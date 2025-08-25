@@ -1,3 +1,42 @@
-[gd_scene load_steps=0 format=3 uid="uid://bidv6kfotgk2e"]
+[gd_scene load_steps=2 format=3 uid="uid://dkugvwc2gd622"]
 
-[node name="MainMenu" type="Node3D"]
+[ext_resource type="Script" uid="uid://caw3u0ea5whm4" path="res://scripts/ui/MainMenu.gd" id="1_l6cm7"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_l6cm7")
+
+[node name="MenuContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 98.0
+offset_top = 120.0
+offset_right = 1038.0
+offset_bottom = 511.0
+
+[node name="CampaignButton" type="Button" parent="MenuContainer"]
+layout_mode = 2
+text = "CAMPAIGN"
+
+[node name="ScenariosButton" type="Button" parent="MenuContainer"]
+layout_mode = 2
+text = "SCENARIOS"
+
+[node name="MultiplayerButton" type="Button" parent="MenuContainer"]
+layout_mode = 2
+disabled = true
+text = "MULTIPLAYER"
+
+[node name="ScenarioEditorButton" type="Button" parent="MenuContainer"]
+layout_mode = 2
+text = "SCENARIO EDITOR"
+
+[node name="SettingsButton" type="Button" parent="MenuContainer"]
+layout_mode = 2
+text = "SETTINGS"
+
+[node name="CloseButton" type="Button" parent="MenuContainer"]
+layout_mode = 2
+text = "CLOSE GAME"
