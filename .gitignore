@@ -1,0 +1,38 @@
+# Godot
+src/.export/
+src/.import/
+src/.import/**/*
+*.import
+*.translation
+*.translation.import
+*.stex
+*.scn
+*.res
+*.tres
+*.tmp
+src/.godot/
+src/.godot/tmp/**
+src/.godot/editor_settings-*.tres
+src/.godot/editor_state-*.cfg
+
+# Godot cache
+src/.cache/
+
+# IDE metadata
+.vscode/
+.idea/
+*.suo
+*.user
+*.userossc
+*.sln.docstates
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
