@@ -1,11 +1,7 @@
-# ORBAT Game Design Document
-*ORBAT stands for Order Of Battle and is a common military term*
-
+# Operational Command Game Design Document
 ## Overview
-**Title:** ORBAT
-
 ### Game Concept
-ORBAT is a Real-Time Strategy (RTS) game set during an alternate history where the Cold War escalates 
+Operational Command is a Real-Time Strategy (RTS) game set during an alternate history where the Cold War escalates 
 into full-scale conflict in the 1980s. Players act as a NATO field officer, commanding units at the 
 platoon or battalion level via a tactical map and radio communication system. The entire interface 
 simulates a command post, with players analyzing intelligence, planning maneuvers, and issuing voice-based 
@@ -85,6 +81,7 @@ and adjust plans based on updates from the field.
 - Combat resolution is handled by simulation using unit stats and terrain effects
 - Factors include: 
 	- Unit strength
+	- Unit veterancy
 	- Unit morale
 	- Unit Spotting Distance
 	- Unit Attack Distance
