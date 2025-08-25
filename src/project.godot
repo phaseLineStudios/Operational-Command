@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="Operational Command"
+run/main_scene="uid://dkugvwc2gd622"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -18,3 +19,9 @@ config/icon="res://icon.svg"
 
 buses/default_bus_layout="uid://hr6ifjohxknp"
 driver/enable_input=true
+
+[autoload]
+
+Game="*res://scripts/core/Game.gd"
+Persistence="*res://scripts/core/Persistence.gd"
+ContentDB="*res://scripts/core/ContentDB.gd"
