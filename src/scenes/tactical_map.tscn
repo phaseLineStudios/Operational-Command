@@ -1,0 +1,3 @@
+[gd_scene load_steps=0 format=3 uid="uid://drgy8o6g6af86"]
+
+[node name="TacticalMap" type="Node2D"]
