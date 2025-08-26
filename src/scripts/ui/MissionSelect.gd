@@ -14,6 +14,7 @@ extends Control
 @onready var _card_image: TextureRect = $"Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer/Image"
 @onready var _card_diff: Label = $"Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer/Difficulty"
 @onready var _card_start: Button = $"Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer/StartMission"
+@onready var _click_catcher: Control = $"Container/ClickCatcher"
 
 var _selected_mission: Dictionary = {}
 var _campaign: Dictionary = {}
@@ -24,6 +25,20 @@ var _card_pin_button: BaseButton
 @export var pin_size := Vector2i(24, 24)
 ## Optional custom pin icon; if empty, a text-dot button is used.
 @export var pin_texture: Texture2D
+## Show title labels next to pins.
+@export var show_pin_labels := true
+## Offset for the label relative to the pin's top-left (px).
+@export var pin_label_offset := Vector2(16, -8)
+## Label background color (with alpha).
+@export var pin_label_bg_color := Color(0, 0, 0, 0.65)
+## Label text color.
+@export var pin_label_text_color := Color(1, 1, 1)
+## Label font size.
+@export var pin_label_font_size := 14
+## Label corner radius (px).
+@export var pin_label_corner_radius := 6
+## Extra padding inside the label panel (px).
+@export var pin_label_padding := Vector2(6, 3)
 
 ## Path to campaign select scene
 const SCENE_CAMPAIGN_SELECT := "res://scenes/campaign_select.tscn"
@@ -38,6 +53,7 @@ func _ready() -> void:
 	await get_tree().process_frame
 	_build_pins()
 
+	_click_catcher.gui_input.connect(_on_backdrop_gui_input)
 	if not resized.is_connected(_update_pin_positions):
 		resized.connect(_update_pin_positions)
 	if not _container.resized.is_connected(_update_pin_positions):
@@ -75,12 +91,14 @@ func _build_pins() -> void:
 	for m in _missions:
 		var pin := _make_pin(m)
 		pin.set_meta("pos_norm", _mission_pos_vec(m))
+		pin.set_meta("title", m.get("title",""))
 		pin.pressed.connect(func(): _on_pin_pressed(m, pin))
 		_pins_layer.add_child(pin)
 	_update_pin_positions()
 
 ## Builds a pin control.
 func _make_pin(m: Dictionary) -> BaseButton:
+	var title: String = m.get("title", "")
 	if pin_texture:
 		var t := TextureButton.new()
 		t.texture_normal = pin_texture
@@ -88,7 +106,7 @@ func _make_pin(m: Dictionary) -> BaseButton:
 		t.ignore_texture_size = true
 		t.custom_minimum_size = Vector2(pin_size)
 		t.focus_mode = Control.FOCUS_NONE
-		t.tooltip_text = m.get("title", "")
+		_attach_pin_label(t, title)
 		return t
 	else:
 		var b := Button.new()
@@ -97,8 +115,8 @@ func _make_pin(m: Dictionary) -> BaseButton:
 		b.custom_minimum_size = Vector2(pin_size)
 		b.focus_mode = Control.FOCUS_NONE
 		b.add_theme_font_size_override("font_size", pin_size.y)
-		b.tooltip_text = m.get("title", "")
 		_apply_transparent_button_style(b)
+		_attach_pin_label(b, title)
 		return b
 
 ## Remove all button styleboxes so only icon/text remains.
@@ -109,6 +127,59 @@ func _apply_transparent_button_style(btn: Button) -> void:
 	btn.add_theme_stylebox_override("pressed", empty)
 	btn.add_theme_stylebox_override("disabled", empty)
 	btn.add_theme_stylebox_override("focus", empty)
+
+## Create and attach a readable label to a pin button.
+func _attach_pin_label(pin_btn: BaseButton, title: String) -> void:
+	# Remove old label (if any) to avoid duplicates when rebuilding pins.
+	if pin_btn.has_node("PinLabel"):
+		pin_btn.get_node("PinLabel").queue_free()
+
+	if not show_pin_labels or title.strip_edges() == "":
+		return
+
+	var panel := PanelContainer.new()
+	panel.name = "PinLabel"
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.z_index = 1
+	panel.position = pin_label_offset
+	panel.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	panel.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = pin_label_bg_color
+	sb.corner_radius_top_left = pin_label_corner_radius
+	sb.corner_radius_top_right = pin_label_corner_radius
+	sb.corner_radius_bottom_left = pin_label_corner_radius
+	sb.corner_radius_bottom_right = pin_label_corner_radius
+	sb.content_margin_left = pin_label_padding.x
+	sb.content_margin_right = pin_label_padding.x
+	sb.content_margin_top = pin_label_padding.y
+	sb.content_margin_bottom = pin_label_padding.y
+	panel.add_theme_stylebox_override("panel", sb)
+
+	var lab := Label.new()
+	lab.text = title
+	lab.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lab.autowrap_mode = TextServer.AUTOWRAP_OFF
+	lab.clip_text = false
+	lab.custom_minimum_size = Vector2.ZERO
+	lab.add_theme_font_size_override("font_size", pin_label_font_size)
+	lab.add_theme_color_override("font_color", pin_label_text_color)
+
+	panel.add_child(lab)
+	pin_btn.add_child(panel)
+
+## Refresh label visibility on all pins.
+func _refresh_pin_labels() -> void:
+	for node in _pins_layer.get_children():
+		if node is BaseButton:
+			if show_pin_labels:
+				var title: String = node.get_meta("title", "")
+				if title != "":
+					_attach_pin_label(node, title)
+			else:
+				if node.has_node("PinLabel"):
+					node.get_node("PinLabel").queue_free()
 
 ## Reposition pins with letterbox awareness.
 func _update_pin_positions() -> void:
@@ -134,29 +205,23 @@ func _update_pin_positions() -> void:
 
 ## Open the mission card; create/remove image node depending on presence.
 func _on_pin_pressed(mission: Dictionary, pin_btn: BaseButton) -> void:
-	# Toggle: clicking same pin closes the card
-	if _card.visible and String(_selected_mission.get("id", "")) == String(mission.get("id","")):
-		_close_card()
-		return
-
 	_selected_mission = mission
 	_card_pin_button = pin_btn
 	_card_title.text = mission.get("title", "Untitled")
 
 	var prev_path: String = mission.get("image", "")
-	if prev_path != "":
-		_ensure_card_image()
-		_card_image.texture = load(prev_path) as Texture2D
-	else:
-		_remove_card_image()
+	_card_image.texture = load(prev_path) as Texture2D
 
 	_card_desc.text = mission.get("description", "")
 	_card_diff.text = "Difficulty: %s" % [mission.get("difficulty", "Unknown")]
 	
 	# BUG Unhiding card removes theme
 	_card.visible = true
+	_click_catcher.visible = true
 	_card.reset_size()
-
+	show_pin_labels = false
+	_refresh_pin_labels()
+	
 	call_deferred("_position_card_near_pin", pin_btn)
 
 ## Start current mission.
@@ -171,18 +236,13 @@ func _on_start_pressed() -> void:
 func _on_back_pressed() -> void:
 	Game.goto_scene(SCENE_CAMPAIGN_SELECT)
 
-## Close the card when clicking outside of it and not on any pin.
-func _unhandled_input(event: InputEvent) -> void:
-	if not _card.visible:
-		return
+## Decide if an overlay click should close the card.
+func _on_backdrop_gui_input(event: InputEvent) -> void:
+	if not _card.visible: return
 	var mb := event as InputEventMouseButton
 	if mb and mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
-		var pt: Vector2 = mb.position  # viewport coords
-		# If click is on the card, ignore (don't close)
+		var pt: Vector2 = mb.position
 		if _card.get_global_rect().has_point(pt):
-			return
-		# If click is on any mission pin, ignore (pin handlers will run)
-		if _point_over_any_pin(pt):
 			return
 		_close_card()
 
@@ -193,30 +253,10 @@ func _point_over_any_pin(view_pt: Vector2) -> bool:
 			return true
 	return false
 
-## Ensure the image TextureRect exists in the card (created just above the Desc).
-func _ensure_card_image() -> void:
-	if _card_image and is_instance_valid(_card_image):
-		return
-	var v := _card.get_node("V") as VBoxContainer
-	_card_image = TextureRect.new()
-	_card_image.name = "Image"
-	_card_image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	_card_image.custom_minimum_size = Vector2(340, 160)
-	v.add_child(_card_image)
-	v.move_child(_card_image, 1)  # after Title
-
-## Remove the image control if present.
-func _remove_card_image() -> void:
-	if _card_image and is_instance_valid(_card_image):
-		_card_image.queue_free()
-	_card_image = null
-
 ## Place the card near a pin and keep it on-screen.
 func _position_card_near_pin(pin_btn: BaseButton) -> void:
-	# Center of the pin in GLOBAL space
 	var pin_center_global := pin_btn.global_position + pin_btn.size * 0.5
 
-	# Convert GLOBAL → _container LOCAL (Controls: use canvas-aware transform)
 	var container_inv := _container.get_global_transform_with_canvas().affine_inverse()
 	var anchor: Vector2 = container_inv * pin_center_global
 
@@ -246,6 +286,9 @@ func _position_card_near_pin(pin_btn: BaseButton) -> void:
 ## Hide card and clear selection.
 func _close_card() -> void:
 	_card.visible = false
+	_click_catcher.visible = false
+	show_pin_labels = true
+	_refresh_pin_labels()
 	_selected_mission = {}
 	_card_pin_button = null
 

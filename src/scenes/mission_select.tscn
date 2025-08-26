@@ -34,6 +34,14 @@ offset_bottom = 648.0
 size_flags_horizontal = 3
 mouse_filter = 1
 
+[node name="ClickCatcher" type="Control" parent="Container"]
+visible = false
+z_index = 5
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+mouse_filter = 1
+
 [node name="MissionCard" type="Panel" parent="Container"]
 visible = false
 z_index = 10
