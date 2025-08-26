@@ -187,10 +187,10 @@ func list_recruitable_units(mission_id: String):
 	if mission.is_empty():
 		push_warning("Mission not found: %s" % mission_id)
 		return []
-	if not mission.has("reqruitable_units") or typeof(mission["reqruitable_units"]) != TYPE_ARRAY:
-		push_warning("Mission missing 'reqruitable_units' array: %s" % mission_id)
+	if not mission.has("recruitable_units") or typeof(mission["recruitable_units"]) != TYPE_ARRAY:
+		push_warning("Mission missing 'recruitable_units' array: %s" % mission_id)
 		return []
-	var ids: Array = mission["reqruitable_units"]
+	var ids: Array = mission["recruitable_units"]
 	var out: Array = []
 	for id in ids:
 		var u := get_unit(String(id))

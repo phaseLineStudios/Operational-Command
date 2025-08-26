@@ -8,10 +8,10 @@
 	"order": 0,
 	"unit_points": 1250,
 	"unit_slots": [
-		{ "key": "COMPANY_HQ", "title": "Company HQ", "allowed_roles": ["HQ"], "max_count": 1 },
-		{ "key": "PLT_1", "title": "1st Platoon (ALPHA)", "allowed_roles": ["INF", "MECH", "ARMOR", "SUPPORT"], "max_count": 3 },
-		{ "key": "PLT_2", "title": "2nd Platoon (BRAVO)", "allowed_roles": ["INF", "MECH", "ARMOR", "SUPPORT"], "max_count": 3 },
-		{ "key": "WEAPONS", "title": "Weapons (CHARLIE)", "allowed_roles": ["SUPPORT"], "max_count": 2 }
+		{ "key": "COMPANY_HQ", "title": "Company HQ", "allowed_roles": ["HQ"] },
+		{ "key": "PLT_1", "title": "1st Platoon (ALPHA)", "allowed_roles": ["INF", "MECH", "ARMOR", "SUPPORT"] },
+		{ "key": "PLT_2", "title": "2nd Platoon (BRAVO)", "allowed_roles": ["INF", "MECH", "ARMOR", "SUPPORT"] },
+		{ "key": "WEAPONS", "title": "Weapons (CHARLIE)", "allowed_roles": ["SUPPORT"] }
 	],
 	"recruitable_units": [],
 	"has_reserve_unit": true

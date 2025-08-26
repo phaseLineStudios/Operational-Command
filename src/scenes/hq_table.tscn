@@ -1,3 +1,77 @@
-[gd_scene load_steps=0 format=3 uid="uid://bmnrh7bwbd2ft"]
+[gd_scene load_steps=10 format=3 uid="uid://c20duptp1uplb"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
+size = Vector2(10, 10)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p1n4g"]
+albedo_color = Color(0.103343, 0.276828, 0.0129619, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_oof4l"]
+size = Vector3(1, 0.75, 0.7)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3f477"]
+albedo_color = Color(0.375626, 0.28718, 0.13782, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_p1n4g"]
+size = Vector2(0.5, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_py2wd"]
+size = Vector3(0.273, 0.1, 0.273)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lmes1"]
+albedo_color = Color(0.295867, 0.295866, 0.295866, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3f477"]
+size = Vector3(0.15, 0.075, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lmes1"]
+size = Vector3(0.12, 0.005, 0.18)
 
 [node name="HqTable" type="Node3D"]
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_yqfno")
+surface_material_override/0 = SubResource("StandardMaterial3D_p1n4g")
+
+[node name="Table" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.355681, 0)
+mesh = SubResource("BoxMesh_oof4l")
+surface_material_override/0 = SubResource("StandardMaterial3D_3f477")
+
+[node name="Map" type="MeshInstance3D" parent="Table"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.376205, 0.0681208)
+mesh = SubResource("PlaneMesh_p1n4g")
+
+[node name="Radio" type="MeshInstance3D" parent="Table"]
+transform = Transform3D(0.894638, 0, -0.446791, 0, 1, 0, 0.446791, 0, 0.894638, 0.384348, 0.425746, -0.278661)
+mesh = SubResource("BoxMesh_py2wd")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_lmes1")
+
+[node name="Timer" type="MeshInstance3D" parent="Table"]
+transform = Transform3D(0.778561, 0, 0.627569, 0, 1, 0, -0.627569, 0, 0.778561, -0.383399, 0.415917, -0.261362)
+mesh = SubResource("BoxMesh_3f477")
+surface_material_override/0 = SubResource("StandardMaterial3D_lmes1")
+
+[node name="PhysicsObjects" type="Node3D" parent="."]
+
+[node name="ClipboardIntel" type="MeshInstance3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.383427, 0.735465, -0.0676914)
+mesh = SubResource("BoxMesh_lmes1")
+
+[node name="ClipboardTerrain" type="MeshInstance3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388701, 0.747355, 0.0703042)
+mesh = SubResource("BoxMesh_lmes1")
+skeleton = NodePath("../ClipboardIntel")
+
+[node name="ClipboardBriefing" type="MeshInstance3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388701, 0.754058, 0.228009)
+mesh = SubResource("BoxMesh_lmes1")
+skeleton = NodePath("../ClipboardIntel")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.854323, 0.519743, 0, -0.519743, 0.854323, 0, 1.08494, 0.53907)
+current = true
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.24826, 0)

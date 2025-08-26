@@ -1,6 +1,6 @@
 {
 	"id": "heavy_weapons_plt_1",
-	"title": "1st Heavy Weapons Platoon",
+	"title": "1st Heavy Weapons",
 	"role": "SUPPORT",
 	"cost": 80,
 	"size": "platoon",
@@ -20,7 +20,7 @@
 		"equipment_ratio": 0.90,
 		"cohesion": 0.70
 	},
-	"throughput": [],
+	"throughput": {},
 	"equipment_tags": [],
 	"icon": "",
 	"allowed_slots": ["INF_SLOT", "SUPPORT_SLOT", "RESERVE_ANY", "RESERVE_INF", "RESERVE_SUPPORT"],

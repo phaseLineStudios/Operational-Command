@@ -1,3 +1,39 @@
-[gd_scene load_steps=0 format=3 uid="uid://bn4eaac5fjjdf"]
+[gd_scene load_steps=2 format=3 uid="uid://o3h5jon6ffip"]
 
-[node name="Briefing" type="Node3D"]
+[ext_resource type="Script" uid="uid://bbr2ohjdpwwns" path="res://scripts/ui/Briefing.gd" id="1_opxbr"]
+
+[node name="Briefing" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_opxbr")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 1154.0
+offset_bottom = 645.0
+
+[node name="Panel" type="Panel" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/Panel"]
+layout_mode = 0
+offset_left = 504.0
+offset_top = 283.0
+offset_right = 628.0
+offset_bottom = 306.0
+text = "Mission briefing placeholder"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Back" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Back"
+
+[node name="SelectUnits" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Select Units"

@@ -44,7 +44,7 @@ var _card_pin_button: BaseButton
 const SCENE_CAMPAIGN_SELECT := "res://scenes/campaign_select.tscn"
 
 ## Path to unit select scene
-const SCENE_UNIT_SELECT := "res://scenes/unit_select.tscn"
+const SCENE_BRIEFING := "res://scenes/briefing.tscn"
 
 ## Build UI, load map, place pins, hook resizes.
 func _ready() -> void:
@@ -230,7 +230,7 @@ func _on_start_pressed() -> void:
 	if mid == "":
 		return
 	Game.select_mission(mid)
-	Game.goto_scene(SCENE_UNIT_SELECT)
+	Game.goto_scene(SCENE_BRIEFING)
 
 ## Return to campaign select.
 func _on_back_pressed() -> void:
