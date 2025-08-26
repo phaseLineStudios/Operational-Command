@@ -81,7 +81,7 @@ func _load_campaign_and_map() -> void:
 		else:
 			push_warning("MissionSelect: Failed to load map: %s" % map_path)
 
-	_missions = ContentDB.list_missions(cid)
+	_missions = ContentDB.list_missions_for_campaign(cid)
 	if _missions.is_empty():
 		push_warning("MissionSelect: Campaign has no missions.")
 

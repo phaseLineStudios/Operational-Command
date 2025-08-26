@@ -1,0 +1,9 @@
+{
+	"id": "nato_1985_west_ger",
+	"title": "NATO 1985 – West German Front",
+	"blurb": "Defensive to counteroffensive along the Inner German Border.",
+	"image": "res://maps/previews/west_ger_preview.png",
+	"campaign_map": "res://maps/campaign/west_ger_map.png",
+	"missions": ["wg_exercise_reforger", "wg_border_probe"],
+	"order": 0
+}
