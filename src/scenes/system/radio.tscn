@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://5wbc83x6ecek"]
+
+[ext_resource type="Script" uid="uid://c2ou0jfby4bkd" path="res://scripts/radio/Radio.gd" id="1_ilbh7"]
+
+[sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_xor53"]
+
+[node name="Radio" type="Node"]
+script = ExtResource("1_ilbh7")
+
+[node name="Microphone" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamMicrophone_xor53")
+autoplay = true
+bus = &"Capture"
