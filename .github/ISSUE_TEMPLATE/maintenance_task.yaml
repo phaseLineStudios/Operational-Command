@@ -1,4 +1,4 @@
-name: "🧹 Maintenance Task"
+name: "Maintenance Task"
 description: chore / maintenance / dependency update / infrastructure task
 title: "<Area e.g. Docs> - <Short description of task>"
 labels: ["Type: Maintenance"]
