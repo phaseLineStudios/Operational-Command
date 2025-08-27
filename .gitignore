@@ -36,3 +36,16 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# SCons generated files
+.sconsign.dblite
+
+# Build output directories
+dependencies/vosk_gd/**/build/
+dependencies/vosk_gd/**/lib/
+dependencies/vosk_gd/**/obj/
+
+# Temporary files
+*.obj
+*.tmp
+*.log

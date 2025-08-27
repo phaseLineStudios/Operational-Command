@@ -1,0 +1,44 @@
+#!/usr/bin/env python
+import os
+import sys
+
+env = SConscript("godot-cpp/SConstruct")
+
+# For reference:
+# - CCFLAGS are compilation flags shared between C and C++
+# - CFLAGS are for C-specific compilation flags
+# - CXXFLAGS are for C++-specific compilation flags
+# - CPPFLAGS are for pre-processor flags
+# - CPPDEFINES are for pre-processor defines
+# - LINKFLAGS are for linking flags
+
+# tweak this if you want to use different folders, or more folders, to store your source code in.
+env.Append(CPPPATH=["src/"])
+env.Append(LIBPATH=["bin/"])
+env.Append(LIBS=["lib/libvosk"])
+sources = Glob("src/*.cpp")
+
+# Copy over binaries
+binaries = []
+if (env["platform"] == "windows"):
+    binaries = Glob("bin/win64/*.dll")
+elif env["platform"] == "linux":
+    binaries = Glob("bin/linux/*.so")
+
+for binary in binaries:
+    Copy("../../src/addons/vosk_gd/", binary)
+
+if env["platform"] == "macos":
+    library = env.SharedLibrary(
+        "../../src/addons/vosk_gd/vosk_gd.{}.{}.framework/vosk_gd.{}.{}".format(
+            env["platform"], env["target"], env["platform"], env["target"]
+        ),
+        source=sources,
+    )
+else:
+    library = env.SharedLibrary(
+        "../../src/addons/vosk_gd/vosk_gd{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
+        source=sources,
+    )
+
+Default(library)
