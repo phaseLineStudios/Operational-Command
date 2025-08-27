@@ -49,3 +49,4 @@ dependencies/vosk_gd/**/obj/
 *.obj
 *.tmp
 *.log
+~*.dll
