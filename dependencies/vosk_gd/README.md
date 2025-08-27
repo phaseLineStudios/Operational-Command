@@ -45,3 +45,10 @@ scons platform=<platform>
 ### Install
 1. Copy (if not automatically copied) the resulting files to: `/src/addons/vosk_gd/`
 2. Copy (if not automaitcally copied) the vosk binaries from: `bin/<platform>/` to: `/src/addons/vosk_gd/`
+
+### Get Models
+- Download a model from [Vosk](https://alphacephei.com/vosk/models), preferably "small" models as the largeo nes require crazy amounts of memory.
+- Extract the model into `src/third_party/vosk/`
+- In `STTService.gd` set the model path to reflect your model.
+
+*Note: We should create a service to download the model on game start instead of packaging the applciation with it*
