@@ -2,7 +2,7 @@
 ## Overview
 ### Game Concept
 Operational Command is a Real-Time Strategy (RTS) game set during an alternate history where the Cold War escalates 
-into full-scale conflict in the 1980s. Players act as a NATO field officer, commanding units at the 
+into full-scale conflict in the 1980s. Players act as a field officer, commanding units at the 
 platoon or battalion level via a tactical map and radio communication system. The entire interface 
 simulates a command post, with players analyzing intelligence, planning maneuvers, and issuing voice-based 
 commands to coordinate military operations.
@@ -38,7 +38,7 @@ must be manually placed by the player. Position and status updates are obtained 
 to units. Supporting documents like mission briefings, force compositions (ToE), and intel reports are 
 available for strategic reference.
 
-A map editor is also available, allowing users to create and share custom scenarios.
+A scenario and terrain editor is also available, allowing users to create and share custom scenarios.
 
 #### Game progression
 - Missions award points for completed objectives
@@ -99,16 +99,15 @@ and adjust plans based on updates from the field.
 - Each unit has ammunition that runs out during combat and would require logistical supply
 - Vehicle units have fuel that runs out from movement and would require logistical supply
 
-#### Screne Flow
+#### Scene Flow
 The player moves between screens in the following order:
 - Main Menu
 - Campaign Selection
 - Mission Selection
 - Mission Briefing
-- Unit Selection
-- Tactical Map (Mission Execution)
+- Unit Selection & Management
+- HQ Scene (Mission Execution)
 - Mission Debrief
-- Unit Management and Reinforcement
 
 ### Game Options
 Options include difficulty levels affecting AI behavior and unit stats. Accessibility settings 
@@ -141,7 +140,7 @@ forests, and river crossings. Each area presents tactical challenges shaped by t
 enemy placement.
 
 ### Characters
-The main character is the player—a NATO field commander. Supporting characters include voice actors 
+The main character is the player — a field commander. Supporting characters include voice actors 
 for command staff and unit leaders. Units are persistent entities with their own history, which can 
 be influenced by player decisions.
 
@@ -163,8 +162,8 @@ players interact with models of radios, documents, and maps. The interface empha
 realism.
 
 ### Control System
-Controls include voice commands via microphone, mouse input for map tools, and optional keyboard 
-shortcuts.
+Controls include voice commands via microphone, mouse input for map tools and optional unit management 
+(incase speech recognition fails), and optional keyboard shortcuts.
 
 ### Audio, Music, Sound Effects
 Audio includes ambient HQ sounds, radio chatter, and battlefield reports. Music is sparse and 
@@ -173,8 +172,8 @@ overwhelming the player.
 
 ### Help System
 The help system includes a tutorial mission, visual hints, a command reference guide, and tooltips 
-for all interactive elements. Voice command construction suggestions assist new players during 
-missions.
+for all interactive elements. Voice command construction suggestions assist players during 
+missions by showing possible next phrases for a legal command.
 
 ## Artificial Intelligence
 ### Opponent and Enemy AI
@@ -187,9 +186,8 @@ Friendly units interpret and follow orders independently. Voice responses indica
 success. Some scripted characters (e.g., mission briefers) provide narrative structure.
 
 ### Support AI
-The speech-to-text system supports command recognition, offering predictive suggestions for valid 
-command continuations. Additional AI governs pathfinding, reaction timing, and visibility for all 
-units.
+Some mission may have non-interactible, non-hostile units to simulate another friendly commander
+fighting on the same battlefield.
 
 ### Player and Collision Detection, Path-finding.
 Units use terrain-aware pathfinding. No traditional player collision is necessary unless in a 3D HQ 
@@ -202,18 +200,18 @@ PC (Windows, Linux, macOS)
 
 ### Development Hardware and Software (including game engine)
 - Engine: Godot
-- Code: GDScript
-- Tools: Speech-to-text (Vosk), asset editors, version control
+- Code: GDScript, C++
+- Tools: Speech-to-text (Vosk), git, GitHub Projects
 
 ### Network requirements
-- Primarily offline single-player, but optionally Cooperative or adversial play. 
+- Primarily offline single-player, but optionally Cooperative or adversial play.
 - Optional features could include cloud saves.
 
 ## Game Art
-### Key assets 
+### Key assets
 - 2D tactical maps and NATO symbols
 - 3D assets for command tools (radios, documents)
-- HQ environment (if 3D)
+- HQ environment (table, tent, nature)
 - Minimalist, functional UI matching Cold War military style
 
 This is an extension of parts of [cs.unc.edu](http://wwwx.cs.unc.edu/Courses/comp585-s11/585GameDesignDocumentTemplate.docx)
