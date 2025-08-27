@@ -1,0 +1,40 @@
+name: "🧹 Maintenance Task"
+description: chore / maintenance / dependency update / infrastructure task
+title: "<Area e.g. Docs> - <Short description of task>"
+labels: ["Type: Maintenance"]
+projects: ["operationalCommandTeam/1"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for chores, refactors, dependency updates, or infrastructure tasks.
+  - type: input
+    id: summary
+    attributes:
+      label: Task Summary
+      description: Short description of the maintenance task
+      placeholder: "Upgrade Node.js version to 20.x"
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale
+      description: Why is this task needed? What benefit does it bring?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Which parts of the system/repo are affected?
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks / Considerations
+      description: Any potential issues to watch out for?
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional Notes
+      description: Links, references, or related issues/PRs?
