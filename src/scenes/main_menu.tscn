@@ -22,6 +22,7 @@ text = "CAMPAIGN"
 
 [node name="ScenariosButton" type="Button" parent="MenuContainer"]
 layout_mode = 2
+disabled = true
 text = "SCENARIOS"
 
 [node name="MultiplayerButton" type="Button" parent="MenuContainer"]

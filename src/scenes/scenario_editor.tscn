@@ -1,9 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://dnkv7sdobw3af"]
+[gd_scene load_steps=2 format=3 uid="uid://do0e8t8jcy6an"]
 
-[ext_resource type="Script" uid="uid://l0ofofbe60u0" path="res://scripts/editors/ScenarioEditor.gd" id="1_wqbsy"]
-[ext_resource type="Script" uid="uid://ogd520ux8io2" path="res://scripts/editors/ui/ToolOptionsPanel.gd" id="2_ysx1w"]
-[ext_resource type="Script" uid="uid://bgwbb3qqf7m3x" path="res://scripts/editors/MapCanvas.gd" id="3_gsqds"]
-[ext_resource type="Script" uid="uid://l3tr64u40qxc" path="res://scripts/editors/ui/NewMapDialog.gd" id="3_ysx1w"]
+[ext_resource type="Script" uid="uid://cilbctp6dmcm" path="res://scripts/editors/ScenarioEditor.gd" id="1_wqbsy"]
 
 [node name="ScenarioEditor" type="Control"]
 layout_mode = 3
@@ -48,7 +45,6 @@ layout_mode = 2
 
 [node name="ToolOptions" type="VBoxContainer" parent="Root/Main/LeftDock/VBox"]
 layout_mode = 2
-script = ExtResource("2_ysx1w")
 metadata/_custom_type_script = "uid://ogd520ux8io2"
 
 [node name="MapViewport" type="SubViewportContainer" parent="Root/Main"]
@@ -63,10 +59,8 @@ render_target_update_mode = 4
 
 [node name="MapCanvas" type="Node2D" parent="Root/Main/MapViewport/SubViewport"]
 position = Vector2(0, 39)
-script = ExtResource("3_gsqds")
 
 [node name="Camera2D" type="Camera2D" parent="Root/Main/MapViewport/SubViewport/MapCanvas"]
 position = Vector2(501, 241)
 
 [node name="NewMapDialog" type="AcceptDialog" parent="."]
-script = ExtResource("3_ysx1w")
