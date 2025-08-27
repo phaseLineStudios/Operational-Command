@@ -1,6 +1,8 @@
 {
 	"id": "wg_exercise_reforger",
 	"title": "Exercise Reforger 85'",
+	"briefing": "wg_exercise_reforger_brief",
+	"terrain": "",
 	"description": "Annual NATO exercise held in West Germany.",
 	"image": "res://maps/previews/wg_exercise_reforger.png",
 	"difficulty": "Easy",

@@ -62,6 +62,8 @@ Authoritative JSON databases used by ContentDB.
 ```json
 {
 	"id": "wg_exercise_reforger",
+	"briefing": "wg_exercise_reforger_brief",
+	"terrain": "wg_reforger_terrain",
 	"title": "Exercise Reforger 85'",
 	"description": "Annual NATO exercise held in West Germany.",
 	"image": "res://maps/previews/wg_exercise_reforger.png",
@@ -82,16 +84,43 @@ Authoritative JSON databases used by ContentDB.
 
 ### Brief (briefs/<id>.json)
 ```json
-{
-  "id": "op_bravo_line",
-  "title": "Operation BRAVO LINE",
-  "situation": "WP forces crossing at point CHARLIE...",
-  "mission": "Delay and trade space for time...",
-  "execution": ["Phase I: Recon pull", "Phase II: Delay"],
-  "admin_log": "Ammo limited. Keep losses low.",
-  "signals": { "net": "Alpha", "callsigns": { "HQ": "Razor", "1PLT": "Viper-1" } },
-  "objectives": [
-	{ "id": "OBJ_DELAY_30", "type": "delay", "score": 100 }
-  ]
+{ 
+	"id": "wg_exercise_reforger_brief", 
+	"title": "Operation BRAVO LINE",
+	"situation": { 
+		"enemy": "MRB assembling east of PL BRAVO; armor mix T-72/BMP.", 
+		"friendly": "A/1-36 IN (-) with attached Hvy Weapons Plt.", 
+		"terrain": "Rolling with wooded draws; bridges over the Jossa.", 
+		"weather": { "wind": "NE 5kt", "vis_km": 10 },
+		"start_time": "1984-09-22T05:30:00Z"
+	},
+	"mission": {
+		"mission": "Delay and trade space for time...",
+		"objectives": [ 
+			{ "id": "obj_secure_bridge", "type": "SECURE", "title": "Secure the bridge", "success": "Hold 15 minutes", "score": 100 }, 
+			{ "id": "obj_hold_msrs", "type": "HOLD", "title": "Hold MSR nodes", "score": 200 } 
+		]
+	}, 
+	"execution": ["Phase I: Recon pull", "Phase II: Delay"], 
+	"admin_log": "Ammo limited. Keep losses low.", 
+	"board": { 
+		"background": "res://assets/ui/whiteboard.png", 
+		"items": [ 
+			{ 
+				"id": "intel_photo", 
+				"title": "Recon Photo – MSR", 
+				"type": "image", 
+				"resource": "res://maps/intel/wg_reforger/recon_photo_01.png", 
+				"pos": [0.62, 0.22] 
+			}, 
+			{ 
+				"id": "sigint", 
+				"title": "SIGINT Summary", 
+				"type": "text", 
+				"resource": "res://maps/intel/wg_reforger/sigint_summary.bbcode", 
+				"pos": [0.42, 0.62]
+			}
+		] 
+	}
 }
 ```

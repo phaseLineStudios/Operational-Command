@@ -172,6 +172,42 @@ func list_missions_for_campaign(campaign_id: StringName) -> Array:
 		out.append(item[2])
 	return out
 
+## Briefing helpers.
+## Get a briefing by id OR by mission id (smart resolver).
+func get_briefing(id_or_mission_id: String) -> Dictionary:
+	var brief := get_object("briefs", id_or_mission_id)
+	if not brief.is_empty():
+		return brief
+
+	var m := get_mission(id_or_mission_id)
+	if m.is_empty():
+		return {}
+
+	var link_id := ""
+	if m.has("briefing"):
+		link_id = String(m["briefing"])
+	if link_id != "":
+		brief = get_object("briefs", link_id)
+		if not brief.is_empty():
+			return brief
+
+	if m.has("briefing") and typeof(m["briefing"]) == TYPE_DICTIONARY:
+		return m["briefing"]
+
+	return {}
+
+## Get multiple briefings by ids (keeps order).
+func get_briefings(ids: Array) -> Array:
+	return get_objects("briefs", ids)
+
+## List all briefings.
+func list_briefings() -> Array:
+	return get_all_objects("briefs")
+
+## Convenience explicit mission briefing resolver.
+func get_briefing_for_mission(mission_id: String) -> Dictionary:
+	return get_briefing(mission_id)
+
 ## Units helpers.
 func get_unit(id: String) -> Dictionary:
 	return get_object("units", id)
