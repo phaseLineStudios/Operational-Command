@@ -14,9 +14,13 @@ signal save_selected(save_id: StringName)
 ## Emitted when a mission is selected.
 signal mission_selected(mission_id: StringName)
 
+## Emitted when a mission loadout is selected
+signal mission_loadout_selected(loadout: Dictionary)
+
 var current_campaign_id: StringName = &""
 var current_save_id: StringName = &""
 var current_mission_id: StringName = &""
+var current_mission_loadout: Dictionary = {}
 
 ## Change to scene at [param path]; logs error if missing.
 func goto_scene(path: String) -> void:
@@ -39,3 +43,8 @@ func select_save(save_id: StringName) -> void:
 func select_mission(mission_id: StringName) -> void:
 	current_mission_id = mission_id
 	emit_signal("mission_selected", mission_id)
+
+## Set current mission loadout and emit [signal mission_loadout_selected]
+func set_mission_loadout(loadout: Dictionary) -> void:
+	current_mission_loadout = loadout
+	emit_signal("mission_loadout_selected", loadout)

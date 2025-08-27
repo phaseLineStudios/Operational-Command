@@ -1,15 +1,18 @@
-[gd_scene load_steps=5 format=3 uid="uid://obyhpxe5r3nc"]
+[gd_scene load_steps=7 format=3 uid="uid://obyhpxe5r3nc"]
 
 [ext_resource type="Script" uid="uid://ccwvjhbhbak72" path="res://scripts/ui/UnitSelect.gd" id="1_oi50k"]
 [ext_resource type="Script" uid="uid://c1km1pb0bjkq1" path="res://scripts/ui/helpers/PoolDropArea.gd" id="2_erus1"]
 [ext_resource type="Texture2D" uid="uid://b0d0mou0168fe" path="res://assets/textures/units/nato_unknown_platoon.png" id="2_lkfvs"]
+[ext_resource type="PackedScene" uid="uid://sfmt46l71mce" path="res://scenes/ui/unit_card.tscn" id="3_8jeif"]
 [ext_resource type="Script" uid="uid://bjpkmlmnxp410" path="res://scripts/ui/helpers/SlotsList.gd" id="4_lkfvs"]
+[ext_resource type="PackedScene" uid="uid://dvyattx2k3rxj" path="res://scenes/ui/slot_item.tscn" id="6_qiiyt"]
 
 [node name="UnitSelect" type="Control"]
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_oi50k")
 default_unit_icon = ExtResource("2_lkfvs")
+unit_card_scene = ExtResource("3_8jeif")
 
 [node name="Root" type="VBoxContainer" parent="."]
 layout_mode = 0
@@ -175,6 +178,7 @@ size_flags_horizontal = 3
 [node name="SlotsList" type="VBoxContainer" parent="Root/Main/TaskOrgSheet"]
 layout_mode = 2
 script = ExtResource("4_lkfvs")
+slot_item_scene = ExtResource("6_qiiyt")
 
 [node name="RightTray" type="PanelContainer" parent="Root/Main"]
 layout_mode = 2
