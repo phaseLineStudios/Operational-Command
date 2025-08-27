@@ -2,7 +2,7 @@
 import os
 import sys
 
-env = SConscript("godot-cpp/SConstruct")
+env = SConscript("godot-cpp/SConstruct") # type: ignore
 
 # For reference:
 # - CCFLAGS are compilation flags shared between C and C++
@@ -16,17 +16,17 @@ env = SConscript("godot-cpp/SConstruct")
 env.Append(CPPPATH=["src/"])
 env.Append(LIBPATH=["bin/"])
 env.Append(LIBS=["lib/libvosk"])
-sources = Glob("src/*.cpp")
+sources = Glob("src/*.cpp") # type: ignore
 
 # Copy over binaries
 binaries = []
 if (env["platform"] == "windows"):
-    binaries = Glob("bin/win64/*.dll")
+    binaries = Glob("bin/win64/*.dll") # type: ignore
 elif env["platform"] == "linux":
-    binaries = Glob("bin/linux/*.so")
+    binaries = Glob("bin/linux/*.so") # type: ignore
 
 for binary in binaries:
-    Copy("../../src/addons/vosk_gd/", binary)
+    Copy("../../src/addons/vosk_gd/", binary) # type: ignore
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(
@@ -41,4 +41,4 @@ else:
         source=sources,
     )
 
-Default(library)
+Default(library) # type: ignore
