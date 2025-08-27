@@ -1,0 +1,18 @@
+{
+	"id": "berlin_airlift",
+	"title": "Airlift Scramble",
+	"description": "Secure air corridors while ground routes are contested.",
+	"image": "res://maps/previews/berlin_airlift.png",
+	"difficulty": "Easy",
+	"pos": [0.60, 0.30],
+	"order": 0,
+	"unit_points": 1250,
+	"unit_slots": [
+		{ "key": "COMPANY_HQ", "title": "Company HQ", "allowed_roles": ["HQ"] },
+		{ "key": "PLT_1", "title": "1st Platoon (ALPHA)", "allowed_roles": ["INF", "MECH", "ARMOR", "SUPPORT"] },
+		{ "key": "PLT_2", "title": "2nd Platoon (BRAVO)", "allowed_roles": ["INF", "MECH", "ARMOR", "SUPPORT"] },
+		{ "key": "WEAPONS", "title": "Weapons (CHARLIE)", "allowed_roles": ["SUPPORT"] }
+	],
+	"recruitable_units": [],
+	"has_reserve_unit": true
+}

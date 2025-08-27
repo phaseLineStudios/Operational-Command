@@ -1,0 +1,28 @@
+{
+	"id": "infantry_plt_2",
+	"title": "2nd Infantry",
+	"role": "INF",
+	"cost": 50,
+	"size": "platoon",
+	"personnel": 40,
+	"equipment": { },
+	"veterancy": "REGULAR",
+	"stats": {
+		"attack": 55,
+		"defense": 35,
+		"spot_m": 1800,
+		"range_m": 2500,
+		"morale": 0.9,
+		"speed_kph": 6
+	},
+	"state": {
+		"personnel_ratio": 0.85,
+		"equipment_ratio": 0.90,
+		"cohesion": 0.70
+	},
+	"throughput": {},
+	"equipment_tags": [],
+	"icon": "",
+	"allowed_slots": ["INF_SLOT", "RESERVE_ANY", "RESERVE_INF"],
+	"doctrine": "nato_inf_1985"
+}

@@ -1,3 +1,102 @@
-[gd_scene load_steps=0 format=3 uid="uid://qvymhkd151pa"]
+[gd_scene load_steps=4 format=3 uid="uid://bogs2qcpwnuwd"]
 
-[node name="MissionSelect" type="Node3D"]
+[ext_resource type="Script" uid="uid://c5k2l7sek5n6j" path="res://scripts/ui/MissionSelect.gd" id="1_f8bqk"]
+[ext_resource type="Texture2D" uid="uid://d2mdunnxpb10w" path="res://maps/campaign/west_ger_map.png" id="2_qrooi"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qrooi"]
+bg_color = Color(0, 0, 0, 0.819608)
+
+[node name="MissionSelect" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_f8bqk")
+
+[node name="Container" type="Panel" parent="."]
+layout_mode = 1
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="Map" type="TextureRect" parent="Container"]
+layout_mode = 2
+offset_right = 1152.0
+offset_bottom = 648.0
+size_flags_horizontal = 3
+texture = ExtResource("2_qrooi")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="PinsLayer" type="Control" parent="Container"]
+z_index = 2
+layout_mode = 2
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+size_flags_horizontal = 3
+mouse_filter = 1
+
+[node name="ClickCatcher" type="Control" parent="Container"]
+visible = false
+z_index = 5
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+mouse_filter = 1
+
+[node name="MissionCard" type="Panel" parent="Container"]
+visible = false
+z_index = 10
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 0
+offset_left = 226.0
+offset_top = 190.0
+offset_right = 651.0
+offset_bottom = 465.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_qrooi")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Container/MissionCard"]
+layout_mode = 0
+offset_right = 424.0
+offset_bottom = 275.0
+
+[node name="Title" type="Label" parent="Container/MissionCard/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Placeholder Title"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Container/MissionCard/VBoxContainer"]
+layout_mode = 2
+
+[node name="Desc" type="RichTextLabel" parent="Container/MissionCard/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = "Placeholder Desc"
+fit_content = true
+scroll_active = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Container/MissionCard/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 21
+
+[node name="Image" type="TextureRect" parent="Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(210, 139.453)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Difficulty" type="Label" parent="Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Difficulty: Normal"
+
+[node name="StartMission" type="Button" parent="Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Start Mission"
+
+[node name="BackToCampaign" type="Button" parent="."]
+layout_mode = 2
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 228.0
+offset_bottom = 46.0
+text = "Back to Campaign Selection"

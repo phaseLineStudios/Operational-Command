@@ -1,3 +1,67 @@
-[gd_scene load_steps=0 format=3 uid="uid://0jbnn7lo73pv"]
+[gd_scene load_steps=2 format=3 uid="uid://b450blou0jxup"]
 
-[node name="CampaignSelect" type="Node3D"]
+[ext_resource type="Script" uid="uid://ccx4nsxahdjds" path="res://scripts/ui/CampaignSelect.gd" id="1_kfgox"]
+
+[node name="CampaignSelect" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_kfgox")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 1151.0
+offset_bottom = 650.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="CampaignList" type="ItemList" parent="HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="BackToMainMenu" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Back to Main Menu"
+
+[node name="DetailsRoot" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Panel" type="Panel" parent="HBoxContainer/DetailsRoot"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CampaignDetails" type="BoxContainer" parent="HBoxContainer/DetailsRoot/Panel"]
+layout_mode = 2
+offset_top = 4.0
+offset_right = 847.0
+offset_bottom = 615.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="PlaceholderLabel" type="Label" parent="HBoxContainer/DetailsRoot/Panel/CampaignDetails"]
+layout_mode = 2
+text = "CAMPAIGN DETAILS"
+
+[node name="Options" type="HBoxContainer" parent="HBoxContainer/DetailsRoot"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+alignment = 2
+
+[node name="ContinueLast" type="Button" parent="HBoxContainer/DetailsRoot/Options"]
+layout_mode = 2
+text = "Continue Last Save"
+
+[node name="SelectSave" type="Button" parent="HBoxContainer/DetailsRoot/Options"]
+layout_mode = 2
+text = "Select Save"
+
+[node name="NewSave" type="Button" parent="HBoxContainer/DetailsRoot/Options"]
+layout_mode = 2
+text = "Create new save"

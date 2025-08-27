@@ -1,3 +1,216 @@
-[gd_scene load_steps=0 format=3 uid="uid://dtoccn0u1eq6e"]
+[gd_scene load_steps=7 format=3 uid="uid://obyhpxe5r3nc"]
 
-[node name="UnitSelect" type="Node3D"]
+[ext_resource type="Script" uid="uid://ccwvjhbhbak72" path="res://scripts/ui/UnitSelect.gd" id="1_oi50k"]
+[ext_resource type="Script" uid="uid://c1km1pb0bjkq1" path="res://scripts/ui/helpers/PoolDropArea.gd" id="2_erus1"]
+[ext_resource type="Texture2D" uid="uid://b0d0mou0168fe" path="res://assets/textures/units/nato_unknown_platoon.png" id="2_lkfvs"]
+[ext_resource type="PackedScene" uid="uid://sfmt46l71mce" path="res://scenes/ui/unit_card.tscn" id="3_8jeif"]
+[ext_resource type="Script" uid="uid://bjpkmlmnxp410" path="res://scripts/ui/helpers/SlotsList.gd" id="4_lkfvs"]
+[ext_resource type="PackedScene" uid="uid://dvyattx2k3rxj" path="res://scenes/ui/slot_item.tscn" id="6_qiiyt"]
+
+[node name="UnitSelect" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_oi50k")
+default_unit_icon = ExtResource("2_lkfvs")
+unit_card_scene = ExtResource("3_8jeif")
+
+[node name="Root" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 3.0
+offset_right = 1149.0
+offset_bottom = 648.0
+
+[node name="TopBar" type="PanelContainer" parent="Root"]
+layout_mode = 2
+
+[node name="Splitter" type="VBoxContainer" parent="Root/TopBar"]
+layout_mode = 2
+
+[node name="Constraints" type="HBoxContainer" parent="Root/TopBar/Splitter"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Root/TopBar/Splitter/Constraints"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="Root/TopBar/Splitter/Constraints"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Points" type="Label" parent="Root/TopBar/Splitter/Constraints"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Points: "
+
+[node name="Spacer1" type="BoxContainer" parent="Root/TopBar/Splitter/Constraints"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+
+[node name="Slots" type="Label" parent="Root/TopBar/Splitter/Constraints"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Slots "
+
+[node name="Spacer2" type="BoxContainer" parent="Root/TopBar/Splitter/Constraints"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+
+[node name="Actions" type="HBoxContainer" parent="Root/TopBar/Splitter"]
+layout_mode = 2
+
+[node name="Back" type="Button" parent="Root/TopBar/Splitter/Actions"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Back"
+
+[node name="Spacer" type="Control" parent="Root/TopBar/Splitter/Actions"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Reset" type="Button" parent="Root/TopBar/Splitter/Actions"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Reset"
+
+[node name="Deploy" type="Button" parent="Root/TopBar/Splitter/Actions"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Deploy"
+
+[node name="Main" type="HBoxContainer" parent="Root"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LeftTray" type="PanelContainer" parent="Root/Main"]
+layout_mode = 2
+
+[node name="AvailableUnits" type="VBoxContainer" parent="Root/Main/LeftTray"]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+
+[node name="Filters" type="HBoxContainer" parent="Root/Main/LeftTray/AvailableUnits"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="All" type="Button" parent="Root/Main/LeftTray/AvailableUnits/Filters"]
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = "All"
+
+[node name="Armor" type="Button" parent="Root/Main/LeftTray/AvailableUnits/Filters"]
+layout_mode = 2
+toggle_mode = true
+text = "Armor"
+
+[node name="Inf" type="Button" parent="Root/Main/LeftTray/AvailableUnits/Filters"]
+layout_mode = 2
+toggle_mode = true
+text = "Inf"
+
+[node name="Mech" type="Button" parent="Root/Main/LeftTray/AvailableUnits/Filters"]
+layout_mode = 2
+toggle_mode = true
+text = "Mech"
+
+[node name="Motor" type="Button" parent="Root/Main/LeftTray/AvailableUnits/Filters"]
+layout_mode = 2
+toggle_mode = true
+text = "Motor"
+
+[node name="Support" type="Button" parent="Root/Main/LeftTray/AvailableUnits/Filters"]
+layout_mode = 2
+toggle_mode = true
+text = "Support"
+
+[node name="Search" type="LineEdit" parent="Root/Main/LeftTray/AvailableUnits"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Search"
+
+[node name="Pool" type="ScrollContainer" parent="Root/Main/LeftTray/AvailableUnits"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="List" type="VBoxContainer" parent="Root/Main/LeftTray/AvailableUnits/Pool"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2_erus1")
+
+[node name="HSeparator" type="HSeparator" parent="Root/Main/LeftTray/AvailableUnits"]
+layout_mode = 2
+
+[node name="UnitStats" type="VBoxContainer" parent="Root/Main/LeftTray/AvailableUnits"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Veterancy" type="Label" parent="Root/Main/LeftTray/AvailableUnits/UnitStats"]
+layout_mode = 2
+
+[node name="Attack" type="Label" parent="Root/Main/LeftTray/AvailableUnits/UnitStats"]
+layout_mode = 2
+
+[node name="Defence" type="Label" parent="Root/Main/LeftTray/AvailableUnits/UnitStats"]
+layout_mode = 2
+
+[node name="SpottingDistance" type="Label" parent="Root/Main/LeftTray/AvailableUnits/UnitStats"]
+layout_mode = 2
+
+[node name="EngagementRange" type="Label" parent="Root/Main/LeftTray/AvailableUnits/UnitStats"]
+layout_mode = 2
+
+[node name="Morale" type="Label" parent="Root/Main/LeftTray/AvailableUnits/UnitStats"]
+layout_mode = 2
+
+[node name="GroundSpeed" type="Label" parent="Root/Main/LeftTray/AvailableUnits/UnitStats"]
+layout_mode = 2
+
+[node name="Cohesion" type="Label" parent="Root/Main/LeftTray/AvailableUnits/UnitStats"]
+layout_mode = 2
+
+[node name="TaskOrgSheet" type="PanelContainer" parent="Root/Main"]
+custom_minimum_size = Vector2(550, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SlotsList" type="VBoxContainer" parent="Root/Main/TaskOrgSheet"]
+layout_mode = 2
+script = ExtResource("4_lkfvs")
+slot_item_scene = ExtResource("6_qiiyt")
+
+[node name="RightTray" type="PanelContainer" parent="Root/Main"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stats" type="TabContainer" parent="Root/Main/RightTray"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+current_tab = 0
+
+[node name="Logistics" type="VBoxContainer" parent="Root/Main/RightTray/Stats"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Ammo" type="Label" parent="Root/Main/RightTray/Stats/Logistics"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Fuel" type="Label" parent="Root/Main/RightTray/Stats/Logistics"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Medical" type="Label" parent="Root/Main/RightTray/Stats/Logistics"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Repair" type="Label" parent="Root/Main/RightTray/Stats/Logistics"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Replacements" type="VBoxContainer" parent="Root/Main/RightTray/Stats"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1

@@ -1,3 +1,49 @@
-[gd_scene load_steps=0 format=3 uid="uid://bn4eaac5fjjdf"]
+[gd_scene load_steps=3 format=3 uid="uid://o3h5jon6ffip"]
 
-[node name="Briefing" type="Node3D"]
+[ext_resource type="Script" uid="uid://bbr2ohjdpwwns" path="res://scripts/ui/Briefing.gd" id="1_opxbr"]
+[ext_resource type="Texture2D" uid="uid://b8o20185tqdu7" path="res://assets/textures/ui/whiteboard.png" id="2_siir0"]
+
+[node name="Briefing" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_opxbr")
+default_whiteboard = ExtResource("2_siir0")
+
+[node name="Root" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="Board" type="PanelContainer" parent="Root"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Whiteboard" type="TextureRect" parent="Root/Board"]
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("2_siir0")
+expand_mode = 1
+
+[node name="ItemsLayer" type="Control" parent="Root/Board"]
+layout_mode = 2
+
+[node name="BottomBar" type="PanelContainer" parent="Root"]
+layout_mode = 2
+
+[node name="Row" type="HBoxContainer" parent="Root/BottomBar"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Back" type="Button" parent="Root/BottomBar/Row"]
+layout_mode = 2
+text = "Back"
+
+[node name="Title" type="Label" parent="Root/BottomBar/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Briefing"
+horizontal_alignment = 1
+
+[node name="Continue" type="Button" parent="Root/BottomBar/Row"]
+layout_mode = 2
+text = "Continue"

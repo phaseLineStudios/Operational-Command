@@ -1,0 +1,28 @@
+{
+	"id": "logistics_platoon_1",
+	"title": "1st Logi",
+	"role": "SUPPORT",
+	"cost": 50,
+	"size": "platoon",
+	"personnel": 15,
+	"equipment": { "M925A2": 2, "M932A2_FUEL": 2, "M1026A0": 1 },
+	"veterancy": "REGULAR",
+	"stats": {
+		"attack": 25,
+		"defense": 15,
+		"spot_m": 800,
+		"range_m": 500,
+		"morale": 0.7,
+		"speed_kph": 50
+	},
+	"state": {
+		"personnel_ratio": 0.85,
+		"equipment_ratio": 0.90,
+		"cohesion": 0.70
+	},
+	"throughput": { "equipment": 500, "fuel": 500 },
+	"equipment_tags": ["AMMUNITION_PALLET", "FUEL_TANK"],
+	"icon": "",
+	"allowed_slots": ["INF_SLOT", "SUPPORT_SLOT", "RESERVE_ANY", "RESERVE_INF", "RESERVE_SUPPORT"],
+	"doctrine": "nato_logi_1984"
+}
