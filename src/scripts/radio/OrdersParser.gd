@@ -43,13 +43,13 @@ func parse(text: String) -> Array:
 	
 ## Scan tokens left→right and extract orders.
 func _extract_orders(tokens: PackedStringArray) -> Array:
-	var callsigns: Dictionary = _tables.get("callsigns", {})
-	var actions: Dictionary = _tables.get("action_synonyms", {})
-	var directions: Dictionary = _tables.get("directions", {})
-	var stopwords: Dictionary = _tables.get("stopwords", {})
-	var number_words: Dictionary = _tables.get("number_words", {})
-	var prepositions: Dictionary = _tables.get("prepositions", {})
-	var qty_labels: Dictionary = _tables.get("quantity_labels", {})
+	var callsigns: Dictionary     = _tables.get("callsigns", {})
+	var actions: Dictionary       = _tables.get("action_synonyms", {})
+	var directions: Dictionary    = _tables.get("directions", {})
+	var stopwords: Dictionary     = _tables.get("stopwords", {})
+	var number_words: Dictionary  = _tables.get("number_words", {})
+	var prepositions: Dictionary  = _tables.get("prepositions", {})
+	var qty_labels: Dictionary    = _tables.get("quantity_labels", {})
 
 	var out: Array = []
 	var cur := _new_order_builder()
@@ -63,7 +63,7 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 			i += 1
 			continue
 
-		# Callsign handling.
+		# Callsign.
 		if callsigns.has(t):
 			var cs := String(callsigns[t])
 			if cur.callsign == "":
@@ -79,7 +79,7 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 			i += 1
 			continue
 
-		# Action to OrderType.
+		# Action keyword.
 		if actions.has(t):
 			var ot := int(actions[t])
 			if cur.type != OrderType.UNKNOWN and cur.callsign != "":
@@ -97,25 +97,34 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 			i += 1
 			continue
 
-		# Quantity.
-		var consumed := 0
-		var num := _read_number(tokens, i, number_words, consumed)
-		if consumed > 0:
-			i += consumed
+		if qty_labels.has(t):
+			var num_after := _read_number(tokens, i + 1, number_words)
+			if num_after.consumed > 0:
+				cur.zone = String(qty_labels[t])
+				cur.quantity = num_after.value
+				i += 1 + num_after.consumed
+				continue
+			# If no number after label, treat label as hint and continue scanning.
+			i += 1
+			continue
+
+		var num_here := _read_number(tokens, i, number_words)
+		if num_here.consumed > 0:
+			i += num_here.consumed
 			if i < tokens.size():
 				var lbl := tokens[i]
 				if qty_labels.has(lbl):
 					cur.zone = String(qty_labels[lbl])
 					i += 1
-			cur.quantity = num
+			cur.quantity = num_here.value
 			continue
 
-		# Prepositions are hints
+		# Prepositions are hints; skip.
 		if prepositions.has(t):
 			i += 1
 			continue
 
-		# Keep unknowns for debugging.
+		# Unknowns kept for debugging.
 		cur.raw.append(t)
 		i += 1
 
@@ -173,31 +182,45 @@ func _normalize_and_tokenize(text: String) -> PackedStringArray:
 	return out
 
 ## Read a verbal or digit number from tokens[idx..]; sets 'consumed'.
-func _read_number(tokens: PackedStringArray, idx: int, number_words: Dictionary, _consumed: int) -> int:
-	_consumed = 0
+func _read_number(tokens: PackedStringArray, idx: int, number_words: Dictionary) -> Dictionary:
+	var NIL := {"value": 0, "consumed": 0}
+
 	if idx >= tokens.size():
-		return 0
+		return NIL
 
-	# Digits case (literal "23").
 	if _is_int_literal(tokens[idx]):
-		_consumed = 1
-		return int(tokens[idx])
+		var j := idx
+		var digits := ""
+		while j < tokens.size() and _is_int_literal(tokens[j]):
+			digits += tokens[j]  # concat tokens
+			j += 1
+		return {"value": int(digits), "consumed": j - idx}
 
-	# Word numbers
 	var vals: Array = []
-	var i := idx
-	while i < tokens.size():
-		var t := tokens[i]
+	var j := idx
+	while j < tokens.size():
+		var t := tokens[j]
 		if not number_words.has(t):
 			break
 		vals.append(int(number_words[t]))
-		i += 1
+		j += 1
 
 	if vals.is_empty():
-		return 0
+		return NIL
 
-	# Build numeric value.
-	var value := 0
+	var all_under_ten := true
+	for v in vals:
+		var iv := int(v)
+		if iv < 0 or iv > 9:
+			all_under_ten = false
+			break
+
+	if all_under_ten and vals.size() >= 2:
+		var v := 0
+		for d in vals:
+			v = v * 10 + int(d)
+		return {"value": v, "consumed": vals.size()}
+
 	var has_large := false
 	for v in vals:
 		if int(v) >= 100:
@@ -217,18 +240,12 @@ func _read_number(tokens: PackedStringArray, idx: int, number_words: Dictionary,
 				current = 0
 			else:
 				current += iv
-		value = acc + current
-	elif vals.size() >= 2 and _all_under_ten(vals):
-		value = 0
-		for d in vals:
-			value = value * 10 + int(d)
+		return {"value": acc + current, "consumed": vals.size()}
 	else:
-		value = 0
+		var sum := 0
 		for v in vals:
-			value += int(v)
-
-	_consumed = vals.size()
-	return value
+			sum += int(v)
+		return {"value": sum, "consumed": vals.size()}
 
 ## True if s consists only of ASCII digits (uses unicode_at()).
 func _is_int_literal(s: String) -> bool:
