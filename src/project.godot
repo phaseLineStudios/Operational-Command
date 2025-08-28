@@ -26,6 +26,8 @@ Game="*res://scripts/core/Game.gd"
 Persistence="*res://scripts/core/Persistence.gd"
 ContentDB="*res://scripts/core/ContentDB.gd"
 STTService="*res://scripts/radio/STTService.gd"
+NARules="*res://scripts/radio/NARules.gd"
+OrdersParser="*res://scripts/radio/OrdersParser.gd"
 
 [input]
 

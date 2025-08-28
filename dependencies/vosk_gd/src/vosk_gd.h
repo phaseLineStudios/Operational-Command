@@ -96,6 +96,17 @@ public:
     void init_wordlist(String modelPath, String wordsList);
 
     /**
+     * @brief Update the recognizer's grammar/word list at runtime.
+     *
+     * This calls `vosk_recognizer_set_grm` to change the active grammar
+     * without recreating the recognizer.
+     *
+     * @param wordsList New JSON grammar/word-list string.
+     * @see https://alphacephei.com/vosk/ for grammar format details.
+     */
+    void set_wordlist(String wordsList);
+
+    /**
      * @brief Feed raw mono 16-bit PCM audio (little-endian) to the recognizer.
      *
      * The input buffer is expected to contain interleaved 32-bit float stereo
