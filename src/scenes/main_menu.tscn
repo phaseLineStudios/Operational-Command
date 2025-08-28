@@ -17,27 +17,33 @@ offset_right = 1038.0
 offset_bottom = 511.0
 
 [node name="CampaignButton" type="Button" parent="MenuContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "CAMPAIGN"
 
 [node name="ScenariosButton" type="Button" parent="MenuContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 disabled = true
 text = "SCENARIOS"
 
 [node name="MultiplayerButton" type="Button" parent="MenuContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 disabled = true
 text = "MULTIPLAYER"
 
-[node name="ScenarioEditorButton" type="Button" parent="MenuContainer"]
+[node name="EditorButton" type="Button" parent="MenuContainer"]
+unique_name_in_owner = true
 layout_mode = 2
-text = "SCENARIO EDITOR"
+text = "EDITOR"
 
 [node name="SettingsButton" type="Button" parent="MenuContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "SETTINGS"
 
 [node name="CloseButton" type="Button" parent="MenuContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "CLOSE GAME"

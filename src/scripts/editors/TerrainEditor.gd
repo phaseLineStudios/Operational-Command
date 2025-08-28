@@ -1,8 +1,7 @@
 extends Control
-## In-game scenario editor for custom scenarios.
+## In-game terrain editor for custom terrains.
 ##
-## Lets creators place units, define objectives, establish spawn zones, and set
-## environmental parameters. Saves to JSON compatible with ContentDB.gd.
+## Lets creators create terrains to use in scenarios.
 
 @onready var file_menu: MenuButton = %File
 
