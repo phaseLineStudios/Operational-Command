@@ -1,0 +1,178 @@
+[gd_scene load_steps=2 format=3 uid="uid://b175cxl2nsgdr"]
+
+[ext_resource type="Script" uid="uid://c73k311tmyrf8" path="res://scripts/editors/CampaignEditor.gd" id="1_von5t"]
+
+[node name="CampaignEditor" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_von5t")
+
+[node name="Root" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="TopBar" type="PanelContainer" parent="Root"]
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="Root/TopBar"]
+layout_mode = 2
+
+[node name="Back" type="Button" parent="Root/TopBar/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Back To Main Menu"
+
+[node name="TitleField" type="Label" parent="Root/TopBar/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Unsaved Mission*"
+horizontal_alignment = 1
+
+[node name="Save" type="Button" parent="Root/TopBar/HBox"]
+layout_mode = 2
+text = "Save"
+
+[node name="Load" type="Button" parent="Root/TopBar/HBox"]
+layout_mode = 2
+text = "Load"
+
+[node name="Export" type="Button" parent="Root/TopBar/HBox"]
+layout_mode = 2
+text = "Export"
+
+[node name="MainContent" type="HBoxContainer" parent="Root"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MetaContainer" type="PanelContainer" parent="Root/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBox" type="VBoxContainer" parent="Root/MainContent/MetaContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="TextEdit" parent="Root/MainContent/MetaContainer/VBox"]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+placeholder_text = "Title"
+
+[node name="Blurb" type="TextEdit" parent="Root/MainContent/MetaContainer/VBox"]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+placeholder_text = "Short Blurb"
+
+[node name="Description" type="TextEdit" parent="Root/MainContent/MetaContainer/VBox"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+placeholder_text = "Description"
+
+[node name="CampaignImage" type="HBoxContainer" parent="Root/MainContent/MetaContainer/VBox"]
+layout_mode = 2
+
+[node name="CampaignMap" type="HBoxContainer" parent="Root/MainContent/MetaContainer/VBox"]
+layout_mode = 2
+
+[node name="ScenarioContainer" type="PanelContainer" parent="Root/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBox" type="VBoxContainer" parent="Root/MainContent/ScenarioContainer"]
+layout_mode = 2
+
+[node name="ScenarioList" type="ItemList" parent="Root/MainContent/ScenarioContainer/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScenarioButtons" type="HBoxContainer" parent="Root/MainContent/ScenarioContainer/VBox"]
+layout_mode = 2
+
+[node name="Add" type="Button" parent="Root/MainContent/ScenarioContainer/VBox/ScenarioButtons"]
+layout_mode = 2
+text = "Add Scenario"
+
+[node name="Spacer" type="Control" parent="Root/MainContent/ScenarioContainer/VBox/ScenarioButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Edit" type="Button" parent="Root/MainContent/ScenarioContainer/VBox/ScenarioButtons"]
+layout_mode = 2
+text = "Edit Scenario"
+
+[node name="Spacer2" type="Control" parent="Root/MainContent/ScenarioContainer/VBox/ScenarioButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Remove" type="Button" parent="Root/MainContent/ScenarioContainer/VBox/ScenarioButtons"]
+layout_mode = 2
+text = "Remove Scenario"
+
+[node name="BottomPanel" type="PanelContainer" parent="Root"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBox" type="HBoxContainer" parent="Root/BottomPanel"]
+layout_mode = 2
+
+[node name="PreviewCard" type="CenterContainer" parent="Root/BottomPanel/HBox"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Root/BottomPanel/HBox/PreviewCard"]
+layout_mode = 2
+
+[node name="TestButtons" type="CenterContainer" parent="Root/BottomPanel/HBox"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Test" type="Button" parent="Root/BottomPanel/HBox/TestButtons"]
+layout_mode = 2
+text = "Test Campaign"
+
+[node name="PinEditorPopup" type="Window" parent="."]
+title = "Scenario Map Position"
+position = Vector2i(100, 100)
+size = Vector2i(950, 500)
+visible = false
+
+[node name="MapTexture" type="TextureRect" parent="PinEditorPopup"]
+offset_top = 26.0
+offset_right = 950.0
+offset_bottom = 500.0
+
+[node name="PinLayer" type="Control" parent="PinEditorPopup"]
+custom_minimum_size = Vector2(0, -26)
+layout_mode = 3
+anchors_preset = 0
+offset_top = 26.0
+offset_right = 950.0
+offset_bottom = 526.0
+
+[node name="PanelContainer" type="PanelContainer" parent="PinEditorPopup"]
+offset_right = 950.0
+offset_bottom = 26.0
+
+[node name="HBox" type="HBoxContainer" parent="PinEditorPopup/PanelContainer"]
+layout_mode = 2
+
+[node name="Cancel" type="Button" parent="PinEditorPopup/PanelContainer/HBox"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="Clear" type="Button" parent="PinEditorPopup/PanelContainer/HBox"]
+layout_mode = 2
+text = "Clear"
+
+[node name="Spacer" type="Control" parent="PinEditorPopup/PanelContainer/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Done" type="Button" parent="PinEditorPopup/PanelContainer/HBox"]
+layout_mode = 2
+text = "Done"
