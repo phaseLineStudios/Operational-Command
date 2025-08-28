@@ -39,7 +39,7 @@ cd ..
 
 3. Build the extension
 ```bash
-scons platform=<platform>
+scons platform=<platform> target=<editor, template_debug or template_release>
 ```
 
 ### Install

@@ -37,6 +37,7 @@ void Vosk::_bind_methods() {
     // Godot method bindings exposed to scripting languages.
 	ClassDB::bind_method(D_METHOD("init", "modelPath"), &Vosk::init);
     ClassDB::bind_method(D_METHOD("init_wordlist", "modelPath", "wordsList"), &Vosk::init_wordlist);
+    ClassDB::bind_method(D_METHOD("set_wordlist", "wordsList"), &Vosk::set_wordlist);
 	ClassDB::bind_method(D_METHOD("accept_wave_form", "data"), &Vosk::accept_wave_form);
 	ClassDB::bind_method(D_METHOD("accept_wave_form_stereo_float", "data"), &Vosk::accept_wave_form_stereo_float);
 	ClassDB::bind_method(D_METHOD("partial_result"), &Vosk::partial_result);
@@ -45,14 +46,19 @@ void Vosk::_bind_methods() {
 
 Vosk::Vosk() {
     time_passed = 0.0;
+    recognizer = nullptr;
+    model = nullptr;
+    vosk_handle = nullptr;
 }
 
 Vosk::~Vosk() {
-    if (recognizer != nullptr) {
+    if (recognizer) {
         vosk_recognizer_free(recognizer);
+        recognizer = nullptr;
     }
-    if (model != nullptr ) {
+    if (model) {
         vosk_model_free(model);
+        model = nullptr;
     }
 }
 
@@ -63,9 +69,19 @@ Vosk::~Vosk() {
  */
 void Vosk::init(String modelPath)
 {
-    vosk_set_log_level(VOSK_LOG_LEVEL);
+    if (recognizer) { vosk_recognizer_free(recognizer); recognizer = nullptr; }
+    if (model) { vosk_model_free(model); model = nullptr; }
+
     model = vosk_model_new(modelPath.utf8().get_data());
+    if (!model) {
+        UtilityFunctions::push_error("Vosk: failed to load model at " + modelPath);
+        return;
+    }
     recognizer = vosk_recognizer_new(model, SAMPLE_RATE);
+    if (!recognizer) {
+        UtilityFunctions::push_error("Vosk: failed to create recognizer");
+        vosk_model_free(model); model = nullptr;
+    }
 }
 
 /**
@@ -76,8 +92,34 @@ void Vosk::init(String modelPath)
 void Vosk::init_wordlist(String modelPath, String wordsList)
 {
     vosk_set_log_level(VOSK_LOG_LEVEL);
+
+    if (recognizer) { vosk_recognizer_free(recognizer); recognizer = nullptr; }
+    if (model) { vosk_model_free(model); model = nullptr; }
+
     model = vosk_model_new(modelPath.utf8().get_data());
+    if (!model) {
+        UtilityFunctions::push_error("Vosk: failed to load model at " + modelPath);
+        return;
+    }
     recognizer = vosk_recognizer_new_grm(model, SAMPLE_RATE, wordsList.utf8().get_data());
+    if (!recognizer) {
+        UtilityFunctions::push_error("Vosk: failed to create GRM recognizer");
+        vosk_model_free(model); model = nullptr;
+    }
+}
+
+/**
+ * @brief Update the recognizer's grammar/word list at runtime.
+ *
+ * @param wordsList New JSON grammar as expected by Vosk GRM APIs.
+ */
+void Vosk::set_wordlist(String wordsList)
+{
+    if (!recognizer) {
+        UtilityFunctions::push_warning("Vosk.set_wordlist: recognizer is null (call init/init_wordlist first).");
+        return;
+    }
+    vosk_recognizer_set_grm(recognizer, wordsList.utf8().get_data());
 }
 
 /**
@@ -93,6 +135,9 @@ void Vosk::init_wordlist(String modelPath, String wordsList)
  */
 bool Vosk::accept_wave_form(PackedByteArray data)
 {
+    if (!recognizer) return false;
+    if (data.is_empty()) return false;
+
     // big hack waiting https://github.com/godotengine/godot-proposals/issues/7105
     char mono[TEMP_MONO_BUFFER_SIZE] = { 0 };
 
@@ -116,6 +161,9 @@ bool Vosk::accept_wave_form(PackedByteArray data)
  */
 bool Vosk::accept_wave_form_stereo_float(PackedVector2Array data)
 {
+    if (!recognizer) return false;
+    if (data.is_empty()) return false;
+    
     std::vector<short> mono;
     mono.resize(data.size());
 
