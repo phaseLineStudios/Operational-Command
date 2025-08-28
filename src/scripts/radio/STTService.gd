@@ -143,6 +143,7 @@ func _emit_partial() -> void:
 	if full.length() == 0 or full == _last_emitted:
 		return
 	_last_emitted = full
+	print("Partial: %s" % full)
 	emit_signal("partial", full)
 
 ## Extract final text from Vosk's result(), which may be JSON or plain text.
