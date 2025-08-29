@@ -1,9 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=15 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
-size = Vector2(10, 10)
+size = Vector2(10, 30)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p1n4g"]
 albedo_color = Color(0.103343, 0.276828, 0.0129619, 1)
@@ -28,6 +28,20 @@ size = Vector3(0.15, 0.075, 0.1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_lmes1"]
 size = Vector3(0.12, 0.005, 0.18)
+
+[sub_resource type="BoxMesh" id="BoxMesh_p1n4g"]
+size = Vector3(0.1, 0.001, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cx6my"]
+size = Vector3(0.12, 0.005, 0.15)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_uk27s"]
+top_radius = 0.005
+bottom_radius = 0.005
+height = 0.1
+
+[sub_resource type="BoxMesh" id="BoxMesh_ge8rp"]
+size = Vector3(0.04, 0.02, 0.12)
 
 [node name="HQTable" type="Node3D"]
 
@@ -55,6 +69,9 @@ transform = Transform3D(0.778561, 0, 0.627569, 0, 1, 0, -0.627569, 0, 0.778561, 
 mesh = SubResource("BoxMesh_3f477")
 surface_material_override/0 = SubResource("StandardMaterial3D_lmes1")
 
+[node name="Lamp" type="MeshInstance3D" parent="Table"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.248519, 0.380662, -0.305243)
+
 [node name="PhysicsObjects" type="Node3D" parent="."]
 
 [node name="ClipboardIntel" type="MeshInstance3D" parent="PhysicsObjects"]
@@ -71,6 +88,30 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388701, 0.754058, 0.228009
 mesh = SubResource("BoxMesh_lmes1")
 skeleton = NodePath("../ClipboardIntel")
 
+[node name="Protractor" type="MeshInstance3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.356782, 0.737931, -0.0401387)
+mesh = SubResource("BoxMesh_p1n4g")
+
+[node name="FieldManual" type="MeshInstance3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.358866, 0.737931, 0.245496)
+mesh = SubResource("BoxMesh_cx6my")
+
+[node name="PenBlack" type="MeshInstance3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.289519, 0.738096, 0.087646)
+mesh = SubResource("CylinderMesh_uk27s")
+
+[node name="PenRed" type="MeshInstance3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.321053, 0.738096, 0.087646)
+mesh = SubResource("CylinderMesh_uk27s")
+
+[node name="PenBlue" type="MeshInstance3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.348029, 0.738096, 0.087646)
+mesh = SubResource("CylinderMesh_uk27s")
+
+[node name="Eraser" type="MeshInstance3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.40282, 0.738096, 0.087646)
+mesh = SubResource("BoxMesh_ge8rp")
+
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.854323, 0.519743, 0, -0.519743, 0.854323, 0, 1.08494, 0.53907)
 current = true
@@ -79,3 +120,19 @@ current = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.24826, 0)
 
 [node name="Radio" parent="." instance=ExtResource("1_p1n4g")]
+
+[node name="Tent" type="MeshInstance3D" parent="."]
+
+[node name="PlaceHolder" type="CSGBox3D" parent="Tent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0238228, 0.86145, 0.0106506)
+size = Vector3(3.33334, 1.77856, 3.539)
+
+[node name="InsideSpace" type="CSGBox3D" parent="Tent/PlaceHolder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0218391, -0.392822, -0.339142)
+operation = 2
+size = Vector3(3.13879, 1.81592, 2.76892)
+
+[node name="Door" type="CSGBox3D" parent="Tent/PlaceHolder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00355911, -0.417542, -1.20057)
+operation = 2
+size = Vector3(1.37492, 1.76648, 2.76892)
