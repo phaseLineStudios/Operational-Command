@@ -1,4 +1,6 @@
-[gd_scene load_steps=10 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=11 format=3 uid="uid://c20duptp1uplb"]
+
+[ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
 size = Vector2(10, 10)
@@ -27,7 +29,7 @@ size = Vector3(0.15, 0.075, 0.1)
 [sub_resource type="BoxMesh" id="BoxMesh_lmes1"]
 size = Vector3(0.12, 0.005, 0.18)
 
-[node name="HqTable" type="Node3D"]
+[node name="HQTable" type="Node3D"]
 
 [node name="Ground" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_yqfno")
@@ -75,3 +77,5 @@ current = true
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.24826, 0)
+
+[node name="Radio" parent="." instance=ExtResource("1_p1n4g")]
