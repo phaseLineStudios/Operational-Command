@@ -1,0 +1,98 @@
+extends PanelContainer
+class_name MarginLayer
+
+@export var margin_label_every_m: int = 1000
+@export var label_color: Color = Color(0.05, 0.05, 0.05, 1.0)
+@export var label_font: Font
+@export var label_size: int = 14
+
+@export var show_top: bool = true
+@export var show_bottom: bool = true
+@export var show_left: bool = true
+@export var show_right: bool = true
+
+# --- NEW: fine-tuning + border compensation ---
+@export var base_border_px: float = 1.0            # match your TerrainBase border
+@export var offset_top_px: float = -1.0            # negative pulls toward/over the map
+@export var offset_bottom_px: float = 35
+@export var offset_left_px: float = -10
+@export var offset_right_px: float = 35
+
+var data: TerrainData
+
+func set_data(d: TerrainData) -> void:
+	data = d
+	queue_redraw()
+
+func _notification(what):
+	if what == NOTIFICATION_THEME_CHANGED or what == NOTIFICATION_RESIZED:
+		queue_redraw()
+
+func _draw() -> void:
+	if data == null or label_font == null:
+		return
+
+	var sb := get_theme_stylebox("panel")
+	var l := 0.0
+	var t := 0.0
+	if sb:
+		l = sb.get_content_margin(SIDE_LEFT)
+		t = sb.get_content_margin(SIDE_TOP)
+
+	var map_left := l + base_border_px
+	var map_top := t + base_border_px
+	var map_w := float(data.width_m) - base_border_px * 2.0
+	var map_h := float(data.height_m) - base_border_px * 2.0
+	var map_right := map_left + map_w
+	var map_bottom := map_top + map_h
+
+	# Safer defaults if grid start isn’t present.
+	var start_x := 0
+	var start_y := 0
+	if data.has_method("get"):
+		if data.has_method("_get") or true: # keep simple; access may still work directly
+			# If your TerrainData always has these, direct access is fine:
+			if "grid_start_x" in data: start_x = int(data.grid_start_x)
+			if "grid_start_y" in data: start_y = int(data.grid_start_y)
+
+	var every := float(max(1, margin_label_every_m))
+	var ascent := label_font.get_ascent(label_size)
+	var height := label_font.get_height(label_size)
+
+	if every > 0.0 and (show_top or show_bottom):
+		var i := 0
+		while true:
+			var m := i * every
+			if m > map_w: break
+			var screen_x := map_left + m
+			var num := str(start_x + i)
+			if show_top:
+				_draw_text_center(num, Vector2(screen_x, map_top - ascent + offset_top_px))
+			if show_bottom:
+				_draw_text_center(num, Vector2(screen_x, map_bottom + ascent + offset_bottom_px))
+			i += 1
+
+	if every > 0.0 and (show_left or show_right):
+		var j := 0
+		while true:
+			var m2 := (j * every)
+			if m2 > map_h: break
+			var screen_y := map_top + m2
+			var num2 := str(start_y + j)
+			if show_left:
+				_draw_text_middle(num2, Vector2(map_left + offset_left_px, screen_y), true, ascent, height)
+			if show_right:
+				_draw_text_middle(num2, Vector2(map_right + offset_right_px, screen_y), false, ascent, height)
+			j += 1
+
+func _draw_text_center(text: String, pos: Vector2) -> void:
+	var s := label_size
+	var fm := label_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, s)
+	draw_string(label_font, pos - Vector2(fm.x * 0.5, 0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, s, label_color)
+
+func _draw_text_middle(text: String, pos: Vector2, align_right: bool, ascent: float, height: float) -> void:
+	var s := label_size
+	var fm := label_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, s)
+	var baseline_y := pos.y + (height - ascent)
+	var draw_x := pos.x - fm.x if align_right else pos.x
+	draw_string(label_font, Vector2(draw_x, baseline_y), text, HORIZONTAL_ALIGNMENT_LEFT, -1, s, label_color)

@@ -1,0 +1,89 @@
+[gd_scene load_steps=10 format=3 uid="uid://rbcwabwc1v0o"]
+
+[ext_resource type="Script" uid="uid://bcbx6qa1jofhc" path="res://scripts/terrain/TerrainRender.gd" id="1_kobl6"]
+[ext_resource type="Script" uid="uid://do8882r1q2sil" path="res://scripts/terrain/TerrainData.gd" id="2_ceejx"]
+[ext_resource type="Script" uid="uid://cxbielgj0k7ei" path="res://scripts/terrain/GridLayer.gd" id="2_llqno"]
+[ext_resource type="Script" uid="uid://dlu6lynrhk1n0" path="res://scripts/terrain/MapMargin.gd" id="3_ceejx"]
+
+[sub_resource type="Resource" id="Resource_utooi"]
+script = ExtResource("2_ceejx")
+name = ""
+width_m = 1000
+height_m = 1000
+elevation_resolution_m = 20
+grid_start_x = 120
+grid_start_y = 230
+contour_interval_m = 10
+surfaces = []
+features = []
+labels = []
+metadata/_custom_type_script = "uid://do8882r1q2sil"
+
+[sub_resource type="FontVariation" id="FontVariation_fvhov"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_llqno"]
+content_margin_left = 50.0
+content_margin_top = 50.0
+content_margin_right = 50.0
+content_margin_bottom = 50.0
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="FontVariation" id="FontVariation_ceejx"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nu5ig"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.0874685, 0.0392869, 0.00880663, 1)
+
+[node name="TerrainRender" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_kobl6")
+data = SubResource("Resource_utooi")
+base_color = Color(0.993332, 0.99162, 0.98202, 1)
+terrain_border_color = Color(0.0749913, 0.0331813, 0.000359687, 1)
+terrain_border_px = 2
+grid_100m_color = Color(0.138125, 0.049278, 0, 0.25)
+grid_1km_color = Color(0.0760013, 0.0254519, 3.00817e-09, 0.5)
+label_color = Color(0.0745098, 0.0313726, 0, 1)
+label_font = SubResource("FontVariation_fvhov")
+
+[node name="MapMargin" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_llqno")
+script = ExtResource("3_ceejx")
+margin_label_every_m = 100
+label_font = SubResource("FontVariation_ceejx")
+
+[node name="TerrainBase" type="PanelContainer" parent="MapMargin"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_nu5ig")
+
+[node name="SurfaceLayer" type="Control" parent="MapMargin/TerrainBase"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="FeatureLayer" type="Control" parent="MapMargin/TerrainBase"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ContourLayer" type="Control" parent="MapMargin/TerrainBase"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GridLayer" type="Control" parent="MapMargin/TerrainBase"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_llqno")
+
+[node name="LabelLayer" type="Control" parent="MapMargin/TerrainBase"]
+unique_name_in_owner = true
+layout_mode = 2
