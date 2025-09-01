@@ -1,23 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://rbcwabwc1v0o"]
+[gd_scene load_steps=9 format=3 uid="uid://rbcwabwc1v0o"]
 
 [ext_resource type="Script" uid="uid://bcbx6qa1jofhc" path="res://scripts/terrain/TerrainRender.gd" id="1_kobl6"]
-[ext_resource type="Script" uid="uid://do8882r1q2sil" path="res://scripts/terrain/TerrainData.gd" id="2_ceejx"]
 [ext_resource type="Script" uid="uid://cxbielgj0k7ei" path="res://scripts/terrain/GridLayer.gd" id="2_llqno"]
 [ext_resource type="Script" uid="uid://dlu6lynrhk1n0" path="res://scripts/terrain/MapMargin.gd" id="3_ceejx"]
-
-[sub_resource type="Resource" id="Resource_utooi"]
-script = ExtResource("2_ceejx")
-name = ""
-width_m = 1000
-height_m = 1000
-elevation_resolution_m = 20
-grid_start_x = 120
-grid_start_y = 230
-contour_interval_m = 10
-surfaces = []
-features = []
-labels = []
-metadata/_custom_type_script = "uid://do8882r1q2sil"
+[ext_resource type="Script" uid="uid://dbte70ha7h22j" path="res://scripts/terrain/ContourLayer.gd" id="4_utooi"]
 
 [sub_resource type="FontVariation" id="FontVariation_fvhov"]
 
@@ -38,11 +24,10 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.0874685, 0.0392869, 0.00880663, 1)
 
-[node name="TerrainRender" type="Control"]
-layout_mode = 3
-anchors_preset = 0
+[node name="TerrainRender" type="PanelContainer"]
+offset_right = 1152.0
+offset_bottom = 648.0
 script = ExtResource("1_kobl6")
-data = SubResource("Resource_utooi")
 base_color = Color(0.993332, 0.99162, 0.98202, 1)
 terrain_border_color = Color(0.0749913, 0.0331813, 0.000359687, 1)
 terrain_border_px = 2
@@ -50,12 +35,13 @@ grid_100m_color = Color(0.138125, 0.049278, 0, 0.25)
 grid_1km_color = Color(0.0760013, 0.0254519, 3.00817e-09, 0.5)
 label_color = Color(0.0745098, 0.0313726, 0, 1)
 label_font = SubResource("FontVariation_fvhov")
+contour_color = Color(0.252098, 0.100844, 0, 0.7)
+contour_thick_color = Color(0.165151, 0.0734315, 1.20327e-08, 0.85)
 
 [node name="MapMargin" type="PanelContainer" parent="."]
 unique_name_in_owner = true
-layout_mode = 0
-offset_right = 1152.0
-offset_bottom = 648.0
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_llqno")
 script = ExtResource("3_ceejx")
 margin_label_every_m = 100
@@ -78,6 +64,7 @@ layout_mode = 2
 [node name="ContourLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
 layout_mode = 2
+script = ExtResource("4_utooi")
 
 [node name="GridLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true

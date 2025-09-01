@@ -1,4 +1,3 @@
-# GridLayer.gd (attach this to your %GridLayer Control/Node2D)
 extends Control
 class_name GridLayer
 

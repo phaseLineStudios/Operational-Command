@@ -1,9 +1,24 @@
-[gd_scene load_steps=5 format=3 uid="uid://j3lcjcfdq7qw"]
+[gd_scene load_steps=7 format=3 uid="uid://j3lcjcfdq7qw"]
 
 [ext_resource type="Script" uid="uid://cl441lw7n8a2o" path="res://scripts/editors/TerrainEditor.gd" id="1_k3bf1"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="2_fwab6"]
+[ext_resource type="Script" uid="uid://do8882r1q2sil" path="res://scripts/terrain/TerrainData.gd" id="2_q832w"]
 [ext_resource type="Script" uid="uid://cjsu4sh4wfvmg" path="res://scripts/editors/TerrainCamera.gd" id="3_15xeg"]
 [ext_resource type="PackedScene" uid="uid://c5thlr0tfddoe" path="res://scenes/ui/new_terrain_dialog.tscn" id="4_4pae0"]
+
+[sub_resource type="Resource" id="Resource_cc7e2"]
+script = ExtResource("2_q832w")
+name = ""
+width_m = 1000
+height_m = 1000
+elevation_resolution_m = 20
+grid_start_x = 150
+grid_start_y = 120
+contour_interval_m = 10
+surfaces = []
+features = []
+labels = []
+metadata/_custom_type_script = "uid://do8882r1q2sil"
 
 [node name="TerrainEditor" type="Control"]
 layout_mode = 3
@@ -13,7 +28,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_k3bf1")
-tool_icon_size = Vector2(32, 32)
+data = SubResource("Resource_cc7e2")
+tool_icon_size = Vector2(40, 40)
 
 [node name="Root" type="VBoxContainer" parent="."]
 layout_mode = 0
@@ -79,6 +95,9 @@ current_tab = 0
 [node name="Tools" type="GridContainer" parent="Root/HBox/LeftTray/VBox/TabContainer1"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+columns = 4
 metadata/_tab_index = 0
 
 [node name="TabContainer2" type="TabContainer" parent="Root/HBox/LeftTray/VBox"]
@@ -87,10 +106,12 @@ size_flags_vertical = 3
 current_tab = 0
 
 [node name="Tool Options" type="VBoxContainer" parent="Root/HBox/LeftTray/VBox/TabContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 metadata/_tab_index = 0
 
 [node name="TerrainView" type="SubViewportContainer" parent="Root/HBox"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 stretch = true
@@ -110,9 +131,18 @@ offset_right = 898.0
 offset_bottom = 613.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+data = SubResource("Resource_cc7e2")
+
+[node name="BrushOverlay" type="Control" parent="Root/HBox/TerrainView/View/World"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="Camera" type="Camera2D" parent="Root/HBox/TerrainView/View"]
-zoom = Vector2(0.25, 0.25)
+unique_name_in_owner = true
+position = Vector2(250, 500)
+zoom = Vector2(0.5, 0.5)
 drag_horizontal_enabled = true
 drag_vertical_enabled = true
 script = ExtResource("3_15xeg")
@@ -130,6 +160,7 @@ size_flags_vertical = 3
 current_tab = 0
 
 [node name="Tool Info" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
+unique_name_in_owner = true
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -147,7 +178,7 @@ theme_override_constants/separation = 12
 
 [node name="LMBHint" type="Label" parent="Root/BottomBar/HBox"]
 layout_mode = 2
-text = "LMB - Rotate Camera"
+text = "LMB - Use Tool"
 
 [node name="VSeparator" type="VSeparator" parent="Root/BottomBar/HBox"]
 layout_mode = 2
@@ -161,7 +192,7 @@ layout_mode = 2
 
 [node name="RMBHint" type="Label" parent="Root/BottomBar/HBox"]
 layout_mode = 2
-text = "RMB - Use Tool"
+text = "RMB - Nothing"
 
 [node name="NewTerrainDialog" parent="." instance=ExtResource("4_4pae0")]
 unique_name_in_owner = true

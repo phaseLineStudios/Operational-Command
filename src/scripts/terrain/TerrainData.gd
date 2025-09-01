@@ -13,19 +13,19 @@ class_name TerrainData
 ## World meters per elevation sample (grid step). Lower = denser.
 @export var elevation_resolution_m: int = 20 : set = _set_resolution
 
-# --- Grid numbering -----------------------------------------------------------
+@export_group("Grid")
 ## Starting number on X axis labels.
 @export var grid_start_x: int = 100 : set = _set_grid_x
 ## Starting number on Y axis labels.
 @export var grid_start_y: int = 100 : set = _set_grid_y
 
-# --- Elevation ---------------------------------------------------------------
+@export_group("Elevation")
 ## Contour interval in meters.
 @export var contour_interval_m: int = 10 : set = _touch
 ## Elevation image (R channel = meters; 16F or 32F preferred).
 @export var elevation: Image = Image.create(64, 64, false, Image.FORMAT_RF) : set = _set_elev
 
-# --- Content -----------------------------------------------------------------
+@export_group("Content")
 ## List of surface shapes. Each: { "brush": TerrainBrush, "type": "freehand|line|polygon", "points": PackedVector2Array, "closed": bool }.
 @export var surfaces: Array = [] : set = _touch
 ## List of point features. Each: { "res": TerrainFeature, "pos": Vector2, "rot": float }.
@@ -41,12 +41,14 @@ func _init() -> void:
 ## Set terrain width (meters).
 func _set_width(v: int) -> void:
 	width_m = max(100, v)
+	_resample_or_resize()
 	_update_scale()
 	emit_signal("changed")
 
 ## Set terrain height (meters).
 func _set_height(v: int) -> void:
 	height_m = max(100, v)
+	_resample_or_resize()
 	_update_scale()
 	emit_signal("changed")
 
@@ -59,6 +61,7 @@ func _set_resolution(v: int) -> void:
 func _set_grid_x(_v: int) -> void:
 	grid_start_x = _v
 	emit_signal("changed")
+	
 func _set_grid_y(_v: int) -> void:
 	grid_start_y = _v
 	emit_signal("changed")
@@ -68,6 +71,7 @@ func _set_elev(img: Image) -> void:
 		elevation = Image.create(64, 64, false, Image.FORMAT_RF)
 	else:
 		elevation = img
+	_resample_or_resize()
 	_update_scale()
 	emit_signal("changed")
 
@@ -125,13 +129,13 @@ func elev_px_to_world(px: Vector2i) -> Vector2:
 	return Vector2(px.x * elevation_resolution_m, px.y * elevation_resolution_m)
  
 ## Get the grid number of a position
-func position_to_grid(pos: Vector2):
+func position_to_grid(_pos: Vector2):
 	pass # TODO
 
 ## Get the surface of a position
-func get_surface_at_pos(pos: Vector2):
+func get_surface_at_pos(_pos: Vector2):
 	pass # TODO
 
 ## Get the elevation of a position
-func get_elev_at_pos(pos: Vector2):
+func get_elev_at_pos(_pos: Vector2):
 	pass # TODO
