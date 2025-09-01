@@ -1,32 +1,24 @@
-# ContourLayer.gd (runtime, for your in-game TerrainEditor too)
 extends Control
 class_name ContourLayer
 
-# ---- Style knobs (same names as in TerrainRender) ----
 @export var contour_color: Color = Color(0.15, 0.15, 0.15, 0.7)
 @export var contour_thick_color: Color = Color(0.1, 0.1, 0.1, 0.85)
 @export var contour_px: float = 1.0
 @export var contour_thick_every_m: int = 50
 @export var antialias: bool = true
 
-# ---- Data ----
 var data: TerrainData
 var _data_conn := false
 var _data_conn_elev := false
 
-# ---- Cache ----
 var _levels: PackedFloat32Array = []
-var _polylines_by_level: Dictionary = {}  # level(float) -> Array[PackedVector2Array]
+var _polylines_by_level: Dictionary = {}
 var _dirty := true
 
-# ---- Debounce for live editing ----
 var _rebuild_scheduled := false
-@export var rebuild_delay_sec := 0.05  # tune for your editor feel
-
-# ------------------ Public API ------------------
+@export var rebuild_delay_sec := 0.05
 
 func set_data(d: TerrainData) -> void:
-	# disconnect old
 	if _data_conn and data and data.is_connected("changed", Callable(self, "_on_data_changed")):
 		data.disconnect("changed", Callable(self, "_on_data_changed"))
 	if _data_conn_elev and data and data.has_signal("elevation_changed") and data.is_connected("elevation_changed", Callable(self, "_on_elevation_changed")):
@@ -37,19 +29,16 @@ func set_data(d: TerrainData) -> void:
 	data = d
 	_mark_dirty()
 
-	# connect new (runtime)
 	if data:
 		data.changed.connect(_on_data_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
 		_data_conn = true
-		# Optional: if you add a more granular signal on your TerrainData later:
 		if data.has_signal("elevation_changed"):
 			data.elevation_changed.connect(_on_elevation_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
 			_data_conn_elev = true
 
-	_schedule_rebuild()  # initial build
+	_schedule_rebuild()
 	queue_redraw()
 
-# Optional convenience if you want to push style from TerrainRender in one call
 func apply_style(from: Node) -> void:
 	if from == null: return
 	if "contour_color" in from: contour_color = from.contour_color
@@ -59,26 +48,18 @@ func apply_style(from: Node) -> void:
 	_mark_dirty()
 	_schedule_rebuild()
 
-# Call this from your TerrainEditor after a paint pass (or per stroke)
 func request_rebuild() -> void:
 	_mark_dirty()
 	_schedule_rebuild()
 
-# ------------------ Notifications ------------------
-
 func _notification(what):
 	if what == NOTIFICATION_RESIZED:
-		# size changed; geometry is in world units, just redraw
 		queue_redraw()
-
-# ------------------ Live update plumbing ------------------
 
 func _on_data_changed() -> void:
 	_mark_dirty()
 	_schedule_rebuild()
 
-# If you add TerrainData.elevation_changed(rect2i), we can still full rebuild for now.
-# You can later extend this to do partial rebuilds.
 func _on_elevation_changed(_rect := Rect2i(0,0,0,0)) -> void:
 	_mark_dirty()
 	_schedule_rebuild()
@@ -98,12 +79,9 @@ func _schedule_rebuild() -> void:
 		queue_redraw()
 	)
 
-# ------------------ Drawing ------------------
-
 func _draw() -> void:
 	if data == null:
 		return
-	# If something marked dirty but no timer is running (e.g., first draw), rebuild now.
 	if _dirty and not _rebuild_scheduled:
 		_rebuild_contours()
 
@@ -113,15 +91,14 @@ func _draw() -> void:
 		if polylines.is_empty():
 			continue
 
-		var thick := (contour_thick_every_m > 0) and _is_multiple(level, float(contour_thick_every_m))
+		var thick := false
+		thick = (contour_thick_every_m > 0) and _is_multiple(level, float(contour_thick_every_m))
 		var col := contour_thick_color if thick else contour_color
 		var w: float = max(0.5, (contour_px * 1.6) if thick else contour_px)
 
 		for line: PackedVector2Array in polylines:
 			if line.size() >= 2:
 				draw_polyline(line, col, w, antialias)
-
-# ------------------ Geometry build ------------------
 
 func _rebuild_contours() -> void:
 	_dirty = false
@@ -150,22 +127,19 @@ func _rebuild_contours() -> void:
 			if e < min_e: min_e = e
 			if e > max_e: max_e = e
 
-	# choose contour levels
 	var start_level: float = floor(min_e / dH) * dH
 	var level := start_level
 	while level <= max_e + 0.0001:
 		_levels.append(level)
 		level += dH
 
-	# build segments per level and stitch to polylines
 	for L in _levels:
 		var segments := _march_level_segments(img, w, h, step_m, L)
 		var polylines := _stitch_segments_to_polylines(segments)
 		_polylines_by_level[L] = polylines
 
-# marching squares per level -> segments
 func _march_level_segments(img: Image, w: int, h: int, step_m: float, level: float) -> Array:
-	var segs: Array = []   # Array[PackedVector2Array]
+	var segs: Array = []
 
 	for j in range(0, h - 1):
 		for i in range(0, w - 1):
@@ -191,10 +165,8 @@ func _march_level_segments(img: Image, w: int, h: int, step_m: float, level: flo
 				var denom := (b - a)
 				return 0.5 if abs(denom) < 1e-6 else clamp((level - a) / denom, 0.0, 1.0)
 
-			var pts := {}  # edge -> Vector2
+			var pts := {}
 
-			# Edges: 0=top,1=right,2=bottom,3=left
-			# Crossings exist when edge vertices straddle the level
 			if ( (c & 1) != (c & 2) ):
 				var t0: float = lerp_t.call(zTL, zTR)
 				pts[0] = Vector2(lerp(x0, x1, t0), y0)
@@ -222,7 +194,6 @@ func _march_level_segments(img: Image, w: int, h: int, step_m: float, level: flo
 				6, 9:
 					segs.append(PackedVector2Array([pts[0], pts[2]]))
 				5, 10:
-					# Saddle: asymptotic decider via bilinear center
 					var zC := (zTL + zTR + zBR + zBL) * 0.25
 					if zC > level:
 						segs.append(PackedVector2Array([pts[0], pts[1]]))
@@ -235,7 +206,6 @@ func _march_level_segments(img: Image, w: int, h: int, step_m: float, level: flo
 
 	return segs
 
-# connect segments into polylines (open/closed)
 func _stitch_segments_to_polylines(segments: Array) -> Array:
 	var polylines: Array = []
 	if segments.is_empty():
