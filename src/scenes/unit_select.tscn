@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ccwvjhbhbak72" path="res://scripts/ui/UnitSelect.gd" id="1_oi50k"]
 [ext_resource type="Script" uid="uid://c1km1pb0bjkq1" path="res://scripts/ui/helpers/PoolDropArea.gd" id="2_erus1"]
-[ext_resource type="Texture2D" uid="uid://b0d0mou0168fe" path="res://assets/textures/units/nato_unknown_platoon.png" id="2_lkfvs"]
+[ext_resource type="Texture2D" uid="uid://c5yrrmua01ejx" path="res://assets/textures/units/nato_unknown_platoon.png" id="2_lkfvs"]
 [ext_resource type="PackedScene" uid="uid://sfmt46l71mce" path="res://scenes/ui/unit_card.tscn" id="3_8jeif"]
 [ext_resource type="Script" uid="uid://bjpkmlmnxp410" path="res://scripts/ui/helpers/SlotsList.gd" id="4_lkfvs"]
 [ext_resource type="PackedScene" uid="uid://dvyattx2k3rxj" path="res://scenes/ui/slot_item.tscn" id="6_qiiyt"]
