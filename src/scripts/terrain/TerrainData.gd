@@ -33,7 +33,6 @@ class_name TerrainData
 ## List of text labels. Each: { "text": String, "pos": Vector2, "size": int, "rot": float }.
 @export var labels: Array = [] : set = _touch
 
-# --- Derived -----------------------------------------------------------------
 var _px_per_m: float = 1.0
 
 func _init() -> void:
@@ -125,3 +124,14 @@ func world_to_elev_px(p: Vector2) -> Vector2i:
 func elev_px_to_world(px: Vector2i) -> Vector2:
 	return Vector2(px.x * elevation_resolution_m, px.y * elevation_resolution_m)
  
+## Get the grid number of a position
+func position_to_grid(pos: Vector2):
+	pass # TODO
+
+## Get the surface of a position
+func get_surface_at_pos(pos: Vector2):
+	pass # TODO
+
+## Get the elevation of a position
+func get_elev_at_pos(pos: Vector2):
+	pass # TODO
