@@ -166,8 +166,7 @@ script = ExtResource("3_3f477")
 transform = Transform3D(1, 0, 0, 0, 0.854323, 0.519743, 0, -0.519743, 0.854323, 0, 1.08494, 0.53907)
 current = true
 
-[node name="HoldPoint" type="Node3D" parent="Player/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.004, -0.5)
+[node name="HoldPoint" type="Marker3D" parent="Player/Camera3D"]
 
 [node name="RayCast3D" type="RayCast3D" parent="Player/Camera3D"]
 target_position = Vector3(0, 0, -0.75)
