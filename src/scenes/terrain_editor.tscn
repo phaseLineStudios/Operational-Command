@@ -8,7 +8,7 @@
 
 [sub_resource type="Resource" id="Resource_cc7e2"]
 script = ExtResource("2_q832w")
-name = ""
+name = "New Terrain"
 width_m = 1000
 height_m = 1000
 elevation_resolution_m = 20
@@ -136,8 +136,6 @@ data = SubResource("Resource_cc7e2")
 [node name="BrushOverlay" type="Control" parent="Root/HBox/TerrainView/View/World"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 
 [node name="Camera" type="Camera2D" parent="Root/HBox/TerrainView/View"]
 unique_name_in_owner = true

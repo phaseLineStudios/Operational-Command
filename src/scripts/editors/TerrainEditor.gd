@@ -28,6 +28,7 @@ var features: Array[Variant] = []
 
 var tool_map := {}
 var active_tool: TerrainToolBase
+var _inside_brush_overlay := false
 
 const TOOL_ORDER := [
 	"res://scripts/editors/tools/TerrainElevationTool.gd"
@@ -38,7 +39,10 @@ const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 func _ready():
 	file_menu.get_popup().connect("id_pressed", _on_filemenu_pressed)
 	new_terrain_dialog.connect("request_create", _new_terrain)
+	brush_overlay.mouse_entered.connect(_on_brush_overlay_mouse_enter)
+	brush_overlay.mouse_exited.connect(_on_brush_overlay_mouse_exit)
 	brush_overlay.gui_input.connect(_on_brush_overlay_gui_input)
+	terrain_render.map_resize.connect(_on_terrain_resize)
 	terrain_render.data = data
 	_build_tool_buttons()
 
@@ -127,15 +131,24 @@ func _input(event: InputEvent) -> void:
 ## Input handler for terrainview Viewport
 func _on_brush_overlay_gui_input(event):
 	if event is InputEventMouseMotion && active_tool:
-		var local := overlay_to_terrain_local(event.position)
-		var inside := is_screen_inside_terrainview(local)
-		
-		active_tool.on_mouse_inside(inside)
-		if not inside:
+		active_tool.on_mouse_inside(_inside_brush_overlay)
+		if not _inside_brush_overlay:
 			return
 		
 		# BUG Brush overlay check fails even when brush is over terrain render
 		active_tool.update_preview_at_overlay(brush_overlay, event.position)
+
+## Triggers when mouse enters brush overlay
+func _on_brush_overlay_mouse_enter():
+	_inside_brush_overlay = true
+
+## Triggers when mouse exits brush overlay
+func _on_brush_overlay_mouse_exit():
+	_inside_brush_overlay = false
+
+func _on_terrain_resize():
+	brush_overlay.position = terrain_render.get_map_position()
+	brush_overlay.size = terrain_render.get_map_size()
 
 ## Helper function to delete all children of a parent node
 func queue_free_children(node: Control):
@@ -177,26 +190,37 @@ func screen_to_terrain(pos: Vector2, keep_aspect: bool = true) -> Vector2:
 
 	return local_px
 
+func terrain_to_screen(local_m: Vector2, keep_aspect: bool = true) -> Vector2:
+	var sv := terrainview
+	if sv == null:
+		return Vector2.INF
+	if not local_m.is_finite():
+		return Vector2.INF
+
+	var cont_rect := terrainview_container.get_global_rect()
+	var sv_size: Vector2 = sv.size
+
+	var draw_pos: Vector2
+	var p_scale: Vector2
+	if keep_aspect:
+		var s: float = min(cont_rect.size.x / sv_size.x, cont_rect.size.y / sv_size.y)
+		var draw_size: Vector2 = sv_size * s
+		draw_pos = cont_rect.position + (cont_rect.size - draw_size) * 0.5
+		p_scale = Vector2(s, s)
+	else:
+		draw_pos = cont_rect.position
+		p_scale = Vector2(cont_rect.size.x / sv_size.x, cont_rect.size.y / sv_size.y)
+
+	# Forward (non-inverted) canvas transform: local_m -> sprite/view space
+	var from_local_xform := terrain_render.get_global_transform_with_canvas()
+	var sv_pos := from_local_xform * local_m
+
+	# Scale + translate into the container to get screen coords
+	var screen_pos := draw_pos + sv_pos * p_scale
+	return screen_pos
+
 ## API to get a terrain pos from a brush overlay pos
 func overlay_to_terrain_local(pos: Vector2) -> Vector2:
 	var overlay_to_canvas := brush_overlay.get_global_transform_with_canvas()
 	var terrain_from_canvas := terrain_render.get_global_transform_with_canvas().affine_inverse()
 	return terrain_from_canvas * (overlay_to_canvas * pos)
-
-## API to check if screen position is inside the terrainview viewport
-func is_screen_inside_terrainview(pos: Vector2, keep_aspect = true) -> bool:
-	var cont_rect := terrainview_container.get_global_rect()
-	var sv_size: Vector2 = terrainview.size
-
-	var draw_pos: Vector2
-	var draw_size: Vector2
-	if keep_aspect:
-		var s: float = min(cont_rect.size.x / sv_size.x, cont_rect.size.y / sv_size.y)
-		draw_size = sv_size * s
-		draw_pos = cont_rect.position + (cont_rect.size - draw_size) * 0.5
-	else:
-		draw_pos = cont_rect.position
-		draw_size = cont_rect.size
-
-	var drawn_rect := Rect2(draw_pos, draw_size)
-	return drawn_rect.has_point(pos)
