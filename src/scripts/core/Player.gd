@@ -19,6 +19,9 @@ var pitch := 0.0  # up/down rotation
 # This is important because at the start nothing is held by the player
 var held_item: Node = null
 
+# NEW: keep the actual collider nodes of the held item so the ray can ignore them
+var held_colliders: Array[CollisionObject3D] = []  # NEW
+
 # Runs whenever the scene is loaded, after all nodes are loaded
 func _ready():
 	camera = $Camera3D
@@ -28,14 +31,20 @@ func _ready():
 # Handles all types of inputs, first input function that is executed
 func _input(event):
 	# handling the interact events (usually E)
-	if event.is_action_pressed("interact"):
+	if Input.is_action_just_pressed("interact"):
 		if held_item:
-			# Drop current item
+			# remove exceptions for this item's colliders
+			for co in held_colliders:
+				if is_instance_valid(co):
+					ray.remove_exception(co)
+			held_colliders.clear()
+
+			print("[PLAYER] Dropping: ", held_item.name)
 			held_item.drop(self)
 			held_item = null
 		else:
-			# Try picking up something
 			try_pickup()
+
 
 # also handles inpput but is only called after _input()
 # only used for events that are not consumed by GUI
@@ -71,7 +80,6 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = 3.0
 
-
 	# applying the direction changes
 	direction = direction.normalized()
 	velocity.x = direction.x * speed
@@ -98,6 +106,12 @@ func try_pickup():
 	if item and item.has_method("pickup") and not held_item:
 		item.pickup(self)
 		held_item = item
+		print("[PLAYER] Picked up: ", held_item.name, " parent=", held_item.get_parent().get_path())
+
+		# Collect all CollisionObject3D nodes under the item and add them as exceptions
+		held_colliders = _collect_colliders(held_item)
+		for co in held_colliders:
+			ray.add_exception(co)
 
 # function is used to find the item a player wants to pickup
 func _find_pickup_item(node: Object) -> Node:
@@ -108,3 +122,13 @@ func _find_pickup_item(node: Object) -> Node:
 			return n
 		n = n.get_parent()
 	return null
+
+# Recursively gather all CollisionObject3D nodes (StaticBody3D, RigidBody3D, Area3D) under a node
+func _collect_colliders(n: Node) -> Array[CollisionObject3D]:
+	var out: Array[CollisionObject3D] = []
+	if n is CollisionObject3D:
+		out.append(n)
+	for child in n.get_children():
+		if child is Node:
+			out.append_array(_collect_colliders(child))
+	return out

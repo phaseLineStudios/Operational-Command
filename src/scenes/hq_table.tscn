@@ -125,7 +125,7 @@ mesh = SubResource("CylinderMesh_uk27s")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.40282, 0.738096, 0.087646)
 mesh = SubResource("BoxMesh_ge8rp")
 
-[node name="FieldManual" type="Area3D" parent="PhysicsObjects"]
+[node name="FieldManual" type="Node3D" parent="PhysicsObjects"]
 script = ExtResource("1_oof4l")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsObjects/FieldManual"]
@@ -166,8 +166,8 @@ script = ExtResource("3_3f477")
 transform = Transform3D(1, 0, 0, 0, 0.854323, 0.519743, 0, -0.519743, 0.854323, 0, 1.08494, 0.53907)
 current = true
 
-[node name="HoldPoint" type="Marker3D" parent="Player/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00371075, -0.297742)
+[node name="HoldPoint" type="Node3D" parent="Player/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.004, -0.5)
 
 [node name="RayCast3D" type="RayCast3D" parent="Player/Camera3D"]
 target_position = Vector3(0, 0, -0.75)
