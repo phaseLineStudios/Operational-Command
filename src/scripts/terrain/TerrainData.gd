@@ -58,14 +58,17 @@ func _set_resolution(v: int) -> void:
 	_resample_or_resize()
 	emit_signal("changed")
 
+## Set the starting grid for the X axis
 func _set_grid_x(_v: int) -> void:
 	grid_start_x = _v
 	emit_signal("changed")
-	
+
+## Set the starting grid for the Y axis
 func _set_grid_y(_v: int) -> void:
 	grid_start_y = _v
 	emit_signal("changed")
 
+## Set elevation heightmap
 func _set_elev(img: Image) -> void:
 	if img.is_empty():
 		elevation = Image.create(64, 64, false, Image.FORMAT_RF)
@@ -75,16 +78,18 @@ func _set_elev(img: Image) -> void:
 	_update_scale()
 	emit_signal("changed")
 
+## Emit changed signal when data is changed
 func _touch(_value) -> void:
 	emit_signal("changed")
 
+## Update heightmap scale
 func _update_scale() -> void:
 	if elevation.is_empty():
 		return
 	_px_per_m = float(elevation.get_width()) / float(max(width_m, 1))
 
+## Resmaple or resize heightmap
 func _resample_or_resize() -> void:
-	# Keep elevation pixel size tied to meters/resolution.
 	var new_w := int(round(float(width_m) / elevation_resolution_m))
 	var new_h := int(round(float(height_m) / elevation_resolution_m))
 	new_w = max(new_w, 8)

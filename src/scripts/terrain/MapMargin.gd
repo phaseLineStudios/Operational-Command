@@ -1,40 +1,67 @@
 extends PanelContainer
 class_name MarginLayer
 
+## Font size for map title
+@export var title_size: int
+## Color of outer margin
 @export var margin_color: Color = Color(1.0, 1.0, 1.0)
-@export var margin_size: int = 50
+## Size of outer margin top
+@export var margin_top_px: int = 50
+## Size of outer margin bottom
+@export var margin_bottom_px: int = 50
+## Size of outer margin left
+@export var margin_left_px: int = 50
+## Size of outer margin right
+@export var margin_right_px: int = 50
 
-@export var margin_label_every_m: int = 1000
+## When to show a grid number (per meter)
+@export var margin_label_every_m: int = 100
+## Color of grid number
 @export var label_color: Color = Color(0.05, 0.05, 0.05, 1.0)
+## Font of grid number
 @export var label_font: Font
+## Font size of grid number
 @export var label_size: int = 14
 
+## Show grid numbers at top
 @export var show_top: bool = true
+## Show grid numbers at bottom
 @export var show_bottom: bool = true
+## Show grid numbers at left
 @export var show_left: bool = true
+## Show grid numbers at right
 @export var show_right: bool = true
 
+## width of map border
 @export var base_border_px: float = 1.0
+## grid number offset top
 @export var offset_top_px: float = -1.0
+## grid number offset bottom
 @export var offset_bottom_px: float = 35
+## grid number offset left
 @export var offset_left_px: float = -10
+## grid number offset right
 @export var offset_right_px: float = 35
 
 var data: TerrainData
 
+## API to set terrain data
 func set_data(d: TerrainData) -> void:
 	data = d
 	queue_redraw()
 
+## Redraw margin on resize
 func _notification(what):
 	if what == NOTIFICATION_THEME_CHANGED or what == NOTIFICATION_RESIZED:
 		queue_redraw()
 
 func _draw() -> void:
-	# Draw margin
 	var margin_sb := StyleBoxFlat.new()
 	margin_sb.bg_color = margin_color
-	margin_sb.set_content_margin_all(margin_size)
+	margin_sb.content_margin_top = margin_top_px
+	margin_sb.content_margin_bottom = margin_bottom_px
+	margin_sb.content_margin_left = margin_left_px
+	margin_sb.content_margin_right = margin_right_px
 	add_theme_stylebox_override("panel", margin_sb)
 	
 	if data == null or label_font == null:
@@ -53,6 +80,15 @@ func _draw() -> void:
 	var map_h := float(data.height_m) - base_border_px * 2.0
 	var map_right := map_left + map_w
 	var map_bottom := map_top + map_h
+	
+	if data.name != "":
+		var center_x := 0.5 * (map_left + map_right)
+		var ascent := label_font.get_ascent(label_size)
+		var height := label_font.get_height(label_size)
+		var y_mid := 0.5 + height
+		var baseline_y := y_mid + (ascent - 0.5 * height)
+
+		_draw_text_center(str(data.name), Vector2(center_x, baseline_y), title_size)
 
 	var start_x := 0
 	var start_y := 0
@@ -91,13 +127,15 @@ func _draw() -> void:
 				_draw_text_middle(num2, Vector2(map_right + offset_right_px, screen_y), false, ascent, height)
 			j += 1
 
-func _draw_text_center(text: String, pos: Vector2) -> void:
-	var s := label_size
+## Helper function to draw horizontally centered text
+func _draw_text_center(text: String, pos: Vector2, font_size: int = label_size) -> void:
+	var s := font_size
 	var fm := label_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, s)
 	draw_string(label_font, pos - Vector2(fm.x * 0.5, 0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, s, label_color)
 
-func _draw_text_middle(text: String, pos: Vector2, align_right: bool, ascent: float, height: float) -> void:
-	var s := label_size
+## Helper function to draw vertically centered text
+func _draw_text_middle(text: String, pos: Vector2, align_right: bool, ascent: float, height: float, font_size: int = label_size) -> void:
+	var s := font_size
 	var fm := label_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, s)
 	var baseline_y := pos.y + (height - ascent)
 	var draw_x := pos.x - fm.x if align_right else pos.x

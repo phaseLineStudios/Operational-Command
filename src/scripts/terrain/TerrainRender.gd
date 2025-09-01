@@ -13,8 +13,13 @@ class_name TerrainRender
 @export var terrain_border_px: int = 1
 
 @export_group("Margin")
+## Font size for map title
+@export var title_size: int = 24
 @export var margin_color: Color = Color(1.0, 1.0, 1.0)
-@export var margin_size: int = 50
+@export var margin_top_px: int = 50
+@export var margin_bottom_px: int = 50
+@export var margin_left_px: int = 50
+@export var margin_right_px: int = 50
 
 @export_group("Grid")
 @export var grid_100m_color: Color = Color(0.2, 0.2, 0.2, 0.25)
@@ -51,6 +56,7 @@ func _ready():
 	_apply_visuals_to_grid()
 	_draw()
 	grid_layer.queue_redraw()
+	base_layer.resized.connect(_on_base_layer_resize)
 
 func _set_data(d: TerrainData):
 	_mark_all_dirty()
@@ -66,11 +72,15 @@ func _push_data_to_layers() -> void:
 		grid_layer.queue_redraw()
 
 	if margin and margin.has_method("set_data"):
+		margin.title_size = title_size
 		margin.label_font = label_font
 		margin.label_size = label_size
 		margin.label_color = label_color
 		margin.margin_color = margin_color
-		margin.margin_size = margin_size
+		margin.margin_top_px = margin_top_px
+		margin.margin_bottom_px = margin_bottom_px
+		margin.margin_left_px = margin_left_px
+		margin.margin_right_px = margin_right_px
 		margin.margin_label_every_m = 100
 		margin.set_data(data)
 		margin.queue_redraw()
@@ -121,13 +131,17 @@ func _draw_map_size() -> void:
 		var base_size := data.get_size()
 		var total := base_size + Vector2(margin_px * 2, margin_px * 2)
 		margin.size = total
+		
+	size = margin.size
 
 	if grid_layer:
 		grid_layer.queue_redraw()
 	if label_layer:
 		label_layer.queue_redraw()
 	queue_redraw()
-	
+
+## Emit a resize event for base layer
+func _on_base_layer_resize():
 	emit_signal("map_resize")
 
 ## API to get the map size

@@ -31,6 +31,7 @@ script = ExtResource("1_kobl6")
 base_color = Color(0.993332, 0.99162, 0.98202, 1)
 terrain_border_color = Color(0.0749913, 0.0331813, 0.000359687, 1)
 terrain_border_px = 2
+margin_top_px = 75
 grid_100m_color = Color(0.138125, 0.049278, 0, 0.25)
 grid_1km_color = Color(0.0760013, 0.0254519, 3.00817e-09, 0.5)
 label_color = Color(0.0745098, 0.0313726, 0, 1)
@@ -44,7 +45,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_llqno")
 script = ExtResource("3_ceejx")
-margin_label_every_m = 100
 label_font = SubResource("FontVariation_ceejx")
 
 [node name="TerrainBase" type="PanelContainer" parent="MapMargin"]
