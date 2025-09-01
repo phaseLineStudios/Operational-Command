@@ -1,6 +1,9 @@
 extends PanelContainer
 class_name MarginLayer
 
+@export var margin_color: Color = Color(1.0, 1.0, 1.0)
+@export var margin_size: int = 50
+
 @export var margin_label_every_m: int = 1000
 @export var label_color: Color = Color(0.05, 0.05, 0.05, 1.0)
 @export var label_font: Font
@@ -11,9 +14,8 @@ class_name MarginLayer
 @export var show_left: bool = true
 @export var show_right: bool = true
 
-# --- NEW: fine-tuning + border compensation ---
-@export var base_border_px: float = 1.0            # match your TerrainBase border
-@export var offset_top_px: float = -1.0            # negative pulls toward/over the map
+@export var base_border_px: float = 1.0
+@export var offset_top_px: float = -1.0
 @export var offset_bottom_px: float = 35
 @export var offset_left_px: float = -10
 @export var offset_right_px: float = 35
@@ -29,6 +31,12 @@ func _notification(what):
 		queue_redraw()
 
 func _draw() -> void:
+	# Draw margin
+	var margin_sb := StyleBoxFlat.new()
+	margin_sb.bg_color = margin_color
+	margin_sb.set_content_margin_all(margin_size)
+	add_theme_stylebox_override("panel", margin_sb)
+	
 	if data == null or label_font == null:
 		return
 
@@ -46,12 +54,10 @@ func _draw() -> void:
 	var map_right := map_left + map_w
 	var map_bottom := map_top + map_h
 
-	# Safer defaults if grid start isn’t present.
 	var start_x := 0
 	var start_y := 0
 	if data.has_method("get"):
-		if data.has_method("_get") or true: # keep simple; access may still work directly
-			# If your TerrainData always has these, direct access is fine:
+		if data.has_method("_get") or true:
 			if "grid_start_x" in data: start_x = int(data.grid_start_x)
 			if "grid_start_y" in data: start_y = int(data.grid_start_y)
 

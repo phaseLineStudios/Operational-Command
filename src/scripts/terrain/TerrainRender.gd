@@ -42,6 +42,8 @@ class_name TerrainRender
 @onready var grid_layer: GridLayer = %GridLayer
 @onready var label_layer = %LabelLayer
 
+signal map_resize()
+
 var _contours: Dictionary = {}
 var _contours_dirty := true
 
@@ -67,9 +69,16 @@ func _push_data_to_layers() -> void:
 		margin.label_font = label_font
 		margin.label_size = label_size
 		margin.label_color = label_color
+		margin.margin_color = margin_color
+		margin.margin_size = margin_size
 		margin.margin_label_every_m = 100
 		margin.set_data(data)
 		margin.queue_redraw()
+	
+	if contour_layer and contour_layer.has_method("set_data"):
+		contour_layer.set_data(data)
+		contour_layer.apply_style(self)
+		contour_layer.queue_redraw()
 		
 	queue_redraw()
 
@@ -77,6 +86,7 @@ func _on_data_changed() -> void:
 	_mark_all_dirty()
 	_draw_map_size()
 	_push_data_to_layers()
+	contour_layer.request_rebuild()
 	queue_redraw()
 
 func _mark_all_dirty() -> void:
@@ -95,12 +105,6 @@ func _apply_visuals_to_grid() -> void:
 func _draw() -> void:
 	if data == null: return
 	_draw_map_size()
-	
-	# Draw margin
-	var margin_sb := StyleBoxFlat.new()
-	margin_sb.bg_color = margin_color
-	margin_sb.set_content_margin_all(margin_size)
-	margin.add_theme_stylebox_override("panel", margin_sb)
 	
 	# Draw Terrain Base
 	var base_sb := StyleBoxFlat.new()
@@ -123,3 +127,13 @@ func _draw_map_size() -> void:
 	if label_layer:
 		label_layer.queue_redraw()
 	queue_redraw()
+	
+	emit_signal("map_resize")
+
+## API to get the map size
+func get_map_size():
+	return base_layer.size
+
+## API to get the map position
+func get_map_position():
+	return base_layer.position
