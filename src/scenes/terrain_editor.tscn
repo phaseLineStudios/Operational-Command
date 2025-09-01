@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://j3lcjcfdq7qw"]
+[gd_scene load_steps=5 format=3 uid="uid://j3lcjcfdq7qw"]
 
 [ext_resource type="Script" uid="uid://cl441lw7n8a2o" path="res://scripts/editors/TerrainEditor.gd" id="1_k3bf1"]
+[ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="2_fwab6"]
+[ext_resource type="Script" uid="uid://cjsu4sh4wfvmg" path="res://scripts/editors/TerrainCamera.gd" id="3_15xeg"]
+[ext_resource type="PackedScene" uid="uid://c5thlr0tfddoe" path="res://scenes/ui/new_terrain_dialog.tscn" id="4_4pae0"]
 
 [node name="TerrainEditor" type="Control"]
 layout_mode = 3
@@ -10,6 +13,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_k3bf1")
+tool_icon_size = Vector2(32, 32)
 
 [node name="Root" type="VBoxContainer" parent="."]
 layout_mode = 0
@@ -27,15 +31,17 @@ theme_override_constants/separation = 6
 unique_name_in_owner = true
 layout_mode = 2
 text = "File"
-item_count = 4
-popup/item_0/text = "Open"
+item_count = 5
+popup/item_0/text = "New"
 popup/item_0/id = 0
-popup/item_1/text = "Save"
+popup/item_1/text = "Open"
 popup/item_1/id = 1
-popup/item_2/text = "Save As"
+popup/item_2/text = "Save"
 popup/item_2/id = 2
-popup/item_3/text = "Quit"
+popup/item_3/text = "Save As"
 popup/item_3/id = 3
+popup/item_4/text = "Quit"
+popup/item_4/id = 4
 
 [node name="Edit" type="MenuButton" parent="Root/TopBar/HBox"]
 layout_mode = 2
@@ -71,6 +77,7 @@ size_flags_vertical = 3
 current_tab = 0
 
 [node name="Tools" type="GridContainer" parent="Root/HBox/LeftTray/VBox/TabContainer1"]
+unique_name_in_owner = true
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -86,10 +93,29 @@ metadata/_tab_index = 0
 [node name="TerrainView" type="SubViewportContainer" parent="Root/HBox"]
 layout_mode = 2
 size_flags_horizontal = 3
+stretch = true
+mouse_target = true
 
 [node name="View" type="SubViewport" parent="Root/HBox/TerrainView"]
+disable_3d = true
 handle_input_locally = false
+size = Vector2i(644, 586)
 render_target_update_mode = 4
+
+[node name="World" parent="Root/HBox/TerrainView/View" instance=ExtResource("2_fwab6")]
+unique_name_in_owner = true
+offset_left = -254.0
+offset_top = -35.0
+offset_right = 898.0
+offset_bottom = 613.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Camera" type="Camera2D" parent="Root/HBox/TerrainView/View"]
+zoom = Vector2(0.25, 0.25)
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+script = ExtResource("3_15xeg")
 
 [node name="RightTray" type="PanelContainer" parent="Root/HBox"]
 custom_minimum_size = Vector2(250, 0)
@@ -136,3 +162,7 @@ layout_mode = 2
 [node name="RMBHint" type="Label" parent="Root/BottomBar/HBox"]
 layout_mode = 2
 text = "RMB - Use Tool"
+
+[node name="NewTerrainDialog" parent="." instance=ExtResource("4_4pae0")]
+unique_name_in_owner = true
+visible = false
