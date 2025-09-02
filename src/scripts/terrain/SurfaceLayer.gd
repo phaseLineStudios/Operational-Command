@@ -39,7 +39,6 @@ func _draw() -> void:
 	if data == null or data.surfaces.is_empty():
 		return
 
-	# Filter AREA only and sort by z_index
 	var polys: Array = []
 	for s in data.surfaces:
 		if s == null or not (s is Dictionary): continue
@@ -85,14 +84,11 @@ func _draw() -> void:
 					var sym_scale := float(rec.symbol.scale if "scale" in rec.symbol else 1.0)
 					_fill_symbol_tiled(pts, tex, spacing_px, sym_scale)
 				elif fill_col.a > 0.0:
-					# Fallback: solid if no symbol
 					draw_colored_polygon(pts, fill_col, PackedVector2Array(), null)
 			_:
-				# Fallback: solid
 				if fill_col.a > 0.0:
 					draw_colored_polygon(pts, fill_col, PackedVector2Array(), null)
 
-		# Outline
 		var stroke_col: Color = rec.stroke.color if rec.has("stroke") and "color" in rec.stroke else Color(0,0,0,0)
 		var stroke_w: float = rec.stroke.width_px if rec.has("stroke") and "width_px" in rec.stroke else 1.0
 		if stroke_col.a > 0.0 and stroke_w > 0.0:
@@ -100,7 +96,6 @@ func _draw() -> void:
 			var outline: PackedVector2Array = _closed_copy(pts, closed)
 
 			if snap_half_px_for_thin_strokes and int(round(stroke_w)) % 2 != 0:
-				# center odd-width strokes on pixel centers for crispness
 				outline = _offset_half_px(outline)
 
 			match mode:
@@ -111,12 +106,10 @@ func _draw() -> void:
 					var gap: float = rec.stroke.gap_px  if "gap_px"  in rec.stroke else 6.0
 					_draw_polyline_dashed(outline, stroke_col, stroke_w, dash, gap)
 				_:
-					# DOTTED/HATCHED/SYMBOL_TILED for outlines not implemented here
 					_draw_polyline_closed(outline, stroke_col, stroke_w)
 
 func _closed_copy(pts: PackedVector2Array, closed: bool) -> PackedVector2Array:
 	if closed:
-		# ensure last==first for easy “closed” drawing
 		if pts[0].distance_to(pts[pts.size()-1]) > 1e-5:
 			var c := pts.duplicate(); c.append(pts[0]); return c
 	return pts.duplicate()
@@ -225,9 +218,7 @@ func _draw_polyline_dashed(pts: PackedVector2Array, color: Color, width: float, 
 	var total := pts.size() - 1
 	for i in total:
 		_dash_segment(pts[i], pts[i+1], color, width, dash_px, gap_px)
-	# close if needed
 	if closed == false and false:
-		# (no-op; we already have explicit last==first when closed)
 		pass
 
 func _dash_segment(a: Vector2, b: Vector2, color: Color, width: float, dash_px: float, gap_px: float) -> void:
