@@ -10,41 +10,58 @@ class_name TerrainBrush
 ##
 ## @experimental  Values may evolve as balance solidifies.
 
-# ---- Types ------------------------------------------------------------------
+## Type of feature geometry.
 enum FeatureType { LINEAR, AREA, POINT }
+## Rendering mode for the feature.
 enum DrawMode   { SOLID, DASHED, DOTTED, HATCHED, SYMBOL_TILED }
+## Orientation of tiled symbols.
 enum SymbolAlign { ALONG_TANGENT, SCREEN_UP }
-
+## Movement profile of a unit type.
 enum MoveProfile { TRACKED, WHEELED, FOOT, RIVERINE }
 
-# ---- Rendering --------------------------------------------------------------
+## The geometry type of the feature (line, polygon, or point).
 @export var feature_type: FeatureType = FeatureType.LINEAR
+## Drawing style used for rendering the feature.
 @export var draw_mode: DrawMode = DrawMode.SOLID
+## Rendering order relative to other features.
 @export var z_index: int = 0
 
-@export_group("Stroke")
+@export_group("Outline")
+## Outline color of the feature.
 @export var stroke_color: Color = Color(0.15, 0.85, 0.3, 0.9)
+## Outline width in pixels.
 @export_range(0.5, 12.0, 0.5) var stroke_width_px: float = 2.0
+## Dash length in pixels (when dashed mode is used).
 @export var dash_px: float = 8.0
+## Gap length between dashes (when dashed mode is used).
 @export var gap_px: float = 6.0
 
 @export_group("Fill (Area Features)")
+## Fill color of polygons.
 @export var fill_color: Color = Color(0.1, 0.6, 0.2, 0.25)
+## Spacing of hatch lines in pixels.
 @export var hatch_spacing_px: float = 8.0
+## Angle of hatch lines in degrees.
 @export var hatch_angle_deg: float = 45.0
 
 @export_group("Symbol (Tiled)")
+## Symbol texture for tiled rendering.
 @export var symbol: Texture2D
+## Spacing between repeated symbols in pixels.
 @export var symbol_spacing_px: float = 24.0
+## Scale factor for symbol rendering.
 @export var symbol_scale: float = 1.0
+## Alignment of symbols relative to geometry.
 @export var symbol_align: SymbolAlign = SymbolAlign.ALONG_TANGENT
 
-# ---- Gameplay ---------------------------------------------------------------
-
 @export_group("Movement cost (multiplier)")
+## Movement multiplier for tracked vehicles.
 @export var mv_tracked: float = 1.0
+## Movement multiplier for wheeled vehicles.
 @export var mv_wheeled: float = 1.0
+## Movement multiplier for foot infantry.
 @export var mv_foot: float = 1.0
+## Movement multiplier for riverine units.
 @export var mv_riverine: float = 1.0
 
 @export_group("LOS & Spotting")
@@ -67,9 +84,7 @@ enum MoveProfile { TRACKED, WHEELED, FOOT, RIVERINE }
 ## (Rivers) Width in meters (useful for crossing logic).
 @export var river_width_m: float = 0.0
 
-# ---- API --------------------------------------------------------------------
 ## Returns the movement multiplier for a given profile.
-## [param profile] One of [code]MoveProfile[/code].
 func movement_multiplier(profile: int) -> float:
 	match profile:
 		MoveProfile.TRACKED: return mv_tracked
@@ -89,8 +104,7 @@ func defensive_modifiers() -> Dictionary:
 		"concealment": concealment
 	}
 
-## Provides a light-weight draw recipe that your renderer can consume.
-## The actual drawing is handled by the map layer, not the resource.
+## Provide a light-weight draw recipe for the renderer.
 func get_draw_recipe() -> Dictionary:
 	return {
 		"type": feature_type,
