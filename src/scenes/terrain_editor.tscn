@@ -9,8 +9,8 @@
 [sub_resource type="Resource" id="Resource_cc7e2"]
 script = ExtResource("2_q832w")
 name = "New Terrain"
-width_m = 1000
-height_m = 1000
+width_m = 2000
+height_m = 2000
 elevation_resolution_m = 20
 grid_start_x = 150
 grid_start_y = 120
@@ -125,10 +125,15 @@ render_target_update_mode = 4
 
 [node name="World" parent="Root/HBox/TerrainView/View" instance=ExtResource("2_fwab6")]
 unique_name_in_owner = true
-offset_left = -254.0
-offset_top = -35.0
-offset_right = 898.0
-offset_bottom = 613.0
+anchors_preset = -1
+anchor_left = -0.394
+anchor_top = -0.06
+anchor_right = -0.394
+anchor_bottom = -0.06
+offset_left = 253.736
+offset_top = 35.16
+offset_right = 897.736
+offset_bottom = 621.16
 size_flags_horizontal = 3
 size_flags_vertical = 3
 data = SubResource("Resource_cc7e2")
@@ -139,11 +144,12 @@ layout_mode = 2
 
 [node name="Camera" type="Camera2D" parent="Root/HBox/TerrainView/View"]
 unique_name_in_owner = true
-position = Vector2(250, 500)
+position = Vector2(500, 500)
 zoom = Vector2(0.5, 0.5)
 drag_horizontal_enabled = true
 drag_vertical_enabled = true
 script = ExtResource("3_15xeg")
+min_zoom = 0.1
 
 [node name="RightTray" type="PanelContainer" parent="Root/HBox"]
 custom_minimum_size = Vector2(250, 0)
@@ -176,7 +182,7 @@ theme_override_constants/separation = 12
 
 [node name="LMBHint" type="Label" parent="Root/BottomBar/HBox"]
 layout_mode = 2
-text = "LMB - Use Tool"
+text = " LMB - Use Tool"
 
 [node name="VSeparator" type="VSeparator" parent="Root/BottomBar/HBox"]
 layout_mode = 2
@@ -191,6 +197,14 @@ layout_mode = 2
 [node name="RMBHint" type="Label" parent="Root/BottomBar/HBox"]
 layout_mode = 2
 text = "RMB - Nothing"
+
+[node name="Spacer" type="Control" parent="Root/BottomBar/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MousePosition" type="Label" parent="Root/BottomBar/HBox"]
+layout_mode = 2
+text = "(0, 0) "
 
 [node name="NewTerrainDialog" parent="." instance=ExtResource("4_4pae0")]
 unique_name_in_owner = true

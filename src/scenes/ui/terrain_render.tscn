@@ -1,9 +1,12 @@
-[gd_scene load_steps=9 format=3 uid="uid://rbcwabwc1v0o"]
+[gd_scene load_steps=10 format=3 uid="uid://rbcwabwc1v0o"]
 
 [ext_resource type="Script" uid="uid://bcbx6qa1jofhc" path="res://scripts/terrain/TerrainRender.gd" id="1_kobl6"]
 [ext_resource type="Script" uid="uid://cxbielgj0k7ei" path="res://scripts/terrain/GridLayer.gd" id="2_llqno"]
 [ext_resource type="Script" uid="uid://dlu6lynrhk1n0" path="res://scripts/terrain/MapMargin.gd" id="3_ceejx"]
 [ext_resource type="Script" uid="uid://dbte70ha7h22j" path="res://scripts/terrain/ContourLayer.gd" id="4_utooi"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ceejx"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="FontVariation" id="FontVariation_fvhov"]
 
@@ -27,6 +30,7 @@ border_color = Color(0.0874685, 0.0392869, 0.00880663, 1)
 [node name="TerrainRender" type="PanelContainer"]
 offset_right = 1152.0
 offset_bottom = 648.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ceejx")
 script = ExtResource("1_kobl6")
 base_color = Color(0.993332, 0.99162, 0.98202, 1)
 terrain_border_color = Color(0.0749913, 0.0331813, 0.000359687, 1)

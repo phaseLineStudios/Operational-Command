@@ -81,10 +81,12 @@ func _draw() -> void:
 	var map_right := map_left + map_w
 	var map_bottom := map_top + map_h
 	
+	var ascent: float
+	var height: float
 	if data.name != "":
 		var center_x := 0.5 * (map_left + map_right)
-		var ascent := label_font.get_ascent(label_size)
-		var height := label_font.get_height(label_size)
+		ascent = label_font.get_ascent(label_size)
+		height = label_font.get_height(label_size)
 		var y_mid := 0.5 + height
 		var baseline_y := y_mid + (ascent - 0.5 * height)
 
@@ -98,8 +100,8 @@ func _draw() -> void:
 			if "grid_start_y" in data: start_y = int(data.grid_start_y)
 
 	var every := float(max(1, margin_label_every_m))
-	var ascent := label_font.get_ascent(label_size)
-	var height := label_font.get_height(label_size)
+	ascent = label_font.get_ascent(label_size)
+	height = label_font.get_height(label_size)
 
 	if every > 0.0 and (show_top or show_bottom):
 		var i := 0
