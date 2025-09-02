@@ -42,6 +42,8 @@ grid_100m_color = Color(0.138125, 0.049278, 0, 0.25)
 grid_1km_color = Color(0.0760013, 0.0254519, 3.00817e-09, 0.5)
 contour_color = Color(0.252098, 0.100844, 0, 0.7)
 contour_thick_color = Color(0.165151, 0.0734315, 1.20327e-08, 0.85)
+smooth_iterations = 1
+smooth_segment_len_m = 5.0
 
 [node name="MapMargin" type="PanelContainer" parent="."]
 unique_name_in_owner = true
@@ -69,6 +71,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("4_utooi")
+smooth_iterations = 5
 
 [node name="GridLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true

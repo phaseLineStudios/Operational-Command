@@ -1,11 +1,20 @@
 extends Control
 class_name ContourLayer
 
+## Base contour color
 @export var contour_color: Color = Color(0.15, 0.15, 0.15, 0.7)
+## Contour color for thick lines
 @export var contour_thick_color: Color = Color(0.1, 0.1, 0.1, 0.85)
+## Base width for contour lines
 @export var contour_px: float = 1.0
+## How often should contour lines be thick (in m)
 @export var contour_thick_every_m: int = 50
-@export var antialias: bool = true
+## Smoothing iterations
+@export var smooth_iterations: int = 2
+## Smoothing segment lengths
+@export var smooth_segment_len_m: float = 4.0
+## Should smoothing keep ends
+@export var smooth_keep_ends: bool = true
 
 var data: TerrainData
 var _data_conn := false
@@ -18,6 +27,7 @@ var _dirty := true
 var _rebuild_scheduled := false
 @export var rebuild_delay_sec := 0.05
 
+## API to set Terrain Data
 func set_data(d: TerrainData) -> void:
 	if _data_conn and data and data.is_connected("changed", Callable(self, "_on_data_changed")):
 		data.disconnect("changed", Callable(self, "_on_data_changed"))
@@ -39,6 +49,7 @@ func set_data(d: TerrainData) -> void:
 	_schedule_rebuild()
 	queue_redraw()
 
+## API to apply style exports
 func apply_style(from: Node) -> void:
 	if from == null: return
 	if "contour_color" in from: contour_color = from.contour_color
@@ -48,25 +59,31 @@ func apply_style(from: Node) -> void:
 	_mark_dirty()
 	_schedule_rebuild()
 
+## API to request contour rebuild
 func request_rebuild() -> void:
 	_mark_dirty()
 	_schedule_rebuild()
 
+## Redraw contours on resize
 func _notification(what):
 	if what == NOTIFICATION_RESIZED:
 		queue_redraw()
 
+## Rebuild contours if terrain data changes
 func _on_data_changed() -> void:
 	_mark_dirty()
 	_schedule_rebuild()
 
+## Rebuild contours if elevation data changes
 func _on_elevation_changed(_rect := Rect2i(0,0,0,0)) -> void:
 	_mark_dirty()
 	_schedule_rebuild()
 
+## Mark contours as dirty
 func _mark_dirty() -> void:
 	_dirty = true
 
+## Schedule a Rebuild of the contour lines
 func _schedule_rebuild() -> void:
 	if _rebuild_scheduled:
 		return
@@ -98,8 +115,9 @@ func _draw() -> void:
 
 		for line: PackedVector2Array in polylines:
 			if line.size() >= 2:
-				draw_polyline(line, col, w, antialias)
+				draw_polyline(line, col, w, true)
 
+## Rebuild the contour lines
 func _rebuild_contours() -> void:
 	_dirty = false
 	_polylines_by_level.clear()
@@ -118,7 +136,6 @@ func _rebuild_contours() -> void:
 	var step_m := float(max(1, data.elevation_resolution_m))
 	var dH := float(max(1, data.contour_interval_m))
 
-	# scan elevation range
 	var min_e := INF
 	var max_e := -INF
 	for y in h:
@@ -136,8 +153,23 @@ func _rebuild_contours() -> void:
 	for L in _levels:
 		var segments := _march_level_segments(img, w, h, step_m, L)
 		var polylines := _stitch_segments_to_polylines(segments)
-		_polylines_by_level[L] = polylines
+		
+		if smooth_segment_len_m > 0.0:
+			var smoothed: Array = []
+			for pl: PackedVector2Array in polylines:
+				if pl.size() < 2:
+					continue
+				var closed := _polyline_is_closed(pl)
+				var res := _resample_polyline_equal_step(pl, max(0.5, smooth_segment_len_m), closed)
+				var s := res
+				for _i in smooth_iterations:
+					s = _chaikin_once(s, closed, smooth_keep_ends)
+				smoothed.append(s)
+			_polylines_by_level[L] = smoothed
+		else:
+			_polylines_by_level[L] = polylines
 
+## March over segments for a level
 func _march_level_segments(img: Image, w: int, h: int, step_m: float, level: float) -> Array:
 	var segs: Array = []
 
@@ -206,6 +238,7 @@ func _march_level_segments(img: Image, w: int, h: int, step_m: float, level: flo
 
 	return segs
 
+## Stitch segments into polylines
 func _stitch_segments_to_polylines(segments: Array) -> Array:
 	var polylines: Array = []
 	if segments.is_empty():
@@ -264,7 +297,104 @@ func _stitch_segments_to_polylines(segments: Array) -> Array:
 
 	return polylines
 
+## Helper function to check for multiple
 static func _is_multiple(value: float, step: float) -> bool:
 	if step <= 0.0: return false
 	var t := value / step
 	return abs(t - round(t)) < 1e-4
+
+## Helper to check if polyline is closed
+func _polyline_is_closed(pl: PackedVector2Array, eps := 0.01) -> bool:
+	if pl.size() < 3: return false
+	return pl[0].distance_to(pl[pl.size() - 1]) <= eps
+
+## Resample a polyline to (roughly) uniform segment length 'step'.
+func _resample_polyline_equal_step(pl: PackedVector2Array, step: float, closed: bool) -> PackedVector2Array:
+	var pts := pl
+	var n := pts.size()
+	if n < 2: return pts
+	
+	# Build a list including closing segment if closed
+	var total_len := 0.0
+	var seg_len := PackedFloat32Array()
+	var count := n if not closed else n
+	for i in count - 1:
+		var a := pts[i]
+		var b := pts[(i + 1) % n]
+		var L := a.distance_to(b)
+		seg_len.append(L)
+		total_len += L
+	
+	if total_len <= step:
+		return pts.duplicate()
+	
+	var out := PackedVector2Array()
+	var target := 0.0
+	
+	# Start point
+	out.append(pts[0])
+	
+	var seg_idx := 0
+	var seg_acc := 0.0
+	while target + step <= total_len + 1e-5:
+		target += step
+		# advance along segments to reach 'target'
+		while seg_idx < seg_len.size() and seg_acc + seg_len[seg_idx] < target:
+			seg_acc += seg_len[seg_idx]
+			seg_idx += 1
+		if seg_idx >= seg_len.size():
+			break
+		var a_i := seg_idx
+		var a := pts[a_i]
+		var b := pts[(a_i + 1) % n]
+		var within := target - seg_acc
+		var Lseg: float = max(1e-6, seg_len[seg_idx])
+		var alpha := within / Lseg
+		out.append(a.lerp(b, alpha))
+	# End point for open lines
+	if not closed:
+		var last := pts[n - 1]
+		if out[out.size() - 1].distance_to(last) > 1e-5:
+			out.append(last)
+	else:
+		# Ensure closure
+		if out.size() > 1 and out[0].distance_to(out[out.size() - 1]) > 1e-5:
+			out.append(out[0])
+	
+	return out
+
+# https://www.cs.unc.edu/~dm/UNC/COMP258/LECTURES/Chaikins-Algorithm.pdf
+## One iteration of Chaikin corner cutting.
+func _chaikin_once(pl: PackedVector2Array, closed: bool, keep_ends: bool) -> PackedVector2Array:
+	var n := pl.size()
+	if n < 3:
+		return pl.duplicate()
+	
+	var out := PackedVector2Array()
+	
+	if closed:
+		for i in n:
+			var p0 := pl[(i - 1 + n) % n]
+			var p1 := pl[i]
+			var p2 := pl[(i + 1) % n]
+			var Q := p0 * 0.75 + p1 * 0.25
+			var R := p1 * 0.75 + p2 * 0.25
+			out.append(Q)
+			out.append(R)
+		# close loop
+		if out[0].distance_to(out[out.size() - 1]) > 1e-5:
+			out.append(out[0])
+	else:
+		if keep_ends:
+			out.append(pl[0])  # preserve start
+		for i in range(1, n - 1):
+			var p0 := pl[i - 1]
+			var p1 := pl[i]
+			var p2 := pl[i + 1]
+			var Q := p0 * 0.75 + p1 * 0.25
+			var R := p1 * 0.75 + p2 * 0.25
+			out.append(Q)
+			out.append(R)
+		if keep_ends:
+			out.append(pl[n - 1])
+	return out
