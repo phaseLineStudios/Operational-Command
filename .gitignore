@@ -7,8 +7,6 @@ src/.import/**/*
 *.translation.import
 *.stex
 *.scn
-*.res
-*.tres
 *.tmp
 src/.godot/
 src/.godot/tmp/**
