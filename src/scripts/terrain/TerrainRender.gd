@@ -8,35 +8,52 @@ class_name TerrainRender
 
 ## Visual Style
 @export_group("Terrain Base")
+## Base background map color
 @export var base_color: Color = Color(1.0, 1.0, 1.0)
+## Color of the map border
 @export var terrain_border_color: Color = Color(0.0, 0.0, 0.0)
+## Width of the map border
 @export var terrain_border_px: int = 1
 
 @export_group("Margin")
 ## Font size for map title
 @export var title_size: int = 24
+## Color of outer margin
 @export var margin_color: Color = Color(1.0, 1.0, 1.0)
+## Size of outer margin top
 @export var margin_top_px: int = 50
+## Size of outer margin bottom
 @export var margin_bottom_px: int = 50
+## Size of outer margin left
 @export var margin_left_px: int = 50
+## Size of outer margin right
 @export var margin_right_px: int = 50
-
-@export_group("Grid")
-@export var grid_100m_color: Color = Color(0.2, 0.2, 0.2, 0.25)
-@export var grid_1km_color: Color = Color(0.1, 0.1, 0.1, 0.5)
-@export var grid_line_px: float = 1.0
-@export var grid_1km_line_px: float = 2.0
-@export var margin_bg: Color = Color(0.95, 0.95, 0.93, 1.0)
-@export var map_bg: Color = Color(1, 1, 1, 1)
-@export var margin_px: int = 64
+## Color for text
 @export var label_color: Color = Color(0.05, 0.05, 0.05, 1.0)
+## Font for text
 @export var label_font: Font
+## Font size of grid number text
 @export var label_size: int = 14
 
+
+@export_group("Grid")
+## Color of grid lines for every 100m
+@export var grid_100m_color: Color = Color(0.2, 0.2, 0.2, 0.25)
+## Color of grid lines for every 1000m
+@export var grid_1km_color: Color = Color(0.1, 0.1, 0.1, 0.5)
+## Width of grid lines for every 100m
+@export var grid_line_px: float = 1.0
+## Width of grid lines for every 1000m
+@export var grid_1km_line_px: float = 2.0
+
 @export_group("Contours")
+## Base contour color
 @export var contour_color: Color = Color(0.15, 0.15, 0.15, 0.7)
+## Contour color for thick lines
 @export var contour_thick_color: Color = Color(0.1, 0.1, 0.1, 0.85)
+## Base width for contour lines
 @export var contour_px: float = 1.0
+## How often should contour lines be thick (in m)
 @export var contour_thick_every_m: int = 50
 
 @onready var margin = %MapMargin
@@ -47,10 +64,8 @@ class_name TerrainRender
 @onready var grid_layer: GridLayer = %GridLayer
 @onready var label_layer = %LabelLayer
 
+## Emits when the map is resized
 signal map_resize()
-
-var _contours: Dictionary = {}
-var _contours_dirty := true
 
 func _ready():
 	_apply_visuals_to_grid()
@@ -58,6 +73,7 @@ func _ready():
 	grid_layer.queue_redraw()
 	base_layer.resized.connect(_on_base_layer_resize)
 
+## Set new Terrain Data
 func _set_data(d: TerrainData):
 	_mark_all_dirty()
 	data = d
@@ -66,6 +82,7 @@ func _set_data(d: TerrainData):
 	call_deferred("_draw_map_size")
 	call_deferred("_push_data_to_layers")
 
+## Push exports to their respective layers
 func _push_data_to_layers() -> void:
 	if grid_layer and grid_layer.has_method("set_data"):
 		grid_layer.set_data(data)
@@ -92,6 +109,7 @@ func _push_data_to_layers() -> void:
 		
 	queue_redraw()
 
+## Reconfigure if terrain data is changed
 func _on_data_changed() -> void:
 	_mark_all_dirty()
 	_draw_map_size()
@@ -99,10 +117,11 @@ func _on_data_changed() -> void:
 	contour_layer.request_rebuild()
 	queue_redraw()
 
+## Mark elements as dirty to redraw
 func _mark_all_dirty() -> void:
-	_contours_dirty = true
-	_contours.clear()
+	pass
 
+## Apply visual settings to grid
 func _apply_visuals_to_grid() -> void:
 	if not grid_layer:
 		return
@@ -123,13 +142,14 @@ func _draw() -> void:
 	base_sb.border_color = terrain_border_color
 	base_layer.add_theme_stylebox_override("panel", base_sb)
 
+## Resize the map to fit the terrain data
 func _draw_map_size() -> void:
 	if data == null:
 		return
 	
 	if margin:
 		var base_size := data.get_size()
-		var total := base_size + Vector2(margin_px * 2, margin_px * 2)
+		var total := base_size + Vector2(margin_left_px + margin_right_px, margin_top_px + margin_bottom_px)
 		margin.size = total
 		
 	size = margin.size
