@@ -65,7 +65,8 @@ class_name TerrainRender
 @onready var margin = %MapMargin
 @onready var base_layer = %TerrainBase
 @onready var surface_layer = %SurfaceLayer
-@onready var feature_layer = %FeatureLayer
+@onready var line_layer = %LineLayer
+@onready var point_layer = %PointLayer
 @onready var contour_layer = %ContourLayer
 @onready var grid_layer: GridLayer = %GridLayer
 @onready var label_layer = %LabelLayer
