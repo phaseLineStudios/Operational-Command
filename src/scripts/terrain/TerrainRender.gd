@@ -161,8 +161,7 @@ func _draw_map_size() -> void:
 		var base_size := data.get_size()
 		var total := base_size + Vector2(margin_left_px + margin_right_px, margin_top_px + margin_bottom_px)
 		margin.size = total
-		
-	size = margin.size
+		size = margin.size
 
 	if grid_layer:
 		grid_layer.queue_redraw()

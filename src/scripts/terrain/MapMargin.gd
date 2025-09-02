@@ -37,11 +37,11 @@ class_name MarginLayer
 ## grid number offset top
 @export var offset_top_px: float = -1.0
 ## grid number offset bottom
-@export var offset_bottom_px: float = 35
+@export var offset_bottom_px: float = 10
 ## grid number offset left
 @export var offset_left_px: float = -10
 ## grid number offset right
-@export var offset_right_px: float = 35
+@export var offset_right_px: float = 10
 
 var data: TerrainData
 

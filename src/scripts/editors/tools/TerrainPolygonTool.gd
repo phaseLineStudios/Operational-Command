@@ -5,12 +5,6 @@ class_name TerrainPolygonTool
 
 @export var active_brush: TerrainBrush
 
-var _points_m := PackedVector2Array()
-var _hover_idx := -1
-var _drag_idx := -1
-var _is_drag := false
-var _pick_radius_px := 10.0
-
 func _init():
 	tool_icon = preload("res://assets/textures/ui/editors_polygon_tool.png")
 	tool_hint = "Polygon Tool"
@@ -25,10 +19,10 @@ func _load_brushes() -> void:
 				if r is TerrainBrush:
 					brushes.append(r)
 
-func build_preview(overlay_parent: Node) -> Control:
+func build_preview(_overlay_parent: Node) -> Control:
 	return Control.new()
 
-func _place_preview(local_px: Vector2) -> void:
+func _place_preview(_local_px: Vector2) -> void:
 	if _preview:
 		_preview.queue_redraw()
 
@@ -73,5 +67,5 @@ func _label(t: String) -> Label:
 	l.text = t
 	return l
 
-func handle_view_input(event: InputEvent) -> bool:
+func handle_view_input(_event: InputEvent) -> bool:
 	return false
