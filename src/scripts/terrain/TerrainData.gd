@@ -29,7 +29,7 @@ class_name TerrainData
 ## List of surface shapes. Each: { "brush": TerrainBrush, "type": "freehand|line|polygon", "points": PackedVector2Array, "closed": bool }.
 @export var surfaces: Array = [] : set = _touch
 ## List of point features. Each: { "res": TerrainFeature, "pos": Vector2, "rot": float }.
-@export var features: Array = [] : set = _touch
+@export var points: Array = [] : set = _touch
 ## List of text labels. Each: { "text": String, "pos": Vector2, "size": int, "rot": float }.
 @export var labels: Array = [] : set = _touch
 

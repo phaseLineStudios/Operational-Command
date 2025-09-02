@@ -19,6 +19,8 @@ enum SymbolAlign { ALONG_TANGENT, SCREEN_UP }
 ## Movement profile of a unit type.
 enum MoveProfile { TRACKED, WHEELED, FOOT, RIVERINE }
 
+## Legend Title
+@export var legend_title: String = ""
 ## The geometry type of the feature (line, polygon, or point).
 @export var feature_type: FeatureType = FeatureType.LINEAR
 ## Drawing style used for rendering the feature.
@@ -107,6 +109,7 @@ func defensive_modifiers() -> Dictionary:
 ## Provide a light-weight draw recipe for the renderer.
 func get_draw_recipe() -> Dictionary:
 	return {
+		"title": legend_title,
 		"type": feature_type,
 		"mode": draw_mode,
 		"z_index": z_index,
