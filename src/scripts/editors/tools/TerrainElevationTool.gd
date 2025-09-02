@@ -113,12 +113,12 @@ func _apply(screen_pos: Vector2) -> void:
 	if img.is_empty(): 
 		return
 	
-	# BUG The position is slighlty offsett from the mouse
 	var local_m := editor.screen_to_terrain(screen_pos, true)
 	if not local_m.is_finite():
 		return
-		
-	var px := data.world_to_elev_px(local_m)
+	
+	var local_terrain := local_m - Vector2(render.margin_left_px, render.margin_top_px)
+	var px := data.world_to_elev_px(local_terrain)
 
 	var r_px := int(round(brush_radius_m / data.elevation_resolution_m))
 	var r_px_i := int(round(r_px))
