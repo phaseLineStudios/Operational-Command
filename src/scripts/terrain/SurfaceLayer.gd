@@ -66,7 +66,6 @@ func _draw() -> void:
 		var closed: bool = item.closed
 		var brush: TerrainBrush = item.brush
 		var rec := brush.get_draw_recipe()
-
 		var fill_col: Color = rec.fill.color if rec.has("fill") and "color" in rec.fill else Color(0,0,0,0)
 		match int(rec.mode if rec.has("mode") else TerrainBrush.DrawMode.SOLID):
 			TerrainBrush.DrawMode.SOLID:

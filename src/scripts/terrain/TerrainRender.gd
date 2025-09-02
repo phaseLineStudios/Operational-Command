@@ -173,10 +173,14 @@ func _draw_map_size() -> void:
 func _on_base_layer_resize():
 	emit_signal("map_resize")
 
+## API to check if position is inside terrain
+func is_inside_terrain(pos: Vector2) -> bool:
+	return base_layer.get_global_rect().has_point(pos)
+
 ## API to get the map size
-func get_map_size():
+func get_map_size() -> Vector2:
 	return base_layer.size
 
 ## API to get the map position
-func get_map_position():
+func get_map_position() -> Vector2:
 	return base_layer.position

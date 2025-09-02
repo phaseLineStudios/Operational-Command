@@ -11,6 +11,7 @@ signal on_need_info()
 var editor: TerrainEditor
 var render: TerrainRender
 var viewport_container: SubViewportContainer
+var viewport: SubViewport
 var data: TerrainData
 var brushes: Array[TerrainBrush] = []
 var features: Array[Variant] = []

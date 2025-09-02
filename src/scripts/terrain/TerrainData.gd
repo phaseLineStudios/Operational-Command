@@ -21,17 +21,17 @@ class_name TerrainData
 
 @export_group("Elevation")
 ## Contour interval in meters.
-@export var contour_interval_m: int = 10 : set = _touch
+@export var contour_interval_m: int = 10 : set = _set_contour_interval_m
 ## Elevation image (R channel = meters; 16F or 32F preferred).
 @export var elevation: Image = Image.create(64, 64, false, Image.FORMAT_RF) : set = _set_elev
 
 @export_group("Content")
 ## List of surface shapes. Each: { "brush": TerrainBrush, "type": "freehand|line|polygon", "points": PackedVector2Array, "closed": bool }.
-@export var surfaces: Array = [] : set = _touch
+@export var surfaces: Array = [] : set = _set_surfaces
 ## List of point features. Each: { "res": TerrainFeature, "pos": Vector2, "rot": float }.
-@export var points: Array = [] : set = _touch
+@export var points: Array = [] : set = _set_points
 ## List of text labels. Each: { "text": String, "pos": Vector2, "size": int, "rot": float }.
-@export var labels: Array = [] : set = _touch
+@export var labels: Array = [] : set = _set_labels
 
 var _px_per_m: float = 1.0
 
@@ -78,8 +78,27 @@ func _set_elev(img: Image) -> void:
 	_update_scale()
 	emit_signal("changed")
 
+## Set surfaces variable
+func _set_surfaces(v) -> void:
+	surfaces = v
+	_touch()
+	
+## Set points variable
+func _set_points(v) -> void:
+	points = v
+	_touch()
+	
+## Set surfaces variable
+func _set_labels(v) -> void:
+	labels = v
+	_touch()
+
+func _set_contour_interval_m(v):
+	contour_interval_m = v
+	_touch()
+
 ## Emit changed signal when data is changed
-func _touch(_value) -> void:
+func _touch() -> void:
 	emit_signal("changed")
 
 ## Update heightmap scale

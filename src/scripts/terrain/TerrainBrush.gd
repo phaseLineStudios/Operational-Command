@@ -1,4 +1,3 @@
-@tool
 @icon("res://icons/TerrainBrush.svg")
 extends Resource
 class_name TerrainBrush
