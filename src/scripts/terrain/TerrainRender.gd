@@ -55,6 +55,12 @@ class_name TerrainRender
 @export var contour_px: float = 1.0
 ## How often should contour lines be thick (in m)
 @export var contour_thick_every_m: int = 50
+## Smoothing iterations
+@export var smooth_iterations: int = 2
+## Smoothing segment lengths
+@export var smooth_segment_len_m: float = 4.0
+## Should smoothing keep ends
+@export var smooth_keep_ends: bool = true
 
 @onready var margin = %MapMargin
 @onready var base_layer = %TerrainBase
