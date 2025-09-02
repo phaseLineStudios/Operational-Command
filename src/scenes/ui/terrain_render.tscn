@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://rbcwabwc1v0o"]
+[gd_scene load_steps=11 format=3 uid="uid://rbcwabwc1v0o"]
 
 [ext_resource type="Script" uid="uid://bcbx6qa1jofhc" path="res://scripts/terrain/TerrainRender.gd" id="1_kobl6"]
 [ext_resource type="Script" uid="uid://cxbielgj0k7ei" path="res://scripts/terrain/GridLayer.gd" id="2_llqno"]
 [ext_resource type="Script" uid="uid://dlu6lynrhk1n0" path="res://scripts/terrain/MapMargin.gd" id="3_ceejx"]
+[ext_resource type="Script" uid="uid://cg0secq4wft8v" path="res://scripts/terrain/SurfaceLayer.gd" id="3_utooi"]
 [ext_resource type="Script" uid="uid://dbte70ha7h22j" path="res://scripts/terrain/ContourLayer.gd" id="4_utooi"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ceejx"]
@@ -62,8 +63,13 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_nu5ig")
 [node name="SurfaceLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
 layout_mode = 2
+script = ExtResource("3_utooi")
 
-[node name="FeatureLayer" type="Control" parent="MapMargin/TerrainBase"]
+[node name="LineLayer" type="Control" parent="MapMargin/TerrainBase"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PointLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
 layout_mode = 2
 
