@@ -112,6 +112,9 @@ func _push_data_to_layers() -> void:
 		contour_layer.set_data(data)
 		contour_layer.apply_style(self)
 		contour_layer.queue_redraw()
+	
+	if surface_layer and surface_layer.has_method("set_data"):
+		surface_layer.set_data(data)
 		
 	queue_redraw()
 
