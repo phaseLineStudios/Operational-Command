@@ -112,13 +112,13 @@ func _select_tool(btn: TextureButton) -> void:
 
 ## Rebuild the options panel for the selected tool
 func _rebuild_options_panel() -> void:
-	queue_free_children(tools_options)
+	_queue_free_children(tools_options)
 	if active_tool:
 		active_tool.build_options_ui(tools_options)
 
 ## Builds the tool info panel
 func _rebuild_info_panel() -> void:
-	queue_free_children(tools_info)
+	_queue_free_children(tools_info)
 	if active_tool:
 		active_tool.build_info_ui(tools_info)
 
@@ -150,7 +150,7 @@ func _on_terrain_resize():
 	brush_overlay.size = terrain_render.get_map_size()
 
 ## Helper function to delete all children of a parent node
-func queue_free_children(node: Control):
+func _queue_free_children(node: Control):
 	for n in node.get_children():
 		n.queue_free()
 
@@ -188,9 +188,3 @@ func screen_to_terrain(pos: Vector2, keep_aspect: bool = true) -> Vector2:
 	var local_px := to_local_xform * sv_pos
 
 	return local_px
-
-## API to get a terrain pos from a brush overlay pos
-func overlay_to_terrain_local(pos: Vector2) -> Vector2:
-	var overlay_to_canvas := brush_overlay.get_global_transform_with_canvas()
-	var terrain_from_canvas := terrain_render.get_global_transform_with_canvas().affine_inverse()
-	return terrain_from_canvas * (overlay_to_canvas * pos)
