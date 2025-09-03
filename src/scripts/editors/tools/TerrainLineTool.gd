@@ -28,7 +28,7 @@ func _load_brushes() -> void:
 				if r is TerrainBrush and r.feature_type == TerrainBrush.FeatureType.LINEAR:
 					brushes.append(r)
 
-func build_preview(overlay_parent: Node) -> Control:
+func build_preview(parent: Node) -> Control:
 	_preview = HandlesOverlay.new()
 	_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_preview.anchor_left = 0; _preview.anchor_top = 0
@@ -36,11 +36,14 @@ func build_preview(overlay_parent: Node) -> Control:
 	_preview.offset_left = 0; _preview.offset_top = 0
 	_preview.offset_right = 0; _preview.offset_bottom = 0
 	(_preview as HandlesOverlay).tool = self
-	overlay_parent.add_child(_preview)
+	parent.add_child(_preview)
 	return _preview
 
 func _place_preview(_local_px: Vector2) -> void:
 	if _preview: _preview.queue_redraw()
+
+func update_preview_at_overlay(_overlay: Control, _overlay_pos: Vector2):
+	pass
 
 func _queue_preview_redraw() -> void:
 	if _preview: _preview.queue_redraw()
@@ -82,9 +85,9 @@ func build_options_ui(p: Control) -> void:
 	s.value_changed.connect(func(v):
 		line_width_px = v
 		if _edit_idx >= 0:
-			var surf: Dictionary = data.surfaces[_edit_idx]
+			var surf: Dictionary = data.lines[_edit_idx]
 			surf["width_px"] = line_width_px
-			data.surfaces[_edit_idx] = surf
+			data.lines[_edit_idx] = surf
 			_emit_data_changed()
 	)
 	vb.add_child(_label("Line width (px)"))
@@ -144,9 +147,10 @@ func handle_view_input(event: InputEvent) -> bool:
 			_hover_idx = _pick_point(event.position)
 			_queue_preview_redraw()
 		if _is_drag and _drag_idx >= 0 and _edit_idx >= 0:
-			if not render.is_inside_terrain(event.position):
-				return false
 			var map_m: Vector2 = editor.screen_to_map(event.position, true)
+			if not render.is_inside_terrain(map_m):
+				return false
+
 			if map_m.is_finite():
 				var local_m := editor.terrain_to_map(map_m)
 				var pts := _current_points()
@@ -157,7 +161,8 @@ func handle_view_input(event: InputEvent) -> bool:
 	
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
-			if not render.is_inside_terrain(event.position):
+			var map_m: Vector2 = editor.screen_to_map(event.position, true)
+			if not render.is_inside_terrain(map_m):
 				return false
 
 			if _edit_idx < 0:
@@ -170,7 +175,6 @@ func handle_view_input(event: InputEvent) -> bool:
 				_drag_idx = _hover_idx
 				_queue_preview_redraw()
 			else:
-				var map_m: Vector2 = editor.screen_to_map(event.position, true)
 				if map_m.is_finite():
 					_sync_edit_brush_to_active_if_needed()
 					var local_m := editor.terrain_to_map(map_m)
@@ -218,7 +222,6 @@ func _start_new_line() -> void:
 	if data == null: return
 	if active_brush == null or active_brush.feature_type != TerrainBrush.FeatureType.LINEAR:
 		return
-	print("new line")
 	var pid := _next_id; _next_id += 1
 	var line := {
 		"id": pid,
@@ -230,32 +233,32 @@ func _start_new_line() -> void:
 	}
 	data.lines.append(line)
 	_edit_id = pid
-	_edit_idx = data.surfaces.size() - 1
+	_edit_idx = data.lines.size() - 1
 	_emit_data_changed()
 
 func _current_points() -> PackedVector2Array:
 	if data == null or _edit_idx < 0: return PackedVector2Array()
-	return data.surfaces[_edit_idx].get("points", PackedVector2Array())
+	return data.lines[_edit_idx].get("points", PackedVector2Array())
 
 func _set_current_points(pts: PackedVector2Array) -> void:
 	if data == null or _edit_idx < 0: return
-	var s: Dictionary = data.surfaces[_edit_idx]
+	var s: Dictionary = data.lines[_edit_idx]
 	s["points"] = pts
-	data.surfaces[_edit_idx] = s
+	data.lines[_edit_idx] = s
 	_emit_data_changed()
 	_queue_preview_redraw()
 
 func _find_edit_index_by_id() -> int:
 	if data == null or _edit_id < 0: return -1
-	for i in data.surfaces.size():
-		var s = data.surfaces[i]
+	for i in data.lines.size():
+		var s = data.lines[i]
 		if "id" in s and int(s.id) == _edit_id:
 			return i
 	return -1
 
 func _cancel_edit_delete_line() -> void:
 	if data == null or _edit_idx < 0: return
-	data.surfaces.remove_at(_edit_idx)
+	data.lines.remove_at(_edit_idx)
 	_edit_id = -1; _edit_idx = -1
 	_drag_idx = -1; _hover_idx = -1
 	_is_drag = false
@@ -269,40 +272,25 @@ func _finish_edit_keep_line() -> void:
 
 func _sync_edit_brush_to_active_if_needed() -> void:
 	if data == null or _edit_idx < 0 or active_brush == null: return
-	var s: Dictionary = data.surfaces[_edit_idx]
+	var s: Dictionary = data.lines[_edit_idx]
 	if s.get("brush") != active_brush:
 		s["brush"] = active_brush
-		data.surfaces[_edit_idx] = s
+		data.lines[_edit_idx] = s
 		_emit_data_changed()
 
-func _pick_point(mouse_global: Vector2) -> int:
+func _pick_point(pos: Vector2) -> int:
+	var terrain_pos = editor.terrain_to_map(editor.screen_to_map(pos))
 	if _edit_idx < 0: return -1
 	var pts := _current_points()
 	if pts.is_empty(): return -1
-
-	var to_overlay := _preview.get_global_transform_with_canvas().affine_inverse()
-	var mouse_overlay := to_overlay * mouse_global
-
-	var T := _xform_local_to_overlay()
-	var m := _margin_m()
-
 	var best := -1
 	var best_d2 := _pick_radius_px * _pick_radius_px
 	for i in pts.size():
-		var p_overlay := T * (pts[i] + m)
-		var d2 := p_overlay.distance_squared_to(mouse_overlay)
+		var d2 := pts[i].distance_squared_to(terrain_pos)
 		if d2 <= best_d2:
 			best = i
 			best_d2 = d2
 	return best
-
-func _margin_m() -> Vector2:
-	return Vector2(render.margin_left_px, render.margin_top_px)
-
-func _xform_local_to_overlay() -> Transform2D:
-	var to_overlay := _preview.get_global_transform_with_canvas().affine_inverse()
-	var from_render := render.get_global_transform_with_canvas()
-	return to_overlay * from_render
 
 func _label(t: String) -> Label:
 	var l := Label.new(); l.text = t; return l
@@ -320,23 +308,24 @@ func _emit_data_changed() -> void:
 
 class HandlesOverlay extends Control:
 	var tool: TerrainLineTool
-	var r := 4.0
+	var handle_r := 7.0
 	func _draw() -> void:
-		if tool == null or tool._edit_idx < 0: return
-		var pts_local := tool._current_points()
-		if pts_local.is_empty(): return
+		if tool == null or tool._edit_idx < 0:
+			return
+		var pts := tool._current_points()
+		if pts.is_empty():
+			return
 
-		var T := tool._xform_local_to_overlay()
-		var m := tool._margin_m()
+		for i in pts.size():
+			var p_map := tool.editor.map_to_terrain(pts[i])
 
-		for i in pts_local.size():
-			var p := T * (pts_local[i] + m)
-			draw_circle(p, r + 1.0, Color(0,0,0,0.9))
-			draw_circle(p, r, Color(1,1,1,0.95))
+			draw_circle(p_map, handle_r + 2.0, Color(0,0,0,0.9))
+			draw_circle(p_map, handle_r, Color(1,1,1,0.95))
 
-		if tool._hover_idx >= 0 and tool._hover_idx < pts_local.size():
-			var ph := T * (pts_local[tool._hover_idx] + m)
-			draw_circle(ph, r + 4.0, Color(1.0, 0.7, 0.2, 0.35))
-		if tool._is_drag and tool._drag_idx >= 0 and tool._drag_idx < pts_local.size():
-			var pd := T * (pts_local[tool._drag_idx] + m)
-			draw_circle(pd, r + 6.0, Color(0.2, 0.6, 1.0, 0.35))
+		if tool._hover_idx >= 0 and tool._hover_idx < pts.size():
+			var ph_map := tool.editor.map_to_terrain(pts[tool._hover_idx])
+			draw_circle(ph_map, handle_r + 4.0, Color(1.0, 0.7, 0.2, 0.35))
+
+		if tool._is_drag and tool._drag_idx >= 0 and tool._drag_idx < pts.size():
+			var pd_map := tool.editor.map_to_terrain(pts[tool._drag_idx])
+			draw_circle(pd_map, handle_r + 6.0, Color(0.2, 0.6, 1.0, 0.35))
