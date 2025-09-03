@@ -287,15 +287,15 @@ func _finish_edit_keep_polygon() -> void:
 	_queue_preview_redraw()
 
 ## Function to pick a point at position
-func _pick_point(screen_pos: Vector2) -> int:
+func _pick_point(pos: Vector2) -> int:
+	var terrain_pos = editor.terrain_to_map(editor.screen_to_map(pos))
 	if _edit_idx < 0: return -1
 	var pts := _current_points()
 	if pts.is_empty(): return -1
 	var best := -1
 	var best_d2 := _pick_radius_px * _pick_radius_px
 	for i in pts.size():
-		var sp := editor.map_to_screen(pts[i], true)
-		var d2 := sp.distance_squared_to(screen_pos)
+		var d2 := pts[i].distance_squared_to(terrain_pos)
 		if d2 <= best_d2:
 			best = i
 			best_d2 = d2
