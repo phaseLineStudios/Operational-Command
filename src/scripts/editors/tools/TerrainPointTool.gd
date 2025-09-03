@@ -15,7 +15,6 @@ func _init():
 	tool_icon = preload("res://assets/textures/ui/editors_point_tool.png")
 	tool_hint = "Point Tool"
 
-# -------- brushes (POINT only) --------
 func _load_brushes() -> void:
 	brushes.clear()
 	var dir := DirAccess.open("res://assets/terrain_brushes/")
@@ -26,7 +25,6 @@ func _load_brushes() -> void:
 				if r is TerrainBrush and r.feature_type == TerrainBrush.FeatureType.POINT:
 					brushes.append(r)
 
-# -------- UI --------
 func build_options_ui(p: Control) -> void:
 	_load_brushes()
 
@@ -50,6 +48,7 @@ func build_options_ui(p: Control) -> void:
 		if i >= 0 and i < map_index.size():
 			active_brush = brushes[map_index[i]]
 			_rebuild_info_ui()
+			_update_preview_appearance()
 	)
 	vb.add_child(list)
 
@@ -60,6 +59,7 @@ func build_options_ui(p: Control) -> void:
 	s.value = symbol_scale
 	s.value_changed.connect(func(v):
 		symbol_scale = v
+		_update_preview_appearance()
 	)
 	vb.add_child(_label("Symbol scale"))
 	vb.add_child(s)
@@ -81,9 +81,33 @@ func _rebuild_info_ui() -> void:
 	]
 	_info_ui_parent.add_child(l)
 
-# -------- input --------
+
+func build_preview(overlay_parent: Node) -> Control:
+	_preview = SymbolPreview.new()
+	_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_preview.brush = active_brush
+	_preview.z_index = 100
+	overlay_parent.add_child(_preview)
+	_update_preview_appearance()
+	return _preview
+
+func _place_preview(local_px: Vector2) -> void:
+	if _preview == null:
+		return
+	_preview.position = local_px
+	_preview.visible = _preview is SymbolPreview and (active_brush != null and active_brush.symbol != null)
+	_preview.queue_redraw()
+
+func _update_preview_appearance() -> void:
+	if _preview == null: return
+	if _preview is SymbolPreview:
+		var sp := _preview as SymbolPreview
+		sp.tex = (active_brush.symbol if active_brush and active_brush.symbol else null)
+		sp.scale_factor = symbol_scale
+		sp.brush = active_brush
+		sp.queue_redraw()
+
 func handle_view_input(event: InputEvent) -> bool:
-	# Hover/drag move
 	if event is InputEventMouseMotion:
 		_hover_idx = _pick_point(event.position)
 		if _is_drag and _drag_idx >= 0:
@@ -91,23 +115,21 @@ func handle_view_input(event: InputEvent) -> bool:
 			if not render.is_inside_terrain(map_m):
 				return false
 			if map_m.is_finite():
-				var local_m := editor.terrain_to_map(map_m)               # -> terrain-local
+				var local_m := editor.terrain_to_map(map_m)
 				_set_point_pos(_drag_idx, local_m)
 		return false
 
-	# Place / drag
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			var map_m := editor.screen_to_map(event.position)
 			if not render.is_inside_terrain(map_m):
 				return false
-			# drag if near an existing point
+
 			_hover_idx = _pick_point(event.position)
 			if _hover_idx >= 0:
 				_is_drag = true
 				_drag_idx = _hover_idx
 			else:
-				# create a new point
 				if active_brush == null or active_brush.feature_type != TerrainBrush.FeatureType.POINT:
 					return true
 				if map_m.is_finite():
@@ -119,7 +141,6 @@ func handle_view_input(event: InputEvent) -> bool:
 			_drag_idx = -1
 			return true
 
-	# Delete hovered/dragged with Backspace, cancel drag with Esc
 	if event is InputEventKey and event.pressed:
 		match event.keycode:
 			KEY_BACKSPACE:
@@ -168,7 +189,6 @@ func _remove_point(idx_in_surfaces: int) -> void:
 	data.points.remove_at(idx_in_surfaces)
 	_emit_data_changed()
 
-# -------- picking (find closest point in screen space) --------
 func _pick_point(mouse_global: Vector2) -> int:
 	if data == null or data.points == null:
 		return -1
@@ -189,7 +209,6 @@ func _pick_point(mouse_global: Vector2) -> int:
 			best_d2 = d2
 	return best
 
-# -------- utils --------
 func _emit_data_changed() -> void:
 	if data == null: return
 	if data.has_method("emit_changed"): data.emit_changed()
@@ -200,3 +219,21 @@ func _label(t: String) -> Label:
 
 func _queue_free_children(node: Control):
 	for n in node.get_children(): n.queue_free()
+
+class SymbolPreview extends Control:
+	var tex: Texture2D
+	var brush: TerrainBrush
+	var scale_factor := 1.0
+	var antialias := true
+
+	func _get_minimum_size() -> Vector2:
+		if tex == null: return Vector2.ZERO
+		return Vector2(tex.get_width(), tex.get_height()) * max(0.01, scale_factor)
+
+	func _draw() -> void:
+		if tex == null:
+			return
+		var sc: float = max(0.01, scale_factor)
+		var t_size: Vector2 = Vector2(brush.symbol_size_m, brush.symbol_size_m) * sc
+		var top_left := -t_size * 0.5
+		draw_texture_rect(tex, Rect2(top_left, t_size), false)

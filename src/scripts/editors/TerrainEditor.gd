@@ -35,7 +35,8 @@ const TOOL_ORDER := [
 	"res://scripts/editors/tools/TerrainElevationTool.gd",
 	"res://scripts/editors/tools/TerrainPolygonTool.gd",
 	"res://scripts/editors/tools/TerrainLineTool.gd",
-	"res://scripts/editors/tools/TerrainPointTool.gd"
+	"res://scripts/editors/tools/TerrainPointTool.gd",
+	"res://scripts/editors/tools/TerrainLabelTool.gd"
 ]
 
 const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"

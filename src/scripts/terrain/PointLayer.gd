@@ -27,7 +27,6 @@ func _draw() -> void:
 	if data == null or data.points == null or data.points.is_empty():
 		return
 
-	# Collect points with brushes & textures
 	var items: Array = []
 	for s in data.points:
 		if s == null or not (s is Dictionary): continue
@@ -39,13 +38,13 @@ func _draw() -> void:
 
 		var pos_local: Vector2 = s.get("pos", Vector2.INF)
 		if not pos_local.is_finite(): continue
-		var scale: float = float(s.get("scale", 1.0))
-		var size = brush.symbol_size_m * max(0.01, scale)
+		var p_scale: float = float(s.get("scale", 1.0))
+		var p_size = brush.symbol_size_m * max(0.01, p_scale)
 
 		items.append({
 			"pos_local": pos_local,
 			"tex": tex,
-			"size": size,
+			"size": p_size,
 			"z": brush.z_index
 		})
 
@@ -56,8 +55,8 @@ func _draw() -> void:
 		var tex: Texture2D = it.tex
 		var sc: float = it.size
 
-		var size := Vector2(sc, sc)
-		var top_left := pos_local - size * 0.5
+		var p_size := Vector2(sc, sc)
+		var top_left := pos_local - p_size * 0.5
 
-		var rect := Rect2(top_left, size)
+		var rect := Rect2(top_left, p_size)
 		draw_texture_rect(tex, rect, false)

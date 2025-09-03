@@ -1,0 +1,206 @@
+extends TerrainToolBase
+class_name TerrainLabelTool
+
+@export var label_text: String = "Label"
+@export var label_size: int = 16
+
+var _hover_idx := -1
+var _drag_idx := -1
+var _is_drag := false
+var _pick_radius_px := 14.0
+
+func _init():
+	tool_icon = preload("res://assets/textures/ui/editors_label_tool.png")
+	tool_hint = "Label Tool"
+
+func build_preview(overlay_parent: Node) -> Control:
+	_preview = LabelPreview.new()
+	_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_preview.z_index = 100
+	overlay_parent.add_child(_preview)
+	_refresh_preview()
+	return _preview
+
+func _place_preview(local_px: Vector2) -> void:
+	if _preview == null: 
+		return
+	_preview.position = local_px
+	_preview.visible = true
+	_preview.queue_redraw()
+
+func _refresh_preview() -> void:
+	if _preview == null: 
+		return
+	if _preview is LabelPreview:
+		var p := _preview as LabelPreview
+		p.text = label_text
+		p.font = render.label_font
+		p.font_size = label_size
+		p.fill_color = render.label_color
+		p.outline_color = Color(1,1,1,1)
+		p.queue_redraw()
+
+func build_options_ui(parent: Control) -> void:
+	var vb := VBoxContainer.new()
+	parent.add_child(vb)
+
+	vb.add_child(_label("Text"))
+	var te := LineEdit.new()
+	te.text = label_text
+	te.text_changed.connect(func(t):
+		label_text = t
+		_refresh_preview()
+	)
+	vb.add_child(te)
+
+	vb.add_child(_label("Font size"))
+	var s := HSlider.new()
+	s.min_value = 8
+	s.max_value = 96
+	s.step = 1
+	s.value = label_size
+	s.value_changed.connect(func(v):
+		label_size = int(v)
+		_refresh_preview()
+	)
+	vb.add_child(s)
+
+func build_info_ui(parent: Control) -> void:
+	var l := Label.new()
+	l.text = "Place text label"
+	parent.add_child(l)
+
+func build_hint_ui(parent: Control) -> void:
+	parent.add_child(_label("LMB - Place"))
+	parent.add_child(VSeparator.new())
+	parent.add_child(_label("Drag - Move"))
+	parent.add_child(VSeparator.new())
+	parent.add_child(_label("Backspace - Delete hovered"))
+	parent.add_child(VSeparator.new())
+	parent.add_child(_label("Esc - Cancel Drag"))
+
+func handle_view_input(event: InputEvent) -> bool:
+	if event is InputEventMouseMotion:
+		_hover_idx = _pick_label(event.position)
+		if _is_drag and _drag_idx >= 0:
+			var map_m := editor.screen_to_map(event.position)
+			if not render.is_inside_terrain(map_m): 
+				return false
+				
+			if map_m.is_finite():
+				var local_m := editor.terrain_to_map(map_m)
+				_set_label_pos(_drag_idx, local_m)
+		return false
+
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			var map_m := editor.screen_to_map(event.position)
+			if not render.is_inside_terrain(map_m): 
+				return false
+				
+			_hover_idx = _pick_label(event.position)
+			if _hover_idx >= 0:
+				_is_drag = true; _drag_idx = _hover_idx
+			else:
+				if map_m.is_finite():
+					var local_m := editor.terrain_to_map(map_m)
+					_add_label(local_m, label_text, label_size)
+			return true
+		else:
+			_is_drag = false; _drag_idx = -1
+			return true
+
+	if event is InputEventKey and event.pressed:
+		match event.keycode:
+			KEY_BACKSPACE:
+				if _hover_idx >= 0:
+					_remove_label(_hover_idx)
+					_hover_idx = -1
+				return true
+			KEY_ESCAPE:
+				_is_drag = false; _drag_idx = -1
+				return true
+
+	return false
+
+func _ensure_surfaces():
+	if data == null: return
+	if !("surfaces" in data) or data.labels == null:
+		data.labels = []
+
+func _add_label(local_pos: Vector2, text: String, size: int) -> void:
+	if data == null: return
+	_ensure_surfaces()
+	data.labels.append({
+		"id": randi(),
+		"type": "label",
+		"text": text,
+		"pos": local_pos,
+		"size": size
+	})
+	_emit_changed()
+
+func _set_label_pos(idx: int, local_pos: Vector2) -> void:
+	if data == null or idx < 0 or idx >= data.labels.size(): return
+	var d: Dictionary = data.labels[idx]
+	if d.get("type","") != "label": return
+	d["pos"] = local_pos
+	data.labels[idx] = d
+	_emit_changed()
+
+func _remove_label(idx: int) -> void:
+	if data == null or idx < 0 or idx >= data.labels.size(): return
+	data.labels.remove_at(idx)
+	_emit_changed()
+
+func _pick_label(mouse_global: Vector2) -> int:
+	if data == null or data.labels == null: return -1
+	var size := label_size
+	var best := -1
+	var best_d2 := _pick_radius_px * _pick_radius_px
+
+	for i in data.labels.size():
+		var s = data.labels[i]
+		if typeof(s) != TYPE_DICTIONARY: 
+			continue
+		var p_local: Vector2 = s.get("pos", Vector2.INF)
+		if not p_local.is_finite(): 
+			continue
+		var p_screen := editor.map_to_screen(editor.terrain_to_map(p_local))
+		var d2 := p_screen.distance_squared_to(mouse_global)
+		if d2 <= best_d2:
+			best = i; best_d2 = d2
+	return best
+
+func _emit_changed():
+	if data == null: return
+	if data.has_method("emit_changed"): data.emit_changed()
+	elif data.has_signal("changed"): data.emit_signal("changed")
+
+func _label(t: String) -> Label:
+	var l := Label.new(); l.text = t; return l
+
+func _queue_free_children(node: Control):
+	for n in node.get_children(): n.queue_free()
+
+class LabelPreview extends Control:
+	var text: String = ""
+	var font: Font
+	var font_size: int = 16
+	var fill_color: Color = Color(0.1,0.1,0.1,1.0)
+	var outline_color: Color = Color(1,1,1,1)
+
+	func _draw() -> void:
+		if font == null or text == "": return
+		var s_size := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
+		var ascent := font.get_ascent(font_size)
+		var height := font.get_height(font_size)
+		var baseline := Vector2(-s_size.x * 0.5, -height * 0.5 + ascent)
+
+		var offs := [
+			Vector2(-1,  0), Vector2(1,  0), Vector2(0, -1), Vector2(0, 1),
+			Vector2(-1,-1), Vector2(1,-1), Vector2(-1, 1), Vector2(1, 1)
+		]
+		for o in offs:
+			draw_string(font, baseline + o, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_color)
+		draw_string(font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, fill_color)

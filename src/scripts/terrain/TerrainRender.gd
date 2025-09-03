@@ -140,6 +140,12 @@ func _push_data_to_layers() -> void:
 	if point_layer and point_layer.has_method("set_data"):
 		point_layer.set_data(data)
 		point_layer.queue_redraw()
+	
+	if label_layer:
+		label_layer.font = label_font
+		label_layer.text_color = label_color
+		label_layer.set_data(data)
+		label_layer.queue_redraw()
 		
 	queue_redraw()
 

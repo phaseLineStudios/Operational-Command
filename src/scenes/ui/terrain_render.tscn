@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://rbcwabwc1v0o"]
+[gd_scene load_steps=15 format=3 uid="uid://rbcwabwc1v0o"]
 
 [ext_resource type="Script" uid="uid://bcbx6qa1jofhc" path="res://scripts/terrain/TerrainRender.gd" id="1_kobl6"]
 [ext_resource type="Script" uid="uid://cxbielgj0k7ei" path="res://scripts/terrain/GridLayer.gd" id="2_llqno"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://bfau3gaqh44a4" path="res://scripts/terrain/LineLayer.gd" id="4_uopel"]
 [ext_resource type="Script" uid="uid://dbte70ha7h22j" path="res://scripts/terrain/ContourLayer.gd" id="4_utooi"]
 [ext_resource type="Script" uid="uid://cm8auwtr4pxfp" path="res://scripts/terrain/PointLayer.gd" id="5_c2fte"]
+[ext_resource type="Script" uid="uid://bio2qt3p5m683" path="res://scripts/terrain/LabelLayer.gd" id="8_tecap"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ceejx"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -99,3 +100,4 @@ script = ExtResource("2_llqno")
 [node name="LabelLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
 layout_mode = 2
+script = ExtResource("8_tecap")

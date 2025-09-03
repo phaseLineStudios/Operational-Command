@@ -1,18 +1,18 @@
-[gd_resource type="Resource" script_class="TerrainBrush" load_steps=2 format=3 uid="uid://crf1m85nm55nh"]
+[gd_resource type="Resource" script_class="TerrainBrush" load_steps=2 format=3 uid="uid://bwjs7oudbes28"]
 
-[ext_resource type="Script" uid="uid://c8tm5edxa6cdw" path="res://scripts/terrain/TerrainBrush.gd" id="1_0gxxc"]
+[ext_resource type="Script" uid="uid://c8tm5edxa6cdw" path="res://scripts/terrain/TerrainBrush.gd" id="1_3qexa"]
 
 [resource]
-script = ExtResource("1_0gxxc")
-legend_title = "Powerline"
+script = ExtResource("1_3qexa")
+legend_title = "Trail"
 feature_type = 0
 draw_mode = 1
-z_index = 1
+z_index = 0
 stroke_color = Color(0, 0, 0, 0)
-stroke_width_px = 0.5
-dash_px = 20.0
+stroke_width_px = 2.0
+dash_px = 8.0
 gap_px = 6.0
-fill_color = Color(0.172549, 0.298039, 0.654902, 1)
+fill_color = Color(0, 0, 0, 1)
 hatch_spacing_px = 8.0
 hatch_angle_deg = 45.0
 symbol_spacing_px = 24.0

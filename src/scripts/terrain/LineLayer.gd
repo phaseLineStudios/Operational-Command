@@ -31,7 +31,6 @@ func _draw() -> void:
 	var lines: Array = []
 	for s in data.lines:
 		if s == null or not (s is Dictionary): continue
-		if s.get("type", "") != "polyline": continue
 		var brush: TerrainBrush = s.get("brush", null)
 		if brush == null or brush.feature_type != TerrainBrush.FeatureType.LINEAR: continue
 
