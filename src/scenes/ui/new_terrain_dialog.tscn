@@ -38,7 +38,7 @@ text = "X"
 layout_mode = 2
 min_value = 1000.0
 max_value = 10000.0
-value = 1000.0
+value = 2000.0
 suffix = "m"
 
 [node name="YLabel" type="Label" parent="VBoxContainer/Size"]
@@ -49,7 +49,7 @@ text = "Y"
 layout_mode = 2
 min_value = 1000.0
 max_value = 10000.0
-value = 1000.0
+value = 2000.0
 suffix = "m"
 
 [node name="GridLabel" type="Label" parent="VBoxContainer"]

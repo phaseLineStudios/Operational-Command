@@ -84,7 +84,6 @@ func _rebuild_info_ui() -> void:
 	]
 	_info_ui_parent.add_child(l)
 
-
 func build_preview(overlay_parent: Node) -> Control:
 	_preview = SymbolPreview.new()
 	_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE

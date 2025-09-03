@@ -30,6 +30,7 @@ var features: Array[Variant] = []
 var tool_map := {}
 var active_tool: TerrainToolBase
 var _inside_brush_overlay := false
+var _current_path: String = ""
 
 const TOOL_ORDER := [
 	"res://scripts/editors/tools/TerrainElevationTool.gd",
@@ -47,7 +48,6 @@ func _ready():
 	brush_overlay.mouse_entered.connect(_on_brush_overlay_mouse_enter)
 	brush_overlay.mouse_exited.connect(_on_brush_overlay_mouse_exit)
 	brush_overlay.gui_input.connect(_on_brush_overlay_gui_input)
-	terrain_render.map_resize.connect(_on_terrain_resize)
 	terrain_render.data = data
 	_build_tool_buttons()
 
@@ -55,6 +55,9 @@ func _ready():
 func _on_filemenu_pressed(id: int):
 	match id:
 		0: _on_new_pressed()
+		1: _open()
+		2: _save()
+		3: _save_as()
 		4: _quit_editor()
 
 ## On New Terrain Pressed event
@@ -137,6 +140,17 @@ func _rebuild_tool_hint() -> void:
 	if active_tool:
 		active_tool.build_hint_ui(tools_hint)
 
+## Handle unhandled input
+func _unhandled_key_input(event):
+	if event is InputEventKey and event.pressed:
+		var ctrl: bool = event.ctrl_pressed or event.meta_pressed
+		if ctrl and event.keycode == KEY_S:
+			if event.shift_pressed: _save_as()
+			else: _save()
+			accept_event()
+		elif ctrl and event.keycode == KEY_O:
+			_open(); accept_event()
+
 ## Handle input
 func _input(event: InputEvent) -> void:
 	if active_tool and active_tool.handle_view_input(event):
@@ -163,9 +177,55 @@ func _on_brush_overlay_mouse_enter():
 func _on_brush_overlay_mouse_exit():
 	_inside_brush_overlay = false
 
-func _on_terrain_resize():
-	brush_overlay.position = terrain_render.get_terrain_position()
-	brush_overlay.size = terrain_render.get_terrain_size()
+## Save terrain
+func _save():
+	if data == null: return
+	if _current_path == "":
+		_save_as(); return
+	var err := ResourceSaver.save(data, _current_path)
+	if err != OK:
+		push_error("Save failed: %s" % err)
+
+## Save terrain as
+func _save_as():
+	if data == null: return
+	var dlg := FileDialog.new()
+	dlg.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	dlg.access = FileDialog.ACCESS_FILESYSTEM
+	dlg.add_filter("*.tres ; Text Resource")
+	dlg.add_filter("*.res ; Binary Resource")
+	add_child(dlg)
+	dlg.popup_centered_ratio(0.5)
+	dlg.file_selected.connect(func(path):
+		var err := ResourceSaver.save(data, path)
+		if err == OK:
+			_current_path = path
+		else:
+			push_error("Save As failed: %s" % err)
+		dlg.queue_free()
+	)
+	dlg.canceled.connect(func(): dlg.queue_free())
+
+## Open terrain
+func _open():
+	var dlg := FileDialog.new()
+	dlg.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	dlg.access = FileDialog.ACCESS_FILESYSTEM
+	dlg.add_filter("*.tres, *.res ; TerrainData")
+	add_child(dlg)
+	dlg.popup_centered_ratio(0.5)
+	dlg.file_selected.connect(func(path):
+		var res := ResourceLoader.load(path)
+		if res is TerrainData:
+			data = res
+			_current_path = path
+			if terrain_render:
+				terrain_render.set_data(data)
+		else:
+			push_error("Not a TerrainData: %s" % path)
+		dlg.queue_free()
+	)
+	dlg.canceled.connect(func(): dlg.queue_free())
 
 ## Helper function to delete all children of a parent node
 func _queue_free_children(node: Control):
