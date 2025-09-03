@@ -6,6 +6,7 @@ class_name NewTerrainDialog
 @onready var terrain_size_y: SpinBox = %Size/Y
 @onready var terrain_grid_x: SpinBox = %GridStart/X
 @onready var terrain_grid_y: SpinBox = %GridStart/Y
+@onready var base_elevation: SpinBox = %BaseElevation
 @onready var create_btn: Button = %Create
 @onready var cancel_btn: Button = %Cancel
 
@@ -23,18 +24,19 @@ func _on_create_pressed():
 	data.height_m = terrain_size_y.value
 	data.grid_start_x = terrain_grid_x.value
 	data.grid_start_y = terrain_grid_y.value
+	data.base_elevation_m = base_elevation.value
 	
 	show_dialog(false)
 	emit_signal("request_create", data)
 
 ## Reset values before popup
 func _reset_values():
-	print("reset values")
 	terrain_title.text = ""
 	terrain_size_x.value = 2000
 	terrain_size_y.value = 2000
 	terrain_grid_x.value = 100
 	terrain_grid_y.value = 100
+	base_elevation.value = 110
 
 ## API to show/hide dialog window
 func show_dialog(state: bool):

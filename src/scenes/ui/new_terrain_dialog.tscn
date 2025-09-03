@@ -78,6 +78,16 @@ layout_mode = 2
 max_value = 899.0
 value = 100.0
 
+[node name="ElevationLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Base Elevation in meters"
+
+[node name="BaseElevation" type="SpinBox" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 5000.0
+value = 110.0
+
 [node name="Spacer" type="Control" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3

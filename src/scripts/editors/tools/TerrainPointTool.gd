@@ -78,10 +78,7 @@ func _rebuild_info_ui() -> void:
 	var l := RichTextLabel.new()
 	l.bbcode_enabled = true
 	l.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	l.text = "[b]%s[/b]\nScale (tool): %.2f  •  Base scale (brush): %.2f" % [
-		active_brush.legend_title, symbol_scale,
-		active_brush.symbol_scale if "symbol_scale" in active_brush else 1.0
-	]
+	l.text = "Place point features"
 	_info_ui_parent.add_child(l)
 
 func build_preview(overlay_parent: Node) -> Control:

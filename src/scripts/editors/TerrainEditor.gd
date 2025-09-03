@@ -11,6 +11,8 @@ class_name TerrainEditor
 ## Icon size for tool buttons
 @export var tool_icon_size: Vector2 = Vector2(25, 25)
 
+@onready var history := TerrainHistory.new()
+
 @onready var file_menu: MenuButton = %File
 @onready var tools_grid: GridContainer = %Tools
 @onready var terrain_render: TerrainRender = %World
@@ -144,12 +146,19 @@ func _rebuild_tool_hint() -> void:
 func _unhandled_key_input(event):
 	if event is InputEventKey and event.pressed:
 		var ctrl: bool = event.ctrl_pressed or event.meta_pressed
-		if ctrl and event.keycode == KEY_S:
+		if ctrl and event.keycode == KEY_Z:
+			TerrainHistory.undo(); 
+			accept_event()
+		elif ctrl and (event.keycode == KEY_Y or (event.shift_pressed and event.keycode == KEY_Z)):
+			TerrainHistory.redo(); 
+			accept_event()
+		elif ctrl and event.keycode == KEY_S:
 			if event.shift_pressed: _save_as()
 			else: _save()
 			accept_event()
 		elif ctrl and event.keycode == KEY_O:
-			_open(); accept_event()
+			_open()
+			accept_event()
 
 ## Handle input
 func _input(event: InputEvent) -> void:

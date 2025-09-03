@@ -97,7 +97,3 @@ func destroy_preview() -> void:
 	if is_instance_valid(_preview):
 		_preview.queue_free()
 	_preview = null
-
-## Undo/Redo hooks.
-func undo() -> void: pass
-func redo() -> void: pass
