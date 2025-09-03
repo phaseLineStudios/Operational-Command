@@ -64,12 +64,11 @@ func _draw() -> void:
 
 	for L in lines:
 		var chain: PackedVector2Array = L.pts.duplicate()
+		var outer_w: float = L.core_w + 2.0 * L.outline_w
 		if snap_half_px_for_thin_strokes:
-			var outer_w: float = L.core_w + 2.0 * L.outline_w
 			if int(round(outer_w)) % 2 != 0:
 				chain = _offset_half_px(chain)
 
-		var outer_w: float = L.core_w + 2.0 * L.outline_w
 		if L.stroke.a > 0.0 and outer_w > 0.0:
 			match L.mode:
 				TerrainBrush.DrawMode.SOLID:
@@ -105,23 +104,25 @@ func _draw_polyline_dashed_continuous(pts: PackedVector2Array, color: Color, wid
 	var period := dash + gap
 	var phase := 0.0
 	for i in range(pts.size() - 1):
-		var a := pts[i]; var b := pts[i + 1]
-		var seg := b - a; var len := seg.length()
-		if len <= 1e-6: continue
-		var dir := seg / len
+		var a := pts[i]
+		var b := pts[i + 1]
+		var seg := b - a; 
+		var length := seg.length()
+		if length <= 1e-6: continue
+		var dir := seg / length
 		var t := 0.0
-		if phase > 0.0: t = min(phase, len)
-		while t < len:
+		if phase > 0.0: t = min(phase, length)
+		while t < length:
 			var t0 := t
-			var t1: float = min(len, t + dash)
+			var t1: float = min(length, t + dash)
 			if t1 > t0:
 				draw_line(a + dir * t0, a + dir * t1, color, width, antialias)
 			t += period
 
 		var advanced := (phase if phase > 0.0 else 0.0)
-		var remaining := len - advanced
+		var remaining := length - advanced
 		var cycles: float = floor(remaining / period)
-		phase = len - (advanced + cycles * period)
+		phase = length - (advanced + cycles * period)
 
 ## Draw dotted line
 func _draw_polyline_dotted_continuous(pts: PackedVector2Array, color: Color, width: float, step_px: float) -> void:
@@ -130,16 +131,18 @@ func _draw_polyline_dotted_continuous(pts: PackedVector2Array, color: Color, wid
 	var r: float = max(0.5, width * 0.5)
 	var phase := 0.0
 	for i in range(pts.size() - 1):
-		var a := pts[i]; var b := pts[i + 1]
-		var seg := b - a; var len := seg.length()
-		if len <= 1e-6: continue
-		var dir := seg / len
+		var a := pts[i]
+		var b := pts[i + 1]
+		var seg := b - a; 
+		var length := seg.length()
+		if length <= 1e-6: continue
+		var dir := seg / length
 		var t := 0.0
-		if phase > 0.0: t = min(phase, len)
-		while t <= len:
+		if phase > 0.0: t = min(phase, length)
+		while t <= length:
 			draw_circle(a + dir * t, r, color)
 			t += step
 		var advanced := (phase if phase > 0.0 else 0.0)
-		var remaining := len - advanced
+		var remaining := length - advanced
 		var cycles: float = floor(remaining / step)
-		phase = len - (advanced + cycles * step)
+		phase = length - (advanced + cycles * step)

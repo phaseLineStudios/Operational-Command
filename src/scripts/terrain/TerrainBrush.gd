@@ -50,8 +50,8 @@ enum MoveProfile { TRACKED, WHEELED, FOOT, RIVERINE }
 @export var symbol: Texture2D
 ## Spacing between repeated symbols in pixels.
 @export var symbol_spacing_px: float = 24.0
-## Scale factor for symbol rendering.
-@export var symbol_scale: float = 1.0
+## Symbol size in meters
+@export var symbol_size_m: float = 1.0
 ## Alignment of symbols relative to geometry.
 @export var symbol_align: SymbolAlign = SymbolAlign.ALONG_TANGENT
 
@@ -126,7 +126,7 @@ func get_draw_recipe() -> Dictionary:
 		"symbol": {
 			"tex": symbol,
 			"spacing_px": symbol_spacing_px,
-			"scale": symbol_scale,
+			"size": symbol_size_m,
 			"align": symbol_align
 		}
 	}

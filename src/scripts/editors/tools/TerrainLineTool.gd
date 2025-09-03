@@ -226,7 +226,6 @@ func _start_new_line() -> void:
 	var line := {
 		"id": pid,
 		"brush": active_brush,
-		"type": "polyline",
 		"points": PackedVector2Array(),
 		"closed": false,
 		"width_px": line_width_px

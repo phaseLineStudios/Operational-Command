@@ -136,6 +136,10 @@ func _push_data_to_layers() -> void:
 	if line_layer and line_layer.has_method("set_data"):
 		line_layer.set_data(data)
 		line_layer.queue_redraw()
+	
+	if point_layer and point_layer.has_method("set_data"):
+		point_layer.set_data(data)
+		point_layer.queue_redraw()
 		
 	queue_redraw()
 
@@ -196,6 +200,8 @@ func _draw_map_size() -> void:
 		line_layer.queue_redraw()
 	if surface_layer:
 		surface_layer.queue_redraw()
+	if point_layer:
+		point_layer.queue_redraw()
 	queue_redraw()
 
 ## Emit a resize event for base layer

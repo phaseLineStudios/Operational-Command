@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://rbcwabwc1v0o"]
+[gd_scene load_steps=14 format=3 uid="uid://rbcwabwc1v0o"]
 
 [ext_resource type="Script" uid="uid://bcbx6qa1jofhc" path="res://scripts/terrain/TerrainRender.gd" id="1_kobl6"]
 [ext_resource type="Script" uid="uid://cxbielgj0k7ei" path="res://scripts/terrain/GridLayer.gd" id="2_llqno"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://cg0secq4wft8v" path="res://scripts/terrain/SurfaceLayer.gd" id="3_utooi"]
 [ext_resource type="Script" uid="uid://bfau3gaqh44a4" path="res://scripts/terrain/LineLayer.gd" id="4_uopel"]
 [ext_resource type="Script" uid="uid://dbte70ha7h22j" path="res://scripts/terrain/ContourLayer.gd" id="4_utooi"]
+[ext_resource type="Script" uid="uid://cm8auwtr4pxfp" path="res://scripts/terrain/PointLayer.gd" id="5_c2fte"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ceejx"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -82,6 +83,7 @@ script = ExtResource("4_uopel")
 [node name="PointLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
 layout_mode = 2
+script = ExtResource("5_c2fte")
 
 [node name="ContourLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
