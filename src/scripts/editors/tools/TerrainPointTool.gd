@@ -68,6 +68,9 @@ func build_info_ui(parent: Control) -> void:
 	_info_ui_parent = parent
 	_rebuild_info_ui()
 
+func build_hint_ui(parent: Control) -> void:
+	parent.add_child(_label("LMB - Place"))
+
 func _rebuild_info_ui() -> void:
 	if not _info_ui_parent or not active_brush:
 		return

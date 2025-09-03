@@ -97,6 +97,15 @@ func build_info_ui(parent: Control) -> void:
 	_info_ui_parent = parent
 	_rebuild_info_ui()
 
+func build_hint_ui(parent: Control) -> void:
+	parent.add_child(_label("LMB - New point"))
+	parent.add_child(VSeparator.new())
+	parent.add_child(_label("Backspace - Delete Point"))
+	parent.add_child(VSeparator.new())
+	parent.add_child(_label("ESC - Cancel"))
+	parent.add_child(VSeparator.new())
+	parent.add_child(_label("Enter - Save"))
+
 func _rebuild_info_ui():
 	if not _info_ui_parent || not active_brush:
 		return
