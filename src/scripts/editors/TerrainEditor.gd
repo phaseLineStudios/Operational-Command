@@ -147,10 +147,10 @@ func _unhandled_key_input(event):
 	if event is InputEventKey and event.pressed:
 		var ctrl: bool = event.ctrl_pressed or event.meta_pressed
 		if ctrl and event.keycode == KEY_Z:
-			TerrainHistory.undo(); 
+			history.undo(); 
 			accept_event()
 		elif ctrl and (event.keycode == KEY_Y or (event.shift_pressed and event.keycode == KEY_Z)):
-			TerrainHistory.redo(); 
+			history.redo(); 
 			accept_event()
 		elif ctrl and event.keycode == KEY_S:
 			if event.shift_pressed: _save_as()
