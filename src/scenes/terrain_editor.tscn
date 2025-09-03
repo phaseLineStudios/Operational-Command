@@ -17,6 +17,7 @@ grid_start_y = 120
 base_elevation_m = 326
 contour_interval_m = 10
 surfaces = []
+lines = []
 points = []
 labels = []
 metadata/_custom_type_script = "uid://do8882r1q2sil"

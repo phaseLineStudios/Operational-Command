@@ -30,6 +30,8 @@ class_name TerrainData
 @export_group("Content")
 ## List of surface shapes. Each: { "brush": TerrainBrush, "type": "freehand|line|polygon", "points": PackedVector2Array, "closed": bool }.
 @export var surfaces: Array = [] : set = _set_surfaces
+## List of lines features. Each: { "res": TerrainFeature, "type": "freehand|line", "points": PackedVector2Array, "closed": bool, "width": float }.
+@export var lines: Array = [] : set = _set_lines
 ## List of point features. Each: { "res": TerrainFeature, "pos": Vector2, "rot": float }.
 @export var points: Array = [] : set = _set_points
 ## List of text labels. Each: { "text": String, "pos": Vector2, "size": int, "rot": float }.
@@ -85,6 +87,11 @@ func _set_surfaces(v) -> void:
 	surfaces = v
 	_touch()
 	
+## Set points variable
+func _set_lines(v) -> void:
+	lines = v
+	_touch()
+
 ## Set points variable
 func _set_points(v) -> void:
 	points = v

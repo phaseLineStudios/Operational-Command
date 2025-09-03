@@ -28,6 +28,7 @@ func _load_brushes() -> void:
 			if f.ends_with(".tres") or f.ends_with(".res"):
 				var r := ResourceLoader.load("res://assets/terrain_brushes/%s" % f)
 				if r is TerrainBrush:
+					if r.feature_type != TerrainBrush.FeatureType.AREA: continue
 					brushes.append(r)
 
 func build_options_ui(p: Control) -> void:

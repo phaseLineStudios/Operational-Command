@@ -81,9 +81,9 @@ class_name TerrainRender
 @onready var margin: PanelContainer = %MapMargin
 @onready var base_layer: PanelContainer = %TerrainBase
 @onready var surface_layer: SurfaceLayer = %SurfaceLayer
-@onready var line_layer: Control = %LineLayer
+@onready var line_layer: LineLayer = %LineLayer
 @onready var point_layer: Control = %PointLayer
-@onready var contour_layer: Control = %ContourLayer
+@onready var contour_layer: ContourLayer = %ContourLayer
 @onready var grid_layer: GridLayer = %GridLayer
 @onready var label_layer: Control = %LabelLayer
 
@@ -132,6 +132,10 @@ func _push_data_to_layers() -> void:
 	
 	if surface_layer and surface_layer.has_method("set_data"):
 		surface_layer.set_data(data)
+	
+	if line_layer and line_layer.has_method("set_data"):
+		line_layer.set_data(data)
+		line_layer.queue_redraw()
 		
 	queue_redraw()
 
@@ -140,7 +144,12 @@ func _on_data_changed() -> void:
 	_mark_all_dirty()
 	_draw_map_size()
 	_push_data_to_layers()
-	contour_layer.request_rebuild()
+	if contour_layer and contour_layer.has_method("request_rebuild"):
+		contour_layer.request_rebuild()
+	if surface_layer:
+		surface_layer.queue_redraw()
+	if line_layer:
+		line_layer.queue_redraw()
 	queue_redraw()
 
 ## Mark elements as dirty to redraw
@@ -183,6 +192,10 @@ func _draw_map_size() -> void:
 		grid_layer.queue_redraw()
 	if label_layer:
 		label_layer.queue_redraw()
+	if line_layer:
+		line_layer.queue_redraw()
+	if surface_layer:
+		surface_layer.queue_redraw()
 	queue_redraw()
 
 ## Emit a resize event for base layer
