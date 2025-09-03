@@ -232,10 +232,10 @@ func map_to_screen(local_m: Vector2, keep_aspect: bool = true) -> Vector2:
 	var screen_pos := draw_pos + sv_pos * p_scale
 	return screen_pos
 
-func terrain_to_map(local_m: Vector2, keep_aspect: bool = true) -> Vector2:
+func terrain_to_map(local_m: Vector2) -> Vector2:
 	var map_margins := Vector2(terrain_render.margin_left_px, terrain_render.margin_top_px)
 	return local_m - map_margins
 
-func map_to_terrain(pos: Vector2, keep_aspect: bool = true) -> Vector2:
+func map_to_terrain(pos: Vector2) -> Vector2:
 	var map_margins := Vector2(terrain_render.margin_left_px, terrain_render.margin_top_px)
 	return pos + map_margins

@@ -14,6 +14,7 @@ height_m = 2000
 elevation_resolution_m = 20
 grid_start_x = 150
 grid_start_y = 120
+base_elevation_m = 326
 contour_interval_m = 10
 surfaces = []
 points = []

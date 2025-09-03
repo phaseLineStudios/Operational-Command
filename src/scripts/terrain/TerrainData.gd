@@ -20,6 +20,8 @@ class_name TerrainData
 @export var grid_start_y: int = 100 : set = _set_grid_y
 
 @export_group("Elevation")
+## The base elevation of the terrain in meters.
+@export var base_elevation_m: int = 0
 ## Contour interval in meters.
 @export var contour_interval_m: int = 10 : set = _set_contour_interval_m
 ## Elevation image (R channel = meters; 16F or 32F preferred).

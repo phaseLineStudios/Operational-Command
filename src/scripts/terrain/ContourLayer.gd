@@ -15,6 +15,22 @@ class_name ContourLayer
 @export var smooth_segment_len_m: float = 4.0
 ## Should smoothing keep ends
 @export var smooth_keep_ends: bool = true
+## Contour label spacing
+@export var contour_label_every_m: int = 200
+## Only show elevation label on thick contours
+@export var contour_label_on_thick_only: bool = true
+## Contour label color
+@export var contour_label_color: Color = Color(0.1, 0.1, 0.1, 0.95)
+## Contour label background
+@export var contour_label_bg: Color = Color(1, 1, 1, 0.85)
+## Contour label padding
+@export var contour_label_padding_px: float = 3.0
+## Contour label font
+@export var contour_label_font: Font
+## Contour label font size
+@export var contour_label_size: int = 12
+## Extra space beyond plaque width
+@export var contour_label_gap_extra_px: float = 2.0
 
 var data: TerrainData
 var _data_conn := false
@@ -56,6 +72,17 @@ func apply_style(from: Node) -> void:
 	if "contour_thick_color" in from: contour_thick_color = from.contour_thick_color
 	if "contour_px" in from: contour_px = from.contour_px
 	if "contour_thick_every_m" in from: contour_thick_every_m = from.contour_thick_every_m
+	if "smooth_iterations" in from: smooth_iterations = from.smooth_iterations
+	if "smooth_segment_len_m" in from: smooth_segment_len_m = from.smooth_segment_len_m
+	if "smooth_keep_ends" in from: smooth_keep_ends = from.smooth_keep_ends
+	if "contour_label_every_m" in from: contour_label_every_m = from.contour_label_every_m
+	if "contour_label_on_thick_only" in from: contour_label_on_thick_only = from.contour_label_on_thick_only
+	if "contour_label_color" in from: contour_label_color = from.contour_label_color
+	if "contour_label_bg" in from: contour_label_bg = from.contour_label_bg
+	if "contour_label_padding_px" in from: contour_label_padding_px = from.contour_label_padding_px
+	if "contour_label_font" in from: contour_label_font = from.contour_label_font
+	if "contour_label_size" in from: contour_label_size = from.contour_label_size
+	if "contour_label_gap_extra_px" in from: contour_label_gap_extra_px = from.contour_label_gap_extra_px
 	_mark_dirty()
 	_schedule_rebuild()
 
@@ -108,14 +135,39 @@ func _draw() -> void:
 		if polylines.is_empty():
 			continue
 
-		var thick := false
-		thick = (contour_thick_every_m > 0) and _is_multiple(level, float(contour_thick_every_m))
+		var thick := _is_thick_level_abs(level)
 		var col := contour_thick_color if thick else contour_color
 		var w: float = max(0.5, (contour_px * 1.6) if thick else contour_px)
 
+		var place_labels := contour_label_font != null and contour_label_every_m > 0
+		var label_this_level := true
+		if contour_label_on_thick_only:
+			label_this_level = _is_thick_level_abs(level)
+
+		var label_text := str(int(round(level + _get_base_offset())))
+		var label_rect_size := Vector2.ZERO
+		if place_labels and label_this_level:
+			var ts := contour_label_font.get_string_size(label_text, HORIZONTAL_ALIGNMENT_LEFT, -1, contour_label_size)
+			label_rect_size = ts + Vector2.ONE * (contour_label_padding_px * 2.0)
+
 		for line: PackedVector2Array in polylines:
-			if line.size() >= 2:
-				draw_polyline(line, col, w, true)
+			if line.size() < 2:
+				continue
+
+			var gaps: Array = []
+			var placements: Array = []
+
+			if place_labels and label_this_level:
+				placements = _layout_labels_on_line(line, float(contour_label_every_m))
+				if label_rect_size.x > 0.0:
+					var half := (label_rect_size.x * 0.5) + contour_label_gap_extra_px
+					for p in placements:
+						gaps.append(Vector2(p.s - half, p.s + half))
+
+			_draw_polyline_with_gaps(line, gaps, col, w)
+			
+			if place_labels and label_this_level:
+				_draw_labels_for_placements(placements, label_text)
 
 ## Rebuild the contour lines
 func _rebuild_contours() -> void:
@@ -143,8 +195,9 @@ func _rebuild_contours() -> void:
 			var e := img.get_pixel(x, y).r
 			if e < min_e: min_e = e
 			if e > max_e: max_e = e
-
-	var start_level: float = floor(min_e / dH) * dH
+	
+	var base := _get_base_offset() 
+	var start_level: float = floor((min_e + base) / dH) * dH - base
 	var level := start_level
 	while level <= max_e + 0.0001:
 		_levels.append(level)
@@ -386,7 +439,7 @@ func _chaikin_once(pl: PackedVector2Array, closed: bool, keep_ends: bool) -> Pac
 			out.append(out[0])
 	else:
 		if keep_ends:
-			out.append(pl[0])  # preserve start
+			out.append(pl[0])
 		for i in range(1, n - 1):
 			var p0 := pl[i - 1]
 			var p1 := pl[i]
@@ -398,3 +451,141 @@ func _chaikin_once(pl: PackedVector2Array, closed: bool, keep_ends: bool) -> Pac
 		if keep_ends:
 			out.append(pl[n - 1])
 	return out
+
+## Get base elevation offset
+func _get_base_offset() -> float:
+	return (data.base_elevation_m if (data and "base_elevation_m" in data) else 0.0)
+
+## Check if thick level is absolute elevation
+func _is_thick_level_abs(level: float) -> bool:
+	var step := float(contour_thick_every_m)
+	if step <= 0.0: return false
+	var abs_elev := level + _get_base_offset()
+	var t := abs_elev / step
+	return abs(t - round(t)) < 1e-4
+
+## Compute cumulative length, place labels every `spacing` meters.
+func _layout_labels_on_line(line: PackedVector2Array, spacing: float) -> Array:
+	var out: Array = []
+	var min_seg := 1e-6
+	spacing = max(1.0, spacing)
+	
+	var L := PackedFloat32Array()
+	L.resize(line.size())
+	L[0] = 0.0
+	for i in range(1, line.size()):
+		L[i] = L[i-1] + line[i-1].distance_to(line[i])
+
+	var total := L[L.size()-1]
+	if total < spacing:
+		return out
+
+	var next_s := spacing
+	var i := 0
+	while next_s <= total + 1e-5:
+		while i < L.size()-1 and L[i+1] < next_s:
+			i += 1
+		if i >= L.size()-1: break
+		
+		var seg_len: float = max(min_seg, line[i].distance_to(line[i+1]))
+		var s_on_seg := next_s - L[i]
+		var t: float = clamp(s_on_seg / seg_len, 0.0, 1.0)
+		var a := line[i]
+		var b := line[i+1]
+		var pos := a.lerp(b, t)
+		var dir := (b - a) / seg_len
+		var rot := atan2(dir.y, dir.x)
+		var deg := rad_to_deg(rot)
+		if deg > 90.0 or deg < -90.0:
+			rot += PI
+			dir = -dir
+
+		out.append({"s": next_s, "pos": pos, "dir": dir, "rot": rot})
+		next_s += spacing
+	return out
+
+## Draw polyline while skipping arclength windows in `gaps`.
+func _draw_polyline_with_gaps(line: PackedVector2Array, gaps: Array, color: Color, width: float) -> void:
+	if line.size() < 2:
+		return
+	
+	var cleaned: Array = []
+	for g in gaps:
+		var a: int = min(g.x, g.y)
+		var b: int = max(g.x, g.y)
+		if b - a > 0.5:
+			cleaned.append(Vector2(a, b))
+	cleaned.sort_custom(func(a, b): return a.x < b.x)
+
+	var merged: Array = []
+	for g in cleaned:
+		if merged.is_empty() or g.x > merged[merged.size()-1].y:
+			merged.append(g)
+		else:
+			merged[merged.size()-1].y = max(merged[merged.size()-1].y, g.y)
+
+	var s_acc := 0.0
+	for i in range(0, line.size() - 1):
+		var a := line[i]
+		var b := line[i + 1]
+		var seg_len := a.distance_to(b)
+		if seg_len <= 1e-6:
+			continue
+		var seg_s0 := s_acc
+		var seg_s1 := s_acc + seg_len
+		
+		var draw_from := seg_s0
+		for g in merged:
+			if g.y <= seg_s0 or g.x >= seg_s1:
+				continue
+
+			var left: float = clamp(g.x, seg_s0, seg_s1)
+			if left > draw_from + 1e-3:
+				_draw_segment_subrange(a, b, seg_s0, seg_len, draw_from, left, color, width)
+			draw_from = max(draw_from, g.y)
+			if draw_from >= seg_s1 - 1e-3:
+				break
+		if draw_from < seg_s1 - 1e-3:
+			_draw_segment_subrange(a, b, seg_s0, seg_len, draw_from, seg_s1, color, width)
+
+		s_acc = seg_s1
+
+## Draw subrange of a single segment given absolute arclengths
+func _draw_segment_subrange(a: Vector2, b: Vector2, seg_s0: float, seg_len: float, s0: float, s1: float, color: Color, width: float) -> void:
+	s0 = clamp(s0, seg_s0, seg_s0 + seg_len)
+	s1 = clamp(s1, seg_s0, seg_s0 + seg_len)
+	if s1 <= s0: return
+	var t0 := (s0 - seg_s0) / seg_len
+	var t1 := (s1 - seg_s0) / seg_len
+	var p0 := a.lerp(b, t0)
+	var p1 := a.lerp(b, t1)
+	draw_line(p0, p1, color, width, true)
+
+## Draw the text plaques using precomputed placements
+func _draw_labels_for_placements(placements: Array, text: String) -> void:
+	if placements.is_empty() or contour_label_font == null:
+		return
+	var font := contour_label_font
+	var fsize := contour_label_size
+	var ts := font.get_string_size(text, HORIZONTAL_ALIGNMENT_CENTER, -1, fsize)
+	var half := ts * 0.5
+	var pad := Vector2(contour_label_padding_px, contour_label_padding_px)
+	var rect := Rect2(-half - pad, ts + pad * 2.0)
+
+	for p in placements:
+		var pos: Vector2 = p.pos
+		var rot: float   = p.rot
+		draw_set_transform(pos, rot, Vector2.ONE)
+		if contour_label_bg.a > 0.0:
+			draw_rect(rect, contour_label_bg, true)
+			draw_rect(rect, contour_label_bg.darkened(0.2), false, 1.0, true)
+		draw_string(
+			font,
+			Vector2(-half.x, half.y),
+			text,
+			HORIZONTAL_ALIGNMENT_CENTER,
+			-1,
+			fsize,
+			contour_label_color
+		)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

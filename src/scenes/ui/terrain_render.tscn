@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://rbcwabwc1v0o"]
+[gd_scene load_steps=12 format=3 uid="uid://rbcwabwc1v0o"]
 
 [ext_resource type="Script" uid="uid://bcbx6qa1jofhc" path="res://scripts/terrain/TerrainRender.gd" id="1_kobl6"]
 [ext_resource type="Script" uid="uid://cxbielgj0k7ei" path="res://scripts/terrain/GridLayer.gd" id="2_llqno"]
@@ -10,6 +10,8 @@
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="FontVariation" id="FontVariation_fvhov"]
+
+[sub_resource type="FontVariation" id="FontVariation_utooi"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_llqno"]
 content_margin_left = 50.0
@@ -41,10 +43,15 @@ label_color = Color(0.0745098, 0.0313726, 0, 1)
 label_font = SubResource("FontVariation_fvhov")
 grid_100m_color = Color(0.138125, 0.049278, 0, 0.25)
 grid_1km_color = Color(0.0760013, 0.0254519, 3.00817e-09, 0.5)
-contour_color = Color(0.252098, 0.100844, 0, 0.7)
-contour_thick_color = Color(0.165151, 0.0734315, 1.20327e-08, 0.85)
+contour_color = Color(0.252, 0.101, 0, 1)
+contour_thick_color = Color(0.165, 0.073, 0, 1)
 smooth_iterations = 1
 smooth_segment_len_m = 5.0
+contour_label_on_thick_only = false
+contour_label_color = Color(0.185, 0.054, 0, 1)
+contour_label_bg = Color(1, 1, 1, 0)
+contour_label_font = SubResource("FontVariation_utooi")
+contour_label_gap_extra_px = 5.0
 
 [node name="MapMargin" type="PanelContainer" parent="."]
 unique_name_in_owner = true

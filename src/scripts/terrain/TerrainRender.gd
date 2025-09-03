@@ -61,6 +61,22 @@ class_name TerrainRender
 @export var smooth_segment_len_m: float = 4.0
 ## Should smoothing keep ends
 @export var smooth_keep_ends: bool = true
+## Contour label spacing
+@export var contour_label_every_m: int = 200
+## Only show elevation label on thick contours
+@export var contour_label_on_thick_only: bool = true
+## Contour label color
+@export var contour_label_color: Color = Color(0.1, 0.1, 0.1, 0.95)
+## Contour label background
+@export var contour_label_bg: Color = Color(1, 1, 1, 0.85)
+## Contour label padding
+@export var contour_label_padding_px: float = 3.0
+## Contour label font
+@export var contour_label_font: Font
+## Contour label font size
+@export var contour_label_size: int = 12
+## Extra space beyond plaque width
+@export var contour_label_gap_extra_px: float = 2.0
 
 @onready var margin: PanelContainer = %MapMargin
 @onready var base_layer: PanelContainer = %TerrainBase
