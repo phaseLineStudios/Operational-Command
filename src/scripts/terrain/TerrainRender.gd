@@ -62,14 +62,14 @@ class_name TerrainRender
 ## Should smoothing keep ends
 @export var smooth_keep_ends: bool = true
 
-@onready var margin = %MapMargin
-@onready var base_layer = %TerrainBase
-@onready var surface_layer = %SurfaceLayer
-@onready var line_layer = %LineLayer
-@onready var point_layer = %PointLayer
-@onready var contour_layer = %ContourLayer
+@onready var margin: PanelContainer = %MapMargin
+@onready var base_layer: PanelContainer = %TerrainBase
+@onready var surface_layer: SurfaceLayer = %SurfaceLayer
+@onready var line_layer: Control = %LineLayer
+@onready var point_layer: Control = %PointLayer
+@onready var contour_layer: Control = %ContourLayer
 @onready var grid_layer: GridLayer = %GridLayer
-@onready var label_layer = %LabelLayer
+@onready var label_layer: Control = %LabelLayer
 
 ## Emits when the map is resized
 signal map_resize()
@@ -178,9 +178,53 @@ func is_inside_terrain(pos: Vector2) -> bool:
 	return base_layer.get_global_rect().has_point(pos)
 
 ## API to get the map size
-func get_map_size() -> Vector2:
+func get_terrain_size() -> Vector2:
 	return base_layer.size
 
 ## API to get the map position
-func get_map_position() -> Vector2:
+func get_terrain_position() -> Vector2:
 	return base_layer.position
+
+## API to get surface at map position
+func get_surface_at_terrain_position(terrain_pos: Vector2) -> Dictionary:
+	if data == null or data.surfaces == null:
+		return {}
+
+	var base_rect := Rect2(Vector2.ZERO, Vector2(data.width_m, data.height_m))
+	if not base_rect.has_point(terrain_pos):
+		return {}
+
+	var best := {}
+	var best_z := -INF
+	var best_idx := -1
+
+	for i in data.surfaces.size():
+		var s = data.surfaces[i]
+		if typeof(s) != TYPE_DICTIONARY:
+			continue
+		if s.get("type", "") != "polygon":
+			continue
+
+		var brush: TerrainBrush = s.get("brush", null)
+		if brush == null or brush.feature_type != TerrainBrush.FeatureType.AREA:
+			continue
+		var z := brush.z_index
+
+		var pts: PackedVector2Array = s.get("points", PackedVector2Array())
+		if pts.size() < 3:
+			continue
+
+		if pts.size() >= 2 and pts[0].distance_squared_to(pts[pts.size()-1]) < 1e-10:
+			var tmp := PackedVector2Array(pts)
+			tmp.remove_at(tmp.size() - 1)
+			pts = tmp
+			if pts.size() < 3:
+				continue
+
+		if Geometry2D.is_point_in_polygon(terrain_pos, pts):
+			if (z > best_z) or (z == best_z and i > best_idx):
+				best = s
+				best_z = z
+				best_idx = i
+
+	return best

@@ -7,6 +7,8 @@ class_name TerrainToolBase
 signal on_options_changed()
 @warning_ignore("unused_signal")
 signal on_need_info()
+@warning_ignore("unused_signal")
+signal on_hints_changed()
 
 var editor: TerrainEditor
 var render: TerrainRender
@@ -39,6 +41,10 @@ func build_options_ui(_parent: Control) -> void:
 func build_info_ui(_parent: Control) -> void:
 	pass
 
+## Populate hint UI
+func build_hint_ui(_parent: Control) -> void:
+	pass
+
 ## Build tool preview
 func build_preview(_parent: Control) -> Control:
 	return null
@@ -59,7 +65,7 @@ func update_preview_at_screen(screen_pos: Vector2) -> void:
 	if not _inside or _preview == null or viewport_container == null or render == null: 
 		return
 		
-	var local_m := editor.screen_to_terrain(screen_pos, true)
+	var local_m := editor.screen_to_map(screen_pos, true)
 	if not local_m.is_finite():
 		return
 	

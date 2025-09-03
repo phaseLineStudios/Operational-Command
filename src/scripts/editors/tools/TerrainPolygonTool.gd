@@ -65,27 +65,59 @@ func build_info_ui(parent: Control) -> void:
 	_info_ui_parent = parent
 	_rebuild_info_ui()
 
+func build_hint_ui(parent: Control) -> void:
+	parent.add_child(_label("LMB - New point"))
+	parent.add_child(VSeparator.new())
+	parent.add_child(_label("Backspace - Delete Point"))
+	parent.add_child(VSeparator.new())
+	parent.add_child(_label("ESC - Cancel"))
+	parent.add_child(VSeparator.new())
+	parent.add_child(_label("Enter - Save"))
+
+func build_preview(overlay_parent: Node) -> Control:
+	_preview = HandlesOverlay.new()
+	_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_preview.anchor_left = 0; _preview.anchor_top = 0
+	_preview.anchor_right = 1; _preview.anchor_bottom = 1
+	_preview.offset_left = 0; _preview.offset_top = 0
+	_preview.offset_right = 0; _preview.offset_bottom = 0
+	(_preview as HandlesOverlay).tool = self
+	overlay_parent.add_child(_preview)
+	return _preview
+
+func _place_preview(_local_px: Vector2) -> void:
+	if _preview: _preview.queue_redraw()
+
+func update_preview_at_overlay(_overlay: Control, _overlay_pos: Vector2):
+	pass
+
 func handle_view_input(event: InputEvent) -> bool:
 	if event is InputEventMouseMotion:
 		
 		if _edit_idx >= 0:
 			_hover_idx = _pick_point(event.position)
+			_queue_preview_redraw()
 		if _is_drag and _drag_idx >= 0 and _edit_idx >= 0:
-			var local_m := editor.screen_to_terrain(event.position, true)
+			var local_m := editor.screen_to_map(event.position)
 			if not render.is_inside_terrain(local_m):
 				return false
 				
 			if local_m.is_finite():
-				var local_terrain := local_m - Vector2(render.margin_left_px, render.margin_top_px)
+				var local_terrain := editor.terrain_to_map(local_m)
 				
 				var pts := _current_points()
 				if _drag_idx >= 0 and _drag_idx < pts.size():
 					pts[_drag_idx] = local_terrain
 					_set_current_points(pts)
+					_queue_preview_redraw()
 		return false
 
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
+			var local_m := editor.screen_to_map(event.position, true)
+			if not render.is_inside_terrain(local_m):
+				return false
+			
 			if _edit_idx < 0:
 				_start_new_polygon()
 				_edit_idx = _find_edit_index_by_id()
@@ -94,22 +126,23 @@ func handle_view_input(event: InputEvent) -> bool:
 			if _hover_idx >= 0:
 				_is_drag = true
 				_drag_idx = _hover_idx
+				_queue_preview_redraw()
 			else:
-				var local_m := editor.screen_to_terrain(event.position, true)
 				if not render.is_inside_terrain(local_m):
 					return false
 					
 				if local_m.is_finite():
-					var local_terrain := local_m - Vector2(render.margin_left_px, render.margin_top_px)
+					var local_terrain := editor.terrain_to_map(local_m)
 						
 					var pts := _current_points()
 					pts.append(local_terrain)
 					_set_current_points(pts)
-					print("Added point: ", local_terrain)
+					_queue_preview_redraw()
 			return true
 		else:
 			_is_drag = false
 			_drag_idx = -1
+			_queue_preview_redraw()
 			return true
 
 	if event is InputEventKey and event.pressed:
@@ -120,6 +153,7 @@ func handle_view_input(event: InputEvent) -> bool:
 					if pts.size() > 0:
 						pts.remove_at(pts.size() - 1)
 						_set_current_points(pts)
+						_queue_preview_redraw()
 				return true
 
 			KEY_ENTER, KEY_KP_ENTER:
@@ -129,11 +163,13 @@ func handle_view_input(event: InputEvent) -> bool:
 						_cancel_edit_delete_polygon()
 					else:
 						_finish_edit_keep_polygon()
+						_queue_preview_redraw()
 				return true
 
 			KEY_ESCAPE:
 				if _edit_idx >= 0:
 					_cancel_edit_delete_polygon()
+					_queue_preview_redraw()
 				return true
 				
 	return false
@@ -183,6 +219,29 @@ func _rebuild_info_ui():
 	]
 	_info_ui_parent.add_child(l)
 
+## retrieve current polygon points
+func _current_points() -> PackedVector2Array:
+	if data == null or _edit_idx < 0: return PackedVector2Array()
+	return data.surfaces[_edit_idx].get("points", PackedVector2Array())
+
+## Set current polygon points
+func _set_current_points(pts: PackedVector2Array) -> void:
+	if data == null or _edit_idx < 0: return
+	var poly: Dictionary = data.surfaces[_edit_idx]
+	poly["points"] = pts
+	data.surfaces[_edit_idx] = poly
+	_emit_data_changed()
+	_queue_preview_redraw()
+
+## Helper function to find current polygon in Terrain Data
+func _find_edit_index_by_id() -> int:
+	if data == null or _edit_id < 0: return -1
+	for i in data.surfaces.size():
+		var s = data.surfaces[i]
+		if "id" in s and int(s.id) == _edit_id:
+			return i
+	return -1
+
 ## Start creating a new polygon
 func _start_new_polygon() -> void:
 	if data == null: return
@@ -202,28 +261,7 @@ func _start_new_polygon() -> void:
 	_edit_id = pid
 	_edit_idx = data.surfaces.size() - 1
 	_emit_data_changed()
-
-## retrieve current polygon points
-func _current_points() -> PackedVector2Array:
-	if data == null or _edit_idx < 0: return PackedVector2Array()
-	return data.surfaces[_edit_idx].get("points", PackedVector2Array())
-
-## Set current polygon points
-func _set_current_points(pts: PackedVector2Array) -> void:
-	if data == null or _edit_idx < 0: return
-	var poly: Dictionary = data.surfaces[_edit_idx]
-	poly["points"] = pts
-	data.surfaces[_edit_idx] = poly
-	_emit_data_changed()
-
-## Helper function to find current polygon in Terrain Data
-func _find_edit_index_by_id() -> int:
-	if data == null or _edit_id < 0: return -1
-	for i in data.surfaces.size():
-		var s = data.surfaces[i]
-		if "id" in s and int(s.id) == _edit_id:
-			return i
-	return -1
+	_queue_preview_redraw()
 
 ## Delete polygon
 func _cancel_edit_delete_polygon() -> void:
@@ -235,6 +273,7 @@ func _cancel_edit_delete_polygon() -> void:
 	_hover_idx = -1
 	_is_drag = false
 	_emit_data_changed()
+	_queue_preview_redraw()
 
 ## Stop editing and save polygon
 func _finish_edit_keep_polygon() -> void:
@@ -244,6 +283,7 @@ func _finish_edit_keep_polygon() -> void:
 	_hover_idx = -1
 	_is_drag = false
 	_emit_data_changed()
+	_queue_preview_redraw()
 
 ## Function to pick a point at position
 func _pick_point(screen_pos: Vector2) -> int:
@@ -253,7 +293,7 @@ func _pick_point(screen_pos: Vector2) -> int:
 	var best := -1
 	var best_d2 := _pick_radius_px * _pick_radius_px
 	for i in pts.size():
-		var sp := editor.terrain_to_screen(pts[i], true)
+		var sp := editor.map_to_screen(pts[i], true)
 		var d2 := sp.distance_squared_to(screen_pos)
 		if d2 <= best_d2:
 			best = i
@@ -279,3 +319,33 @@ func _label(t: String) -> Label:
 func _queue_free_children(node: Control):
 	for n in node.get_children():
 		n.queue_free()
+
+## Queue a redraw of the preview
+func _queue_preview_redraw() -> void:
+	if _preview: _preview.queue_redraw()
+
+## Class to draw a point handle
+class HandlesOverlay extends Control:
+	var tool: TerrainPolygonTool
+	var handle_r := 7.0
+
+	func _draw() -> void:
+		if tool == null or tool._edit_idx < 0:
+			return
+		var pts := tool._current_points()
+		if pts.is_empty():
+			return
+
+		for i in pts.size():
+			var p_map := tool.editor.map_to_terrain(pts[i])
+
+			draw_circle(p_map, handle_r + 2.0, Color(0,0,0,0.9))
+			draw_circle(p_map, handle_r, Color(1,1,1,0.95))
+
+		if tool._hover_idx >= 0 and tool._hover_idx < pts.size():
+			var ph_map := tool.editor.map_to_terrain(pts[tool._hover_idx])
+			draw_circle(ph_map, handle_r + 4.0, Color(1.0, 0.7, 0.2, 0.35))
+
+		if tool._is_drag and tool._drag_idx >= 0 and tool._drag_idx < pts.size():
+			var pd_map := tool.editor.map_to_terrain(pts[tool._drag_idx])
+			draw_circle(pd_map, handle_r + 6.0, Color(0.2, 0.6, 1.0, 0.35))

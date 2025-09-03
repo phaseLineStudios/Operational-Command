@@ -195,6 +195,7 @@ func _fill_symbol_tiled(pts: PackedVector2Array, symbol: Texture2D, spacing_px: 
 	# TODO Create this helper
 	# draw_textured_polygon(pts, tex, uvs, Color.WHITE, null, antialias)
 
+## Get boundary box for polygon
 func _poly_bbox(pts: PackedVector2Array) -> Rect2:
 	var minp := pts[0]
 	var maxp := pts[0]
@@ -204,6 +205,7 @@ func _poly_bbox(pts: PackedVector2Array) -> Rect2:
 		maxp.x = max(maxp.x, p.x); maxp.y = max(maxp.y, p.y)
 	return Rect2(minp, maxp - minp)
 
+## Draw a closed polyline
 func _draw_polyline_closed(pts: PackedVector2Array, color: Color, width: float) -> void:
 	if pts.size() < 2: return
 	# draw_polyline doesn't “close”, so draw the chain and close manually if needed
@@ -211,6 +213,7 @@ func _draw_polyline_closed(pts: PackedVector2Array, color: Color, width: float) 
 	if pts[0].distance_to(pts[pts.size()-1]) > 1e-5:
 		draw_line(pts[pts.size()-1], pts[0], color, width, antialias)
 
+## Draw a dashed polyline
 func _draw_polyline_dashed(pts: PackedVector2Array, color: Color, width: float, dash_px: float, gap_px: float) -> void:
 	if pts.size() < 2: return
 	var closed := pts[0].distance_to(pts[pts.size()-1]) <= 1e-5
@@ -220,6 +223,7 @@ func _draw_polyline_dashed(pts: PackedVector2Array, color: Color, width: float, 
 	if closed == false and false:
 		pass
 
+## Draw dash segment
 func _dash_segment(a: Vector2, b: Vector2, color: Color, width: float, dash_px: float, gap_px: float) -> void:
 	var seg_len := a.distance_to(b)
 	if seg_len <= 1e-6:

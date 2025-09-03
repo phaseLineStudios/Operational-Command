@@ -6,9 +6,9 @@ class_name TerrainElevationTool
 enum Mode { RAISE, LOWER, SMOOTH }
 
 @export var meters_per_pixel := 1.0
-@export var brush_radius_m := 32.0
+@export var brush_radius_m := 100.0
 @export var falloff_p := 0.5
-@export var strength_m := 1.0
+@export var strength_m := 3.0
 
 var mode: int = Mode.RAISE
 
@@ -112,11 +112,11 @@ func _apply(screen_pos: Vector2) -> void:
 	if img.is_empty(): 
 		return
 	
-	var local_m := editor.screen_to_terrain(screen_pos, true)
+	var local_m := editor.screen_to_map(screen_pos, true)
 	if not local_m.is_finite():
 		return
 	
-	var local_terrain := local_m - Vector2(render.margin_left_px, render.margin_top_px)
+	var local_terrain := editor.terrain_to_map(local_m)
 	var px := data.world_to_elev_px(local_terrain)
 
 	var r_px := int(round(brush_radius_m / data.elevation_resolution_m))

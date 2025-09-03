@@ -20,7 +20,9 @@ class_name TerrainEditor
 @onready var new_terrain_dialog: NewTerrainDialog = %NewTerrainDialog
 @onready var tools_options: VBoxContainer = %"Tool Options"
 @onready var tools_info: VBoxContainer = %"Tool Info"
+@onready var tools_hint: HBoxContainer = %"ToolHint"
 @onready var camera: TerrainCamera = %Camera
+@onready var mouse_position_l: Label = %MousePosition
 
 var brushes: Array[TerrainBrush] = []
 var features: Array[Variant] = []
@@ -82,6 +84,7 @@ func _build_tool_buttons():
 		tool.brushes = brushes
 		tool.features = features
 		tool.on_options_changed.connect(_rebuild_options_panel)
+		tool.on_hints_changed.connect(_rebuild_tool_hint)
 		tool.on_need_info.connect(_rebuild_info_panel)
 		
 		var btn := TextureButton.new()
@@ -109,6 +112,7 @@ func _select_tool(btn: TextureButton) -> void:
 	active_tool = tool_map[btn]
 	_rebuild_options_panel()
 	_rebuild_info_panel()
+	_rebuild_tool_hint()
 	if active_tool:
 		active_tool.ensure_preview(brush_overlay)
 
@@ -123,6 +127,12 @@ func _rebuild_info_panel() -> void:
 	_queue_free_children(tools_info)
 	if active_tool:
 		active_tool.build_info_ui(tools_info)
+		
+## Builds the tool info panel
+func _rebuild_tool_hint() -> void:
+	_queue_free_children(tools_hint)
+	if active_tool:
+		active_tool.build_hint_ui(tools_hint)
 
 ## Handle input
 func _input(event: InputEvent) -> void:
@@ -131,6 +141,10 @@ func _input(event: InputEvent) -> void:
 
 ## Input handler for terrainview Viewport
 func _on_brush_overlay_gui_input(event):
+	if event is InputEventMouseMotion:
+		var mp: Vector2 = event.position
+		mouse_position_l.text = "(%d, %d)" % [mp.x, mp.y]
+	
 	if event is InputEventMouseMotion && active_tool:
 		active_tool.on_mouse_inside(_inside_brush_overlay)
 		if not _inside_brush_overlay:
@@ -147,8 +161,8 @@ func _on_brush_overlay_mouse_exit():
 	_inside_brush_overlay = false
 
 func _on_terrain_resize():
-	brush_overlay.position = terrain_render.get_map_position()
-	brush_overlay.size = terrain_render.get_map_size()
+	brush_overlay.position = terrain_render.get_terrain_position()
+	brush_overlay.size = terrain_render.get_terrain_size()
 
 ## Helper function to delete all children of a parent node
 func _queue_free_children(node: Control):
@@ -164,7 +178,7 @@ func world_to_screen(pos: Vector2) -> Vector2:
 	return (pos - camera.position) * camera.zoom + terrain_render.global_position
 
 ## API to convert a screen-space point to terrain-local meters,
-func screen_to_terrain(pos: Vector2, keep_aspect: bool = true) -> Vector2:
+func screen_to_map(pos: Vector2, keep_aspect: bool = true) -> Vector2:
 	var sv := terrainview
 	if sv == null:
 		return Vector2.INF
@@ -191,7 +205,7 @@ func screen_to_terrain(pos: Vector2, keep_aspect: bool = true) -> Vector2:
 	return local_px
 
 ## API to convert terrain meters to a screen-space point
-func terrain_to_screen(local_m: Vector2, keep_aspect: bool = true) -> Vector2:
+func map_to_screen(local_m: Vector2, keep_aspect: bool = true) -> Vector2:
 	var sv := terrainview
 	if sv == null:
 		return Vector2.INF
@@ -217,3 +231,11 @@ func terrain_to_screen(local_m: Vector2, keep_aspect: bool = true) -> Vector2:
 
 	var screen_pos := draw_pos + sv_pos * p_scale
 	return screen_pos
+
+func terrain_to_map(local_m: Vector2, keep_aspect: bool = true) -> Vector2:
+	var map_margins := Vector2(terrain_render.margin_left_px, terrain_render.margin_top_px)
+	return local_m - map_margins
+
+func map_to_terrain(pos: Vector2, keep_aspect: bool = true) -> Vector2:
+	var map_margins := Vector2(terrain_render.margin_left_px, terrain_render.margin_top_px)
+	return pos + map_margins

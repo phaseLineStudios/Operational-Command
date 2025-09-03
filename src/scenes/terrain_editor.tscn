@@ -180,21 +180,26 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="LMBHint" type="Label" parent="Root/BottomBar/HBox"]
+[node name="ToolHint" type="HBoxContainer" parent="Root/BottomBar/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="LMBHint" type="Label" parent="Root/BottomBar/HBox/ToolHint"]
 layout_mode = 2
 text = " LMB - Use Tool"
 
-[node name="VSeparator" type="VSeparator" parent="Root/BottomBar/HBox"]
+[node name="VSeparator" type="VSeparator" parent="Root/BottomBar/HBox/ToolHint"]
 layout_mode = 2
 
-[node name="MMBHint" type="Label" parent="Root/BottomBar/HBox"]
+[node name="MMBHint" type="Label" parent="Root/BottomBar/HBox/ToolHint"]
 layout_mode = 2
 text = "MMB - Pick Surface"
 
-[node name="VSeparator2" type="VSeparator" parent="Root/BottomBar/HBox"]
+[node name="VSeparator2" type="VSeparator" parent="Root/BottomBar/HBox/ToolHint"]
 layout_mode = 2
 
-[node name="RMBHint" type="Label" parent="Root/BottomBar/HBox"]
+[node name="RMBHint" type="Label" parent="Root/BottomBar/HBox/ToolHint"]
 layout_mode = 2
 text = "RMB - Nothing"
 
@@ -203,6 +208,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="MousePosition" type="Label" parent="Root/BottomBar/HBox"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "(0, 0) "
 
