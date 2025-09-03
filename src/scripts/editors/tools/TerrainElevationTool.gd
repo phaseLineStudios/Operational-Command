@@ -18,7 +18,6 @@ func _init():
 	tool_icon = preload("res://assets/textures/ui/editors_elevation_tool.png")
 	tool_hint = "Elevation Tool"
 
-
 func build_preview(overlay_parent: Node) -> Control:
 	var p := BrushPreviewCircle.new()
 	p.meters_per_pixel = meters_per_pixel
@@ -86,6 +85,9 @@ func build_info_ui(parent: Control) -> void:
 	var l = Label.new()
 	l.text = "Edit Terrain Elevation"
 	parent.add_child(l)
+
+func build_hint_ui(parent: Control) -> void:
+	parent.add_child(_label("LMB - Draw"))
 
 ## Helper function to create a new label
 func _label(t: String) -> Label:

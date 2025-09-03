@@ -185,24 +185,6 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="LMBHint" type="Label" parent="Root/BottomBar/HBox/ToolHint"]
-layout_mode = 2
-text = " LMB - Use Tool"
-
-[node name="VSeparator" type="VSeparator" parent="Root/BottomBar/HBox/ToolHint"]
-layout_mode = 2
-
-[node name="MMBHint" type="Label" parent="Root/BottomBar/HBox/ToolHint"]
-layout_mode = 2
-text = "MMB - Pick Surface"
-
-[node name="VSeparator2" type="VSeparator" parent="Root/BottomBar/HBox/ToolHint"]
-layout_mode = 2
-
-[node name="RMBHint" type="Label" parent="Root/BottomBar/HBox/ToolHint"]
-layout_mode = 2
-text = "RMB - Nothing"
-
 [node name="Spacer" type="Control" parent="Root/BottomBar/HBox"]
 layout_mode = 2
 size_flags_horizontal = 3
