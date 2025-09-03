@@ -454,7 +454,7 @@ func _chaikin_once(pl: PackedVector2Array, closed: bool, keep_ends: bool) -> Pac
 
 ## Get base elevation offset
 func _get_base_offset() -> float:
-	return (data.base_elevation_m if (data and "base_elevation_m" in data) else 0.0)
+	return (data.base_elevation_m if (data and "base_elevation_m" in data) else 0)
 
 ## Check if thick level is absolute elevation
 func _is_thick_level_abs(level: float) -> bool:

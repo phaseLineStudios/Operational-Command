@@ -97,6 +97,10 @@ func _label(t: String) -> Label:
 
 func handle_view_input(event: InputEvent) -> bool:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		var local_m := editor.screen_to_map(event.position)
+		if not render.is_inside_terrain(local_m):
+			return false
+				
 		if event.pressed:
 			_is_drag = true
 			_apply(event.position)
@@ -104,6 +108,10 @@ func handle_view_input(event: InputEvent) -> bool:
 			_is_drag = false
 		return true
 	if _is_drag and event is InputEventMouseMotion:
+		var local_m := editor.screen_to_map(event.position)
+		if not render.is_inside_terrain(local_m):
+			return false
+			
 		_apply(event.position)
 		return true
 	return false
