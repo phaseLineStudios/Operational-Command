@@ -82,8 +82,6 @@ enum MoveProfile { TRACKED, WHEELED, FOOT, RIVERINE }
 @export var road_bias: float = 1.0
 ## (Bridges) Max mass in tons that can traverse; 0 = unlimited/not a bridge.
 @export var bridge_capacity_tons: float = 0.0
-## (Rivers) Width in meters (useful for crossing logic).
-@export var river_width_m: float = 0.0
 
 ## Returns the movement multiplier for a given profile.
 func movement_multiplier(profile: int) -> float:
