@@ -13,12 +13,13 @@ class_name TerrainEditor
 
 @onready var history := TerrainHistory.new()
 @onready var file_menu: MenuButton = %File
+@onready var edit_menu: MenuButton = %Edit
 @onready var tools_grid: GridContainer = %Tools
 @onready var terrain_render: TerrainRender = %World
 @onready var terrainview_container: SubViewportContainer = %TerrainView
 @onready var terrainview: SubViewport = %TerrainView/View
 @onready var brush_overlay: Control = %BrushOverlay
-@onready var new_terrain_dialog: NewTerrainDialog = %NewTerrainDialog
+@onready var terrain_settings_dialog: NewTerrainDialog = %TerrainSettingsDialog
 @onready var tools_options: VBoxContainer = %"Tool Options"
 @onready var tools_info: VBoxContainer = %"Tool Info"
 @onready var tools_hint: HBoxContainer = %"ToolHint"
@@ -46,7 +47,10 @@ const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 
 func _ready():
 	file_menu.get_popup().connect("id_pressed", _on_filemenu_pressed)
-	new_terrain_dialog.connect("request_create", _new_terrain)
+	edit_menu.get_popup().connect("id_pressed", _on_editmenu_pressed)
+	terrain_settings_dialog.connect("request_create", _new_terrain)
+	terrain_settings_dialog.connect("request_edit", _edit_terrain)
+	terrain_settings_dialog.editor = self
 	brush_overlay.mouse_entered.connect(_on_brush_overlay_mouse_enter)
 	brush_overlay.mouse_exited.connect(_on_brush_overlay_mouse_exit)
 	brush_overlay.gui_input.connect(_on_brush_overlay_gui_input)
@@ -68,17 +72,25 @@ func _on_filemenu_pressed(id: int):
 ## On edit menu pressed event
 func _on_editmenu_pressed(id: int):
 	match id:
-		0: history.undo()
-		1: history.redo()
+		0: terrain_settings_dialog.open_for_edit(data)
+		1: history.undo()
+		2: history.redo()
 
 ## On New Terrain Pressed event
 func _on_new_pressed():
-	new_terrain_dialog.show_dialog(true)
+	terrain_settings_dialog.open_for_create("New Terrain", 2000, 2000, 100, 100, 113)
 
 ## Create new terrain data
 func _new_terrain(d: TerrainData):
 	data = d
 	terrain_render.data = d
+	
+	for tool: TerrainToolBase in tool_map.values():
+		tool.data = data
+
+## Create new terrain data
+func _edit_terrain(d: TerrainData):
+	terrain_render.data = data
 	
 	for tool: TerrainToolBase in tool_map.values():
 		tool.data = data

@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=3 uid="uid://c5thlr0tfddoe"]
 
-[ext_resource type="Script" uid="uid://bk38es8bv6snb" path="res://scripts/editors/NewTerrainDialog.gd" id="1_k8bl3"]
+[ext_resource type="Script" uid="uid://bk38es8bv6snb" path="res://scripts/editors/TerrainSettingsDialog.gd" id="1_k8bl3"]
 
-[node name="NewTerrainDialog" type="Window"]
+[node name="TerrainSettingsDialog" type="Window"]
 auto_translate_mode = 1
 title = "New Terrain"
 position = Vector2i(325, 200)
