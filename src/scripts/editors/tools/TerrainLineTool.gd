@@ -179,7 +179,7 @@ func handle_view_input(event: InputEvent) -> bool:
 			_queue_preview_redraw()
 		if _is_drag and _drag_idx >= 0 and _edit_idx >= 0:
 			var map_m: Vector2 = editor.screen_to_map(event.position, true)
-			if not render.is_inside_terrain(map_m):
+			if not render.is_inside_map(map_m):
 				return false
 
 			if map_m.is_finite():
@@ -193,7 +193,7 @@ func handle_view_input(event: InputEvent) -> bool:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			var map_m: Vector2 = editor.screen_to_map(event.position, true)
-			if not render.is_inside_terrain(map_m):
+			if not render.is_inside_map(map_m):
 				return false
 
 			if _edit_idx < 0:

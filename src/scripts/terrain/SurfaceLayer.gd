@@ -8,6 +8,8 @@ class_name SurfaceLayer
 ## Max texture size for patterns
 @export var max_pattern_size_px: int = 2048 
 
+@onready var renderer: TerrainRender = get_owner()
+
 var data: TerrainData
 var _data_conn := false
 var _dirty := true
@@ -41,16 +43,23 @@ func _draw() -> void:
 
 	var polys: Array = []
 	for s in data.surfaces:
-		if s == null or not (s is Dictionary): continue
-		if not s.has("points"): continue
+		if s == null or not (s is Dictionary): 
+			continue
+		if not s.has("points"): 
+			continue
 		var brush: TerrainBrush = s.get("brush", null)
-		if brush == null: continue
-		if brush.feature_type != TerrainBrush.FeatureType.AREA: continue
+		if brush == null: 
+			continue
+		if brush.feature_type != TerrainBrush.FeatureType.AREA: 
+			continue
 		var pts: PackedVector2Array = s.points
-		if pts.size() < 3: continue
+		if pts.size() < 3: 
+			continue
 		var closed := bool(s.get("closed", true))
+		
+		var safe_pts := renderer.clamp_shape_to_terrain(pts)
 		polys.append({
-			"points": pts,
+			"points": safe_pts,
 			"closed": closed,
 			"brush": brush
 		})

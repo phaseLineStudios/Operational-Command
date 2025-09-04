@@ -6,6 +6,8 @@ class_name LabelLayer
 @export var font: Font
 @export var antialias: bool = true
 
+@onready var renderer: TerrainRender = get_owner()
+
 var data: TerrainData
 var _data_conn := false
 
@@ -36,6 +38,8 @@ func _draw() -> void:
 			continue
 		var pos_local: Vector2 = s.get("pos", Vector2.INF)
 		if not pos_local.is_finite(): 
+			continue
+		if not renderer.is_inside_terrain(pos_local):
 			continue
 		var txt: String = String(s.get("text", ""))
 		if txt == "": 

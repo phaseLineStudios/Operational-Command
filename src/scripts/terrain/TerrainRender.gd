@@ -214,6 +214,26 @@ func _draw_map_size() -> void:
 func _on_base_layer_resize():
 	emit_signal("map_resize")
 
+## Clamp a single point to the terrain (local map coordinates)
+func clamp_point_to_terrain(p: Vector2) -> Vector2:
+	var sz: Vector2 = get_terrain_size()
+	return Vector2(
+		clamp(p.x, 0.0, sz.x - terrain_border_px * 2),
+		clamp(p.y, 0.0, sz.y - terrain_border_px * 2)
+	)
+
+## Clamp an entire polygon (without mutating the source array)
+func clamp_shape_to_terrain(pts: PackedVector2Array) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	out.resize(pts.size())
+	for i in pts.size():
+		out[i] = clamp_point_to_terrain(pts[i])
+	return out
+
+## API to check if position is inside map
+func is_inside_map(pos: Vector2) -> bool:
+	return margin.get_global_rect().has_point(pos)
+
 ## API to check if position is inside terrain
 func is_inside_terrain(pos: Vector2) -> bool:
 	return base_layer.get_global_rect().has_point(pos)

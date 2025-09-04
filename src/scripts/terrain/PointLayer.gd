@@ -3,6 +3,8 @@ class_name PointLayer
 
 @export var antialias: bool = true
 
+@onready var renderer: TerrainRender = get_owner()
+
 var data: TerrainData
 var _data_conn := false
 
@@ -29,15 +31,20 @@ func _draw() -> void:
 
 	var items: Array = []
 	for s in data.points:
-		if s == null or not (s is Dictionary): continue
+		if s == null or not (s is Dictionary): 
+			continue
 		var brush: TerrainBrush = s.get("brush", null)
 		if brush == null or brush.feature_type != TerrainBrush.FeatureType.POINT:
 			continue
 		var tex: Texture2D = brush.symbol
-		if tex == null: continue
+		if tex == null: 
+			continue
 
 		var pos_local: Vector2 = s.get("pos", Vector2.INF)
-		if not pos_local.is_finite(): continue
+		if not pos_local.is_finite(): 
+			continue
+		if not renderer.is_inside_terrain(pos_local):
+			continue
 		var p_scale: float = float(s.get("scale", 1.0))
 		var p_size = brush.symbol_size_m * max(0.01, p_scale)
 

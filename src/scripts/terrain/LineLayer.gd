@@ -4,6 +4,8 @@ class_name LineLayer
 @export var antialias: bool = true
 @export var snap_half_px_for_thin_strokes := true
 
+@onready var renderer: TerrainRender = get_owner()
+
 var data: TerrainData
 var _data_conn := false
 
@@ -36,6 +38,7 @@ func _draw() -> void:
 
 		var pts: PackedVector2Array = s.get("points", PackedVector2Array())
 		if pts.size() < 2: continue
+		var safe_pts := renderer.clamp_shape_to_terrain(pts)
 
 		var rec := brush.get_draw_recipe()
 		var fill_col: Color   = rec.fill.color   if rec.has("fill")   and "color" in rec.fill   else Color(0,0,0,0)
@@ -46,9 +49,9 @@ func _draw() -> void:
 		var core_w: float = float(s.get("width_px", 0.0))
 		if core_w <= 0.0:
 			core_w = max(1.0, stroke_w)
-
+	
 		lines.append({
-			"pts": pts,
+			"pts": safe_pts,
 			"fill": fill_col,
 			"stroke": stroke_col,
 			"core_w": core_w,

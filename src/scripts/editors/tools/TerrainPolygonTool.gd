@@ -105,7 +105,7 @@ func handle_view_input(event: InputEvent) -> bool:
 			_queue_preview_redraw()
 		if _is_drag and _drag_idx >= 0 and _edit_idx >= 0:
 			var local_m := editor.screen_to_map(event.position)
-			if not render.is_inside_terrain(local_m):
+			if not render.is_inside_map(local_m):
 				return false
 				
 			if local_m.is_finite():
@@ -121,7 +121,7 @@ func handle_view_input(event: InputEvent) -> bool:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			var local_m := editor.screen_to_map(event.position, true)
-			if not render.is_inside_terrain(local_m):
+			if not render.is_inside_map(local_m):
 				return false
 			
 			if _edit_idx < 0:
@@ -135,7 +135,7 @@ func handle_view_input(event: InputEvent) -> bool:
 				_drag_before = data.surfaces[_edit_idx].duplicate(true)
 				_queue_preview_redraw()
 			else:
-				if not render.is_inside_terrain(local_m):
+				if not render.is_inside_map(local_m):
 					return false
 					
 				if local_m.is_finite():
