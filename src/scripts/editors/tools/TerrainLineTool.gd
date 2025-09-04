@@ -178,12 +178,11 @@ func handle_view_input(event: InputEvent) -> bool:
 			_hover_idx = _pick_point(event.position)
 			_queue_preview_redraw()
 		if _is_drag and _drag_idx >= 0 and _edit_idx >= 0:
-			var map_m: Vector2 = editor.screen_to_map(event.position, true)
-			if not render.is_inside_map(map_m):
+			if not render.is_inside_map(event.position):
 				return false
 
-			if map_m.is_finite():
-				var local_m := editor.terrain_to_map(map_m)
+			if event.position.is_finite():
+				var local_m := editor.terrain_to_map(event.position)
 				var pts := _current_points()
 				if _drag_idx >= 0 and _drag_idx < pts.size():
 					pts[_drag_idx] = local_m
@@ -192,8 +191,7 @@ func handle_view_input(event: InputEvent) -> bool:
 	
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
-			var map_m: Vector2 = editor.screen_to_map(event.position, true)
-			if not render.is_inside_map(map_m):
+			if not render.is_inside_map(event.position):
 				return false
 
 			if _edit_idx < 0:
@@ -211,9 +209,9 @@ func handle_view_input(event: InputEvent) -> bool:
 				_drag_before = data.lines[_edit_idx].duplicate(true)
 				_queue_preview_redraw()
 			else:
-				if map_m.is_finite():
+				if event.position.is_finite():
 					_sync_edit_brush_to_active_if_needed()
-					var local_m := editor.terrain_to_map(map_m)
+					var local_m := editor.terrain_to_map(event.position)
 					var before: Dictionary = data.lines[idx].duplicate(true)
 					var pts_before: PackedVector2Array = before.get("points", PackedVector2Array())
 					var pts_after := PackedVector2Array(pts_before)
@@ -355,7 +353,7 @@ func _sync_edit_brush_to_active_if_needed() -> void:
 		_emit_data_changed()
 
 func _pick_point(pos: Vector2) -> int:
-	var terrain_pos = editor.terrain_to_map(editor.screen_to_map(pos))
+	var terrain_pos = editor.terrain_to_map(pos)
 	if _edit_idx < 0: 
 		return -1
 	var pts := _current_points()

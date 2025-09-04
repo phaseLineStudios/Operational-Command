@@ -99,8 +99,7 @@ func _label(t: String) -> Label:
 
 func handle_view_input(event: InputEvent) -> bool:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		var local_m := editor.screen_to_map(event.position)
-		if not render.is_inside_terrain(local_m):
+		if not render.is_inside_terrain(event.position):
 			return false
 
 		if event.pressed:
@@ -122,8 +121,7 @@ func handle_view_input(event: InputEvent) -> bool:
 		return true
 
 	if _is_drag and event is InputEventMouseMotion:
-		var local_m2 := editor.screen_to_map(event.position)
-		if not render.is_inside_terrain(local_m2):
+		if not render.is_inside_terrain(event.position):
 			return false
 		_apply(event.position)
 		return true
@@ -131,16 +129,15 @@ func handle_view_input(event: InputEvent) -> bool:
 	return false
 
 ## Draw elevation change
-func _apply(screen_pos: Vector2) -> void:
+func _apply(pos: Vector2) -> void:
 	var img := data.elevation
 	if img.is_empty(): 
 		return
-	
-	var local_m := editor.screen_to_map(screen_pos, true)
-	if not local_m.is_finite():
+
+	if not pos.is_finite():
 		return
 	
-	var local_terrain := editor.terrain_to_map(local_m)
+	var local_terrain := editor.terrain_to_map(pos)
 	var px := data.world_to_elev_px(local_terrain)
 
 	var r_px := int(round(brush_radius_m / data.elevation_resolution_m))

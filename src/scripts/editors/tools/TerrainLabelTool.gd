@@ -84,19 +84,17 @@ func handle_view_input(event: InputEvent) -> bool:
 	if event is InputEventMouseMotion:
 		_hover_idx = _pick_label(event.position)
 		if _is_drag and _drag_idx >= 0:
-			var map_m := editor.screen_to_map(event.position)
-			if not render.is_inside_terrain(map_m): 
+			if not render.is_inside_terrain(event.position): 
 				return false
 				
-			if map_m.is_finite():
-				var local_m := editor.terrain_to_map(map_m)
+			if event.position.is_finite():
+				var local_m := editor.terrain_to_map(event.position)
 				_set_label_pos(_drag_idx, local_m)
 		return false
 
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
-			var map_m := editor.screen_to_map(event.position)
-			if not render.is_inside_terrain(map_m): 
+			if not render.is_inside_terrain(event.position): 
 				return false
 				
 			_hover_idx = _pick_label(event.position)
@@ -105,8 +103,8 @@ func handle_view_input(event: InputEvent) -> bool:
 				_drag_idx = _hover_idx
 				_drag_before = (data.labels[_drag_idx].duplicate(true) if _drag_idx >= 0 and _drag_idx < data.labels.size() else {})
 			else:
-				if map_m.is_finite():
-					var local_m := editor.terrain_to_map(map_m)
+				if event.position.is_finite():
+					var local_m := editor.terrain_to_map(event.position)
 					_add_label(local_m, label_text, label_size)
 			return true
 		else:
@@ -192,8 +190,8 @@ func _pick_label(mouse_global: Vector2) -> int:
 		var p_local: Vector2 = s.get("pos", Vector2.INF)
 		if not p_local.is_finite(): 
 			continue
-		var p_screen := editor.map_to_screen(editor.terrain_to_map(p_local))
-		var d2 := p_screen.distance_squared_to(mouse_global)
+		var p_map := editor.terrain_to_map(p_local)
+		var d2 := p_map.distance_squared_to(mouse_global)
 		if d2 <= best_d2:
 			best = i
 			best_d2 = d2

@@ -112,18 +112,16 @@ func handle_view_input(event: InputEvent) -> bool:
 	if event is InputEventMouseMotion:
 		_hover_idx = _pick_point(event.position)
 		if _is_drag and _drag_idx >= 0:
-			var map_m := editor.screen_to_map(event.position)
-			if not render.is_inside_terrain(map_m):
+			if not render.is_inside_terrain(event.position):
 				return false
-			if map_m.is_finite():
-				var local_m := editor.terrain_to_map(map_m)
+			if event.position.is_finite():
+				var local_m := editor.terrain_to_map(event.position)
 				_set_point_pos(_drag_idx, local_m)
 		return false
 
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
-			var map_m := editor.screen_to_map(event.position)
-			if not render.is_inside_terrain(map_m):
+			if not render.is_inside_terrain(event.position):
 				return false
 
 			_hover_idx = _pick_point(event.position)
@@ -134,8 +132,8 @@ func handle_view_input(event: InputEvent) -> bool:
 			else:
 				if active_brush == null or active_brush.feature_type != TerrainBrush.FeatureType.POINT:
 					return true
-				if map_m.is_finite():
-					var local_m := editor.terrain_to_map(map_m)
+				if event.position.is_finite():
+					var local_m := editor.terrain_to_map(event.position)
 					_add_point(local_m)
 			return true
 		else:
@@ -214,13 +212,15 @@ func _pick_point(mouse_global: Vector2) -> int:
 	var best_d2 := _pick_radius_px * _pick_radius_px
 	for i in data.points.size():
 		var s = data.points[i]
-		if typeof(s) != TYPE_DICTIONARY: continue
-		if s.get("type","") != "point": continue
+		if typeof(s) != TYPE_DICTIONARY: 
+			continue
+		if s.get("type","") != "point": 
+			continue
 		var p_local: Vector2 = s.get("pos", Vector2.INF)
-		if not p_local.is_finite(): continue
+		if not p_local.is_finite(): 
+			continue
 		var p_map := editor.terrain_to_map(p_local)
-		var p_screen := editor.map_to_screen(p_map, true)
-		var d2 := p_screen.distance_squared_to(mouse_global)
+		var d2 := p_map.distance_squared_to(mouse_global)
 		if d2 <= best_d2:
 			best = i
 			best_d2 = d2

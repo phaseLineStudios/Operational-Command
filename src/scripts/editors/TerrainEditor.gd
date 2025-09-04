@@ -212,6 +212,9 @@ func _rebuild_tool_hint() -> void:
 
 ## Handle unhandled input
 func _unhandled_key_input(event):
+	if active_tool and active_tool.handle_view_input(event):
+		return
+		
 	if event is InputEventKey and event.pressed:
 		var ctrl: bool = event.ctrl_pressed or event.meta_pressed
 		if ctrl and event.keycode == KEY_Z:
@@ -228,11 +231,6 @@ func _unhandled_key_input(event):
 			_open()
 			accept_event()
 
-## Handle input
-func _input(event: InputEvent) -> void:
-	if active_tool and active_tool.handle_view_input(event):
-		return
-
 ## Input handler for terrainview Viewport
 func _on_brush_overlay_gui_input(event):
 	if event is InputEventMouseMotion:
@@ -245,6 +243,9 @@ func _on_brush_overlay_gui_input(event):
 			return
 		
 		active_tool.update_preview_at_overlay(brush_overlay, event.position)
+		
+	if active_tool and active_tool.handle_view_input(event):
+		return
 
 ## Triggers when mouse enters brush overlay
 func _on_brush_overlay_mouse_enter():
