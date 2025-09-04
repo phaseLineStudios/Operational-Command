@@ -297,10 +297,7 @@ func _open():
 	dlg.file_selected.connect(func(path):
 		var res := ResourceLoader.load(path)
 		if res is TerrainData:
-			data = res
-			_current_path = path
-			if terrain_render:
-				terrain_render.data = data # BUG Opening data makes it unmutable
+			_new_terrain(res)
 		else:
 			push_error("Not a TerrainData: %s" % path)
 		dlg.queue_free()

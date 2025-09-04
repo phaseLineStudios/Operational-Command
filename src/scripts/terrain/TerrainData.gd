@@ -230,3 +230,40 @@ static func _clip_rect_to_image(rect: Rect2i, img: Image) -> Rect2i:
 	var cw: int = max(0, x1 - x0)
 	var ch: int = max(0, y1 - y0)
 	return Rect2i(Vector2i(x0, y0), Vector2i(cw, ch))
+
+## Create a deep copy of itself
+func duplicate_deep() -> TerrainData:
+	var copy := TerrainData.new()
+
+	copy.name = name
+	copy.width_m = width_m
+	copy.height_m = height_m
+	copy.elevation_resolution_m = elevation_resolution_m
+
+	copy.grid_start_x = grid_start_x
+	copy.grid_start_y = grid_start_y
+
+	copy.base_elevation_m = base_elevation_m
+	copy.contour_interval_m = contour_interval_m
+
+	if elevation and not elevation.is_empty():
+		copy.elevation = elevation.duplicate()
+	else:
+		copy.elevation = Image.create(64, 64, false, Image.FORMAT_RF)
+
+	copy.surfaces = []
+	for s in surfaces:
+		copy.surfaces.append(s.duplicate(true) if s is Resource else s)
+	copy.lines = []
+	for l in lines:
+		copy.lines.append(l.duplicate(true) if l is Resource else l)
+	copy.points = []
+	for p in points:
+		copy.points.append(p.duplicate(true) if p is Resource else p)
+	copy.labels = []
+	for lab in labels:
+		copy.labels.append(lab.duplicate(true) if lab is Resource else lab)
+
+	copy._px_per_m = _px_per_m
+
+	return copy
