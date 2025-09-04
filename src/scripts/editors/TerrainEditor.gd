@@ -124,10 +124,32 @@ func _build_tool_buttons():
 		tool_map[btn] = tool
 		btn.tooltip_text = tool.tool_hint
 		btn.texture_normal = tool.tool_icon
+		btn.self_modulate = Color(1, 1, 1, 0.4)
+		btn.set_meta("hovered", false)
 		tools_grid.add_child(btn)
 		
-		btn.pressed.connect(func():
-			_select_tool(btn)
+		btn.mouse_entered.connect(func ():
+			btn.set_meta("hovered", true)
+			_update_tool_button_tint(btn)
+		)
+		btn.mouse_exited.connect(func ():
+			btn.set_meta("hovered", false)
+			_update_tool_button_tint(btn)
+		)
+		btn.focus_entered.connect(func ():
+			btn.set_meta("hovered", true)
+			_update_tool_button_tint(btn)
+		)
+		btn.focus_exited.connect(func ():
+			btn.set_meta("hovered", false)
+			_update_tool_button_tint(btn)
+		)
+		btn.toggled.connect(func (pressed: bool):
+			_update_tool_button_tint(btn)
+			if pressed:
+				_select_tool(btn)
+			else:
+				_deselect_tool(btn)
 		)
 
 ## Select the active tool
@@ -136,14 +158,39 @@ func _select_tool(btn: TextureButton) -> void:
 		active_tool.destroy_preview()
 		
 	for n in tools_grid.get_children():
-		if n is Button:
+		if n is TextureButton:
 			n.button_pressed = (n == btn)
+			_update_tool_button_tint(n)
+	
 	active_tool = tool_map[btn]
 	_rebuild_options_panel()
 	_rebuild_info_panel()
 	_rebuild_tool_hint()
 	if active_tool:
 		active_tool.ensure_preview(brush_overlay)
+
+## Deselect the active tool
+func _deselect_tool(_btn: TextureButton) -> void:
+	if active_tool:
+		active_tool.destroy_preview()
+		active_tool = null
+
+	for n in tools_grid.get_children():
+		if n is TextureButton:
+			n.button_pressed = false
+			_update_tool_button_tint(n)
+
+	_rebuild_options_panel()
+	_rebuild_info_panel()
+	_rebuild_tool_hint()
+
+## Update tool button tint
+func _update_tool_button_tint(btn: TextureButton) -> void:
+	var hovered := bool(btn.get_meta("hovered", false))
+	if btn.button_pressed or hovered:
+		btn.self_modulate = Color(1, 1, 1, 1.0)  # fully visible
+	else:
+		btn.self_modulate = Color(1, 1, 1, 0.4)  # dimmed idle
 
 ## Rebuild the options panel for the selected tool
 func _rebuild_options_panel() -> void:
