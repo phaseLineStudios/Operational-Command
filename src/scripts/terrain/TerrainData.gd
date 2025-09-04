@@ -230,15 +230,3 @@ static func _clip_rect_to_image(rect: Rect2i, img: Image) -> Rect2i:
 	var cw: int = max(0, x1 - x0)
 	var ch: int = max(0, y1 - y0)
 	return Rect2i(Vector2i(x0, y0), Vector2i(cw, ch))
-
-## Get the grid number of a position
-func position_to_grid(_pos: Vector2):
-	pass # TODO
-
-## Get the surface of a position
-func get_surface_at_pos(_pos: Vector2):
-	pass # TODO
-
-## Get the elevation of a position
-func get_elev_at_pos(_pos: Vector2):
-	pass # TODO
