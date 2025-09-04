@@ -49,7 +49,7 @@ func _draw() -> void:
 		var core_w: float = float(s.get("width_px", 0.0))
 		if core_w <= 0.0:
 			core_w = max(1.0, stroke_w)
-	
+
 		lines.append({
 			"pts": safe_pts,
 			"fill": fill_col,
@@ -65,29 +65,46 @@ func _draw() -> void:
 	lines.sort_custom(func(a, b): return int(a.z) < int(b.z))
 
 	for L in lines:
+		var stroke_col: Color = L.stroke
+		if stroke_col.a <= 0.0:
+			continue
 		var chain: PackedVector2Array = L.pts.duplicate()
 		var outer_w: float = L.core_w + 2.0 * L.outline_w
-		if snap_half_px_for_thin_strokes:
-			if int(round(outer_w)) % 2 != 0:
-				chain = _offset_half_px(chain)
+		if outer_w <= 0.0:
+			continue
+		if snap_half_px_for_thin_strokes and (int(round(outer_w)) % 2 != 0):
+			chain = _offset_half_px(chain)
 
-		if L.stroke.a > 0.0 and outer_w > 0.0:
-			match L.mode:
-				TerrainBrush.DrawMode.SOLID:
-					_draw_polyline_solid(chain, L.stroke, outer_w)
-				TerrainBrush.DrawMode.DASHED:
-					_draw_polyline_dashed_continuous(chain, L.stroke, outer_w, L.dash, L.gap)
-				TerrainBrush.DrawMode.DOTTED:
-					_draw_polyline_dotted_continuous(chain, L.stroke, outer_w, max(2.0, L.gap))
+		match L.mode:
+			TerrainBrush.DrawMode.SOLID:
+				_draw_polyline_solid(chain, stroke_col, outer_w)
+			TerrainBrush.DrawMode.DASHED:
+				_draw_polyline_dashed(chain, stroke_col, outer_w, L.dash, L.gap)
+			TerrainBrush.DrawMode.DOTTED:
+				_draw_polyline_dotted(chain, stroke_col, outer_w, max(2.0, L.gap))
+			_:
+				_draw_polyline_solid(chain, stroke_col, outer_w)
 
-		if L.fill.a > 0.0 and L.core_w > 0.0:
-			match L.mode:
-				TerrainBrush.DrawMode.SOLID:
-					_draw_polyline_solid(chain, L.fill, L.core_w)
-				TerrainBrush.DrawMode.DASHED:
-					_draw_polyline_dashed_continuous(chain, L.fill, L.core_w, L.dash, L.gap)
-				TerrainBrush.DrawMode.DOTTED:
-					_draw_polyline_dotted_continuous(chain, L.fill, L.core_w, max(2.0, L.gap))
+	for L in lines:
+		var fill_col: Color = L.fill
+		if fill_col.a <= 0.0:
+			continue
+		var chain: PackedVector2Array = L.pts.duplicate()
+		var core_w: float = L.core_w
+		if core_w <= 0.0:
+			continue
+		if snap_half_px_for_thin_strokes and (int(round(core_w)) % 2 != 0):
+			chain = _offset_half_px(chain)
+
+		match L.mode:
+			TerrainBrush.DrawMode.SOLID:
+				_draw_polyline_solid(chain, fill_col, core_w)
+			TerrainBrush.DrawMode.DASHED:
+				_draw_polyline_dashed(chain, fill_col, core_w, L.dash, L.gap)
+			TerrainBrush.DrawMode.DOTTED:
+				_draw_polyline_dotted(chain, fill_col, core_w, max(2.0, L.gap))
+			_:
+				_draw_polyline_solid(chain, fill_col, core_w)
 
 func _offset_half_px(pts: PackedVector2Array) -> PackedVector2Array:
 	var out := PackedVector2Array()
@@ -99,7 +116,7 @@ func _draw_polyline_solid(pts: PackedVector2Array, color: Color, width: float) -
 	draw_polyline(pts, color, width, antialias)
 
 ## Draw dashed line
-func _draw_polyline_dashed_continuous(pts: PackedVector2Array, color: Color, width: float, dash_px: float, gap_px: float) -> void:
+func _draw_polyline_dashed(pts: PackedVector2Array, color: Color, width: float, dash_px: float, gap_px: float) -> void:
 	if pts.size() < 2: return
 	var dash: float = max(0.5, dash_px)
 	var gap : float = max(0.5, gap_px)
@@ -127,7 +144,7 @@ func _draw_polyline_dashed_continuous(pts: PackedVector2Array, color: Color, wid
 		phase = length - (advanced + cycles * period)
 
 ## Draw dotted line
-func _draw_polyline_dotted_continuous(pts: PackedVector2Array, color: Color, width: float, step_px: float) -> void:
+func _draw_polyline_dotted(pts: PackedVector2Array, color: Color, width: float, step_px: float) -> void:
 	if pts.size() < 2: return
 	var step: float = max(1.0, step_px)
 	var r: float = max(0.5, width * 0.5)
