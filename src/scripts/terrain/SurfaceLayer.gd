@@ -41,80 +41,89 @@ func _draw() -> void:
 	if data == null or data.surfaces.is_empty():
 		return
 
-	var polys: Array = []
+	var groups := {}
 	for s in data.surfaces:
-		if s == null or not (s is Dictionary): 
-			continue
-		if not s.has("points"): 
-			continue
+		if s == null or typeof(s) != TYPE_DICTIONARY: continue
+		if s.get("type", "") != "polygon": continue
+		if not s.has("points"): continue
 		var brush: TerrainBrush = s.get("brush", null)
-		if brush == null: 
-			continue
-		if brush.feature_type != TerrainBrush.FeatureType.AREA: 
+		if brush == null or brush.feature_type != TerrainBrush.FeatureType.AREA:
 			continue
 		var pts: PackedVector2Array = s.points
-		if pts.size() < 3: 
+		if pts.size() < 3:
 			continue
-		var closed := bool(s.get("closed", true))
-		
-		var safe_pts := renderer.clamp_shape_to_terrain(pts)
-		polys.append({
-			"points": safe_pts,
-			"closed": closed,
-			"brush": brush
-		})
 
-	polys.sort_custom(func(a, b):
-		var za: int = a.brush.z_index
-		var zb: int = b.brush.z_index
-		return za < zb
+		var clamped := renderer.clamp_shape_to_terrain(pts)
+		if clamped.size() < 3:
+			continue
+
+		var key := _brush_key(brush)
+		if not groups.has(key):
+			groups[key] = {
+				"brush": brush,
+				"z": int(brush.z_index),
+				"polys": []
+			}
+		groups[key].polys.append(clamped)
+
+	var merged_to_draw: Array = []
+	for key in groups.keys():
+		var g = groups[key]
+		var polys: Array = g.polys
+		var merged: Array = _union_polys(polys)
+		if not merged.is_empty():
+			merged_to_draw.append({
+				"brush": g.brush,
+				"z": g.z,
+				"polys": merged
+			})
+
+	merged_to_draw.sort_custom(func(a, b):
+		return int(a.z) < int(b.z)
 	)
 
-	for item in polys:
-		var pts: PackedVector2Array = item.points
-		var closed: bool = item.closed
+	for item in merged_to_draw:
 		var brush: TerrainBrush = item.brush
 		var rec := brush.get_draw_recipe()
 		var fill_col: Color = rec.fill.color if rec.has("fill") and "color" in rec.fill else Color(0,0,0,0)
-		match int(rec.mode if rec.has("mode") else TerrainBrush.DrawMode.SOLID):
-			TerrainBrush.DrawMode.SOLID:
-				if fill_col.a > 0.0:
-					draw_colored_polygon(pts, fill_col, PackedVector2Array(), null)
-			TerrainBrush.DrawMode.HATCHED:
-				if fill_col.a > 0.0:
-					var spacing := float(rec.fill.hatch_spacing_px if "hatch_spacing_px" in rec.fill else 8.0)
-					var angle   := float(rec.fill.hatch_angle_deg   if "hatch_angle_deg"   in rec.fill else 45.0)
-					_fill_hatched(pts, fill_col, spacing, angle)
-			TerrainBrush.DrawMode.SYMBOL_TILED:
-				var tex: Texture2D = rec.symbol.tex if rec.has("symbol") and "tex" in rec.symbol else null
-				if tex != null and tex.get_width() > 0 and tex.get_height() > 0:
-					var spacing_px := float(rec.symbol.spacing_px if "spacing_px" in rec.symbol else 24.0)
-					var sym_scale := float(rec.symbol.scale if "scale" in rec.symbol else 1.0)
-					_fill_symbol_tiled(pts, tex, spacing_px, sym_scale)
-				elif fill_col.a > 0.0:
-					draw_colored_polygon(pts, fill_col, PackedVector2Array(), null)
-			_:
-				if fill_col.a > 0.0:
-					draw_colored_polygon(pts, fill_col, PackedVector2Array(), null)
-
 		var stroke_col: Color = rec.stroke.color if rec.has("stroke") and "color" in rec.stroke else Color(0,0,0,0)
 		var stroke_w: float = rec.stroke.width_px if rec.has("stroke") and "width_px" in rec.stroke else 1.0
-		if stroke_col.a > 0.0 and stroke_w > 0.0:
-			var mode: TerrainBrush.DrawMode = rec.mode if rec.has("mode") else TerrainBrush.DrawMode.SOLID
-			var outline: PackedVector2Array = _closed_copy(pts, closed)
+		var mode: int = int(rec.mode if rec.has("mode") else TerrainBrush.DrawMode.SOLID)
 
-			if snap_half_px_for_thin_strokes and int(round(stroke_w)) % 2 != 0:
-				outline = _offset_half_px(outline)
-
+		for poly: PackedVector2Array in item.polys:
 			match mode:
 				TerrainBrush.DrawMode.SOLID:
-					_draw_polyline_closed(outline, stroke_col, stroke_w)
-				TerrainBrush.DrawMode.DASHED:
-					var dash: float = rec.stroke.dash_px if "dash_px" in rec.stroke else 8.0
-					var gap: float = rec.stroke.gap_px  if "gap_px"  in rec.stroke else 6.0
-					_draw_polyline_dashed(outline, stroke_col, stroke_w, dash, gap)
+					if fill_col.a > 0.0:
+						draw_colored_polygon(poly, fill_col, PackedVector2Array(), null)
+				TerrainBrush.DrawMode.HATCHED:
+					if fill_col.a > 0.0:
+						var spacing := float(rec.fill.hatch_spacing_px if "hatch_spacing_px" in rec.fill else 8.0)
+						var angle   := float(rec.fill.hatch_angle_deg   if "hatch_angle_deg"   in rec.fill else 45.0)
+						_fill_hatched(poly, fill_col, spacing, angle)
+				TerrainBrush.DrawMode.SYMBOL_TILED:
+					var tex: Texture2D = rec.symbol.tex if rec.has("symbol") and "tex" in rec.symbol else null
+					if tex != null and tex.get_width() > 0 and tex.get_height() > 0:
+						var spacing_px := float(rec.symbol.spacing_px if "spacing_px" in rec.symbol else 24.0)
+						var sym_scale := float(rec.symbol.scale if "scale" in rec.symbol else 1.0)
+						_fill_symbol_tiled(poly, tex, spacing_px, sym_scale)
+					elif fill_col.a > 0.0:
+						draw_colored_polygon(poly, fill_col, PackedVector2Array(), null)
 				_:
-					_draw_polyline_closed(outline, stroke_col, stroke_w)
+					if fill_col.a > 0.0:
+						draw_colored_polygon(poly, fill_col, PackedVector2Array(), null)
+
+			if stroke_col.a > 0.0 and stroke_w > 0.0:
+				var outline := poly
+				if snap_half_px_for_thin_strokes and int(round(stroke_w)) % 2 != 0:
+					outline = _offset_half_px(outline)
+
+				match mode:
+					TerrainBrush.DrawMode.DASHED:
+						var dash: float = rec.stroke.dash_px if "dash_px" in rec.stroke else 8.0
+						var gap: float  = rec.stroke.gap_px  if "gap_px"  in rec.stroke else 6.0
+						_draw_polyline_dashed(_closed_copy(outline, true), stroke_col, stroke_w, dash, gap)
+					_:
+						_draw_polyline_closed(_closed_copy(outline, true), stroke_col, stroke_w)
 
 func _closed_copy(pts: PackedVector2Array, closed: bool) -> PackedVector2Array:
 	if closed:
@@ -248,3 +257,76 @@ func _dash_segment(a: Vector2, b: Vector2, color: Color, width: float, dash_px: 
 			var p1 := a + dir * t1
 			draw_line(p0, p1, color, width, antialias)
 		t += step
+
+## Key to group polygons that share style
+func _brush_key(brush: TerrainBrush) -> String:
+	if brush == null: return ""
+	return (brush.resource_path if brush.resource_path != "" else "id:%s" % brush.get_instance_id())
+
+## Boolean union for an array of polygons.
+func _union_polys(polys: Array) -> Array:
+	if polys.is_empty():
+		return []
+
+	var clean: Array = []
+	for p in polys:
+		var s := _sanitize_polygon(p)
+		if s.size() >= 3 and abs(_polygon_area(s)) > 1e-6:
+			clean.append(s)
+	if clean.is_empty():
+		return []
+
+	var acc: Array = [clean[0]]
+
+	for i in range(1, clean.size()):
+		var b: PackedVector2Array = clean[i]
+		var new_acc: Array = []
+		var merged_any := false
+
+		for a in acc:
+			var res: Array = Geometry2D.merge_polygons(a, b)
+			if res.is_empty():
+				new_acc.append(a)
+			else:
+				for r in res:
+					new_acc.append(r)
+				merged_any = true
+		if not merged_any:
+			new_acc.append(b)
+
+		acc = new_acc
+	return acc
+
+## Remove duplicate closing vertex, collapse near-duplicates, ensure >= 3 verts.
+func _sanitize_polygon(pts_in: PackedVector2Array) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	if pts_in.size() < 3:
+		return out
+
+	var n := pts_in.size()
+	var first := pts_in[0]
+	var last  := pts_in[n - 1]
+	var end_n := n - 1 if first.distance_squared_to(last) < 1e-12 else n
+
+	var eps2 := 1e-10
+	var prev := Vector2.INF
+	for i in range(end_n):
+		var p := pts_in[i]
+		if not prev.is_finite() or prev.distance_squared_to(p) > eps2:
+			out.append(p)
+		prev = p
+
+	if out.size() < 3:
+		return PackedVector2Array()
+	return out
+
+## Compute signed polygon area (shoelace formula).
+static func _polygon_area(pts: PackedVector2Array) -> float:
+	var n := pts.size()
+	if n < 3:
+		return 0.0
+	var area := 0.0
+	for i in range(n):
+		var j := (i + 1) % n
+		area += pts[i].x * pts[j].y - pts[j].x * pts[i].y
+	return area * 0.5
