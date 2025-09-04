@@ -58,7 +58,7 @@ func _on_primary_pressed():
 		_target_data.height_m = sy
 		_target_data.grid_start_x = int(terrain_grid_x.value)
 		_target_data.grid_start_y = int(terrain_grid_y.value)
-		_target_data.base_elevation_m = float(base_elevation.value)
+		_target_data.base_elevation_m = int(base_elevation.value)
 
 		show_dialog(false)
 		emit_signal("request_edit", _target_data)
@@ -69,7 +69,7 @@ func _on_primary_pressed():
 		data.height_m = sy
 		data.grid_start_x = int(terrain_grid_x.value)
 		data.grid_start_y = int(terrain_grid_y.value)
-		data.base_elevation_m = float(base_elevation.value)
+		data.base_elevation_m = int(base_elevation.value)
 
 		show_dialog(false)
 		emit_signal("request_create", data)

@@ -138,6 +138,7 @@ func _offset_half_px(pts: PackedVector2Array) -> PackedVector2Array:
 	return out
 
 ## Draw hatched fill by rasterizing a hatch pattern into a temporary image
+# BUG doesn't work
 func _fill_hatched(pts: PackedVector2Array, color: Color, spacing_px: float, angle_deg: float) -> void:
 	var bbox := _poly_bbox(pts)
 	if bbox.size.x <= 1.0 or bbox.size.y <= 1.0: return
@@ -146,6 +147,7 @@ func _fill_hatched(pts: PackedVector2Array, color: Color, spacing_px: float, ang
 	var ih := int(clamp(ceil(bbox.size.y), 1.0, float(max_pattern_size_px)))
 
 	var img := Image.create(iw, ih, false, Image.FORMAT_RGBA8)
+	# Optional: img.fill(Color(0,0,0,0))
 
 	var rad := deg_to_rad(angle_deg)
 	var c := cos(rad)
@@ -155,24 +157,27 @@ func _fill_hatched(pts: PackedVector2Array, color: Color, spacing_px: float, ang
 
 	for y in ih:
 		for x in iw:
-			var xf := float(x)
-			var yf := float(y)
-			var u := xf * c + yf * s
+			var u := float(x) * c + float(y) * s
 			var f: float = abs(fmod(u * inv_spacing, 1.0))
 			if f < 0.05 or f > 0.95:
 				img.set_pixel(x, y, Color(color.r, color.g, color.b, line_alpha))
 			else:
 				img.set_pixel(x, y, Color(0,0,0,0))
 
-	var _tex := ImageTexture.create_from_image(img)
-	var uvs := PackedVector2Array()
-	for p in pts:
-		uvs.append(p - bbox.position)
+	var tex := ImageTexture.create_from_image(img)
 
-	# TODO Create this helper
-	# draw_textured_polygon(pts, tex, uvs, Color.WHITE, null, antialias)
+	var uvs := PackedVector2Array()
+	var inv_size := Vector2(1.0 / float(iw), 1.0 / float(ih))
+	for p in pts:
+		uvs.append((p - bbox.position) * inv_size)
+
+	var prev_filter := texture_filter
+	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	draw_colored_polygon(pts, Color.WHITE, uvs, tex)
+	texture_filter = prev_filter
 
 ## Draw symbol-tiled fill by blitting the symbol into a temporary image
+# BUG doesn't work
 func _fill_symbol_tiled(pts: PackedVector2Array, symbol: Texture2D, spacing_px: float, sym_scale: float) -> void:
 	var bbox := _poly_bbox(pts)
 	if bbox.size.x <= 1.0 or bbox.size.y <= 1.0: return
@@ -186,32 +191,37 @@ func _fill_symbol_tiled(pts: PackedVector2Array, symbol: Texture2D, spacing_px: 
 	var sym_img := symbol.get_image()
 	if sym_img == null or sym_img.is_empty():
 		return
+
 	var sw: int = max(1, int(round(sym_img.get_width()  * max(0.01, sym_scale))))
 	var sh: int = max(1, int(round(sym_img.get_height() * max(0.01, sym_scale))))
 	var sym_scaled := sym_img.duplicate()
 	sym_scaled.resize(sw, sh, Image.INTERPOLATE_BILINEAR)
 
-	var step: float = max(1.0, spacing_px)
+	var step: int = int(max(1.0, spacing_px))
 	for y in range(0, ih, step):
 		for x in range(0, iw, step):
 			var dst := Rect2i(Vector2i(x, y), Vector2i(sw, sh))
 			var clipped := dst.intersection(Rect2i(Vector2i(0,0), Vector2i(iw, ih)))
 			if clipped.size.x <= 0 or clipped.size.y <= 0:
 				continue
-				
+
 			var src := Rect2i(
 				Vector2i(max(0, -dst.position.x), max(0, -dst.position.y)),
 				clipped.size
 			)
 			img.blit_rect(sym_scaled, src, clipped.position)
 
-	var _tex := ImageTexture.create_from_image(img)
+	var tex := ImageTexture.create_from_image(img)
+
 	var uvs := PackedVector2Array()
+	var inv_size := Vector2(1.0 / float(iw), 1.0 / float(ih))
 	for p in pts:
-		uvs.append(p - bbox.position)
-	
-	# TODO Create this helper
-	# draw_textured_polygon(pts, tex, uvs, Color.WHITE, null, antialias)
+		uvs.append((p - bbox.position) * inv_size)
+
+	var prev_filter := texture_filter
+	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	draw_colored_polygon(pts, Color.WHITE, uvs, tex)
+	texture_filter = prev_filter
 
 ## Get boundary box for polygon
 func _poly_bbox(pts: PackedVector2Array) -> Rect2:
