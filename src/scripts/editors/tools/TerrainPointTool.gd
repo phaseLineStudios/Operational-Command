@@ -9,6 +9,7 @@ var _info_ui_parent: Control
 var _hover_idx: int = -1
 var _drag_idx: int = -1
 var _is_drag := false
+var _drag_before: Dictionary = {}
 var _pick_radius_px := 12.0
 
 func _init():
@@ -98,7 +99,8 @@ func _place_preview(local_px: Vector2) -> void:
 	_preview.queue_redraw()
 
 func _update_preview_appearance() -> void:
-	if _preview == null: return
+	if _preview == null: 
+		return
 	if _preview is SymbolPreview:
 		var sp := _preview as SymbolPreview
 		sp.tex = (active_brush.symbol if active_brush and active_brush.symbol else null)
@@ -128,6 +130,7 @@ func handle_view_input(event: InputEvent) -> bool:
 			if _hover_idx >= 0:
 				_is_drag = true
 				_drag_idx = _hover_idx
+				_drag_before = (data.points[_drag_idx].duplicate(true) if _drag_idx >= 0 and _drag_idx < data.points.size() else {})
 			else:
 				if active_brush == null or active_brush.feature_type != TerrainBrush.FeatureType.POINT:
 					return true
@@ -137,7 +140,14 @@ func handle_view_input(event: InputEvent) -> bool:
 			return true
 		else:
 			_is_drag = false
+			if _drag_idx >= 0 and _drag_idx < data.points.size() and _drag_before.size() > 0:
+				var after: Dictionary = data.points[_drag_idx].duplicate(true)
+				if after != _drag_before:
+					var id: int = after.get("id", null)
+					if id != null:
+						editor.history.push_item_edit_by_id(data, "points", id, _drag_before, after, "Move point")
 			_drag_idx = -1
+			_drag_before = {}
 			return true
 
 	if event is InputEventKey and event.pressed:
@@ -155,12 +165,14 @@ func handle_view_input(event: InputEvent) -> bool:
 	return false
 
 func _ensure_surfaces():
-	if data == null: return
+	if data == null: 
+		return
 	if !("surfaces" in data) or data.points == null:
 		data.points = []
 
 func _add_point(local_m: Vector2) -> void:
-	if data == null: return
+	if data == null: 
+		return
 	_ensure_surfaces()
 	var pid := randi()
 	var surf := {
@@ -170,22 +182,29 @@ func _add_point(local_m: Vector2) -> void:
 		"scale": symbol_scale
 	}
 	data.points.append(surf)
+	editor.history.push_item_insert(data, "points", surf, "Add point", data.points.size())
 	_emit_data_changed()
 
-func _set_point_pos(idx_in_surfaces: int, local_m: Vector2) -> void:
-	if data == null or idx_in_surfaces < 0 or idx_in_surfaces >= data.points.size():
+func _set_point_pos(idx_in_points: int, local_m: Vector2) -> void:
+	if data == null or idx_in_points < 0 or idx_in_points >= data.points.size():
 		return
-	var s: Dictionary = data.points[idx_in_surfaces]
+	var s: Dictionary = data.points[idx_in_points]
 	if s.get("type","") != "point":
 		return
 	s["pos"] = local_m
-	data.points[idx_in_surfaces] = s
+	data.points[idx_in_points] = s
 	_emit_data_changed()
 
-func _remove_point(idx_in_surfaces: int) -> void:
-	if data == null or idx_in_surfaces < 0 or idx_in_surfaces >= data.points.size():
+func _remove_point(idx_in_points: int) -> void:
+	if data == null or idx_in_points < 0 or idx_in_points >= data.points.size():
 		return
-	data.points.remove_at(idx_in_surfaces)
+	var s: Dictionary = data.points[idx_in_points]
+	var id = s.get("id", null)
+	if id == null: 
+		return
+	var copy := s.duplicate(true)
+	editor.history.push_item_erase_by_id(data, "points", id, copy, "Delete point", idx_in_points)
+	data.points.remove_at(idx_in_points)
 	_emit_data_changed()
 
 func _pick_point(mouse_global: Vector2) -> int:
@@ -199,7 +218,6 @@ func _pick_point(mouse_global: Vector2) -> int:
 		if s.get("type","") != "point": continue
 		var p_local: Vector2 = s.get("pos", Vector2.INF)
 		if not p_local.is_finite(): continue
-		# terrain-local -> map space -> screen
 		var p_map := editor.terrain_to_map(p_local)
 		var p_screen := editor.map_to_screen(p_map, true)
 		var d2 := p_screen.distance_squared_to(mouse_global)
@@ -209,12 +227,15 @@ func _pick_point(mouse_global: Vector2) -> int:
 	return best
 
 func _emit_data_changed() -> void:
-	if data == null: return
+	if data == null: 
+		return
 	if data.has_method("emit_changed"): data.emit_changed()
 	elif data.has_signal("changed"):    data.emit_signal("changed")
 
 func _label(t: String) -> Label:
-	var l := Label.new(); l.text = t; return l
+	var l := Label.new()
+	l.text = t
+	return l
 
 func _queue_free_children(node: Control):
 	for n in node.get_children(): n.queue_free()
@@ -226,7 +247,8 @@ class SymbolPreview extends Control:
 	var antialias := true
 
 	func _get_minimum_size() -> Vector2:
-		if tex == null: return Vector2.ZERO
+		if tex == null: 
+			return Vector2.ZERO
 		return Vector2(tex.get_width(), tex.get_height()) * max(0.01, scale_factor)
 
 	func _draw() -> void:

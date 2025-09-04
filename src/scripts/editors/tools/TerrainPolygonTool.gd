@@ -12,6 +12,7 @@ var _edit_idx: int = -1
 var _drag_idx: int = -1
 var _hover_idx: int = -1
 var _is_drag := false
+var _drag_before: Dictionary = {}
 var _pick_radius_px := 10.0 
 
 var _next_id: int = randi()
@@ -78,10 +79,14 @@ func build_hint_ui(parent: Control) -> void:
 func build_preview(overlay_parent: Node) -> Control:
 	_preview = HandlesOverlay.new()
 	_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_preview.anchor_left = 0; _preview.anchor_top = 0
-	_preview.anchor_right = 1; _preview.anchor_bottom = 1
-	_preview.offset_left = 0; _preview.offset_top = 0
-	_preview.offset_right = 0; _preview.offset_bottom = 0
+	_preview.anchor_left = 0
+	_preview.anchor_top = 0
+	_preview.anchor_right = 1
+	_preview.anchor_bottom = 1
+	_preview.offset_left = 0
+	_preview.offset_top = 0
+	_preview.offset_right = 0
+	_preview.offset_bottom = 0
 	(_preview as HandlesOverlay).tool = self
 	overlay_parent.add_child(_preview)
 	return _preview
@@ -127,6 +132,7 @@ func handle_view_input(event: InputEvent) -> bool:
 			if _hover_idx >= 0:
 				_is_drag = true
 				_drag_idx = _hover_idx
+				_drag_before = data.surfaces[_edit_idx].duplicate(true)
 				_queue_preview_redraw()
 			else:
 				if not render.is_inside_terrain(local_m):
@@ -134,15 +140,35 @@ func handle_view_input(event: InputEvent) -> bool:
 					
 				if local_m.is_finite():
 					var local_terrain := editor.terrain_to_map(local_m)
-						
-					var pts := _current_points()
-					pts.append(local_terrain)
-					_set_current_points(pts)
+
+					var idx := _ensure_current_poly_idx()
+					if idx < 0:
+						_start_new_polygon()
+						idx = _ensure_current_poly_idx()
+						if idx < 0:
+							return true
+
+					var before: Dictionary = data.surfaces[idx].duplicate(true)
+					var pts := (before.get("points", PackedVector2Array()) as PackedVector2Array)
+					var pts_after := PackedVector2Array(pts)
+					pts_after.append(local_terrain)
+
+					var after := before.duplicate(true)
+					after["points"] = pts_after
+
+					editor.history.push_item_edit_by_id(data, "surfaces", before.get("id"), before, after, "Add polygon point")
+
+					_emit_data_changed()
 					_queue_preview_redraw()
 			return true
 		else:
 			_is_drag = false
+			if _drag_idx >= 0 and _edit_idx >= 0 and _drag_before.size() > 0:
+				var after: Dictionary = data.surfaces[_edit_idx].duplicate(true)
+				if after != _drag_before:
+					editor.history.push_item_edit_by_id(data, "surfaces", after.get("id"), _drag_before, after, "Move polygon point")
 			_drag_idx = -1
+			_drag_before = {}
 			_queue_preview_redraw()
 			return true
 
@@ -150,9 +176,14 @@ func handle_view_input(event: InputEvent) -> bool:
 		match event.keycode:
 			KEY_BACKSPACE:
 				if _edit_idx >= 0:
+					var before: Dictionary = data.surfaces[_edit_idx].duplicate(true)
 					var pts := _current_points()
 					if pts.size() > 0:
 						pts.remove_at(pts.size() - 1)
+						var after := before.duplicate(true)
+						after["points"] = pts
+						editor.history.push_item_edit_by_id(data, "surfaces", before.get("id"), before, after, "Remove polygon point")
+						data.surfaces[_edit_idx] = after
 						_set_current_points(pts)
 						_queue_preview_redraw()
 				return true
@@ -222,12 +253,21 @@ func _rebuild_info_ui():
 
 ## retrieve current polygon points
 func _current_points() -> PackedVector2Array:
-	if data == null or _edit_idx < 0: return PackedVector2Array()
-	return data.surfaces[_edit_idx].get("points", PackedVector2Array())
+	if data == null or _edit_idx < 0: 
+		return PackedVector2Array()
+	
+	var idx := _ensure_current_poly_idx()
+	if idx < 0:
+		_start_new_polygon()
+		idx = _ensure_current_poly_idx()
+		if idx < 0:
+			return PackedVector2Array()
+	return data.surfaces[idx].get("points", PackedVector2Array())
 
 ## Set current polygon points
 func _set_current_points(pts: PackedVector2Array) -> void:
-	if data == null or _edit_idx < 0: return
+	if data == null or _edit_idx < 0: 
+		return
 	var poly: Dictionary = data.surfaces[_edit_idx]
 	poly["points"] = pts
 	data.surfaces[_edit_idx] = poly
@@ -236,7 +276,8 @@ func _set_current_points(pts: PackedVector2Array) -> void:
 
 ## Helper function to find current polygon in Terrain Data
 func _find_edit_index_by_id() -> int:
-	if data == null or _edit_id < 0: return -1
+	if data == null or _edit_id < 0: 
+		return -1
 	for i in data.surfaces.size():
 		var s = data.surfaces[i]
 		if "id" in s and int(s.id) == _edit_id:
@@ -245,7 +286,8 @@ func _find_edit_index_by_id() -> int:
 
 ## Start creating a new polygon
 func _start_new_polygon() -> void:
-	if data == null: return
+	if data == null: 
+		return
 	if active_brush == null or active_brush.feature_type != TerrainBrush.FeatureType.AREA:
 		return
 	var pid := _next_id
@@ -259,6 +301,7 @@ func _start_new_polygon() -> void:
 		"closed": true
 	}
 	data.surfaces.append(poly)
+	editor.history.push_item_insert(data, "surfaces", poly, "Add polygon", data.surfaces.size())
 	_edit_id = pid
 	_edit_idx = data.surfaces.size() - 1
 	_emit_data_changed()
@@ -266,7 +309,14 @@ func _start_new_polygon() -> void:
 
 ## Delete polygon
 func _cancel_edit_delete_polygon() -> void:
-	if data == null or _edit_idx < 0: return
+	if data == null or _edit_idx < 0: 
+		return
+	var d: Dictionary = data.surfaces[_edit_idx]
+	var id = d.get("id", null)
+	if id == null: 
+		return
+	var copy := d.duplicate(true)
+	editor.history.push_item_erase_by_id(data, "surfaces", id, copy, "Delete polygon", _edit_idx)
 	data.surfaces.remove_at(_edit_idx)
 	_edit_id = -1
 	_edit_idx = -1
@@ -289,9 +339,11 @@ func _finish_edit_keep_polygon() -> void:
 ## Function to pick a point at position
 func _pick_point(pos: Vector2) -> int:
 	var terrain_pos = editor.terrain_to_map(editor.screen_to_map(pos))
-	if _edit_idx < 0: return -1
+	if _edit_idx < 0: 
+		return -1
 	var pts := _current_points()
-	if pts.is_empty(): return -1
+	if pts.is_empty(): 
+		return -1
 	var best := -1
 	var best_d2 := _pick_radius_px * _pick_radius_px
 	for i in pts.size():
@@ -304,7 +356,8 @@ func _pick_point(pos: Vector2) -> int:
 ## Helper function to emit data changed
 # TODO Move into terrain data
 func _emit_data_changed() -> void:
-	if data == null: return
+	if data == null: 
+		return
 	if data.has_method("emit_changed"):
 		data.emit_changed()
 	elif data.has_signal("changed"):
@@ -324,6 +377,17 @@ func _queue_free_children(node: Control):
 ## Queue a redraw of the preview
 func _queue_preview_redraw() -> void:
 	if _preview: _preview.queue_redraw()
+
+## Ensure _edit_idx points at the polygon with _edit_id, return index or -1
+func _ensure_current_poly_idx() -> int:
+	if data == null or _edit_id < 0: 
+		return -1
+	if _edit_idx >= 0 and _edit_idx < data.surfaces.size():
+		var s: Dictionary = data.surfaces[_edit_idx]
+		if typeof(s) == TYPE_DICTIONARY and s.get("id", null) == _edit_id:
+			return _edit_idx
+	_edit_idx = _find_edit_index_by_id()
+	return _edit_idx
 
 ## Class to draw a point handle
 class HandlesOverlay extends Control:

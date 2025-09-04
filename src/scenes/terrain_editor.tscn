@@ -171,6 +171,7 @@ layout_mode = 2
 metadata/_tab_index = 0
 
 [node name="History" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1

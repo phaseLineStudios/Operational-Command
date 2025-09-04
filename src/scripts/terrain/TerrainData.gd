@@ -39,6 +39,9 @@ class_name TerrainData
 
 var _px_per_m: float = 1.0
 
+## emits when the elevation is changed
+signal elevation_changed(rect: Rect2i)
+
 func _init() -> void:
 	_update_scale()
 
@@ -137,7 +140,8 @@ func get_size() -> Vector2:
 
 ## Get elevation (meters) at sample coord.
 func get_elev_px(px: Vector2i) -> float:
-	if elevation.is_empty(): return 0.0
+	if elevation.is_empty(): 
+		return 0.0
 	var w := elevation.get_width()
 	var h := elevation.get_height()
 	var x: int = clamp(px.x, 0, w - 1)
@@ -146,8 +150,10 @@ func get_elev_px(px: Vector2i) -> float:
 
 ## Set elevation (meters) at sample coord.
 func set_elev_px(px: Vector2i, meters: float) -> void:
-	if elevation.is_empty(): return
-	if px.x < 0 or px.y < 0 or px.x >= elevation.get_width() or px.y >= elevation.get_height(): return
+	if elevation.is_empty(): 
+		return
+	if px.x < 0 or px.y < 0 or px.x >= elevation.get_width() or px.y >= elevation.get_height(): 
+		return
 	elevation.set_pixel(px.x, px.y, Color(meters, 0, 0))
 	emit_signal("changed")
 
@@ -161,6 +167,70 @@ func world_to_elev_px(p: Vector2) -> Vector2i:
 func elev_px_to_world(px: Vector2i) -> Vector2:
 	return Vector2(px.x * elevation_resolution_m, px.y * elevation_resolution_m)
  
+## Returns a row-major block of elevation samples (r channel) for the clipped rect.
+func get_elevation_block(rect: Rect2i) -> PackedFloat32Array:
+	var out := PackedFloat32Array()
+	if elevation == null or elevation.is_empty():
+		return out
+
+	var r := _clip_rect_to_image(rect, elevation)
+	if r.size.x <= 0 or r.size.y <= 0:
+		return out
+
+	out.resize(r.size.x * r.size.y)
+
+	var k := 0
+	for y in r.size.y:
+		for x in r.size.x:
+			var v := elevation.get_pixel(r.position.x + x, r.position.y + y).r
+			out[k] = v
+			k += 1
+	return out
+
+
+## Writes a row-major block of elevation samples (r channel) into the clipped rect.
+func set_elevation_block(rect: Rect2i, block: PackedFloat32Array) -> void:
+	if elevation == null or elevation.is_empty():
+		return
+
+	var r := _clip_rect_to_image(rect, elevation)
+	if r.size.x <= 0 or r.size.y <= 0:
+		return
+
+	var expected := r.size.x * r.size.y
+	if block.size() != expected:
+		push_warning("set_elevation_block: block size ", block.size(), " does not match rect (", expected, ")")
+		return
+
+	var k := 0
+	for y in r.size.y:
+		for x in r.size.x:
+			var v := block[k]
+			elevation.set_pixel(r.position.x + x, r.position.y + y, Color(v, 0.0, 0.0, 1.0))
+			k += 1
+
+	if has_signal("elevation_changed"):
+		emit_signal("elevation_changed", r)
+	elif has_signal("changed"):
+		emit_signal("changed")
+
+
+## Helper function to clip a rect to image bounds
+static func _clip_rect_to_image(rect: Rect2i, img: Image) -> Rect2i:
+	var w := img.get_width()
+	var h := img.get_height()
+	if w <= 0 or h <= 0:
+		return Rect2i()
+
+	var x0: int = clamp(rect.position.x, 0, w)
+	var y0: int = clamp(rect.position.y, 0, h)
+	var x1: int = clamp(rect.position.x + rect.size.x, 0, w)
+	var y1: int = clamp(rect.position.y + rect.size.y, 0, h)
+
+	var cw: int = max(0, x1 - x0)
+	var ch: int = max(0, y1 - y0)
+	return Rect2i(Vector2i(x0, y0), Vector2i(cw, ch))
+
 ## Get the grid number of a position
 func position_to_grid(_pos: Vector2):
 	pass # TODO

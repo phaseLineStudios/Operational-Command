@@ -12,7 +12,6 @@ class_name TerrainEditor
 @export var tool_icon_size: Vector2 = Vector2(25, 25)
 
 @onready var history := TerrainHistory.new()
-
 @onready var file_menu: MenuButton = %File
 @onready var tools_grid: GridContainer = %Tools
 @onready var terrain_render: TerrainRender = %World
@@ -23,6 +22,7 @@ class_name TerrainEditor
 @onready var tools_options: VBoxContainer = %"Tool Options"
 @onready var tools_info: VBoxContainer = %"Tool Info"
 @onready var tools_hint: HBoxContainer = %"ToolHint"
+@onready var history_container: VBoxContainer = %History
 @onready var camera: TerrainCamera = %Camera
 @onready var mouse_position_l: Label = %MousePosition
 
@@ -52,8 +52,11 @@ func _ready():
 	brush_overlay.gui_input.connect(_on_brush_overlay_gui_input)
 	terrain_render.data = data
 	_build_tool_buttons()
+	
+	history.history_changed.connect(_on_history_changed)
+	_on_history_changed([], [])
 
-## On filemenu pressed event
+## On file menu pressed event
 func _on_filemenu_pressed(id: int):
 	match id:
 		0: _on_new_pressed()
@@ -61,6 +64,12 @@ func _on_filemenu_pressed(id: int):
 		2: _save()
 		3: _save_as()
 		4: _quit_editor()
+		
+## On edit menu pressed event
+func _on_editmenu_pressed(id: int):
+	match id:
+		0: history.undo()
+		1: history.redo()
 
 ## On New Terrain Pressed event
 func _on_new_pressed():
@@ -147,7 +156,7 @@ func _unhandled_key_input(event):
 	if event is InputEventKey and event.pressed:
 		var ctrl: bool = event.ctrl_pressed or event.meta_pressed
 		if ctrl and event.keycode == KEY_Z:
-			history.undo(); 
+			history.undo();
 			accept_event()
 		elif ctrl and (event.keycode == KEY_Y or (event.shift_pressed and event.keycode == KEY_Z)):
 			history.redo(); 
@@ -188,7 +197,8 @@ func _on_brush_overlay_mouse_exit():
 
 ## Save terrain
 func _save():
-	if data == null: return
+	if data == null: 
+		return
 	if _current_path == "":
 		_save_as(); return
 	var err := ResourceSaver.save(data, _current_path)
@@ -197,7 +207,8 @@ func _save():
 
 ## Save terrain as
 func _save_as():
-	if data == null: return
+	if data == null: 
+		return
 	var dlg := FileDialog.new()
 	dlg.file_mode = FileDialog.FILE_MODE_SAVE_FILE
 	dlg.access = FileDialog.ACCESS_FILESYSTEM
@@ -229,12 +240,37 @@ func _open():
 			data = res
 			_current_path = path
 			if terrain_render:
-				terrain_render.set_data(data)
+				terrain_render.data = data # BUG Opening data makes it unmutable
 		else:
 			push_error("Not a TerrainData: %s" % path)
 		dlg.queue_free()
 	)
 	dlg.canceled.connect(func(): dlg.queue_free())
+
+## Show UndoRedo history
+func _on_history_changed(past: Array, future: Array) -> void:
+	_queue_free_children(history_container)
+
+	for i in range(past.size()):
+		var row := HBoxContainer.new()
+		var txt := Label.new()
+		txt.text = str(past[i])
+		if i == past.size() - 1:
+			txt.add_theme_color_override("font_color", Color(1, 1, 1))
+			txt.add_theme_font_size_override("font_size", 14)
+		row.add_child(txt)
+		history_container.add_child(row)
+
+	for i in range(future.size() - 1, -1, -1):
+		var row2 := HBoxContainer.new()
+		var arrow := Label.new()
+		arrow.text = "↻ "
+		var txt2 := Label.new()
+		txt2.text = str(future[i])
+		txt2.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8))
+		row2.add_child(arrow)
+		row2.add_child(txt2)
+		history_container.add_child(row2)
 
 ## Helper function to delete all children of a parent node
 func _queue_free_children(node: Control):

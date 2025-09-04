@@ -7,6 +7,7 @@ class_name TerrainLabelTool
 var _hover_idx := -1
 var _drag_idx := -1
 var _is_drag := false
+var _drag_before: Dictionary = {}
 var _pick_radius_px := 14.0
 
 func _init():
@@ -100,14 +101,24 @@ func handle_view_input(event: InputEvent) -> bool:
 				
 			_hover_idx = _pick_label(event.position)
 			if _hover_idx >= 0:
-				_is_drag = true; _drag_idx = _hover_idx
+				_is_drag = true
+				_drag_idx = _hover_idx
+				_drag_before = (data.labels[_drag_idx].duplicate(true) if _drag_idx >= 0 and _drag_idx < data.labels.size() else {})
 			else:
 				if map_m.is_finite():
 					var local_m := editor.terrain_to_map(map_m)
 					_add_label(local_m, label_text, label_size)
 			return true
 		else:
-			_is_drag = false; _drag_idx = -1
+			_is_drag = false
+			if _drag_idx >= 0 and _drag_idx < data.labels.size() and _drag_before.size() > 0:
+				var after: Dictionary = data.labels[_drag_idx].duplicate(true)
+				if after != _drag_before:
+					var id: int = after.get("id", null)
+					if id != null:
+						editor.history.push_item_edit_by_id(data, "labels", id, _drag_before, after, "Move label")
+			_drag_idx = -1
+			_drag_before = {}
 			return true
 
 	if event is InputEventKey and event.pressed:
@@ -118,43 +129,58 @@ func handle_view_input(event: InputEvent) -> bool:
 					_hover_idx = -1
 				return true
 			KEY_ESCAPE:
-				_is_drag = false; _drag_idx = -1
+				_is_drag = false
+				_drag_idx = -1
 				return true
 
 	return false
 
 func _ensure_surfaces():
-	if data == null: return
+	if data == null: 
+		return
 	if !("surfaces" in data) or data.labels == null:
 		data.labels = []
 
 func _add_label(local_pos: Vector2, text: String, size: int) -> void:
-	if data == null: return
+	if data == null: 
+		return
 	_ensure_surfaces()
-	data.labels.append({
+	var label := {
 		"id": randi(),
 		"type": "label",
 		"text": text,
 		"pos": local_pos,
 		"size": size
-	})
+	}
+	data.labels.append(label)
+	editor.history.push_item_insert(data, "labels", label, "Add label", data.labels.size())
 	_emit_changed()
 
 func _set_label_pos(idx: int, local_pos: Vector2) -> void:
-	if data == null or idx < 0 or idx >= data.labels.size(): return
+	if data == null or idx < 0 or idx >= data.labels.size(): 
+		return
 	var d: Dictionary = data.labels[idx]
-	if d.get("type","") != "label": return
+	if d.get("type","") != "label": 
+		return
 	d["pos"] = local_pos
 	data.labels[idx] = d
 	_emit_changed()
 
 func _remove_label(idx: int) -> void:
-	if data == null or idx < 0 or idx >= data.labels.size(): return
+	if data == null or idx < 0 or idx >= data.labels.size(): 
+		return
+	var d: Dictionary = data.labels[idx]
+	var id = d.get("id", null)
+	if id == null: 
+		return
+	var copy := d.duplicate(true)
+	editor.history.push_item_erase_by_id(data, "labels", id, copy, "Delete label", idx)
 	data.labels.remove_at(idx)
 	_emit_changed()
 
 func _pick_label(mouse_global: Vector2) -> int:
-	if data == null or data.labels == null: return -1
+	if data == null or data.labels == null: 
+		return -1
 	var size := label_size
 	var best := -1
 	var best_d2 := _pick_radius_px * _pick_radius_px
@@ -169,16 +195,20 @@ func _pick_label(mouse_global: Vector2) -> int:
 		var p_screen := editor.map_to_screen(editor.terrain_to_map(p_local))
 		var d2 := p_screen.distance_squared_to(mouse_global)
 		if d2 <= best_d2:
-			best = i; best_d2 = d2
+			best = i
+			best_d2 = d2
 	return best
 
 func _emit_changed():
-	if data == null: return
+	if data == null: 
+		return
 	if data.has_method("emit_changed"): data.emit_changed()
 	elif data.has_signal("changed"): data.emit_signal("changed")
 
 func _label(t: String) -> Label:
-	var l := Label.new(); l.text = t; return l
+	var l := Label.new()
+	l.text = t
+	return l
 
 func _queue_free_children(node: Control):
 	for n in node.get_children(): n.queue_free()
@@ -191,7 +221,8 @@ class LabelPreview extends Control:
 	var outline_color: Color = Color(1,1,1,1)
 
 	func _draw() -> void:
-		if font == null or text == "": return
+		if font == null or text == "": 
+			return
 		var s_size := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
 		var ascent := font.get_ascent(font_size)
 		var height := font.get_height(font_size)
