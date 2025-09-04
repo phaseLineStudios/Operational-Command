@@ -89,7 +89,7 @@ func _new_terrain(d: TerrainData):
 		tool.data = data
 
 ## Create new terrain data
-func _edit_terrain(d: TerrainData):
+func _edit_terrain(_d: TerrainData):
 	terrain_render.data = data
 	
 	for tool: TerrainToolBase in tool_map.values():
