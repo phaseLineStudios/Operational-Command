@@ -39,7 +39,7 @@ func _draw() -> void:
 		var pos_local: Vector2 = s.get("pos", Vector2.INF)
 		if not pos_local.is_finite(): 
 			continue
-		if not renderer.is_inside_terrain(pos_local):
+		if not renderer.is_inside_terrain(pos_local + Vector2(renderer.margin_left_px, renderer.margin_top_px)):
 			continue
 		var txt: String = String(s.get("text", ""))
 		if txt == "": 
