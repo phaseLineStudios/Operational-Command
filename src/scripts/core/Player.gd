@@ -3,12 +3,12 @@
 extends CharacterBody3D
 
 # Store the RayCast and HoldPoint in variables on load
-@onready var ray: RayCast3D = $Camera3D/RayCast3D
+@onready var ray: ShapeCast3D = $Camera3D/ShapeCast3DCast3D
 @onready var hold_point: Node3D = $Camera3D/HoldPoint
 
 # Setting up the speed and mouse sensitivity
-@export var speed := 3.0
-@export var mouse_sensitivity := 0.002
+@export var speed := 1.5
+@export var mouse_sensitivity := 0.0015
 
 # Creating variables for the camera
 var camera
@@ -20,7 +20,7 @@ var pitch := 0.0  # up/down rotation
 var held_item: Node = null
 
 # NEW: keep the actual collider nodes of the held item so the ray can ignore them
-var held_colliders: Array[CollisionObject3D] = []  # NEW
+var held_colliders: Array[CollisionObject3D] = [] 
 
 # Runs whenever the scene is loaded, after all nodes are loaded
 func _ready():
@@ -44,7 +44,6 @@ func _input(event):
 			held_item = null
 		else:
 			try_pickup()
-
 
 # also handles inpput but is only called after _input()
 # only used for events that are not consumed by GUI
@@ -97,21 +96,41 @@ func _physics_process(delta):
 
 # function to handle pickups
 func try_pickup():
+	ray.force_shapecast_update()  # refresh results
 	if not ray.is_colliding():
+		print("[DEBUG] No collision detected by shapecast")
 		return
 
-	var collider = ray.get_collider()
-	var item = _find_pickup_item(collider)
+	var nearest_item: Node = null
+	var nearest_dist := INF
 
-	if item and item.has_method("pickup") and not held_item:
-		item.pickup(self)
-		held_item = item
-		print("[PLAYER] Picked up: ", held_item.name, " parent=", held_item.get_parent().get_path())
+	print("[DEBUG] Colliders found:", ray.get_collision_count())
 
-		# Collect all CollisionObject3D nodes under the item and add them as exceptions
-		held_colliders = _collect_colliders(held_item)
-		for co in held_colliders:
-			ray.add_exception(co)
+	for i in range(ray.get_collision_count()):
+		var collider = ray.get_collider(i)
+		print("[DEBUG] Checking collider:", collider)
+
+		var item = _find_pickup_item(collider)
+		if item:
+			print("[DEBUG] Found pickup candidate:", item.name)
+		else:
+			print("[DEBUG] Collider has no pickup method")
+
+		if item and item.has_method("pickup") and not held_item:
+			var dist = camera.global_position.distance_to(item.global_position)
+			print("[DEBUG] Distance to", item.name, "=", dist)
+
+			if dist < nearest_dist:
+				nearest_dist = dist
+				nearest_item = item
+				print("[DEBUG] Nearest candidate so far:", item.name)
+
+	if nearest_item:
+		nearest_item.pickup(self)
+		held_item = nearest_item
+		print("[PLAYER] Picked up:", held_item.name)
+	else:
+		print("[DEBUG] No valid pickup item found")
 
 # function is used to find the item a player wants to pickup
 func _find_pickup_item(node: Object) -> Node:
