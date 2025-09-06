@@ -234,8 +234,9 @@ func _unhandled_key_input(event):
 ## Input handler for terrainview Viewport
 func _on_brush_overlay_gui_input(event):
 	if event is InputEventMouseMotion:
-		var mp: Vector2 = event.position
-		mouse_position_l.text = "(%d, %d)" % [mp.x, mp.y]
+		var mp = terrain_to_map(event.position)
+		var grid := terrain_render.pos_to_grid(mp)
+		mouse_position_l.text = "(%d, %d | %s)" % [mp.x, mp.y, grid]
 	
 	if event is InputEventMouseMotion && active_tool:
 		active_tool.on_mouse_inside(_inside_brush_overlay)
