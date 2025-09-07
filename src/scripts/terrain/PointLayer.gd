@@ -7,6 +7,7 @@ class_name PointLayer
 
 var data: TerrainData
 var _data_conn := false
+var _dirty := false
 
 func set_data(d: TerrainData) -> void:
 	if _data_conn and data and data.is_connected("changed", Callable(self, "_on_data_changed")):
@@ -17,6 +18,10 @@ func set_data(d: TerrainData) -> void:
 		data.changed.connect(_on_data_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
 		_data_conn = true
 	queue_redraw()
+
+## Mark points as dirty
+func mark_dirty():
+	_dirty = true
 
 func _on_data_changed() -> void:
 	queue_redraw()

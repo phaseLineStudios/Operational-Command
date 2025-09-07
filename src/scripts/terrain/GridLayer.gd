@@ -16,7 +16,17 @@ func set_data(d: TerrainData) -> void:
 	_need_bake = true
 	queue_redraw()
 
-func mark_style_dirty() -> void:
+## Apply root style
+func apply_style(from: Node) -> void:
+	if from == null: 
+		return
+	if "grid_100m_color" in from: grid_100m_color = from.grid_100m_color
+	if "grid_1km_color" in from: grid_1km_color = from.grid_1km_color
+	if "grid_line_px" in from: grid_line_px = from.grid_line_px
+	if "grid_1km_line_px" in from: grid_1km_line_px = from.grid_1km_line_px
+	mark_dirty()
+
+func mark_dirty() -> void:
 	_need_bake = true
 	queue_redraw()
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://rbcwabwc1v0o"]
+[gd_scene load_steps=16 format=3 uid="uid://rbcwabwc1v0o"]
 
 [ext_resource type="Script" uid="uid://bcbx6qa1jofhc" path="res://scripts/terrain/TerrainRender.gd" id="1_kobl6"]
 [ext_resource type="Script" uid="uid://cxbielgj0k7ei" path="res://scripts/terrain/GridLayer.gd" id="2_llqno"]
@@ -32,6 +32,8 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.0874685, 0.0392869, 0.00880663, 1)
+
+[sub_resource type="FontVariation" id="FontVariation_tecap"]
 
 [node name="TerrainRender" type="PanelContainer"]
 offset_right = 1152.0
@@ -100,3 +102,4 @@ script = ExtResource("2_llqno")
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("8_tecap")
+font = SubResource("FontVariation_tecap")

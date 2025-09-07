@@ -11,6 +11,7 @@ class_name LabelLayer
 
 var data: TerrainData
 var _data_conn := false
+var _dirty := false
 
 func set_data(d: TerrainData) -> void:
 	if _data_conn and data and data.is_connected("changed", Callable(self, "_on_data_changed")):
@@ -20,6 +21,20 @@ func set_data(d: TerrainData) -> void:
 	if data:
 		data.changed.connect(_on_data_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
 		_data_conn = true
+	queue_redraw()
+
+func apply_style(from: Node):
+	if from == null:
+		return
+	if "outline_color" in from: outline_color = from.outline_color
+	if "outline_size" in from: outline_size = from.outline_size
+	if "text_color" in from: text_color = from.text_color
+	if "font" in from: font = from.font
+	if "antialias" in from: antialias = from.antialias
+
+## Mark dirty for redraw
+func mark_dirty():
+	_dirty = true
 	queue_redraw()
 
 func _on_data_changed() -> void:

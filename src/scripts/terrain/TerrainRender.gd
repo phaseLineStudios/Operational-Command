@@ -97,7 +97,6 @@ var _base_sb: StyleBoxFlat
 var _debounce_timer: SceneTreeTimer
 
 func _ready():
-	_apply_visuals_to_grid()
 	_apply_base_style_if_needed()
 	_draw_map_size()
 	base_layer.resized.connect(_on_base_layer_resize)
@@ -122,51 +121,42 @@ func _set_data(d: TerrainData):
 
 ## Push exports to their respective layers
 func _push_data_to_layers() -> void:
-	if grid_layer and grid_layer.has_method("set_data"):
+	if grid_layer:
 		grid_layer.set_data(data)
+		grid_layer.apply_style(self)
 		grid_layer.queue_redraw()
 
-	if margin and margin.has_method("set_data"):
-		margin.title_size = title_size
-		margin.label_font = label_font
-		margin.label_size = label_size
-		margin.label_color = label_color
-		margin.margin_color = margin_color
-		margin.margin_top_px = margin_top_px
-		margin.margin_bottom_px = margin_bottom_px
-		margin.margin_left_px = margin_left_px
-		margin.margin_right_px = margin_right_px
-		margin.margin_label_every_m = 100
+	if margin:
 		margin.set_data(data)
+		margin.apply_style(self)
 		margin.queue_redraw()
 	
-	if contour_layer and contour_layer.has_method("set_data"):
+	if contour_layer:
 		contour_layer.set_data(data)
 		contour_layer.apply_style(self)
 		contour_layer.queue_redraw()
 	
-	if surface_layer and surface_layer.has_method("set_data"):
+	if surface_layer:
 		surface_layer.set_data(data)
+		surface_layer.queue_redraw()
 	
-	if line_layer and line_layer.has_method("set_data"):
+	if line_layer:
 		line_layer.set_data(data)
 		line_layer.queue_redraw()
 	
-	if point_layer and point_layer.has_method("set_data"):
+	if point_layer:
 		point_layer.set_data(data)
 		point_layer.queue_redraw()
 	
 	if label_layer:
-		label_layer.font = label_font
-		label_layer.text_color = label_color
 		label_layer.set_data(data)
+		label_layer.apply_style(self)
 		label_layer.queue_redraw()
 		
 	queue_redraw()
 
 ## Reconfigure if terrain data is changed
 func _on_data_changed() -> void:
-	_mark_all_dirty()
 	_debounce_relayout_and_push()
 
 ## Mark elements as dirty to redraw
@@ -183,23 +173,13 @@ func _debounce_relayout_and_push() -> void:
 		_draw_map_size()
 		_push_data_to_layers()
 		if contour_layer:
-			contour_layer.request_rebuild()
+			contour_layer.mark_dirty()
 		if surface_layer: 
-			surface_layer.request_rebuild()
+			surface_layer.mark_dirty()
 		if line_layer: 
-			line_layer.request_rebuild()
+			line_layer.mark_dirty()
 		queue_redraw()
 	)
-
-## Apply visual settings to grid
-func _apply_visuals_to_grid() -> void:
-	if not grid_layer: 
-		return
-	grid_layer.grid_100m_color = grid_100m_color
-	grid_layer.grid_1km_color = grid_1km_color
-	grid_layer.grid_line_px = grid_line_px
-	grid_layer.grid_1km_line_px = grid_1km_line_px
-	grid_layer.mark_style_dirty()
 
 ## Resize the map to fit the terrain data
 func _draw_map_size() -> void:
@@ -213,8 +193,8 @@ func _draw_map_size() -> void:
 		size = margin.size
 
 	if grid_layer: grid_layer._need_bake = true
-	if surface_layer: surface_layer.request_rebuild()
-	if line_layer: line_layer.request_rebuild()
+	if surface_layer: surface_layer.mark_dirty()
+	if line_layer: line_layer.mark_dirty()
 	if label_layer: label_layer.queue_redraw()
 	if point_layer: point_layer.queue_redraw()
 	queue_redraw()

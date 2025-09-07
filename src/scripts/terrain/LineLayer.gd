@@ -22,7 +22,7 @@ func set_data(d: TerrainData) -> void:
 		_data_conn = true
 	queue_redraw()
 
-func request_rebuild() -> void:
+func mark_dirty() -> void:
 	_dirty = true
 	queue_redraw()
 

@@ -53,7 +53,7 @@ func set_data(d: TerrainData) -> void:
 	_data_conn_elev = false
 
 	data = d
-	_mark_dirty()
+	_dirty = true
 
 	if data:
 		data.changed.connect(_on_data_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
@@ -65,9 +65,10 @@ func set_data(d: TerrainData) -> void:
 	_schedule_rebuild()
 	queue_redraw()
 
-## API to apply style exports
+## Apply root style
 func apply_style(from: Node) -> void:
-	if from == null: return
+	if from == null: 
+		return
 	if "contour_color" in from: contour_color = from.contour_color
 	if "contour_thick_color" in from: contour_thick_color = from.contour_thick_color
 	if "contour_px" in from: contour_px = from.contour_px
@@ -83,12 +84,11 @@ func apply_style(from: Node) -> void:
 	if "contour_label_font" in from: contour_label_font = from.contour_label_font
 	if "contour_label_size" in from: contour_label_size = from.contour_label_size
 	if "contour_label_gap_extra_px" in from: contour_label_gap_extra_px = from.contour_label_gap_extra_px
-	_mark_dirty()
-	_schedule_rebuild()
+	mark_dirty()
 
 ## API to request contour rebuild
-func request_rebuild() -> void:
-	_mark_dirty()
+func mark_dirty() -> void:
+	_dirty = true
 	_schedule_rebuild()
 
 ## Redraw contours on resize
@@ -98,17 +98,12 @@ func _notification(what):
 
 ## Rebuild contours if terrain data changes
 func _on_data_changed() -> void:
-	_mark_dirty()
-	_schedule_rebuild()
+	mark_dirty()
 
 ## Rebuild contours if elevation data changes
 func _on_elevation_changed(_rect := Rect2i(0,0,0,0)) -> void:
-	_mark_dirty()
+	mark_dirty()
 	_schedule_rebuild()
-
-## Mark contours as dirty
-func _mark_dirty() -> void:
-	_dirty = true
 
 ## Schedule a Rebuild of the contour lines
 func _schedule_rebuild() -> void:

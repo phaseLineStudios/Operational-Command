@@ -32,7 +32,7 @@ func set_data(d: TerrainData) -> void:
 	queue_redraw()
 
 ## Request a rebuild
-func request_rebuild() -> void:
+func mark_dirty() -> void:
 	_dirty = true
 	queue_redraw()
 
