@@ -45,20 +45,31 @@ func _draw() -> void:
 		if txt == "": 
 			continue
 		var sz: int = int(s.get("size", 16))
-		var z := int(s.get("z", 0))  # optional
-		items.append({"p":pos_local, "t":txt, "s":sz, "z":z})
+		var z := int(s.get("z", 0))
+		var rot := int(s.get("rot", 0.0))
+		items.append({
+			"pos":pos_local,
+			"text":txt, 
+			"size":sz,
+			"rot": rot,
+			"z":z
+		})
 
 	items.sort_custom(func(a,b): 
 		return int(a.z) < int(b.z))
 
 	for it in items:
-		_draw_label_centered(it.p, it.t, it.s)
+		_draw_label_centered(it.pos, it.text, it.size, it.rot)
 
-func _draw_label_centered(pos_local: Vector2, text: String, font_size: int) -> void:
+func _draw_label_centered(pos_local: Vector2, text: String, font_size: int, rot: float) -> void:
 	var s_size := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
 	var ascent := font.get_ascent(font_size)
 	var height := font.get_height(font_size)
-	var baseline := pos_local + Vector2(-s_size.x * 0.5, -height * 0.5 + ascent)
+
+	var baseline_local := Vector2(-s_size.x * 0.5, -height * 0.5 + ascent)
+
+	var ang := deg_to_rad(rot)
+	draw_set_transform(pos_local, ang, Vector2.ONE)
 
 	var oc := outline_color
 	var offs := [
@@ -66,6 +77,8 @@ func _draw_label_centered(pos_local: Vector2, text: String, font_size: int) -> v
 		Vector2(-1,-1), Vector2(1,-1), Vector2(-1, 1), Vector2(1, 1)
 	]
 	for o in offs:
-		draw_string(font, baseline + o, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, oc)
+		draw_string(font, baseline_local + o, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, oc)
 
-	draw_string(font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, text_color)
+	draw_string(font, baseline_local, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, text_color)
+
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

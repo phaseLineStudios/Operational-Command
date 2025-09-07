@@ -3,6 +3,7 @@ class_name TerrainLabelTool
 
 @export var label_text: String = "Label"
 @export var label_size: int = 16
+@export var label_rotation_deg: float = 0.0
 
 var _hover_idx := -1
 var _drag_idx := -1
@@ -37,6 +38,7 @@ func _refresh_preview() -> void:
 		p.text = label_text
 		p.font = render.label_font
 		p.font_size = label_size
+		p.rot_deg = label_rotation_deg
 		p.fill_color = render.label_color
 		p.outline_color = Color(1,1,1,1)
 		p.queue_redraw()
@@ -65,6 +67,18 @@ func build_options_ui(parent: Control) -> void:
 		_refresh_preview()
 	)
 	vb.add_child(s)
+	
+	var rot_slider := HSlider.new()
+	rot_slider.min_value = -180.0
+	rot_slider.max_value = 180.0
+	rot_slider.step = 1.0
+	rot_slider.value = label_rotation_deg
+	rot_slider.value_changed.connect(func(v):
+		label_rotation_deg = v
+		_refresh_preview()
+	)
+	vb.add_child(_label("Rotation (°)"))
+	vb.add_child(rot_slider)
 
 func build_info_ui(parent: Control) -> void:
 	var l := Label.new()
@@ -145,9 +159,9 @@ func _add_label(local_pos: Vector2, text: String, size: int) -> void:
 	_ensure_surfaces()
 	var label := {
 		"id": randi(),
-		"type": "label",
 		"text": text,
 		"pos": local_pos,
+		"rot": label_rotation_deg,
 		"size": size
 	}
 	data.labels.append(label)
@@ -158,8 +172,6 @@ func _set_label_pos(idx: int, local_pos: Vector2) -> void:
 	if data == null or idx < 0 or idx >= data.labels.size(): 
 		return
 	var d: Dictionary = data.labels[idx]
-	if d.get("type","") != "label": 
-		return
 	d["pos"] = local_pos
 	data.labels[idx] = d
 	_emit_changed()
@@ -215,16 +227,22 @@ class LabelPreview extends Control:
 	var text: String = ""
 	var font: Font
 	var font_size: int = 16
+	var rot_deg: float = 0.0
 	var fill_color: Color = Color(0.1,0.1,0.1,1.0)
 	var outline_color: Color = Color(1,1,1,1)
 
 	func _draw() -> void:
-		if font == null or text == "": 
+		if font == null or text == "":
 			return
+
 		var s_size := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
 		var ascent := font.get_ascent(font_size)
 		var height := font.get_height(font_size)
+
 		var baseline := Vector2(-s_size.x * 0.5, -height * 0.5 + ascent)
+
+		var ang := deg_to_rad(rot_deg)
+		draw_set_transform(Vector2.ZERO, ang, Vector2.ONE)
 
 		var offs := [
 			Vector2(-1,  0), Vector2(1,  0), Vector2(0, -1), Vector2(0, 1),
@@ -233,3 +251,5 @@ class LabelPreview extends Control:
 		for o in offs:
 			draw_string(font, baseline + o, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_color)
 		draw_string(font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, fill_color)
+
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
