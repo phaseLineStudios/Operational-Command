@@ -1,7 +1,8 @@
 extends Control
 class_name LabelLayer
 
-@export var outline_color: Color = Color(1,1,1,1)  # white outline fallback
+@export var outline_color: Color = Color.WHITE
+@export var outline_size := 1
 @export var text_color: Color = Color(0.05,0.05,0.05,1.0)
 @export var font: Font
 @export var antialias: bool = true
@@ -65,20 +66,12 @@ func _draw_label_centered(pos_local: Vector2, text: String, font_size: int, rot:
 	var s_size := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
 	var ascent := font.get_ascent(font_size)
 	var height := font.get_height(font_size)
-
 	var baseline_local := Vector2(-s_size.x * 0.5, -height * 0.5 + ascent)
-
 	var ang := deg_to_rad(rot)
 	draw_set_transform(pos_local, ang, Vector2.ONE)
 
-	var oc := outline_color
-	var offs := [
-		Vector2(-1, 0), Vector2(1, 0), Vector2(0, -1), Vector2(0, 1),
-		Vector2(-1,-1), Vector2(1,-1), Vector2(-1, 1), Vector2(1, 1)
-	]
-	for o in offs:
-		draw_string(font, baseline_local + o, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, oc)
-
+	if outline_size > 0 and outline_color.a > 0.0:
+		draw_string_outline(font, baseline_local, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_size, outline_color)
 	draw_string(font, baseline_local, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, text_color)
 
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
