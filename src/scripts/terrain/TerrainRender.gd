@@ -93,11 +93,23 @@ signal map_resize()
 ## Grid cell size in meters
 const GRID_SIZE_M = 100
 
+var _base_sb: StyleBoxFlat
+var _debounce_timer: SceneTreeTimer
+
 func _ready():
 	_apply_visuals_to_grid()
-	_draw()
-	grid_layer.queue_redraw()
+	_apply_base_style_if_needed()
+	_draw_map_size()
 	base_layer.resized.connect(_on_base_layer_resize)
+
+## Build base style
+func _apply_base_style_if_needed() -> void:
+	if _base_sb == null:
+		_base_sb = StyleBoxFlat.new()
+	_base_sb.bg_color = base_color
+	_base_sb.set_border_width_all(terrain_border_px)
+	_base_sb.border_color = terrain_border_color
+	base_layer.add_theme_stylebox_override("panel", _base_sb)
 
 ## Set new Terrain Data
 func _set_data(d: TerrainData):
@@ -155,62 +167,56 @@ func _push_data_to_layers() -> void:
 ## Reconfigure if terrain data is changed
 func _on_data_changed() -> void:
 	_mark_all_dirty()
-	_draw_map_size()
-	_push_data_to_layers()
-	if contour_layer and contour_layer.has_method("request_rebuild"):
-		contour_layer.request_rebuild()
-	if surface_layer:
-		surface_layer.queue_redraw()
-	if line_layer:
-		line_layer.queue_redraw()
-	queue_redraw()
+	_debounce_relayout_and_push()
 
 ## Mark elements as dirty to redraw
 func _mark_all_dirty() -> void:
 	pass
 
+## Debounce the relayout and push styles
+func _debounce_relayout_and_push() -> void:
+	if _debounce_timer:
+		return
+	_debounce_timer = get_tree().create_timer(0.03)
+	_debounce_timer.timeout.connect(func ():
+		_debounce_timer = null
+		_draw_map_size()
+		_push_data_to_layers()
+		if contour_layer:
+			contour_layer.request_rebuild()
+		if surface_layer: 
+			surface_layer.request_rebuild()
+		if line_layer: 
+			line_layer.request_rebuild()
+		queue_redraw()
+	)
+
 ## Apply visual settings to grid
 func _apply_visuals_to_grid() -> void:
-	if not grid_layer:
+	if not grid_layer: 
 		return
 	grid_layer.grid_100m_color = grid_100m_color
 	grid_layer.grid_1km_color = grid_1km_color
 	grid_layer.grid_line_px = grid_line_px
 	grid_layer.grid_1km_line_px = grid_1km_line_px
-	grid_layer.queue_redraw()
-
-func _draw() -> void:
-	if data == null: return
-	_draw_map_size()
-	
-	# Draw Terrain Base
-	var base_sb := StyleBoxFlat.new()
-	base_sb.bg_color = base_color
-	base_sb.set_border_width_all(terrain_border_px)
-	base_sb.border_color = terrain_border_color
-	base_layer.add_theme_stylebox_override("panel", base_sb)
+	grid_layer.mark_style_dirty()
 
 ## Resize the map to fit the terrain data
 func _draw_map_size() -> void:
-	if data == null:
+	if data == null: 
 		return
-	
 	if margin:
 		var base_size := data.get_size()
-		var total := base_size + Vector2(margin_left_px + margin_right_px, margin_top_px + margin_bottom_px)
+		var margins := Vector2(margin_left_px + margin_right_px, margin_top_px + margin_bottom_px)
+		var total := base_size + margins
 		margin.size = total
 		size = margin.size
 
-	if grid_layer:
-		grid_layer.queue_redraw()
-	if label_layer:
-		label_layer.queue_redraw()
-	if line_layer:
-		line_layer.queue_redraw()
-	if surface_layer:
-		surface_layer.queue_redraw()
-	if point_layer:
-		point_layer.queue_redraw()
+	if grid_layer: grid_layer._need_bake = true
+	if surface_layer: surface_layer.request_rebuild()
+	if line_layer: line_layer.request_rebuild()
+	if label_layer: label_layer.queue_redraw()
+	if point_layer: point_layer.queue_redraw()
 	queue_redraw()
 
 ## Emit a resize event for base layer
