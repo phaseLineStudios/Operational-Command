@@ -90,6 +90,9 @@ class_name TerrainRender
 ## Emits when the map is resized
 signal map_resize()
 
+## Grid cell size in meters
+const GRID_SIZE_M = 100
+
 func _ready():
 	_apply_visuals_to_grid()
 	_draw()
@@ -239,12 +242,38 @@ func is_inside_terrain(pos: Vector2) -> bool:
 	return base_layer.get_global_rect().has_point(pos)
 
 ## API to get grid number from terrain local position
-func pos_to_grid(pos: Vector2) -> String:
-	var cell_x := floori(pos.x / 100)
-	var cell_y := floori(pos.y / 100)
-	var x := data.grid_start_x + cell_x
-	var y := data.grid_start_y + cell_y
-	return "%03d%03d" % [x, y]
+func pos_to_grid(pos: Vector2, total_digits: int = 6) -> String:
+	var per_axis := total_digits / 2
+	if per_axis != 3 and per_axis != 4 and per_axis != 5:
+		push_warning("pos_to_grid: total_digits must be 6, 8, or 10; got %d. Using 6." % total_digits)
+		per_axis = 3
+
+	var cell_x := floori(pos.x / GRID_SIZE_M)
+	var cell_y := floori(pos.y / GRID_SIZE_M)
+
+	var base_x := data.grid_start_x + cell_x
+	var base_y := data.grid_start_y + cell_y
+
+	var off_x := clampf(pos.x - float(cell_x) * GRID_SIZE_M, 0.0, 99.9999)
+	var off_y := clampf(pos.y - float(cell_y) * GRID_SIZE_M, 0.0, 99.9999)
+
+	var east: int
+	var north: int
+
+	match per_axis:
+		3:
+			east = base_x
+			north = base_y
+		4:
+			east = base_x * 10 + int(floor(off_x / 10.0))
+			north = base_y * 10 + int(floor(off_y / 10.0))
+		5:
+			east = base_x * 100 + int(floor(off_x))
+			north = base_y * 100 + int(floor(off_y))
+
+	var e_str := str(east).pad_zeros(per_axis)
+	var n_str := str(north).pad_zeros(per_axis)
+	return e_str + n_str
 
 ## API to get terrain local position from grid number
 func grid_to_pos(grid: String) -> Vector2:
