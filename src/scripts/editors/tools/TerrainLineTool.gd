@@ -182,7 +182,7 @@ func handle_view_input(event: InputEvent) -> bool:
 				return false
 
 			if event.position.is_finite():
-				var local_m := editor.terrain_to_map(event.position)
+				var local_m := editor.map_to_terrain(event.position)
 				var pts := _current_points()
 				if _drag_idx >= 0 and _drag_idx < pts.size():
 					pts[_drag_idx] = local_m
@@ -211,7 +211,7 @@ func handle_view_input(event: InputEvent) -> bool:
 			else:
 				if event.position.is_finite():
 					_sync_edit_brush_to_active_if_needed()
-					var local_m := editor.terrain_to_map(event.position)
+					var local_m := editor.map_to_terrain(event.position)
 					var before: Dictionary = data.lines[idx].duplicate(true)
 					var pts_before: PackedVector2Array = before.get("points", PackedVector2Array())
 					var pts_after := PackedVector2Array(pts_before)
@@ -353,7 +353,7 @@ func _sync_edit_brush_to_active_if_needed() -> void:
 		_emit_data_changed()
 
 func _pick_point(pos: Vector2) -> int:
-	var terrain_pos = editor.terrain_to_map(pos)
+	var terrain_pos = editor.map_to_terrain(pos)
 	if _edit_idx < 0: 
 		return -1
 	var pts := _current_points()
@@ -411,15 +411,15 @@ class HandlesOverlay extends Control:
 			return
 
 		for i in pts.size():
-			var p_map := tool.editor.map_to_terrain(pts[i])
+			var p_map := tool.editor.terrain_to_map(pts[i])
 
 			draw_circle(p_map, handle_r + 2.0, Color(0,0,0,0.9))
 			draw_circle(p_map, handle_r, Color(1,1,1,0.95))
 
 		if tool._hover_idx >= 0 and tool._hover_idx < pts.size():
-			var ph_map := tool.editor.map_to_terrain(pts[tool._hover_idx])
+			var ph_map := tool.editor.terrain_to_map(pts[tool._hover_idx])
 			draw_circle(ph_map, handle_r + 4.0, Color(1.0, 0.7, 0.2, 0.35))
 
 		if tool._is_drag and tool._drag_idx >= 0 and tool._drag_idx < pts.size():
-			var pd_map := tool.editor.map_to_terrain(pts[tool._drag_idx])
+			var pd_map := tool.editor.terrain_to_map(pts[tool._drag_idx])
 			draw_circle(pd_map, handle_r + 6.0, Color(0.2, 0.6, 1.0, 0.35))

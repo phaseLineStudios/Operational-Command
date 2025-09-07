@@ -137,7 +137,7 @@ func _apply(pos: Vector2) -> void:
 	if not pos.is_finite():
 		return
 	
-	var local_terrain := editor.terrain_to_map(pos)
+	var local_terrain := editor.map_to_terrain(pos)
 	var px := data.world_to_elev_px(local_terrain)
 
 	var r_px := int(round(brush_radius_m / data.elevation_resolution_m))

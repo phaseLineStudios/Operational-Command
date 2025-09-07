@@ -88,7 +88,7 @@ func handle_view_input(event: InputEvent) -> bool:
 				return false
 				
 			if event.position.is_finite():
-				var local_m := editor.terrain_to_map(event.position)
+				var local_m := editor.map_to_terrain(event.position)
 				_set_label_pos(_drag_idx, local_m)
 		return false
 
@@ -104,7 +104,7 @@ func handle_view_input(event: InputEvent) -> bool:
 				_drag_before = (data.labels[_drag_idx].duplicate(true) if _drag_idx >= 0 and _drag_idx < data.labels.size() else {})
 			else:
 				if event.position.is_finite():
-					var local_m := editor.terrain_to_map(event.position)
+					var local_m := editor.map_to_terrain(event.position)
 					_add_label(local_m, label_text, label_size)
 			return true
 		else:
@@ -190,7 +190,7 @@ func _pick_label(mouse_global: Vector2) -> int:
 		var p_local: Vector2 = s.get("pos", Vector2.INF)
 		if not p_local.is_finite(): 
 			continue
-		var p_map := editor.terrain_to_map(p_local)
+		var p_map := editor.map_to_terrain(p_local)
 		var d2 := p_map.distance_squared_to(mouse_global)
 		if d2 <= best_d2:
 			best = i

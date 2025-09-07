@@ -115,7 +115,7 @@ func handle_view_input(event: InputEvent) -> bool:
 			if not render.is_inside_terrain(event.position):
 				return false
 			if event.position.is_finite():
-				var local_m := editor.terrain_to_map(event.position)
+				var local_m := editor.map_to_terrain(event.position)
 				_set_point_pos(_drag_idx, local_m)
 		return false
 
@@ -133,7 +133,7 @@ func handle_view_input(event: InputEvent) -> bool:
 				if active_brush == null or active_brush.feature_type != TerrainBrush.FeatureType.POINT:
 					return true
 				if event.position.is_finite():
-					var local_m := editor.terrain_to_map(event.position)
+					var local_m := editor.map_to_terrain(event.position)
 					_add_point(local_m)
 			return true
 		else:
@@ -214,12 +214,10 @@ func _pick_point(mouse_global: Vector2) -> int:
 		var s = data.points[i]
 		if typeof(s) != TYPE_DICTIONARY: 
 			continue
-		if s.get("type","") != "point": 
-			continue
 		var p_local: Vector2 = s.get("pos", Vector2.INF)
 		if not p_local.is_finite(): 
 			continue
-		var p_map := editor.terrain_to_map(p_local)
+		var p_map := editor.map_to_terrain(p_local)
 		var d2 := p_map.distance_squared_to(mouse_global)
 		if d2 <= best_d2:
 			best = i

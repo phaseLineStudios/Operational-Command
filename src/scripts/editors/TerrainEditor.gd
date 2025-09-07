@@ -234,7 +234,7 @@ func _unhandled_key_input(event):
 ## Input handler for terrainview Viewport
 func _on_brush_overlay_gui_input(event):
 	if event is InputEventMouseMotion:
-		var mp = terrain_to_map(event.position)
+		var mp = map_to_terrain(event.position)
 		var grid := terrain_render.pos_to_grid(mp)
 		mouse_position_l.text = "(%d, %d | %s)" % [mp.x, mp.y, grid]
 	
@@ -398,12 +398,12 @@ func map_to_screen(local_m: Vector2, keep_aspect: bool = true) -> Vector2:
 	var screen_pos := draw_pos + sv_pos * p_scale
 	return screen_pos
 
-## Helper function to convert terrain position to map position
-func terrain_to_map(local_m: Vector2) -> Vector2:
+## Wrapper for map_to_terrain from terrain renderer
+func map_to_terrain(local_m: Vector2) -> Vector2:
 	var map_margins := Vector2(terrain_render.margin_left_px, terrain_render.margin_top_px)
-	return local_m - map_margins
+	return terrain_render.map_to_terrain(local_m)
 
-## helepr function to convert map position to terrain position
-func map_to_terrain(pos: Vector2) -> Vector2:
+## Wrapper for terrain_to_map from terrain renderer
+func terrain_to_map(pos: Vector2) -> Vector2:
 	var map_margins := Vector2(terrain_render.margin_left_px, terrain_render.margin_top_px)
-	return pos + map_margins
+	return terrain_render.terrain_to_map(pos)

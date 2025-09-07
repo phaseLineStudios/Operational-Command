@@ -233,6 +233,16 @@ func clamp_shape_to_terrain(pts: PackedVector2Array) -> PackedVector2Array:
 		out[i] = clamp_point_to_terrain(pts[i])
 	return out
 
+## Helper function to convert terrain position to map position
+func map_to_terrain(local_m: Vector2) -> Vector2:
+	var map_margins := Vector2(margin_left_px, margin_top_px)
+	return local_m - map_margins
+
+## helepr function to convert map position to terrain position
+func terrain_to_map(pos: Vector2) -> Vector2:
+	var map_margins := Vector2(margin_left_px, margin_top_px)
+	return pos + map_margins
+
 ## API to check if position is inside map
 func is_inside_map(pos: Vector2) -> bool:
 	return margin.get_global_rect().has_point(pos)
