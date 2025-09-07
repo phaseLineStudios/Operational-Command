@@ -35,6 +35,17 @@ var active_tool: TerrainToolBase
 var _inside_brush_overlay := false
 var _current_path: String = ""
 
+var _dirty: bool = false
+var _current_history_index: int = 0
+var _saved_history_index: int = 0
+var _pending_exit_kind: String = ""
+var _pending_quit_after_save: bool = false
+var _exit_dialog: ConfirmationDialog
+
+## Action on exit
+const _EXIT_DISCARD_ACTION := "discard"
+
+## Order of editor tools
 const TOOL_ORDER := [
 	"res://scripts/editors/tools/TerrainElevationTool.gd",
 	"res://scripts/editors/tools/TerrainPolygonTool.gd",
@@ -59,6 +70,16 @@ func _ready():
 	
 	history.history_changed.connect(_on_history_changed)
 	_on_history_changed([], [])
+	
+	get_tree().set_auto_accept_quit(false)
+	_build_exit_dialog()
+
+## Catch resize and close notifications
+func _notification(what):
+	if what == NOTIFICATION_RESIZED:
+		queue_redraw()
+	elif what == NOTIFICATION_WM_CLOSE_REQUEST:
+		_request_exit("app")
 
 ## On file menu pressed event
 func _on_filemenu_pressed(id: int):
@@ -67,7 +88,7 @@ func _on_filemenu_pressed(id: int):
 		1: _open()
 		2: _save()
 		3: _save_as()
-		4: _quit_editor()
+		4: _request_exit("menu")
 		
 ## On edit menu pressed event
 func _on_editmenu_pressed(id: int):
@@ -84,9 +105,11 @@ func _on_new_pressed():
 func _new_terrain(d: TerrainData):
 	data = d
 	terrain_render.data = d
-	
 	for tool: TerrainToolBase in tool_map.values():
 		tool.data = data
+
+	_saved_history_index = _current_history_index
+	_dirty = false
 
 ## Create new terrain data
 func _edit_terrain(_d: TerrainData):
@@ -94,10 +117,34 @@ func _edit_terrain(_d: TerrainData):
 	
 	for tool: TerrainToolBase in tool_map.values():
 		tool.data = data
+	
+	_dirty = true
 
-## Quit editor and return to main menu
-func _quit_editor():
-	Game.goto_scene(MAIN_MENU_SCENE)
+## Request to exit the editor
+func _request_exit(kind: String) -> void:
+	_pending_exit_kind = kind
+	if _dirty:
+		_exit_dialog.popup_centered()
+	else:
+		_perform_pending_exit()
+
+## Save then exit
+func _on_exit_save_confirmed() -> void:
+	if _current_path == "":
+		_pending_quit_after_save = true
+		_save_as()
+	else:
+		_save()
+		if not _pending_quit_after_save:
+			_perform_pending_exit()
+
+## Exit application
+func _perform_pending_exit() -> void:
+	if _pending_exit_kind == "menu":
+		Game.goto_scene(MAIN_MENU_SCENE)
+	elif _pending_exit_kind == "app":
+		get_tree().quit()
+	_pending_exit_kind = ""
 
 ## Build the tool panel
 func _build_tool_buttons():
@@ -210,6 +257,25 @@ func _rebuild_tool_hint() -> void:
 	if active_tool:
 		active_tool.build_hint_ui(tools_hint)
 
+## Build exit dialog
+func _build_exit_dialog() -> void:
+	_exit_dialog = ConfirmationDialog.new()
+	_exit_dialog.title = "Unsaved Changes"
+	_exit_dialog.dialog_text = "Save changes before exiting?"
+	_exit_dialog.get_ok_button().text = "Save"
+	_exit_dialog.get_cancel_button().text = "Cancel"
+	_exit_dialog.add_button("Don't Save", true, _EXIT_DISCARD_ACTION)
+	add_child(_exit_dialog)
+
+	_exit_dialog.confirmed.connect(_on_exit_save_confirmed)
+	_exit_dialog.custom_action.connect(func(action: String):
+		if action == _EXIT_DISCARD_ACTION:
+			_perform_pending_exit()
+	)
+	_exit_dialog.canceled.connect(func():
+		_pending_exit_kind = ""
+	)
+
 ## Handle unhandled input
 func _unhandled_key_input(event):
 	if active_tool and active_tool.handle_view_input(event):
@@ -265,6 +331,12 @@ func _save():
 	var err := ResourceSaver.save(data, _current_path)
 	if err != OK:
 		push_error("Save failed: %s" % err)
+	else:
+		_saved_history_index = _current_history_index
+		_dirty = false
+		if _pending_quit_after_save:
+			_pending_quit_after_save = false
+			_perform_pending_exit()
 
 ## Save terrain as
 func _save_as():
@@ -281,6 +353,11 @@ func _save_as():
 		var err := ResourceSaver.save(data, path)
 		if err == OK:
 			_current_path = path
+			_saved_history_index = _current_history_index
+			_dirty = false
+			if _pending_quit_after_save:
+				_pending_quit_after_save = false
+				_perform_pending_exit()
 		else:
 			push_error("Save As failed: %s" % err)
 		dlg.queue_free()
@@ -329,6 +406,9 @@ func _on_history_changed(past: Array, future: Array) -> void:
 		row2.add_child(arrow)
 		row2.add_child(txt2)
 		history_container.add_child(row2)
+		
+	_current_history_index = past.size()
+	_dirty = (_current_history_index != _saved_history_index)
 
 ## Helper function to delete all children of a parent node
 func _queue_free_children(node: Control):
