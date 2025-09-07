@@ -30,5 +30,4 @@ cover_reduction = 0.6
 concealment = 0.6
 road_bias = 1.0
 bridge_capacity_tons = 0.0
-river_width_m = 0.0
 metadata/_custom_type_script = "uid://c8tm5edxa6cdw"
