@@ -30,7 +30,7 @@ func _ready():
 	ray.enabled = true
 
 # Handles all types of inputs, first input function that is executed
-func _input(event):
+func _input(_event):
 	# handling the interact events (usually E)
 	if Input.is_action_just_pressed("interact"):
 		if held_item:
