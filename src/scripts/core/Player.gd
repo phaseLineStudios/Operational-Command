@@ -19,26 +19,21 @@ var pitch := 0.0  # up/down rotation
 # This is important because at the start nothing is held by the player
 var held_item: Node = null
 
-# NEW: keep the actual collider nodes of the held item so the ray can ignore them
-var held_colliders: Array[CollisionObject3D] = [] 
-
 # Runs whenever the scene is loaded, after all nodes are loaded
 func _ready():
 	camera = $Camera3D
 	# Lock and hide the mouse, makes the game more immersive
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	# Check if the shapecast is configured correctly:
+	assert(ray != null, "ShapeCast3D not found at $Camera3D/ShapeCast3D")
+	assert(ray.shape != null, "ShapeCast3D.shape is not set")
+	ray.enabled = true
 
 # Handles all types of inputs, first input function that is executed
 func _input(event):
 	# handling the interact events (usually E)
 	if Input.is_action_just_pressed("interact"):
 		if held_item:
-			# remove exceptions for this item's colliders
-			for co in held_colliders:
-				if is_instance_valid(co):
-					ray.remove_exception(co)
-			held_colliders.clear()
-
 			print("[PLAYER] Dropping: ", held_item.name)
 			held_item.drop(self)
 			held_item = null
@@ -96,58 +91,53 @@ func _physics_process(delta):
 
 # function to handle pickups
 func try_pickup():
-	ray.force_shapecast_update()  # refresh results
-	if not ray.is_colliding():
-		print("[DEBUG] No collision detected by shapecast")
+	if ray == null:
+		push_error("ShapeCast3D is null; check the node path.")
+		return
+
+	# Make sure filters are sane (helpful while debugging)
+	# ray.collision_mask = 1  # uncomment if you want to force mask 1 at runtime
+
+	ray.force_shapecast_update()
+	var hit_count := ray.get_collision_count()
+	if hit_count == 0:
+		print("[DEBUG] No hits. enabled=%s mask=%d target=%s shape=%s" % [
+			str(ray.enabled), ray.collision_mask, str(ray.target_position), str(ray.shape)
+		])
 		return
 
 	var nearest_item: Node = null
 	var nearest_dist := INF
 
-	print("[DEBUG] Colliders found:", ray.get_collision_count())
-
-	for i in range(ray.get_collision_count()):
-		var collider = ray.get_collider(i)
-		print("[DEBUG] Checking collider:", collider)
-
-		var item = _find_pickup_item(collider)
-		if item:
-			print("[DEBUG] Found pickup candidate:", item.name)
-		else:
-			print("[DEBUG] Collider has no pickup method")
-
+	print("[DEBUG] ShapeCast hits:", hit_count)
+	# Use range(hit_count) because hit_count is an int, not an iterable.
+	for i in range(hit_count):
+		var collider := ray.get_collider(i)
+		print("[DEBUG]   collider:", collider)
+		var item := _find_pickup_item(collider)
 		if item and item.has_method("pickup") and not held_item:
-			var dist = camera.global_position.distance_to(item.global_position)
-			print("[DEBUG] Distance to", item.name, "=", dist)
-
+			var hit_pos := ray.get_collision_point(i)
+			# Use plain assignment to avoid static typing inference on an unknown camera type.
+			var dist = camera.global_position.distance_to(hit_pos)
+			print("[DEBUG]   -> candidate %s at %.3f" % [item.name, dist])
 			if dist < nearest_dist:
 				nearest_dist = dist
 				nearest_item = item
-				print("[DEBUG] Nearest candidate so far:", item.name)
 
 	if nearest_item:
 		nearest_item.pickup(self)
 		held_item = nearest_item
 		print("[PLAYER] Picked up:", held_item.name)
 	else:
-		print("[DEBUG] No valid pickup item found")
+		print("[DEBUG] Only non-pickable colliders were hit")
 
 # function is used to find the item a player wants to pickup
-func _find_pickup_item(node: Object) -> Node:
-	# Walk up the parent chain, since raycast might hit a MeshInstance or collider child
-	var n = node
-	while n:
-		if n is Node and n.has_method("pickup"):
+func _find_pickup_item(obj: Object) -> Node:
+	# Walk up the parent chain until we either find a node that implements `pickup()`
+	# or we run out of parents.
+	var n := obj
+	while n is Node:
+		if n.has_method("pickup"):
 			return n
 		n = n.get_parent()
-	return null
-
-# Recursively gather all CollisionObject3D nodes (StaticBody3D, RigidBody3D, Area3D) under a node
-func _collect_colliders(n: Node) -> Array[CollisionObject3D]:
-	var out: Array[CollisionObject3D] = []
-	if n is CollisionObject3D:
-		out.append(n)
-	for child in n.get_children():
-		if child is Node:
-			out.append_array(_collect_colliders(child))
-	return out
+	return null  # no pickable item found
