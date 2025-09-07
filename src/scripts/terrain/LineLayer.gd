@@ -8,15 +8,22 @@ class_name LineLayer
 
 var data: TerrainData
 var _data_conn := false
+var _dirty := true
+var _strokes: Array = []
 
 func set_data(d: TerrainData) -> void:
 	if _data_conn and data and data.is_connected("changed", Callable(self, "_on_data_changed")):
 		data.disconnect("changed", Callable(self, "_on_data_changed"))
 		_data_conn = false
 	data = d
+	_dirty = true
 	if data:
 		data.changed.connect(_on_data_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
 		_data_conn = true
+	queue_redraw()
+
+func request_rebuild() -> void:
+	_dirty = true
 	queue_redraw()
 
 func _on_data_changed() -> void:
@@ -27,10 +34,30 @@ func _notification(what):
 		queue_redraw()
 
 func _draw() -> void:
-	if data == null or data.lines == null or data.lines.is_empty():
-		return
+	if data == null: return
+	if _dirty:
+		_rebuild_strokes()
 
-	var lines: Array = []
+	# Draw outlines first (z sorted inside)
+	for S in _strokes:
+		if S.color.a <= 0.0: continue
+		if S.width <= 0.0: continue
+		for chain in S.chains:
+			match S.mode:
+				TerrainBrush.DrawMode.SOLID:  _draw_polyline_solid(chain, S.color, S.width)
+				TerrainBrush.DrawMode.DASHED: _draw_polyline_dashed(chain, S.color, S.width, S.dash, S.gap)
+				TerrainBrush.DrawMode.DOTTED: _draw_polyline_dotted(chain, S.color, S.width, max(2.0, S.gap))
+				_:                            _draw_polyline_solid(chain, S.color, S.width)
+
+## Rebuild lines
+func _rebuild_strokes() -> void:
+	_dirty = false
+	_strokes.clear()
+	if data == null or data.lines == null or data.lines.is_empty(): return
+
+	var outlines: Array = []
+	var cores: Array = []
+
 	for s in data.lines:
 		if s == null or not (s is Dictionary): continue
 		var brush: TerrainBrush = s.get("brush", null)
@@ -50,61 +77,30 @@ func _draw() -> void:
 		if core_w <= 0.0:
 			core_w = max(1.0, stroke_w)
 
-		lines.append({
-			"pts": safe_pts,
-			"fill": fill_col,
-			"stroke": stroke_col,
-			"core_w": core_w,
-			"outline_w": stroke_w,
-			"mode": mode,
-			"z": brush.z_index,
+		var chain_outline := safe_pts
+		var chain_core := safe_pts
+		if snap_half_px_for_thin_strokes and (int(round(core_w + 2.0 * stroke_w)) % 2 != 0):
+			chain_outline = _offset_half_px(chain_outline)
+		if snap_half_px_for_thin_strokes and (int(round(core_w)) % 2 != 0):
+			chain_core = _offset_half_px(chain_core)
+
+		outlines.append({
+			"mode": mode, "color": stroke_col, "width": core_w + 2.0 * stroke_w,
+			"chains": [chain_outline], "z": brush.z_index,
+			"dash": float(rec.stroke.dash_px if rec.has("stroke") and "dash_px" in rec.stroke else 8.0),
+			"gap":  float(rec.stroke.gap_px  if rec.has("stroke") and "gap_px"  in rec.stroke else 6.0)
+		})
+		cores.append({
+			"mode": mode, "color": fill_col, "width": core_w,
+			"chains": [chain_core], "z": brush.z_index,
 			"dash": float(rec.stroke.dash_px if rec.has("stroke") and "dash_px" in rec.stroke else 8.0),
 			"gap":  float(rec.stroke.gap_px  if rec.has("stroke") and "gap_px"  in rec.stroke else 6.0)
 		})
 
-	lines.sort_custom(func(a, b): return int(a.z) < int(b.z))
-
-	for L in lines:
-		var stroke_col: Color = L.stroke
-		if stroke_col.a <= 0.0:
-			continue
-		var chain: PackedVector2Array = L.pts.duplicate()
-		var outer_w: float = L.core_w + 2.0 * L.outline_w
-		if outer_w <= 0.0:
-			continue
-		if snap_half_px_for_thin_strokes and (int(round(outer_w)) % 2 != 0):
-			chain = _offset_half_px(chain)
-
-		match L.mode:
-			TerrainBrush.DrawMode.SOLID:
-				_draw_polyline_solid(chain, stroke_col, outer_w)
-			TerrainBrush.DrawMode.DASHED:
-				_draw_polyline_dashed(chain, stroke_col, outer_w, L.dash, L.gap)
-			TerrainBrush.DrawMode.DOTTED:
-				_draw_polyline_dotted(chain, stroke_col, outer_w, max(2.0, L.gap))
-			_:
-				_draw_polyline_solid(chain, stroke_col, outer_w)
-
-	for L in lines:
-		var fill_col: Color = L.fill
-		if fill_col.a <= 0.0:
-			continue
-		var chain: PackedVector2Array = L.pts.duplicate()
-		var core_w: float = L.core_w
-		if core_w <= 0.0:
-			continue
-		if snap_half_px_for_thin_strokes and (int(round(core_w)) % 2 != 0):
-			chain = _offset_half_px(chain)
-
-		match L.mode:
-			TerrainBrush.DrawMode.SOLID:
-				_draw_polyline_solid(chain, fill_col, core_w)
-			TerrainBrush.DrawMode.DASHED:
-				_draw_polyline_dashed(chain, fill_col, core_w, L.dash, L.gap)
-			TerrainBrush.DrawMode.DOTTED:
-				_draw_polyline_dotted(chain, fill_col, core_w, max(2.0, L.gap))
-			_:
-				_draw_polyline_solid(chain, fill_col, core_w)
+	outlines.sort_custom(func(a,b): return int(a.z) < int(b.z))
+	cores.sort_custom(func(a,b): return int(a.z) < int(b.z))
+	_strokes.append_array(outlines)
+	_strokes.append_array(cores)
 
 func _offset_half_px(pts: PackedVector2Array) -> PackedVector2Array:
 	var out := PackedVector2Array()
