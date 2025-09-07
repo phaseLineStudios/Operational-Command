@@ -99,7 +99,6 @@ func update_preview_at_overlay(_overlay: Control, _overlay_pos: Vector2):
 
 func handle_view_input(event: InputEvent) -> bool:
 	if event is InputEventMouseMotion:
-		
 		if _edit_idx >= 0:
 			_hover_idx = _pick_point(event.position)
 			_queue_preview_redraw()
@@ -108,7 +107,7 @@ func handle_view_input(event: InputEvent) -> bool:
 				return false
 				
 			if event.position.is_finite():
-				var local_terrain := editor.terrain_to_map(event.position)
+				var local_terrain := editor.map_to_terrain(event.position)
 				
 				var pts := _current_points()
 				if _drag_idx >= 0 and _drag_idx < pts.size():
