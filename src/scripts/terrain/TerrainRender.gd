@@ -112,48 +112,39 @@ func _apply_base_style_if_needed() -> void:
 
 ## Set new Terrain Data
 func _set_data(d: TerrainData):
-	_mark_all_dirty()
 	data = d
 	if data:
 		data.changed.connect(_on_data_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
 	call_deferred("_draw_map_size")
 	call_deferred("_push_data_to_layers")
+	call_deferred("_mark_all_dirty")
 
 ## Push exports to their respective layers
 func _push_data_to_layers() -> void:
 	if grid_layer:
 		grid_layer.set_data(data)
 		grid_layer.apply_style(self)
-		grid_layer.queue_redraw()
 
 	if margin:
 		margin.set_data(data)
 		margin.apply_style(self)
-		margin.queue_redraw()
 	
 	if contour_layer:
 		contour_layer.set_data(data)
 		contour_layer.apply_style(self)
-		contour_layer.queue_redraw()
 	
 	if surface_layer:
 		surface_layer.set_data(data)
-		surface_layer.queue_redraw()
 	
 	if line_layer:
 		line_layer.set_data(data)
-		line_layer.queue_redraw()
 	
 	if point_layer:
 		point_layer.set_data(data)
-		point_layer.queue_redraw()
 	
 	if label_layer:
 		label_layer.set_data(data)
 		label_layer.apply_style(self)
-		label_layer.queue_redraw()
-		
-	queue_redraw()
 
 ## Reconfigure if terrain data is changed
 func _on_data_changed() -> void:
@@ -161,7 +152,14 @@ func _on_data_changed() -> void:
 
 ## Mark elements as dirty to redraw
 func _mark_all_dirty() -> void:
-	pass
+	if grid_layer: grid_layer.mark_dirty()
+	if margin: margin.mark_dirty()
+	if contour_layer: contour_layer.mark_dirty()
+	if surface_layer: surface_layer.mark_dirty()
+	if line_layer: line_layer.mark_dirty()
+	if point_layer: point_layer.mark_dirty()
+	if label_layer: label_layer.mark_dirty()
+	queue_redraw()
 
 ## Debounce the relayout and push styles
 func _debounce_relayout_and_push() -> void:
@@ -172,13 +170,6 @@ func _debounce_relayout_and_push() -> void:
 		_debounce_timer = null
 		_draw_map_size()
 		_push_data_to_layers()
-		if contour_layer:
-			contour_layer.mark_dirty()
-		if surface_layer: 
-			surface_layer.mark_dirty()
-		if line_layer: 
-			line_layer.mark_dirty()
-		queue_redraw()
 	)
 
 ## Resize the map to fit the terrain data
@@ -191,12 +182,6 @@ func _draw_map_size() -> void:
 		var total := base_size + margins
 		margin.size = total
 		size = margin.size
-
-	if grid_layer: grid_layer._need_bake = true
-	if surface_layer: surface_layer.mark_dirty()
-	if line_layer: line_layer.mark_dirty()
-	if label_layer: label_layer.queue_redraw()
-	if point_layer: point_layer.queue_redraw()
 	queue_redraw()
 
 ## Emit a resize event for base layer
