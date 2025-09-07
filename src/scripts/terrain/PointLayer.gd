@@ -47,11 +47,13 @@ func _draw() -> void:
 			continue
 		var p_scale: float = float(s.get("scale", 1.0))
 		var p_size = brush.symbol_size_m * max(0.01, p_scale)
-
+		var rot_deg: float = float(s.get("rot", 0.0))
+		
 		items.append({
 			"pos_local": pos_local,
 			"tex": tex,
 			"size": p_size,
+			"rot_deg": rot_deg,
 			"z": brush.z_index
 		})
 
@@ -61,9 +63,11 @@ func _draw() -> void:
 		var pos_local: Vector2 = it.pos_local
 		var tex: Texture2D = it.tex
 		var sc: float = it.size
+		var rot_rad := deg_to_rad(float(it.rot_deg))
 
-		var p_size := Vector2(sc, sc)
-		var top_left := pos_local - p_size * 0.5
+		var half := Vector2(sc, sc) * 0.5
+		var rect := Rect2(-half, Vector2(sc, sc))
 
-		var rect := Rect2(top_left, p_size)
+		draw_set_transform(pos_local, rot_rad, Vector2.ONE)
 		draw_texture_rect(tex, rect, false)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

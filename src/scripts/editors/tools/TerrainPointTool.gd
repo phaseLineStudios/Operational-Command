@@ -3,6 +3,7 @@ class_name TerrainPointTool
 
 @export var active_brush: TerrainBrush
 @export_range(0.1, 4.0, 0.1) var symbol_scale: float = 1.0
+@export_range(-180.0, 180.0, 1.0) var symbol_rotation_deg: float = 0.0
 
 var _info_ui_parent: Control
 
@@ -64,6 +65,18 @@ func build_options_ui(p: Control) -> void:
 	)
 	vb.add_child(_label("Symbol scale"))
 	vb.add_child(s)
+	
+	var rot_slider := HSlider.new()
+	rot_slider.min_value = -180.0
+	rot_slider.max_value = 180.0
+	rot_slider.step = 1.0
+	rot_slider.value = symbol_rotation_deg
+	rot_slider.value_changed.connect(func(v):
+		symbol_rotation_deg = v
+		_update_preview_appearance()
+	)
+	vb.add_child(_label("Rotation (°)"))
+	vb.add_child(rot_slider)
 
 func build_info_ui(parent: Control) -> void:
 	_info_ui_parent = parent
@@ -105,6 +118,7 @@ func _update_preview_appearance() -> void:
 		var sp := _preview as SymbolPreview
 		sp.tex = (active_brush.symbol if active_brush and active_brush.symbol else null)
 		sp.scale_factor = symbol_scale
+		sp.rotation_deg = symbol_rotation_deg
 		sp.brush = active_brush
 		sp.queue_redraw()
 
@@ -177,7 +191,8 @@ func _add_point(local_m: Vector2) -> void:
 		"id": pid,
 		"brush": active_brush,
 		"pos": local_m,
-		"scale": symbol_scale
+		"scale": symbol_scale,
+		"rot": symbol_rotation_deg
 	}
 	data.points.append(surf)
 	editor.history.push_item_insert(data, "points", surf, "Add point", data.points.size())
@@ -187,8 +202,6 @@ func _set_point_pos(idx_in_points: int, local_m: Vector2) -> void:
 	if data == null or idx_in_points < 0 or idx_in_points >= data.points.size():
 		return
 	var s: Dictionary = data.points[idx_in_points]
-	if s.get("type","") != "point":
-		return
 	s["pos"] = local_m
 	data.points[idx_in_points] = s
 	_emit_data_changed()
@@ -242,6 +255,7 @@ class SymbolPreview extends Control:
 	var tex: Texture2D
 	var brush: TerrainBrush
 	var scale_factor := 1.0
+	var rotation_deg := 0.0
 	var antialias := true
 
 	func _get_minimum_size() -> Vector2:
@@ -255,4 +269,6 @@ class SymbolPreview extends Control:
 		var sc: float = max(0.01, scale_factor)
 		var t_size: Vector2 = Vector2(brush.symbol_size_m, brush.symbol_size_m) * sc
 		var top_left := -t_size * 0.5
+		draw_set_transform(Vector2.ZERO, deg_to_rad(rotation_deg), Vector2.ONE)
 		draw_texture_rect(tex, Rect2(top_left, t_size), false)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

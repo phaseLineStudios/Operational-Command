@@ -236,12 +236,12 @@ func clamp_shape_to_terrain(pts: PackedVector2Array) -> PackedVector2Array:
 ## Helper function to convert terrain position to map position
 func map_to_terrain(local_m: Vector2) -> Vector2:
 	var map_margins := Vector2(margin_left_px, margin_top_px)
-	return local_m - map_margins
+	return local_m - map_margins - Vector2(terrain_border_px, terrain_border_px)
 
 ## helepr function to convert map position to terrain position
 func terrain_to_map(pos: Vector2) -> Vector2:
 	var map_margins := Vector2(margin_left_px, margin_top_px)
-	return pos + map_margins
+	return pos + map_margins + Vector2(terrain_border_px, terrain_border_px)
 
 ## API to check if position is inside map
 func is_inside_map(pos: Vector2) -> bool:
@@ -253,6 +253,7 @@ func is_inside_terrain(pos: Vector2) -> bool:
 
 ## API to get grid number from terrain local position
 func pos_to_grid(pos: Vector2, total_digits: int = 6) -> String:
+	@warning_ignore("integer_division")
 	var per_axis := total_digits / 2
 	if per_axis != 3 and per_axis != 4 and per_axis != 5:
 		push_warning("pos_to_grid: total_digits must be 6, 8, or 10; got %d. Using 6." % total_digits)
@@ -296,6 +297,7 @@ func grid_to_pos(grid: String) -> Vector2:
 		push_warning("Grid label must have an even number of digits (6/8/10). Got: %s" % grid)
 		return Vector2i.ZERO
 
+	@warning_ignore("integer_division")
 	var half := digits.length() / 2
 	if half < 3 or half > 5:
 		push_warning("Grid label must be 6, 8, or 10 digits (got %d)." % digits.length())

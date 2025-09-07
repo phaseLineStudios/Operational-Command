@@ -400,10 +400,8 @@ func map_to_screen(local_m: Vector2, keep_aspect: bool = true) -> Vector2:
 
 ## Wrapper for map_to_terrain from terrain renderer
 func map_to_terrain(local_m: Vector2) -> Vector2:
-	var map_margins := Vector2(terrain_render.margin_left_px, terrain_render.margin_top_px)
 	return terrain_render.map_to_terrain(local_m)
 
 ## Wrapper for terrain_to_map from terrain renderer
 func terrain_to_map(pos: Vector2) -> Vector2:
-	var map_margins := Vector2(terrain_render.margin_left_px, terrain_render.margin_top_px)
 	return terrain_render.terrain_to_map(pos)
