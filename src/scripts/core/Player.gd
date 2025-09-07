@@ -3,7 +3,7 @@
 extends CharacterBody3D
 
 # Store the RayCast and HoldPoint in variables on load
-@onready var ray: ShapeCast3D = $Camera3D/ShapeCast3DCast3D
+@onready var ray: ShapeCast3D = $Camera3D/ShapeCast3D
 @onready var hold_point: Node3D = $Camera3D/HoldPoint
 
 # Setting up the speed and mouse sensitivity
