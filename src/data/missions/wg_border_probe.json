@@ -2,7 +2,7 @@
 	"id": "wg_border_probe",
 	"title": "Border Probe",
 	"description": "Soviet recon-in-force tests your line near Fulda.",
-	"image": "res://maps/previews/wg_border_probe.png",
+	"image": "res://campaigns/previews/wg_border_probe.png",
 	"difficulty": "Normal",
 	"pos": [0.52, 0.55],
 	"order": 1,

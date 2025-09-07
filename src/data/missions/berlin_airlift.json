@@ -2,7 +2,7 @@
 	"id": "berlin_airlift",
 	"title": "Airlift Scramble",
 	"description": "Secure air corridors while ground routes are contested.",
-	"image": "res://maps/previews/berlin_airlift.png",
+	"image": "res://campaigns/previews/berlin_airlift.png",
 	"difficulty": "Easy",
 	"pos": [0.60, 0.30],
 	"order": 0,

@@ -4,7 +4,7 @@
 	"briefing": "wg_exercise_reforger_brief",
 	"terrain": "",
 	"description": "Annual NATO exercise held in West Germany.",
-	"image": "res://maps/previews/wg_exercise_reforger.png",
+	"image": "res://campaigns/previews/wg_exercise_reforger.png",
 	"difficulty": "Easy",
 	"pos": [0.44, 0.40],
 	"order": 0,
