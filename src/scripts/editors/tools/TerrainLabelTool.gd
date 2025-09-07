@@ -164,17 +164,14 @@ func _add_label(local_pos: Vector2, text: String, size: int) -> void:
 		"rot": label_rotation_deg,
 		"size": size
 	}
-	data.labels.append(label)
+	data.add_label(label)
 	editor.history.push_item_insert(data, "labels", label, "Add label", data.labels.size())
-	_emit_changed()
 
 func _set_label_pos(idx: int, local_pos: Vector2) -> void:
 	if data == null or idx < 0 or idx >= data.labels.size(): 
 		return
 	var d: Dictionary = data.labels[idx]
-	d["pos"] = local_pos
-	data.labels[idx] = d
-	_emit_changed()
+	data.set_label_pose(d.id, local_pos, label_rotation_deg)
 
 func _remove_label(idx: int) -> void:
 	if data == null or idx < 0 or idx >= data.labels.size(): 
@@ -185,8 +182,7 @@ func _remove_label(idx: int) -> void:
 		return
 	var copy := d.duplicate(true)
 	editor.history.push_item_erase_by_id(data, "labels", id, copy, "Delete label", idx)
-	data.labels.remove_at(idx)
-	_emit_changed()
+	data.remove_label(id)
 
 func _pick_label(mouse_global: Vector2) -> int:
 	if data == null or data.labels == null: 
@@ -209,19 +205,14 @@ func _pick_label(mouse_global: Vector2) -> int:
 			best_d2 = d2
 	return best
 
-func _emit_changed():
-	if data == null: 
-		return
-	if data.has_method("emit_changed"): data.emit_changed()
-	elif data.has_signal("changed"): data.emit_signal("changed")
-
 func _label(t: String) -> Label:
 	var l := Label.new()
 	l.text = t
 	return l
 
 func _queue_free_children(node: Control):
-	for n in node.get_children(): n.queue_free()
+	for n in node.get_children(): 
+		n.queue_free()
 
 class LabelPreview extends Control:
 	var text: String = ""

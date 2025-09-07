@@ -43,7 +43,7 @@ var _px_per_m: float = 1.0
 signal elevation_changed(rect: Rect2i)
 ## Emits when surfaces mutate. kind: "reset|added|removed|points|brush|meta".
 signal surfaces_changed(kind: String, ids: PackedInt32Array)
-## Emits when lines mutate. kind: "reset|added|removed|points|style|meta".
+## Emits when lines mutate. kind: "reset|added|removed|points|style|brush|meta".
 signal lines_changed(kind: String, ids: PackedInt32Array)
 ## Emits when points mutate. kind: "reset|added|removed|move|style|meta".
 signal points_changed(kind: String, ids: PackedInt32Array)
@@ -140,7 +140,6 @@ func _set_contour_interval_m(v):
 	contour_interval_m = v
 	emit_signal("changed")
 
-# Ensure IDs on bulk assigns; emit granular “reset”.
 func _set_surfaces(v) -> void:
 	surfaces = _ensure_ids(v, "_next_surface_id")
 	_queue_emit(_pend_surfaces, "reset", _collect_ids(surfaces))
@@ -189,38 +188,49 @@ func remove_surface(id: int) -> void:
 	surfaces.remove_at(i)
 	_queue_emit(_pend_surfaces, "removed", PackedInt32Array([id]))
 
-## Lines (similar pattern)
+## Add a new line. Returns the assigned id.
 func add_line(l: Dictionary) -> int:
 	var id := _ensure_id_on_item(l, "_next_line_id")
 	lines.append(l)
 	_queue_emit(_pend_lines, "added", PackedInt32Array([id]))
 	return id
 
+## Update line points by id (fast path while drawing).
 func set_line_points(id: int, pts: PackedVector2Array) -> void:
 	var i := _find_by_id(lines, id)
 	if i < 0: return
 	lines[i].points = pts
 	_queue_emit(_pend_lines, "points", PackedInt32Array([id]))
 
+## Update line style.
 func set_line_style(id: int, width_px: float) -> void:
 	var i := _find_by_id(lines, id)
 	if i < 0: return
 	lines[i].width_px = width_px
 	_queue_emit(_pend_lines, "style", PackedInt32Array([id]))
 
+## Update line brush by id.
+func set_line_brush(id: int, brush: TerrainBrush) -> void:
+	var i := _find_by_id(lines, id)
+	if i < 0: return
+	lines[i].brush = brush
+	_queue_emit(_pend_lines, "brush", PackedInt32Array([id]))
+
+## Remove line by id.
 func remove_line(id: int) -> void:
 	var i := _find_by_id(lines, id)
 	if i < 0: return
 	lines.remove_at(i)
 	_queue_emit(_pend_lines, "removed", PackedInt32Array([id]))
 
-## Points
+## Add a new point. Returns the assigned id.
 func add_point(p: Dictionary) -> int:
 	var id := _ensure_id_on_item(p, "_next_point_id")
 	points.append(p)
 	_queue_emit(_pend_points, "added", PackedInt32Array([id]))
 	return id
 
+## Update points transformation
 func set_point_transform(id: int, pos: Vector2, rot: float, scale: float=1.0) -> void:
 	var i := _find_by_id(points, id)
 	if i < 0: return
@@ -229,19 +239,21 @@ func set_point_transform(id: int, pos: Vector2, rot: float, scale: float=1.0) ->
 	points[i].scale = scale
 	_queue_emit(_pend_points, "move", PackedInt32Array([id]))
 
+## Remove point by id
 func remove_point(id: int) -> void:
 	var i := _find_by_id(points, id)
 	if i < 0: return
 	points.remove_at(i)
 	_queue_emit(_pend_points, "removed", PackedInt32Array([id]))
 
-## Labels
+## Add a new label. Returns the assigned id
 func add_label(lab: Dictionary) -> int:
 	var id := _ensure_id_on_item(lab, "_next_label_id")
 	labels.append(lab)
 	_queue_emit(_pend_labels, "added", PackedInt32Array([id]))
 	return id
 
+## Update labels transform by id
 func set_label_pose(id: int, pos: Vector2, rot: float) -> void:
 	var i := _find_by_id(labels, id)
 	if i < 0: return
@@ -249,18 +261,21 @@ func set_label_pose(id: int, pos: Vector2, rot: float) -> void:
 	labels[i].rot = rot
 	_queue_emit(_pend_labels, "move", PackedInt32Array([id]))
 
+## Update labelstyle or metadata by id
 func set_label_style(id: int, size: int) -> void:
 	var i := _find_by_id(labels, id)
 	if i < 0: return
 	labels[i].size = size
 	_queue_emit(_pend_labels, "style", PackedInt32Array([id]))
 
+## Remove label by id
 func remove_label(id: int) -> void:
 	var i := _find_by_id(labels, id)
 	if i < 0: return
 	labels.remove_at(i)
 	_queue_emit(_pend_labels, "removed", PackedInt32Array([id]))
 
+## Returns a row-major block of elevation samples (r channel) for the clipped rect.
 func get_elevation_block(rect: Rect2i) -> PackedFloat32Array:
 	var out := PackedFloat32Array()
 	if elevation == null or elevation.is_empty():
@@ -276,6 +291,7 @@ func get_elevation_block(rect: Rect2i) -> PackedFloat32Array:
 			k += 1
 	return out
 
+## Writes a row-major block of elevation samples (r channel) into the clipped rect.
 func set_elevation_block(rect: Rect2i, block: PackedFloat32Array) -> void:
 	if elevation == null or elevation.is_empty():
 		return
@@ -321,6 +337,7 @@ func world_to_elev_px(p: Vector2) -> Vector2i:
 func elev_px_to_world(px: Vector2i) -> Vector2:
 	return Vector2(px.x * elevation_resolution_m, px.y * elevation_resolution_m)
 
+## Helper function to clip a rect to image bounds
 static func _clip_rect_to_image(rect: Rect2i, img: Image) -> Rect2i:
 	var w := img.get_width()
 	var h := img.get_height()
@@ -332,10 +349,12 @@ static func _clip_rect_to_image(rect: Rect2i, img: Image) -> Rect2i:
 	var y1: int = clamp(rect.position.y + rect.size.y, 0, h)
 	return Rect2i(Vector2i(x0, y0), Vector2i(max(0, x1 - x0), max(0, y1 - y0)))
 
+## Update heightmap scale
 func _update_scale() -> void:
 	if elevation.is_empty(): return
 	_px_per_m = float(elevation.get_width()) / float(max(width_m, 1))
 
+## Resmaple or resize heightmap
 func _resample_or_resize() -> void:
 	var new_w := int(round(float(width_m) / elevation_resolution_m))
 	var new_h := int(round(float(height_m) / elevation_resolution_m))
@@ -350,6 +369,7 @@ func _resample_or_resize() -> void:
 		old.resize(new_w, new_h, Image.INTERPOLATE_NEAREST)
 		elevation.blit_rect(old, Rect2i(Vector2i.ZERO, old.get_size()), Vector2i.ZERO)
 
+## Ensure IDs are unique
 func _ensure_ids(arr: Array, counter_prop: String) -> Array:
 	var out := []
 	for it in arr:
@@ -361,12 +381,14 @@ func _ensure_ids(arr: Array, counter_prop: String) -> Array:
 		out.append(item)
 	return out
 
+## Ensure item has ID
 func _ensure_id_on_item(item: Dictionary, counter_prop: String) -> int:
 	if not item.has("id") or int(item.id) <= 0:
 		item.id = self.get(counter_prop)
 		self.set(counter_prop, int(self.get(counter_prop)) + 1)
 	return int(item.id)
 
+## Collect valid IDs
 func _collect_ids(arr: Array) -> PackedInt32Array:
 	var ids := PackedInt32Array()
 	for it in arr:
@@ -374,6 +396,7 @@ func _collect_ids(arr: Array) -> PackedInt32Array:
 			ids.append(int(it.id))
 	return ids
 
+## Find item by ID
 func _find_by_id(arr: Array, id: int) -> int:
 	for i in arr.size():
 		var it = arr[i]
@@ -381,6 +404,7 @@ func _find_by_id(arr: Array, id: int) -> int:
 			return i
 	return -1
 
+## Queue up signal emits
 func _queue_emit(bucket: Array, kind: String, ids: PackedInt32Array) -> void:
 	if _batch_depth > 0:
 		bucket.append([kind, ids])
