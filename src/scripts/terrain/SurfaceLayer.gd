@@ -10,21 +10,30 @@ class_name SurfaceLayer
 
 @onready var renderer: TerrainRender = get_owner()
 
+## Emitted when batches are rebuilt
+signal batches_rebuilt()
+
 var data: TerrainData
 var _data_conn := false
 var _dirty := true
+
+var _batches: Array = []
 
 ## API to set Terrain Data
 func set_data(d: TerrainData) -> void:
 	if _data_conn and data and data.is_connected("changed", Callable(self, "_on_data_changed")):
 		data.disconnect("changed", Callable(self, "_on_data_changed"))
 		_data_conn = false
-
 	data = d
 	_dirty = true
 	if data:
 		data.changed.connect(_on_data_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
 		_data_conn = true
+	queue_redraw()
+
+## Request a rebuild
+func request_rebuild() -> void:
+	_dirty = true
 	queue_redraw()
 
 ## Redraw if terrain data changes
@@ -38,53 +47,11 @@ func _notification(what):
 		queue_redraw()
 
 func _draw() -> void:
-	if data == null or data.surfaces.is_empty():
-		return
-
-	var groups := {}
-	for s in data.surfaces:
-		if s == null or typeof(s) != TYPE_DICTIONARY: continue
-		if s.get("type", "") != "polygon": continue
-		if not s.has("points"): continue
-		var brush: TerrainBrush = s.get("brush", null)
-		if brush == null or brush.feature_type != TerrainBrush.FeatureType.AREA:
-			continue
-		var pts: PackedVector2Array = s.points
-		if pts.size() < 3:
-			continue
-
-		var clamped := renderer.clamp_shape_to_terrain(pts)
-		if clamped.size() < 3:
-			continue
-
-		var key := _brush_key(brush)
-		if not groups.has(key):
-			groups[key] = {
-				"brush": brush,
-				"z": int(brush.z_index),
-				"polys": []
-			}
-		groups[key].polys.append(clamped)
-
-	var merged_to_draw: Array = []
-	for key in groups.keys():
-		var g = groups[key]
-		var polys: Array = g.polys
-		var merged: Array = _union_polys(polys)
-		if not merged.is_empty():
-			merged_to_draw.append({
-				"brush": g.brush,
-				"z": g.z,
-				"polys": merged
-			})
-
-	merged_to_draw.sort_custom(func(a, b):
-		return int(a.z) < int(b.z)
-	)
-
-	for item in merged_to_draw:
-		var brush: TerrainBrush = item.brush
-		var rec := brush.get_draw_recipe()
+	if data == null: return
+	if _dirty:
+		_rebuild_batches()
+	for item in _batches:
+		var rec: Dictionary = item.rec
 		var fill_col: Color = rec.fill.color if rec.has("fill") and "color" in rec.fill else Color(0,0,0,0)
 		var stroke_col: Color = rec.stroke.color if rec.has("stroke") and "color" in rec.stroke else Color(0,0,0,0)
 		var stroke_w: float = rec.stroke.width_px if rec.has("stroke") and "width_px" in rec.stroke else 1.0
@@ -97,15 +64,12 @@ func _draw() -> void:
 						draw_colored_polygon(poly, fill_col, PackedVector2Array(), null)
 				TerrainBrush.DrawMode.HATCHED:
 					if fill_col.a > 0.0:
-						var spacing := float(rec.fill.hatch_spacing_px if "hatch_spacing_px" in rec.fill else 8.0)
-						var angle   := float(rec.fill.hatch_angle_deg   if "hatch_angle_deg"   in rec.fill else 45.0)
-						_fill_hatched(poly, fill_col, spacing, angle)
+						# Keep as-is, or pre-bake patterns per brush if needed
+						_fill_hatched(poly, fill_col, float(rec.fill.hatch_spacing_px if "hatch_spacing_px" in rec.fill else 8.0), float(rec.fill.hatch_angle_deg if "hatch_angle_deg" in rec.fill else 45.0))
 				TerrainBrush.DrawMode.SYMBOL_TILED:
 					var tex: Texture2D = rec.symbol.tex if rec.has("symbol") and "tex" in rec.symbol else null
-					if tex != null and tex.get_width() > 0 and tex.get_height() > 0:
-						var spacing_px := float(rec.symbol.spacing_px if "spacing_px" in rec.symbol else 24.0)
-						var sym_scale := float(rec.symbol.scale if "scale" in rec.symbol else 1.0)
-						_fill_symbol_tiled(poly, tex, spacing_px, sym_scale)
+					if tex:
+						_fill_symbol_tiled(poly, tex, float(rec.symbol.spacing_px if "spacing_px" in rec.symbol else 24.0), float(rec.symbol.scale if "scale" in rec.symbol else 1.0))
 					elif fill_col.a > 0.0:
 						draw_colored_polygon(poly, fill_col, PackedVector2Array(), null)
 				_:
@@ -116,14 +80,43 @@ func _draw() -> void:
 				var outline := poly
 				if snap_half_px_for_thin_strokes and int(round(stroke_w)) % 2 != 0:
 					outline = _offset_half_px(outline)
+				_draw_polyline_closed(_closed_copy(outline, true), stroke_col, stroke_w)
 
-				match mode:
-					TerrainBrush.DrawMode.DASHED:
-						var dash: float = rec.stroke.dash_px if "dash_px" in rec.stroke else 8.0
-						var gap: float  = rec.stroke.gap_px  if "gap_px"  in rec.stroke else 6.0
-						_draw_polyline_dashed(_closed_copy(outline, true), stroke_col, stroke_w, dash, gap)
-					_:
-						_draw_polyline_closed(_closed_copy(outline, true), stroke_col, stroke_w)
+## Rebuild batches
+func _rebuild_batches() -> void:
+	_dirty = false
+	_batches.clear()
+	if data == null or data.surfaces == null or data.surfaces.is_empty():
+		return
+
+	var groups := {}  # key -> {brush, z, polys:Array}
+	for s in data.surfaces:
+		if s == null or typeof(s) != TYPE_DICTIONARY: continue
+		if s.get("type","") != "polygon": continue
+		var brush: TerrainBrush = s.get("brush", null)
+		if brush == null or brush.feature_type != TerrainBrush.FeatureType.AREA: continue
+		var pts: PackedVector2Array = s.get("points", PackedVector2Array())
+		if pts.size() < 3: continue
+
+		var clamped := renderer.clamp_shape_to_terrain(pts)
+		if clamped.size() < 3: continue
+
+		var key := _brush_key(brush)
+		if not groups.has(key):
+			groups[key] = {"brush": brush, "z": int(brush.z_index), "polys": []}
+		groups[key].polys.append(clamped)
+
+	var merged_list: Array = []
+	for key in groups.keys():
+		var g = groups[key]
+		var merged: Array = _union_polys(g.polys)
+		if merged.is_empty(): continue
+		var rec: Dictionary = g.brush.get_draw_recipe()
+		merged_list.append({"brush": g.brush, "z": g.z, "polys": merged, "rec": rec})
+
+	merged_list.sort_custom(func(a,b): return int(a.z) < int(b.z))
+	_batches = merged_list
+	emit_signal("batches_rebuilt")
 
 func _closed_copy(pts: PackedVector2Array, closed: bool) -> PackedVector2Array:
 	if closed:
