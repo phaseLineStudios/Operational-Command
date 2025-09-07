@@ -13,9 +13,13 @@ func set_data(d: TerrainData) -> void:
 	if _data_conn and data and data.is_connected("changed", Callable(self, "_on_data_changed")):
 		data.disconnect("changed", Callable(self, "_on_data_changed"))
 		_data_conn = false
+	if _data_conn and data and data.is_connected("points_changed", Callable(self, "_on_points_changed")):
+		data.disconnect("points_changed", Callable(self, "_on_points_changed"))
+		_data_conn = false
 	data = d
 	if data:
 		data.changed.connect(_on_data_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
+		data.points_changed.connect(_on_points_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
 		_data_conn = true
 	queue_redraw()
 
@@ -25,6 +29,9 @@ func mark_dirty():
 
 func _on_data_changed() -> void:
 	queue_redraw()
+
+func _on_points_changed(kind: String, ids: PackedInt32Array):
+	print("[DBG] Points Changed (%s)" % ids)
 
 func _notification(what):
 	if what == NOTIFICATION_RESIZED:

@@ -102,6 +102,7 @@ func _on_data_changed() -> void:
 
 ## Rebuild contours if elevation data changes
 func _on_elevation_changed(_rect := Rect2i(0,0,0,0)) -> void:
+	print("[DBG] Elevation Changed")
 	mark_dirty()
 	_schedule_rebuild()
 

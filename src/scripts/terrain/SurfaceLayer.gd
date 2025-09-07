@@ -24,10 +24,13 @@ func set_data(d: TerrainData) -> void:
 	if _data_conn and data and data.is_connected("changed", Callable(self, "_on_data_changed")):
 		data.disconnect("changed", Callable(self, "_on_data_changed"))
 		_data_conn = false
+	if _data_conn and data and data.is_connected("surfaces_changed", Callable(self, "_on_surfaces_changed")):
+		data.disconnect("surfaces_changed", Callable(self, "_on_surfaces_changed"))
+		_data_conn = false
 	data = d
 	_dirty = true
 	if data:
-		data.changed.connect(_on_data_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
+		data.surfaces_changed.connect(_on_surfaces_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
 		_data_conn = true
 	queue_redraw()
 
@@ -40,6 +43,9 @@ func mark_dirty() -> void:
 func _on_data_changed() -> void:
 	_dirty = true
 	queue_redraw()
+
+func _on_surfaces_changed(kind: String, ids: PackedInt32Array):
+	print("[DBG] Surfaces Changed (%s)" % ids)
 
 ## Redraw if map is resized
 func _notification(what):
