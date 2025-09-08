@@ -4,6 +4,8 @@ class_name SurfaceLayer
 ## Renders area surfaces (polygons) with per-id caching and minimal rebuilds.
 ##
 ## Only recalculates groups affected by TerrainData.surfaces_changed.
+##
+## @experimental For further optimization consider switching to Meshinstance2D.
 
 ## Enable antialiasing for polylines and strokes
 @export var antialias: bool = true
