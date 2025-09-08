@@ -24,10 +24,7 @@ class_name CampaignData
 func serialize() -> Dictionary:
 	var scenario_dicts: Array = []
 	for sc in scenarios:
-		if sc and sc.has_method("to_json"):
-			scenario_dicts.append(sc.to_json())
-		else:
-			scenario_dicts.append(null)
+		scenario_dicts.append(sc.serialize())
 
 	return {
 		"id": id,
