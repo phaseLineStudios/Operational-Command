@@ -99,7 +99,6 @@ func update_preview_at_overlay(_overlay: Control, _overlay_pos: Vector2):
 
 func handle_view_input(event: InputEvent) -> bool:
 	if event is InputEventMouseMotion:
-		
 		if _edit_idx >= 0:
 			_hover_idx = _pick_point(event.position)
 			_queue_preview_redraw()
@@ -108,12 +107,12 @@ func handle_view_input(event: InputEvent) -> bool:
 				return false
 				
 			if event.position.is_finite():
-				var local_terrain := editor.terrain_to_map(event.position)
+				var local_terrain := editor.map_to_terrain(event.position)
 				
 				var pts := _current_points()
 				if _drag_idx >= 0 and _drag_idx < pts.size():
 					pts[_drag_idx] = local_terrain
-					_set_current_points(pts)
+					data.set_surface_points(_edit_id, pts)
 					_queue_preview_redraw()
 		return false
 
@@ -155,8 +154,8 @@ func handle_view_input(event: InputEvent) -> bool:
 					after["points"] = pts_after
 
 					editor.history.push_item_edit_by_id(data, "surfaces", before.get("id"), before, after, "Add polygon point")
+					data.set_surface_points(before.id, pts_after)
 
-					_emit_data_changed()
 					_queue_preview_redraw()
 			return true
 		else:
@@ -182,7 +181,7 @@ func handle_view_input(event: InputEvent) -> bool:
 						after["points"] = pts
 						editor.history.push_item_edit_by_id(data, "surfaces", before.get("id"), before, after, "Remove polygon point")
 						data.surfaces[_edit_idx] = after
-						_set_current_points(pts)
+						data.set_surface_points(_edit_id, pts)
 						_queue_preview_redraw()
 				return true
 
@@ -262,16 +261,6 @@ func _current_points() -> PackedVector2Array:
 			return PackedVector2Array()
 	return data.surfaces[idx].get("points", PackedVector2Array())
 
-## Set current polygon points
-func _set_current_points(pts: PackedVector2Array) -> void:
-	if data == null or _edit_idx < 0: 
-		return
-	var poly: Dictionary = data.surfaces[_edit_idx]
-	poly["points"] = pts
-	data.surfaces[_edit_idx] = poly
-	_emit_data_changed()
-	_queue_preview_redraw()
-
 ## Helper function to find current polygon in Terrain Data
 func _find_edit_index_by_id() -> int:
 	if data == null or _edit_id < 0: 
@@ -298,11 +287,10 @@ func _start_new_polygon() -> void:
 		"points": PackedVector2Array(),
 		"closed": true
 	}
-	data.surfaces.append(poly)
+	data.add_surface(poly)
 	editor.history.push_item_insert(data, "surfaces", poly, "Add polygon", data.surfaces.size())
 	_edit_id = pid
 	_edit_idx = data.surfaces.size() - 1
-	_emit_data_changed()
 	_queue_preview_redraw()
 
 ## Delete polygon
@@ -315,13 +303,12 @@ func _cancel_edit_delete_polygon() -> void:
 		return
 	var copy := d.duplicate(true)
 	editor.history.push_item_erase_by_id(data, "surfaces", id, copy, "Delete polygon", _edit_idx)
-	data.surfaces.remove_at(_edit_idx)
+	data.remove_surface(_edit_id)
 	_edit_id = -1
 	_edit_idx = -1
 	_drag_idx = -1
 	_hover_idx = -1
 	_is_drag = false
-	_emit_data_changed()
 	_queue_preview_redraw()
 
 ## Stop editing and save polygon
@@ -331,7 +318,6 @@ func _finish_edit_keep_polygon() -> void:
 	_drag_idx = -1
 	_hover_idx = -1
 	_is_drag = false
-	_emit_data_changed()
 	_queue_preview_redraw()
 
 ## Function to pick a point at position
@@ -350,16 +336,6 @@ func _pick_point(pos: Vector2) -> int:
 			best = i
 			best_d2 = d2
 	return best
-
-## Helper function to emit data changed
-# TODO Move into terrain data
-func _emit_data_changed() -> void:
-	if data == null: 
-		return
-	if data.has_method("emit_changed"):
-		data.emit_changed()
-	elif data.has_signal("changed"):
-		data.emit_signal("changed")
 
 ## Helper function to create a new label
 func _label(t: String) -> Label:

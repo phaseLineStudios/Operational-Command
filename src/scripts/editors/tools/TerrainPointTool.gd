@@ -187,16 +187,15 @@ func _add_point(local_m: Vector2) -> void:
 		return
 	_ensure_surfaces()
 	var pid := randi()
-	var surf := {
+	var point := {
 		"id": pid,
 		"brush": active_brush,
 		"pos": local_m,
 		"scale": symbol_scale,
 		"rot": symbol_rotation_deg
 	}
-	data.points.append(surf)
-	editor.history.push_item_insert(data, "points", surf, "Add point", data.points.size())
-	_emit_data_changed()
+	data.add_point(point)
+	editor.history.push_item_insert(data, "points", point, "Add point", data.points.size())
 
 func _set_point_pos(idx_in_points: int, local_m: Vector2) -> void:
 	if data == null or idx_in_points < 0 or idx_in_points >= data.points.size():
@@ -204,7 +203,7 @@ func _set_point_pos(idx_in_points: int, local_m: Vector2) -> void:
 	var s: Dictionary = data.points[idx_in_points]
 	s["pos"] = local_m
 	data.points[idx_in_points] = s
-	_emit_data_changed()
+	data.set_point_transform(s.id, local_m, symbol_rotation_deg, symbol_scale)
 
 func _remove_point(idx_in_points: int) -> void:
 	if data == null or idx_in_points < 0 or idx_in_points >= data.points.size():
@@ -215,8 +214,7 @@ func _remove_point(idx_in_points: int) -> void:
 		return
 	var copy := s.duplicate(true)
 	editor.history.push_item_erase_by_id(data, "points", id, copy, "Delete point", idx_in_points)
-	data.points.remove_at(idx_in_points)
-	_emit_data_changed()
+	data.remove_point(data.points[idx_in_points].id)
 
 func _pick_point(mouse_global: Vector2) -> int:
 	if data == null or data.points == null:
@@ -236,12 +234,6 @@ func _pick_point(mouse_global: Vector2) -> int:
 			best = i
 			best_d2 = d2
 	return best
-
-func _emit_data_changed() -> void:
-	if data == null: 
-		return
-	if data.has_method("emit_changed"): data.emit_changed()
-	elif data.has_signal("changed"):    data.emit_signal("changed")
 
 func _label(t: String) -> Label:
 	var l := Label.new()
