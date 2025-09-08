@@ -49,8 +49,6 @@ const SCENE_BRIEFING := "res://scenes/briefing.tscn"
 ## Path to hq table scene
 const SCENE_HQ_TABLE := "res://scenes/hq_table.tscn"
 
-var _mission_id: String
-var mission: Dictionary
 var _total_points: int = 0
 var _total_slots: int = 0
 
@@ -64,10 +62,8 @@ var _selected_card: UnitCard = null
 
 ## Build UI, load mission
 func _ready() -> void:
-	_mission_id  = Game.current_mission_id
-	
 	_connect_ui()
-	_load_mission(_mission_id)
+	_load_mission()
 	_refresh_topbar()
 	_refresh_filters()
 	_update_deploy_enabled()
@@ -89,14 +85,9 @@ func _connect_ui() -> void:
 	_pool.request_return_to_pool.connect(_on_request_return_to_pool)
 
 ## Load mission data into the UI
-func _load_mission(id: String) -> void:
-	mission = ContentDB.get_mission(id)
-	if mission.is_empty():
-		push_error("Mission not found: %s" % id)
-		return
-
-	_lbl_title.text = String(mission.get("title", ""))
-	_total_points = int(mission.get("unit_points", 0))
+func _load_mission() -> void:
+	_lbl_title.text = Game.current_scenario.title
+	_total_points = Game.current_scenario.unit_points
 
 	_build_slots()
 	_build_pool()
@@ -106,12 +97,12 @@ func _build_slots() -> void:
 	_slot_data.clear()
 	_total_slots = 0
 
-	var defs: Array = mission.get("unit_slots", [])
+	var defs: Array[UnitSlotData] = Game.current_scenario.unit_slots
 	for def in defs:
-		var title := String(def.get("title", "Slot"))
-		var key := String(def.get("key", "SLOT"))
+		var title := String(def.title)
+		var key := String(def.key)
 		
-		var allowed_roles: Array = def.get("allowed_roles", [])
+		var allowed_roles: Array = def.allowed_roles
 		var slot_id := "%s#%d" % [key, _total_slots + 1]
 		_slot_data[slot_id] = {
 			"key": key,
@@ -132,12 +123,10 @@ func _build_pool() -> void:
 	for child in _pool.get_children():
 		child.queue_free()
 
-	var units: Array = ContentDB.list_recruitable_units(String(mission["id"]))
+	var units: Array[UnitData] = ContentDB.list_recruitable_units(Game.current_scenario.id)
 	for u in units:
-		var unit_id := _uid(u)
-		_units_by_id[unit_id] = u
-		
-		print(unit_card_scene)
+		_units_by_id[u.id] = u
+
 		var card: UnitCard = unit_card_scene.instantiate() as UnitCard
 		card.default_icon = default_unit_icon
 
@@ -146,7 +135,7 @@ func _build_pool() -> void:
 		
 		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		card.unit_selected.connect(_on_card_selected)
-		_cards_by_unit[unit_id] = card
+		_cards_by_unit[u.id] = card
 
 	_refresh_pool_filter()
 
@@ -195,7 +184,7 @@ func _refresh_filters() -> void:
 		b.set_pressed_no_signal(false)
 
 ## Called when a slot requests to assign a unit
-func _on_request_assign_drop(slot_id: String, unit: Dictionary, source_slot_id: String) -> void:
+func _on_request_assign_drop(slot_id: String, unit: UnitData, source_slot_id: String) -> void:
 	# Move from another slot if needed
 	if not source_slot_id.is_empty():
 		if source_slot_id == slot_id:
@@ -205,7 +194,7 @@ func _on_request_assign_drop(slot_id: String, unit: Dictionary, source_slot_id: 
 	_try_assign(slot_id, unit)
 
 ## Attempt to assign a unit to a slot with validation
-func _try_assign(slot_id: String, unit: Dictionary) -> void:
+func _try_assign(slot_id: String, unit: UnitData) -> void:
 	if not _slot_data.has(slot_id):
 		return
 	var slot: Variant = _slot_data[slot_id]
@@ -217,32 +206,31 @@ func _try_assign(slot_id: String, unit: Dictionary) -> void:
 
 	# Validate: role
 	var allowed: Array = slot["allowed_roles"]
-	var role := String(unit.get("role", ""))
+	var role := unit.role
 	if not allowed.has(role):
 		_slots_list.flash_denied(slot_id)
 		return
 
 	# Validate: points
-	var cost := int(unit.get("cost", 0))
+	var cost := unit.cost
 	if _used_points + cost > _total_points:
 		_slots_list.flash_denied(slot_id)
 		return
 
 	# Validate: unit unique
-	var unit_id := _uid(unit)
-	if _assigned_by_unit.has(unit_id):
+	if _assigned_by_unit.has(unit.id):
 		_slots_list.flash_denied(slot_id)
 		return
 
 	# Apply
-	slot["assigned"] = unit_id
+	slot["assigned"] = unit.id
 	_slot_data[slot_id] = slot
-	_assigned_by_unit[unit_id] = slot_id
+	_assigned_by_unit[unit.id] = slot_id
 	_used_points += cost
 
 	# Hide card in pool
-	if _cards_by_unit.has(unit_id):
-		var c: UnitCard = _cards_by_unit[unit_id]
+	if _cards_by_unit.has(unit.id):
+		var c: UnitCard = _cards_by_unit[unit.id]
 		if is_instance_valid(c):
 			c.visible = false
 
@@ -254,7 +242,7 @@ func _try_assign(slot_id: String, unit: Dictionary) -> void:
 	_on_card_selected(unit)
 
 ## Called when a slot unit is returned to pool
-func _on_request_return_to_pool(slot_id: String, _unit: Dictionary) -> void:
+func _on_request_return_to_pool(slot_id: String, _unit: UnitData) -> void:
 	_unassign_slot(slot_id)
 
 ## Unassign a unit from the given slot
@@ -302,10 +290,8 @@ func _recompute_logistics() -> void:
 	var repair := 0
 
 	for unit_id in _assigned_by_unit.keys():
-		var u: Dictionary = _units_by_id[unit_id]
-		if not u.has("throughput"):
-			continue
-		var thr: Dictionary = u["throughput"]
+		var u: UnitData = _units_by_id[unit_id]
+		var thr: Dictionary = u.throughput
 
 		if thr.has("equipment"):
 			equipment += int(thr["equipment"])
@@ -326,39 +312,36 @@ func _update_logistics_labels(equipment: int, fuel: int, medical: int, repair: i
 	_lbl_rep.text = "Repair: %d" % repair
 
 ## Handle card clicked in pool
-func _on_card_selected(unit: Dictionary) -> void:
+func _on_card_selected(unit: UnitData) -> void:
 	_show_unit_stats(unit)
 	_update_card_selection(unit)
 
 ## Highlight the selected card in the pool
-func _update_card_selection(unit: Dictionary) -> void:
+func _update_card_selection(unit: UnitData) -> void:
 	if _selected_card and is_instance_valid(_selected_card):
 		_selected_card.set_selected(false)
 
-	var uid := StringName(unit.get("id", ""))
-	if _cards_by_unit.has(uid):
-		var c: UnitCard = _cards_by_unit[uid]
+	if _cards_by_unit.has(unit.id):
+		var c: UnitCard = _cards_by_unit[unit.id]
 		if is_instance_valid(c) and c.visible:
 			_selected_card = c
 			_selected_card.set_selected(true)
 
 ## Inspect unit from slot list and show stats
-func _on_request_inspect_from_tree(unit: Dictionary) -> void:
+func _on_request_inspect_from_tree(unit: UnitData) -> void:
 	_show_unit_stats(unit)
 	_update_card_selection(unit)
 
 ## Update stats panel with selected unit data
-func _show_unit_stats(unit: Dictionary) -> void:
-	var stats: Dictionary = unit.get("stats", {})
-	var state: Dictionary = unit.get("state", {})
-	_lbl_vet.text = "Veterancy: %s" % String(unit.get("veterancy", ""))
-	_lbl_att.text = "Attack: %d" % int(stats.get("attack", 0))
-	_lbl_def.text = "Defence: %d" % int(stats.get("defense", int(stats.get("defence", 0))))
-	_lbl_spot.text = "Spotting Distance: %dm" % int(stats.get("spot_m", 0))
-	_lbl_range.text = "Engagement Range: %dm" % int(stats.get("range_m", 0))
-	_lbl_morale.text = "Morale: %d%%" % int(round(100.0 * float(stats.get("morale", 0.0))))
-	_lbl_speed.text = "Ground Speed: %dkm/h" % int(stats.get("speed_kph", 0))
-	_lbl_coh.text = "Cohesion: %d%%" % int(round(100.0 * float(state.get("cohesion", 0.0))))
+func _show_unit_stats(unit: UnitData) -> void:
+	_lbl_vet.text = "Veterancy: %d" % unit.experience
+	_lbl_att.text = "Attack: %d" % unit.attack
+	_lbl_def.text = "Defence: %d" % unit.defense
+	_lbl_spot.text = "Spotting Distance: %dm" % unit.spot_m
+	_lbl_range.text = "Engagement Range: %dm" % unit.range_m
+	_lbl_morale.text = "Morale: %d%%" % unit.morale
+	_lbl_speed.text = "Ground Speed: %dkm/h" % unit.speed_kph
+	_lbl_coh.text = "Cohesion: %d%%" % unit.cohesion
 
 ## Go back to briefing scene
 func _on_back_pressed() -> void:
@@ -376,7 +359,7 @@ func _on_deploy_pressed() -> void:
 	if _assigned_by_unit.size() != _total_slots:
 		return
 	var loadout := _export_loadout()
-	Game.set_mission_loadout(loadout)
+	Game.set_scenario_loadout(loadout)
 	Game.goto_scene(SCENE_HQ_TABLE)
 
 
@@ -396,11 +379,7 @@ func _export_loadout() -> Dictionary:
 			"unit_id": String(unit_id)
 		})
 	return {
-		"mission_id": _mission_id,
+		"mission_id": Game.current_scenario.id,
 		"points_used": _used_points,
 		"assignments": arr
 	}
-
-## Get string unit id from a unit dictionary
-func _uid(u: Dictionary) -> String:
-	return String(u.get("id", ""))

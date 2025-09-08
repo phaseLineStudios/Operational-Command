@@ -25,7 +25,7 @@ var title: String = ""
 var allowed_roles: Array = []
 var index := 1
 var max_count := 1
-var _assigned_unit: Dictionary = {}
+var _assigned_unit: UnitData
 
 var _base_style: StyleBox
 var _is_hovered := false
@@ -63,7 +63,7 @@ func configure(id: String, slot_title: String, roles: Array, i: int, m: int) -> 
 	_apply_style()
 
 ## Assign a unit to this slot and refresh visuals.
-func set_assignment(unit: Dictionary) -> void:
+func set_assignment(unit: UnitData) -> void:
 	_assigned_unit = unit.duplicate(true)
 	_refresh_labels()
 	_update_icon()
@@ -71,7 +71,7 @@ func set_assignment(unit: Dictionary) -> void:
 
 ## Clear the assigned unit and refresh visuals.
 func clear_assignment() -> void:
-	_assigned_unit = {}
+	_assigned_unit = null
 	_refresh_labels()
 	_update_icon()
 	_apply_style()
@@ -79,25 +79,22 @@ func clear_assignment() -> void:
 ## Update Title, and Type.
 func _refresh_labels() -> void:
 	var roles_str := ", ".join(allowed_roles)
-	if _assigned_unit.is_empty():
+	if not _assigned_unit:
 		_lbl_title.text = "[Empty] • %s" % title
 		_lbl_slot.text = "Slot %d/%d • %s" % [index, max_count, roles_str]
 	else:
-		var unit_title: String = _assigned_unit.get("title", _assigned_unit.get("id", ""))
+		var unit_title: String = _assigned_unit.title
 		_lbl_title.text = "%s • %s" % [unit_title, title]
 		
-		var unit_role: String = _assigned_unit.get("role", "")
+		var unit_role: String = _assigned_unit.role
 		_lbl_slot.text = "Slot %d/%d • %s" % [index, max_count, unit_role]
 
 ## Set icon to assigned unit's icon or fall back to exported default.
 func _update_icon() -> void:
 	var tex: Texture2D = null
-	if not _assigned_unit.is_empty():
-		var path := String(_assigned_unit.get("icon", ""))
-		if path != "":
-			var loaded := load(path)
-			if loaded is Texture2D:
-				tex = loaded
+	if _assigned_unit:
+		if _assigned_unit.icon:
+			tex = _assigned_unit.icon
 	if tex == null:
 		tex = default_icon
 	_icon.texture = tex
@@ -106,7 +103,7 @@ func _update_icon() -> void:
 func _apply_style() -> void:
 	if _deny_hover and deny_hover_style:
 		add_theme_stylebox_override("panel", deny_hover_style)
-	elif not _assigned_unit.is_empty():
+	elif _assigned_unit:
 		if _is_hovered and hover_style_filled:
 			add_theme_stylebox_override("panel", hover_style_filled)
 		elif filled_style:
@@ -140,8 +137,8 @@ func _can_drop_data(_pos: Vector2, data: Variant) -> bool:
 		_deny_hover = false
 		_apply_style()
 		return false
-	var unit: Dictionary = data.get("unit", {})
-	var can := allowed_roles.has(String(unit.get("role", "")))
+	var unit: UnitData = data.get("unit", {})
+	var can := allowed_roles.has(String(unit.role))
 	_deny_hover = not can
 	_apply_style()
 	return can
@@ -150,7 +147,7 @@ func _can_drop_data(_pos: Vector2, data: Variant) -> bool:
 func _drop_data(_pos: Vector2, data: Variant) -> void:
 	if not _can_drop_data(_pos, data):
 		return
-	var unit: Dictionary = data["unit"]
+	var unit: UnitData = data["unit"]
 	var source_sid := String(data.get("slot_id", ""))
 	emit_signal("request_assign_drop", slot_id, unit, source_sid)
 
@@ -159,7 +156,7 @@ func _get_drag_data(_pos: Vector2) -> Variant:
 	if _assigned_unit.is_empty():
 		return null
 	var p := Label.new()
-	p.text = String(_assigned_unit.get("title", _assigned_unit.get("id", "")))
+	p.text = _assigned_unit.title
 	set_drag_preview(p)
 	return {
 		"type":"assigned_unit",
