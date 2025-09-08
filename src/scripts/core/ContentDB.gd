@@ -99,18 +99,28 @@ func get_objects(dir_path: String, ids: Array) -> Array:
 	return out
 
 ## Campaigns helpers.
-func get_campaign(id: String) -> Dictionary:
-	return get_object("campaigns", id)
+## Get Campaign by ID
+func get_campaign(id: String) -> CampaignData:
+	var d := get_object("campaigns", id)
+	if d.is_empty():
+		push_warning("Campaign not found: %s" % id)
+		return null
+	return CampaignData.deserialize(d)
 
+## Get multiple campaigns by IDs
 func get_campaigns(ids: Array) -> Array:
-	return get_objects("campaigns", ids)
+	var out: Array[CampaignData] = []
+	for raw in ids:
+		var s := get_campaign(String(raw))
+		if s: out.append(s)
+	return out
 
+## List all campaigns
 func list_campaigns() -> Array:
 	var camps := get_all_objects("campaigns")
 	if camps.is_empty():
 		return []
 
-	# decorate with index to preserve stable order when orders are equal
 	var decorated: Array = []
 	var i := 0
 	for c in camps:
@@ -124,114 +134,277 @@ func list_campaigns() -> Array:
 		return a[1] < b[1] if a[0] == b[0] else a[0] < b[0]
 	)
 
-	var out: Array = []
+	var out: Array[CampaignData] = []
 	for item in decorated:
-		out.append(item[2])
+		var d: Dictionary = item[2]
+		var res := CampaignData.deserialize(d)
+		if res != null: out.append(res)
 	return out
 
 ## Missions helpers.
-func get_mission(id: String) -> Dictionary:
-	return get_object("missions", id)
+## Get Mission by ID
+func get_scenario(id: String) -> ScenarioData:
+	var d := get_object("scenarios", id)
+	if d.is_empty():
+		push_warning("Mission not found: %s" % id)
+		return null
+	return ScenarioData.deserialize(d)
 
-func get_missions(ids: Array) -> Array:
-	return get_objects("missions", ids)
+## Get multiple scenarios by IDs
+func get_scenarios(ids: Array) -> Array[CampaignData]:
+	var out: Array[CampaignData] = []
+	for raw in ids:
+		var s := get_campaign(String(raw))
+		if s: out.append(s)
+	return out
 
-func list_missions() -> Array:
-	return get_all_objects("missions")
-	
-func list_missions_for_campaign(campaign_id: StringName) -> Array:
-	var camp := get_campaign(campaign_id)
+## list all scenarios
+func list_scenarios() -> Array[ScenarioData]:
+	var camps := get_all_objects("scenarios")
+	if camps.is_empty():
+		return []
+
+	var out: Array[ScenarioData] = []
+	for item in camps:
+		var res := ScenarioData.deserialize(item)
+		if res != null: out.append(res)
+	return out
+
+## List all scenarios for a campaign by ID
+func list_scenarios_for_campaign(campaign_id: StringName) -> Array[ScenarioData]:
+	var camp := get_object("campaigns", String(campaign_id))
 	if camp.is_empty():
 		push_warning("Campaign not found: %s" % campaign_id)
 		return []
-	if not camp.has("missions") or typeof(camp["missions"]) != TYPE_ARRAY:
-		push_warning("Campaign missing 'missions' array: %s" % campaign_id)
+
+	var ids: Array = []
+	if typeof(camp["scenarios"]) == TYPE_ARRAY:
+		ids = camp["scenarios"]
+	else:
+		push_warning("Campaign missing 'scenarios' array: %s" % campaign_id)
 		return []
 
-	var ids: Array = camp["missions"]
 	var decorated: Array = []
 	var i := 0
 	for id_val in ids:
 		var id_str := String(id_val)
-		var m := get_mission(id_str)
+		var m_dict := get_object("scenarios", id_str)
 		var ord := 2147483647
-		if not m.is_empty():
-			ord = int(m.get("order", ord))
+		if not m_dict.is_empty():
+			if m_dict.has("order"):
+				ord = int(m_dict["order"])
+			elif m_dict.has("scenario_order"):
+				ord = int(m_dict["scenario_order"])
 		else:
-			push_warning("Mission not found for id: %s" % id_str)
-			m = {}
-		decorated.append([ord, i, m])
+			push_warning("Scenario not found for id: %s" % id_str)
+		decorated.append([ord, i, id_str])
 		i += 1
 
 	decorated.sort_custom(func(a, b):
 		return a[1] < b[1] if a[0] == b[0] else a[0] < b[0]
 	)
 
-	var out: Array = []
+	var out: Array[ScenarioData] = []
 	for item in decorated:
-		out.append(item[2])
+		var mid := String(item[2])
+		var m_res := get_scenario(mid)
+		if m_res != null:
+			out.append(m_res)
 	return out
 
 ## Briefing helpers.
-## Get a briefing by id OR by mission id (smart resolver).
-func get_briefing(id_or_mission_id: String) -> Dictionary:
-	var brief := get_object("briefs", id_or_mission_id)
-	if not brief.is_empty():
-		return brief
+## Get a briefing by id or by mission id
+func get_briefing(id_or_mission_id: String) -> BriefData:
+	var brief_d := get_object("briefs", id_or_mission_id)
+	if brief_d.is_empty():
+		var m_json := get_object("scenarios", id_or_mission_id)
+		if m_json.is_empty():
+			return null
+		var link_id := ""
+		if m_json.has("briefing"):
+			link_id = String(m_json["briefing"])
+		if link_id != "":
+			brief_d = get_object("briefs", link_id)
+			if brief_d.is_empty():
+				return null
+		elif m_json.has("briefing") and typeof(m_json["briefing"]) == TYPE_DICTIONARY:
+			brief_d = m_json["briefing"]
+			if typeof(brief_d) != TYPE_DICTIONARY:
+				return null
+	return BriefData.deserialize(brief_d)
 
-	var m := get_mission(id_or_mission_id)
-	if m.is_empty():
-		return {}
+## Get multiple briefings by ids
+func get_briefings(ids: Array) -> Array[BriefData]:
+	var out: Array[BriefData] = []
+	for raw in ids:
+		var u: BriefData = get_briefing(String(raw))
+		if u != null:
+			out.append(u)
+	return out
 
-	var link_id := ""
-	if m.has("briefing"):
-		link_id = String(m["briefing"])
-	if link_id != "":
-		brief = get_object("briefs", link_id)
-		if not brief.is_empty():
-			return brief
+## List all briefings
+func list_briefings() -> Array[BriefData]:
+	var camps := get_all_objects("briefs")
+	if camps.is_empty():
+		return []
 
-	if m.has("briefing") and typeof(m["briefing"]) == TYPE_DICTIONARY:
-		return m["briefing"]
-
-	return {}
-
-## Get multiple briefings by ids (keeps order).
-func get_briefings(ids: Array) -> Array:
-	return get_objects("briefs", ids)
-
-## List all briefings.
-func list_briefings() -> Array:
-	return get_all_objects("briefs")
+	var out: Array[BriefData] = []
+	for item in camps:
+		var res := BriefData.deserialize(item)
+		if res != null: out.append(res)
+	return out
 
 ## Convenience explicit mission briefing resolver.
-func get_briefing_for_mission(mission_id: String) -> Dictionary:
+func get_briefing_for_mission(mission_id: String) -> BriefData:
 	return get_briefing(mission_id)
 
 ## Units helpers.
-func get_unit(id: String) -> Dictionary:
-	return get_object("units", id)
+func get_unit(id: String) -> UnitData:
+	var d := get_object("units", id)
+	if d.is_empty():
+		push_warning("Unit not found: %s" % id)
+		return null
+	return UnitData.deserialize(d)
 
-func get_units(ids: Array) -> Array:
-	return get_objects("units", ids)
+func get_units(ids: Array) -> Array[UnitData]:
+	var out: Array[UnitData] = []
+	for raw in ids:
+		var u: UnitData = get_unit(String(raw))
+		if u != null:
+			out.append(u)
+	return out
 
-func list_units() -> Array:
-	return get_all_objects("units")
+func list_units() -> Array[UnitData]:
+	var camps := get_all_objects("units")
+	if camps.is_empty():
+		return []
 
-func list_recruitable_units(mission_id: String):
-	var mission := get_mission(mission_id)
+	var out: Array[UnitData] = []
+	for item in camps:
+		var res := UnitData.deserialize(item)
+		if res != null: out.append(res)
+	return out
+
+## Get list of reqreuitable units for scenario
+func list_recruitable_units(mission_id: String) -> Array[UnitData]:
+	var mission := get_object("scenarios", mission_id)
 	if mission.is_empty():
 		push_warning("Mission not found: %s" % mission_id)
 		return []
-	if not mission.has("recruitable_units") or typeof(mission["recruitable_units"]) != TYPE_ARRAY:
-		push_warning("Mission missing 'recruitable_units' array: %s" % mission_id)
+
+	var ids: Array = []
+	if mission.has("recruitable_units") and typeof(mission["recruitable_units"]) == TYPE_ARRAY:
+		# legacy/simple schema
+		ids = mission["recruitable_units"]
+	elif mission.has("units") and typeof(mission["units"]) == TYPE_DICTIONARY:
+		var um: Dictionary = mission["units"]
+		if um.has("unit_recruits_ids") and typeof(um["unit_recruits_ids"]) == TYPE_ARRAY:
+			# new schema produced by ScenarioData.serialize()
+			ids = um["unit_recruits_ids"]
+		else:
+			push_warning("Mission 'units' present but missing 'unit_recruits_ids': %s" % mission_id)
+	else:
+		push_warning("Mission missing recruitable units list: %s" % mission_id)
 		return []
-	var ids: Array = mission["recruitable_units"]
-	var out: Array = []
-	for id in ids:
-		var u := get_unit(String(id))
-		if u.is_empty():
-			push_warning("Unit not found for id: %s" % id)
-			continue
-		out.append(u)
+
+	var out: Array[UnitData] = []
+	for id_val in ids:
+		var u := get_unit(String(id_val))
+		if u != null:
+			out.append(u)
+		else:
+			push_warning("Unit not found for id: %s" % String(id_val))
 	return out
+
+## Serialization helpers
+## Serialize Vector2
+func v2(v: Vector2) -> Dictionary:
+	return {"x": v.x, "y": v.y}
+
+## Deserialize Vector2
+func v2_from(d: Variant) -> Vector2:
+	if typeof(d) == TYPE_DICTIONARY and d.has("x") and d.has("y"):
+		return Vector2(float(d["x"]), float(d["y"]))
+	if typeof(d) == TYPE_ARRAY and d.size() >= 2:
+		return Vector2(float(d[0]), float(d[1]))
+	return Vector2.ZERO
+
+## Serialize PackedVector2Array
+func v2arr_serialize(a: PackedVector2Array) -> Array:
+	var out: Array = []
+	for p in a:
+		out.append(v2(p))
+	return out
+
+## deserialize PackedVector2Array
+func v2arr_deserialize(a: Variant) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	if typeof(a) != TYPE_ARRAY:
+		return out
+	out.resize(a.size())
+	for i in a.size():
+		out[i] = v2_from(a[i])
+	return out
+
+## serialize a resource
+func res_path_or_null(res: Variant) -> Variant:
+	if typeof(res) == TYPE_STRING:
+		var s := String(res)
+		@warning_ignore("incompatible_ternary")
+		return s if s != "" else null
+	if res is Resource and String(res.resource_path) != "":
+		return res.resource_path
+	return null
+
+## Deserialize a resource
+func load_res(path: Variant) -> Variant:
+	if typeof(path) == TYPE_STRING:
+		var s := String(path)
+		if s != "":
+			return load(s)
+	return null
+
+## Serialize a image to Base 64
+func image_to_png_b64(img: Image) -> String:
+	if img == null or img.is_empty():
+		return ""
+	var png: PackedByteArray = img.save_png_to_buffer()
+	return Marshalls.raw_to_base64(png)
+
+## Deserialize a image from Base 64
+func png_b64_to_image(b64: Variant) -> Image:
+	if typeof(b64) != TYPE_STRING or String(b64) == "":
+		return Image.new()
+	var bytes: PackedByteArray = Marshalls.base64_to_raw(String(b64))
+	var img := Image.new()
+	var err := img.load_png_from_buffer(bytes)
+	return img if err == OK else Image.new()
+
+## Serialize resources to IDs
+func ids_from_resources(arr: Array, id_prop: String = "id") -> Array:
+	var out: Array = []
+	for r in arr:
+		if r != null and r.has_method("get"):
+			var rid = r.get(id_prop)
+			if rid != null and String(rid) != "":
+				out.append(String(rid))
+	return out
+
+## Deserialize resources from IDs
+func resources_from_ids(ids: Array, loader: Callable) -> Array:
+	var out: Array = []
+	if typeof(ids) != TYPE_ARRAY:
+		return out
+	for raw in ids:
+		var id_str := String(raw)
+		var res: Variant = loader.call(id_str)
+		if res != null:
+			out.append(res)
+	return out
+
+## Safely duplicate a dictionary or array
+func safe_dup(v: Variant) -> Variant:
+	match typeof(v):
+		TYPE_DICTIONARY: return (v as Dictionary).duplicate(true)
+		TYPE_ARRAY: return (v as Array).duplicate(true)
+		_: return v

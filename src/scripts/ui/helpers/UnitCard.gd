@@ -12,7 +12,7 @@ signal unit_selected(unit: Dictionary)
 ## Selected Style
 @export var selected_style: StyleBox
 
-var unit: Dictionary
+var unit: UnitData
 var unit_id: String
 var default_icon: Texture2D
 var _base_style: StyleBox 
@@ -36,9 +36,8 @@ func _ready() -> void:
 		_base_style = sb.duplicate()  
 
 ## Initialize card visual with a unit dictionary.
-func setup(u: Dictionary) -> void:
+func setup(u: UnitData) -> void:
 	unit = u
-	unit_id = String(u.get("id", ""))
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	custom_minimum_size = Vector2(0, 64)
@@ -50,19 +49,16 @@ func setup(u: Dictionary) -> void:
 	_role.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	# Text
-	_name.text = String(u.get("title", unit_id))
+	_name.text = String(u.title)
 	_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_role.text = String(u.get("role", ""))
-	_cost.text = "Cost: %d" % int(u.get("cost", 0))
-	tooltip_text = "%s (%s) • Cost: %d" % [_name.text, _role.text, int(u.get("cost", 0))]
+	_role.text = String(u.role)
+	_cost.text = "Cost: %d" % int(u.cost if u.cost else 0)
+	tooltip_text = "%s (%s) • Cost: %d" % [_name.text, _role.text, int(u.cost if u.cost else 0)]
 
 	# Icon
 	var tex: Texture2D = null
-	var icon_path := String(u.get("icon", ""))
-	if icon_path != "":
-		var loaded := load(icon_path)
-		if loaded is Texture2D:
-			tex = loaded
+	if u.icon:
+		tex = u.icon
 	if tex == null and default_icon:
 		tex = default_icon
 	if tex == null and fallback_default_icon:

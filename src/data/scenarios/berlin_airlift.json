@@ -1,11 +1,11 @@
 {
-	"id": "wg_border_probe",
-	"title": "Border Probe",
-	"description": "Soviet recon-in-force tests your line near Fulda.",
-	"image": "res://campaigns/previews/wg_border_probe.png",
-	"difficulty": "Normal",
-	"pos": [0.52, 0.55],
-	"order": 1,
+	"id": "berlin_airlift",
+	"title": "Airlift Scramble",
+	"description": "Secure air corridors while ground routes are contested.",
+	"preview_path": "res://campaigns/previews/berlin_airlift.png",
+	"difficulty": 0,
+	"map_position": [0.60, 0.30],
+	"order": 0,
 	"unit_points": 1250,
 	"unit_slots": [
 		{ "key": "COMPANY_HQ", "title": "Company HQ", "allowed_roles": ["HQ"] },

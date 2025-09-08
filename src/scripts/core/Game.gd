@@ -12,15 +12,15 @@ signal campaign_selected(campaign_id: StringName)
 signal save_selected(save_id: StringName)
 
 ## Emitted when a mission is selected.
-signal mission_selected(mission_id: StringName)
+signal scenario_selected(mission_id: StringName)
 
 ## Emitted when a mission loadout is selected
-signal mission_loadout_selected(loadout: Dictionary)
+signal scenario_loadout_selected(loadout: Dictionary)
 
-var current_campaign_id: StringName = &""
+var current_campaign: CampaignData
 var current_save_id: StringName = &""
-var current_mission_id: StringName = &""
-var current_mission_loadout: Dictionary = {}
+var current_scenario: ScenarioData
+var current_scenario_loadout: Dictionary = {}
 
 ## Change to scene at [param path]; logs error if missing.
 func goto_scene(path: String) -> void:
@@ -30,9 +30,9 @@ func goto_scene(path: String) -> void:
 		push_error("Scene not found: %s" % path)
 
 ## Set current campaign and emit [signal campaign_selected].
-func select_campaign(campaign_id: StringName) -> void:
-	current_campaign_id = campaign_id
-	emit_signal("campaign_selected", campaign_id)
+func select_campaign(campaign: CampaignData) -> void:
+	current_campaign = campaign
+	emit_signal("campaign_selected", campaign.id)
 
 ## Set current save and emit [signal save_selected].
 func select_save(save_id: StringName) -> void:
@@ -40,11 +40,11 @@ func select_save(save_id: StringName) -> void:
 	emit_signal("save_selected", save_id)
 
 ## Set current mission and emit [signal mission_selected].
-func select_mission(mission_id: StringName) -> void:
-	current_mission_id = mission_id
-	emit_signal("mission_selected", mission_id)
+func select_scenario(scenario: ScenarioData) -> void:
+	current_scenario = scenario
+	emit_signal("scenario_selected", scenario.id)
 
 ## Set current mission loadout and emit [signal mission_loadout_selected]
-func set_mission_loadout(loadout: Dictionary) -> void:
-	current_mission_loadout = loadout
-	emit_signal("mission_loadout_selected", loadout)
+func set_scenario_loadout(loadout: Dictionary) -> void:
+	current_scenario_loadout = loadout
+	emit_signal("scenario_loadout_selected", loadout)

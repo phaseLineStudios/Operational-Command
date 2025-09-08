@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bogs2qcpwnuwd"]
 
 [ext_resource type="Script" uid="uid://c5k2l7sek5n6j" path="res://scripts/ui/MissionSelect.gd" id="1_f8bqk"]
-[ext_resource type="Texture2D" uid="uid://d2mdunnxpb10w" path="res://campaigns/maps/west_ger_map.png" id="2_qrooi"]
+[ext_resource type="Texture2D" uid="uid://cu44nf8ee7fri" path="res://campaigns/campaign/west_ger_map.png" id="2_qrooi"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qrooi"]
 bg_color = Color(0, 0, 0, 0.819608)
