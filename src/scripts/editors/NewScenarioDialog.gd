@@ -34,8 +34,6 @@ func _on_primary_pressed() -> void:
 	var data := ScenarioData.new()
 	data.title = title_input.text
 	data.description = desc_input.text
-	data.preview_path = thumb_path.text
-	data.terrain_path = terrain_path.text
 	data.preview = thumbnail
 	data.terrain = terrain
 	emit_signal("request_create", data)
