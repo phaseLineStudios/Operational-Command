@@ -65,7 +65,7 @@ func serialize() -> Dictionary:
 		"admin_logi": frago_logi,
 
 		"intel_board": {
-			"board_texture_path": (board_texture.resource_path if board_texture and board_texture.resource_path != "" else null),
+			"board_texture_path": (board_texture.resource_path as Variant if board_texture and board_texture.resource_path != "" else null as Variant),
 			"items": items
 		}
 	}

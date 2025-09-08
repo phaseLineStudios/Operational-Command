@@ -33,7 +33,7 @@ static func deserialize(data: Variant) -> BriefItemData:
 	var b := BriefItemData.new()
 	b.id = data.get("id", b.id)
 	b.title = data.get("title", b.title)
-	b.type = int(data.get("type", b.type))
+	b.type = int(data.get("type", b.type)) as ItemType
 
 	var res_path = data.get("resource_path", null)
 	if res_path != null and typeof(res_path) == TYPE_STRING and res_path != "":

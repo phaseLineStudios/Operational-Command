@@ -10,7 +10,7 @@ enum unitSize { Team, Squad, Platoon, Company, Battalion }
 ## Human-readable title of the unit
 @export var title: String
 ## Unit icon texture
-@export var icon: Texture2D
+@export var icon: Texture2D = preload("res://assets/textures/units/nato_unknown_platoon.png")
 ## role for this unit
 @export var role: String = "INF"
 ## Allowed slot codes where this unit can be deployed
@@ -62,21 +62,12 @@ enum unitSize { Team, Squad, Platoon, Company, Battalion }
 ## Doctrine code used by the AI for this unit.
 @export var doctrine: String = "nato_inf_1983"
 
-# Load default unit icon
-func _init():
-	var res := Image.new()
-	var err := res.load("res://assets/textures/units/nato_unknown_platoon.png")
-	if err:
-		push_error("Default unit icon missing or moved")
-		return
-	icon = ImageTexture.create_from_image(res)
-
 ## Serialzie this unit to JSON
 func serialize() -> Dictionary:
 	return {
 		"id": id,
 		"title": title,
-		"icon_path": (icon.resource_path if icon and icon.resource_path != "" else null),
+		"icon_path": (icon.resource_path as Variant if icon and icon.resource_path != "" else null as Variant),
 		"role": role,
 		"allowed_slots": allowed_slots.duplicate(),
 		"cost": cost,
@@ -117,8 +108,13 @@ static func deserialize(data: Variant) -> UnitData:
 	u.id = data.get("id", u.id)
 	u.title = data.get("title", u.title)
 	u.role = data.get("role", u.role)
-	u.allowed_slots = data.get("allowed_slots", u.allowed_slots)
 	u.cost = int(data.get("cost", u.cost))
+	var slots = data.get("allowed_slots", null)
+	if typeof(slots) == TYPE_ARRAY:
+		var tmp_slots: Array[String] = []
+		for s in slots:
+			tmp_slots.append(str(s))
+		u.allowed_slots = tmp_slots
 
 	var icon_path = data.get("icon_path", null)
 	if icon_path != null and typeof(icon_path) == TYPE_STRING and icon_path != "":
@@ -126,7 +122,7 @@ static func deserialize(data: Variant) -> UnitData:
 		if tex is Texture2D:
 			u.icon = tex
 
-	u.size = int(data.get("size", u.size))
+	u.size = int(data.get("size", u.size)) as unitSize
 	u.strength = int(data.get("strength", u.strength))
 	u.equipment = data.get("equipment", u.equipment)
 	u.experience = float(data.get("experience", u.experience))
@@ -148,7 +144,12 @@ static func deserialize(data: Variant) -> UnitData:
 		u.cohesion = float(state.get("cohesion", u.cohesion))
 
 	u.throughput = data.get("throughput", u.throughput)
-	u.equipment_tags = data.get("equipment_tags", u.equipment_tags)
 	u.doctrine = data.get("doctrine", u.doctrine)
+	var equipment_t = data.get("equipment_tags", null)
+	if typeof(slots) == TYPE_ARRAY:
+		var tmp_slots: Array[String] = []
+		for e in equipment_t:
+			tmp_slots.append(str(e))
+		u.equipment_tags = tmp_slots
 
 	return u

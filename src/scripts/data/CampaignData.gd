@@ -30,8 +30,8 @@ func serialize() -> Dictionary:
 		"id": id,
 		"title": title,
 		"description": description,
-		"preview_path": (preview.resource_path if preview and preview.resource_path != "" else null),
-		"scenario_bg_path": (scenario_bg.resource_path if scenario_bg and scenario_bg.resource_path != "" else null),
+		"preview_path": (preview.resource_path as Variant if preview and preview.resource_path != "" else null as Variant),
+		"scenario_bg_path": (scenario_bg.resource_path as Variant if scenario_bg and scenario_bg.resource_path != "" else null as Variant),
 		"scenarios": scenario_dicts,
 		"order": order,
 		"saves": saves.duplicate()

@@ -42,7 +42,7 @@ func build_from_slots(slots: Dictionary) -> void:
 		_items_by_slot[sid] = item
 
 ## Apply an assigned unit to a specific SlotItem by slot_id.
-func set_assignment(slot_id: String, unit: Dictionary) -> void:
+func set_assignment(slot_id: String, unit: UnitData) -> void:
 	var item: SlotItem = _items_by_slot.get(slot_id, null)
 	if item: 
 		item.set_assignment(unit)
