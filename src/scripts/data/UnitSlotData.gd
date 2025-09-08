@@ -1,8 +1,11 @@
 extends Resource
 class_name UnitSlotData
 
+## A unique key identifying this slot.
 @export var key: String = "PLT_1"
+## A human-readable title for the slot.
 @export var title: String = "1st Platoon"
+## A list of allowed roles
 @export var allowed_roles: Array[String] = ["INF", "MOTOR", "MECH"]
 
 ## Serialize data to JSON
