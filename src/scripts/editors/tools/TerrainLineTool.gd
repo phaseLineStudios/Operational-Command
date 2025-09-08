@@ -94,10 +94,7 @@ func build_options_ui(p: Control) -> void:
 			if _width_before < 0.0:
 				_width_before = float(data.lines[_edit_idx].get("width_px", line_width_px))
 			line_width_px = new_w
-			var surf: Dictionary = data.lines[_edit_idx]
-			surf["width_px"] = line_width_px
-			data.lines[_edit_idx] = surf
-			_emit_data_changed()
+			data.set_line_style(_edit_id, line_width_px)
 		else:
 			line_width_px = new_w
 	)
@@ -186,7 +183,7 @@ func handle_view_input(event: InputEvent) -> bool:
 				var pts := _current_points()
 				if _drag_idx >= 0 and _drag_idx < pts.size():
 					pts[_drag_idx] = local_m
-					_set_current_points(pts)
+					data.set_line_points(_edit_id, pts)
 		return false
 	
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
@@ -220,8 +217,8 @@ func handle_view_input(event: InputEvent) -> bool:
 					after["points"] = pts_after
 
 					editor.history.push_item_edit_by_id(data, "lines", before.get("id"), before, after, "Add line point")
+					data.set_surface_points(int(before.id), pts_after)
 
-					_emit_data_changed()
 					_queue_preview_redraw()
 			return true
 		else:
@@ -247,7 +244,7 @@ func handle_view_input(event: InputEvent) -> bool:
 						after["points"] = pts
 						editor.history.push_item_edit_by_id(data, "lines", before.get("id"), before, after, "Remove line point")
 						data.lines[_edit_idx] = after
-						_set_current_points(pts)
+						data.set_line_points(_edit_id, pts)
 						_queue_preview_redraw()
 				return true
 
@@ -283,11 +280,10 @@ func _start_new_line() -> void:
 		"closed": false,
 		"width_px": line_width_px
 	}
-	data.lines.append(line)
+	data.add_line(line)
 	editor.history.push_item_insert(data, "lines", line, "Add line", data.lines.size())
 	_edit_id = pid
 	_edit_idx = data.lines.size() - 1
-	_emit_data_changed()
 
 func _current_points() -> PackedVector2Array:
 	if data == null: 
@@ -296,18 +292,6 @@ func _current_points() -> PackedVector2Array:
 	if idx < 0: 
 		return PackedVector2Array()
 	return data.lines[idx].get("points", PackedVector2Array())
-
-func _set_current_points(pts: PackedVector2Array) -> void:
-	if data == null: 
-		return
-	var idx := _ensure_current_line_idx()
-	if idx < 0: 
-		return
-	var s: Dictionary = data.lines[idx]
-	s["points"] = pts
-	data.lines[idx] = s
-	_emit_data_changed()
-	_queue_preview_redraw()
 
 func _find_edit_index_by_id() -> int:
 	if data == null or _edit_id < 0: 
@@ -327,13 +311,12 @@ func _cancel_edit_delete_line() -> void:
 		return
 	var copy := d.duplicate(true)
 	editor.history.push_item_erase_by_id(data, "lines", id, copy, "Delete line", _edit_idx)
-	data.lines.remove_at(_edit_idx)
+	data.remove_line(_edit_id)
 	_edit_id = -1
 	_edit_idx = -1
 	_drag_idx = -1
 	_hover_idx = -1
 	_is_drag = false
-	_emit_data_changed()
 
 func _finish_edit_keep_line() -> void:
 	_edit_id = -1
@@ -341,16 +324,13 @@ func _finish_edit_keep_line() -> void:
 	_drag_idx = -1
 	_hover_idx = -1
 	_is_drag = false
-	_emit_data_changed()
 
 func _sync_edit_brush_to_active_if_needed() -> void:
 	if data == null or _edit_idx < 0 or active_brush == null: 
 		return
 	var s: Dictionary = data.lines[_edit_idx]
 	if s.get("brush") != active_brush:
-		s["brush"] = active_brush
-		data.lines[_edit_idx] = s
-		_emit_data_changed()
+		data.set_line_brush(_edit_id, active_brush)
 
 func _pick_point(pos: Vector2) -> int:
 	var terrain_pos = editor.map_to_terrain(pos)
@@ -376,14 +356,6 @@ func _label(t: String) -> Label:
 func _queue_free_children(node: Control):
 	for n in node.get_children():
 		n.queue_free()
-
-func _emit_data_changed() -> void:
-	if data == null: 
-		return
-	if data.has_method("emit_changed"):
-		data.emit_changed()
-	elif data.has_signal("changed"):
-		data.emit_signal("changed")
 
 ## Ensure _edit_idx points at the line with _edit_id, return index or -1
 func _ensure_current_line_idx() -> int:
