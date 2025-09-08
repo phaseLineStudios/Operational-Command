@@ -120,6 +120,7 @@ func _set_data(d: TerrainData):
 	data = d
 	if data:
 		data.changed.connect(_on_data_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
+		clear_render_error()
 	else:
 		render_error("NO TERRAIN DATA")
 	call_deferred("_draw_map_size")

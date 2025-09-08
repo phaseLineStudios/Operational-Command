@@ -1,0 +1,110 @@
+[gd_scene load_steps=2 format=3 uid="uid://5awqyidom0l2"]
+
+[ext_resource type="Script" uid="uid://b4bj1a02xuud3" path="res://scripts/editors/NewScenarioDialog.gd" id="1_f0svs"]
+
+[node name="NewScenarioDialog" type="Window"]
+auto_translate_mode = 1
+title = "New Scenario"
+position = Vector2i(325, 36)
+size = Vector2i(500, 600)
+script = ExtResource("1_f0svs")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+offset_right = 500.0
+offset_bottom = 300.0
+
+[node name="TitleLabel" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Scenario name"
+
+[node name="Title" type="LineEdit" parent="VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Name"
+
+[node name="DescriptionLabel" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Description"
+
+[node name="Description" type="TextEdit" parent="VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+placeholder_text = "Description"
+
+[node name="ThumbnailLabel" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Thumbnail"
+
+[node name="PreviewCenter" type="CenterContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="PreviewContainer" type="PanelContainer" parent="VBox/PreviewCenter"]
+layout_mode = 2
+
+[node name="ThumbnailPreview" type="TextureRect" parent="VBox/PreviewCenter/PreviewContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 200)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ThumbnailRow" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="ThumbnailPath" type="LineEdit" parent="VBox/ThumbnailRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "No Thumbnail Selected"
+editable = false
+
+[node name="ClearThumbnail" type="Button" parent="VBox/ThumbnailRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Clear"
+
+[node name="SelectThumbnail" type="Button" parent="VBox/ThumbnailRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Select"
+
+[node name="TerrainLabel" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Terrain"
+
+[node name="TerrainRow" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="TerrainPath" type="LineEdit" parent="VBox/TerrainRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "No Terrain Selected"
+editable = false
+
+[node name="SelectTerrain" type="Button" parent="VBox/TerrainRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Select"
+
+[node name="Spacer" type="Control" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActionRow" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="Close" type="Button" parent="VBox/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"
+
+[node name="Spacer" type="Control" parent="VBox/ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Create" type="Button" parent="VBox/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Create"

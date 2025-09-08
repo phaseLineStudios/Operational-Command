@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cl441lw7n8a2o" path="res://scripts/editors/TerrainEditor.gd" id="1_k3bf1"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="2_fwab6"]
-[ext_resource type="Script" uid="uid://do8882r1q2sil" path="res://scripts/terrain/TerrainData.gd" id="2_q832w"]
+[ext_resource type="Script" uid="uid://do8882r1q2sil" path="res://scripts/data/TerrainData.gd" id="2_q832w"]
 [ext_resource type="Script" uid="uid://cjsu4sh4wfvmg" path="res://scripts/editors/TerrainCamera.gd" id="3_15xeg"]
 [ext_resource type="PackedScene" uid="uid://c5thlr0tfddoe" path="res://scenes/ui/terrain_settings_dialog.tscn" id="4_4pae0"]
 

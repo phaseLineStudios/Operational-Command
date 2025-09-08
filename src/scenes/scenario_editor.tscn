@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://c5vv37x66vtg7"]
+[gd_scene load_steps=6 format=3 uid="uid://c5vv37x66vtg7"]
 
 [ext_resource type="Script" uid="uid://cilbctp6dmcm" path="res://scripts/editors/ScenarioEditor.gd" id="1_wqbsy"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="2_gsqds"]
+[ext_resource type="PackedScene" uid="uid://5awqyidom0l2" path="res://scenes/ui/scenario_new_dialog.tscn" id="4_un5t0"]
 [ext_resource type="Script" uid="uid://cjsu4sh4wfvmg" path="res://scripts/editors/TerrainCamera.gd" id="4_ysx1w"]
+[ext_resource type="PackedScene" uid="uid://qsm7784yjbw7" path="res://scenes/ui/weather_dialog.tscn" id="5_un5t0"]
 
 [node name="ScenarioEditor" type="Control"]
 layout_mode = 3
@@ -29,15 +31,17 @@ theme_override_constants/separation = 6
 unique_name_in_owner = true
 layout_mode = 2
 text = "File"
-item_count = 4
-popup/item_0/text = "Open"
+item_count = 5
+popup/item_0/text = "New"
 popup/item_0/id = 0
-popup/item_1/text = "Save"
+popup/item_1/text = "Open"
 popup/item_1/id = 1
-popup/item_2/text = "Save As"
+popup/item_2/text = "Save"
 popup/item_2/id = 2
-popup/item_3/text = "Quit"
+popup/item_3/text = "Save As"
 popup/item_3/id = 3
+popup/item_4/text = "Quit"
+popup/item_4/id = 4
 
 [node name="Edit" type="MenuButton" parent="Root/TopBar/HBox"]
 unique_name_in_owner = true
@@ -58,11 +62,28 @@ text = "View"
 unique_name_in_owner = true
 layout_mode = 2
 text = "Attributes"
+item_count = 3
+popup/item_0/text = "Meta"
+popup/item_0/id = 0
+popup/item_1/text = "Briefing"
+popup/item_1/id = 1
+popup/item_2/text = "Weather"
+popup/item_2/id = 2
 
 [node name="Help" type="MenuButton" parent="Root/TopBar/HBox"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Help"
+
+[node name="ScenarioTitle" type="Label" parent="Root/TopBar/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="Root/TopBar/HBox"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
 
 [node name="HBox" type="HBoxContainer" parent="Root"]
 layout_mode = 2
@@ -200,3 +221,11 @@ size_flags_horizontal = 3
 unique_name_in_owner = true
 layout_mode = 2
 text = "(0, 0) "
+
+[node name="NewScenarioDialog" parent="." instance=ExtResource("4_un5t0")]
+unique_name_in_owner = true
+visible = false
+
+[node name="WeatherDialog" parent="." instance=ExtResource("5_un5t0")]
+unique_name_in_owner = true
+visible = false

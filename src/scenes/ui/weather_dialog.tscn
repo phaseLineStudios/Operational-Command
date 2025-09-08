@@ -1,0 +1,87 @@
+[gd_scene load_steps=2 format=3 uid="uid://qsm7784yjbw7"]
+
+[ext_resource type="Script" uid="uid://dweep418akwjf" path="res://scripts/editors/WeatherDialog.gd" id="1_fr0su"]
+
+[node name="WeatherDialog" type="Window"]
+auto_translate_mode = 1
+title = "Change Weather"
+position = Vector2i(325, 200)
+size = Vector2i(500, 300)
+script = ExtResource("1_fr0su")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_right = 500.0
+offset_bottom = 300.0
+
+[node name="RainLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Rain (mm/h)"
+
+[node name="Rain" type="SpinBox" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 50.0
+step = 0.1
+suffix = "mm/h"
+
+[node name="FogLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Fog Visibility in meters"
+
+[node name="Fog" type="SpinBox" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 10000.0
+value = 8000.0
+suffix = "m"
+
+[node name="WindLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Wind"
+
+[node name="Wind" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="DirectionLabel" type="Label" parent="VBoxContainer/Wind"]
+layout_mode = 2
+text = "Direction"
+
+[node name="WindDir" type="SpinBox" parent="VBoxContainer/Wind"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 360.0
+suffix = "°"
+
+[node name="SpeedLabel" type="Label" parent="VBoxContainer/Wind"]
+layout_mode = 2
+text = "Speed"
+
+[node name="WindSpeed" type="SpinBox" parent="VBoxContainer/Wind"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 110.0
+step = 0.5
+value = 1.0
+suffix = "m/s"
+
+[node name="Spacer" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ActionRow" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Close" type="Button" parent="VBoxContainer/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"
+
+[node name="Spacer" type="Control" parent="VBoxContainer/ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Save" type="Button" parent="VBoxContainer/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Save"
