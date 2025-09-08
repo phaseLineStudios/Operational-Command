@@ -82,10 +82,12 @@ class_name TerrainRender
 @onready var base_layer: PanelContainer = %TerrainBase
 @onready var surface_layer: SurfaceLayer = %SurfaceLayer
 @onready var line_layer: LineLayer = %LineLayer
-@onready var point_layer: Control = %PointLayer
+@onready var point_layer: PointLayer = %PointLayer
 @onready var contour_layer: ContourLayer = %ContourLayer
 @onready var grid_layer: GridLayer = %GridLayer
-@onready var label_layer: Control = %LabelLayer
+@onready var label_layer: LabelLayer = %LabelLayer
+@onready var error_layer: CenterContainer = %ErrorLayer
+@onready var error_label: Label = %ErrorLayer/ErrorLabel
 
 ## Emits when the map is resized
 signal map_resize()
@@ -100,6 +102,9 @@ func _ready():
 	_apply_base_style_if_needed()
 	_draw_map_size()
 	base_layer.resized.connect(_on_base_layer_resize)
+	
+	if not data:
+		render_error("NO TERRAIN DATA")
 
 ## Build base style
 func _apply_base_style_if_needed() -> void:
@@ -115,6 +120,8 @@ func _set_data(d: TerrainData):
 	data = d
 	if data:
 		data.changed.connect(_on_data_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
+	else:
+		render_error("NO TERRAIN DATA")
 	call_deferred("_draw_map_size")
 	call_deferred("_push_data_to_layers")
 	call_deferred("_mark_all_dirty")
@@ -149,6 +156,15 @@ func _push_data_to_layers() -> void:
 ## Reconfigure if terrain data is changed
 func _on_data_changed() -> void:
 	_debounce_relayout_and_push()
+
+## Show a render error
+func render_error(error: String = "") -> void:
+	error_layer.visible = true
+	error_label.text = error
+
+## Hide the render error
+func clear_render_error() -> void:
+	error_layer.visible = false
 
 ## Mark elements as dirty to redraw
 func _mark_all_dirty() -> void:

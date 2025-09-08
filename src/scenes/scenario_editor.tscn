@@ -1,25 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://c5vv37x66vtg7"]
+[gd_scene load_steps=4 format=3 uid="uid://c5vv37x66vtg7"]
 
 [ext_resource type="Script" uid="uid://cilbctp6dmcm" path="res://scripts/editors/ScenarioEditor.gd" id="1_wqbsy"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="2_gsqds"]
-[ext_resource type="Script" uid="uid://do8882r1q2sil" path="res://scripts/terrain/TerrainData.gd" id="3_ysx1w"]
 [ext_resource type="Script" uid="uid://cjsu4sh4wfvmg" path="res://scripts/editors/TerrainCamera.gd" id="4_ysx1w"]
-
-[sub_resource type="Resource" id="Resource_un5t0"]
-script = ExtResource("3_ysx1w")
-name = "New Terrain"
-width_m = 2000
-height_m = 2000
-elevation_resolution_m = 20
-grid_start_x = 150
-grid_start_y = 120
-base_elevation_m = 326
-contour_interval_m = 10
-surfaces = []
-lines = []
-points = []
-labels = []
-metadata/_custom_type_script = "uid://do8882r1q2sil"
 
 [node name="ScenarioEditor" type="Control"]
 layout_mode = 3
@@ -132,7 +115,6 @@ offset_right = 815.728
 offset_bottom = 616.72
 size_flags_horizontal = 3
 size_flags_vertical = 3
-data = SubResource("Resource_un5t0")
 
 [node name="BrushOverlay" type="Control" parent="Root/HBox/TerrainView/View/World"]
 unique_name_in_owner = true

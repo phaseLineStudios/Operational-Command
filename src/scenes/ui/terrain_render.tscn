@@ -104,3 +104,14 @@ layout_mode = 2
 script = ExtResource("8_tecap")
 text_color = Color(0.27451, 0.219608, 0.219608, 1)
 font = SubResource("FontVariation_tecap")
+
+[node name="ErrorLayer" type="CenterContainer" parent="MapMargin/TerrainBase"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="ErrorLabel" type="Label" parent="MapMargin/TerrainBase/ErrorLayer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 37
+text = "NO TERRAIN DATA"
