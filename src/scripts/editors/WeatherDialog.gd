@@ -31,6 +31,10 @@ func _reset_values():
 
 ## Show/hide dialog
 func show_dialog(state: bool):
+	if not editor.data:
+		print("Must create a scenario first")
+		return
+		
 	if state:
 		_reset_values()
 		

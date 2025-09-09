@@ -1,6 +1,8 @@
 extends Window
 class_name NewScenarioDialog
 
+enum DialogMode { CREATE, EDIT }
+
 @onready var title_input: LineEdit = %Title
 @onready var desc_input: TextEdit = %Description
 @onready var thumb_preview: TextureRect = %ThumbnailPreview
@@ -12,11 +14,16 @@ class_name NewScenarioDialog
 @onready var close_btn: Button = %Close
 @onready var create_btn: Button = %Create
 
+## Emitted when user confirms new.
+signal request_create(scenario_data: ScenarioData)
+## Emitted when user confirms edit.
+signal request_update(scenario_data: ScenarioData)
+
 var terrain: TerrainData
 var thumbnail: Texture2D
 
-## Request scenario create
-signal request_create(scenario_data: ScenarioData)
+var dialog_mode: DialogMode = DialogMode.CREATE
+var working: ScenarioData
 
 func _ready():
 	create_btn.pressed.connect(_on_primary_pressed)
@@ -27,16 +34,26 @@ func _ready():
 	thumb_clear.pressed.connect(_on_thumbnail_clear)
 
 func _on_primary_pressed() -> void:
-	if not terrain:
-		print("No terrain selected")
-		return
-	
-	var data := ScenarioData.new()
-	data.title = title_input.text
-	data.description = desc_input.text
-	data.preview = thumbnail
-	data.terrain = terrain
-	emit_signal("request_create", data)
+	match dialog_mode:
+		DialogMode.CREATE:
+			if not terrain:
+				push_warning("No terrain selected")
+				return
+			var sd := ScenarioData.new()
+			sd.title = title_input.text
+			sd.description = desc_input.text
+			sd.preview = thumbnail
+			sd.terrain = terrain
+			emit_signal("request_create", sd)
+		DialogMode.EDIT:
+			if not working:
+				push_warning("No scenario to update")
+				return
+			working.title = title_input.text
+			working.description = desc_input.text
+			working.preview = thumbnail
+			working.terrain = terrain
+			emit_signal("request_update", working)
 	show_dialog(false)
 
 func _on_terrain_select() -> void:
@@ -67,7 +84,7 @@ func _on_thumbnail_select() -> void:
 	dlg.file_selected.connect(func(path):
 		var res := Image.new()
 		var err := res.load(path)
-		if not err:
+		if err == OK:
 			var tex = ImageTexture.create_from_image(res)
 			
 			thumbnail = tex
@@ -94,9 +111,44 @@ func _reset_values() -> void:
 	thumb_preview.texture = null
 	thumbnail = null
 	terrain = null
+	working = null
+	dialog_mode = DialogMode.CREATE
+	_title_button_from_mode()
 
-## Show/hide dialog
-func show_dialog(state: bool) -> void:
-	visible = state
+## Preload fields from existing ScenarioData.
+func _load_from_data(d: ScenarioData) -> void:
+	title_input.text = d.title
+	desc_input.text = d.description
+	thumbnail = d.preview
+	thumb_preview.texture = thumbnail
+	terrain = d.terrain
+	if ResourceLoader.exists(terrain.resource_path):
+		terrain_path.text = terrain.resource_path
+	else:
+		terrain_path.text = ""
+
+## Update window title and primary button text to reflect mode.
+func _title_button_from_mode() -> void:
+	if dialog_mode == DialogMode.CREATE:
+		title = "New Scenario"
+		create_btn.text = "Create"
+	else:
+		title = "Edit Scenario"
+		create_btn.text = "Save"
+
+## Show/hide dialog.
+func show_dialog(state: bool, existing: ScenarioData = null) -> void:
 	if not state:
+		visible = false
 		_reset_values()
+		return
+
+	if existing:
+		dialog_mode = DialogMode.EDIT
+		working = existing
+		_load_from_data(existing)
+	else:
+		dialog_mode = DialogMode.CREATE
+
+	_title_button_from_mode()
+	visible = true
