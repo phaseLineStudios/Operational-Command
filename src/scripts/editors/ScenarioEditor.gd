@@ -30,6 +30,7 @@ var current_tool: ScenarioToolBase
 var unit_categories: Array[UnitCategoryData]
 var selected_category: UnitCategoryData
 var all_units: Array[UnitData]
+var _slot_proto := UnitSlotData.new()
 
 func _ready():
 	file_menu.get_popup().connect("id_pressed", _on_filemenu_pressed)
@@ -39,7 +40,10 @@ func _ready():
 	terrain_overlay.gui_input.connect(_on_overlay_gui_input)
 	weather_dialog.editor = self
 	terrain_overlay.editor = self
+	if data.terrain:
+		terrain_render.data = data.terrain
 	
+	_slot_proto.title = "Playable Slot"
 	all_units = ContentDB.list_units()
 	unit_categories = ContentDB.list_unit_categories()
 	unit_category_opt.item_selected.connect(_on_unit_category_select)
@@ -79,20 +83,19 @@ func _on_data_changed():
 		mouse_position_label.text = ""
 	_request_overlay_redraw()
 
-
 func set_tool(tool: ScenarioToolBase) -> void:
 	if current_tool:
 		current_tool.deactivate()
 	current_tool = tool
 	if current_tool:
 		current_tool.activate(self)
+		current_tool.build_hint_ui(tool_hint)
 		current_tool.request_redraw_overlay.connect(func(): _request_overlay_redraw())
-		current_tool.hint_changed.connect(func(t): _set_tool_hint(t))
 		current_tool.finished.connect(func(): clear_tool())
 		current_tool.canceled.connect(func(): clear_tool())
 		_request_overlay_redraw()
 	else:
-		_set_tool_hint("")
+		_queue_free_children(tool_hint)
 
 func clear_tool() -> void:
 	set_tool(null)
@@ -133,6 +136,27 @@ func _refresh_filter_units() -> void:
 
 	var query := unit_search.text.strip_edges().to_lower()
 	var role_items := {}
+	
+	var show_slot := query.is_empty() \
+		or "slot".findn(query) != -1 \
+		or "playable".findn(query) != -1
+	if show_slot:
+		var pkey := "PLAYABLE"
+		var pitem: TreeItem = role_items.get(pkey)
+		if pitem == null:
+			pitem = unit_list.create_item(root)
+			pitem.set_text(0, "PLAYABLE")
+			pitem.set_selectable(0, false)
+			role_items[pkey] = pitem
+		
+		var icon := load("res://assets/textures/units/slot_icon.png") as Texture2D
+		var img := icon.get_image()
+		img.resize(24, 24, Image.INTERPOLATE_LANCZOS)
+		
+		var item := unit_list.create_item(pitem)
+		item.set_text(0, _slot_proto.title)
+		item.set_icon(0, ImageTexture.create_from_image(img))
+		item.set_metadata(0, _slot_proto)
 
 	for unit in all_units:
 		if unit.unit_category.id != selected_category.id:
@@ -161,20 +185,18 @@ func _refresh_filter_units() -> void:
 	
 		item.set_text(0, unit.title)
 		item.set_icon(0, ImageTexture.create_from_image(img))
-		item.set_metadata(0, unit)   
+		item.set_metadata(0, unit)
 
 func _on_units_tree_item_activated() -> void:
 	var it := unit_list.get_selected()
-	if not it:
-		return
-	var payload: UnitData = it.get_metadata(0)
-	if payload is UnitData:
-		print("start tool")
+	if it == null: return
+	var payload: Variant = it.get_metadata(0)
+	if payload is UnitData or payload is UnitSlotData:
 		start_place_unit_tool(payload)
 
-func start_place_unit_tool(u: UnitData) -> void:
+func start_place_unit_tool(payload: Variant) -> void:
 	var tool := UnitPlaceTool.new()
-	tool.unit = u
+	tool.payload = payload
 	set_tool(tool)
 
 func _place_unit_from_tool(u: UnitData, pos_m: Vector2) -> void:
@@ -188,6 +210,28 @@ func _place_unit_from_tool(u: UnitData, pos_m: Vector2) -> void:
 		data.units = []
 	data.units.append(su)
 	_request_overlay_redraw()
+
+## Commit a placed player slot into the scenario.
+func _place_slot_from_tool(slot_def: UnitSlotData, pos_m: Vector2) -> void:
+	if not data:
+		push_warning("No active scenario"); return
+
+	var inst := UnitSlotData.new()
+	inst.key = _next_slot_key()
+	inst.title = slot_def.title
+	inst.allowed_roles = slot_def.allowed_roles.duplicate()
+	inst.start_position = pos_m
+
+	data.unit_slots.append(inst)
+
+	_request_overlay_redraw()
+
+## Generate a unique key like
+func _next_slot_key() -> String:
+	var n := 1
+	if data and data.unit_slots:
+		n = data.unit_slots.size() + 1
+	return "SLOT_%d" % n
 
 func _unhandled_key_input(event):
 	if current_tool and current_tool.handle_input(event):

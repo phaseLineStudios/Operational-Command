@@ -5,9 +5,12 @@ class_name ScenarioEditorOverlay
 
 ## Owning editor.
 @export var editor: ScenarioEditor
-
 ## Icon size for placed units (px).
 @export var unit_icon_px: int = 36
+## Icon size for placed slots (px)
+@export var slot_icon_px: int = 36
+## Slot Icon texture
+@export var slot_icon: Texture2D = preload("res://assets/textures/units/slot_icon.png")
 
 var _icon_cache := {}
 
@@ -17,6 +20,7 @@ func _ready() -> void:
 
 func _draw() -> void:
 	_draw_units()
+	_draw_slots()
 
 	if editor and editor.current_tool:
 		editor.current_tool.draw_overlay(self)
@@ -27,13 +31,11 @@ func request_redraw() -> void:
 func _draw_units() -> void:
 	if not editor or not editor.data or not editor.data.terrain:
 		return
-	if not editor.terrain_render or not editor.terrain_render.has_method("terrain_to_map"):
-		return
 
 	for su in editor.data.units:
 		if su == null or su.unit == null:
 			continue
-		var tex := _get_scaled_icon(su.unit)
+		var tex := _get_scaled_icon_unit(su.unit)
 		if tex == null:
 			continue
 
@@ -46,18 +48,39 @@ func _draw_units() -> void:
 
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
-func _get_scaled_icon(u: UnitData) -> Texture2D:
-	var base: Texture2D = u.icon if u.icon else load("res://assets/textures/units/nato_unknown_platoon.png")
+## Draw placed UnitSlotData instances using slot_icon
+func _draw_slots() -> void:
+	if not editor or not editor.data or not editor.data.terrain:
+		return
+
+	var tex := _get_scaled_icon_slot()
+	if tex == null:
+		return
+
+	for entry in editor.data.unit_slots:
+		var screen_pos: Vector2 = editor.terrain_render.terrain_to_map(entry.start_position)
+		var icon_size: Vector2 = tex.get_size()
+		var half := icon_size * 0.5
+		draw_texture(tex, screen_pos - half)
+
+func _get_scaled_icon_unit(u: UnitData) -> Texture2D:
+	var base: Texture2D = (u and u.icon) as Variant if u and u.icon else null as Variant
 	if base == null:
-		return null
-	var key := "%s:%d" % [u.id, unit_icon_px]
+		base = load("res://assets/textures/units/nato_unknown_platoon.png")
+	var key := "UNIT:%s:%d" % [str(u and u.id), unit_icon_px]
+	return _scaled_cached(key, base, unit_icon_px)
+
+func _get_scaled_icon_slot() -> Texture2D:
+	var key := "SLOT:%d" % slot_icon_px
+	return _scaled_cached(key, slot_icon, slot_icon_px)
+
+func _scaled_cached(key: String, base: Texture2D, px: int) -> Texture2D:
 	var cached: Texture2D = _icon_cache.get(key)
-	if cached:
-		return cached
+	if cached: return cached
+	if base == null: return null
 	var img := base.get_image()
-	if img.is_empty():
-		return base
-	img.resize(unit_icon_px, unit_icon_px, Image.INTERPOLATE_LANCZOS)
+	if img.is_empty(): return base
+	img.resize(px, px, Image.INTERPOLATE_LANCZOS)
 	var tex := ImageTexture.create_from_image(img)
 	_icon_cache[key] = tex
 	return tex

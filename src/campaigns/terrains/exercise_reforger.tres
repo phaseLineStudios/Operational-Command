@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="TerrainData" load_steps=10 format=4]
+[gd_resource type="Resource" script_class="TerrainData" load_steps=10 format=4 uid="uid://ebka0yt6c2xo"]
 
 [ext_resource type="Resource" uid="uid://bw73pdcdhu2pg" path="res://assets/terrain_brushes/primary_road.tres" id="1_yxxxn"]
 [ext_resource type="Resource" uid="uid://dggrws8viqbb" path="res://assets/terrain_brushes/secondary_road.tres" id="2_7d22y"]

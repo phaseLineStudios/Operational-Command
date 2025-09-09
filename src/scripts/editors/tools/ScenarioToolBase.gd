@@ -11,8 +11,6 @@ var terrain: TerrainData
 ## Emit when the overlay should redraw
 @warning_ignore("unused_signal")
 signal request_redraw_overlay()
-## Emit to display a short hint in the bottom bar
-signal hint_changed(text: String)
 ## Emit when tool finished normally
 @warning_ignore("unused_signal")
 signal finished()
@@ -23,7 +21,6 @@ signal canceled()
 ## Called by the editor when tool becomes active
 func activate(ed: ScenarioEditor) -> void:
 	editor = ed
-	emit_signal("hint_changed", get_hint_text())
 	_on_activated()
 
 ## Called when tool is removed
@@ -47,8 +44,8 @@ func draw_overlay(_canvas: Control) -> void:
 	pass
 
 ## Short usage hint for the bottom bar
-func get_hint_text() -> String:
-	return ""
+func build_hint_ui(_parent: Control) -> void:
+	pass
 
 func _on_activated() -> void: pass
 func _on_deactivated() -> void: pass
