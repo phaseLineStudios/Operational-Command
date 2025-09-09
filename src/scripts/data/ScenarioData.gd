@@ -59,7 +59,7 @@ enum scenarioDifficulty { easy, normal, hard }
 
 @export_group("Content")
 ## List of units placed in this scenario
-@export var units: Array[UnitData] = []
+@export var units: Array[ScenarioUnit] = []
 ## Triggers that define scripted events and conditions
 @export var triggers: Array = []
 ## Tasks or objectives for the AI to complete
@@ -76,10 +76,10 @@ func serialize() -> Dictionary:
 		if u is UnitData and u.id != null and String(u.id) != "":
 			recruit_ids.append(String(u.id))
 
-	var placed_ids: Array = []
+	var placed_units: Array = []
 	for u in units:
-		if u is UnitData and u.id != null and String(u.id) != "":
-			placed_ids.append(String(u.id))
+		if u is ScenarioUnit:
+			placed_units.append(u.serialize)
 
 	return {
 		"id": id,
@@ -111,7 +111,7 @@ func serialize() -> Dictionary:
 		},
 
 		"content": {
-			"unit_ids": placed_ids,
+			"units": placed_units,
 			"triggers": triggers,
 			"tasks": tasks,
 			"drawings": drawings
@@ -173,9 +173,12 @@ static func deserialize(json: Variant) -> ScenarioData:
 
 	var content: Dictionary = json.get("content", {})
 	if typeof(content) == TYPE_DICTIONARY:
-		var placed_ids: Array = content.get("unit_ids", [])
-		if typeof(placed_ids) == TYPE_ARRAY:
-			s.units = ContentDB.get_units(placed_ids)
+		var placed_units: Array = content.get("units", [])
+		if typeof(placed_units) == TYPE_ARRAY:
+			var scenario_units: Array[ScenarioUnit] = []
+			for unit in placed_units:
+				scenario_units.append(ScenarioUnit.deserialize(unit))
+			s.units = scenario_units
 
 		s.triggers = content.get("triggers", s.triggers)
 		s.tasks = content.get("tasks", s.tasks)

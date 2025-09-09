@@ -152,7 +152,7 @@ static func deserialize(data: Variant) -> UnitData:
 		
 	var editor: Dictionary = data.get("editor", {})
 	if typeof(editor) == TYPE_DICTIONARY:
-		u.unit_category = editor.get("unit_category", u.unit_category)
+		u.unit_category = ContentDB.get_unit_category(editor.get("unit_category", u.unit_category))
 
 	u.throughput = data.get("throughput", u.throughput)
 	u.doctrine = data.get("doctrine", u.doctrine)

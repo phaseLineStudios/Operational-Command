@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://c5vv37x66vtg7"]
+[gd_scene load_steps=7 format=3 uid="uid://c5vv37x66vtg7"]
 
 [ext_resource type="Script" uid="uid://cilbctp6dmcm" path="res://scripts/editors/ScenarioEditor.gd" id="1_wqbsy"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="2_gsqds"]
+[ext_resource type="Script" uid="uid://dxc7kql2s6ijx" path="res://scripts/editors/ScenarioEditorOverlay.gd" id="3_cvhnd"]
 [ext_resource type="PackedScene" uid="uid://5awqyidom0l2" path="res://scenes/ui/scenario_new_dialog.tscn" id="4_un5t0"]
 [ext_resource type="Script" uid="uid://cjsu4sh4wfvmg" path="res://scripts/editors/TerrainCamera.gd" id="4_ysx1w"]
 [ext_resource type="PackedScene" uid="uid://qsm7784yjbw7" path="res://scenes/ui/weather_dialog.tscn" id="5_un5t0"]
@@ -140,8 +141,8 @@ size_flags_vertical = 3
 
 [node name="Overlay" type="Control" parent="Root/HBox/TerrainView/View/World"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
+script = ExtResource("3_cvhnd")
 
 [node name="Camera" type="Camera2D" parent="Root/HBox/TerrainView/View"]
 unique_name_in_owner = true
@@ -168,16 +169,31 @@ current_tab = 0
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="UnitSearch" type="TextEdit" parent="Root/HBox/RightTray/VBox/TabContainer3/Units"]
+[node name="CategoryLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Units"]
+layout_mode = 2
+text = "Category"
+
+[node name="UnitCategory" type="OptionButton" parent="Root/HBox/RightTray/VBox/TabContainer3/Units"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="Root/HBox/RightTray/VBox/TabContainer3/Units"]
+layout_mode = 2
+
+[node name="UnitsLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Units"]
+layout_mode = 2
+text = "Units"
+
+[node name="UnitSearch" type="LineEdit" parent="Root/HBox/RightTray/VBox/TabContainer3/Units"]
+unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "Search"
 
-[node name="Units" type="ItemList" parent="Root/HBox/RightTray/VBox/TabContainer3/Units"]
+[node name="Units" type="Tree" parent="Root/HBox/RightTray/VBox/TabContainer3/Units"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+hide_root = true
 
 [node name="NewUnit" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Units"]
 unique_name_in_owner = true
@@ -221,7 +237,6 @@ size_flags_horizontal = 3
 [node name="MousePosition" type="Label" parent="Root/BottomBar/HBox"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "(0, 0) "
 
 [node name="NewScenarioDialog" parent="." instance=ExtResource("4_un5t0")]
 unique_name_in_owner = true
