@@ -1,26 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://j3lcjcfdq7qw"]
+[gd_scene load_steps=2 format=3 uid="uid://j3lcjcfdq7qw"]
 
 [ext_resource type="Script" uid="uid://cl441lw7n8a2o" path="res://scripts/editors/TerrainEditor.gd" id="1_k3bf1"]
-[ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="2_fwab6"]
-[ext_resource type="Script" uid="uid://do8882r1q2sil" path="res://scripts/terrain/TerrainData.gd" id="2_q832w"]
-[ext_resource type="Script" uid="uid://cjsu4sh4wfvmg" path="res://scripts/editors/TerrainCamera.gd" id="3_15xeg"]
-[ext_resource type="PackedScene" uid="uid://c5thlr0tfddoe" path="res://scenes/ui/terrain_settings_dialog.tscn" id="4_4pae0"]
-
-[sub_resource type="Resource" id="Resource_cc7e2"]
-script = ExtResource("2_q832w")
-name = "New Terrain"
-width_m = 2000
-height_m = 2000
-elevation_resolution_m = 20
-grid_start_x = 150
-grid_start_y = 120
-base_elevation_m = 326
-contour_interval_m = 10
-surfaces = []
-lines = []
-points = []
-labels = []
-metadata/_custom_type_script = "uid://do8882r1q2sil"
 
 [node name="TerrainEditor" type="Control"]
 layout_mode = 3
@@ -30,8 +10,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_k3bf1")
-data = SubResource("Resource_cc7e2")
-tool_icon_size = Vector2(40, 40)
 
 [node name="Root" type="VBoxContainer" parent="."]
 layout_mode = 0
@@ -49,29 +27,24 @@ theme_override_constants/separation = 6
 unique_name_in_owner = true
 layout_mode = 2
 text = "File"
-item_count = 5
-popup/item_0/text = "New"
+item_count = 4
+popup/item_0/text = "Open"
 popup/item_0/id = 0
-popup/item_1/text = "Open"
+popup/item_1/text = "Save"
 popup/item_1/id = 1
-popup/item_2/text = "Save"
+popup/item_2/text = "Save As"
 popup/item_2/id = 2
-popup/item_3/text = "Save As"
+popup/item_3/text = "Quit"
 popup/item_3/id = 3
-popup/item_4/text = "Quit"
-popup/item_4/id = 4
 
 [node name="Edit" type="MenuButton" parent="Root/TopBar/HBox"]
-unique_name_in_owner = true
 layout_mode = 2
 text = "Edit"
-item_count = 3
-popup/item_0/text = "Edit Terrain"
+item_count = 2
+popup/item_0/text = "Undo"
 popup/item_0/id = 0
-popup/item_1/text = "Undo"
+popup/item_1/text = "Redo"
 popup/item_1/id = 1
-popup/item_2/text = "Redo"
-popup/item_2/id = 2
 
 [node name="View" type="MenuButton" parent="Root/TopBar/HBox"]
 layout_mode = 2
@@ -98,11 +71,7 @@ size_flags_vertical = 3
 current_tab = 0
 
 [node name="Tools" type="GridContainer" parent="Root/HBox/LeftTray/VBox/TabContainer1"]
-unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 6
-columns = 6
 metadata/_tab_index = 0
 
 [node name="TabContainer2" type="TabContainer" parent="Root/HBox/LeftTray/VBox"]
@@ -111,50 +80,16 @@ size_flags_vertical = 3
 current_tab = 0
 
 [node name="Tool Options" type="VBoxContainer" parent="Root/HBox/LeftTray/VBox/TabContainer2"]
-unique_name_in_owner = true
 layout_mode = 2
 metadata/_tab_index = 0
 
 [node name="TerrainView" type="SubViewportContainer" parent="Root/HBox"]
-unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-stretch = true
-mouse_target = true
 
 [node name="View" type="SubViewport" parent="Root/HBox/TerrainView"]
-disable_3d = true
 handle_input_locally = false
-size = Vector2i(644, 586)
 render_target_update_mode = 4
-
-[node name="World" parent="Root/HBox/TerrainView/View" instance=ExtResource("2_fwab6")]
-unique_name_in_owner = true
-anchors_preset = -1
-anchor_left = -0.394
-anchor_top = -0.06
-anchor_right = -0.394
-anchor_bottom = -0.06
-offset_left = 253.736
-offset_top = 35.16
-offset_right = 897.736
-offset_bottom = 621.16
-size_flags_horizontal = 3
-size_flags_vertical = 3
-data = SubResource("Resource_cc7e2")
-
-[node name="BrushOverlay" type="Control" parent="Root/HBox/TerrainView/View/World"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Camera" type="Camera2D" parent="Root/HBox/TerrainView/View"]
-unique_name_in_owner = true
-position = Vector2(500, 500)
-zoom = Vector2(0.5, 0.5)
-drag_horizontal_enabled = true
-drag_vertical_enabled = true
-script = ExtResource("3_15xeg")
-min_zoom = 0.1
 
 [node name="RightTray" type="PanelContainer" parent="Root/HBox"]
 custom_minimum_size = Vector2(250, 0)
@@ -169,12 +104,10 @@ size_flags_vertical = 3
 current_tab = 0
 
 [node name="Tool Info" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
-unique_name_in_owner = true
 layout_mode = 2
 metadata/_tab_index = 0
 
 [node name="History" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
-unique_name_in_owner = true
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
@@ -186,20 +119,20 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="ToolHint" type="HBoxContainer" parent="Root/BottomBar/HBox"]
-unique_name_in_owner = true
+[node name="LMBHint" type="Label" parent="Root/BottomBar/HBox"]
 layout_mode = 2
-theme_override_constants/separation = 6
+text = "LMB - Rotate Camera"
 
-[node name="Spacer" type="Control" parent="Root/BottomBar/HBox"]
+[node name="VSeparator" type="VSeparator" parent="Root/BottomBar/HBox"]
 layout_mode = 2
-size_flags_horizontal = 3
 
-[node name="MousePosition" type="Label" parent="Root/BottomBar/HBox"]
-unique_name_in_owner = true
+[node name="MMBHint" type="Label" parent="Root/BottomBar/HBox"]
 layout_mode = 2
-text = "(0, 0) "
+text = "MMB - Pick Surface"
 
-[node name="TerrainSettingsDialog" parent="." instance=ExtResource("4_4pae0")]
-unique_name_in_owner = true
-visible = false
+[node name="VSeparator2" type="VSeparator" parent="Root/BottomBar/HBox"]
+layout_mode = 2
+
+[node name="RMBHint" type="Label" parent="Root/BottomBar/HBox"]
+layout_mode = 2
+text = "RMB - Use Tool"
