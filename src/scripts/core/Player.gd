@@ -95,9 +95,6 @@ func try_pickup():
 		push_error("ShapeCast3D is null; check the node path.")
 		return
 
-	# Make sure filters are sane (helpful while debugging)
-	# ray.collision_mask = 1  # uncomment if you want to force mask 1 at runtime
-
 	ray.force_shapecast_update()
 	var hit_count := ray.get_collision_count()
 	if hit_count == 0:
