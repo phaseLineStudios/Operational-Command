@@ -36,6 +36,7 @@ func _unhandled_input(event: InputEvent) -> void:
 ## TODO Remove this
 func _on_result(t):
 	OrdersParser.parse(t)
+	print("[Radio] Heard: %s" % t)
 	emit_signal("radio_result", t)
 
 ## Manually enable the radio / STT.
