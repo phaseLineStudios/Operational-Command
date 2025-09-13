@@ -36,27 +36,21 @@ func _draw() -> void:
 func request_redraw() -> void:
 	queue_redraw()
 
-
 func on_ctx_open(event: InputEventMouseButton):
 	if not event: return
-	# Build pick info at cursor (overlay-local pos).
 	_last_pick = _pick_at(event.position)
 
 	_ctx.clear()
-	# Header (disabled)
 	_ctx.add_item("Map", -1)
 	_ctx.set_item_disabled(0, true)
 	_ctx.add_separator()
 
-	# Slot-specific item if a slot is under the cursor.
 	if _last_pick.get("type", &"") == &"slot":
 		_ctx.add_item("Configure Slot…", MI_CONFIG_SLOT)
 	else:
-		# Optional: generic items later (add/remove markers, etc.)
 		_ctx.add_item("No actions here", -1)
 		_ctx.set_item_disabled(_ctx.get_item_count() - 1, true)
 
-	# Position menu at click point (overlay coords).
 	_ctx.position = event.position.floor()
 	_ctx.reset_size()
 	_ctx.popup()
@@ -68,7 +62,7 @@ func on_dbl_click(event: InputEventMouseButton):
 		&"slot":
 			editor._open_slot_config(pick["index"])
 		_:
-			pass # extend for units/triggers later
+			pass
 
 func _on_ctx_pressed(id: int) -> void:
 	match id:

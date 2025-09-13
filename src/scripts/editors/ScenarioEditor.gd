@@ -18,6 +18,7 @@ class_name ScenarioEditor
 @onready var tool_hint: HBoxContainer = %ToolHint
 @onready var mouse_position_label: Label = %MousePosition
 @onready var _slot_cfg: SlotConfigDialog = %SlotConfigDialog
+@onready var scene_tree: Tree = %"Scene Tree"
 
 @onready var unit_faction_friend: Button = %FactionRow/Friend
 @onready var unit_faction_enemy: Button = %FactionRow/Enemy
@@ -57,6 +58,9 @@ func _ready():
 	_setup_units_tree()
 	_rebuild_unit_categories()
 	_refresh_filter_units()
+	
+	_setup_scene_tree()
+	_rebuild_scene_tree()
 
 func _on_filemenu_pressed(id: int):
 	match id:
@@ -214,6 +218,26 @@ func _refresh_filter_units() -> void:
 		item.set_icon(0, ImageTexture.create_from_image(img))
 		item.set_metadata(0, unit)
 
+func _setup_scene_tree():
+	scene_tree.set_column_expand(0, true)
+	scene_tree.set_column_custom_minimum_width(0, 200)
+
+func _rebuild_scene_tree():
+	scene_tree.clear()
+	var root := scene_tree.create_item()
+	
+	var slots := scene_tree.create_item(root)
+	slots.set_text(0, "Slots")
+	for slot in data.unit_slots:
+		var s_item := scene_tree.create_item(slots)
+		s_item.set_text(0, slot.title)
+	
+	var units := scene_tree.create_item(root)
+	units.set_text(0, "Units")
+	for unit in data.units:
+		var u_item = scene_tree.create_item(units)
+		u_item.set_text(0, unit.unit.title)
+
 func _on_units_tree_item_activated() -> void:
 	var it := unit_list.get_selected()
 	if it == null: return
@@ -234,11 +258,11 @@ func _place_unit_from_tool(u: UnitData, pos_m: Vector2) -> void:
 	su.unit = u
 	su.position_m = pos_m
 	su.affiliation = _selected_unit_affiliation
-	print(_selected_unit_affiliation)
 	if data.units == null:
 		data.units = []
 	data.units.append(su)
 	_request_overlay_redraw()
+	_rebuild_scene_tree()
 
 ## Commit a placed player slot into the scenario.
 func _place_slot_from_tool(slot_def: UnitSlotData, pos_m: Vector2) -> void:
@@ -254,6 +278,7 @@ func _place_slot_from_tool(slot_def: UnitSlotData, pos_m: Vector2) -> void:
 	data.unit_slots.append(inst)
 
 	_request_overlay_redraw()
+	_rebuild_scene_tree()
 
 ## Generate a unique key like
 func _next_slot_key() -> String:

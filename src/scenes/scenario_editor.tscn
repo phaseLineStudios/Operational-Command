@@ -141,6 +141,7 @@ current_tab = 0
 [node name="Scene Tree" type="Tree" parent="Root/HBox/LeftTray/VBox/TabContainer1"]
 unique_name_in_owner = true
 layout_mode = 2
+hide_root = true
 metadata/_tab_index = 0
 
 [node name="History" type="VBoxContainer" parent="Root/HBox/LeftTray/VBox/TabContainer1"]
@@ -158,7 +159,7 @@ mouse_target = true
 
 [node name="View" type="SubViewport" parent="Root/HBox/TerrainView"]
 handle_input_locally = false
-size = Vector2i(540, 586)
+size = Vector2i(614, 586)
 render_target_update_mode = 4
 
 [node name="World" parent="Root/HBox/TerrainView/View" instance=ExtResource("2_gsqds")]
@@ -254,28 +255,35 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "+ New Unit"
 
-[node name="System" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
-visible = false
-layout_mode = 2
-metadata/_tab_index = 1
-
 [node name="Triggers" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-metadata/_tab_index = 2
+metadata/_tab_index = 1
+
+[node name="Label" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Triggers"]
+layout_mode = 2
+text = "NOT YET IMPLEMENTED"
 
 [node name="Tasks" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-metadata/_tab_index = 3
+metadata/_tab_index = 2
+
+[node name="Label" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Tasks"]
+layout_mode = 2
+text = "NOT YET IMPLEMENTED"
 
 [node name="Draw" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-metadata/_tab_index = 4
+metadata/_tab_index = 3
+
+[node name="Label" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+layout_mode = 2
+text = "NOT YET IMPLEMENTED"
 
 [node name="BottomBar" type="PanelContainer" parent="Root"]
 layout_mode = 2

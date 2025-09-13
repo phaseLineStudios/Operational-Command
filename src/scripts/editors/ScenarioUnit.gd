@@ -5,6 +5,8 @@ enum CombatMode { forced_hold_fire, do_not_fire_unless_fired_upon, open_fire }
 enum Behaviour { careless, safe, aware, combat, stealth }
 enum Affiliation { friend, enemy }
 
+## Unique identifier
+@export var id: String
 ## Unit Data
 @export var unit: UnitData
 ## Unit Position

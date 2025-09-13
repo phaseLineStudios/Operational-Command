@@ -42,6 +42,7 @@ func _on_save() -> void:
 	s.allowed_roles = _roles
 	visible = false
 	editor._request_overlay_redraw()
+	editor._rebuild_scene_tree()
 
 ## Add role to role list
 func _on_role_add():
