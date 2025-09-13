@@ -24,7 +24,7 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 	editor = _editor
 	slot_index = index
 	var entry := editor.data.unit_slots[slot_index]
-	var s: UnitSlotData = entry["slot"]
+	var s: UnitSlotData = entry
 	key_input.text = String(s.key)
 	title_input.text = s.title
 	_roles = s.allowed_roles
@@ -36,7 +36,7 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 func _on_save() -> void:
 	if editor == null or slot_index < 0: return
 	var entry := editor.data.unit_slots[slot_index]
-	var s: UnitSlotData = entry["slot"]
+	var s: UnitSlotData = entry
 	s.key = key_input.text
 	s.title = title_input.text
 	s.allowed_roles = _roles

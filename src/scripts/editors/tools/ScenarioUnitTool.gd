@@ -48,33 +48,40 @@ func build_hint_ui(parent: Control) -> void:
 	parent.add_child(_label("Shift - Grid Snap"))
 	parent.add_child(VSeparator.new())
 	parent.add_child(_label("Enter - Save"))
-	pass
 
-func _on_mouse_move(e: InputEventMouseMotion) -> void:
+func _on_mouse_move(e: InputEventMouseMotion) -> bool:
 	if not editor or not editor.data or not editor.data.terrain:
-		_hover_valid = false; return
+		_hover_valid = false; return false
 	var mp := editor.terrain_render.map_to_terrain(e.position)
 	if snap_to_grid or Input.is_key_pressed(KEY_SHIFT):
 		mp = _snap(mp)
 	_hover_map_pos = mp
 	_hover_valid = editor.terrain_render.is_inside_map(mp)
 	emit_signal("request_redraw_overlay")
+	return true
 
-func _on_mouse_button(e: InputEventMouseButton) -> void:
+func _on_mouse_button(e: InputEventMouseButton) -> bool:
 	if e.pressed:
 		match e.button_index:
 			MOUSE_BUTTON_LEFT:
-				if _hover_valid: _place()
+				if _hover_valid: 
+					_place()
+					return true
 			MOUSE_BUTTON_RIGHT:
 				emit_signal("canceled")
+				return true
+	return false
 
-func _on_key(e: InputEventKey) -> void:
-	if not e.pressed: return
+func _on_key(e: InputEventKey) -> bool:
+	if not e.pressed: return false
 	if e.keycode == KEY_ESCAPE:
 		emit_signal("canceled")
+		return true
+		
+	return false
 
+## Draw ghost
 func draw_overlay(canvas: Control) -> void:
-	## Draw ghost (scale at draw-time to avoid white quads).
 	if not _hover_valid or not _icon_tex: return
 	var screen_pos := editor.terrain_render.terrain_to_map(_hover_map_pos)
 	var size := Vector2(48, 48)

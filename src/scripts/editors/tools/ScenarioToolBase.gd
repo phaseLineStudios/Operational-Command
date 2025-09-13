@@ -31,11 +31,11 @@ func deactivate() -> void:
 ## Editor forwards overlay input here
 func handle_input(event: InputEvent) -> bool:
 	if event is InputEventMouseMotion:
-		_on_mouse_move(event)
+		return _on_mouse_move(event)
 	elif event is InputEventMouseButton:
-		_on_mouse_button(event)
+		return _on_mouse_button(event)
 	elif event is InputEventKey:
-		_on_key(event)
+		return _on_key(event)
 	
 	return false
 
@@ -49,6 +49,6 @@ func build_hint_ui(_parent: Control) -> void:
 
 func _on_activated() -> void: pass
 func _on_deactivated() -> void: pass
-func _on_mouse_move(_e: InputEventMouseMotion) -> void: pass
-func _on_mouse_button(_e: InputEventMouseButton) -> void: pass
-func _on_key(_e: InputEventKey) -> void: pass
+func _on_mouse_move(_e: InputEventMouseMotion) -> bool: return false
+func _on_mouse_button(_e: InputEventMouseButton) -> bool: return false
+func _on_key(_e: InputEventKey) -> bool: return false

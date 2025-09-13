@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://c5vv37x66vtg7"]
+[gd_scene load_steps=14 format=3 uid="uid://c5vv37x66vtg7"]
 
 [ext_resource type="Script" uid="uid://cilbctp6dmcm" path="res://scripts/editors/ScenarioEditor.gd" id="1_wqbsy"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="2_gsqds"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" uid="uid://cku7nh4ja4fig" path="res://scripts/data/UnitSlotData.gd" id="5_32ip5"]
 [ext_resource type="PackedScene" uid="uid://qsm7784yjbw7" path="res://scenes/ui/weather_dialog.tscn" id="5_un5t0"]
 [ext_resource type="Script" uid="uid://d2krdrl55hin0" path="res://scripts/editors/ScenarioUnit.gd" id="6_puqku"]
+[ext_resource type="PackedScene" uid="uid://cb5oknciymdd4" path="res://scenes/ui/slot_config_dialog.tscn" id="12_csmny"]
 
 [sub_resource type="Resource" id="Resource_twvdg"]
 script = ExtResource("2_ltmm0")
@@ -301,5 +302,9 @@ unique_name_in_owner = true
 visible = false
 
 [node name="WeatherDialog" parent="." instance=ExtResource("5_un5t0")]
+unique_name_in_owner = true
+visible = false
+
+[node name="SlotConfigDialog" parent="." instance=ExtResource("12_csmny")]
 unique_name_in_owner = true
 visible = false

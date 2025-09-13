@@ -12,11 +12,19 @@ class_name ScenarioEditorOverlay
 ## Slot Icon texture
 @export var slot_icon: Texture2D = preload("res://assets/textures/units/slot_icon.png")
 
+const MI_CONFIG_SLOT := 1001
+
 var _icon_cache := {}
+var _ctx: PopupMenu
+var _last_pick: Dictionary = {}
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	visible = true
+	
+	_ctx = PopupMenu.new()
+	add_child(_ctx)
+	_ctx.id_pressed.connect(_on_ctx_pressed)
 
 func _draw() -> void:
 	_draw_units()
@@ -27,6 +35,46 @@ func _draw() -> void:
 
 func request_redraw() -> void:
 	queue_redraw()
+
+
+func on_ctx_open(event: InputEventMouseButton):
+	if not event: return
+	# Build pick info at cursor (overlay-local pos).
+	_last_pick = _pick_at(event.position)
+
+	_ctx.clear()
+	# Header (disabled)
+	_ctx.add_item("Map", -1)
+	_ctx.set_item_disabled(0, true)
+	_ctx.add_separator()
+
+	# Slot-specific item if a slot is under the cursor.
+	if _last_pick.get("type", &"") == &"slot":
+		_ctx.add_item("Configure Slot…", MI_CONFIG_SLOT)
+	else:
+		# Optional: generic items later (add/remove markers, etc.)
+		_ctx.add_item("No actions here", -1)
+		_ctx.set_item_disabled(_ctx.get_item_count() - 1, true)
+
+	# Position menu at click point (overlay coords).
+	_ctx.position = event.position.floor()
+	_ctx.reset_size()
+	_ctx.popup()
+
+func on_dbl_click(event: InputEventMouseButton):
+	if not event: return
+	var pick := _pick_at(event.position)
+	match pick.get("type", &""):
+		&"slot":
+			editor._open_slot_config(pick["index"])
+		_:
+			pass # extend for units/triggers later
+
+func _on_ctx_pressed(id: int) -> void:
+	match id:
+		MI_CONFIG_SLOT:
+			if _last_pick.get("type", &"") == &"slot":
+				editor._open_slot_config(_last_pick["index"])
 
 func _draw_units() -> void:
 	if not editor or not editor.data or not editor.data.terrain:
@@ -62,6 +110,34 @@ func _draw_slots() -> void:
 		var icon_size: Vector2 = tex.get_size()
 		var half := icon_size * 0.5
 		draw_texture(tex, screen_pos - half)
+
+## Returns { type: "slot"/..., index: int } of nearest object under cursor
+func _pick_at(overlay_pos: Vector2) -> Dictionary:
+	var best := {}
+	var best_d2 := INF
+
+	var slot_r := float(slot_icon_px) * 0.5 + 2.0
+	if editor and editor.data and editor.data.unit_slots:
+		for i in editor.data.unit_slots.size():
+			var entry = editor.data.unit_slots[i]
+			var pos_m := _slot_pos_m(entry)
+			var screen := editor.terrain_render.terrain_to_map(pos_m)
+			var d2 := screen.distance_squared_to(overlay_pos)
+			if d2 <= slot_r * slot_r and d2 < best_d2:
+				best_d2 = d2
+				best = { "type": &"slot", "index": i }
+
+	return best
+
+## Supports both dict and resource with .start_position or .position_m
+func _slot_pos_m(entry) -> Vector2:
+	if typeof(entry) == TYPE_DICTIONARY:
+		return entry.get("position_m", Vector2.ZERO)
+	if "start_position" in entry:
+		return entry.start_position
+	if "position_m" in entry:
+		return entry.position_m
+	return Vector2.ZERO
 
 func _get_scaled_icon_unit(u: ScenarioUnit) -> Texture2D:
 	var base: Texture2D = null

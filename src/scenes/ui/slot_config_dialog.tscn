@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://belky168v1xca"]
+[gd_scene load_steps=2 format=3 uid="uid://cb5oknciymdd4"]
 
 [ext_resource type="Script" uid="uid://b0sjynkywr4g" path="res://scripts/editors/SlotConfigDialog.gd" id="1_nsms8"]
 

@@ -17,6 +17,7 @@ class_name ScenarioEditor
 @onready var terrain_overlay: ScenarioEditorOverlay = %Overlay
 @onready var tool_hint: HBoxContainer = %ToolHint
 @onready var mouse_position_label: Label = %MousePosition
+@onready var _slot_cfg: SlotConfigDialog = %SlotConfigDialog
 
 @onready var unit_faction_friend: Button = %FactionRow/Friend
 @onready var unit_faction_enemy: Button = %FactionRow/Enemy
@@ -117,6 +118,11 @@ func set_tool(tool: ScenarioToolBase) -> void:
 
 func clear_tool() -> void:
 	set_tool(null)
+
+func _open_slot_config(index: int) -> void:
+	if not data or not data.unit_slots: 
+		return
+	_slot_cfg.show_for(self, index)
 
 func _request_overlay_redraw() -> void:
 	terrain_overlay.request_redraw()
@@ -270,6 +276,14 @@ func _on_overlay_gui_input(event):
 
 	if current_tool and current_tool.handle_input(event):
 		return
+	
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_RIGHT:
+			terrain_overlay.on_ctx_open(event)
+			return
+		if event.button_index == MOUSE_BUTTON_LEFT and event.double_click:
+			terrain_overlay.on_dbl_click(event)
+			return
 
 ## Helper function to delete all children of a parent node
 func _queue_free_children(node: Control):
