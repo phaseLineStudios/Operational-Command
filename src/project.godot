@@ -29,6 +29,10 @@ STTService="*res://scripts/radio/STTService.gd"
 NARules="*res://scripts/radio/NARules.gd"
 OrdersParser="*res://scripts/radio/OrdersParser.gd"
 
+[debug]
+
+settings/stdout/verbose_stdout=true
+
 [input]
 
 ptt={

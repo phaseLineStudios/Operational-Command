@@ -6,7 +6,7 @@ extends Node3D
 
 # Placement relative to the camera while held.
 # x = left/right, y = up/down, z = depth (negative pulls toward the camera)
-@export var hold_offset: Vector3 = Vector3(0, 0, -0.1)
+@export var hold_offset: Vector3 = Vector3(0, 0, -2)
 
 # Flip the mesh 180° around Y while held if its front face is away from the camera
 @export var flip_y_when_held: bool = true
@@ -91,7 +91,7 @@ func pickup(player: Node):
 ## - applies the configured offset to place it centered in view
 func _finish_pickup(cam: Camera3D, hold_point: Node3D) -> void:
 	# Reparent under camera and align root exactly with camera
-	reparent(hold_point, true)
+	reparent(hold_point, false)
 	transform = Transform3D.IDENTITY
 	scale = _orig_scale
 
