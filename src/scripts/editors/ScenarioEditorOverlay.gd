@@ -65,7 +65,6 @@ func _draw_slots() -> void:
 
 func _get_scaled_icon_unit(u: ScenarioUnit) -> Texture2D:
 	var base: Texture2D = null
-	print(u.affiliation)
 	if u and u.unit:
 		if ScenarioUnit.Affiliation.friend == u.affiliation:
 			base = u.unit.icon if u.unit.icon else null
