@@ -225,6 +225,23 @@ unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "Search"
 
+[node name="FactionRow" type="HBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3/Units"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Enemy" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Units/FactionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_pressed = true
+text = "Enemy"
+
+[node name="Friend" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Units/FactionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Friendly"
+
 [node name="Units" type="Tree" parent="Root/HBox/RightTray/VBox/TabContainer3/Units"]
 unique_name_in_owner = true
 layout_mode = 2

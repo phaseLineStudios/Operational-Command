@@ -35,7 +35,7 @@ func _draw_units() -> void:
 	for su in editor.data.units:
 		if su == null or su.unit == null:
 			continue
-		var tex := _get_scaled_icon_unit(su.unit)
+		var tex := _get_scaled_icon_unit(su)
 		if tex == null:
 			continue
 
@@ -63,11 +63,20 @@ func _draw_slots() -> void:
 		var half := icon_size * 0.5
 		draw_texture(tex, screen_pos - half)
 
-func _get_scaled_icon_unit(u: UnitData) -> Texture2D:
-	var base: Texture2D = (u and u.icon) as Variant if u and u.icon else null as Variant
+func _get_scaled_icon_unit(u: ScenarioUnit) -> Texture2D:
+	var base: Texture2D = null
+	print(u.affiliation)
+	if u and u.unit:
+		if ScenarioUnit.Affiliation.friend == u.affiliation:
+			base = u.unit.icon if u.unit.icon else null
+		else:
+			base = u.unit.enemy_icon if u.unit.enemy_icon else null
 	if base == null:
-		base = load("res://assets/textures/units/nato_unknown_platoon.png")
-	var key := "UNIT:%s:%d" % [str(u and u.id), unit_icon_px]
+		if ScenarioUnit.Affiliation.friend == u.affiliation:
+			base = load("res://assets/textures/units/nato_unknown_platoon.png")
+		else:
+			base = load("res://assets/textures/units/enemy_unknown_platoon.png")
+	var key := "UNIT:%s:%d:%d" % [u.unit.id, unit_icon_px, u.affiliation]
 	return _scaled_cached(key, base, unit_icon_px)
 
 func _get_scaled_icon_slot() -> Texture2D:

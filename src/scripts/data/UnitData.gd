@@ -11,6 +11,8 @@ enum unitSize { Team, Squad, Platoon, Company, Battalion }
 @export var title: String
 ## Unit icon texture
 @export var icon: Texture2D = preload("res://assets/textures/units/nato_unknown_platoon.png")
+## Enemy unit icon texture
+@export var enemy_icon: Texture2D = preload("res://assets/textures/units/enemy_unknown_platoon.png")
 ## role for this unit
 @export var role: String = "INF"
 ## Allowed slot codes where this unit can be deployed

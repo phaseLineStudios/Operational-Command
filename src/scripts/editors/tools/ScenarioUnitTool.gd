@@ -1,5 +1,6 @@
 extends ScenarioToolBase
 class_name UnitPlaceTool
+
 ## Tool for placing a unit or a player slot.
 ##
 ## Hover shows a ghost. LMB places, ESC/RMB cancels.
@@ -21,11 +22,17 @@ func _on_activated() -> void:
 	if not payload:
 		return
 	if payload is UnitData:
-		_icon_tex = payload.icon
+		if editor._selected_unit_affiliation == ScenarioUnit.Affiliation.friend:
+			_icon_tex = payload.icon
+		else:
+			_icon_tex = payload.enemy_icon
 	elif payload is UnitSlotData:
 		_icon_tex = load("res://assets/textures/units/slot_icon.png") as Texture2D
 	if _icon_tex == null:
-		_icon_tex = load("res://assets/textures/units/nato_unknown_platoon.png") as Texture2D
+		if editor._selected_unit_affiliation == ScenarioUnit.Affiliation.friend:
+			_icon_tex = load("res://assets/textures/units/nato_unknown_platoon.png") as Texture2D
+		else:
+			_icon_tex = load("res://assets/textures/units/enemy_unknown_platoon.png") as Texture2D
 	emit_signal("request_redraw_overlay")
 
 func _on_deactivated():
@@ -87,7 +94,6 @@ func _place() -> void:
 func _snap(p: Vector2) -> Vector2:
 	var s := 100.0
 	return Vector2(round(p.x / s) * s, round(p.y / s) * s)
-
 
 ## Helper function to create a new label
 func _label(t: String) -> Label:

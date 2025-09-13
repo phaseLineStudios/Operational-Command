@@ -18,6 +18,8 @@ class_name ScenarioEditor
 @onready var tool_hint: HBoxContainer = %ToolHint
 @onready var mouse_position_label: Label = %MousePosition
 
+@onready var unit_faction_friend: Button = %FactionRow/Friend
+@onready var unit_faction_enemy: Button = %FactionRow/Enemy
 @onready var unit_category_opt: OptionButton = %UnitCategory
 @onready var unit_search: LineEdit = %UnitSearch
 @onready var unit_list: Tree = %Units
@@ -27,6 +29,7 @@ const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 
 var current_tool: ScenarioToolBase
 
+var _selected_unit_affiliation = ScenarioUnit.Affiliation.enemy
 var unit_categories: Array[UnitCategoryData]
 var selected_category: UnitCategoryData
 var all_units: Array[UnitData]
@@ -48,6 +51,8 @@ func _ready():
 	unit_categories = ContentDB.list_unit_categories()
 	unit_category_opt.item_selected.connect(_on_unit_category_select)
 	unit_search.text_changed.connect(func(_d): _refresh_filter_units())
+	unit_faction_friend.pressed.connect(func (): _on_faction_changed(ScenarioUnit.Affiliation.friend))
+	unit_faction_enemy.pressed.connect(func (): _on_faction_changed(ScenarioUnit.Affiliation.enemy))
 	_setup_units_tree()
 	_rebuild_unit_categories()
 	_refresh_filter_units()
@@ -82,6 +87,19 @@ func _on_data_changed():
 	else:
 		mouse_position_label.text = ""
 	_request_overlay_redraw()
+
+func _on_faction_changed(affiliation: ScenarioUnit.Affiliation):
+	if affiliation == ScenarioUnit.Affiliation.enemy:
+		unit_faction_friend.set_pressed_no_signal(false)
+		unit_faction_enemy.set_pressed_no_signal(true)
+	elif affiliation == ScenarioUnit.Affiliation.friend:
+		unit_faction_enemy.set_pressed_no_signal(false)
+		unit_faction_friend.set_pressed_no_signal(true)
+	else:
+		return
+	
+	_selected_unit_affiliation = affiliation
+	_refresh_filter_units()
 
 func set_tool(tool: ScenarioToolBase) -> void:
 	if current_tool:
@@ -177,9 +195,12 @@ func _refresh_filter_units() -> void:
 			role_items[role_key] = role_item
 
 		var item := unit_list.create_item(role_item)
-		var icon := unit.icon
+		var icon := unit.icon if _selected_unit_affiliation == ScenarioUnit.Affiliation.friend else unit.enemy_icon
 		if icon == null:
-			icon = load("res://assets/textures/units/nato_unknown_platoon.png") as Texture2D
+			if _selected_unit_affiliation == ScenarioUnit.Affiliation.friend:
+				icon = load("res://assets/textures/units/nato_unknown_platoon.png") as Texture2D
+			else:
+				icon = load("res://assets/textures/units/enemy_unknown_platoon.png") as Texture2D
 		var img := icon.get_image()
 		img.resize(24, 24, Image.INTERPOLATE_LANCZOS)
 	
@@ -206,6 +227,8 @@ func _place_unit_from_tool(u: UnitData, pos_m: Vector2) -> void:
 	var su := ScenarioUnit.new()
 	su.unit = u
 	su.position_m = pos_m
+	su.affiliation = _selected_unit_affiliation
+	print(_selected_unit_affiliation)
 	if data.units == null:
 		data.units = []
 	data.units.append(su)
