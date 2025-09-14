@@ -274,6 +274,7 @@ func _place_unit_from_tool(u: UnitData, pos_m: Vector2) -> void:
 	su.position_m = pos_m
 	su.affiliation = _selected_unit_affiliation
 	su.callsign = _generate_callsign(_selected_unit_affiliation)
+	su.id = _generate_unit_instance_id_for(u)
 	if data.units == null:
 		data.units = []
 	data.units.append(su)
@@ -362,6 +363,28 @@ func _generate_callsign(affiliation: ScenarioUnit.Affiliation) -> String:
 			idx = 0
 			wrap += 1
 	return "UNIT"
+
+## Next unique id for a unit entity
+func _generate_unit_instance_id_for(u: UnitData) -> String:
+	var base := String(u.id)
+	if base.is_empty():
+		base = "unit"
+
+	var used := {}
+	if data and data.units:
+		var prefix := base + "_"
+		for su in data.units:
+			if su and su.unit and String(su.unit.id) == base and su.id is String:
+				var sid: String = su.id
+				if sid.begins_with(prefix):
+					var suffix := sid.substr(prefix.length())
+					if suffix.is_valid_int():
+						used[int(suffix)] = true
+
+	var n := 1
+	while used.has(n):
+		n += 1
+	return "%s_%d" % [base, n]
 
 func _unhandled_key_input(event):
 	if current_tool and current_tool.handle_input(event):

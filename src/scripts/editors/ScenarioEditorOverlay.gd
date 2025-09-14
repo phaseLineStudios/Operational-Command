@@ -6,15 +6,15 @@ class_name ScenarioEditorOverlay
 ## Owning editor.
 @export var editor: ScenarioEditor
 ## Icon size for placed units (px).
-@export var unit_icon_px: int = 36
+@export var unit_icon_px: int = 48
 ## Icon size for placed slots (px)
-@export var slot_icon_px: int = 36
+@export var slot_icon_px: int = 48
 ## Slot Icon texture
 @export var slot_icon: Texture2D = preload("res://assets/textures/units/slot_icon.png")
 ## Scale modifier when hovered
 @export var hover_scale: float = 1.15
 ## Offset of entity title when hovered
-@export var hover_title_offset: Vector2 = Vector2(0, 40)
+@export var hover_title_offset: Vector2 = Vector2(0, 48)
 
 const MI_CONFIG_SLOT := 1001
 
