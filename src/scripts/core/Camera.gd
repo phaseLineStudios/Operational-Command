@@ -4,8 +4,8 @@
 extends Node3D
 
 # variables for the camera
-@export var move_speed: float = 6.0
-@export var accel: float = 18.0
+@export var move_speed: float = 1.0
+@export var accel: float = 5.0
 @export var table_top_y: float = 0.8   # height of the table surface
 @export var hover_offset: float = 0.2  # how high above the table the camera floats
 
