@@ -95,7 +95,7 @@ func _draw_units() -> void:
 		var hovered: bool = _hover_pick.get("type", &"") == &"unit" and _hover_pick.get("index", -1) == i
 		_draw_icon_with_hover(tex, pos, hovered)
 		if hovered:
-			_draw_title(su.unit.title, pos)
+			_draw_title(su.callsign, pos)
 
 ## Draw placed UnitSlotData instances using slot_icon
 func _draw_slots() -> void:

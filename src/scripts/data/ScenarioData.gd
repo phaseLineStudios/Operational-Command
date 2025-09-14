@@ -56,6 +56,10 @@ enum scenarioDifficulty { easy, normal, hard }
 @export var unit_recruits: Array[UnitData] = []
 ## Reserve slots for reinforcements or delayed units
 @export var unit_reserves: Array[UnitSlotData]
+## Friendly Callsign List
+@export var friendly_callsigns: Array[String]
+## Enemy Callsign List
+@export var enemy_callsigns: Array[String]
 
 @export_group("Content")
 ## List of units placed in this scenario

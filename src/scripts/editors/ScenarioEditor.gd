@@ -29,6 +29,21 @@ class_name ScenarioEditor
 
 const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 
+const DEFAULT_FRIENDLY_CALLSIGNS: Array[String] = [
+	"ALPHA","BRAVO","CHARLIE","DELTA","ECHO","FOXTROT","GOLF","HOTEL","INDIA",
+	"JULIET","KILO","LIMA","MIKE","NOVEMBER","OSCAR","PAPA","QUEBEC","ROMEO",
+	"SIERRA","TANGO","UNIFORM","VICTOR","WHISKEY","XRAY","YANKEE","ZULU"
+]
+
+const DEFAULT_ENEMY_CALLSIGNS: Array[String] = [
+	"VICTOR", "BORIS", "IVAN", "SERGEI", "ANTON",
+	"PAVEL", "DIMITRI", "MIKHAIL", "OSKAR", "YURI",
+	"EGOR", "STEFAN", "NIKLAS", "ROLF", "GUNTER",
+	"KLAUS", "DIETER", "HORST", "HELMUT", "ERICH",
+	"MANFRED", "JURGEN", "ALARIC", "KONRAD", "ULRICH",
+	"RUDOLF", "HENRIK", "VOLKMAR", "FALKO", "LEONID"
+]
+
 var current_tool: ScenarioToolBase
 
 var _selected_unit_affiliation = ScenarioUnit.Affiliation.enemy
@@ -236,7 +251,7 @@ func _rebuild_scene_tree():
 	units.set_text(0, "Units")
 	for unit in data.units:
 		var u_item = scene_tree.create_item(units)
-		u_item.set_text(0, unit.unit.title)
+		u_item.set_text(0, unit.callsign)
 
 func _on_units_tree_item_activated() -> void:
 	var it := unit_list.get_selected()
@@ -258,6 +273,7 @@ func _place_unit_from_tool(u: UnitData, pos_m: Vector2) -> void:
 	su.unit = u
 	su.position_m = pos_m
 	su.affiliation = _selected_unit_affiliation
+	su.callsign = _generate_callsign(_selected_unit_affiliation)
 	if data.units == null:
 		data.units = []
 	data.units.append(su)
@@ -271,7 +287,7 @@ func _place_slot_from_tool(slot_def: UnitSlotData, pos_m: Vector2) -> void:
 
 	var inst := UnitSlotData.new()
 	inst.key = _next_slot_key()
-	inst.title = slot_def.title
+	inst.title = _generate_callsign(ScenarioUnit.Affiliation.friend)
 	inst.allowed_roles = slot_def.allowed_roles.duplicate()
 	inst.start_position = pos_m
 
@@ -286,6 +302,66 @@ func _next_slot_key() -> String:
 	if data and data.unit_slots:
 		n = data.unit_slots.size() + 1
 	return "SLOT_%d" % n
+
+## Returns the callsign pool for the given affiliation, with fallbacks.
+func _get_callsign_pool(affiliation: ScenarioUnit.Affiliation) -> Array[String]:
+	var pool: Array[String]
+	if affiliation == ScenarioUnit.Affiliation.friend:
+		if (data and data.friendly_callsigns and data.friendly_callsigns.size() > 0):
+			pool = data.friendly_callsigns
+		else:
+			pool = DEFAULT_FRIENDLY_CALLSIGNS
+	else:
+		if (data and data.enemy_callsigns and data.enemy_callsigns.size() > 0):
+			pool = data.enemy_callsigns
+		else:
+			pool = DEFAULT_ENEMY_CALLSIGNS
+	# Normalize to strings
+	var out: Array[String] = []
+	for v in pool:
+		out.append(str(v))
+	return out
+
+## Builds a set of used callsigns for an affiliation.
+func _collect_used_callsigns(affiliation: ScenarioUnit.Affiliation) -> Dictionary:
+	var used := {}
+	if not data:
+		return used
+
+	if data.units:
+		for su in data.units:
+			if su and su.affiliation == affiliation:
+				var cs := String(su.callsign).strip_edges()
+				if not cs.is_empty():
+					used[cs] = true
+
+	if data.unit_slots:
+		for s in data.unit_slots:
+			if s and ScenarioUnit.Affiliation.friend == affiliation:
+				var title := String(s.title).strip_edges()
+				if not title.is_empty():
+					used[title] = true
+
+	return used
+
+## Generate the next available callsign for an affiliation.
+func _generate_callsign(affiliation: ScenarioUnit.Affiliation) -> String:
+	var pool := _get_callsign_pool(affiliation)
+	if pool.is_empty():
+		return "UNIT"
+	var used := _collect_used_callsigns(affiliation)
+	var wrap := 0
+	var idx := 0
+	while true:
+		var base := pool[idx]
+		var candidate := base if (wrap == 0) else "%s-%d" % [base, wrap]
+		if not used.has(candidate):
+			return candidate
+		idx += 1
+		if idx >= pool.size():
+			idx = 0
+			wrap += 1
+	return "UNIT"
 
 func _unhandled_key_input(event):
 	if current_tool and current_tool.handle_input(event):
