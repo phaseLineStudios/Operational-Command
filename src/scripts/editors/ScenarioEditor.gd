@@ -298,6 +298,8 @@ func _rebuild_scene_tree():
 	if data.unit_slots:
 		for i in data.unit_slots.size():
 			var slot: UnitSlotData = data.unit_slots[i]
+			if slot == null: 
+				continue
 			var s_item := scene_tree.create_item(slots)
 			s_item.set_text(0, slot.title)
 			s_item.set_metadata(0, {"type": &"slot", "index": i})
@@ -307,6 +309,8 @@ func _rebuild_scene_tree():
 	if data.units:
 		for ui in data.units.size():
 			var su: ScenarioUnit = data.units[ui]
+			if su == null: 
+				continue
 			var u_item := scene_tree.create_item(units)
 			u_item.set_text(0, su.callsign)
 			u_item.set_metadata(0, {"type": &"unit", "index": ui})
@@ -439,6 +443,74 @@ func _next_slot_key() -> String:
 		n = data.unit_slots.size() + 1
 	return "SLOT_%d" % n
 
+## Delete the entity described by pick
+func _delete_pick(pick: Dictionary) -> void:
+	var t := StringName(pick.get("type",""))
+	var idx := int(pick.get("index",-1))
+	match t:
+		&"unit":
+			_delete_unit(idx)
+		&"slot":
+			_delete_slot(idx)
+		&"task":
+			_delete_task(idx)
+		_:
+			return
+	_clear_selection()
+	_request_overlay_redraw()
+	_rebuild_scene_tree()
+
+## Delete unit at index and all its tasks; compact indices
+func _delete_unit(unit_index: int) -> void:
+	if not data or not data.units: return
+	if unit_index < 0 or unit_index >= data.units.size(): return
+
+	if data.tasks:
+		var to_remove: Array[int] = []
+		for i in data.tasks.size():
+			var ti: ScenarioTask = data.tasks[i]
+			if ti and ti.unit_index == unit_index:
+				to_remove.append(i)
+		to_remove.sort()
+		for i in range(to_remove.size()-1, -1, -1):
+			_delete_task(to_remove[i])
+
+	data.units.remove_at(unit_index)
+
+	if data.tasks:
+		for ti in data.tasks:
+			if ti and ti.unit_index > unit_index:
+				ti.unit_index -= 1
+
+## Delete slot at index
+func _delete_slot(slot_index: int) -> void:
+	if not data or not data.unit_slots: return
+	if slot_index < 0 or slot_index >= data.unit_slots.size(): return
+	data.unit_slots.remove_at(slot_index)
+
+## Delete task at index. Repairs chain links and compacts indices
+func _delete_task(task_index: int) -> void:
+	if not data or not data.tasks: return
+	if task_index < 0 or task_index >= data.tasks.size(): return
+	var inst: ScenarioTask = data.tasks[task_index]
+	if inst == null:
+		data.tasks.remove_at(task_index)
+		_reindex_task_links_after(task_index)
+		return
+
+	var prev_idx := inst.prev_index
+	var next_idx := inst.next_index
+	if prev_idx >= 0 and prev_idx < data.tasks.size():
+		var prev := data.tasks[prev_idx]
+		if prev: prev.next_index = next_idx
+	if next_idx >= 0 and next_idx < data.tasks.size():
+		var nxt := data.tasks[next_idx]
+		if nxt: nxt.prev_index = prev_idx
+
+	data.tasks.remove_at(task_index)
+
+	_reindex_task_links_after(task_index)
+
 ## Returns the callsign pool for the given affiliation, with fallbacks.
 func _get_callsign_pool(affiliation: ScenarioUnit.Affiliation) -> Array[String]:
 	var pool: Array[String]
@@ -545,6 +617,12 @@ func _find_tail_task_index(unit_index: int) -> int:
 	return tail
 
 func _unhandled_key_input(event):
+	if event is InputEventKey and event.pressed and event.keycode == KEY_DELETE:
+		if not selected_pick.is_empty():
+			_delete_pick(selected_pick)
+			get_viewport().set_input_as_handled()
+			return
+
 	if current_tool and current_tool.handle_input(event):
 		return
 
@@ -641,6 +719,12 @@ func _collect_unit_task_chain(unit_index: int) -> Array[int]:
 func _make_task_title(inst: ScenarioTask, index_in_chain: int) -> String:
 	var name := inst.task.display_name if (inst.task and inst.task.display_name != "") else "Task"
 	return "%d: %s" % [index_in_chain + 1, name]
+
+func _reindex_task_links_after(removed: int) -> void:
+	for t in data.tasks:
+		if t == null: continue
+		if t.prev_index > removed: t.prev_index -= 1
+		if t.next_index > removed: t.next_index -= 1
 
 ## Helper function to delete all children of a parent node
 func _queue_free_children(node: Control):

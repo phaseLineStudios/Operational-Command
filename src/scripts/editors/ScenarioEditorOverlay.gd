@@ -27,6 +27,7 @@ class_name ScenarioEditorOverlay
 const MI_CONFIG_SLOT := 1001
 const MI_CONFIG_UNIT := 1002
 const MI_CONFIG_TASK := 1003
+const MI_DELETE      := 1099
 
 var _icon_cache := {}
 var _ctx: PopupMenu
@@ -80,10 +81,16 @@ func on_ctx_open(event: InputEventMouseButton):
 	match _last_pick.get("type", &""):
 		&"slot":
 			_ctx.add_item("Configure Slot", MI_CONFIG_SLOT)
+			_ctx.add_separator()
+			_ctx.add_item("Delete", MI_DELETE)
 		&"unit":
 			_ctx.add_item("Configure Unit", MI_CONFIG_UNIT)
+			_ctx.add_separator()
+			_ctx.add_item("Delete", MI_DELETE)
 		&"task": 
 			_ctx.add_item("Configure Task", MI_CONFIG_TASK)
+			_ctx.add_separator()
+			_ctx.add_item("Delete", MI_DELETE)
 		_:
 			_ctx.add_item("No actions here", -1)
 			_ctx.set_item_disabled(_ctx.get_item_count() - 1, true)
@@ -121,6 +128,9 @@ func _on_ctx_pressed(id: int) -> void:
 		MI_CONFIG_TASK: 
 			if _last_pick.get("type","") == "task": 
 				editor._open_task_config(_last_pick["index"])
+		MI_DELETE:
+			if not _last_pick.is_empty():
+				editor._delete_pick(_last_pick)
 
 func _draw_units() -> void:
 	if not editor or not editor.data or not editor.data.terrain or editor.data.units == null:
@@ -259,6 +269,8 @@ func _pick_at(overlay_pos: Vector2) -> Dictionary:
 	if editor and editor.data and editor.data.unit_slots:
 		for i in editor.data.unit_slots.size():
 			var entry = editor.data.unit_slots[i]
+			if entry == null: 
+				continue
 			var pos_m := _slot_pos_m(entry)
 			var sp := editor.terrain_render.terrain_to_map(pos_m)
 			var d2 := sp.distance_squared_to(overlay_pos)
@@ -270,7 +282,8 @@ func _pick_at(overlay_pos: Vector2) -> Dictionary:
 	if editor and editor.data and editor.data.units:
 		for i in editor.data.units.size():
 			var su = editor.data.units[i]
-			if su == null: continue
+			if su == null: 
+				continue
 			var up := editor.terrain_render.terrain_to_map(su.position_m)
 			var d2 := up.distance_squared_to(overlay_pos)
 			if d2 <= unit_r * unit_r and d2 < best_d2:
@@ -281,7 +294,8 @@ func _pick_at(overlay_pos: Vector2) -> Dictionary:
 	if editor and editor.data and editor.data.tasks:
 		for i in editor.data.tasks.size():
 			var inst: ScenarioTask = editor.data.tasks[i]
-			if inst == null: continue
+			if inst == null: 
+				continue
 			var tp := editor.terrain_render.terrain_to_map(inst.position_m)
 			var d2 := tp.distance_squared_to(overlay_pos)
 			if d2 <= task_r * task_r and d2 < best_d2:
