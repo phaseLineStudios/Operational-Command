@@ -1,8 +1,8 @@
-[gd_scene load_steps=29 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=28 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
-[ext_resource type="Script" uid="uid://dn828tsljtrki" path="res://scripts/core/Player.gd" id="3_3f477"]
+[ext_resource type="Script" uid="uid://dn828tsljtrki" path="res://scripts/core/Camera.gd" id="3_3f477"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
 size = Vector2(10, 30)
@@ -78,8 +78,6 @@ size = Vector3(0.04, 0.02, 0.12)
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3f477"]
 radius = 0.025
 height = 1.0
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_3f477"]
 
 [node name="HQTable" type="Node3D"]
 
@@ -256,25 +254,22 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00355911, -0.417542, -1.20
 operation = 2
 size = Vector3(1.37492, 1.76648, 2.76892)
 
-[node name="Player" type="CharacterBody3D" parent="."]
+[node name="CameraRig" type="Node3D" parent="."]
 script = ExtResource("3_3f477")
 
-[node name="Camera3D" type="Camera3D" parent="Player"]
+[node name="PitchPivot" type="Node3D" parent="CameraRig"]
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig/PitchPivot"]
 transform = Transform3D(1, 0, 0, 0, 0.854323, 0.519743, 0, -0.519743, 0.854323, 0, 1.08494, 0.53907)
 current = true
 
-[node name="HoldPoint" type="Marker3D" parent="Player/Camera3D"]
+[node name="HoldPoint" type="Marker3D" parent="CameraRig/PitchPivot/Camera3D"]
 
-[node name="ShapeCast3D" type="ShapeCast3D" parent="Player/Camera3D"]
+[node name="ShapeCast3D" type="ShapeCast3D" parent="CameraRig/PitchPivot/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -0.5)
 shape = SubResource("CapsuleShape3D_3f477")
 target_position = Vector3(0, 0, 0)
 debug_shape_custom_color = Color(0.914868, 7.51802e-05, 0.709427, 1)
-
-[node name="PlayerCollision" type="CollisionShape3D" parent="Player"]
-transform = Transform3D(0.25, 0, 0, 0, 0.5, 0, 0, 0, 0.25, 0, 0.569304, 0.539)
-rotation_edit_mode = 2
-shape = SubResource("CylinderShape3D_3f477")
 
 [node name="UI" type="CanvasLayer" parent="."]
 

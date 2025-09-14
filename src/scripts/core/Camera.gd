@@ -1,6 +1,6 @@
 # Script for the player behaviour in the 3d scenes (mainly for hq_table.tscn)
 
-extends CharacterBody3D
+extends Node3D
 
 # Store the RayCast and HoldPoint in variables on load
 @onready var ray: ShapeCast3D = $Camera3D/ShapeCast3D
@@ -8,12 +8,9 @@ extends CharacterBody3D
 
 # Setting up the speed and mouse sensitivity
 @export var speed := 1.5
-@export var mouse_sensitivity := 0.0015
 
 # Creating variables for the camera
 var camera
-var yaw := 0.0    # left/right rotation
-var pitch := 0.0  # up/down rotation
 
 # Set the held_item to null
 # This is important because at the start nothing is held by the player
@@ -23,7 +20,8 @@ var held_item: Node = null
 func _ready():
 	camera = $Camera3D
 	# Lock and hide the mouse, makes the game more immersive
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	# IMPORTANT: UNCOMMENT THIS LINE IF THE MOUSE NEEDS TO BE CAPTURED
+	#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	# Check if the shapecast is configured correctly:
 	assert(ray != null, "ShapeCast3D not found at $Camera3D/ShapeCast3D")
 	assert(ray.shape != null, "ShapeCast3D.shape is not set")
@@ -40,19 +38,6 @@ func _input(_event):
 		else:
 			try_pickup()
 
-# also handles inpput but is only called after _input()
-# only used for events that are not consumed by GUI
-# useful for camera rotation
-func _unhandled_input(event):
-	# handles the camera movement
-	if event is InputEventMouseMotion:
-		yaw -= event.relative.x * mouse_sensitivity
-		pitch -= event.relative.y * mouse_sensitivity
-		pitch = clamp(pitch, -1.2, 1.2) # stop looking too far up/down
-
-		rotation.y = yaw
-		camera.rotation.x = pitch
-
 # called every physics frame (like 60Hz)
 # ideal for movement, collisions and gravity
 # since _process should not be used for player movement, use _physics_process for this
@@ -68,26 +53,6 @@ func _physics_process(delta):
 		direction -= transform.basis.x
 	if Input.is_action_pressed("move_right"):
 		direction += transform.basis.x
-		
-	# handles the jumping
-	# since we have gravity implemented, this is fine like this
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = 3.0
-
-	# applying the direction changes
-	direction = direction.normalized()
-	velocity.x = direction.x * speed
-	velocity.z = direction.z * speed
-
-	# Gravity (so you don't float)
-	if not is_on_floor():
-		velocity.y -= 9.8 * delta
-
-	# function that moves everything
-	# needs to be called to update the velocity
-	# also used for the collitions
-	# so we call this in order for the player to move
-	move_and_slide()
 
 # function to handle pickups
 func try_pickup():
