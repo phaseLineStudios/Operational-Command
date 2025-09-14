@@ -38,6 +38,82 @@ var _colliders_prev_disabled: Array = []
 @onready var _mesh: MeshInstance3D = _find_first_mesh(self)
 var _mesh_prev_xform: Transform3D
 
+# Track whether this node was already top-level before dragging
+var _was_top_level: bool = false
+
+# ------------------------------------------------
+# Drag and Drop pickup logic
+# ------------------------------------------------
+
+## Begins a table-drag hold without reparenting under the camera.
+## Disables physics & stores original placement, similar to pickup(), but does NOT move it in front of the camera.
+func start_drag() -> void:
+	if is_held:
+		return
+	is_held = true
+
+	# Remember placement
+	_prev_parent = get_parent()
+	_prev_index  = get_index()
+	_prev_global = global_transform
+	_orig_scale  = scale
+
+	# Do NOT set_as_top_level(true). Keep the hierarchy intact.
+
+	# Disable collisions while dragging so the item doesn't fight the table
+	if _static_body:
+		_saved_layer = _static_body.collision_layer
+		_saved_mask  = _static_body.collision_mask
+		_static_body.collision_layer = 0
+		_static_body.collision_mask  = 0
+
+	_colliders = _collect_collision_shapes(self)
+	_colliders_prev_disabled.clear()
+	for cs in _colliders:
+		_colliders_prev_disabled.append(cs.disabled)
+		cs.set_deferred("disabled", true)
+
+
+## Updates world position while dragging on the table.
+func update_drag(world_pos: Vector3) -> void:
+	if not is_held:
+		return
+	visible = true
+	if _mesh: _mesh.visible = true   # <- force the first mesh on
+	var xf := global_transform
+	xf.origin = world_pos + Vector3(0, 0.1, 0) # lift 5 cm above table
+	global_transform = xf
+
+## Ends drag. If place_now=true, keeps current transform.
+## If place_now=false (for a cancel flow), restores original.
+func end_drag(place_now: bool) -> void:
+	if not is_held:
+		return
+
+	# Restore placement if canceled
+	if not place_now:
+		var world := get_tree().current_scene
+		var target_parent: Node = _prev_parent if is_instance_valid(_prev_parent) else world
+		reparent(target_parent, true)
+		global_transform = _prev_global
+
+	# Re-enable physics
+	if _static_body:
+		_static_body.collision_layer = _saved_layer
+		_static_body.collision_mask  = _saved_mask
+	for i in range(_colliders.size()):
+		var cs: CollisionShape3D = _colliders[i]
+		if is_instance_valid(cs):
+			cs.disabled = bool(_colliders_prev_disabled[i])
+
+	is_held = false
+
+# ------------------------------------------------
+# Old logic to view the item in front of the camera
+# Maybe we can keep some of this code for later use to inspect an item
+# TODO: Check what we should keep when implementing the inspect feature
+# ------------------------------------------------
+
 ## Picks up the item:
 ## - stores original parent/index/global transform/scale
 ## - prepares mesh orientation to face the camera
@@ -130,7 +206,7 @@ func drop(_player: Node):
 	if _static_body:
 		_static_body.collision_layer = _saved_layer
 		_static_body.collision_mask  = _saved_mask
-	for i in _colliders.size():
+	for i in range(_colliders.size()):
 		var cs: CollisionShape3D = _colliders[i]
 		if is_instance_valid(cs):
 			cs.disabled = bool(_colliders_prev_disabled[i])
