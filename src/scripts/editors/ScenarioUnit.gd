@@ -7,6 +7,8 @@ enum Affiliation { friend, enemy }
 
 ## Unique identifier
 @export var id: String
+## Callsign
+@export var callsign: String
 ## Unit Data
 @export var unit: UnitData
 ## Unit Position

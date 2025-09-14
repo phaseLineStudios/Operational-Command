@@ -298,6 +298,7 @@ func _on_overlay_gui_input(event):
 			var mp = terrain_render.map_to_terrain(event.position)
 			var grid := terrain_render.pos_to_grid(mp)
 			mouse_position_label.text = "(%d, %d | %s)" % [mp.x, mp.y, grid]
+			terrain_overlay.on_mouse_move(event.position)
 
 	if current_tool and current_tool.handle_input(event):
 		return

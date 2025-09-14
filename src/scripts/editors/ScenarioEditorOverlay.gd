@@ -11,12 +11,18 @@ class_name ScenarioEditorOverlay
 @export var slot_icon_px: int = 36
 ## Slot Icon texture
 @export var slot_icon: Texture2D = preload("res://assets/textures/units/slot_icon.png")
+## Scale modifier when hovered
+@export var hover_scale: float = 1.15
+## Offset of entity title when hovered
+@export var hover_title_offset: Vector2 = Vector2(0, 40)
 
 const MI_CONFIG_SLOT := 1001
 
 var _icon_cache := {}
 var _ctx: PopupMenu
 var _last_pick: Dictionary = {}
+var _hover_pick: Dictionary = {}
+var _hover_pos: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -64,6 +70,11 @@ func on_dbl_click(event: InputEventMouseButton):
 		_:
 			pass
 
+func on_mouse_move(pos: Vector2) -> void:
+	_hover_pos = pos
+	_hover_pick = _pick_at(pos)
+	queue_redraw()
+
 func _on_ctx_pressed(id: int) -> void:
 	match id:
 		MI_CONFIG_SLOT:
@@ -71,41 +82,61 @@ func _on_ctx_pressed(id: int) -> void:
 				editor._open_slot_config(_last_pick["index"])
 
 func _draw_units() -> void:
-	if not editor or not editor.data or not editor.data.terrain:
+	if not editor or not editor.data or not editor.data.terrain or editor.data.units == null:
 		return
-
-	for su in editor.data.units:
-		if su == null or su.unit == null:
+	for i in editor.data.units.size():
+		var su = editor.data.units[i]
+		if su == null or su.unit == null: 
 			continue
 		var tex := _get_scaled_icon_unit(su)
-		if tex == null:
+		if tex == null: 
 			continue
-
-		var screen_pos: Vector2 = editor.terrain_render.terrain_to_map(su.position_m)
-		var icon_size: Vector2 = tex.get_size()
-		var half := icon_size * 0.5
-
-		draw_set_transform(screen_pos)
-		draw_texture(tex, -half)
-
-		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		var pos: Vector2 = editor.terrain_render.terrain_to_map(su.position_m)
+		var hovered: bool = _hover_pick.get("type", &"") == &"unit" and _hover_pick.get("index", -1) == i
+		_draw_icon_with_hover(tex, pos, hovered)
+		if hovered:
+			_draw_title(su.unit.title, pos)
 
 ## Draw placed UnitSlotData instances using slot_icon
 func _draw_slots() -> void:
-	if not editor or not editor.data or not editor.data.terrain:
+	if not editor or not editor.data or not editor.data.terrain or editor.data.unit_slots == null:
 		return
-
 	var tex := _get_scaled_icon_slot()
-	if tex == null:
+	if tex == null: 
 		return
+	for i in editor.data.unit_slots.size():
+		var entry = editor.data.unit_slots[i]
+		var pos_m := _slot_pos_m(entry)
+		var pos: Vector2 = editor.terrain_render.terrain_to_map(pos_m)
+		var hovered: bool = _hover_pick.get("type", &"") == &"slot" and _hover_pick.get("index", -1) == i
+		_draw_icon_with_hover(tex, pos, hovered)
+		if hovered:
+			var title := "slot"
+			if entry is UnitSlotData:
+				title = (entry as UnitSlotData).title
+			_draw_title(title, pos)
 
-	for entry in editor.data.unit_slots:
-		var screen_pos: Vector2 = editor.terrain_render.terrain_to_map(entry.start_position)
-		var icon_size: Vector2 = tex.get_size()
-		var half := icon_size * 0.5
-		draw_texture(tex, screen_pos - half)
+func _draw_icon_with_hover(tex: Texture2D, center: Vector2, hovered: bool) -> void:
+	var icon_size: Vector2 = tex.get_size()
+	var half := icon_size * 0.5
+	if hovered:
+		draw_set_transform(center, 0.0, Vector2.ONE * hover_scale)
+		draw_texture(tex, -half)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	else:
+		draw_texture(tex, center - half)
 
-## Returns { type: "slot"/..., index: int } of nearest object under cursor
+func _draw_title(text: String, center: Vector2) -> void:
+	var font := get_theme_default_font()
+	var fs := get_theme_default_font_size()
+	if font == null: return
+	var pos := center + hover_title_offset
+	var w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+	var rect := Rect2(Vector2(pos.x - w * 0.5 - 4, pos.y - fs - 4), Vector2(w + 8, fs + 8))
+	draw_rect(rect, Color(0, 0, 0, 0.55), true)
+	draw_string(font, Vector2(pos.x - w * 0.5, pos.y), text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(1,1,1,0.96))
+
+## Returns { type: string/..., index: int } of nearest object under cursor
 func _pick_at(overlay_pos: Vector2) -> Dictionary:
 	var best := {}
 	var best_d2 := INF
@@ -115,11 +146,22 @@ func _pick_at(overlay_pos: Vector2) -> Dictionary:
 		for i in editor.data.unit_slots.size():
 			var entry = editor.data.unit_slots[i]
 			var pos_m := _slot_pos_m(entry)
-			var screen := editor.terrain_render.terrain_to_map(pos_m)
-			var d2 := screen.distance_squared_to(overlay_pos)
+			var sp := editor.terrain_render.terrain_to_map(pos_m)
+			var d2 := sp.distance_squared_to(overlay_pos)
 			if d2 <= slot_r * slot_r and d2 < best_d2:
 				best_d2 = d2
 				best = { "type": &"slot", "index": i }
+
+	var unit_r := float(unit_icon_px) * 0.5 + 2.0
+	if editor and editor.data and editor.data.units:
+		for i in editor.data.units.size():
+			var su = editor.data.units[i]
+			if su == null: continue
+			var up := editor.terrain_render.terrain_to_map(su.position_m)
+			var d2 := up.distance_squared_to(overlay_pos)
+			if d2 <= unit_r * unit_r and d2 < best_d2:
+				best_d2 = d2
+				best = { "type": &"unit", "index": i }
 
 	return best
 
