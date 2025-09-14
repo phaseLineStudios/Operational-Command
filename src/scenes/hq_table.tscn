@@ -257,6 +257,7 @@ size = Vector3(1.37492, 1.76648, 2.76892)
 [node name="CameraRig" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.546)
 script = ExtResource("3_3f477")
+table_node = NodePath("../Table")
 
 [node name="PitchPivot" type="Node3D" parent="CameraRig"]
 
