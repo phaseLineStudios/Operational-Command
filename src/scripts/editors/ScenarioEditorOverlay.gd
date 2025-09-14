@@ -22,6 +22,7 @@ const MI_CONFIG_UNIT := 1002
 var _icon_cache := {}
 var _ctx: PopupMenu
 var _last_pick: Dictionary = {}
+var _selected_pick: Dictionary = {} 
 var _hover_pick: Dictionary = {}
 var _hover_pos: Vector2 = Vector2.ZERO
 
@@ -42,6 +43,19 @@ func _draw() -> void:
 
 func request_redraw() -> void:
 	queue_redraw()
+
+## Editor sets current selection here
+func set_selected(pick: Dictionary) -> void:
+	_selected_pick = pick if pick != null else {}
+	queue_redraw()
+
+func clear_selected() -> void:
+	_selected_pick = {}
+	queue_redraw()
+
+## Let editor query the thing under a given overlay position
+func get_pick_at(pos: Vector2) -> Dictionary:
+	return _pick_at(pos)
 
 func on_ctx_open(event: InputEventMouseButton):
 	if not event: return
@@ -101,9 +115,9 @@ func _draw_units() -> void:
 		if tex == null: 
 			continue
 		var pos: Vector2 = editor.terrain_render.terrain_to_map(su.position_m)
-		var hovered: bool = _hover_pick.get("type", &"") == &"unit" and _hover_pick.get("index", -1) == i
-		_draw_icon_with_hover(tex, pos, hovered)
-		if hovered:
+		var hi := _is_highlighted(&"unit", i) 
+		_draw_icon_with_hover(tex, pos, hi)
+		if hi:
 			_draw_title(su.callsign, pos)
 
 ## Draw placed UnitSlotData instances using slot_icon
@@ -117,13 +131,17 @@ func _draw_slots() -> void:
 		var entry = editor.data.unit_slots[i]
 		var pos_m := _slot_pos_m(entry)
 		var pos: Vector2 = editor.terrain_render.terrain_to_map(pos_m)
-		var hovered: bool = _hover_pick.get("type", &"") == &"slot" and _hover_pick.get("index", -1) == i
-		_draw_icon_with_hover(tex, pos, hovered)
-		if hovered:
+		var hi := _is_highlighted(&"slot", i)
+		_draw_icon_with_hover(tex, pos, hi)
+		if hi:
 			var title := "slot"
 			if entry is UnitSlotData:
 				title = (entry as UnitSlotData).title
 			_draw_title(title, pos)
+
+func _is_highlighted(t: StringName, idx: int) -> bool:
+	return (_hover_pick.get("type", &"") == t and _hover_pick.get("index", -1) == idx) \
+		or (_selected_pick.get("type", &"") == t and _selected_pick.get("index", -1) == idx)
 
 func _draw_icon_with_hover(tex: Texture2D, center: Vector2, hovered: bool) -> void:
 	var icon_size: Vector2 = tex.get_size()
@@ -133,7 +151,7 @@ func _draw_icon_with_hover(tex: Texture2D, center: Vector2, hovered: bool) -> vo
 		draw_texture(tex, -half)
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	else:
-		draw_texture(tex, center - half)
+		draw_texture(tex, center - half, Color(1,1,1,0.75))
 
 func _draw_title(text: String, center: Vector2) -> void:
 	var font := get_theme_default_font()

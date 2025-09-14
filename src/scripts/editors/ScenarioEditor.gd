@@ -46,6 +46,7 @@ const DEFAULT_ENEMY_CALLSIGNS: Array[String] = [
 ]
 
 var current_tool: ScenarioToolBase
+var selected_pick: Dictionary = {}
 
 var _selected_unit_affiliation = ScenarioUnit.Affiliation.enemy
 var unit_categories: Array[UnitCategoryData]
@@ -75,6 +76,7 @@ func _ready():
 	_rebuild_unit_categories()
 	_refresh_filter_units()
 	
+	scene_tree.item_selected.connect(_on_scene_tree_item_selected)
 	_setup_scene_tree()
 	_rebuild_scene_tree()
 
@@ -245,18 +247,31 @@ func _setup_scene_tree():
 func _rebuild_scene_tree():
 	scene_tree.clear()
 	var root := scene_tree.create_item()
-	
+
 	var slots := scene_tree.create_item(root)
 	slots.set_text(0, "Slots")
-	for slot in data.unit_slots:
-		var s_item := scene_tree.create_item(slots)
-		s_item.set_text(0, slot.title)
-	
+	if data.unit_slots:
+		for i in data.unit_slots.size():
+			var slot: UnitSlotData = data.unit_slots[i]
+			var s_item := scene_tree.create_item(slots)
+			s_item.set_text(0, slot.title)
+			s_item.set_metadata(0, {"type": &"slot", "index": i})
+
 	var units := scene_tree.create_item(root)
 	units.set_text(0, "Units")
-	for unit in data.units:
-		var u_item = scene_tree.create_item(units)
-		u_item.set_text(0, unit.callsign)
+	if data.units:
+		for i in data.units.size():
+			var su: ScenarioUnit = data.units[i]
+			var u_item := scene_tree.create_item(units)
+			u_item.set_text(0, su.callsign)
+			u_item.set_metadata(0, {"type": &"unit", "index": i})
+
+func _on_scene_tree_item_selected() -> void:
+	var it := scene_tree.get_selected()
+	if it == null: return
+	var meta: Variant = it.get_metadata(0)
+	if typeof(meta) == TYPE_DICTIONARY and meta.has("type") and meta.has("index"):
+		_set_selection(meta, true)
 
 func _on_units_tree_item_activated() -> void:
 	var it := unit_list.get_selected()
@@ -414,6 +429,48 @@ func _on_overlay_gui_input(event):
 		if event.button_index == MOUSE_BUTTON_LEFT and event.double_click:
 			terrain_overlay.on_dbl_click(event)
 			return
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			var pick := terrain_overlay.get_pick_at(event.position)
+			if pick.is_empty():
+				_clear_selection()
+			else:
+				_set_selection(pick)
+			return
+
+func _set_selection(pick: Dictionary, from_tree: bool = false) -> void:
+	selected_pick = pick if pick != null else {}
+	terrain_overlay.set_selected(selected_pick)
+	_request_overlay_redraw()
+	if not from_tree:
+		_select_in_scene_tree(pick)
+
+func _clear_selection(from_tree: bool = false) -> void:
+	selected_pick = {}
+	terrain_overlay.clear_selected()
+	_request_overlay_redraw()
+	if not from_tree:
+		scene_tree.deselect_all()
+
+func _select_in_scene_tree(pick: Dictionary) -> void:
+	if pick.is_empty():
+		scene_tree.deselect_all(); return
+	var root := scene_tree.get_root()
+	if root == null: return
+	_select_item_recursive(root, pick)
+
+func _select_item_recursive(item: TreeItem, pick: Dictionary) -> bool:
+	var meta: Variant = item.get_metadata(0)
+	if typeof(meta) == TYPE_DICTIONARY \
+	and meta.get("type","") == pick.get("type","") \
+	and int(meta.get("index",-1)) == int(pick.get("index",-1)):
+		scene_tree.set_selected(item, 0)
+		return true
+	var child := item.get_first_child()
+	while child:
+		if _select_item_recursive(child, pick):
+			return true
+		child = child.get_next()
+	return false
 
 ## Helper function to delete all children of a parent node
 func _queue_free_children(node: Control):
