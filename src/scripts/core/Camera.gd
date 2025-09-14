@@ -16,7 +16,15 @@ extends Node3D
 # needed because the camera does not look straight down
 @export var forward_offset: float = 0.3
 
+# variables used for tilting the camera near z edge of the table
+@export_group("Tilt near Z edge")
+@export var default_pitch_deg: float = -30.0  # base downward tilt
+@export var max_edge_tilt_deg: float = 20.0   # extra tilt when near edge
+@export var tilt_start_distance: float = 0.5  # start tilting within this Z distance to the edge
+@export var tilt_lerp_speed: float = 80.0      # how fast the tilt eases
+@onready var pitch_pivot: Node3D = $PitchPivot
 
+# create a 0 velicity vector
 var _vel: Vector3 = Vector3.ZERO
 
 # Resolved world-space bounds
@@ -31,8 +39,12 @@ var _bounds_ready := false
 func _ready():
 	# Initialize the table bounds, used to limit the camera movement to the table only
 	_init_table_bounds()
+	# if the camera was found, perform the default tilt
+	if pitch_pivot:
+		pitch_pivot.rotation_degrees.x = default_pitch_deg
 	# Lock and hide the mouse, makes the game more immersive
 	# IMPORTANT: UNCOMMENT THIS LINE IF THE MOUSE NEEDS TO BE CAPTURED
+	# NO LONGER NEED FOR NOW BUT MAYBE IN THE FUTURE
 	#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 # called every physics frame (like 60Hz)
@@ -73,6 +85,22 @@ func _physics_process(delta: float) -> void:
 		# Clamp to table rectangle
 		pos.x = clamp(pos.x, _bx_min + edge_padding, _bx_max - edge_padding)
 		pos.z = clamp(pos.z, _bz_min + edge_padding, _bz_max - edge_padding)
+		
+		# this is the logic to tilt the camera at the end of z bounds
+		if pitch_pivot:
+			# Distance to the far Z edge
+			var dist_edge: float = abs(pos.z - _bz_min)
+
+			var t: float = 0.0
+			if tilt_start_distance > 0.0:
+				t = 1.0 - clamp(dist_edge / tilt_start_distance, 0.0, 1.0)
+				t = t * t * (3.0 - 2.0 * t) # smoothstep
+				print("t=", t, "  pitch=", pitch_pivot.rotation_degrees.x)
+
+
+			var target_pitch: float = default_pitch_deg - max_edge_tilt_deg * t
+			var k: float = clamp(tilt_lerp_speed * delta, 0.0, 1.0)
+			pitch_pivot.rotation_degrees.x = lerp(pitch_pivot.rotation_degrees.x, target_pitch, k)
 	global_position = pos
 		
 

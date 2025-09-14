@@ -262,7 +262,7 @@ table_node = NodePath("../Table")
 [node name="PitchPivot" type="Node3D" parent="CameraRig"]
 
 [node name="Camera3D" type="Camera3D" parent="CameraRig/PitchPivot"]
-transform = Transform3D(1, 0, 0, 0, 0.854323, 0.519743, 0, -0.519743, 0.854323, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 current = true
 
 [node name="HoldPoint" type="Marker3D" parent="CameraRig/PitchPivot/Camera3D"]
