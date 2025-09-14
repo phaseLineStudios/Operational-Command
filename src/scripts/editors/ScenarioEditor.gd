@@ -18,6 +18,7 @@ class_name ScenarioEditor
 @onready var tool_hint: HBoxContainer = %ToolHint
 @onready var mouse_position_label: Label = %MousePosition
 @onready var _slot_cfg: SlotConfigDialog = %SlotConfigDialog
+@onready var _unit_cfg: UnitConfigDialog = %UnitConfigDialog
 @onready var scene_tree: Tree = %"Scene Tree"
 
 @onready var unit_faction_friend: Button = %FactionRow/Friend
@@ -142,6 +143,10 @@ func _open_slot_config(index: int) -> void:
 	if not data or not data.unit_slots: 
 		return
 	_slot_cfg.show_for(self, index)
+
+func _open_unit_config(index: int) -> void:
+	if not data or not data.units: return
+	_unit_cfg.show_for(self, index)
 
 func _request_overlay_redraw() -> void:
 	terrain_overlay.request_redraw()
@@ -351,17 +356,17 @@ func _generate_callsign(affiliation: ScenarioUnit.Affiliation) -> String:
 	if pool.is_empty():
 		return "UNIT"
 	var used := _collect_used_callsigns(affiliation)
-	var wrap := 0
+	var cls_wrap := 0
 	var idx := 0
 	while true:
 		var base := pool[idx]
-		var candidate := base if (wrap == 0) else "%s-%d" % [base, wrap]
+		var candidate := base if (cls_wrap == 0) else "%s-%d" % [base, cls_wrap]
 		if not used.has(candidate):
 			return candidate
 		idx += 1
 		if idx >= pool.size():
 			idx = 0
-			wrap += 1
+			cls_wrap += 1
 	return "UNIT"
 
 ## Next unique id for a unit entity

@@ -30,7 +30,6 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 	_roles = s.allowed_roles
 	_refresh_role_list()
 	visible = true
-	popup_centered_ratio(0.35)
 
 ## Save slot config
 func _on_save() -> void:

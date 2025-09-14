@@ -17,6 +17,7 @@ class_name ScenarioEditorOverlay
 @export var hover_title_offset: Vector2 = Vector2(0, 48)
 
 const MI_CONFIG_SLOT := 1001
+const MI_CONFIG_UNIT := 1002
 
 var _icon_cache := {}
 var _ctx: PopupMenu
@@ -51,11 +52,14 @@ func on_ctx_open(event: InputEventMouseButton):
 	_ctx.set_item_disabled(0, true)
 	_ctx.add_separator()
 
-	if _last_pick.get("type", &"") == &"slot":
-		_ctx.add_item("Configure Slot…", MI_CONFIG_SLOT)
-	else:
-		_ctx.add_item("No actions here", -1)
-		_ctx.set_item_disabled(_ctx.get_item_count() - 1, true)
+	match _last_pick.get("type", &""):
+		&"slot":
+			_ctx.add_item("Configure Slot", MI_CONFIG_SLOT)
+		&"unit":
+			_ctx.add_item("Configure Unit", MI_CONFIG_UNIT)
+		_:
+			_ctx.add_item("No actions here", -1)
+			_ctx.set_item_disabled(_ctx.get_item_count() - 1, true)
 
 	_ctx.position = event.position.floor()
 	_ctx.reset_size()
@@ -67,6 +71,8 @@ func on_dbl_click(event: InputEventMouseButton):
 	match pick.get("type", &""):
 		&"slot":
 			editor._open_slot_config(pick["index"])
+		&"unit":
+			editor._open_unit_config(pick["index"])
 		_:
 			pass
 
@@ -80,6 +86,9 @@ func _on_ctx_pressed(id: int) -> void:
 		MI_CONFIG_SLOT:
 			if _last_pick.get("type", &"") == &"slot":
 				editor._open_slot_config(_last_pick["index"])
+		MI_CONFIG_UNIT:
+			if _last_pick.get("type", &"") == &"unit":
+				editor._open_unit_config(_last_pick["index"])
 
 func _draw_units() -> void:
 	if not editor or not editor.data or not editor.data.terrain or editor.data.units == null:
