@@ -21,14 +21,14 @@ extends Node3D
 @export var edge_padding: float = 0.05   # keeps rig slightly inside edges to avoid visual clipping
 # shift plane along +Z (relative to table)
 # needed because the camera does not look straight down
-@export var forward_offset: float = 0.3  # shifts the clamped rectangle forward/back along Z once at init
+@export var forward_offset: float = 0.35  # shifts the clamped rectangle forward/back along Z once at init
 
 # variables used for tilting the camera near z edge of the table
 @export_group("Tilt near Z edge")
 @export var default_pitch_deg: float = -30.0  # base downward tilt applied to PitchPivot at startup
-@export var max_edge_tilt_deg: float = 20.0   # additional downward tilt when close to chosen Z edge
-@export var tilt_start_distance: float = 0.5  # distance-from-edge where tilt begins ramping in
-@export var tilt_lerp_speed: float = 80.0     # interpolation speed for smooth pitch changes each frame
+@export var max_edge_tilt_deg: float = 30.0   # additional downward tilt when close to chosen Z edge
+@export var tilt_start_distance: float = 1  # distance-from-edge where tilt begins ramping in
+@export var tilt_lerp_speed: float = 20.0     # interpolation speed for smooth pitch changes each frame
 @onready var pitch_pivot: Node3D = $PitchPivot # pivot node that actually rotates around local X (pitch)
 
 # create a 0 velicity vector
