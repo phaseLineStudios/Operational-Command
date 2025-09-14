@@ -1,16 +1,14 @@
-[gd_scene load_steps=15 format=3 uid="uid://c5vv37x66vtg7"]
+[gd_scene load_steps=13 format=3 uid="uid://c5vv37x66vtg7"]
 
 [ext_resource type="Script" uid="uid://cilbctp6dmcm" path="res://scripts/editors/ScenarioEditor.gd" id="1_wqbsy"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="2_gsqds"]
 [ext_resource type="Script" uid="uid://dg0cnhart5i21" path="res://scripts/data/ScenarioData.gd" id="2_ltmm0"]
 [ext_resource type="Resource" uid="uid://bt5fxbp2mxljn" path="res://campaigns/terrains/fulda_gap.tres" id="3_csmny"]
 [ext_resource type="Script" uid="uid://dxc7kql2s6ijx" path="res://scripts/editors/ScenarioEditorOverlay.gd" id="3_cvhnd"]
-[ext_resource type="Script" uid="uid://ji05jr2eheu8" path="res://scripts/data/UnitData.gd" id="4_dnx60"]
 [ext_resource type="PackedScene" uid="uid://5awqyidom0l2" path="res://scenes/ui/scenario_new_dialog.tscn" id="4_un5t0"]
 [ext_resource type="Script" uid="uid://cjsu4sh4wfvmg" path="res://scripts/editors/TerrainCamera.gd" id="4_ysx1w"]
-[ext_resource type="Script" uid="uid://cku7nh4ja4fig" path="res://scripts/data/UnitSlotData.gd" id="5_32ip5"]
 [ext_resource type="PackedScene" uid="uid://qsm7784yjbw7" path="res://scenes/ui/weather_dialog.tscn" id="5_un5t0"]
-[ext_resource type="Script" uid="uid://d2krdrl55hin0" path="res://scripts/editors/ScenarioUnit.gd" id="6_puqku"]
+[ext_resource type="PackedScene" uid="uid://dkpal3npfyfbj" path="res://scenes/ui/task_config_dialog.tscn" id="11_ltmm0"]
 [ext_resource type="PackedScene" uid="uid://cb5oknciymdd4" path="res://scenes/ui/slot_config_dialog.tscn" id="12_csmny"]
 [ext_resource type="PackedScene" uid="uid://blt6fcbjfelax" path="res://scenes/ui/unit_config_dialog.tscn" id="13_dnx60"]
 
@@ -21,28 +19,28 @@ title = "Test Scenario"
 description = "Test Scenario for testing the scenario editor"
 preview_path = "uid://dy8x8hgvmq0d7"
 terrain = ExtResource("3_csmny")
-difficulty = 0
-map_position = Vector2(0, 0)
-scenario_order = 0
-rain = 0.0
-fog_m = 8000.0
-wind_dir = 0.0
-wind_speed_m = 1.0
-year = 1983
-month = 1
-day = 1
-hour = 12
-minute = 0
-unit_points = 500
-unit_slots = Array[ExtResource("5_32ip5")]([])
-unit_recruits = Array[ExtResource("4_dnx60")]([])
-unit_reserves = Array[ExtResource("5_32ip5")]([])
-friendly_callsigns = Array[String]([])
-enemy_callsigns = Array[String]([])
-units = Array[ExtResource("6_puqku")]([])
-triggers = []
-tasks = []
-drawings = []
+difficulty = null
+map_position = null
+scenario_order = null
+rain = null
+fog_m = null
+wind_dir = null
+wind_speed_m = null
+year = null
+month = null
+day = null
+hour = null
+minute = null
+unit_points = null
+unit_slots = null
+unit_recruits = null
+unit_reserves = null
+friendly_callsigns = null
+enemy_callsigns = null
+units = null
+triggers = null
+tasks = null
+drawings = null
 metadata/_custom_type_script = "uid://dg0cnhart5i21"
 
 [node name="ScenarioEditor" type="Control"]
@@ -256,6 +254,7 @@ hide_root = true
 [node name="NewUnit" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Units"]
 unique_name_in_owner = true
 layout_mode = 2
+disabled = true
 text = "+ New Unit"
 
 [node name="Triggers" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
@@ -269,14 +268,18 @@ layout_mode = 2
 text = "NOT YET IMPLEMENTED"
 
 [node name="Tasks" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
-unique_name_in_owner = true
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="Label" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Tasks"]
+[node name="TasksLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Tasks"]
 layout_mode = 2
-text = "NOT YET IMPLEMENTED"
+text = "Tasks"
+
+[node name="Tasks" type="ItemList" parent="Root/HBox/RightTray/VBox/TabContainer3/Tasks"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
 
 [node name="Draw" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
 unique_name_in_owner = true
@@ -321,5 +324,9 @@ unique_name_in_owner = true
 visible = false
 
 [node name="UnitConfigDialog" parent="." instance=ExtResource("13_dnx60")]
+unique_name_in_owner = true
+visible = false
+
+[node name="TaskConfigDialog" parent="." instance=ExtResource("11_ltmm0")]
 unique_name_in_owner = true
 visible = false

@@ -19,6 +19,7 @@ class_name ScenarioEditor
 @onready var mouse_position_label: Label = %MousePosition
 @onready var _slot_cfg: SlotConfigDialog = %SlotConfigDialog
 @onready var _unit_cfg: UnitConfigDialog = %UnitConfigDialog
+@onready var _task_cfg: TaskConfigDialog = %TaskConfigDialog
 @onready var scene_tree: Tree = %"Scene Tree"
 
 @onready var unit_faction_friend: Button = %FactionRow/Friend
@@ -27,6 +28,8 @@ class_name ScenarioEditor
 @onready var unit_search: LineEdit = %UnitSearch
 @onready var unit_list: Tree = %Units
 @onready var new_unit: Button = %NewUnit
+
+@onready var task_list: ItemList = %Tasks
 
 const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 
@@ -47,7 +50,8 @@ const DEFAULT_ENEMY_CALLSIGNS: Array[String] = [
 
 var current_tool: ScenarioToolBase
 var selected_pick: Dictionary = {}
-
+var _task_defs: Array[UnitBaseTask] = []
+var _selected_task: UnitBaseTask
 var _selected_unit_affiliation = ScenarioUnit.Affiliation.enemy
 var unit_categories: Array[UnitCategoryData]
 var selected_category: UnitCategoryData
@@ -75,6 +79,10 @@ func _ready():
 	_setup_units_tree()
 	_rebuild_unit_categories()
 	_refresh_filter_units()
+	
+	_init_task_defs()
+	_build_task_list()
+	task_list.item_selected.connect(_on_task_item_selected)
 	
 	scene_tree.item_selected.connect(_on_scene_tree_item_selected)
 	_setup_scene_tree()
@@ -149,6 +157,11 @@ func _open_slot_config(index: int) -> void:
 func _open_unit_config(index: int) -> void:
 	if not data or not data.units: return
 	_unit_cfg.show_for(self, index)
+
+func _open_task_config(task_index: int) -> void:
+	if not data or data.tasks == null: return
+	var inst: ScenarioTask = data.tasks[task_index]
+	_task_cfg.show_for(self, inst)
 
 func _request_overlay_redraw() -> void:
 	terrain_overlay.request_redraw()
@@ -240,6 +253,38 @@ func _refresh_filter_units() -> void:
 		item.set_icon(0, ImageTexture.create_from_image(img))
 		item.set_metadata(0, unit)
 
+## Create the available task definitions shown in the list.
+func _init_task_defs() -> void:
+	_task_defs.clear()
+	_task_defs.append(UnitTask_Move.new())
+	_task_defs.append(UnitTask_Defend.new())
+	_task_defs.append(UnitTask_Wait.new())
+	_task_defs.append(UnitTask_Patrol.new())
+	_task_defs.append(UnitTask_SetBehaviour.new())
+	_task_defs.append(UnitTask_SetCombatMode.new())
+
+## Populate the Tasks ItemList with names
+func _build_task_list() -> void:
+	task_list.clear()
+	for i in _task_defs.size():
+		var t: UnitBaseTask = _task_defs[i]
+		var icon_tex: Texture2D = t.icon
+		var idx: int
+		if icon_tex:
+			var img := icon_tex.get_image()
+			img.resize(24, 24, Image.INTERPOLATE_LANCZOS)
+			idx = task_list.add_item(t.display_name, ImageTexture.create_from_image(img))
+		else:
+			idx = task_list.add_item(t.display_name)
+		task_list.set_item_metadata(idx, t)
+
+## Single-click: remember selection
+func _on_task_item_selected(index: int) -> void:
+	var meta: Variant = task_list.get_item_metadata(index)
+	_selected_task = meta if meta is UnitBaseTask else null
+	if meta is UnitBaseTask:
+		start_place_task_tool(meta)
+
 func _setup_scene_tree():
 	scene_tree.set_column_expand(0, true)
 	scene_tree.set_column_custom_minimum_width(0, 200)
@@ -260,11 +305,39 @@ func _rebuild_scene_tree():
 	var units := scene_tree.create_item(root)
 	units.set_text(0, "Units")
 	if data.units:
-		for i in data.units.size():
-			var su: ScenarioUnit = data.units[i]
+		for ui in data.units.size():
+			var su: ScenarioUnit = data.units[ui]
 			var u_item := scene_tree.create_item(units)
 			u_item.set_text(0, su.callsign)
-			u_item.set_metadata(0, {"type": &"unit", "index": i})
+			u_item.set_metadata(0, {"type": &"unit", "index": ui})
+			
+			if su.affiliation == ScenarioUnit.Affiliation.friend and su.unit.icon:
+				var img := su.unit.icon.get_image()
+				if not img.is_empty():
+					img.resize(16, 16, Image.INTERPOLATE_LANCZOS)
+					u_item.set_icon(0, ImageTexture.create_from_image(img))
+			elif su.affiliation == ScenarioUnit.Affiliation.enemy and su.unit.enemy_icon:
+				var img := su.unit.enemy_icon.get_image()
+				if not img.is_empty():
+					img.resize(16, 16, Image.INTERPOLATE_LANCZOS)
+					u_item.set_icon(0, ImageTexture.create_from_image(img))
+
+			var ordered := _collect_unit_task_chain(ui)
+			for idx in ordered.size():
+				var ti := ordered[idx]
+				var inst: ScenarioTask = data.tasks[ti]
+				if inst == null: continue
+				var t_item := scene_tree.create_item(u_item)
+				t_item.set_text(0, _make_task_title(inst, idx))
+				t_item.set_metadata(0, {"type": &"task", "index": ti})
+
+				if inst.task and inst.task.icon:
+					var img := inst.task.icon.get_image()
+					if not img.is_empty():
+						img.resize(16, 16, Image.INTERPOLATE_LANCZOS)
+						t_item.set_icon(0, ImageTexture.create_from_image(img))
+
+	_select_in_scene_tree(selected_pick)
 
 func _on_scene_tree_item_selected() -> void:
 	var it := scene_tree.get_selected()
@@ -279,6 +352,48 @@ func _on_units_tree_item_activated() -> void:
 	var payload: Variant = it.get_metadata(0)
 	if payload is UnitData or payload is UnitSlotData:
 		start_place_unit_tool(payload)
+
+## Place and chain a task for a unit. Uses prev/next on TaskInstance
+func _place_task_for_unit(unit_index: int, task: UnitBaseTask, pos_m: Vector2, after_task_index: int = -1) -> int:
+	if not data or not task:
+		return -1
+	if data.tasks == null:
+		data.tasks = []
+
+	var inst := ScenarioTask.new()
+	inst.id = _generate_task_instance_id(task.type_id)
+	inst.task = task
+	inst.unit_index = unit_index
+	inst.position_m = pos_m
+	inst.params = task.make_default_params()
+	inst.prev_index = -1
+	inst.next_index = -1
+
+	if after_task_index >= 0 and after_task_index < data.tasks.size():
+		var after: ScenarioTask = data.tasks[after_task_index]
+		inst.prev_index = after_task_index
+		inst.next_index = after.next_index
+	else:
+		var tail_idx := _find_tail_task_index(unit_index)
+		inst.prev_index = tail_idx
+		inst.next_index = -1
+
+	var new_idx := data.tasks.size()
+	data.tasks.append(inst)
+
+	if inst.prev_index >= 0 and inst.prev_index < data.tasks.size():
+		data.tasks[inst.prev_index].next_index = new_idx
+	if inst.next_index >= 0 and inst.next_index < data.tasks.size():
+		data.tasks[inst.next_index].prev_index = new_idx
+
+	_request_overlay_redraw()
+	_set_selection({"type": &"task", "index": new_idx})
+	return new_idx
+
+func start_place_task_tool(task: UnitBaseTask) -> void:
+	var tool := TaskPlaceTool.new()
+	tool.task = task
+	set_tool(tool)
 
 func start_place_unit_tool(payload: Variant) -> void:
 	var tool := UnitPlaceTool.new()
@@ -406,6 +521,29 @@ func _generate_unit_instance_id_for(u: UnitData) -> String:
 		n += 1
 	return "%s_%d" % [base, n]
 
+func _generate_task_instance_id(type_id: StringName) -> String:
+	var base := "task_%s" % String(type_id)
+	if data.tasks == null: return "%s_1" % base
+	var used := {}
+	for t in data.tasks:
+		if t and t.id is String and t.id.begins_with(base + "_"):
+			var s := (t.id as String).substr(base.length() + 1)
+			if s.is_valid_int(): used[int(s)] = true
+	var n := 1
+	while used.has(n): n += 1
+	return "%s_%d" % [base, n]
+
+## Find the current tail TaskInstance index for a unit
+func _find_tail_task_index(unit_index: int) -> int:
+	if data == null or data.tasks == null:
+		return -1
+	var tail := -1
+	for i in data.tasks.size():
+		var ti: ScenarioTask = data.tasks[i]
+		if ti and ti.unit_index == unit_index and ti.next_index == -1:
+			tail = i
+	return tail
+
 func _unhandled_key_input(event):
 	if current_tool and current_tool.handle_input(event):
 		return
@@ -471,6 +609,38 @@ func _select_item_recursive(item: TreeItem, pick: Dictionary) -> bool:
 			return true
 		child = child.get_next()
 	return false
+
+func _collect_unit_task_chain(unit_index: int) -> Array[int]:
+	var out: Array[int] = []
+	if data == null or data.tasks == null: return out
+
+	var visited := {}
+	var heads: Array[int] = []
+	for i in data.tasks.size():
+		var t: ScenarioTask = data.tasks[i]
+		if t and t.unit_index == unit_index and t.prev_index == -1:
+			heads.append(i)
+
+	for h in heads:
+		var cur := h
+		while cur >= 0 and cur < data.tasks.size() and not visited.has(cur):
+			visited[cur] = true
+			out.append(cur)
+			var nxt := data.tasks[cur].next_index
+			if nxt == cur: break # safety
+			cur = nxt
+
+	for i in data.tasks.size():
+		var t2: ScenarioTask = data.tasks[i]
+		if t2 and t2.unit_index == unit_index and not visited.has(i):
+			out.append(i)
+
+	return out
+
+## Label shown in tree, e.g. "1. Move" or "3. Defend
+func _make_task_title(inst: ScenarioTask, index_in_chain: int) -> String:
+	var name := inst.task.display_name if (inst.task and inst.task.display_name != "") else "Task"
+	return "%d: %s" % [index_in_chain + 1, name]
 
 ## Helper function to delete all children of a parent node
 func _queue_free_children(node: Control):

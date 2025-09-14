@@ -96,7 +96,8 @@ func _place() -> void:
 	if place_multiple:
 		pass # TODO Change tool hint in future
 	else:
-		emit_signal("finished"); editor.clear_tool()
+		emit_signal("finished")
+		editor.clear_tool()
 
 func _snap(p: Vector2) -> Vector2:
 	var s := 100.0

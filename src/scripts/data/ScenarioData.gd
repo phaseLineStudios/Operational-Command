@@ -67,7 +67,7 @@ enum scenarioDifficulty { easy, normal, hard }
 ## Triggers that define scripted events and conditions
 @export var triggers: Array = []
 ## Tasks or objectives for the AI to complete
-@export var tasks: Array = []
+@export var tasks: Array[ScenarioTask] = []
 ## Drawings or map overlays associated with the scenario
 @export var drawings: Array = []
 
