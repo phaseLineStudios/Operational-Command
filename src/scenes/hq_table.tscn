@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
 [ext_resource type="Script" uid="uid://dn828tsljtrki" path="res://scripts/core/Camera.gd" id="3_3f477"]
+[ext_resource type="Script" uid="uid://0r8k717de5os" path="res://scripts/core/PlayerInteraction.gd" id="4_py2wd"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
 size = Vector2(10, 30)
@@ -74,10 +75,6 @@ data = PackedVector3Array(-0.02, 0.01, 0.06, 0.02, 0.01, 0.06, -0.02, -0.01, 0.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_ge8rp"]
 size = Vector3(0.04, 0.02, 0.12)
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3f477"]
-radius = 0.025
-height = 1.0
 
 [node name="HQTable" type="Node3D"]
 
@@ -267,11 +264,8 @@ current = true
 
 [node name="HoldPoint" type="Marker3D" parent="CameraRig/PitchPivot/Camera3D"]
 
-[node name="ShapeCast3D" type="ShapeCast3D" parent="CameraRig/PitchPivot/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -0.5)
-shape = SubResource("CapsuleShape3D_3f477")
-target_position = Vector3(0, 0, 0)
-debug_shape_custom_color = Color(0.914868, 7.51802e-05, 0.709427, 1)
+[node name="PlayerInteraction" type="Node" parent="CameraRig"]
+script = ExtResource("4_py2wd")
 
 [node name="UI" type="CanvasLayer" parent="."]
 

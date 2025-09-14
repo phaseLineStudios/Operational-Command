@@ -9,13 +9,14 @@
 
 extends Node
 
-# Store the RayCast and HoldPoint in variables on load
-@onready var ray: ShapeCast3D = $Camera3D/ShapeCast3D
+# Store the HoldPoint in variable on load
 @onready var hold_point: Node3D = $Camera3D/HoldPoint
+@onready var cam: Camera3D = $Camera3D
 
 # Set the held_item to null
 # This is important because at the start nothing is held by the player
 var held_item: Node = null
+var viewing_item: Node = null
 
 # Creating variables for the camera
 # TODO: should we remove this variable?
@@ -26,10 +27,6 @@ var camera
 # Runs whenever the scene is loaded, after all nodes are loaded
 func _ready():
 	camera = $Camera3D
-	# Check if the shapecast is configured correctly:
-	assert(ray != null, "ShapeCast3D not found at $Camera3D/ShapeCast3D")
-	assert(ray.shape != null, "ShapeCast3D.shape is not set")
-	ray.enabled = true
 	
 	
 	# Handles all types of inputs, first input function that is executed
@@ -41,27 +38,15 @@ func _input(_event):
 			held_item.drop(self)
 			held_item = null
 		else:
-			try_pickup()
+			try_pickup_drag()
 
 
-# function to handle pickups
-func try_pickup():
-	if ray == null:
-		push_error("ShapeCast3D is null; check the node path.")
-		return
-
-	ray.force_shapecast_update()
-	var hit_count := ray.get_collision_count()
-	if hit_count == 0:
-		print("[DEBUG] No hits. enabled=%s mask=%d target=%s shape=%s" % [
-			str(ray.enabled), ray.collision_mask, str(ray.target_position), str(ray.shape)
-		])
-		return
+# function to handle pickups using drag and drop
+func try_pickup_drag():
+	# Handle pickup
 
 	var nearest_item: Node = null
 	var nearest_dist := INF
-
-	print("[DEBUG] ShapeCast hits:", hit_count)
 	# Use range(hit_count) because hit_count is an int, not an iterable.
 	for i in range(hit_count):
 		var collider := ray.get_collider(i)
@@ -83,6 +68,19 @@ func try_pickup():
 	else:
 		print("[DEBUG] Only non-pickable colliders were hit")
 
+# function to handle drops using drag and drop
+func drop_drap():
+	pass
+	
+# placeholder to pickup items and view them infront of the camera
+func try_view_item():
+	pass
+
+# placeholder to drop items viewed infront of the camera
+func drop_view_item():
+	pass
+
+	
 # function is used to find the item a player wants to pickup
 func _find_pickup_item(obj: Object) -> Node:
 	# Walk up the parent chain until we either find a node that implements `pickup()`
@@ -93,3 +91,11 @@ func _find_pickup_item(obj: Object) -> Node:
 			return n
 		n = n.get_parent()
 	return null  # no pickable item found
+	
+# placeholder function to view item infront of the camera
+func _position_item_in_front(item: Node):
+	pass
+
+# placeholder function to place items back when after viewing in front of camera
+func _restore_item_position(item: Node):
+	pass
