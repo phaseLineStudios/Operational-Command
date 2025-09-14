@@ -10,7 +10,7 @@ func _init() -> void:
 	color = Color.SLATE_GRAY
 	icon = preload("res://assets/textures/ui/editors_task_wait.png")
 
-func draw_glyph(canvas: Control, center: Vector2, hovered: bool, hover_scale: float, px: int, inner_px: int, inst, to_map: Callable, scale_icon: Callable) -> void:
+func draw_glyph(canvas: Control, center: Vector2, hovered: bool, hover_scale: float, px: int, inner_px: int, _inst, _to_map: Callable, scale_icon: Callable) -> void:
 	var r := px * 0.5 * (hover_scale if hovered else 1.0)
 	canvas.draw_circle(center, r, Color(color, 0.75))
 	canvas.draw_circle(center, r * 0.66, Color(0,0,0,0.0))

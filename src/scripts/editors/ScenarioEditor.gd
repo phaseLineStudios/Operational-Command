@@ -717,8 +717,8 @@ func _collect_unit_task_chain(unit_index: int) -> Array[int]:
 
 ## Label shown in tree, e.g. "1. Move" or "3. Defend
 func _make_task_title(inst: ScenarioTask, index_in_chain: int) -> String:
-	var name := inst.task.display_name if (inst.task and inst.task.display_name != "") else "Task"
-	return "%d: %s" % [index_in_chain + 1, name]
+	var task_name := inst.task.display_name if (inst.task and inst.task.display_name != "") else "Task"
+	return "%d: %s" % [index_in_chain + 1, task_name]
 
 func _reindex_task_links_after(removed: int) -> void:
 	for t in data.tasks:

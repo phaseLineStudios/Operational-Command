@@ -35,7 +35,7 @@ func make_default_params() -> Dictionary:
 	return d
 
 ## Draw the task glyph
-func draw_glyph(canvas: Control, center: Vector2, hovered: bool, hover_scale: float, px: int, inner_px: int, inst, to_map: Callable, scale_icon: Callable) -> void:
+func draw_glyph(canvas: Control, center: Vector2, hovered: bool, hover_scale: float, px: int, inner_px: int, _inst, _to_map: Callable, scale_icon: Callable) -> void:
 	var r := px * 0.5
 	var s := r * (hover_scale if hovered else 1.0)
 	var pts := PackedVector2Array([
