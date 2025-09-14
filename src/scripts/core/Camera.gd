@@ -113,7 +113,6 @@ func _physics_process(delta: float) -> void:
 				t = 1.0 - clamp(dist_edge / tilt_start_distance, 0.0, 1.0)
 				# smoothstep curve for softer easing near start/end
 				t = t * t * (3.0 - 2.0 * t)
-				print("t=", t, "  pitch=", pitch_pivot.rotation_degrees.x)
 
 			# Target pitch: base tilt plus additional downward tilt based on proximity factor
 			var target_pitch: float = default_pitch_deg - max_edge_tilt_deg * t
