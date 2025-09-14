@@ -58,6 +58,11 @@ var selected_category: UnitCategoryData
 var all_units: Array[UnitData]
 var _slot_proto := UnitSlotData.new()
 
+var _dragging := false
+var _drag_pick: Dictionary = {}
+var _drag_offset_m := Vector2.ZERO
+var _drag_origin_m := Vector2.ZERO
+
 func _ready():
 	file_menu.get_popup().connect("id_pressed", _on_filemenu_pressed)
 	attribute_menu.get_popup().connect("id_pressed", _on_attributemenu_pressed)
@@ -552,6 +557,68 @@ func _collect_used_callsigns(affiliation: ScenarioUnit.Affiliation) -> Dictionar
 
 	return used
 
+## Get entity world position (meters)
+func _get_entity_pos_m(pick: Dictionary) -> Vector2:
+	match StringName(pick.get("type","")):
+		&"unit":
+			var i := int(pick["index"])
+			if data.units and i >= 0 and i < data.units.size() and data.units[i]:
+				return data.units[i].position_m
+		&"slot":
+			var i := int(pick["index"])
+			if data.unit_slots and i >= 0 and i < data.unit_slots.size() and data.unit_slots[i]:
+				return data.unit_slots[i].start_position
+		&"task":
+			var i := int(pick["index"])
+			if data.tasks and i >= 0 and i < data.tasks.size() and data.tasks[i]:
+				return data.tasks[i].position_m
+	return Vector2.ZERO
+
+## Set entity world position (meters)
+func _set_entity_pos_m(pick: Dictionary, p: Vector2) -> void:
+	match StringName(pick.get("type","")):
+		&"unit":
+			var i := int(pick["index"])
+			if data.units and i >= 0 and i < data.units.size() and data.units[i]:
+				data.units[i].position_m = p
+		&"slot":
+			var i := int(pick["index"])
+			if data.unit_slots and i >= 0 and i < data.unit_slots.size() and data.unit_slots[i]:
+				data.unit_slots[i].start_position = p
+		&"task":
+			var i := int(pick["index"])
+			if data.tasks and i >= 0 and i < data.tasks.size() and data.tasks[i]:
+				data.tasks[i].position_m = p
+
+## Begin dragging the picked entity from an overlay click position
+func _begin_drag(pick: Dictionary, overlay_pos: Vector2) -> void:
+	if pick.is_empty():
+		return
+	_dragging = true
+	_drag_pick = pick
+	_drag_origin_m = _get_entity_pos_m(pick)
+	var mp := terrain_render.map_to_terrain(overlay_pos)
+	_drag_offset_m = _drag_origin_m - mp
+
+## Update drag as the mouse moves
+func _update_drag(overlay_pos: Vector2) -> void:
+	if not _dragging:
+		return
+	var mp := terrain_render.map_to_terrain(overlay_pos)
+	var target := mp + _drag_offset_m
+	if terrain_render.is_inside_map(target):
+		_set_entity_pos_m(_drag_pick, target)
+		_request_overlay_redraw()
+
+## End the current drag. If commit==false, revert to original position
+func _end_drag(commit := true) -> void:
+	if not _dragging:
+		return
+	if not commit:
+		_set_entity_pos_m(_drag_pick, _drag_origin_m)
+	_dragging = false
+	_drag_pick = {}
+
 ## Generate the next available callsign for an affiliation.
 func _generate_callsign(affiliation: ScenarioUnit.Affiliation) -> String:
 	var pool := _get_callsign_pool(affiliation)
@@ -634,23 +701,37 @@ func _on_overlay_gui_input(event):
 			var grid := terrain_render.pos_to_grid(mp)
 			mouse_position_label.text = "(%d, %d | %s)" % [mp.x, mp.y, grid]
 			terrain_overlay.on_mouse_move(event.position)
+		
+		if _dragging:
+			_update_drag(event.position)
 
-	if current_tool and current_tool.handle_input(event):
+	if not _dragging and current_tool and current_tool.handle_input(event):
 		return
 	
-	if event is InputEventMouseButton and event.pressed:
+	if event is InputEventMouseButton:
+		if not event.pressed:
+			if event.button_index == MOUSE_BUTTON_LEFT and _dragging:
+				_end_drag(true)
+				return
+			return
+
 		if event.button_index == MOUSE_BUTTON_RIGHT:
+			if _dragging:
+				_end_drag(false)
+				return
 			terrain_overlay.on_ctx_open(event)
 			return
-		if event.button_index == MOUSE_BUTTON_LEFT and event.double_click:
-			terrain_overlay.on_dbl_click(event)
-			return
+
 		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.double_click:
+				terrain_overlay.on_dbl_click(event)
+				return
 			var pick := terrain_overlay.get_pick_at(event.position)
 			if pick.is_empty():
 				_clear_selection()
 			else:
 				_set_selection(pick)
+				_begin_drag(pick, event.position)
 			return
 
 func _set_selection(pick: Dictionary, from_tree: bool = false) -> void:
