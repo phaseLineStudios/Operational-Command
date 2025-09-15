@@ -13,6 +13,16 @@ class_name ScenarioEditorOverlay
 @export var task_icon_px: int = 48
 ## Icon Size for inner task icons (px)
 @export var task_icon_inner_px: int = 28
+## Icon size for placed triggers (px)
+@export var trigger_icon_px: int = 48
+## Trigger fill color
+@export var trigger_fill: Color = Color(Color.LIGHT_SKY_BLUE, 0.25)
+## Trigger outline color
+@export var trigger_outline: Color = Color(Color.DEEP_SKY_BLUE, 0.9)
+## Trigger Sync Line Color
+@export var sync_line_color: Color = Color(Color.BLACK, 0.5)
+## Trigger sync line width
+@export var sync_line_width: float = 2.0
 ## Slot Icon texture
 @export var slot_icon: Texture2D = preload("res://assets/textures/units/slot_icon.png")
 ## Scale modifier when hovered
@@ -27,7 +37,8 @@ class_name ScenarioEditorOverlay
 const MI_CONFIG_SLOT := 1001
 const MI_CONFIG_UNIT := 1002
 const MI_CONFIG_TASK := 1003
-const MI_DELETE      := 1099
+const MI_CONFIG_TRIGGER := 1004
+const MI_DELETE := 1099
 
 var _icon_cache := {}
 var _ctx: PopupMenu
@@ -35,6 +46,10 @@ var _last_pick: Dictionary = {}
 var _selected_pick: Dictionary = {} 
 var _hover_pick: Dictionary = {}
 var _hover_pos: Vector2 = Vector2.ZERO
+
+var _link_preview_active := false
+var _link_preview_src: Dictionary = {}
+var _link_preview_pos := Vector2.ZERO
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -46,9 +61,16 @@ func _ready() -> void:
 
 func _draw() -> void:
 	_draw_task_links()
+	_draw_sync_links()
 	_draw_units()
 	_draw_slots()
 	_draw_tasks()
+	_draw_triggers()
+	
+	if _link_preview_active:
+		var a := _screen_pos_for_pick(_link_preview_src)
+		var b := _link_preview_pos
+		draw_line(a, b, sync_line_color, sync_line_width, true)
 
 	if editor and editor.current_tool:
 		editor.current_tool.draw_overlay(self)
@@ -91,6 +113,10 @@ func on_ctx_open(event: InputEventMouseButton):
 			_ctx.add_item("Configure Task", MI_CONFIG_TASK)
 			_ctx.add_separator()
 			_ctx.add_item("Delete", MI_DELETE)
+		&"trigger": 
+			_ctx.add_item("Configure Trigger", MI_CONFIG_TRIGGER)
+			_ctx.add_separator()
+			_ctx.add_item("Delete", MI_DELETE)
 		_:
 			_ctx.add_item("No actions here", -1)
 			_ctx.set_item_disabled(_ctx.get_item_count() - 1, true)
@@ -109,6 +135,8 @@ func on_dbl_click(event: InputEventMouseButton):
 			editor._open_unit_config(pick["index"])
 		&"task": 
 			editor._open_task_config(pick["index"])
+		&"trigger": 
+			editor._open_trigger_config(pick["index"])
 		_:
 			pass
 
@@ -128,6 +156,9 @@ func _on_ctx_pressed(id: int) -> void:
 		MI_CONFIG_TASK: 
 			if _last_pick.get("type","") == "task": 
 				editor._open_task_config(_last_pick["index"])
+		MI_CONFIG_TRIGGER:
+			if _last_pick.get("type","") == "trigger":
+				editor._open_trigger_config(_last_pick["index"])
 		MI_DELETE:
 			if not _last_pick.is_empty():
 				editor._delete_pick(_last_pick)
@@ -219,6 +250,107 @@ func _draw_task_links() -> void:
 		var col := inst.task.color if inst.task else Color.CYAN
 		_draw_arrow(a, b, col, arrow_head_len_px)
 
+func _draw_triggers() -> void:
+	if not editor or not editor.data or editor.data.triggers == null:
+		return
+	for i in editor.data.triggers.size():
+		var trig: ScenarioTrigger = editor.data.triggers[i]
+		if trig == null: 
+			continue
+		var center_px := editor.terrain_render.terrain_to_map(trig.area_center_m)
+		var hi := _is_highlighted(&"trigger", i)
+		_draw_trigger_shape(trig, center_px, hi)
+		if hi and trig.title != "":
+			_draw_title(trig.title, center_px)
+
+func _draw_trigger_shape(trig: ScenarioTrigger, center_px: Vector2, hi: bool) -> void:
+	var fill := trigger_fill
+	var line := trigger_outline
+	var tex := _get_scaled_icon_trigger(trig)
+	if hi:
+		fill = Color(fill, min(1.0, fill.a + 0.15))
+		line = line.lightened(0.15)
+
+	if trig.area_shape == ScenarioTrigger.AreaShape.CIRCLE:
+		var r_m: float = max(trig.area_size_m.x, trig.area_size_m.y) * 0.5
+		var edge_px := editor.terrain_render.terrain_to_map(trig.area_center_m + Vector2(r_m, 0.0))
+		var r_px := edge_px.distance_to(center_px)
+		draw_circle(center_px, r_px, fill)
+		draw_arc(center_px, r_px, 0.0, TAU, 64, line, 2.0, true)
+	else:
+		var hx_m := trig.area_size_m.x * 0.5
+		var hy_m := trig.area_size_m.y * 0.5
+		var p_x := editor.terrain_render.terrain_to_map(trig.area_center_m + Vector2(hx_m, 0.0))
+		var p_y := editor.terrain_render.terrain_to_map(trig.area_center_m + Vector2(0.0, hy_m))
+		var half_w_px: float = abs(p_x.x - center_px.x)
+		var half_h_px: float = abs(p_y.y - center_px.y)
+		var rect := Rect2(
+			Vector2(center_px.x - half_w_px, center_px.y - half_h_px),
+			Vector2(half_w_px * 2.0, half_h_px * 2.0)
+		)
+		draw_rect(rect, fill, true)
+		draw_rect(rect, line, false, 2.0)
+	if tex:
+		var p := editor.terrain_render.terrain_to_map(trig.area_center_m)
+		_draw_icon_with_hover(tex, p, hi)
+
+## Draw all saved syncs from triggers to their units/tasks.
+func _draw_sync_links() -> void:
+	if not editor or not editor.data or editor.data.triggers == null:
+		return
+	for trig in editor.data.triggers:
+		if trig == null: continue
+		var tp := editor.terrain_render.terrain_to_map(trig.area_center_m)
+		for ui in trig.synced_units:
+			if editor.data.units and ui >= 0 and ui < editor.data.units.size():
+				var su: ScenarioUnit = editor.data.units[ui]
+				if su:
+					var up := editor.terrain_render.terrain_to_map(su.position_m)
+					draw_line(up, tp, sync_line_color, sync_line_width, true)
+		for ti in trig.synced_tasks:
+			if editor.data.tasks and ti >= 0 and ti < editor.data.tasks.size():
+				var inst: ScenarioTask = editor.data.tasks[ti]
+				if inst:
+					var p := editor.terrain_render.terrain_to_map(inst.position_m)
+					draw_line(p, tp, sync_line_color, sync_line_width, true)
+
+## Begin live link preview from a picked entity
+func begin_link_preview(src_pick: Dictionary) -> void:
+	_link_preview_active = true
+	_link_preview_src = src_pick
+	queue_redraw()
+
+## Update live preview endpoint
+func update_link_preview(mouse_pos: Vector2) -> void:
+	_link_preview_pos = mouse_pos
+	if _link_preview_active:
+		queue_redraw()
+
+## End live preview
+func end_link_preview() -> void:
+	_link_preview_active = false
+	_link_preview_src = {}
+	queue_redraw()
+
+## Compute screen center for a pick
+func _screen_pos_for_pick(pick: Dictionary) -> Vector2:
+	var t := StringName(pick.get("type",""))
+	var idx := int(pick.get("index",-1))
+	match t:
+		&"unit":
+			if editor.data.units and idx >= 0 and idx < editor.data.units.size() and editor.data.units[idx]:
+				return editor.terrain_render.terrain_to_map(editor.data.units[idx].position_m)
+		&"slot":
+			if editor.data.unit_slots and idx >= 0 and idx < editor.data.unit_slots.size() and editor.data.unit_slots[idx]:
+				return editor.terrain_render.terrain_to_map(editor.data.unit_slots[idx].start_position)
+		&"task":
+			if editor.data.tasks and idx >= 0 and idx < editor.data.tasks.size() and editor.data.tasks[idx]:
+				return editor.terrain_render.terrain_to_map(editor.data.tasks[idx].position_m)
+		&"trigger":
+			if editor.data.triggers and idx >= 0 and idx < editor.data.triggers.size() and editor.data.triggers[idx]:
+				return editor.terrain_render.terrain_to_map(editor.data.triggers[idx].area_center_m)
+	return _hover_pos
+
 func _is_highlighted(t: StringName, idx: int) -> bool:
 	return (_hover_pick.get("type", &"") == t and _hover_pick.get("index", -1) == idx) \
 		or (_selected_pick.get("type", &"") == t and _selected_pick.get("index", -1) == idx)
@@ -301,6 +433,18 @@ func _pick_at(overlay_pos: Vector2) -> Dictionary:
 			if d2 <= task_r * task_r and d2 < best_d2:
 				best_d2 = d2
 				best = { "type": &"task", "index": i }
+	
+	var trig_r := float(trigger_icon_px) * 0.5 + 4.0
+	if editor and editor.data.triggers:
+		for i in editor.data.triggers.size():
+			var trig: ScenarioTrigger = editor.data.triggers[i]
+			if trig == null: 
+				continue
+			var tp := editor.terrain_render.terrain_to_map(trig.area_center_m)
+			var d2 := tp.distance_squared_to(overlay_pos)
+			if d2 <= trig_r * trig_r and d2 < best_d2:
+				best_d2 = d2
+				best = {"type": &"trigger", "index": i}
 
 	return best
 
@@ -343,6 +487,12 @@ func _get_scaled_icon_task(inst: ScenarioTask) -> Texture2D:
 		task_icon_inner_px
 	]
 	return _scaled_cached(key, base, task_icon_inner_px)
+
+func _get_scaled_icon_trigger(trig: ScenarioTrigger) -> Texture2D:
+	if trig.icon == null: 
+		return null
+	var key := "TRIGGER:%d" % trigger_icon_px
+	return _scaled_cached(key, trig.icon, trigger_icon_px)
 
 func _scale_icon(tex: Texture2D, key: String, px: int) -> Texture2D:
 	return _scaled_cached(key, tex, px)

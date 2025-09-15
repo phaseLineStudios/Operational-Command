@@ -22,7 +22,7 @@ class_name BriefData
 ## Mission statement fragment (task & purpose)
 @export var frag_mission: String
 ## Objectives list
-@export var frag_objectives: Array
+@export var frag_objectives: Array[ScenarioObjectiveData]
 
 @export_category("WARNO - Execution")
 ## Execution guidance (e.g., scheme of maneuver)

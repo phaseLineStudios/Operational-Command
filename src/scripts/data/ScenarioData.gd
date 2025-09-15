@@ -65,7 +65,7 @@ enum scenarioDifficulty { easy, normal, hard }
 ## List of units placed in this scenario
 @export var units: Array[ScenarioUnit] = []
 ## Triggers that define scripted events and conditions
-@export var triggers: Array = []
+@export var triggers: Array[ScenarioTrigger] = []
 ## Tasks or objectives for the AI to complete
 @export var tasks: Array[ScenarioTask] = []
 ## Drawings or map overlays associated with the scenario
@@ -81,9 +81,19 @@ func serialize() -> Dictionary:
 			recruit_ids.append(String(u.id))
 
 	var placed_units: Array = []
-	for u in units:
-		if u is ScenarioUnit:
-			placed_units.append(u.serialize)
+	for unit in units:
+		if unit is ScenarioUnit:
+			placed_units.append(unit.serialize)
+			
+	var placed_triggers: Array = []
+	for trigger in triggers:
+		if trigger is ScenarioTrigger:
+			placed_triggers.append(trigger.serialize)
+			
+	var placed_tasks: Array = []
+	for task in tasks:
+		if task is ScenarioTask:
+			placed_units.append(task.serialize)
 
 	return {
 		"id": id,
@@ -116,8 +126,8 @@ func serialize() -> Dictionary:
 
 		"content": {
 			"units": placed_units,
-			"triggers": triggers,
-			"tasks": tasks,
+			"triggers": placed_triggers,
+			"tasks": placed_tasks,
 			"drawings": drawings
 		}
 	}

@@ -1,0 +1,129 @@
+[gd_scene load_steps=2 format=3 uid="uid://cdabq224o47g4"]
+
+[ext_resource type="Script" uid="uid://dn5sm234p6fro" path="res://scripts/editors/TriggerConfigDialog.gd" id="1_5rotb"]
+
+[node name="TriggerConfigDialog" type="Window"]
+auto_translate_mode = 1
+title = "Trigger"
+position = Vector2i(325, 37)
+size = Vector2i(500, 600)
+script = ExtResource("1_5rotb")
+
+[node name="Root" type="VBoxContainer" parent="."]
+offset_right = 500.0
+offset_bottom = 600.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Root"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBox" type="VBoxContainer" parent="Root/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TitleLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+text = "Trigger Name"
+
+[node name="Title" type="LineEdit" parent="Root/ScrollContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ShapeLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+text = "Area Shape"
+
+[node name="Shape" type="OptionButton" parent="Root/ScrollContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SizeLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+text = "Size"
+
+[node name="Size" type="HBoxContainer" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+
+[node name="LabelX" type="Label" parent="Root/ScrollContainer/VBox/Size"]
+layout_mode = 2
+text = "X"
+
+[node name="SizeX" type="SpinBox" parent="Root/ScrollContainer/VBox/Size"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 10000.0
+suffix = "m"
+
+[node name="LabelY" type="Label" parent="Root/ScrollContainer/VBox/Size"]
+layout_mode = 2
+text = "Y"
+
+[node name="SizeY" type="SpinBox" parent="Root/ScrollContainer/VBox/Size"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 10000.0
+suffix = "m"
+
+[node name="PresenceLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+text = "Presence"
+
+[node name="Presence" type="OptionButton" parent="Root/ScrollContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DurationLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+text = "Required Duration"
+
+[node name="Duration" type="SpinBox" parent="Root/ScrollContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 36000.0
+step = 0.5
+suffix = "s"
+
+[node name="ConditionLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+text = "Condition"
+
+[node name="Condition" type="TextEdit" parent="Root/ScrollContainer/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+
+[node name="OnActivateLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+text = "On Activate"
+
+[node name="OnActivate" type="TextEdit" parent="Root/ScrollContainer/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+
+[node name="OnDeactivateLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+text = "On Deactivate"
+
+[node name="OnDeactivate" type="TextEdit" parent="Root/ScrollContainer/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+
+[node name="ActionRow" type="HBoxContainer" parent="Root"]
+layout_mode = 2
+
+[node name="Close" type="Button" parent="Root/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"
+
+[node name="Spacer" type="Control" parent="Root/ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Save" type="Button" parent="Root/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Save"

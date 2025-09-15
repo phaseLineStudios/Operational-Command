@@ -24,7 +24,7 @@ func _on_activated() -> void:
 	emit_signal("request_redraw_overlay")
 
 func _on_deactivated():
-	editor.unit_list.deselect_all()
+	editor.task_list.deselect_all()
 	emit_signal("request_redraw_overlay")
 
 func _on_mouse_move(e: InputEventMouseMotion) -> bool:
@@ -46,12 +46,14 @@ func _on_mouse_button(e: InputEventMouseButton) -> bool:
 				_place()
 				return true
 		MOUSE_BUTTON_RIGHT:
+			editor.clear_tool()
 			emit_signal("canceled")
 			return true
 	return false
 
 func _on_key(e: InputEventKey) -> bool:
 	if e.pressed and e.keycode == KEY_ESCAPE:
+		editor.clear_tool()
 		emit_signal("canceled")
 		return true
 	return false

@@ -12,7 +12,7 @@ func _init() -> void:
 
 func draw_glyph(canvas: Control, center: Vector2, hovered: bool, hover_scale: float, px: int, inner_px: int, _inst, _to_map: Callable, scale_icon: Callable) -> void:
 	var r := px * 0.5 * (hover_scale if hovered else 1.0)
-	canvas.draw_circle(center, r, Color(color, 0.75))
+	canvas.draw_circle(center, r, color if hovered else Color(color, 0.5))
 	canvas.draw_circle(center, r * 0.66, Color(0,0,0,0.0))
 
 	if icon:
@@ -22,7 +22,7 @@ func draw_glyph(canvas: Control, center: Vector2, hovered: bool, hover_scale: fl
 			var half := itex.get_size() * 0.5
 			if hovered:
 				canvas.draw_set_transform(center, 0.0, Vector2.ONE * hover_scale)
-				canvas.draw_texture(itex, -half)
+				canvas.draw_texture(itex, -half, Color.WHITE if hovered else Color(1,1,1,0.5))
 				canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 			else:
 				canvas.draw_texture(itex, center - half)

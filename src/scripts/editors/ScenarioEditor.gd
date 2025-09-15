@@ -30,6 +30,8 @@ class_name ScenarioEditor
 @onready var new_unit: Button = %NewUnit
 
 @onready var task_list: ItemList = %Tasks
+@onready var trigger_list: ItemList = %Triggers
+@onready var _trigger_cfg: TriggerConfigDialog = %TriggerConfigDialog
 
 const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 
@@ -62,6 +64,8 @@ var _dragging := false
 var _drag_pick: Dictionary = {}
 var _drag_offset_m := Vector2.ZERO
 var _drag_origin_m := Vector2.ZERO
+var _linking := false
+var _link_src_pick: Dictionary = {}
 
 func _ready():
 	file_menu.get_popup().connect("id_pressed", _on_filemenu_pressed)
@@ -89,9 +93,14 @@ func _ready():
 	_build_task_list()
 	task_list.item_selected.connect(_on_task_item_selected)
 	
+	_build_trigger_list()
+	trigger_list.item_selected.connect(_on_trigger_item_selected)
+	
 	scene_tree.item_selected.connect(_on_scene_tree_item_selected)
 	_setup_scene_tree()
 	_rebuild_scene_tree()
+	
+	set_process(true)
 
 func _on_filemenu_pressed(id: int):
 	match id:
@@ -160,13 +169,20 @@ func _open_slot_config(index: int) -> void:
 	_slot_cfg.show_for(self, index)
 
 func _open_unit_config(index: int) -> void:
-	if not data or not data.units: return
+	if not data or not data.units: 
+		return
 	_unit_cfg.show_for(self, index)
 
 func _open_task_config(task_index: int) -> void:
-	if not data or data.tasks == null: return
+	if not data or data.tasks == null: 
+		return
 	var inst: ScenarioTask = data.tasks[task_index]
 	_task_cfg.show_for(self, inst)
+
+func _open_trigger_config(index: int) -> void:
+	if index < 0 or index >= data.triggers.size(): 
+		return
+	_trigger_cfg.show_for(self, index)
 
 func _request_overlay_redraw() -> void:
 	terrain_overlay.request_redraw()
@@ -290,6 +306,22 @@ func _on_task_item_selected(index: int) -> void:
 	if meta is UnitBaseTask:
 		start_place_task_tool(meta)
 
+func _build_trigger_list() -> void:
+	trigger_list.clear()
+	var i := trigger_list.add_item("Trigger")
+	var proto := ScenarioTrigger.new()
+	proto.title = "Trigger"
+	proto.area_size_m = Vector2(100.0, 100.0)
+	trigger_list.set_item_metadata(i, proto)
+	var img := proto.icon.get_image()
+	img.resize(24, 24, Image.INTERPOLATE_LANCZOS)
+	trigger_list.set_item_icon(i, ImageTexture.create_from_image(img))
+
+func _on_trigger_item_selected(index: int) -> void:
+	var meta: Variant = trigger_list.get_item_metadata(index)
+	if meta is ScenarioTrigger:
+		start_place_trigger_tool(meta)
+
 func _setup_scene_tree():
 	scene_tree.set_column_expand(0, true)
 	scene_tree.set_column_custom_minimum_width(0, 200)
@@ -345,6 +377,22 @@ func _rebuild_scene_tree():
 					if not img.is_empty():
 						img.resize(16, 16, Image.INTERPOLATE_LANCZOS)
 						t_item.set_icon(0, ImageTexture.create_from_image(img))
+	
+	var triggers := scene_tree.create_item(root)
+	triggers.set_text(0, "Triggers")
+	if data.triggers:
+		for i in data.triggers.size():
+			var trig: ScenarioTrigger = data.triggers[i]
+			if trig == null: 
+				continue
+			var t_item := scene_tree.create_item(triggers)
+			t_item.set_text(0, trig.title)
+			t_item.set_metadata(0, {"type": &"trigger", "index": i})
+			if trig and trig.icon:
+				var img := trig.icon.get_image()
+				if not img.is_empty():
+					img.resize(16, 16, Image.INTERPOLATE_LANCZOS)
+					t_item.set_icon(0, ImageTexture.create_from_image(img))
 
 	_select_in_scene_tree(selected_pick)
 
@@ -409,6 +457,11 @@ func start_place_unit_tool(payload: Variant) -> void:
 	tool.payload = payload
 	set_tool(tool)
 
+func start_place_trigger_tool(proto: ScenarioTrigger) -> void:
+	var tool := ScenarioTriggerTool.new()
+	tool.prototype = proto
+	set_tool(tool)
+
 func _place_unit_from_tool(u: UnitData, pos_m: Vector2) -> void:
 	if not data:
 		push_warning("No active scenario")
@@ -441,12 +494,34 @@ func _place_slot_from_tool(slot_def: UnitSlotData, pos_m: Vector2) -> void:
 	_request_overlay_redraw()
 	_rebuild_scene_tree()
 
+func _place_trigger_from_tool(inst: ScenarioTrigger, pos_m: Vector2) -> void:
+	if inst == null: 
+		return
+	inst.id = _generate_trigger_id()
+	inst.area_center_m = pos_m
+	if inst.title.strip_edges() == "": 
+		inst.title = inst.id
+	data.triggers.append(inst)
+	_rebuild_scene_tree()
+	_request_overlay_redraw()
+
 ## Generate a unique key like
 func _next_slot_key() -> String:
 	var n := 1
 	if data and data.unit_slots:
 		n = data.unit_slots.size() + 1
 	return "SLOT_%d" % n
+
+## Generate a fresh trigger id: TRG_<n>
+func _generate_trigger_id() -> String:
+	var used := {}
+	for t in data.triggers:
+		if t and t.id is String and (t.id as String).begins_with("TRG_"):
+			var s := (t.id as String).substr(4)
+			if s.is_valid_int(): used[int(s)] = true
+	var n := 1
+	while used.has(n): n += 1
+	return "TRG_%d" % n
 
 ## Delete the entity described by pick
 func _delete_pick(pick: Dictionary) -> void:
@@ -459,6 +534,8 @@ func _delete_pick(pick: Dictionary) -> void:
 			_delete_slot(idx)
 		&"task":
 			_delete_task(idx)
+		&"trigger":
+			_delete_trigger(idx)
 		_:
 			return
 	_clear_selection()
@@ -481,6 +558,8 @@ func _delete_unit(unit_index: int) -> void:
 			_delete_task(to_remove[i])
 
 	data.units.remove_at(unit_index)
+	
+	_triggers_remap_units_after_delete(unit_index)
 
 	if data.tasks:
 		for ti in data.tasks:
@@ -501,6 +580,7 @@ func _delete_task(task_index: int) -> void:
 	if inst == null:
 		data.tasks.remove_at(task_index)
 		_reindex_task_links_after(task_index)
+		_triggers_remap_tasks_after_delete(task_index)
 		return
 
 	var prev_idx := inst.prev_index
@@ -515,6 +595,11 @@ func _delete_task(task_index: int) -> void:
 	data.tasks.remove_at(task_index)
 
 	_reindex_task_links_after(task_index)
+
+func _delete_trigger(idx: int) -> void:
+	if idx < 0 or idx >= data.triggers.size(): 
+		return
+	data.triggers.remove_at(idx)
 
 ## Returns the callsign pool for the given affiliation, with fallbacks.
 func _get_callsign_pool(affiliation: ScenarioUnit.Affiliation) -> Array[String]:
@@ -572,6 +657,10 @@ func _get_entity_pos_m(pick: Dictionary) -> Vector2:
 			var i := int(pick["index"])
 			if data.tasks and i >= 0 and i < data.tasks.size() and data.tasks[i]:
 				return data.tasks[i].position_m
+		&"trigger":
+			var i := int(pick["index"])
+			if data.triggers and i >= 0 and i < data.triggers.size() and data.triggers[i]:
+				return data.triggers[i].area_center_m
 	return Vector2.ZERO
 
 ## Set entity world position (meters)
@@ -589,6 +678,10 @@ func _set_entity_pos_m(pick: Dictionary, p: Vector2) -> void:
 			var i := int(pick["index"])
 			if data.tasks and i >= 0 and i < data.tasks.size() and data.tasks[i]:
 				data.tasks[i].position_m = p
+		&"trigger":
+			var i := int(pick["index"])
+			if data.triggers and i >= 0 and i < data.triggers.size() and data.triggers[i]:
+				data.triggers[i].area_center_m = p
 
 ## Begin dragging the picked entity from an overlay click position
 func _begin_drag(pick: Dictionary, overlay_pos: Vector2) -> void:
@@ -618,6 +711,68 @@ func _end_drag(commit := true) -> void:
 		_set_entity_pos_m(_drag_pick, _drag_origin_m)
 	_dragging = false
 	_drag_pick = {}
+
+## Link a trigger with a unit/task based on two picks
+func _try_create_sync_link(a: Dictionary, b: Dictionary) -> void:
+	if a.is_empty() or b.is_empty(): return
+	var ta := StringName(a.get("type",""))
+	var tb := StringName(b.get("type",""))
+	if ta == tb and ta != &"trigger": return
+	if ta != &"trigger" and tb != &"trigger": return
+
+	var trig_idx := -1
+	var unit_idx := -1
+	var task_idx := -1
+
+	if ta == &"trigger":
+		trig_idx = int(a["index"])
+		if tb == &"unit": task_idx = -1; unit_idx = int(b["index"])
+		elif tb == &"task": unit_idx = -1; task_idx = int(b["index"])
+	elif tb == &"trigger":
+		trig_idx = int(b["index"])
+		if ta == &"unit": unit_idx = int(a["index"])
+		elif ta == &"task": task_idx = int(a["index"])
+
+	if trig_idx < 0 or not data or not data.triggers or trig_idx >= data.triggers.size():
+		return
+	var trig: ScenarioTrigger = data.triggers[trig_idx]
+	if trig == null: return
+
+	if unit_idx >= 0:
+		if trig.synced_units == null: trig.synced_units = []
+		if not trig.synced_units.has(unit_idx):
+			trig.synced_units.append(unit_idx)
+	if task_idx >= 0:
+		if trig.synced_tasks == null: trig.synced_tasks = []
+		if not trig.synced_tasks.has(task_idx):
+			trig.synced_tasks.append(task_idx)
+
+	_request_overlay_redraw()
+	_rebuild_scene_tree()
+
+## Remove/shift unit indices from all triggers after a unit deletion
+func _triggers_remap_units_after_delete(deleted_index: int) -> void:
+	if not data or not data.triggers: return
+	for trig in data.triggers:
+		if trig == null or trig.synced_units == null: continue
+		var out: Array[int] = []
+		for i in trig.synced_units:
+			if i == deleted_index:
+				continue
+			out.append(i - 1 if i > deleted_index else i)
+		trig.synced_units = out
+
+## Remove/shift task indices from all triggers after a task deletion
+func _triggers_remap_tasks_after_delete(deleted_index: int) -> void:
+	if not data or not data.triggers: return
+	for trig in data.triggers:
+		if trig == null or trig.synced_tasks == null: continue
+		var out: Array[int] = []
+		for i in trig.synced_tasks:
+			if i == deleted_index:
+				continue
+			out.append(i - 1 if i > deleted_index else i)
+		trig.synced_tasks = out
 
 ## Generate the next available callsign for an affiliation.
 func _generate_callsign(affiliation: ScenarioUnit.Affiliation) -> String:
@@ -702,7 +857,9 @@ func _on_overlay_gui_input(event):
 			mouse_position_label.text = "(%d, %d | %s)" % [mp.x, mp.y, grid]
 			terrain_overlay.on_mouse_move(event.position)
 		
-		if _dragging:
+		if _linking:
+			terrain_overlay.update_link_preview(event.position)
+		elif _dragging:
 			_update_drag(event.position)
 
 	if not _dragging and current_tool and current_tool.handle_input(event):
@@ -710,19 +867,38 @@ func _on_overlay_gui_input(event):
 	
 	if event is InputEventMouseButton:
 		if not event.pressed:
-			if event.button_index == MOUSE_BUTTON_LEFT and _dragging:
-				_end_drag(true)
-				return
+			if event.button_index == MOUSE_BUTTON_LEFT:
+				if _linking:
+					var dst := terrain_overlay.get_pick_at(event.position)
+					terrain_overlay.end_link_preview()
+					_linking = false
+					_try_create_sync_link(_link_src_pick, dst)
+					return
+				if _dragging:
+					_end_drag(true)
+					return
 			return
 
 		if event.button_index == MOUSE_BUTTON_RIGHT:
 			if _dragging:
 				_end_drag(false)
 				return
+			if _linking:
+				terrain_overlay.end_link_preview()
+				_linking = false
+				return
 			terrain_overlay.on_ctx_open(event)
 			return
 
 		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.ctrl_pressed:
+				var src := terrain_overlay.get_pick_at(event.position)
+				if not src.is_empty() and StringName(src.get("type","")) in [&"unit",&"task",&"trigger"]:
+					_linking = true
+					_link_src_pick = src
+					terrain_overlay.begin_link_preview(src)
+					terrain_overlay.update_link_preview(event.position)
+					return
 			if event.double_click:
 				terrain_overlay.on_dbl_click(event)
 				return

@@ -16,7 +16,7 @@ func _init() -> void:
 
 func draw_glyph(canvas: Control, center: Vector2, hovered: bool, hover_scale: float, px: int, inner_px: int, inst, to_map: Callable, scale_icon: Callable) -> void:
 	var r := px * 0.5 * (hover_scale if hovered else 1.0)
-	canvas.draw_circle(center, r, color.darkened(0.1))
+	canvas.draw_circle(center, r, color.darkened(0.1) if hovered else Color(color.darkened(0.1), 0.5))
 
 	var rad_m := float(inst.params.get("radius_m", radius_m))
 	if rad_m > 0.0 and to_map.is_valid():
@@ -31,7 +31,7 @@ func draw_glyph(canvas: Control, center: Vector2, hovered: bool, hover_scale: fl
 			var half := itex.get_size() * 0.5
 			if hovered:
 				canvas.draw_set_transform(center, 0.0, Vector2.ONE * hover_scale)
-				canvas.draw_texture(itex, -half)
+				canvas.draw_texture(itex, -half, Color.WHITE if hovered else Color(1,1,1,0.5))
 				canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 			else:
 				canvas.draw_texture(itex, center - half)

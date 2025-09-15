@@ -44,7 +44,7 @@ func draw_glyph(canvas: Control, center: Vector2, hovered: bool, hover_scale: fl
 		center + Vector2(0,  s),
 		center + Vector2(-s, 0)
 	])
-	canvas.draw_polygon(pts, [color])
+	canvas.draw_polygon(pts, [color if hovered else Color(color, 0.5)])
 
 	if icon:
 		var key := "TASK:%s:%s:%d" % [String(type_id), String(resource_path), inner_px]
@@ -53,7 +53,7 @@ func draw_glyph(canvas: Control, center: Vector2, hovered: bool, hover_scale: fl
 			var half := itex.get_size() * 0.5
 			if hovered:
 				canvas.draw_set_transform(center, 0.0, Vector2.ONE * hover_scale)
-				canvas.draw_texture(itex, -half)
+				canvas.draw_texture(itex, -half, Color.WHITE if hovered else Color(1,1,1,0.5))
 				canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 			else:
 				canvas.draw_texture(itex, center - half)

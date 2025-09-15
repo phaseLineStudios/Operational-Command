@@ -34,11 +34,13 @@ func _build_form() -> void:
 	var params := t.make_default_params() if instance.params.is_empty() else instance.params
 
 	for p in t.get_configurable_props():
+		var row := VBoxContainer.new()
+		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var n := String(p.name)
 		var label := Label.new()
 		label.text = n.capitalize()
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		form.add_child(label)
+		row.add_child(label)
 
 		var w: Control
 		match p.type:
@@ -100,7 +102,8 @@ func _build_form() -> void:
 
 		w.name = n
 		w.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		form.add_child(w)
+		row.add_child(w)
+		form.add_child(row)
 
 func _on_save() -> void:
 	if not instance or not instance.task: return
