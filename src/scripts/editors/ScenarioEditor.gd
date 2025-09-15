@@ -113,7 +113,13 @@ func _on_attributemenu_pressed(id: int):
 			if data:
 				new_scenario_dialog.show_dialog(true, data)
 			else:
-				new_scenario_dialog.show_dialog(true) 
+				new_scenario_dialog.show_dialog(true)
+		1:
+			var acc := AcceptDialog.new()
+			acc.title = "Briefing"
+			acc.dialog_text = "Briefing tool not yet implemented."
+			add_child(acc)
+			acc.popup_centered()
 		2: weather_dialog.show_dialog(true)
 
 func _on_new_scenario(d: ScenarioData):
@@ -383,7 +389,7 @@ func _rebuild_scene_tree():
 	if data.triggers:
 		for i in data.triggers.size():
 			var trig: ScenarioTrigger = data.triggers[i]
-			if trig == null: 
+			if trig == null:
 				continue
 			var t_item := scene_tree.create_item(triggers)
 			t_item.set_text(0, trig.title)
@@ -913,6 +919,15 @@ func _on_overlay_gui_input(event):
 func _set_selection(pick: Dictionary, from_tree: bool = false) -> void:
 	selected_pick = pick if pick != null else {}
 	terrain_overlay.set_selected(selected_pick)
+	_queue_free_children(tool_hint)
+	if StringName(pick.get("type","")) in [&"unit",&"task"]:
+		var l := Label.new()
+		l.text = "CTRL+DRAG - syncronize with trigger"
+		tool_hint.add_child(l)
+	elif StringName(pick.get("type","")) == &"trigger":
+		var l := Label.new()
+		l.text = "CTRL+DRAG - syncronize with Unit/Task"
+		tool_hint.add_child(l)
 	_request_overlay_redraw()
 	if not from_tree:
 		_select_in_scene_tree(pick)
@@ -920,6 +935,7 @@ func _set_selection(pick: Dictionary, from_tree: bool = false) -> void:
 func _clear_selection(from_tree: bool = false) -> void:
 	selected_pick = {}
 	terrain_overlay.clear_selected()
+	_queue_free_children(tool_hint)
 	_request_overlay_redraw()
 	if not from_tree:
 		scene_tree.deselect_all()
