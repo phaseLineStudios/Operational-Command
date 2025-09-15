@@ -83,17 +83,17 @@ func serialize() -> Dictionary:
 	var placed_units: Array = []
 	for unit in units:
 		if unit is ScenarioUnit:
-			placed_units.append(unit.serialize)
+			placed_units.append(unit.serialize())
 			
 	var placed_triggers: Array = []
 	for trigger in triggers:
 		if trigger is ScenarioTrigger:
-			placed_triggers.append(trigger.serialize)
+			placed_triggers.append(trigger.serialize())
 			
 	var placed_tasks: Array = []
 	for task in tasks:
 		if task is ScenarioTask:
-			placed_units.append(task.serialize)
+			placed_tasks.append(task.serialize())
 
 	return {
 		"id": id,
@@ -149,9 +149,9 @@ static func deserialize(json: Variant) -> ScenarioData:
 		if built is TerrainData:
 			s.terrain = built
 
-	var brief_id := String(json.get("briefing_id", ""))
+	var brief_id := str(json.get("briefing_id", ""))
 	if brief_id != "":
-		var brief: BriefData = ContentDB.load_briefing(brief_id)
+		var brief: BriefData = ContentDB.get_briefing(brief_id)
 		if brief is BriefData:
 			s.briefing = brief
 
@@ -193,9 +193,21 @@ static func deserialize(json: Variant) -> ScenarioData:
 			for unit in placed_units:
 				scenario_units.append(ScenarioUnit.deserialize(unit))
 			s.units = scenario_units
+			
+		var placed_triggers: Array = content.get("triggers", [])
+		if typeof(placed_triggers) == TYPE_ARRAY:
+			var scenario_triggers: Array[ScenarioTrigger] = []
+			for trig in placed_triggers:
+				scenario_triggers.append(ScenarioTrigger.deserialize(trig))
+			s.triggers = scenario_triggers
+			
+		var placed_tasks: Array = content.get("tasks", [])
+		if typeof(placed_tasks) == TYPE_ARRAY:
+			var scenario_tasks: Array[ScenarioTask] = []
+			for task in placed_tasks:
+				scenario_tasks.append(ScenarioTask.deserialize(task))
+			s.tasks = scenario_tasks
 
-		s.triggers = content.get("triggers", s.triggers)
-		s.tasks = content.get("tasks", s.tasks)
 		s.drawings = content.get("drawings", s.drawings)
 
 	if typeof(s.preview_path) == TYPE_STRING and s.preview_path != "":

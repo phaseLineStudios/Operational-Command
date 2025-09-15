@@ -425,7 +425,7 @@ func serialize() -> Dictionary:
 			"id": int(s.get("id", 0)),
 			"brush_path": ContentDB.res_path_or_null(s.get("brush", null)),
 			"type": s.get("type", null),
-			"points": ContentDB.v2arr_to_json(s.get("points", PackedVector2Array())),
+			"points": ContentDB.v2arr_serialize(s.get("points", PackedVector2Array())),
 			"closed": bool(s.get("closed", false))
 		})
 
@@ -436,7 +436,7 @@ func serialize() -> Dictionary:
 		ln_out.append({
 			"id": int(l.get("id", 0)),
 			"brush_path": ContentDB.res_path_or_null(l.get("brush", null)),
-			"points": ContentDB.v2arr_to_json(l.get("points", PackedVector2Array())),
+			"points": ContentDB.v2arr_serialize(l.get("points", PackedVector2Array())),
 			"closed": bool(l.get("closed", false)),
 			"width_px": float(l.get("width_px", 1.0))
 		})
@@ -538,7 +538,7 @@ static func deserialize(d: Variant) -> TerrainData:
 				var entry := {
 					"id": int(s.get("id", 0)),
 					"type": s.get("type", null),
-					"points": ContentDB.v2arr_from_json(s.get("points", [])),
+					"points": ContentDB.v2arr_deserialize(s.get("points", [])),
 					"closed": bool(s.get("closed", false))
 				}
 				var bp: String = s.get("brush_path", null)
@@ -547,7 +547,7 @@ static func deserialize(d: Variant) -> TerrainData:
 				srf_out.append(entry)
 			t.surfaces = srf_out
 
-		var ln_in: Dictionary = content.get("lines", [])
+		var ln_in: Array = content.get("lines", [])
 		if typeof(ln_in) == TYPE_ARRAY:
 			var ln_out: Array = []
 			for l in ln_in:
@@ -555,7 +555,7 @@ static func deserialize(d: Variant) -> TerrainData:
 					continue
 				var entry := {
 					"id": int(l.get("id", 0)),
-					"points": ContentDB.v2arr_from_json(l.get("points", [])),
+					"points": ContentDB.v2arr_deserialize(l.get("points", [])),
 					"closed": bool(l.get("closed", false)),
 					"width_px": float(l.get("width_px", 1.0))
 				}
@@ -565,7 +565,7 @@ static func deserialize(d: Variant) -> TerrainData:
 				ln_out.append(entry)
 			t.lines = ln_out
 
-		var pt_in: Dictionary = content.get("points", [])
+		var pt_in: Array = content.get("points", [])
 		if typeof(pt_in) == TYPE_ARRAY:
 			var pt_out: Array = []
 			for p in pt_in:
@@ -583,7 +583,7 @@ static func deserialize(d: Variant) -> TerrainData:
 				pt_out.append(entry)
 			t.points = pt_out
 
-		var lab_in: Dictionary = content.get("labels", [])
+		var lab_in: Array = content.get("labels", [])
 		if typeof(lab_in) == TYPE_ARRAY:
 			var lab_out: Array = []
 			for lab in lab_in:

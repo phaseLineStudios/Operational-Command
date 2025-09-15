@@ -53,6 +53,11 @@ const DEFAULT_ENEMY_CALLSIGNS: Array[String] = [
 	"RUDOLF", "HENRIK", "VOLKMAR", "FALKO", "LEONID"
 ]
 
+var _current_path: String = ""
+var _dirty := false
+var _open_dlg: FileDialog
+var _save_dlg: FileDialog
+
 var current_tool: ScenarioToolBase
 var selected_pick: Dictionary = {}
 var _task_defs: Array[UnitBaseTask] = []
@@ -110,10 +115,29 @@ func _ready():
 
 	# Build UI once at start (empty stacks)
 	_on_history_changed([], [])
+	
+	_open_dlg = FileDialog.new()
+	_open_dlg.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	_open_dlg.access = FileDialog.ACCESS_FILESYSTEM
+	_open_dlg.filters = PackedStringArray(["*.json ; Scenario JSON"])
+	_open_dlg.title = "Open Scenario"
+	_open_dlg.file_selected.connect(_on_open_file_selected)
+	add_child(_open_dlg)
+
+	_save_dlg = FileDialog.new()
+	_save_dlg.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	_save_dlg.access = FileDialog.ACCESS_FILESYSTEM
+	_save_dlg.filters = PackedStringArray(["*.json ; Scenario JSON"])
+	_save_dlg.title = "Save Scenario As"
+	_save_dlg.file_selected.connect(_on_save_file_selected)
+	add_child(_save_dlg)
 
 func _on_filemenu_pressed(id: int):
 	match id:
 		0: new_scenario_dialog.show_dialog(true)
+		1: _cmd_open()
+		2: _cmd_save()
+		3: _cmd_save_as()
 		4: Game.goto_scene(MAIN_MENU_SCENE)
 
 func _on_attributemenu_pressed(id: int):
@@ -133,6 +157,8 @@ func _on_attributemenu_pressed(id: int):
 
 func _on_new_scenario(d: ScenarioData):
 	data = d
+	_current_path = ""
+	_dirty = false
 	_on_data_changed()
 
 func _on_update_scenario(_d: ScenarioData) -> void:
@@ -147,6 +173,8 @@ func _on_data_changed():
 	else:
 		mouse_position_label.text = ""
 	_request_overlay_redraw()
+	_rebuild_scene_tree()
+	_on_history_changed([], [])
 
 func _on_faction_changed(affiliation: ScenarioUnit.Affiliation):
 	if affiliation == ScenarioUnit.Affiliation.enemy:
@@ -1192,6 +1220,126 @@ func _snapshot_arrays() -> Dictionary:
 		"tasks": ScenarioHistory._deep_copy_array_res(data.tasks if data and data.tasks else []),
 		"triggers": ScenarioHistory._deep_copy_array_res(data.triggers if data and data.triggers else []),
 	}
+
+## Save current scenario to disk. If no path, falls back to Save As.
+func _cmd_save() -> void:
+	if _current_path.strip_edges() == "":
+		_cmd_save_as()
+		return
+	if not data:
+		_show_info("No scenario to save.")
+		return
+	var ok := _save_to_path(_current_path)
+	if ok:
+		_dirty = false
+		_show_info("Saved: %s" % _current_path)
+
+## Save As... (shows dialog)
+func _cmd_save_as() -> void:
+	if not data:
+		_show_info("No scenario to save.")
+		return
+	_save_dlg.current_file = _suggest_filename()
+	_save_dlg.popup_centered_ratio(0.75)
+
+## Open (shows dialog, warns on unsaved changes)
+func _cmd_open() -> void:
+	if _dirty and not await _confirm_discard():
+		return
+	_open_dlg.popup_centered_ratio(0.75)
+
+## FileDialog callback (Open)
+func _on_open_file_selected(path: String) -> void:
+	var ok := _load_from_path(path)
+	if ok:
+		_current_path = path
+		_dirty = false
+	else:
+		_show_info("Failed to open: %s" % path)
+
+## FileDialog callback (Save As)
+func _on_save_file_selected(path: String) -> void:
+	var fixed := _ensure_json_ext(path)
+	var ok := _save_to_path(fixed)
+	if ok:
+		_current_path = fixed
+		_dirty = false
+		_show_info("Saved: %s" % fixed)
+	else:
+		_show_info("Failed to save: %s" % fixed)
+
+## Write current ScenarioData as JSON to path.
+func _save_to_path(path: String) -> bool:
+	var out_dict := data.serialize()
+	var json_text := JSON.stringify(out_dict, "  ")
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	if f == null:
+		push_error("Save failed: %s" % path)
+		return false
+	f.store_string(json_text)
+	f.flush()
+	f.close()
+	return true
+
+## Load ScenarioData from a JSON file path.
+func _load_from_path(path: String) -> bool:
+	var f := FileAccess.open(path, FileAccess.READ)
+	if f == null:
+		push_error("Open failed: %s" % path)
+		return false
+	var text := f.get_as_text()
+	f.close()
+
+	var parsed: Variant = JSON.parse_string(text)
+	if typeof(parsed) != TYPE_DICTIONARY:
+		push_error("Invalid scenario JSON.")
+		return false
+
+	var new_data := ScenarioData.deserialize(parsed)
+
+	data = new_data
+	_on_data_changed()
+
+	if is_instance_valid(history):
+		remove_child(history)
+	history = ScenarioHistory.new()
+	add_child(history)
+	history.history_changed.connect(_on_history_changed)
+
+	return true
+
+## Suggest a filename from scenario title.
+func _suggest_filename() -> String:
+	var base := (data.title if data and String(data.title) != "" else "scenario")
+	base = base.strip_edges().to_lower().replace(" ", "_")
+	return _ensure_json_ext(base)
+
+## Ensure .json extension
+func _ensure_json_ext(p: String) -> String:
+	return p if p.to_lower().ends_with(".json") else "%s.json" % p
+
+## Confirm discard of unsaved changes (simple blocking dialog).
+func _confirm_discard() -> bool:
+	var acc := ConfirmationDialog.new()
+	acc.title = "Unsaved changes"
+	acc.dialog_text = "You have unsaved changes. Discard and continue?"
+	add_child(acc)
+	var accepted := false
+	@warning_ignore("confusable_capture_reassignment")
+	acc.canceled.connect(func(): accepted = false)
+	@warning_ignore("confusable_capture_reassignment")
+	acc.confirmed.connect(func(): accepted = true)
+	acc.popup_centered()
+	await acc.confirmed
+	acc.queue_free()
+	return accepted
+
+## Small toast/info (non-blocking)
+func _show_info(msg: String) -> void:
+	var d := AcceptDialog.new()
+	d.title = "Info"
+	d.dialog_text = msg
+	add_child(d)
 
 ## Helper function to delete all children of a parent node
 func _queue_free_children(node: Control):
