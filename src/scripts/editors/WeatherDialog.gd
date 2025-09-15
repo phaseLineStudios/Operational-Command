@@ -16,22 +16,22 @@ func _ready():
 	close_requested.connect(func(): show_dialog(false))
 
 func _on_primary_pressed():
-	editor.data.rain = rain.value
-	editor.data.fog_m = fog.value
-	editor.data.wind_dir = wind_dir.value
-	editor.data.wind_speed_m = wind_spd.value
+	editor.ctx.data.rain = rain.value
+	editor.ctx.data.fog_m = fog.value
+	editor.ctx.data.wind_dir = wind_dir.value
+	editor.ctx.data.wind_speed_m = wind_spd.value
 	show_dialog(false)
 
 ## Reset values before popup
 func _reset_values():
-	rain.value = editor.data.rain
-	fog.value = editor.data.fog_m
-	wind_dir.value = editor.data.wind_dir
-	wind_spd.value = editor.data.wind_speed_m
+	rain.value = editor.ctx.data.rain
+	fog.value = editor.ctx.data.fog_m
+	wind_dir.value = editor.ctx.data.wind_dir
+	wind_spd.value = editor.ctx.data.wind_speed_m
 
 ## Show/hide dialog
 func show_dialog(state: bool):
-	if not editor.data:
+	if not editor.ctx.data:
 		print("Must create a scenario first")
 		return
 		

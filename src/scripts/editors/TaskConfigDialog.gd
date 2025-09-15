@@ -129,11 +129,11 @@ func _on_save() -> void:
 	after.params = params
 
 	if editor and editor.history:
-		editor.history.push_res_edit_by_id(editor.data, "tasks", "id", String(instance.id), _before, after, "Edit Task")
+		editor.history.push_res_edit_by_id(editor.ctx.data, "tasks", "id", String(instance.id), _before, after, "Edit Task")
 	else:
 		instance.params = params
 
 	emit_signal("saved", instance)
 	visible = false
 	if editor:
-		editor._request_overlay_redraw()
+		editor.ctx.request_overlay_redraw()

@@ -37,11 +37,11 @@ func _ready() -> void:
 	close_btn.pressed.connect(func(): visible = false)
 	close_requested.connect(func(): visible = false)
 
-## Open dialog for a unit index in editor.data.units
+## Open dialog for a unit index in editor.ctx.data.units
 func show_for(_editor: ScenarioEditor, index: int) -> void:
 	editor = _editor
 	unit_index = index
-	var su: ScenarioUnit = editor.data.units[unit_index]
+	var su: ScenarioUnit = editor.ctx.data.units[unit_index]
 	_before = su.duplicate(true)
 
 	callsign_in.text = su.callsign
@@ -62,7 +62,7 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 
 func _on_save() -> void:
 	if not editor or unit_index < 0: return
-	var su_live: ScenarioUnit = editor.data.units[unit_index]
+	var su_live: ScenarioUnit = editor.ctx.data.units[unit_index]
 	var after := su_live.duplicate(true)
 	after.callsign    = callsign_in.text.strip_edges()
 	after.affiliation = aff_in.get_selected_id() as ScenarioUnit.Affiliation
@@ -71,7 +71,7 @@ func _on_save() -> void:
 
 	if editor.history:
 		var desc := "Edit Unit %s" % String(_before.callsign)
-		editor.history.push_res_edit_by_id(editor.data, "units", "id", String(su_live.id), _before, after, desc)
+		editor.history.push_res_edit_by_id(editor.ctx.data, "units", "id", String(su_live.id), _before, after, desc)
 	else:
 		su_live.callsign    = after.callsign
 		su_live.affiliation = after.affiliation
@@ -79,5 +79,5 @@ func _on_save() -> void:
 		su_live.behaviour   = after.behaviour
 
 	visible = false
-	editor._request_overlay_redraw()
+	editor.ctx.request_overlay_redraw()
 	editor._rebuild_scene_tree()

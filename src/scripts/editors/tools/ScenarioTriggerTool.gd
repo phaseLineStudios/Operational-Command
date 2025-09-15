@@ -1,7 +1,5 @@
 extends ScenarioToolBase
 class_name ScenarioTriggerTool
-## Tool for placing a ScenarioTrigger.
-## LMB places. RMB/ESC cancels.
 
 @export var icon_px := 40
 
@@ -13,17 +11,18 @@ func _on_activated() -> void:
 	emit_signal("request_redraw_overlay")
 
 func _on_deactivated():
-	editor.trigger_list.deselect_all()
+	if editor and editor.trigger_list:
+		editor.trigger_list.deselect_all()
 	emit_signal("request_redraw_overlay")
 
 func build_hint_ui(parent: Control) -> void:
-	editor._queue_free_children(parent)
+	_clear(parent)
 	parent.add_child(_label("LMB - Place"))
 	parent.add_child(VSeparator.new())
 	parent.add_child(_label("RMB/ESC - Cancel"))
 
 func _on_mouse_move(e: InputEventMouseMotion) -> bool:
-	if not editor or not editor.data or not editor.data.terrain:
+	if not editor or not editor.ctx or not editor.ctx.data or not editor.ctx.data.terrain:
 		_hover_valid = false
 		return false
 	_hover_map_pos = editor.terrain_render.map_to_terrain(e.position)
@@ -32,7 +31,7 @@ func _on_mouse_move(e: InputEventMouseMotion) -> bool:
 	return true
 
 func _on_mouse_button(e: InputEventMouseButton) -> bool:
-	if not e.pressed: 
+	if not e.pressed:
 		return false
 	match e.button_index:
 		MOUSE_BUTTON_LEFT:
@@ -47,18 +46,18 @@ func _on_mouse_button(e: InputEventMouseButton) -> bool:
 				inst.on_activate_expr = prototype.on_activate_expr
 				inst.on_deactivate_expr = prototype.on_deactivate_expr
 				editor._place_trigger_from_tool(inst, _hover_map_pos)
-				editor.clear_tool()
+				editor._clear_tool()
 				emit_signal("finished")
 				return true
 		MOUSE_BUTTON_RIGHT:
-			editor.clear_tool()
+			editor._clear_tool()
 			emit_signal("canceled")
 			return true
 	return false
 
 func _on_key(e: InputEventKey) -> bool:
 	if e.pressed and e.keycode == KEY_ESCAPE:
-		editor.clear_tool()
+		editor._clear_tool()
 		emit_signal("canceled")
 		return true
 	return false
@@ -91,8 +90,11 @@ func draw_overlay(canvas: Control) -> void:
 		canvas.draw_rect(rect, col, true)
 		canvas.draw_rect(rect, outline, false, 2.0)
 
-## Helper function to create a new label
 func _label(t: String) -> Label:
 	var l := Label.new()
 	l.text = t
 	return l
+
+func _clear(node: Control) -> void:
+	for c in node.get_children():
+		c.queue_free()

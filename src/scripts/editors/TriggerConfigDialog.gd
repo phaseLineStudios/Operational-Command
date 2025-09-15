@@ -26,12 +26,12 @@ func _ready() -> void:
 	close_requested.connect(func(): visible = false)
 
 func show_for(_editor: ScenarioEditor, index: int) -> void:
-	if _editor == null or index < 0 or index >= _editor.data.triggers.size():
+	if _editor == null or index < 0 or index >= _editor.ctx.data.triggers.size():
 		return
 	editor = _editor
 	trigger_index = index
 
-	var trig: ScenarioTrigger = editor.data.triggers[trigger_index]
+	var trig: ScenarioTrigger = editor.ctx.data.triggers[trigger_index]
 	_before = trig.duplicate(true)
 
 	trig_title.text = trig.title
@@ -53,8 +53,8 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 	visible = true
 
 func _on_save() -> void:
-	if editor == null or trigger_index < 0 or trigger_index >= editor.data.triggers.size(): return
-	var live: ScenarioTrigger = editor.data.triggers[trigger_index]
+	if editor == null or trigger_index < 0 or trigger_index >= editor.ctx.data.triggers.size(): return
+	var live: ScenarioTrigger = editor.ctx.data.triggers[trigger_index]
 
 	var after := live.duplicate(true)
 	after.title = trig_title.text
@@ -68,7 +68,7 @@ func _on_save() -> void:
 
 	if editor.history:
 		var desc := "Edit Trigger %s" % String(_before.id)
-		editor.history.push_res_edit_by_id(editor.data, "triggers", "id", String(live.id), _before, after, desc)
+		editor.history.push_res_edit_by_id(editor.ctx.data, "triggers", "id", String(live.id), _before, after, desc)
 	else:
 		live.title = after.title
 		live.area_shape = after.area_shape
@@ -81,4 +81,4 @@ func _on_save() -> void:
 
 	emit_signal("saved", trigger_index, after)
 	visible = false
-	editor._request_overlay_redraw()
+	editor.ctx.request_overlay_redraw()

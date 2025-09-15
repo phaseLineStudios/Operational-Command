@@ -3,35 +3,20 @@ class_name ScenarioEditorOverlay
 ## Draws editor overlays: placed units, selection, and active tool ghosts.
 ## The TerrainRender handles map<->terrain transforms; this node just draws.
 
-## Owning editor.
 @export var editor: ScenarioEditor
-## Icon size for placed units (px).
 @export var unit_icon_px: int = 48
-## Icon size for placed slots (px)
 @export var slot_icon_px: int = 48
-## Icon size for placed tasks (px)
 @export var task_icon_px: int = 48
-## Icon Size for inner task icons (px)
 @export var task_icon_inner_px: int = 28
-## Icon size for placed triggers (px)
 @export var trigger_icon_px: int = 48
-## Trigger fill color
 @export var trigger_fill: Color = Color(Color.LIGHT_SKY_BLUE, 0.25)
-## Trigger outline color
 @export var trigger_outline: Color = Color(Color.DEEP_SKY_BLUE, 0.9)
-## Trigger Sync Line Color
 @export var sync_line_color: Color = Color(Color.BLACK, 0.5)
-## Trigger sync line width
 @export var sync_line_width: float = 2.0
-## Slot Icon texture
 @export var slot_icon: Texture2D = preload("res://assets/textures/units/slot_icon.png")
-## Scale modifier when hovered
 @export var hover_scale: float = 1.15
-## Offset of entity title when hovered
 @export var hover_title_offset: Vector2 = Vector2(0, 48)
-## Extra pixel gap between link and glyph edge
 @export var link_gap_px: float = 3.0
-## Arrow head length in pixels
 @export var arrow_head_len_px: float = 10.0
 
 const MI_CONFIG_SLOT := 1001
@@ -43,7 +28,7 @@ const MI_DELETE := 1099
 var _icon_cache := {}
 var _ctx: PopupMenu
 var _last_pick: Dictionary = {}
-var _selected_pick: Dictionary = {} 
+var _selected_pick: Dictionary = {}
 var _hover_pick: Dictionary = {}
 var _hover_pos: Vector2 = Vector2.ZERO
 
@@ -54,7 +39,7 @@ var _link_preview_pos := Vector2.ZERO
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	visible = true
-	
+
 	_ctx = PopupMenu.new()
 	add_child(_ctx)
 	_ctx.id_pressed.connect(_on_ctx_pressed)
@@ -66,19 +51,19 @@ func _draw() -> void:
 	_draw_slots()
 	_draw_tasks()
 	_draw_triggers()
-	
+
 	if _link_preview_active:
 		var a := _screen_pos_for_pick(_link_preview_src)
 		var b := _link_preview_pos
 		draw_line(a, b, sync_line_color, sync_line_width, true)
 
-	if editor and editor.current_tool:
-		editor.current_tool.draw_overlay(self)
+	# draw active tool ghosts (use the SAME ref you checked)
+	if editor and editor.ctx and editor.ctx.current_tool:
+		editor.ctx.current_tool.draw_overlay(self)
 
 func request_redraw() -> void:
 	queue_redraw()
 
-## Editor sets current selection here
 func set_selected(pick: Dictionary) -> void:
 	_selected_pick = pick if pick != null else {}
 	queue_redraw()
@@ -87,7 +72,6 @@ func clear_selected() -> void:
 	_selected_pick = {}
 	queue_redraw()
 
-## Let editor query the thing under a given overlay position
 func get_pick_at(pos: Vector2) -> Dictionary:
 	return _pick_at(pos)
 
@@ -109,11 +93,11 @@ func on_ctx_open(event: InputEventMouseButton):
 			_ctx.add_item("Configure Unit", MI_CONFIG_UNIT)
 			_ctx.add_separator()
 			_ctx.add_item("Delete", MI_DELETE)
-		&"task": 
+		&"task":
 			_ctx.add_item("Configure Task", MI_CONFIG_TASK)
 			_ctx.add_separator()
 			_ctx.add_item("Delete", MI_DELETE)
-		&"trigger": 
+		&"trigger":
 			_ctx.add_item("Configure Trigger", MI_CONFIG_TRIGGER)
 			_ctx.add_separator()
 			_ctx.add_item("Delete", MI_DELETE)
@@ -133,9 +117,9 @@ func on_dbl_click(event: InputEventMouseButton):
 			editor._open_slot_config(pick["index"])
 		&"unit":
 			editor._open_unit_config(pick["index"])
-		&"task": 
+		&"task":
 			editor._open_task_config(pick["index"])
-		&"trigger": 
+		&"trigger":
 			editor._open_trigger_config(pick["index"])
 		_:
 			pass
@@ -153,41 +137,40 @@ func _on_ctx_pressed(id: int) -> void:
 		MI_CONFIG_UNIT:
 			if _last_pick.get("type", &"") == &"unit":
 				editor._open_unit_config(_last_pick["index"])
-		MI_CONFIG_TASK: 
-			if _last_pick.get("type","") == "task": 
+		MI_CONFIG_TASK:
+			if _last_pick.get("type", &"") == &"task":
 				editor._open_task_config(_last_pick["index"])
 		MI_CONFIG_TRIGGER:
-			if _last_pick.get("type","") == "trigger":
+			if _last_pick.get("type", &"") == &"trigger":
 				editor._open_trigger_config(_last_pick["index"])
 		MI_DELETE:
 			if not _last_pick.is_empty():
 				editor._delete_pick(_last_pick)
 
 func _draw_units() -> void:
-	if not editor or not editor.data or not editor.data.terrain or editor.data.units == null:
+	if not editor or not editor.ctx or not editor.ctx.data or not editor.ctx.data.terrain or editor.ctx.data.units == null:
 		return
-	for i in editor.data.units.size():
-		var su = editor.data.units[i]
-		if su == null or su.unit == null: 
+	for i in editor.ctx.data.units.size():
+		var su: ScenarioUnit = editor.ctx.data.units[i]
+		if su == null or su.unit == null:
 			continue
 		var tex := _get_scaled_icon_unit(su)
-		if tex == null: 
+		if tex == null:
 			continue
 		var pos: Vector2 = editor.terrain_render.terrain_to_map(su.position_m)
-		var hi := _is_highlighted(&"unit", i) 
+		var hi := _is_highlighted(&"unit", i)
 		_draw_icon_with_hover(tex, pos, hi)
 		if hi:
 			_draw_title(su.callsign, pos)
 
-## Draw placed UnitSlotData instances using slot_icon
 func _draw_slots() -> void:
-	if not editor or not editor.data or not editor.data.terrain or editor.data.unit_slots == null:
+	if not editor or not editor.ctx or not editor.ctx.data or not editor.ctx.data.terrain or editor.ctx.data.unit_slots == null:
 		return
 	var tex := _get_scaled_icon_slot()
-	if tex == null: 
+	if tex == null:
 		return
-	for i in editor.data.unit_slots.size():
-		var entry = editor.data.unit_slots[i]
+	for i in editor.ctx.data.unit_slots.size():
+		var entry = editor.ctx.data.unit_slots[i]
 		var pos_m := _slot_pos_m(entry)
 		var pos: Vector2 = editor.terrain_render.terrain_to_map(pos_m)
 		var hi := _is_highlighted(&"slot", i)
@@ -199,37 +182,36 @@ func _draw_slots() -> void:
 			_draw_title(title, pos)
 
 func _draw_tasks() -> void:
-	if not editor or not editor.data or editor.data.tasks == null:
+	if not editor or not editor.ctx or not editor.ctx.data or editor.ctx.data.tasks == null:
 		return
-	for i in editor.data.tasks.size():
-		var inst: ScenarioTask = editor.data.tasks[i]
+	for i in editor.ctx.data.tasks.size():
+		var inst: ScenarioTask = editor.ctx.data.tasks[i]
 		if inst == null: continue
 		var p := editor.terrain_render.terrain_to_map(inst.position_m)
 		var hi := _is_highlighted(&"task", i)
 		_draw_task_glyph(inst, p, hi)
 
-## Draw arrow from previous to each task
 func _draw_task_links() -> void:
-	if not editor or not editor.data or editor.data.tasks == null:
+	if not editor or not editor.ctx or not editor.ctx.data or editor.ctx.data.tasks == null:
 		return
 
-	for i in editor.data.tasks.size():
-		var inst: ScenarioTask = editor.data.tasks[i]
+	for i in editor.ctx.data.tasks.size():
+		var inst: ScenarioTask = editor.ctx.data.tasks[i]
 		if inst == null:
 			continue
 
-		var src_center: Vector2
+		var src_center := Vector2.ZERO
 		var src_radius := 0.0
-		if inst.prev_index >= 0 and inst.prev_index < editor.data.tasks.size():
-			var prev: ScenarioTask = editor.data.tasks[inst.prev_index]
+		if inst.prev_index >= 0 and inst.prev_index < editor.ctx.data.tasks.size():
+			var prev: ScenarioTask = editor.ctx.data.tasks[inst.prev_index]
 			if prev == null:
 				continue
 			src_center = editor.terrain_render.terrain_to_map(prev.position_m)
 			src_radius = _glyph_radius(&"task", inst.prev_index)
 		else:
-			if inst.unit_index < 0 or inst.unit_index >= editor.data.units.size():
+			if inst.unit_index < 0 or inst.unit_index >= editor.ctx.data.units.size():
 				continue
-			var su: ScenarioUnit = editor.data.units[inst.unit_index]
+			var su: ScenarioUnit = editor.ctx.data.units[inst.unit_index]
 			src_center = editor.terrain_render.terrain_to_map(su.position_m)
 			src_radius = _glyph_radius(&"unit", inst.unit_index)
 
@@ -243,7 +225,6 @@ func _draw_task_links() -> void:
 		)
 		var a := a_b[0]
 		var b := a_b[1]
-
 		if a.distance_to(b) < 2.0:
 			continue
 
@@ -251,11 +232,11 @@ func _draw_task_links() -> void:
 		_draw_arrow(a, b, col, arrow_head_len_px)
 
 func _draw_triggers() -> void:
-	if not editor or not editor.data or editor.data.triggers == null:
+	if not editor or not editor.ctx or not editor.ctx.data or editor.ctx.data.triggers == null:
 		return
-	for i in editor.data.triggers.size():
-		var trig: ScenarioTrigger = editor.data.triggers[i]
-		if trig == null: 
+	for i in editor.ctx.data.triggers.size():
+		var trig: ScenarioTrigger = editor.ctx.data.triggers[i]
+		if trig == null:
 			continue
 		var center_px := editor.terrain_render.terrain_to_map(trig.area_center_m)
 		var hi := _is_highlighted(&"trigger", i)
@@ -294,61 +275,60 @@ func _draw_trigger_shape(trig: ScenarioTrigger, center_px: Vector2, hi: bool) ->
 		var p := editor.terrain_render.terrain_to_map(trig.area_center_m)
 		_draw_icon_with_hover(tex, p, hi)
 
-## Draw all saved syncs from triggers to their units/tasks.
 func _draw_sync_links() -> void:
-	if not editor or not editor.data or editor.data.triggers == null:
+	if not editor or not editor.ctx or not editor.ctx.data or editor.ctx.data.triggers == null:
 		return
-	for trig in editor.data.triggers:
+	for trig: ScenarioTrigger in editor.ctx.data.triggers:
 		if trig == null: continue
 		var tp := editor.terrain_render.terrain_to_map(trig.area_center_m)
-		for ui in trig.synced_units:
-			if editor.data.units and ui >= 0 and ui < editor.data.units.size():
-				var su: ScenarioUnit = editor.data.units[ui]
-				if su:
-					var up := editor.terrain_render.terrain_to_map(su.position_m)
-					draw_line(up, tp, sync_line_color, sync_line_width, true)
-		for ti in trig.synced_tasks:
-			if editor.data.tasks and ti >= 0 and ti < editor.data.tasks.size():
-				var inst: ScenarioTask = editor.data.tasks[ti]
-				if inst:
-					var p := editor.terrain_render.terrain_to_map(inst.position_m)
-					draw_line(p, tp, sync_line_color, sync_line_width, true)
+		if trig.synced_units:
+			for ui in trig.synced_units:
+				if editor.ctx.data.units and ui >= 0 and ui < editor.ctx.data.units.size():
+					var su: ScenarioUnit = editor.ctx.data.units[ui]
+					if su:
+						var up := editor.terrain_render.terrain_to_map(su.position_m)
+						draw_line(up, tp, sync_line_color, sync_line_width, true)
+		if trig.synced_tasks:
+			for ti in trig.synced_tasks:
+				if editor.ctx.data.tasks and ti >= 0 and ti < editor.ctx.data.tasks.size():
+					var inst: ScenarioTask = editor.ctx.data.tasks[ti]
+					if inst:
+						var p := editor.terrain_render.terrain_to_map(inst.position_m)
+						draw_line(p, tp, sync_line_color, sync_line_width, true)
 
-## Begin live link preview from a picked entity
 func begin_link_preview(src_pick: Dictionary) -> void:
 	_link_preview_active = true
 	_link_preview_src = src_pick
 	queue_redraw()
 
-## Update live preview endpoint
 func update_link_preview(mouse_pos: Vector2) -> void:
 	_link_preview_pos = mouse_pos
 	if _link_preview_active:
 		queue_redraw()
 
-## End live preview
 func end_link_preview() -> void:
 	_link_preview_active = false
 	_link_preview_src = {}
 	queue_redraw()
 
-## Compute screen center for a pick
 func _screen_pos_for_pick(pick: Dictionary) -> Vector2:
 	var t := StringName(pick.get("type",""))
 	var idx := int(pick.get("index",-1))
+	if not editor or not editor.ctx or not editor.ctx.data:
+		return _hover_pos
 	match t:
 		&"unit":
-			if editor.data.units and idx >= 0 and idx < editor.data.units.size() and editor.data.units[idx]:
-				return editor.terrain_render.terrain_to_map(editor.data.units[idx].position_m)
+			if editor.ctx.data.units and idx >= 0 and idx < editor.ctx.data.units.size() and editor.ctx.data.units[idx]:
+				return editor.terrain_render.terrain_to_map(editor.ctx.data.units[idx].position_m)
 		&"slot":
-			if editor.data.unit_slots and idx >= 0 and idx < editor.data.unit_slots.size() and editor.data.unit_slots[idx]:
-				return editor.terrain_render.terrain_to_map(editor.data.unit_slots[idx].start_position)
+			if editor.ctx.data.unit_slots and idx >= 0 and idx < editor.ctx.data.unit_slots.size() and editor.ctx.data.unit_slots[idx]:
+				return editor.terrain_render.terrain_to_map(editor.ctx.data.unit_slots[idx].start_position)
 		&"task":
-			if editor.data.tasks and idx >= 0 and idx < editor.data.tasks.size() and editor.data.tasks[idx]:
-				return editor.terrain_render.terrain_to_map(editor.data.tasks[idx].position_m)
+			if editor.ctx.data.tasks and idx >= 0 and idx < editor.ctx.data.tasks.size() and editor.ctx.data.tasks[idx]:
+				return editor.terrain_render.terrain_to_map(editor.ctx.data.tasks[idx].position_m)
 		&"trigger":
-			if editor.data.triggers and idx >= 0 and idx < editor.data.triggers.size() and editor.data.triggers[idx]:
-				return editor.terrain_render.terrain_to_map(editor.data.triggers[idx].area_center_m)
+			if editor.ctx.data.triggers and idx >= 0 and idx < editor.ctx.data.triggers.size() and editor.ctx.data.triggers[idx]:
+				return editor.terrain_render.terrain_to_map(editor.ctx.data.triggers[idx].area_center_m)
 	return _hover_pos
 
 func _is_highlighted(t: StringName, idx: int) -> bool:
@@ -392,16 +372,15 @@ func _draw_arrow(a: Vector2, b: Vector2, col: Color, head_len: float = arrow_hea
 	draw_line(b, b - side, col, 2.0, true)
 	draw_line(b, b - side2, col, 2.0, true)
 
-## Returns { type: string/..., index: int } of nearest object under cursor
 func _pick_at(overlay_pos: Vector2) -> Dictionary:
 	var best := {}
 	var best_d2 := INF
 
 	var slot_r := float(slot_icon_px) * 0.5 + 2.0
-	if editor and editor.data and editor.data.unit_slots:
-		for i in editor.data.unit_slots.size():
-			var entry = editor.data.unit_slots[i]
-			if entry == null: 
+	if editor and editor.ctx and editor.ctx.data and editor.ctx.data.unit_slots:
+		for i in editor.ctx.data.unit_slots.size():
+			var entry = editor.ctx.data.unit_slots[i]
+			if entry == null:
 				continue
 			var pos_m := _slot_pos_m(entry)
 			var sp := editor.terrain_render.terrain_to_map(pos_m)
@@ -411,34 +390,34 @@ func _pick_at(overlay_pos: Vector2) -> Dictionary:
 				best = { "type": &"slot", "index": i }
 
 	var unit_r := float(unit_icon_px) * 0.5 + 2.0
-	if editor and editor.data and editor.data.units:
-		for i in editor.data.units.size():
-			var su = editor.data.units[i]
-			if su == null: 
+	if editor and editor.ctx and editor.ctx.data and editor.ctx.data.units:
+		for i in editor.ctx.data.units.size():
+			var su: ScenarioUnit = editor.ctx.data.units[i]
+			if su == null:
 				continue
 			var up := editor.terrain_render.terrain_to_map(su.position_m)
 			var d2 := up.distance_squared_to(overlay_pos)
 			if d2 <= unit_r * unit_r and d2 < best_d2:
 				best_d2 = d2
 				best = { "type": &"unit", "index": i }
-	
+
 	var task_r := float(task_icon_px) * 0.5 + 4.0
-	if editor and editor.data and editor.data.tasks:
-		for i in editor.data.tasks.size():
-			var inst: ScenarioTask = editor.data.tasks[i]
-			if inst == null: 
+	if editor and editor.ctx and editor.ctx.data and editor.ctx.data.tasks:
+		for i in editor.ctx.data.tasks.size():
+			var inst: ScenarioTask = editor.ctx.data.tasks[i]
+			if inst == null:
 				continue
 			var tp := editor.terrain_render.terrain_to_map(inst.position_m)
 			var d2 := tp.distance_squared_to(overlay_pos)
 			if d2 <= task_r * task_r and d2 < best_d2:
 				best_d2 = d2
 				best = { "type": &"task", "index": i }
-	
+
 	var trig_r := float(trigger_icon_px) * 0.5 + 4.0
-	if editor and editor.data.triggers:
-		for i in editor.data.triggers.size():
-			var trig: ScenarioTrigger = editor.data.triggers[i]
-			if trig == null: 
+	if editor and editor.ctx and editor.ctx.data and editor.ctx.data.triggers:
+		for i in editor.ctx.data.triggers.size():
+			var trig: ScenarioTrigger = editor.ctx.data.triggers[i]
+			if trig == null:
 				continue
 			var tp := editor.terrain_render.terrain_to_map(trig.area_center_m)
 			var d2 := tp.distance_squared_to(overlay_pos)
@@ -448,7 +427,6 @@ func _pick_at(overlay_pos: Vector2) -> Dictionary:
 
 	return best
 
-## Supports both dict and resource with .start_position or .position_m
 func _slot_pos_m(entry) -> Vector2:
 	if typeof(entry) == TYPE_DICTIONARY:
 		return entry.get("position_m", Vector2.ZERO)
@@ -466,11 +444,11 @@ func _get_scaled_icon_unit(u: ScenarioUnit) -> Texture2D:
 		else:
 			base = u.unit.enemy_icon if u.unit.enemy_icon else null
 	if base == null:
-		if ScenarioUnit.Affiliation.friend == u.affiliation:
-			base = load("res://assets/textures/units/nato_unknown_platoon.png")
-		else:
-			base = load("res://assets/textures/units/enemy_unknown_platoon.png")
-	var key := "UNIT:%s:%d:%d" % [u.unit.id, unit_icon_px, u.affiliation]
+		base = load("res://assets/textures/units/nato_unknown_platoon.png" \
+			if ScenarioUnit.Affiliation.friend == u.affiliation \
+			else "res://assets/textures/units/enemy_unknown_platoon.png")
+	var id_str := (u.unit.id if u and u.unit and u.unit.id else "unknown")
+	var key := "UNIT:%s:%d:%d" % [id_str, unit_icon_px, u.affiliation]
 	return _scaled_cached(key, base, unit_icon_px)
 
 func _get_scaled_icon_slot() -> Texture2D:
@@ -489,9 +467,10 @@ func _get_scaled_icon_task(inst: ScenarioTask) -> Texture2D:
 	return _scaled_cached(key, base, task_icon_inner_px)
 
 func _get_scaled_icon_trigger(trig: ScenarioTrigger) -> Texture2D:
-	if trig.icon == null: 
+	if trig.icon == null:
 		return null
-	var key := "TRIGGER:%d" % trigger_icon_px
+	var rpath := String(trig.icon.resource_path)
+	var key := "TRIGGER:%s:%d" % [rpath, trigger_icon_px]
 	return _scaled_cached(key, trig.icon, trigger_icon_px)
 
 func _scale_icon(tex: Texture2D, key: String, px: int) -> Texture2D:
@@ -508,19 +487,17 @@ func _scaled_cached(key: String, base: Texture2D, px: int) -> Texture2D:
 	_icon_cache[key] = tex
 	return tex
 
-## Approximate visual radius (px) for different overlay entities
 func _glyph_radius(kind: StringName, idx: int) -> float:
 	match kind:
 		&"task":
 			return float(task_icon_px) * 0.5 * (hover_scale if _is_highlighted(&"task", idx) else 1.0)
 		&"unit":
-			return float(unit_icon_px) * 0.5 * (hover_scale if _is_highlighted(&"task", idx) else 1.0)
+			return float(unit_icon_px) * 0.5 * (hover_scale if _is_highlighted(&"unit", idx) else 1.0)
 		&"slot":
-			return float(slot_icon_px) * 0.5 * (hover_scale if _is_highlighted(&"task", idx) else 1.0)
+			return float(slot_icon_px) * 0.5 * (hover_scale if _is_highlighted(&"slot", idx) else 1.0)
 		_:
 			return 0.0
 
-## Shorten segment ends by src_trim and dst_trim (px). Returns [a, b].
 func _trim_segment(src: Vector2, dst: Vector2, src_trim: float, dst_trim: float) -> Array[Vector2]:
 	var dir := dst - src
 	var L := dir.length()

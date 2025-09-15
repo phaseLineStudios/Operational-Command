@@ -20,11 +20,11 @@ func _ready() -> void:
 	close_requested.connect(func(): show_dialog(false))
 	roles_add.pressed.connect(_on_role_add)
 
-## Show dialog for a specific slot entry index in editor.data.unit_slots
+## Show dialog for a specific slot entry index in editor.ctx.data.unit_slots
 func show_for(_editor: ScenarioEditor, index: int) -> void:
 	editor = _editor
 	slot_index = index
-	var s: UnitSlotData = editor.data.unit_slots[slot_index]
+	var s: UnitSlotData = editor.ctx.data.unit_slots[slot_index]
 	_before = s.duplicate(true)
 
 	key_input.text = String(s.key)
@@ -36,7 +36,7 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 ## Save slot config
 func _on_save() -> void:
 	if editor == null or slot_index < 0: return
-	var live: UnitSlotData = editor.data.unit_slots[slot_index]
+	var live: UnitSlotData = editor.ctx.data.unit_slots[slot_index]
 
 	var after := live.duplicate(true)
 	after.key = key_input.text
@@ -45,14 +45,14 @@ func _on_save() -> void:
 
 	if editor.history:
 		var desc := "Edit Slot %s" % String(_before.title)
-		editor.history.push_res_edit_by_id(editor.data, "unit_slots", "key", String(_before.key), _before, after, desc)
+		editor.history.push_res_edit_by_id(editor.ctx.data, "unit_slots", "key", String(_before.key), _before, after, desc)
 	else:
 		live.key = after.key
 		live.title = after.title
 		live.allowed_roles = after.allowed_roles
 
 	visible = false
-	editor._request_overlay_redraw()
+	editor.ctx.request_overlay_redraw()
 	editor._rebuild_scene_tree()
 
 ## Add role to role list
