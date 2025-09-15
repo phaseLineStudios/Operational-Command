@@ -7,6 +7,8 @@ class_name ScenarioEditor
 
 ## Initial Scenario Data
 @export var data: ScenarioData
+## Editor History
+@export var history: ScenarioHistory
 
 @onready var file_menu: MenuButton = %File
 @onready var attribute_menu: MenuButton = %Attributes
@@ -100,7 +102,13 @@ func _ready():
 	_setup_scene_tree()
 	_rebuild_scene_tree()
 	
-	set_process(true)
+	if history == null:
+		history = ScenarioHistory.new()
+		add_child(history)
+	history.history_changed.connect(func(_p,_f):
+		_request_overlay_redraw()
+		_rebuild_scene_tree()
+	)
 
 func _on_filemenu_pressed(id: int):
 	match id:
@@ -189,6 +197,42 @@ func _open_trigger_config(index: int) -> void:
 	if index < 0 or index >= data.triggers.size(): 
 		return
 	_trigger_cfg.show_for(self, index)
+
+## Apply a unit config change
+func commit_unit_config(before_res: ScenarioUnit, after_res: ScenarioUnit, desc: String = "") -> void:
+	if not data: return
+	var idv := String(before_res.id)
+	var d := desc if desc != "" else "Edit Unit %s" % String(before_res.callsign)
+	history.push_res_edit_by_id(data, "units", "id", idv, before_res, after_res, d)
+	_request_overlay_redraw()
+	_rebuild_scene_tree()
+
+## Apply a slot config change.
+func commit_slot_config(before_res: UnitSlotData, after_res: UnitSlotData, desc: String = "") -> void:
+	if not data: return
+	var idv := String(before_res.key)
+	var d := desc if desc != "" else "Edit Slot %s" % String(before_res.title)
+	history.push_res_edit_by_id(data, "unit_slots", "key", idv, before_res, after_res, d)
+	_request_overlay_redraw()
+	_rebuild_scene_tree()
+
+## Apply a task config change
+func commit_task_config(before_res: ScenarioTask, after_res: ScenarioTask, desc: String = "") -> void:
+	if not data: return
+	var idv := String(before_res.id)
+	var d := desc if desc != "" else "Edit Task"
+	history.push_res_edit_by_id(data, "tasks", "id", idv, before_res, after_res, d)
+	_request_overlay_redraw()
+	_rebuild_scene_tree()
+
+## Apply a trigger config change
+func commit_trigger_config(before_res: ScenarioTrigger, after_res: ScenarioTrigger, desc: String = "") -> void:
+	if not data: return
+	var idv := String(before_res.id)
+	var d := desc if desc != "" else "Edit Trigger %s" % idv
+	history.push_res_edit_by_id(data, "triggers", "id", idv, before_res, after_res, d)
+	_request_overlay_redraw()
+	_rebuild_scene_tree()
 
 func _request_overlay_redraw() -> void:
 	terrain_overlay.request_redraw()
@@ -418,10 +462,12 @@ func _on_units_tree_item_activated() -> void:
 
 ## Place and chain a task for a unit. Uses prev/next on TaskInstance
 func _place_task_for_unit(unit_index: int, task: UnitBaseTask, pos_m: Vector2, after_task_index: int = -1) -> int:
-	if not data or not task:
-		return -1
-	if data.tasks == null:
-		data.tasks = []
+	if not data or not task: return -1
+	if data.tasks == null: data.tasks = []
+
+	var before := _snapshot_arrays()
+	var after := _snapshot_arrays()
+	var tasks := after["tasks"] as Array
 
 	var inst := ScenarioTask.new()
 	inst.id = _generate_task_instance_id(task.type_id)
@@ -432,25 +478,34 @@ func _place_task_for_unit(unit_index: int, task: UnitBaseTask, pos_m: Vector2, a
 	inst.prev_index = -1
 	inst.next_index = -1
 
-	if after_task_index >= 0 and after_task_index < data.tasks.size():
-		var after: ScenarioTask = data.tasks[after_task_index]
+	if after_task_index >= 0 and after_task_index < tasks.size():
+		var after_ref: ScenarioTask = tasks[after_task_index]
 		inst.prev_index = after_task_index
-		inst.next_index = after.next_index
+		inst.next_index = after_ref.next_index
 	else:
-		var tail_idx := _find_tail_task_index(unit_index)
+		var tail_idx := -1
+		for i in tasks.size():
+			var ti: ScenarioTask = tasks[i]
+			if ti and ti.unit_index == unit_index and ti.next_index == -1:
+				tail_idx = i
 		inst.prev_index = tail_idx
 		inst.next_index = -1
 
-	var new_idx := data.tasks.size()
-	data.tasks.append(inst)
+	var new_idx: int = tasks.size()
+	tasks.append(inst)
 
-	if inst.prev_index >= 0 and inst.prev_index < data.tasks.size():
-		data.tasks[inst.prev_index].next_index = new_idx
-	if inst.next_index >= 0 and inst.next_index < data.tasks.size():
-		data.tasks[inst.next_index].prev_index = new_idx
+	if inst.prev_index >= 0 and inst.prev_index < tasks.size():
+		tasks[inst.prev_index].next_index = new_idx
+	if inst.next_index >= 0 and inst.next_index < tasks.size():
+		tasks[inst.next_index].prev_index = new_idx
 
+	history.push_array_replace(data, "tasks", before["tasks"], after["tasks"], "Place Task")
 	_request_overlay_redraw()
-	_set_selection({"type": &"task", "index": new_idx})
+
+	for i in data.tasks.size():
+		if data.tasks[i] and String(data.tasks[i].id) == inst.id:
+			_set_selection({"type": &"task", "index": i})
+			break
 	return new_idx
 
 func start_place_task_tool(task: UnitBaseTask) -> void:
@@ -470,8 +525,7 @@ func start_place_trigger_tool(proto: ScenarioTrigger) -> void:
 
 func _place_unit_from_tool(u: UnitData, pos_m: Vector2) -> void:
 	if not data:
-		push_warning("No active scenario")
-		return
+		push_warning("No active scenario"); return
 	var su := ScenarioUnit.new()
 	su.unit = u
 	su.position_m = pos_m
@@ -480,7 +534,8 @@ func _place_unit_from_tool(u: UnitData, pos_m: Vector2) -> void:
 	su.id = _generate_unit_instance_id_for(u)
 	if data.units == null:
 		data.units = []
-	data.units.append(su)
+	history.push_res_insert(data, "units", "id", su, "Place Unit %s" % su.callsign)
+	_set_selection({"type": &"unit", "index": data.units.size() - 1})
 	_request_overlay_redraw()
 	_rebuild_scene_tree()
 
@@ -488,26 +543,26 @@ func _place_unit_from_tool(u: UnitData, pos_m: Vector2) -> void:
 func _place_slot_from_tool(slot_def: UnitSlotData, pos_m: Vector2) -> void:
 	if not data:
 		push_warning("No active scenario"); return
-
 	var inst := UnitSlotData.new()
 	inst.key = _next_slot_key()
 	inst.title = _generate_callsign(ScenarioUnit.Affiliation.friend)
 	inst.allowed_roles = slot_def.allowed_roles.duplicate()
 	inst.start_position = pos_m
-
-	data.unit_slots.append(inst)
-
+	if data.unit_slots == null:
+		data.unit_slots = []
+	history.push_res_insert(data, "unit_slots", "key", inst, "Place Slot %s" % inst.title)
 	_request_overlay_redraw()
 	_rebuild_scene_tree()
 
 func _place_trigger_from_tool(inst: ScenarioTrigger, pos_m: Vector2) -> void:
-	if inst == null: 
-		return
+	if inst == null: return
 	inst.id = _generate_trigger_id()
 	inst.area_center_m = pos_m
-	if inst.title.strip_edges() == "": 
+	if inst.title.strip_edges() == "":
 		inst.title = inst.id
-	data.triggers.append(inst)
+	if data.triggers == null:
+		data.triggers = []
+	history.push_res_insert(data, "triggers", "id", inst, "Place Trigger %s" % inst.title)
 	_rebuild_scene_tree()
 	_request_overlay_redraw()
 
@@ -544,68 +599,136 @@ func _delete_pick(pick: Dictionary) -> void:
 			_delete_trigger(idx)
 		_:
 			return
-	_clear_selection()
-	_request_overlay_redraw()
-	_rebuild_scene_tree()
 
 ## Delete unit at index and all its tasks; compact indices
 func _delete_unit(unit_index: int) -> void:
 	if not data or not data.units: return
 	if unit_index < 0 or unit_index >= data.units.size(): return
+	var before := _snapshot_arrays()
+	var after := _snapshot_arrays()
 
-	if data.tasks:
-		var to_remove: Array[int] = []
-		for i in data.tasks.size():
-			var ti: ScenarioTask = data.tasks[i]
-			if ti and ti.unit_index == unit_index:
-				to_remove.append(i)
-		to_remove.sort()
-		for i in range(to_remove.size()-1, -1, -1):
-			_delete_task(to_remove[i])
+	after["units"].remove_at(unit_index)
 
-	data.units.remove_at(unit_index)
-	
-	_triggers_remap_units_after_delete(unit_index)
+	var to_remove: Array[int] = []
+	for i in (after["tasks"] as Array).size():
+		var ti: ScenarioTask = (after["tasks"] as Array)[i]
+		if ti and ti.unit_index == unit_index:
+			to_remove.append(i)
+	to_remove.sort()
+	for i in range(to_remove.size() - 1, -1, -1):
+		var inst: ScenarioTask = (after["tasks"] as Array)[to_remove[i]]
+		if inst:
+			var p := inst.prev_index
+			var n := inst.next_index
+			if p >= 0 and p < (after["tasks"] as Array).size():
+				var prev: Variant = (after["tasks"] as Array)[p]
+				if prev: prev.next_index = n
+			if n >= 0 and n < (after["tasks"] as Array).size():
+				var nxt: Variant = (after["tasks"] as Array)[n]
+				if nxt: nxt.prev_index = p
+		(after["tasks"] as Array).remove_at(to_remove[i])
 
-	if data.tasks:
-		for ti in data.tasks:
-			if ti and ti.unit_index > unit_index:
-				ti.unit_index -= 1
+	for t in (after["tasks"] as Array):
+		if t == null: continue
+		if t.unit_index > unit_index: t.unit_index -= 1
+		t.prev_index = clamp(t.prev_index, -1, (after["tasks"] as Array).size() - 1)
+		t.next_index = clamp(t.next_index, -1, (after["tasks"] as Array).size() - 1)
+
+	for trig in (after["triggers"] as Array):
+		if trig == null: continue
+		if trig.synced_units != null:
+			var outu: Array[int] = []
+			for uidx in trig.synced_units:
+				if uidx == unit_index: continue
+				outu.append(uidx - 1 if uidx > unit_index else uidx)
+			trig.synced_units = outu
+		if trig.synced_tasks != null:
+			var outt: Array[int] = []
+			for tidx in trig.synced_tasks:
+				if tidx >= 0 and tidx < (after["tasks"] as Array).size():
+					outt.append(tidx)
+			trig.synced_tasks = outt
+
+	history.push_multi_replace(
+		data,
+		[
+			{ "prop": "units",    "before": before["units"],    "after": after["units"] },
+			{ "prop": "tasks",    "before": before["tasks"],    "after": after["tasks"] },
+			{ "prop": "triggers", "before": before["triggers"], "after": after["triggers"] },
+		],
+		"Delete Unit"
+	)
+	_clear_selection()
+	_request_overlay_redraw()
+	_rebuild_scene_tree()
 
 ## Delete slot at index
 func _delete_slot(slot_index: int) -> void:
 	if not data or not data.unit_slots: return
 	if slot_index < 0 or slot_index >= data.unit_slots.size(): return
-	data.unit_slots.remove_at(slot_index)
+	var before := _snapshot_arrays()
+	var after := _snapshot_arrays()
+	(after["unit_slots"] as Array).remove_at(slot_index)
+	history.push_array_replace(data, "unit_slots", before["unit_slots"], after["unit_slots"], "Delete Slot")
+	_clear_selection()
+	_request_overlay_redraw()
+	_rebuild_scene_tree()
 
 ## Delete task at index. Repairs chain links and compacts indices
 func _delete_task(task_index: int) -> void:
 	if not data or not data.tasks: return
 	if task_index < 0 or task_index >= data.tasks.size(): return
-	var inst: ScenarioTask = data.tasks[task_index]
-	if inst == null:
-		data.tasks.remove_at(task_index)
-		_reindex_task_links_after(task_index)
-		_triggers_remap_tasks_after_delete(task_index)
-		return
+	var before := _snapshot_arrays()
+	var after := _snapshot_arrays()
 
-	var prev_idx := inst.prev_index
-	var next_idx := inst.next_index
-	if prev_idx >= 0 and prev_idx < data.tasks.size():
-		var prev := data.tasks[prev_idx]
-		if prev: prev.next_index = next_idx
-	if next_idx >= 0 and next_idx < data.tasks.size():
-		var nxt := data.tasks[next_idx]
-		if nxt: nxt.prev_index = prev_idx
+	var tasks := after["tasks"] as Array
+	var inst: ScenarioTask = tasks[task_index]
+	if inst:
+		var p := inst.prev_index
+		var n := inst.next_index
+		if p >= 0 and p < tasks.size():
+			var prev: Variant = tasks[p]
+			if prev: prev.next_index = n
+		if n >= 0 and n < tasks.size():
+			var nxt: Variant = tasks[n]
+			if nxt: nxt.prev_index = p
 
-	data.tasks.remove_at(task_index)
+	tasks.remove_at(task_index)
+	for t in tasks:
+		if t == null: continue
+		if t.prev_index > task_index: t.prev_index -= 1
+		if t.next_index > task_index: t.next_index -= 1
 
-	_reindex_task_links_after(task_index)
+	for trig in (after["triggers"] as Array):
+		if trig == null or trig.synced_tasks == null: continue
+		var out: Array[int] = []
+		for i in trig.synced_tasks:
+			if i == task_index: continue
+			out.append(i - 1 if i > task_index else i)
+		trig.synced_tasks = out
 
-func _delete_trigger(idx: int) -> void:
-	if idx < 0 or idx >= data.triggers.size(): 
-		return
-	data.triggers.remove_at(idx)
+	history.push_multi_replace(
+		data,
+		[
+			{ "prop": "tasks",    "before": before["tasks"],    "after": after["tasks"] },
+			{ "prop": "triggers", "before": before["triggers"], "after": after["triggers"] },
+		],
+		"Delete Task"
+	)
+	_clear_selection()
+	_request_overlay_redraw()
+	_rebuild_scene_tree()
+
+func _delete_trigger(trigger_index: int) -> void:
+	if not data or not data.triggers: return
+	if trigger_index < 0 or trigger_index >= data.triggers.size(): return
+	var before := _snapshot_arrays()
+	var after := _snapshot_arrays()
+	(after["triggers"] as Array).remove_at(trigger_index)
+	history.push_array_replace(data, "triggers", before["triggers"], after["triggers"], "Delete Trigger")
+	_clear_selection()
+	_request_overlay_redraw()
+	_rebuild_scene_tree()
 
 ## Returns the callsign pool for the given affiliation, with fallbacks.
 func _get_callsign_pool(affiliation: ScenarioUnit.Affiliation) -> Array[String]:
@@ -711,10 +834,36 @@ func _update_drag(overlay_pos: Vector2) -> void:
 
 ## End the current drag. If commit==false, revert to original position
 func _end_drag(commit := true) -> void:
-	if not _dragging:
-		return
+	if not _dragging: return
 	if not commit:
 		_set_entity_pos_m(_drag_pick, _drag_origin_m)
+	else:
+		var t := StringName(_drag_pick.get("type",""))
+		var idx := int(_drag_pick.get("index",-1))
+		var after := _get_entity_pos_m(_drag_pick)
+		if after.distance_squared_to(_drag_origin_m) > 0.001:
+			if t == &"unit":
+				var su: ScenarioUnit = data.units[idx]
+				history.push_entity_move(data, &"unit", su.id, _drag_origin_m, after, "Move Unit %s" % su.callsign)
+			elif t == &"slot":
+				var sl: UnitSlotData = data.unit_slots[idx]
+				history.push_entity_move(data, &"slot", sl.key, _drag_origin_m, after, "Move Slot %s" % sl.title, "key")
+			elif t == &"task":
+				var ti: ScenarioTask = data.tasks[idx]
+				var tname := (ti.task.display_name if ti.task else "Task")
+				history.push_entity_move(data, &"task", ti.id, _drag_origin_m, after, "Move %s" % tname)
+			elif t == &"trigger":
+				var before_snap := _snapshot_arrays()
+				var after_snap := _snapshot_arrays()
+				var arr := after_snap["triggers"] as Array
+				if arr and idx >= 0 and idx < arr.size() and arr[idx]:
+					arr[idx].area_center_m = after
+				history.push_array_replace(
+					data, "triggers",
+					before_snap["triggers"], after_snap["triggers"],
+					"Move Trigger %s" % String(data.triggers[idx].id)
+				)
+
 	_dragging = false
 	_drag_pick = {}
 
@@ -848,6 +997,16 @@ func _unhandled_key_input(event):
 	if event is InputEventKey and event.pressed and event.keycode == KEY_DELETE:
 		if not selected_pick.is_empty():
 			_delete_pick(selected_pick)
+			get_viewport().set_input_as_handled()
+			return
+	
+	if event is InputEventKey and event.pressed:
+		if event.ctrl_pressed and event.keycode == KEY_Z:
+			if history: history.undo()
+			get_viewport().set_input_as_handled()
+			return
+		if event.ctrl_pressed and event.keycode == KEY_Y:
+			if history: history.redo()
 			get_viewport().set_input_as_handled()
 			return
 
@@ -998,6 +1157,15 @@ func _reindex_task_links_after(removed: int) -> void:
 		if t == null: continue
 		if t.prev_index > removed: t.prev_index -= 1
 		if t.next_index > removed: t.next_index -= 1
+
+## Deep-copy core arrays (or empty arrays if null)
+func _snapshot_arrays() -> Dictionary:
+	return {
+		"units": ScenarioHistory._deep_copy_array_res(data.units if data and data.units else []),
+		"unit_slots": ScenarioHistory._deep_copy_array_res(data.unit_slots if data and data.unit_slots else []),
+		"tasks": ScenarioHistory._deep_copy_array_res(data.tasks if data and data.tasks else []),
+		"triggers": ScenarioHistory._deep_copy_array_res(data.triggers if data and data.triggers else []),
+	}
 
 ## Helper function to delete all children of a parent node
 func _queue_free_children(node: Control):

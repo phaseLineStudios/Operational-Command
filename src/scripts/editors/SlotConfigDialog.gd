@@ -12,6 +12,7 @@ class_name SlotConfigDialog
 var editor: ScenarioEditor
 var slot_index := -1
 var _roles: Array[String] = []
+var _before: UnitSlotData
 
 func _ready() -> void:
 	save_btn.pressed.connect(_on_save)
@@ -23,8 +24,9 @@ func _ready() -> void:
 func show_for(_editor: ScenarioEditor, index: int) -> void:
 	editor = _editor
 	slot_index = index
-	var entry := editor.data.unit_slots[slot_index]
-	var s: UnitSlotData = entry
+	var s: UnitSlotData = editor.data.unit_slots[slot_index]
+	_before = s.duplicate(true)
+
 	key_input.text = String(s.key)
 	title_input.text = s.title
 	_roles = s.allowed_roles
@@ -34,11 +36,21 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 ## Save slot config
 func _on_save() -> void:
 	if editor == null or slot_index < 0: return
-	var entry := editor.data.unit_slots[slot_index]
-	var s: UnitSlotData = entry
-	s.key = key_input.text
-	s.title = title_input.text
-	s.allowed_roles = _roles
+	var live: UnitSlotData = editor.data.unit_slots[slot_index]
+
+	var after := live.duplicate(true)
+	after.key = key_input.text
+	after.title = title_input.text
+	after.allowed_roles = _roles
+
+	if editor.history:
+		var desc := "Edit Slot %s" % String(_before.title)
+		editor.history.push_res_edit_by_id(editor.data, "unit_slots", "key", String(_before.key), _before, after, desc)
+	else:
+		live.key = after.key
+		live.title = after.title
+		live.allowed_roles = after.allowed_roles
+
 	visible = false
 	editor._request_overlay_redraw()
 	editor._rebuild_scene_tree()

@@ -14,6 +14,7 @@ class_name UnitConfigDialog
 
 var editor: ScenarioEditor
 var unit_index := -1
+var _before: ScenarioUnit
 
 func _ready() -> void:
 	if aff_in.item_count == 0:
@@ -41,6 +42,7 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 	editor = _editor
 	unit_index = index
 	var su: ScenarioUnit = editor.data.units[unit_index]
+	_before = su.duplicate(true)
 
 	callsign_in.text = su.callsign
 
@@ -60,12 +62,21 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 
 func _on_save() -> void:
 	if not editor or unit_index < 0: return
-	var su: ScenarioUnit = editor.data.units[unit_index]
+	var su_live: ScenarioUnit = editor.data.units[unit_index]
+	var after := su_live.duplicate(true)
+	after.callsign    = callsign_in.text.strip_edges()
+	after.affiliation = aff_in.get_selected_id() as ScenarioUnit.Affiliation
+	after.combat_mode = combat_in.get_selected_id() as ScenarioUnit.CombatMode
+	after.behaviour   = beh_in.get_selected_id() as ScenarioUnit.Behaviour
 
-	su.callsign   = callsign_in.text.strip_edges()
-	su.affiliation = aff_in.get_selected_id() as ScenarioUnit.Affiliation
-	su.combat_mode = combat_in.get_selected_id() as ScenarioUnit.CombatMode
-	su.behaviour   = beh_in.get_selected_id() as ScenarioUnit.Behaviour
+	if editor.history:
+		var desc := "Edit Unit %s" % String(_before.callsign)
+		editor.history.push_res_edit_by_id(editor.data, "units", "id", String(su_live.id), _before, after, desc)
+	else:
+		su_live.callsign    = after.callsign
+		su_live.affiliation = after.affiliation
+		su_live.combat_mode = after.combat_mode
+		su_live.behaviour   = after.behaviour
 
 	visible = false
 	editor._request_overlay_redraw()

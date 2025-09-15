@@ -12,6 +12,7 @@ signal saved(instance: ScenarioTask)
 
 var editor: ScenarioEditor
 var instance: ScenarioTask
+var _before: ScenarioTask
 
 func _ready() -> void:
 	save_btn.pressed.connect(_on_save)
@@ -21,6 +22,7 @@ func _ready() -> void:
 func show_for(_editor: ScenarioEditor, inst: ScenarioTask) -> void:
 	editor = _editor
 	instance = inst
+	_before = instance.duplicate(true)
 	_build_form()
 	visible = true
 
@@ -107,6 +109,7 @@ func _build_form() -> void:
 
 func _on_save() -> void:
 	if not instance or not instance.task: return
+
 	var params := {}
 	for row in form.get_children():
 		var w := row.get_child(1)
@@ -121,8 +124,15 @@ func _on_save() -> void:
 			params[key] = Vector2(w.get_meta("sx").value, w.get_meta("sy").value)
 		elif w is OptionButton:
 			params[key] = (w as OptionButton).get_selected_id()
-	
-	instance.params = params
+
+	var after := instance.duplicate(true)
+	after.params = params
+
+	if editor and editor.history:
+		editor.history.push_res_edit_by_id(editor.data, "tasks", "id", String(instance.id), _before, after, "Edit Task")
+	else:
+		instance.params = params
+
 	emit_signal("saved", instance)
 	visible = false
 	if editor:

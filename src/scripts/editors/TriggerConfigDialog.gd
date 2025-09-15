@@ -18,6 +18,7 @@ signal saved(index: int, trigger: ScenarioTrigger)
 
 var editor: ScenarioEditor
 var trigger_index := -1
+var _before: ScenarioTrigger
 
 func _ready() -> void:
 	save_btn.pressed.connect(_on_save)
@@ -25,12 +26,14 @@ func _ready() -> void:
 	close_requested.connect(func(): visible = false)
 
 func show_for(_editor: ScenarioEditor, index: int) -> void:
-	if _editor == null or index < 0 or index >= _editor.data.triggers.size(): 
+	if _editor == null or index < 0 or index >= _editor.data.triggers.size():
 		return
 	editor = _editor
 	trigger_index = index
-	
+
 	var trig: ScenarioTrigger = editor.data.triggers[trigger_index]
+	_before = trig.duplicate(true)
+
 	trig_title.text = trig.title
 	trig_presence.clear()
 	for i in ScenarioTrigger.PresenceMode.size():
@@ -46,32 +49,36 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 	trig_condition.text = trig.condition_expr
 	trig_on_activate.text = trig.on_activate_expr
 	trig_on_deactivate.text = trig.on_deactivate_expr
-	
+
 	visible = true
 
 func _on_save() -> void:
 	if editor == null or trigger_index < 0 or trigger_index >= editor.data.triggers.size(): return
-	var t: ScenarioTrigger = editor.data.triggers[trigger_index]
+	var live: ScenarioTrigger = editor.data.triggers[trigger_index]
 
-	var t_title := trig_title.text
-	var shape := trig_shape.get_selected_id()
-	var size_x := trig_size_x.value
-	var size_y := trig_size_y.value
-	var dur := trig_duration.value
-	var presence := trig_presence.get_selected_id()
-	var cond := trig_condition.text
-	var on_a := trig_on_activate.text
-	var on_d := trig_on_deactivate.text
+	var after := live.duplicate(true)
+	after.title = trig_title.text
+	after.area_shape = trig_shape.get_selected_id() as ScenarioTrigger.AreaShape
+	after.area_size_m = Vector2(trig_size_x.value, trig_size_y.value)
+	after.require_duration_s = trig_duration.value
+	after.presence = trig_presence.get_selected_id() as ScenarioTrigger.PresenceMode
+	after.condition_expr = trig_condition.text
+	after.on_activate_expr = trig_on_activate.text
+	after.on_deactivate_expr = trig_on_deactivate.text
 
-	t.title = t_title
-	t.area_shape = shape as ScenarioTrigger.AreaShape
-	t.area_size_m = Vector2(size_x, size_y)
-	t.require_duration_s = dur
-	t.presence = presence as ScenarioTrigger.PresenceMode
-	t.condition_expr = cond
-	t.on_activate_expr = on_a
-	t.on_deactivate_expr = on_d
+	if editor.history:
+		var desc := "Edit Trigger %s" % String(_before.id)
+		editor.history.push_res_edit_by_id(editor.data, "triggers", "id", String(live.id), _before, after, desc)
+	else:
+		live.title = after.title
+		live.area_shape = after.area_shape
+		live.area_size_m = after.area_size_m
+		live.require_duration_s = after.require_duration_s
+		live.presence = after.presence
+		live.condition_expr = after.condition_expr
+		live.on_activate_expr = after.on_activate_expr
+		live.on_deactivate_expr = after.on_deactivate_expr
 
-	emit_signal("saved", trigger_index, t)
+	emit_signal("saved", trigger_index, after)
 	visible = false
 	editor._request_overlay_redraw()
