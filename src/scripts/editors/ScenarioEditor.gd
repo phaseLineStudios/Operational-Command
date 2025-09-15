@@ -23,6 +23,7 @@ class_name ScenarioEditor
 @onready var _unit_cfg: UnitConfigDialog = %UnitConfigDialog
 @onready var _task_cfg: TaskConfigDialog = %TaskConfigDialog
 @onready var scene_tree: Tree = %"Scene Tree"
+@onready var history_list: VBoxContainer = %History
 
 @onready var unit_faction_friend: Button = %FactionRow/Friend
 @onready var unit_faction_enemy: Button = %FactionRow/Enemy
@@ -105,10 +106,10 @@ func _ready():
 	if history == null:
 		history = ScenarioHistory.new()
 		add_child(history)
-	history.history_changed.connect(func(_p,_f):
-		_request_overlay_redraw()
-		_rebuild_scene_tree()
-	)
+	history.history_changed.connect(_on_history_changed)
+
+	# Build UI once at start (empty stacks)
+	_on_history_changed([], [])
 
 func _on_filemenu_pressed(id: int):
 	match id:
@@ -159,6 +160,31 @@ func _on_faction_changed(affiliation: ScenarioUnit.Affiliation):
 	
 	_selected_unit_affiliation = affiliation
 	_refresh_filter_units()
+
+## Show UndoRedo history
+func _on_history_changed(past: Array, future: Array) -> void:
+	_queue_free_children(history_list)
+
+	for i in range(past.size()):
+		var row := HBoxContainer.new()
+		var txt := Label.new()
+		txt.text = str(past[i])
+		if i == past.size() - 1:
+			txt.add_theme_color_override("font_color", Color(1, 1, 1))
+			txt.add_theme_font_size_override("font_size", 14)
+		row.add_child(txt)
+		history_list.add_child(row)
+
+	for i in range(future.size() - 1, -1, -1):
+		var row2 := HBoxContainer.new()
+		var arrow := Label.new()
+		arrow.text = "↻ "
+		var txt2 := Label.new()
+		txt2.text = str(future[i])
+		txt2.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8))
+		row2.add_child(arrow)
+		row2.add_child(txt2)
+		history_list.add_child(row2)
 
 func set_tool(tool: ScenarioToolBase) -> void:
 	if current_tool:
