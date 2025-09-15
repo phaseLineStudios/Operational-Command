@@ -5,10 +5,10 @@ extends Node
 func _ready() -> void:
 	OrdersParser.parse_error.connect(_on_parseError)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
 
 func _on_parseError(error: String) -> void:
 	print("parsing failed and cought")
+	var error_sound = get_node("errorSound") as AudioStreamPlayer
+	error_sound.play()
+	
 	
