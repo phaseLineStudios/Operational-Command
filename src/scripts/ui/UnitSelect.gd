@@ -17,12 +17,12 @@ class_name UnitSelect
 @onready var _btn_reset: Button = %Reset
 @onready var _btn_deploy: Button = %Deploy
 
-@onready var _filter_all: Button = $"Root/Main/LeftTray/AvailableUnits/Filters/All"
-@onready var _filter_armor: Button = $"Root/Main/LeftTray/AvailableUnits/Filters/Armor"
-@onready var _filter_inf: Button = $"Root/Main/LeftTray/AvailableUnits/Filters/Inf"
-@onready var _filter_mech: Button = $"Root/Main/LeftTray/AvailableUnits/Filters/Mech"
-@onready var _filter_motor: Button = $"Root/Main/LeftTray/AvailableUnits/Filters/Motor"
-@onready var _filter_support: Button = $"Root/Main/LeftTray/AvailableUnits/Filters/Support"
+@onready var _filter_all: Button = %"Filters/All"
+@onready var _filter_armor: Button = %"Filters/Armor"
+@onready var _filter_inf: Button = %"Filters/Inf"
+@onready var _filter_mech: Button = %"Filters/Mech"
+@onready var _filter_motor: Button = %"Filters/Motor"
+@onready var _filter_support: Button = %"Filters/Support"
 
 @onready var _search: LineEdit = %Search
 @onready var _pool: PoolDropArea = %Pool/List
@@ -76,7 +76,7 @@ func _connect_ui() -> void:
 	_btn_deploy.pressed.connect(_on_deploy_pressed)
 
 	for b in [_filter_all, _filter_armor, _filter_inf, _filter_mech, _filter_motor, _filter_support]:
-		b.toggled.connect(_on_filter_changed)
+		b.toggled.connect(func(_p): _on_filter_changed(b))
 	_search.text_changed.connect(_on_filter_text_changed)
 
 	_slots_list.request_assign_drop.connect(_on_request_assign_drop)
@@ -140,10 +140,9 @@ func _build_pool() -> void:
 	_refresh_pool_filter()
 
 ## Handle filter button toggled
-func _on_filter_changed(_pressed: bool) -> void:
-	# "All" behaves as a quick toggle to show everything
-	if _filter_all.button_pressed:
-		for b in [_filter_armor, _filter_inf, _filter_mech, _filter_motor, _filter_support]:
+func _on_filter_changed(button: Button) -> void:
+	for b in [_filter_all, _filter_armor, _filter_inf, _filter_mech, _filter_motor, _filter_support]:
+		if b != button:
 			b.set_pressed_no_signal(false)
 	_refresh_pool_filter()
 
