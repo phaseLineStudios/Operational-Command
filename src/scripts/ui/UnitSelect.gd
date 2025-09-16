@@ -171,9 +171,9 @@ func _refresh_pool_filter() -> void:
 		var card: UnitCard = _cards_by_unit[unit_id]
 		if not is_instance_valid(card):
 			continue
-		var u: Variant = _units_by_id[unit_id]
-		var role_ok := roles.is_empty() or roles.has(String(u.get("role", "")))
-		var text_ok := search.is_empty() or String(u.get("title", "")).to_lower().find(search) >= 0 or String(unit_id).to_lower().find(search) >= 0
+		var u: UnitData = _units_by_id[unit_id]
+		var role_ok := roles.is_empty() or roles.has(u.role)
+		var text_ok := search.is_empty() or u.title.to_lower().find(search) >= 0 or String(unit_id).to_lower().find(search) >= 0
 		var in_use := _assigned_by_unit.has(unit_id)
 		card.visible = role_ok and text_ok and not in_use
 
@@ -255,8 +255,8 @@ func _unassign_slot(slot_id: String) -> void:
 		return
 
 	# Refund points
-	var u: Variant = _units_by_id[unit_id]
-	_used_points -= int(u.get("cost", 0))
+	var u: UnitData = _units_by_id[unit_id]
+	_used_points -= int(u.cost)
 	_used_points = max(_used_points, 0)
 
 	# Clear maps
