@@ -132,10 +132,10 @@ skeleton = NodePath("../..")
 shape = SubResource("ConcavePolygonShape3D_wsdgh")
 
 [node name="ClipboardIntel" type="Node3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.383427, 0.735465, -0.0676914)
 script = ExtResource("1_oof4l")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="PhysicsObjects/ClipboardIntel"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.383427, 0.735465, -0.0676914)
 
 [node name="ClipboardIntelCollision" type="CollisionShape3D" parent="PhysicsObjects/ClipboardIntel/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_py2wd")
@@ -145,10 +145,10 @@ mesh = SubResource("BoxMesh_lmes1")
 skeleton = NodePath("../../..")
 
 [node name="ClipboardTerrain" type="Node3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388701, 0.747355, 0.0703042)
 script = ExtResource("1_oof4l")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="PhysicsObjects/ClipboardTerrain"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388701, 0.747355, 0.0703042)
 
 [node name="ClipboardTerrainCollision" type="CollisionShape3D" parent="PhysicsObjects/ClipboardTerrain/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_lmes1")
@@ -158,10 +158,10 @@ mesh = SubResource("BoxMesh_lmes1")
 skeleton = NodePath("../../..")
 
 [node name="ClipboardBriefing" type="Node3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388701, 0.754058, 0.228009)
 script = ExtResource("1_oof4l")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="PhysicsObjects/ClipboardBriefing"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388701, 0.754058, 0.228009)
 
 [node name="ClipboardBriefingCollision" type="CollisionShape3D" parent="PhysicsObjects/ClipboardBriefing/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_cx6my")
@@ -171,10 +171,10 @@ mesh = SubResource("BoxMesh_lmes1")
 skeleton = NodePath("../../..")
 
 [node name="FieldManual" type="Node3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.358866, 0.737931, 0.245496)
 script = ExtResource("1_oof4l")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="PhysicsObjects/FieldManual"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.358866, 0.737931, 0.245496)
 
 [node name="FieldManualCollision" type="CollisionShape3D" parent="PhysicsObjects/FieldManual/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_3f477")
@@ -184,10 +184,10 @@ mesh = SubResource("BoxMesh_cx6my")
 skeleton = NodePath("../../..")
 
 [node name="Protractor" type="Node3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.356782, 0.737931, -0.0401387)
 script = ExtResource("1_oof4l")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="PhysicsObjects/Protractor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.356782, 0.737931, -0.0401387)
 
 [node name="ProtractorCollision" type="CollisionShape3D" parent="PhysicsObjects/Protractor/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_uk27s")
@@ -197,10 +197,10 @@ mesh = SubResource("BoxMesh_p1n4g")
 skeleton = NodePath("../../..")
 
 [node name="PenBlack" type="Node3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.289519, 0.738096, 0.087646)
 script = ExtResource("1_oof4l")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="PhysicsObjects/PenBlack"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.289519, 0.738096, 0.087646)
 
 [node name="PenBlackCollision" type="CollisionShape3D" parent="PhysicsObjects/PenBlack/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_ge8rp")
@@ -210,10 +210,10 @@ mesh = SubResource("CylinderMesh_uk27s")
 skeleton = NodePath("../../..")
 
 [node name="PenRed" type="Node3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.321053, 0.738096, 0.087646)
 script = ExtResource("1_oof4l")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="PhysicsObjects/PenRed"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.321053, 0.738096, 0.087646)
 
 [node name="PenRedCollision" type="CollisionShape3D" parent="PhysicsObjects/PenRed/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_vxnyp")
@@ -223,10 +223,10 @@ mesh = SubResource("CylinderMesh_uk27s")
 skeleton = NodePath("../../..")
 
 [node name="PenBlue" type="Node3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.348029, 0.738096, 0.087646)
 script = ExtResource("1_oof4l")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="PhysicsObjects/PenBlue"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.348029, 0.738096, 0.087646)
 
 [node name="PenBlueCollision" type="CollisionShape3D" parent="PhysicsObjects/PenBlue/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_of8da")
@@ -236,10 +236,10 @@ mesh = SubResource("CylinderMesh_uk27s")
 skeleton = NodePath("../../..")
 
 [node name="Eraser" type="Node3D" parent="PhysicsObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.40282, 0.738096, 0.087646)
 script = ExtResource("1_oof4l")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="PhysicsObjects/Eraser"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.40282, 0.738096, 0.087646)
 
 [node name="EraserCollision" type="CollisionShape3D" parent="PhysicsObjects/Eraser/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_qevx8")
@@ -277,7 +277,6 @@ table_node = NodePath("../Table")
 [node name="PitchPivot" type="Node3D" parent="CameraRig"]
 
 [node name="Camera3D" type="Camera3D" parent="CameraRig/PitchPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 current = true
 
 [node name="HoldPoint" type="Marker3D" parent="CameraRig/PitchPivot/Camera3D"]
