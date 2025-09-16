@@ -81,7 +81,7 @@ func update_drag(world_pos: Vector3) -> void:
 	visible = true
 	if _mesh: _mesh.visible = true   # <- force the first mesh on
 	var xf := global_transform
-	xf.origin = world_pos
+	xf.origin = world_pos + Vector3(0, 0.03, 0) # drag hight over the table
 	global_transform = xf
 
 ## Ends drag, keeps current transform.

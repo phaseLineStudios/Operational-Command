@@ -13,7 +13,7 @@ extends Node3D
 # variables for the camera
 @export var move_speed: float = 1.0      # linear speed in units/sec for WASD motion on XZ plane
 @export var accel: float = 5.0           # responsiveness; higher = snappier acceleration/deceleration
-@export var hover_offset: float = 0.2    # vertical offset above detected tabletop (_top_y)
+@export var hover_offset: float = 0.3    # vertical offset above detected tabletop (_top_y)
 
 # Bounds source
 @export_group("Table bounds")

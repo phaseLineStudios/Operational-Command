@@ -9,6 +9,11 @@ extends Node3D
 var _held: Node = null                    # Currently held PickupItem (or null)
 var _dragging := false
 
+# Last in-bounds drag position on the table plane
+var _last_valid_target: Vector3 = Vector3.ZERO
+# margin so the object don’t sit exactly on the edge of the table on drop
+@export var drop_guard_margin: float = 0.03
+
 # Cached nodes
 @onready var _cam: Camera3D = get_node_or_null(camera_path)
 
@@ -19,6 +24,7 @@ var _bz_min := 0.0
 var _bz_max := 0.0
 var _top_y  := 0.0
 var _bounds_ready := false
+
 
 func _ready() -> void:
 	_init_table_bounds()
@@ -35,12 +41,24 @@ func _unhandled_input(event: InputEvent) -> void:
 func _process(_delta: float) -> void:
 	if _dragging and _held and _bounds_ready and _cam:
 		var mouse_pos: Vector2 = get_viewport().get_mouse_position()
-		var world_target := _mouse_to_table(mouse_pos)
-		# Clamp to table rectangle
-		world_target.x = clamp(world_target.x, _bx_min + clamp_padding, _bx_max - clamp_padding)
-		world_target.z = clamp(world_target.z, _bz_min + clamp_padding, _bz_max - clamp_padding)
-		# Slight lift above the plane
-		world_target.y = _top_y + place_height_epsilon
+		var raw := _mouse_to_table(mouse_pos)
+
+		# Bounds check with guard margin so items cannot leave the tabletop
+		var pad := clamp_padding + drop_guard_margin
+		var inside := raw.x >= (_bx_min + pad) and raw.x <= (_bx_max - pad) \
+			and raw.z >= (_bz_min + pad) and raw.z <= (_bz_max - pad)
+
+		var world_target := _last_valid_target
+		if inside:
+			# Clamp inside table and lift above plane
+			world_target.x = clamp(raw.x, _bx_min + pad, _bx_max - pad)
+			world_target.z = clamp(raw.z, _bz_min + pad, _bz_max - pad)
+			world_target.y = _top_y + place_height_epsilon
+			_last_valid_target = world_target
+		else:
+			# Outside bounds → stay at last valid in-bounds position
+			world_target = _last_valid_target
+
 		var item := _held as Node3D
 		item.update_drag(world_target)
 
@@ -75,12 +93,25 @@ func _try_begin_drag(mouse_pos: Vector2) -> void:
 		_held = item
 		_dragging = true
 
+		# Seed _last_valid_target immediately
+		var raw := _mouse_to_table(mouse_pos)
+		var pad := clamp_padding + drop_guard_margin
+		_last_valid_target.x = clamp(raw.x, _bx_min + pad, _bx_max - pad)
+		_last_valid_target.z = clamp(raw.z, _bz_min + pad, _bz_max - pad)
+		_last_valid_target.y = _top_y + place_height_epsilon
+
+		# Move the item right away so it feels responsive
+		item.update_drag(_last_valid_target)
+
+
 func _end_drag(place_now: bool = false) -> void:
 	if not _dragging:
 		return
 	_dragging = false
-	if _held and _held.has_method("end_drag"):
-		_held.end_drag()   # tell the item to restore collisions
+	if _held:
+		if _held.has_method("end_drag"):
+			_held.end_drag()
+
 	_held = null
 
 # Walk up parents until a node with PickupItem API is found
