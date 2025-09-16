@@ -3,7 +3,6 @@ class_name UnitPlaceTool
 
 var payload
 @export var snap_to_grid := false
-@export var place_multiple := true
 
 var _hover_map_pos := Vector2.ZERO
 var _hover_valid := false
@@ -78,20 +77,16 @@ func draw_overlay(canvas: Control) -> void:
 func _place() -> void:
 	if payload is UnitData:
 		if _is_already_used(editor.ctx, payload):
-			editor._set_tool_hint("That unit is already placed.")
-			emit_signal("finished")
-			editor.clear_tool()
+			push_warning("That unit is already placed.")
+			emit_signal("canceled")
 			return
 			
 		editor._place_unit_from_tool(payload, _hover_map_pos)
+		emit_signal("finished")
 	elif payload is UnitSlotData:
 		editor._place_slot_from_tool(payload, _hover_map_pos)
-	if place_multiple:
-		# keep the tool active for rapid placement
-		pass
 	else:
 		emit_signal("finished")
-		editor._clear_tool()
 
 func _snap(p: Vector2) -> Vector2:
 	var s := 100.0
