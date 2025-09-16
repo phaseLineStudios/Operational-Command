@@ -81,32 +81,62 @@ func update_drag(world_pos: Vector3) -> void:
 	visible = true
 	if _mesh: _mesh.visible = true   # <- force the first mesh on
 	var xf := global_transform
-	xf.origin = world_pos + Vector3(0, 0.1, 0) # lift 5 cm above table
+	xf.origin = world_pos
 	global_transform = xf
 
-## Ends drag. If place_now=true, keeps current transform.
-## If place_now=false (for a cancel flow), restores original.
-func end_drag(place_now: bool) -> void:
+## Ends drag, keeps current transform.
+func end_drag() -> void:
 	if not is_held:
 		return
+	is_held = false
 
-	# Restore placement if canceled
-	if not place_now:
-		var world := get_tree().current_scene
-		var target_parent: Node = _prev_parent if is_instance_valid(_prev_parent) else world
-		reparent(target_parent, true)
-		global_transform = _prev_global
+	# Restore the original parent container
+	# but keep the transform from the drag
+	if _prev_parent:
+		var xf := global_transform          # save current dragged transform
+		_prev_parent.add_child(self)        # reattach to the old parent
+		_prev_parent.move_child(self, _prev_index)
+		global_transform = xf               # reapply current transform
 
-	# Re-enable physics
+	# Restore the original scale (if the item was resized while held).
+	scale = _orig_scale
+
+	# Re-enable physics collisions for the StaticBody3D.
 	if _static_body:
 		_static_body.collision_layer = _saved_layer
-		_static_body.collision_mask  = _saved_mask
-	for i in range(_colliders.size()):
-		var cs: CollisionShape3D = _colliders[i]
-		if is_instance_valid(cs):
-			cs.disabled = bool(_colliders_prev_disabled[i])
+		_static_body.collision_mask = _saved_mask
 
-	is_held = false
+	# Re-enable individual collision shapes that were disabled during drag.
+	for i in _colliders.size():
+		_colliders[i].disabled = _colliders_prev_disabled[i]
+
+	# --- Snap flat on table ---
+	# Cast a ray straight down from slightly above the item to detect the table surface.
+	var space_state = get_world_3d().direct_space_state
+	var from_pos = global_transform.origin + Vector3(0, 2, 0)   # start ray 2 units above
+	var to_pos   = global_transform.origin + Vector3(0, -5, 0)  # end ray 5 units below
+
+	var params = PhysicsRayQueryParameters3D.create(from_pos, to_pos)
+	var result = space_state.intersect_ray(params)
+
+	if result.has("position"):
+		var hit = result.position   # the world-space point where the ray hit
+
+		# Calculate how far the object's bottom is from its origin
+		# so we can rest it flush on the surface.
+		var bottom_offset := 0.0
+		if _mesh:
+			var aabb = _mesh.get_aabb()
+			bottom_offset = aabb.position.y * scale.y
+
+		# Move the item so its bottom sits exactly on the hit point.
+		var xf = global_transform
+		xf.origin = hit - Vector3(0, bottom_offset, 0)
+		global_transform = xf
+
+		# Force the object to lie flat (clear tilt).
+		rotation_degrees.x = 0
+		rotation_degrees.z = 0
 
 # ------------------------------------------------
 # Old logic to view the item in front of the camera

@@ -76,10 +76,12 @@ func _try_begin_drag(mouse_pos: Vector2) -> void:
 		_dragging = true
 
 func _end_drag(place_now: bool = false) -> void:
-	if _held:
-		(_held as Node).end_drag(place_now)
-	_held = null
+	if not _dragging:
+		return
 	_dragging = false
+	if _held and _held.has_method("end_drag"):
+		_held.end_drag()   # tell the item to restore collisions
+	_held = null
 
 # Walk up parents until a node with PickupItem API is found
 func _find_pickup_item(obj: Object) -> Node:
@@ -101,7 +103,7 @@ func _mouse_to_table(mouse_pos: Vector2) -> Vector3:
 
 
 
-# --- Bounds detection (same idea as your camera rig, without forward_offset) ---
+# --- Bounds detection (same idea as camera rig, without forward_offset) ---
 
 func _init_table_bounds() -> void:
 	if table_node == NodePath():

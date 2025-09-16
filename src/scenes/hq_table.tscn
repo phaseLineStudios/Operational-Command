@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=31 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -19,6 +19,9 @@ size = Vector3(1, 0.75, 0.7)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3f477"]
 albedo_color = Color(0.375626, 0.28718, 0.13782, 1)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_fera7"]
+data = PackedVector3Array(-0.5, 0.375, 0.35, 0.5, 0.375, 0.35, -0.5, -0.375, 0.35, 0.5, 0.375, 0.35, 0.5, -0.375, 0.35, -0.5, -0.375, 0.35, 0.5, 0.375, -0.35, -0.5, 0.375, -0.35, 0.5, -0.375, -0.35, -0.5, 0.375, -0.35, -0.5, -0.375, -0.35, 0.5, -0.375, -0.35, 0.5, 0.375, 0.35, 0.5, 0.375, -0.35, 0.5, -0.375, 0.35, 0.5, 0.375, -0.35, 0.5, -0.375, -0.35, 0.5, -0.375, 0.35, -0.5, 0.375, -0.35, -0.5, 0.375, 0.35, -0.5, -0.375, -0.35, -0.5, 0.375, 0.35, -0.5, -0.375, 0.35, -0.5, -0.375, -0.35, 0.5, 0.375, 0.35, -0.5, 0.375, 0.35, 0.5, 0.375, -0.35, -0.5, 0.375, 0.35, -0.5, 0.375, -0.35, 0.5, 0.375, -0.35, -0.5, -0.375, 0.35, 0.5, -0.375, 0.35, -0.5, -0.375, -0.35, 0.5, -0.375, 0.35, 0.5, -0.375, -0.35, -0.5, -0.375, -0.35)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_p1n4g"]
 size = Vector2(0.5, 0.5)
@@ -97,6 +100,11 @@ shape = SubResource("ConcavePolygonShape3D_ge0qv")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.355681, 0)
 mesh = SubResource("BoxMesh_oof4l")
 surface_material_override/0 = SubResource("StandardMaterial3D_3f477")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Table"]
+
+[node name="TableCollision" type="CollisionShape3D" parent="Table/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_fera7")
 
 [node name="Map" type="MeshInstance3D" parent="Table"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.376205, 0.0681208)
