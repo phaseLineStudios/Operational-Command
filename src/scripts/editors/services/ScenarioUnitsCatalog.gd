@@ -56,7 +56,8 @@ func _refresh(ctx: ScenarioEditorContext) -> void:
 	var list := ctx.unit_list
 	list.clear()
 	var root := list.create_item()
-
+	
+	var used := _used_unit_ids(ctx)
 	var query := ctx.unit_search.text.strip_edges().to_lower()
 	var role_items := {}
 
@@ -73,6 +74,8 @@ func _refresh(ctx: ScenarioEditorContext) -> void:
 		item.set_metadata(0, slot_proto)
 
 	for unit in all_units:
+		if used.has(String(unit.id)):
+			continue
 		if unit.unit_category.id != selected_category.id: continue
 		var text_ok := query.is_empty() or unit.title.to_lower().find(query) >= 0 or unit.id.to_lower().find(query) >= 0
 		if not text_ok: continue
@@ -95,3 +98,11 @@ func _refresh(ctx: ScenarioEditorContext) -> void:
 		item.set_text(0, unit.title)
 		item.set_icon(0, ImageTexture.create_from_image(img))
 		item.set_metadata(0, unit)
+
+func _used_unit_ids(ctx: ScenarioEditorContext) -> Dictionary:
+	var used := {}
+	if ctx.data and ctx.data.units:
+		for su: ScenarioUnit in ctx.data.units:
+			if su and su.unit:
+				used[String(su.unit.id)] = true
+	return used

@@ -228,6 +228,7 @@ func _place_unit_from_tool(u: UnitData, pos_m: Vector2) -> void:
 	ctx.selected_pick = {"type": &"unit", "index": ctx.data.units.size() - 1}
 	ctx.request_overlay_redraw()
 	_rebuild_scene_tree()
+	units._refresh(ctx)
 
 ## Place a player slot at world position (meters) and push to history
 func _place_slot_from_tool(slot_def: UnitSlotData, pos_m: Vector2) -> void:
@@ -423,6 +424,7 @@ func _delete_unit(unit_index: int) -> void:
 	selection.clear_selection(ctx)
 	ctx.request_overlay_redraw()
 	_rebuild_scene_tree()
+	units._refresh(ctx)
 
 ## Delete a slot; push history and refresh
 func _delete_slot(slot_index: int) -> void:
@@ -589,6 +591,7 @@ func _on_data_changed() -> void:
 	ctx.request_overlay_redraw()
 	_rebuild_scene_tree()
 	_on_history_changed([], [])
+	units._refresh(ctx)
 
 ## Update window title label from scenario title
 func _update_title() -> void:
@@ -596,7 +599,8 @@ func _update_title() -> void:
 
 ## Rebuild history side panel from UndoRedo stacks
 func _on_history_changed(past: Array, future: Array) -> void:
-	for n in history_list.get_children(): n.queue_free()
+	for n in history_list.get_children(): 
+		n.queue_free()
 	for i in range(past.size()):
 		var row := HBoxContainer.new()
 		var txt := Label.new()
@@ -616,6 +620,7 @@ func _on_history_changed(past: Array, future: Array) -> void:
 		row2.add_child(arrow)
 		row2.add_child(txt2)
 		history_list.add_child(row2)
+	units._refresh(ctx)
 
 ## Generate next unique slot key (SLOT_n)
 func _next_slot_key() -> String:

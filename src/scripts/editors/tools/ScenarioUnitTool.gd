@@ -77,6 +77,12 @@ func draw_overlay(canvas: Control) -> void:
 
 func _place() -> void:
 	if payload is UnitData:
+		if _is_already_used(editor.ctx, payload):
+			editor._set_tool_hint("That unit is already placed.")
+			emit_signal("finished")
+			editor.clear_tool()
+			return
+			
 		editor._place_unit_from_tool(payload, _hover_map_pos)
 	elif payload is UnitSlotData:
 		editor._place_slot_from_tool(payload, _hover_map_pos)
@@ -99,3 +105,10 @@ func _label(t: String) -> Label:
 func _clear(node: Control) -> void:
 	for c in node.get_children():
 		c.queue_free()
+
+func _is_already_used(ctx: ScenarioEditorContext, u: UnitData) -> bool:
+	if ctx.data and ctx.data.units:
+		for su: ScenarioUnit in ctx.data.units:
+			if su and su.unit and String(su.unit.id) == String(u.id):
+				return true
+	return false
