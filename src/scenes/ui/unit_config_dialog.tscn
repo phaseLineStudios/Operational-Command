@@ -1,0 +1,73 @@
+[gd_scene load_steps=2 format=3 uid="uid://blt6fcbjfelax"]
+
+[ext_resource type="Script" uid="uid://72aj1h7f32mb" path="res://scripts/editors/UnitConfigDialog.gd" id="1_y0txs"]
+
+[node name="UnitConfigDialog" type="Window"]
+auto_translate_mode = 1
+title = "Unit"
+position = Vector2i(325, 175)
+size = Vector2i(500, 300)
+script = ExtResource("1_y0txs")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+offset_right = 500.0
+offset_bottom = 300.0
+
+[node name="VBox" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CallsignLabel" type="Label" parent="ScrollContainer/VBox"]
+layout_mode = 2
+text = "Callsign"
+
+[node name="Callsign" type="LineEdit" parent="ScrollContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Callsign"
+
+[node name="AffiliationLabel" type="Label" parent="ScrollContainer/VBox"]
+layout_mode = 2
+text = "Affiliation"
+
+[node name="Affiliation" type="OptionButton" parent="ScrollContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CombatModeLabel" type="Label" parent="ScrollContainer/VBox"]
+layout_mode = 2
+text = "Combat Mode"
+
+[node name="CombatMode" type="OptionButton" parent="ScrollContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BehaviourLabel" type="Label" parent="ScrollContainer/VBox"]
+layout_mode = 2
+text = "Behaviour"
+
+[node name="Behaviour" type="OptionButton" parent="ScrollContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="ScrollContainer/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActionRow" type="HBoxContainer" parent="ScrollContainer/VBox"]
+layout_mode = 2
+
+[node name="Close" type="Button" parent="ScrollContainer/VBox/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"
+
+[node name="Spacer" type="Control" parent="ScrollContainer/VBox/ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Save" type="Button" parent="ScrollContainer/VBox/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Save"

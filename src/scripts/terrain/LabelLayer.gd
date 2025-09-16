@@ -120,20 +120,20 @@ func _upsert_from_data(id: int) -> void:
 		_draw_dirty = true
 		return
 
-	var size: int = int(L.get("size", 16))
+	var l_size: int = int(L.get("size", 16))
 	var z: int = int(L.get("z", 0))
 	var rot: float = float(L.get("rot", 0.0))
-	var visible := _is_terrain_pos_visible(pos)
+	var l_visible := _is_terrain_pos_visible(pos)
 
 	var it: Variant = _items.get(id, {
-		"pos": pos, "text": txt, "size": size, "rot": rot, "z": z, "visible": visible
+		"pos": pos, "text": txt, "size": l_size, "rot": rot, "z": z, "visible": l_visible
 	})
 	it.pos = pos
 	it.text = txt
-	it.size = size
+	it.size = l_size
 	it.rot = rot
 	it.z = z
-	it.visible = visible
+	it.visible = l_visible
 
 	_items[id] = it
 	_draw_dirty = true

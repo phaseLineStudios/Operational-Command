@@ -11,6 +11,8 @@ enum unitSize { Team, Squad, Platoon, Company, Battalion }
 @export var title: String
 ## Unit icon texture
 @export var icon: Texture2D = preload("res://assets/textures/units/nato_unknown_platoon.png")
+## Enemy unit icon texture
+@export var enemy_icon: Texture2D = preload("res://assets/textures/units/enemy_unknown_platoon.png")
 ## role for this unit
 @export var role: String = "INF"
 ## Allowed slot codes where this unit can be deployed
@@ -62,6 +64,9 @@ enum unitSize { Team, Squad, Platoon, Company, Battalion }
 ## Doctrine code used by the AI for this unit.
 @export var doctrine: String = "nato_inf_1983"
 
+@export_category("Editor meta")
+@export var unit_category: UnitCategoryData
+
 ## Serialzie this unit to JSON
 func serialize() -> Dictionary:
 	return {
@@ -91,6 +96,10 @@ func serialize() -> Dictionary:
 			"state_injured": state_injured,
 			"state_equipment": state_equipment,
 			"cohesion": cohesion
+		},
+		
+		"editor": {
+			"unit_category": unit_category.id
 		},
 
 		"throughput": throughput.duplicate(),
@@ -142,6 +151,10 @@ static func deserialize(data: Variant) -> UnitData:
 		u.state_injured = float(state.get("state_injured", u.state_injured))
 		u.state_equipment = float(state.get("state_equipment", u.state_equipment))
 		u.cohesion = float(state.get("cohesion", u.cohesion))
+		
+	var editor: Dictionary = data.get("editor", {})
+	if typeof(editor) == TYPE_DICTIONARY:
+		u.unit_category = ContentDB.get_unit_category(editor.get("unit_category", u.unit_category))
 
 	u.throughput = data.get("throughput", u.throughput)
 	u.doctrine = data.get("doctrine", u.doctrine)

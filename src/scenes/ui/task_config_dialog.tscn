@@ -1,0 +1,44 @@
+[gd_scene load_steps=2 format=3 uid="uid://dkpal3npfyfbj"]
+
+[ext_resource type="Script" uid="uid://cukkj2ikokgt" path="res://scripts/editors/TaskConfigDialog.gd" id="1_002jk"]
+
+[node name="TaskConfigDialog" type="Window"]
+auto_translate_mode = 1
+title = "Task"
+position = Vector2i(325, 175)
+size = Vector2i(500, 300)
+script = ExtResource("1_002jk")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+offset_right = 500.0
+offset_bottom = 300.0
+
+[node name="VBox" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Form" type="VBoxContainer" parent="ScrollContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="ScrollContainer/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActionRow" type="HBoxContainer" parent="ScrollContainer/VBox"]
+layout_mode = 2
+
+[node name="Close" type="Button" parent="ScrollContainer/VBox/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"
+
+[node name="Spacer" type="Control" parent="ScrollContainer/VBox/ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Save" type="Button" parent="ScrollContainer/VBox/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Save"
