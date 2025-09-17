@@ -4,7 +4,7 @@ extends Node3D
 # Config
 # =========================
 @export var drag_lift: float = 0.1			# visual hover above plane while dragging
-@export var inspect_distance: float = 0.6	# distance in front of camera when inspecting
+@export var inspect_distance: float = 0.0	# distance in front of camera when inspecting
 
 # =========================
 # Shared State
@@ -169,12 +169,9 @@ func end_drag_with_target(table_y: float, target: Vector3) -> void:
 func begin_inspect(cam: Camera3D, hold_point: Node3D) -> void:
 	if is_inspecting or is_held:
 		return
-	if cam == null:
-		push_warning("PickupItem.begin_inspect: camera missing.")
+	if cam == null or hold_point == null:
+		push_warning("PickupItem.begin_inspect: camera or hold_point missing.")
 		return
-	# If no HoldPoint provided/path not set, fall back to the camera
-	if hold_point == null:
-		hold_point = cam
 
 	is_held = true
 	is_inspecting = true
@@ -190,7 +187,7 @@ func begin_inspect(cam: Camera3D, hold_point: Node3D) -> void:
 		_saved_layer = _static_body.collision_layer
 		_saved_mask  = _static_body.collision_mask
 		_static_body.collision_layer = 0
-		_static_body.collision_mask  = 0
+		_static_body.collision_mask = 0
 
 	_colliders = _collect_collision_shapes(self)
 	_colliders_prev_disabled.clear()
@@ -198,31 +195,19 @@ func begin_inspect(cam: Camera3D, hold_point: Node3D) -> void:
 		_colliders_prev_disabled.append(cs.disabled)
 		cs.set_deferred("disabled", true)
 
-	# Choose placement:
-	# - If a real HoldPoint is set, trust its global transform 1:1.
-	# - If we fell back to the camera node, synthesize a point in front of it.
-	var place: Transform3D
-	if hold_point == cam:
-		var tgt := cam.global_transform
-		var fwd := -tgt.basis.z.normalized()
-		place = tgt
-		# Keep the item's *bottom* in front of the camera to avoid clipping into the near plane
-		var bottom := _compute_bottom_offset()
-		place.origin = tgt.origin + fwd * max(inspect_distance, 0.2) + Vector3(0, bottom, 0)
-	else:
-		place = hold_point.global_transform
-
-	# Reparent under hold point while preserving transform, then move to 'place'
-	var keep := global_transform
+	# --- Place item at HoldPoint ---
 	hold_point.add_child(self)
 	hold_point.move_child(self, hold_point.get_child_count() - 1)
-	global_transform = keep
-	global_transform = place
 
-	# Face the camera (optional)
-	look_at(cam.global_transform.origin, Vector3.UP)
-	# Apply a correction so the mesh is rotated 90° around Y
+	# Snap item directly to HoldPoint transform
+	global_transform = hold_point.global_transform
+
+	# Reset local rotation so the model looks consistent
+	rotation_degrees = Vector3.ZERO
+	# Optional correction if your meshes need it
 	rotate_x(deg_to_rad(90))
+
+
 
 func end_inspect() -> void:
 	if not is_inspecting:

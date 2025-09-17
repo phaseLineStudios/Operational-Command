@@ -1,8 +1,9 @@
-[gd_scene load_steps=29 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=30 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
 [ext_resource type="Script" uid="uid://dn828tsljtrki" path="res://scripts/core/Camera.gd" id="3_3f477"]
+[ext_resource type="Script" uid="uid://p02v0knmeahs" path="res://scripts/core/debug.gd" id="3_lmes1"]
 [ext_resource type="Script" uid="uid://0r8k717de5os" path="res://scripts/core/PlayerInteraction.gd" id="4_py2wd"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
@@ -264,6 +265,10 @@ size = Vector3(3.13879, 1.81592, 2.76892)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00355911, -0.417542, -1.20057)
 operation = 2
 size = Vector3(1.37492, 1.76648, 2.76892)
+
+[node name="DebugStaticCam" type="Camera3D" parent="Tent"]
+transform = Transform3D(-0.006091, 0, 0.999981, 0, 1, 0, -0.999981, 0, -0.006091, 0.346214, 0.151298, 0)
+script = ExtResource("3_lmes1")
 
 [node name="CameraRig" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.546)
