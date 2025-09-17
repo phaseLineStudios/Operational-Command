@@ -275,12 +275,13 @@ table_node = NodePath("../Table/TableMesh")
 [node name="Camera3D" type="Camera3D" parent="CameraRig/PitchPivot"]
 current = true
 
-[node name="HoldPoint" type="Marker3D" parent="CameraRig/PitchPivot/Camera3D"]
+[node name="HoldPoint" type="Node3D" parent="CameraRig/PitchPivot/Camera3D"]
 
 [node name="PlayerInteraction" type="Node3D" parent="CameraRig"]
 script = ExtResource("4_py2wd")
 camera_path = NodePath("../PitchPivot/Camera3D")
 table_node = NodePath("../../Table/TableMesh")
+hold_point_path = NodePath("../PitchPivot/Camera3D/HoldPoint")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
