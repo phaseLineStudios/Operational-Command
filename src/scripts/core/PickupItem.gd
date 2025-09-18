@@ -6,7 +6,7 @@ extends Node3D
 @export var drag_lift: float = 0.1					# visual hover above plane during drag
 @export var inspect_clearance: float = 0.02			# small Y lift while inspecting
 @export var use_face_camera: bool = true			# optional: face camera on inspect
-@export var inspect_rotation_deg := Vector3(90, 0, 0)	# TUNE THIS to fix inspect rotation (degrees, local)
+@export var inspect_rotation_deg := Vector3(90, 0, 0)	# <— TUNE THIS to fix inspect rotation (degrees, local)
 
 # =========================
 # Shared State
