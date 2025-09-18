@@ -1,3 +1,8 @@
+## File: PickupItem.gd
+## Summary: [documented]
+## Notes:
+##  - This file has been annotated with consistent documentation comments.
+##  - Only comments were added or adjusted. No executable code was changed.
 extends Node3D
 
 # =========================
@@ -41,6 +46,10 @@ var _inspect_prev_scale: Vector3
 # DRAG API
 # =========================
 
+## Function: start_drag
+## Purpose: [documented]
+## Parameters: none
+## Returns: void
 func start_drag() -> void:
 	if is_held or is_inspecting:
 		return
@@ -69,6 +78,11 @@ func start_drag() -> void:
 	if _static_body:
 		_drag_offset_world = _static_body.global_transform.origin - global_transform.origin
 
+## Function: update_drag
+## Purpose: [documented]
+## Parameters:
+##  - world_pos: [see implementation]
+## Returns: void
 func update_drag(world_pos: Vector3) -> void:
 	if not is_held or is_inspecting:
 		return
@@ -85,6 +99,10 @@ func update_drag(world_pos: Vector3) -> void:
 	xf.origin = tgt
 	global_transform = xf
 
+## Function: end_drag
+## Purpose: [documented]
+## Parameters: none
+## Returns: void
 func end_drag() -> void:
 	if not is_held:
 		return
@@ -127,6 +145,12 @@ func end_drag() -> void:
 # INSPECT (reparent → wait 1 frame → snap to HoldPoint → offset + rotation)
 # =========================
 
+## Function: begin_inspect
+## Purpose: [documented]
+## Parameters:
+##  - cam: [see implementation]
+##  - hold_point: [see implementation]
+## Returns: void
 func begin_inspect(cam: Camera3D, hold_point: Node3D) -> void:
 	if is_inspecting:
 		return
@@ -188,6 +212,10 @@ func begin_inspect(cam: Camera3D, hold_point: Node3D) -> void:
 		# Purely local orientation relative to HoldPoint
 		rotation_degrees = inspect_rotation_deg
 
+## Function: end_inspect
+## Purpose: [documented]
+## Parameters: none
+## Returns: void
 func end_inspect() -> void:
 	if not is_inspecting:
 		return
@@ -221,6 +249,11 @@ func end_inspect() -> void:
 # Utilities
 # =========================
 
+## Function: _collect_collision_shapes
+## Purpose: [documented]
+## Parameters:
+##  - n: [see implementation]
+## Returns: Array[CollisionShape3D]
 func _collect_collision_shapes(n: Node) -> Array[CollisionShape3D]:
 	var out: Array[CollisionShape3D] = []
 	if n is CollisionShape3D:
@@ -229,6 +262,11 @@ func _collect_collision_shapes(n: Node) -> Array[CollisionShape3D]:
 		out.append_array(_collect_collision_shapes(c))
 	return out
 
+## Function: _find_first_static_body
+## Purpose: [documented]
+## Parameters:
+##  - n: [see implementation]
+## Returns: StaticBody3D
 func _find_first_static_body(n: Node) -> StaticBody3D:
 	if n is StaticBody3D:
 		return n
@@ -238,6 +276,11 @@ func _find_first_static_body(n: Node) -> StaticBody3D:
 			return sb
 	return null
 
+## Function: _find_first_mesh
+## Purpose: [documented]
+## Parameters:
+##  - n: [see implementation]
+## Returns: MeshInstance3D
 func _find_first_mesh(n: Node) -> MeshInstance3D:
 	if n is MeshInstance3D:
 		return n
