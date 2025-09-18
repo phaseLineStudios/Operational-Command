@@ -276,7 +276,6 @@ table_node = NodePath("../Table/TableMesh")
 current = true
 
 [node name="HoldPoint" type="Node3D" parent="CameraRig/PitchPivot/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.2)
 
 [node name="PlayerInteraction" type="Node3D" parent="CameraRig"]
 script = ExtResource("4_py2wd")
