@@ -1,8 +1,3 @@
-## File: PlayerInteraction.gd
-## Summary: [documented]
-## Notes:
-##  - This file has been annotated with consistent documentation comments.
-##  - Only comments were added or adjusted. No executable code was changed.
 extends Node3D
 
 @export var camera_path: NodePath         # Camera3D used for mouse ray
@@ -41,18 +36,9 @@ var _bounds_ready := false
 
 
 
-## Function: _ready
-## Purpose: [documented]
-## Parameters: none
-## Returns: void
 func _ready() -> void:
 	_init_table_bounds()
 
-## Function: _unhandled_input
-## Purpose: [documented]
-## Parameters:
-##  - event: [see implementation]
-## Returns: void
 func _unhandled_input(event: InputEvent) -> void:
 	# While inspecting, block other input and allow exit with E or Esc
 	if _inspecting:
@@ -72,11 +58,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		_try_begin_inspect(event.position)
 
-## Function: _process
-## Purpose: [documented]
-## Parameters:
-##  - _delta: [see implementation]
-## Returns: void
 func _process(_delta: float) -> void:
 	# do not run drag updates while inspecting (prevents transform fights)
 	if _inspecting:
@@ -96,11 +77,6 @@ func _process(_delta: float) -> void:
 
 # --- Drag lifecycle (UNCHANGED) ---
 
-## Function: _try_begin_drag
-## Purpose: [documented]
-## Parameters:
-##  - mouse_pos: [see implementation]
-## Returns: void
 func _try_begin_drag(mouse_pos: Vector2) -> void:
 	if _inspecting:
 		return
@@ -141,10 +117,6 @@ func _try_begin_drag(mouse_pos: Vector2) -> void:
 
 		item.update_drag(_last_valid_target)
 
-## Function: _end_drag
-## Purpose: [documented]
-## Parameters: none
-## Returns: void
 func _end_drag() -> void:
 	if not _dragging:
 		return
@@ -155,11 +127,6 @@ func _end_drag() -> void:
 
 # --- Inspect lifecycle ---
 
-## Function: _try_begin_inspect
-## Purpose: [documented]
-## Parameters:
-##  - mouse_pos: [see implementation]
-## Returns: void
 func _try_begin_inspect(mouse_pos: Vector2) -> void:
 	if _dragging or _cam == null:
 		return
@@ -189,10 +156,6 @@ func _try_begin_inspect(mouse_pos: Vector2) -> void:
 		_held_inspect = item
 		_inspecting = true
 
-## Function: _end_inspect
-## Purpose: [documented]
-## Parameters: none
-## Returns: void
 func _end_inspect() -> void:
 	if not _inspecting:
 		return
@@ -202,11 +165,6 @@ func _end_inspect() -> void:
 	_inspecting = false
 
 # Walk up parents until a node with PickupItem API is found
-## Function: _find_pickup_item
-## Purpose: [documented]
-## Parameters:
-##  - obj: [see implementation]
-## Returns: Node
 func _find_pickup_item(obj: Object) -> Node:
 	var n := obj
 	while n is Node:
@@ -219,11 +177,6 @@ func _find_pickup_item(obj: Object) -> Node:
 	return null
 
 # Convert mouse position to intersection point on the tabletop plane
-## Function: _mouse_to_table
-## Purpose: [documented]
-## Parameters:
-##  - mouse_pos: [see implementation]
-## Returns: Vector3
 func _mouse_to_table(mouse_pos: Vector2) -> Vector3:
 	var from := _cam.project_ray_origin(mouse_pos)
 	var dir  := _cam.project_ray_normal(mouse_pos)
@@ -236,10 +189,6 @@ func _mouse_to_table(mouse_pos: Vector2) -> Vector3:
 
 # --- Bounds detection (UNCHANGED) ---
 
-## Function: _init_table_bounds
-## Purpose: [documented]
-## Parameters: none
-## Returns: void
 func _init_table_bounds() -> void:
 	if table_node == NodePath():
 		push_warning("PlayerInteraction: table_node not set.")
@@ -264,11 +213,6 @@ func _init_table_bounds() -> void:
 	_top_y  = world_aabb.position.y + world_aabb.size.y
 	_bounds_ready = true
 
-## Function: _gather_meshes
-## Purpose: [documented]
-## Parameters:
-##  - n: [see implementation]
-## Returns: Array
 func _gather_meshes(n: Node) -> Array:
 	var out: Array = []
 	if n is MeshInstance3D:
@@ -277,11 +221,6 @@ func _gather_meshes(n: Node) -> Array:
 		out.append_array(_gather_meshes(c))
 	return out
 
-## Function: _world_aabb_for_mesh
-## Purpose: [documented]
-## Parameters:
-##  - mi: [see implementation]
-## Returns: AABB
 func _world_aabb_for_mesh(mi: MeshInstance3D) -> AABB:
 	var aabb: AABB = mi.get_aabb()
 	var xf: Transform3D = mi.global_transform

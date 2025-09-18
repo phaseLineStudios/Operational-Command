@@ -1,8 +1,3 @@
-## File: Camera.gd
-## Summary: [documented]
-## Notes:
-##  - This file has been annotated with consistent documentation comments.
-##  - Only comments were added or adjusted. No executable code was changed.
 # Script for camera behaviour in the 3d scenes (mainly for hq_table.tscn)
 # Attach it to the CameraRig Node3D that has a camera as a child
 # Scene suggestion:
@@ -48,10 +43,6 @@ var _top_y  := 0.0                        # world-space Y of tabletop surface (A
 var _bounds_ready := false                # becomes true once bounds are computed; movement then clamps
 
 # Runs whenever the scene is loaded, after all nodes are loaded
-## Function: _ready
-## Purpose: [documented]
-## Parameters: none
-## Returns: void
 func _ready():
 	# Initialize the table bounds, used to limit the camera movement to the table only
 	_init_table_bounds()
@@ -67,11 +58,6 @@ func _ready():
 # called every physics frame (like 60Hz)
 # ideal for movement, collisions and gravity
 # since _process should not be used for player movement, use _physics_process for this
-## Function: _physics_process
-## Purpose: [documented]
-## Parameters:
-##  - delta: [see implementation]
-## Returns: void
 func _physics_process(delta: float) -> void:
 	# handling the inputs by the player
 	# Input map expected: move_forward/back/left/right
@@ -141,10 +127,6 @@ func _physics_process(delta: float) -> void:
 # --- Bounds detection ---
 # SHOULD ONLY BE CALLED FROM _ready() FUNCTION ON STARTUP
 # AND NOT EVERY FRAME
-## Function: _init_table_bounds
-## Purpose: [documented]
-## Parameters: none
-## Returns: void
 func _init_table_bounds() -> void:
 	# Guard: require a valid NodePath set via Inspector
 	if table_node == NodePath():
@@ -184,11 +166,6 @@ func _init_table_bounds() -> void:
 	# Signal that bounds are ready; movement loop will now lock Y and clamp X/Z
 	_bounds_ready = true
 
-## Function: _gather_meshes
-## Purpose: [documented]
-## Parameters:
-##  - n: [see implementation]
-## Returns: Array
 func _gather_meshes(n: Node) -> Array:
 	# Depth-first search for MeshInstance3D nodes under the given root node
 	var out: Array = []
@@ -198,11 +175,6 @@ func _gather_meshes(n: Node) -> Array:
 		out += _gather_meshes(c)
 	return out
 
-## Function: _world_aabb_for_mesh
-## Purpose: [documented]
-## Parameters:
-##  - mi: [see implementation]
-## Returns: AABB
 func _world_aabb_for_mesh(mi: MeshInstance3D) -> AABB:
 	# Obtain mesh-local AABB and transform it to world space by transforming its 8 corners
 	var aabb: AABB = mi.get_aabb()
