@@ -26,7 +26,7 @@ var _saved_mask: int = 0
 var _colliders: Array[CollisionShape3D] = []
 var _colliders_prev_disabled: Array[bool] = []
 
-# Drag saved state (kept so your drag flow remains unchanged)
+# Drag saved state
 var _prev_parent: Node = null
 var _prev_index: int = 0
 var _prev_global: Transform3D
@@ -200,7 +200,7 @@ func begin_inspect(cam: Camera3D, hold_point: Node3D) -> void:
 
 	# ---- ORIENTATION CONTROL (tweak here) ----
 	if use_face_camera and cam:
-		# Face the camera, then apply your extra local Euler offset
+		# Face the camera, then apply extra local Euler offset
 		look_at(cam.global_transform.origin, Vector3.UP)
 		rotate_object_local(Vector3.RIGHT, deg_to_rad(inspect_rotation_deg.x))
 		rotate_object_local(Vector3.UP, deg_to_rad(inspect_rotation_deg.y))
