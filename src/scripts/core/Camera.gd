@@ -1,5 +1,4 @@
 ## File: Camera.gd
-## Notes: This file was annotated with comments only. No executable code was altered.
 
 # Script for camera behaviour in the 3d scenes (mainly for hq_table.tscn)
 # Attach it to the CameraRig Node3D that has a camera as a child

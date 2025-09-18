@@ -1,5 +1,4 @@
 ## File: PlayerInteraction.gd
-## Notes: This file was annotated with comments only. No executable code was altered.
 
 extends Node3D
 
