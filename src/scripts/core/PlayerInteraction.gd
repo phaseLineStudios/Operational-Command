@@ -5,14 +5,14 @@ extends Node3D
 @export var place_height_epsilon := 0.01  # Slight lift above tabletop to avoid z-fighting
 @export var clamp_padding := 0.02         # Keep placement slightly inside the edge
 
-# Hold point under the camera for inspect mode
+# NEW: Hold point under the camera for inspect mode (assign in Inspector)
 @export var hold_point_path: NodePath
 
 # State
 var _held: Node = null                    # Currently held PickupItem (or null)
 var _dragging := false
 
-# Inspect state
+# NEW: inspection state
 var _inspecting: bool = false
 var _held_inspect: Node = null
 
@@ -23,6 +23,7 @@ var _last_valid_target: Vector3 = Vector3.ZERO
 
 # Cached nodes
 @onready var _cam: Camera3D = get_node_or_null(camera_path)
+# NEW: cached hold point
 @onready var _hold_point: Node3D = get_node_or_null(hold_point_path)
 
 # World-space bounds of the table (auto-detected at _ready)
@@ -39,7 +40,7 @@ func _ready() -> void:
 	_init_table_bounds()
 
 func _unhandled_input(event: InputEvent) -> void:
-	# Block all drag/pick while inspecting; allow exit with E or Esc
+	# NEW: While inspecting, block other input and allow exit with E or Esc
 	if _inspecting:
 		if event is InputEventKey and event.pressed and not event.echo:
 			if event.keycode == KEY_ESCAPE or event.keycode == KEY_E:
@@ -53,34 +54,30 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif not event.pressed and _dragging:
 			_end_drag(true)
 
-	# Begin inspect on LMB press
+	# NEW: Begin inspect (pickup) on LMB press
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		_try_begin_inspect(event.position)
 
 func _process(_delta: float) -> void:
-	# Do not run drag updates while inspecting
+	# NEW: do not run drag updates while inspecting (prevents transform fights)
 	if _inspecting:
 		return
 
 	if _dragging and _held and _bounds_ready and _cam:
 		var mouse_pos: Vector2 = get_viewport().get_mouse_position()
-		var raw := _mouse_to_table(mouse_pos)
-
-		# Always clamp to keep inside bounds
-		var pad := clamp_padding + drop_guard_margin
-		var world_target := raw
-		world_target.x = clamp(raw.x, _bx_min + pad, _bx_max - pad)
-		world_target.z = clamp(raw.z, _bz_min + pad, _bz_max - pad)
+		var world_target := _mouse_to_table(mouse_pos)
+		# Clamp to table rectangle
+		world_target.x = clamp(world_target.x, _bx_min + clamp_padding, _bx_max - clamp_padding)
+		world_target.z = clamp(world_target.z, _bz_min + clamp_padding, _bz_max - clamp_padding)
+		# Slight lift above the plane
 		world_target.y = _top_y + place_height_epsilon
 		_last_valid_target = world_target
-
 		var item := _held as Node3D
 		item.update_drag(world_target)
 
-# --- Drag lifecycle ---
+# --- Drag lifecycle (UNCHANGED) ---
 
 func _try_begin_drag(mouse_pos: Vector2) -> void:
-	# Do not start dragging while inspecting
 	if _inspecting:
 		return
 	if not _cam:
@@ -120,20 +117,16 @@ func _try_begin_drag(mouse_pos: Vector2) -> void:
 
 		item.update_drag(_last_valid_target)
 
-
 func _end_drag(place_now: bool = false) -> void:
 	if not _dragging:
 		return
 	_dragging = false
-	if _held:
-		# If you have the variant that accepts a target, prefer it
-		if _held.has_method("end_drag_with_target"):
-			_held.end_drag_with_target(_top_y, _last_valid_target)
-		elif _held.has_method("end_drag"):
-			_held.end_drag()
+	if _held and _held.has_method("end_drag"):
+		_held.end_drag()
 	_held = null
 
-# Begin inspect on LMB
+# --- Inspect lifecycle (NEW, from the working sample) ---
+
 func _try_begin_inspect(mouse_pos: Vector2) -> void:
 	if _dragging or _cam == null:
 		return
@@ -159,12 +152,10 @@ func _try_begin_inspect(mouse_pos: Vector2) -> void:
 	var item := _find_pickup_item(collider)
 	if item and item.has_method("begin_inspect"):
 		var hold := _hold_point if _hold_point != null else _cam
-		item.begin_inspect(_cam, hold)
+		item.begin_inspect(_cam, hold)   # reparent + snap on next frame (see PickupItem.gd)
 		_held_inspect = item
 		_inspecting = true
-		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
-# Exit inspect on E or Esc
 func _end_inspect() -> void:
 	if not _inspecting:
 		return
@@ -172,7 +163,6 @@ func _end_inspect() -> void:
 		_held_inspect.end_inspect()
 	_held_inspect = null
 	_inspecting = false
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 # Walk up parents until a node with PickupItem API is found
 func _find_pickup_item(obj: Object) -> Node:
@@ -180,7 +170,7 @@ func _find_pickup_item(obj: Object) -> Node:
 	while n is Node:
 		if n.has_method("start_drag") and n.has_method("end_drag") and n.has_method("update_drag"):
 			return n
-		# Also allow items that only implement inspect (no drag)
+		# also accept inspect-only items
 		if n.has_method("begin_inspect") and n.has_method("end_inspect"):
 			return n
 		n = n.get_parent()
@@ -191,13 +181,13 @@ func _mouse_to_table(mouse_pos: Vector2) -> Vector3:
 	var from := _cam.project_ray_origin(mouse_pos)
 	var dir  := _cam.project_ray_normal(mouse_pos)
 	var p := Vector3(0.0, _top_y, 0.0)
-	var plane := Plane(p, p + Vector3.RIGHT, p + Vector3.FORWARD) # unambiguous y = _top_y
+	var plane := Plane(p, p + Vector3.RIGHT, p + Vector3.FORWARD)
 	var hit: Vector3 = plane.intersects_ray(from, dir)
 	return hit if hit != null else from + dir * 2.0
 
 
 
-# --- Bounds detection (same idea as camera rig, without forward_offset) ---
+# --- Bounds detection (UNCHANGED) ---
 
 func _init_table_bounds() -> void:
 	if table_node == NodePath():
