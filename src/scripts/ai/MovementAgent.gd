@@ -9,7 +9,7 @@ class_name MovementAgent
 ## Movement profile used for costs.
 @export var profile: TerrainBrush.MoveProfile = TerrainBrush.MoveProfile.TRACKED
 ## Base speed in meters/second (before terrain modifiers).
-@export var base_speed_kph: float = 8.0
+@export var base_speed_mps: float = 8.0
 ## Distance to consider a waypoint reached (meters).
 @export var arrival_threshold_m: float = 1.0
 ## If true, agent waits for grid build_ready before pathing.
@@ -89,16 +89,16 @@ func _physics_process(delta: float) -> void:
 
 func _effective_speed_at(p_m: Vector2) -> float:
 	if not grid:
-		return base_speed_kph
+		return base_speed_mps
 	var cell := grid.world_to_cell(p_m)
 	if not grid._in_bounds(cell):
-		return base_speed_kph
+		return base_speed_mps
 	if grid._astar and grid._astar.is_in_boundsv(cell) and grid._astar.is_point_solid(cell):
 		return 0.0
 	var w := 1.0
 	if grid._astar and grid._astar.is_in_boundsv(cell):
 		w = max(grid._astar.get_point_weight_scale(cell), 0.001)
-	return base_speed_kph / w
+	return base_speed_mps / w
 
 ## Command pathfind and start moving to a world-meter destination.
 func move_to_m(dest_m: Vector2) -> void:
@@ -125,7 +125,7 @@ func eta_seconds() -> float:
 	var rem := PackedVector2Array()
 	for i in range(_path_idx, _path.size()):
 		rem.append(_path[i])
-	return grid.estimate_travel_time_s(rem, base_speed_kph, profile)
+	return grid.estimate_travel_time_s(rem, base_speed_mps, profile)
 
 func _set_path(p: PackedVector2Array) -> void:
 	_path = p
@@ -231,7 +231,7 @@ func _draw() -> void:
 		var txt := "w=%.2f  v=%.1f/%.1f m/s  ETA=%.1fs  idx:%d/%d" % [
 			(w if w < INF else -1.0),
 			inst_v,
-			base_speed_kph / (w if w < INF else 1.0),
+			base_speed_mps / (w if w < INF else 1.0),
 			eta,
 			_path_idx, _path.size()
 		]

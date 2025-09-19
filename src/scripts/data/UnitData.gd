@@ -19,6 +19,8 @@ enum unitSize { Team, Squad, Platoon, Company, Battalion }
 @export var allowed_slots: Array[String] = ["INF"]
 ## Deployment cost in points
 @export var cost: int = 50
+## Movement Profile for navigation
+@export var movement_profile: TerrainBrush.MoveProfile = TerrainBrush.MoveProfile.FOOT
 
 @export_category("Meta")
 ## Organizational size of the unit
