@@ -1,6 +1,7 @@
-[gd_scene load_steps=16 format=3 uid="uid://rbcwabwc1v0o"]
+[gd_scene load_steps=19 format=3 uid="uid://rbcwabwc1v0o"]
 
 [ext_resource type="Script" uid="uid://bcbx6qa1jofhc" path="res://scripts/terrain/TerrainRender.gd" id="1_kobl6"]
+[ext_resource type="Resource" uid="uid://bt5fxbp2mxljn" path="res://campaigns/terrains/fulda_gap.tres" id="2_dy2sp"]
 [ext_resource type="Script" uid="uid://cxbielgj0k7ei" path="res://scripts/terrain/GridLayer.gd" id="2_llqno"]
 [ext_resource type="Script" uid="uid://dlu6lynrhk1n0" path="res://scripts/terrain/MapMargin.gd" id="3_ceejx"]
 [ext_resource type="Script" uid="uid://cg0secq4wft8v" path="res://scripts/terrain/SurfaceLayer.gd" id="3_utooi"]
@@ -8,6 +9,8 @@
 [ext_resource type="Script" uid="uid://dbte70ha7h22j" path="res://scripts/terrain/ContourLayer.gd" id="4_utooi"]
 [ext_resource type="Script" uid="uid://cm8auwtr4pxfp" path="res://scripts/terrain/PointLayer.gd" id="5_c2fte"]
 [ext_resource type="Script" uid="uid://bio2qt3p5m683" path="res://scripts/terrain/LabelLayer.gd" id="8_tecap"]
+[ext_resource type="Script" path="res://scripts/terrain/PathGridDebugLayer.gd" id="9_4od0y"]
+[ext_resource type="Script" path="res://scripts/terrain/PathGrid.gd" id="11_xg8js"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ceejx"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -35,11 +38,12 @@ border_color = Color(0.0874685, 0.0392869, 0.00880663, 1)
 
 [sub_resource type="FontVariation" id="FontVariation_tecap"]
 
-[node name="TerrainRender" type="PanelContainer"]
+[node name="TerrainRender" type="PanelContainer" node_paths=PackedStringArray("path_grid")]
 offset_right = 1152.0
 offset_bottom = 648.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_ceejx")
 script = ExtResource("1_kobl6")
+data = ExtResource("2_dy2sp")
 base_color = Color(0.993332, 0.99162, 0.98202, 1)
 terrain_border_color = Color(0.27451, 0.219608, 0.219608, 1)
 terrain_border_px = 2
@@ -57,6 +61,7 @@ contour_label_bg = Color(1, 1, 1, 0)
 contour_label_font = SubResource("FontVariation_utooi")
 contour_label_size = 16
 contour_label_gap_extra_px = 5.0
+path_grid = NodePath("MapMargin/TerrainBase/PathGrid")
 
 [node name="MapMargin" type="PanelContainer" parent="."]
 unique_name_in_owner = true
@@ -104,6 +109,19 @@ layout_mode = 2
 script = ExtResource("8_tecap")
 text_color = Color(0.27451, 0.219608, 0.219608, 1)
 font = SubResource("FontVariation_tecap")
+
+[node name="PathGridDebugLayer" type="Control" parent="MapMargin/TerrainBase" node_paths=PackedStringArray("grid")]
+layout_mode = 2
+script = ExtResource("9_4od0y")
+grid = NodePath("../PathGrid")
+
+[node name="PathGrid" type="Node" parent="MapMargin/TerrainBase"]
+script = ExtResource("11_xg8js")
+slope_multiplier_per_grade = 2.0
+line_influence_radius_m = 17.0
+debug_alpha = 0.75
+debug_cell_borders = false
+metadata/_custom_type_script = "uid://bagvx400o1qwa"
 
 [node name="ErrorLayer" type="CenterContainer" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
