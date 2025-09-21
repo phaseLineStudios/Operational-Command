@@ -259,7 +259,6 @@ func get_briefing_for_mission(mission_id: String) -> BriefData:
 	return get_briefing(mission_id)
 
 ## Units helpers.
-## Get unit by ID
 func get_unit(id: String) -> UnitData:
 	var d := get_object("units", id)
 	if d.is_empty():
@@ -267,7 +266,6 @@ func get_unit(id: String) -> UnitData:
 		return null
 	return UnitData.deserialize(d)
 
-## Get units by IDs
 func get_units(ids: Array) -> Array[UnitData]:
 	var out: Array[UnitData] = []
 	for raw in ids:
@@ -276,7 +274,6 @@ func get_units(ids: Array) -> Array[UnitData]:
 			out.append(u)
 	return out
 
-## List all units
 func list_units() -> Array[UnitData]:
 	var camps := get_all_objects("units")
 	if camps.is_empty():
@@ -285,36 +282,6 @@ func list_units() -> Array[UnitData]:
 	var out: Array[UnitData] = []
 	for item in camps:
 		var res := UnitData.deserialize(item)
-		if res != null: out.append(res)
-	return out
-	
-## Unit Category helpers.
-## Get unit category by ID
-func get_unit_category(id: String) -> UnitCategoryData:
-	var d := get_object("unit_categories", id)
-	if d.is_empty():
-		push_warning("Unit category not found: %s" % id)
-		return null
-	return UnitCategoryData.deserialize(d)
-
-## Get unit categories by IDs
-func get_unit_categories(ids: Array) -> Array[UnitCategoryData]:
-	var out: Array[UnitCategoryData] = []
-	for raw in ids:
-		var u: UnitCategoryData = get_unit_category(String(raw))
-		if u != null:
-			out.append(u)
-	return out
-
-## List all unit categories
-func list_unit_categories() -> Array[UnitCategoryData]:
-	var camps := get_all_objects("unit_categories")
-	if camps.is_empty():
-		return []
-
-	var out: Array[UnitCategoryData] = []
-	for item in camps:
-		var res := UnitCategoryData.deserialize(item)
 		if res != null: out.append(res)
 	return out
 

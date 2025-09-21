@@ -4,7 +4,7 @@
 	"role": "SUPPORT",
 	"cost": 50,
 	"size": "platoon",
-	"personnel": 15,
+	"strength": 15,
 	"equipment": { "M925A2": 2, "M932A2_FUEL": 2, "M1026A0": 1 },
 	"veterancy": "REGULAR",
 	"stats": {
@@ -19,9 +19,6 @@
 		"personnel_ratio": 0.85,
 		"equipment_ratio": 0.90,
 		"cohesion": 0.70
-	},
-	"editor": {
-		"unit_category": "us_army"
 	},
 	"throughput": { "equipment": 500, "fuel": 500 },
 	"equipment_tags": ["AMMUNITION_PALLET", "FUEL_TANK"],

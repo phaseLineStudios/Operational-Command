@@ -4,7 +4,7 @@
 	"role": "SUPPORT",
 	"cost": 80,
 	"size": "platoon",
-	"personnel": 21,
+	"strength": 21,
 	"equipment": { "M2HB": 4, "FGM77": 2 },
 	"veterancy": "REGULAR",
 	"stats": {
@@ -19,9 +19,6 @@
 		"personnel_ratio": 0.85,
 		"equipment_ratio": 0.90,
 		"cohesion": 0.70
-	},
-	"editor": {
-		"unit_category": "us_army"
 	},
 	"throughput": {},
 	"equipment_tags": [],

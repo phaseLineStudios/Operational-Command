@@ -4,7 +4,7 @@
 	"role": "INF",
 	"cost": 50,
 	"size": "platoon",
-	"personnel": 40,
+	"strength": 40,
 	"equipment": { },
 	"veterancy": "REGULAR",
 	"stats": {
@@ -19,9 +19,6 @@
 		"personnel_ratio": 0.85,
 		"equipment_ratio": 0.90,
 		"cohesion": 0.70
-	},
-	"editor": {
-		"unit_category": "us_army"
 	},
 	"throughput": {},
 	"equipment_tags": [],
