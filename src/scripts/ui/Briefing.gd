@@ -1,5 +1,5 @@
 extends Control
-## Brief1g controller
+## Briefing controller
 ##
 ## Shows a whiteboard with pinned docs/photos; click to open a zoomable viewer.
 
