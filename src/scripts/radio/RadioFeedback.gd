@@ -1,4 +1,5 @@
 extends Node
+class_name RadioFeedback
 ## Catches when an invalid command is emitted from parsed order and plays an audio to inform the player
 
 @onready var error_player: AudioStreamPlayer2D = %ErrorSound
