@@ -16,9 +16,9 @@ extends Control
 @onready var _card_start: Button = $"Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer/StartMission"
 @onready var _click_catcher: Control = $"Container/ClickCatcher"
 
-var _selected_mission: Dictionary = {}
-var _campaign: Dictionary = {}
-var _missions: Array = []
+var _selected_mission: ScenarioData
+var _campaign: CampaignData
+var _scenarios: Array[ScenarioData] = []
 var _card_pin_button: BaseButton
 
 ## Size of each mission pin in pixels.
@@ -65,40 +65,34 @@ func _ready() -> void:
 
 ## Load current campaign + map.
 func _load_campaign_and_map() -> void:
-	var cid := Game.current_campaign_id
-	_campaign = ContentDB.get_campaign(cid)
-	if _campaign.is_empty():
+	_campaign = Game.current_campaign
+	if not _campaign:
 		push_warning("MissionSelect: No current campaign set.")
 		return
-
-	var map_path: String = _campaign.get("campaign_map", "")
-	if map_path == "":
-		push_warning("MissionSelect: Campaign has no 'campaign_map'.")
+	
+	if _campaign.scenario_bg:
+		_map_rect.texture = _campaign.scenario_bg
 	else:
-		var tex := load(map_path) as Texture2D
-		if tex:
-			_map_rect.texture = tex
-		else:
-			push_warning("MissionSelect: Failed to load map: %s" % map_path)
+		push_warning("MissionSelect: Failed to load map: %s" % _campaign.scenario_bg)
 
-	_missions = ContentDB.list_missions_for_campaign(cid)
-	if _missions.is_empty():
+	_scenarios = ContentDB.list_scenarios_for_campaign(_campaign.id)
+	if _scenarios.is_empty():
 		push_warning("MissionSelect: Campaign has no missions.")
 
 ## Create pins and position them (normalized coords).
 func _build_pins() -> void:
 	_clear_children(_pins_layer)
-	for m in _missions:
+	for m in _scenarios:
 		var pin := _make_pin(m)
-		pin.set_meta("pos_norm", _mission_pos_vec(m))
-		pin.set_meta("title", m.get("title",""))
+		pin.set_meta("pos_norm", m.map_position)
+		pin.set_meta("title", m.title)
 		pin.pressed.connect(func(): _on_pin_pressed(m, pin))
 		_pins_layer.add_child(pin)
 	_update_pin_positions()
 
 ## Builds a pin control.
-func _make_pin(m: Dictionary) -> BaseButton:
-	var title: String = m.get("title", "")
+func _make_pin(m: ScenarioData) -> BaseButton:
+	var title: String = m.title
 	if pin_texture:
 		var t := TextureButton.new()
 		t.texture_normal = pin_texture
@@ -204,16 +198,15 @@ func _update_pin_positions() -> void:
 		_position_card_near_pin(_card_pin_button)
 
 ## Open the mission card; create/remove image node depending on presence.
-func _on_pin_pressed(mission: Dictionary, pin_btn: BaseButton) -> void:
+func _on_pin_pressed(mission: ScenarioData, pin_btn: BaseButton) -> void:
 	_selected_mission = mission
 	_card_pin_button = pin_btn
-	_card_title.text = mission.get("title", "Untitled")
+	_card_title.text = mission.title
 
-	var prev_path: String = mission.get("image", "")
-	_card_image.texture = load(prev_path) as Texture2D
+	_card_image.texture = mission.preview
 
-	_card_desc.text = mission.get("description", "")
-	_card_diff.text = "Difficulty: %s" % [mission.get("difficulty", "Unknown")]
+	_card_desc.text = mission.description
+	_card_diff.text = "Difficulty: %s" % [mission.difficulty]
 	
 	# BUG Unhiding card removes theme
 	_card.visible = true
@@ -226,10 +219,7 @@ func _on_pin_pressed(mission: Dictionary, pin_btn: BaseButton) -> void:
 
 ## Start current mission.
 func _on_start_pressed() -> void:
-	var mid: String = _selected_mission.get("id", "")
-	if mid == "":
-		return
-	Game.select_mission(mid)
+	Game.select_scenario(_selected_mission)
 	Game.goto_scene(SCENE_BRIEFING)
 
 ## Return to campaign select.
@@ -289,19 +279,8 @@ func _close_card() -> void:
 	_click_catcher.visible = false
 	show_pin_labels = true
 	_refresh_pin_labels()
-	_selected_mission = {}
+	_selected_mission = null
 	_card_pin_button = null
-
-## Convert mission.pos from JSON-friendly formats to Vector2.
-func _mission_pos_vec(m: Dictionary) -> Vector2:
-	var v = m.get("pos", Vector2.ZERO)
-	if v is Vector2:
-		return v
-	if v is Array and v.size() >= 2:
-		return Vector2(float(v[0]), float(v[1]))
-	if v is Dictionary:
-		return Vector2(float(v.get("x", 0.0)), float(v.get("y", 0.0)))
-	return Vector2.ZERO
 
 ## Remove all children from a node.
 func _clear_children(node: Node) -> void:

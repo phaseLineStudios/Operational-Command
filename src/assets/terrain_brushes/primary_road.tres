@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="TerrainBrush" load_steps=2 format=3 uid="uid://bw73pdcdhu2pg"]
+
+[ext_resource type="Script" uid="uid://c8tm5edxa6cdw" path="res://scripts/terrain/TerrainBrush.gd" id="1_42pfd"]
+
+[resource]
+script = ExtResource("1_42pfd")
+legend_title = "Primary Road"
+feature_type = 0
+draw_mode = 0
+z_index = 2
+stroke_color = Color(0, 0, 0, 1)
+stroke_width_px = 1.0
+dash_px = 8.0
+gap_px = 6.0
+fill_color = Color(0.572549, 0.270588, 0.270588, 1)
+hatch_spacing_px = 8.0
+hatch_angle_deg = 45.0
+symbol_spacing_px = 24.0
+symbol_size_m = 1.0
+symbol_align = 0
+mv_tracked = 0.6
+mv_wheeled = 0.4
+mv_foot = 0.8
+mv_riverine = 1.0
+los_attenuation_per_m = 0.0
+spotting_penalty_m = 0.0
+cover_reduction = 0.0
+concealment = 0.0
+road_bias = 0.5
+bridge_capacity_tons = 0.0
+metadata/_custom_type_script = "uid://c8tm5edxa6cdw"

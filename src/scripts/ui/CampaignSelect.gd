@@ -21,8 +21,8 @@ const MISSION_SELECT_SCENE := "res://scenes/mission_select.tscn"
 const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 
 # Track mapping from ItemList index -> campaign_id
-var _campaign_rows: Array[StringName] = []
-var _selected_campaign_id: StringName = &""
+var _campaign_rows: Array[CampaignData] = []
+var _selected_campaign: CampaignData
 
 ## Init UI, populate list, connect signals.
 func _ready() -> void:
@@ -45,9 +45,9 @@ func _populate_campaigns() -> void:
 
 	var campaigns := ContentDB.list_campaigns()
 	for c in campaigns:
-		var title: String = c.get("title", "Untitled Campaign")
+		var title: String = c.title
 		var _idx := list_campaigns.add_item(title)
-		_campaign_rows.append(StringName(c.get("id", "")))
+		_campaign_rows.append(c)
 
 	if list_campaigns.item_count > 0:
 		list_campaigns.select(0)
@@ -55,17 +55,17 @@ func _populate_campaigns() -> void:
 
 ## Handle campaign selection; update details + show actions.
 func _on_campaign_selected(index: int) -> void:
-	_selected_campaign_id = _campaign_rows[index]
-	_update_details_placeholder(_selected_campaign_id)
+	_selected_campaign = _campaign_rows[index]
+	_update_details_placeholder(_selected_campaign)
 	_set_action_buttons_visible(true)
 
 ## Placeholder details update (to be replaced later).
-func _update_details_placeholder(campaign_id: StringName) -> void:
+func _update_details_placeholder(campaign: CampaignData) -> void:
 	# TODO populate CampaignDetails UI later with real data
 	# For now, just update the placeholder label if present
 	var label := details_root.get_node_or_null("Panel/CampaignDetails/PlaceholderLabel") as Label
 	if label:
-		label.text = "CAMPAIGN DETAILS Placeholder\n\nSelected: %s" % [String(campaign_id)]
+		label.text = "CAMPAIGN DETAILS Placeholder\n\nSelected: %s" % [String(campaign.id)]
 
 ## Show/hide the three action buttons.
 func _set_action_buttons_visible(state: bool) -> void:
@@ -75,22 +75,22 @@ func _set_action_buttons_visible(state: bool) -> void:
 
 ## Create/select new save and go to Mission Select.
 func _on_new_save_pressed() -> void:
-	if _selected_campaign_id == &"":
+	if not _selected_campaign:
 		return
-	# Create and select a new save for the chosen campaign
-	var save_id := Persistence.create_new_campaign_save(_selected_campaign_id)
-	Game.select_campaign(_selected_campaign_id)
+
+	var save_id := Persistence.create_new_campaign_save(_selected_campaign.id)
+	Game.select_campaign(_selected_campaign)
 	Game.select_save(save_id)
 	Game.goto_scene(MISSION_SELECT_SCENE)
 
 ## resolves last save for the current campaign (if any).
 func _on_continue_last_pressed() -> void:
-	if _selected_campaign_id == &"":
+	if not _selected_campaign:
 		return
 
-	var last_id := Persistence.get_last_save_id_for_campaign(_selected_campaign_id)
+	var last_id := Persistence.get_last_save_id_for_campaign(_selected_campaign.id)
 	if last_id != "":
-		Game.select_campaign(_selected_campaign_id)
+		Game.select_campaign(_selected_campaign)
 		Game.select_save(last_id)
 		Game.goto_scene(MISSION_SELECT_SCENE)
 	else:
@@ -99,7 +99,7 @@ func _on_continue_last_pressed() -> void:
 
 ## open a save picker filtered to the current campaign.
 func _on_select_save_pressed() -> void:
-	if _selected_campaign_id == &"":
+	if not _selected_campaign:
 		return
 	# TODO Open a save picker dialog/scene filtered by campaign
 	push_warning("Save selection UI not implemented yet.")

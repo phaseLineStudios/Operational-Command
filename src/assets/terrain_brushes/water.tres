@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="TerrainBrush" load_steps=2 format=3 uid="uid://dfjh5rfmu4e5j"]
+
+[ext_resource type="Script" uid="uid://c8tm5edxa6cdw" path="res://scripts/terrain/TerrainBrush.gd" id="1_k108a"]
+
+[resource]
+script = ExtResource("1_k108a")
+legend_title = "Water"
+feature_type = 1
+draw_mode = 0
+z_index = 0
+stroke_color = Color(0.192157, 0.486275, 0.847059, 1)
+stroke_width_px = 1.5
+dash_px = 8.0
+gap_px = 6.0
+fill_color = Color(0.615686, 0.752941, 0.839216, 1)
+hatch_spacing_px = 8.0
+hatch_angle_deg = 45.0
+symbol_spacing_px = 24.0
+symbol_size_m = 1.0
+symbol_align = 0
+mv_tracked = 5.0
+mv_wheeled = 5.0
+mv_foot = 5.0
+mv_riverine = 0.5
+los_attenuation_per_m = 0.0
+spotting_penalty_m = 0.0
+cover_reduction = 0.0
+concealment = 0.0
+road_bias = 1.0
+bridge_capacity_tons = 0.0
+metadata/_custom_type_script = "uid://c8tm5edxa6cdw"

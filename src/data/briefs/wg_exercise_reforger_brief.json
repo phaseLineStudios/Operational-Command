@@ -23,14 +23,14 @@
 				"id": "intel_photo", 
 				"title": "Recon Photo – MSR", 
 				"type": "image", 
-				"resource": "res://maps/intel/wg_reforger/recon_photo_01.png", 
+				"resource": "res://campaigns/intel/wg_reforger/recon_photo_01.png", 
 				"pos": [0.62, 0.22] 
 			}, 
 			{ 
 				"id": "sigint", 
 				"title": "SIGINT Summary", 
 				"type": "text", 
-				"resource": "res://maps/intel/wg_reforger/sigint_summary.bbcode", 
+				"resource": "res://campaigns/intel/wg_reforger/sigint_summary.bbcode", 
 				"pos": [0.42, 0.62]
 			}
 		] 
