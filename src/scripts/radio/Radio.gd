@@ -15,7 +15,7 @@ var _tx := false
 
 ## Connect to STTService signals.
 func _ready() -> void:
-	STTService.partial.connect(func(t): emit_signal("radio_partial", t))
+	STTService.partial.connect(func(t):emit_signal("radio_partial", t))
 	STTService.result.connect(_on_result)
 	STTService.error.connect(func(m): push_error("[Radio] STT error: %s" % m))
 
@@ -36,6 +36,7 @@ func _unhandled_input(event: InputEvent) -> void:
 ## TODO Remove this
 func _on_result(t):
 	OrdersParser.parse(t)
+	print("[Radio] Heard: %s" % t)
 	emit_signal("radio_result", t)
 
 ## Manually enable the radio / STT.

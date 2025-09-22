@@ -28,6 +28,7 @@ ContentDB="*res://scripts/core/ContentDB.gd"
 STTService="*res://scripts/radio/STTService.gd"
 NARules="*res://scripts/radio/NARules.gd"
 OrdersParser="*res://scripts/radio/OrdersParser.gd"
+OrderHandler="*res://scripts/radio/OrderHandler.gd"
 
 [input]
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://o3h5jon6ffip"]
 
 [ext_resource type="Script" uid="uid://bbr2ohjdpwwns" path="res://scripts/ui/Briefing.gd" id="1_opxbr"]
-[ext_resource type="Texture2D" uid="uid://b8o20185tqdu7" path="res://assets/textures/ui/whiteboard.png" id="2_siir0"]
+[ext_resource type="Texture2D" uid="uid://behfogb2kmkn2" path="res://assets/textures/ui/whiteboard.png" id="2_siir0"]
 
 [node name="Briefing" type="Control"]
 layout_mode = 3
