@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="2_fwab6"]
 [ext_resource type="Script" uid="uid://do8882r1q2sil" path="res://scripts/data/TerrainData.gd" id="2_q832w"]
 [ext_resource type="Script" uid="uid://cjsu4sh4wfvmg" path="res://scripts/editors/TerrainCamera.gd" id="3_15xeg"]
-[ext_resource type="PackedScene" uid="uid://c5thlr0tfddoe" path="res://scenes/ui/terrain_settings_dialog.tscn" id="4_4pae0"]
+[ext_resource type="PackedScene" path="res://scenes/ui/terrain_settings_dialog.tscn" id="4_4pae0"]
 
 [sub_resource type="Resource" id="Resource_cc7e2"]
 script = ExtResource("2_q832w")
@@ -30,8 +30,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_k3bf1")
-data = SubResource("Resource_cc7e2")
-tool_icon_size = Vector2(40, 40)
 
 [node name="Root" type="VBoxContainer" parent="."]
 layout_mode = 0
@@ -203,3 +201,4 @@ text = "(0, 0) "
 [node name="TerrainSettingsDialog" parent="." instance=ExtResource("4_4pae0")]
 unique_name_in_owner = true
 visible = false
+script = null

@@ -1,0 +1,110 @@
+[gd_scene load_steps=2 format=3 uid="uid://fvb0wp58qmeg"]
+
+[ext_resource type="Script" path="res://scripts/editors/TerrainSettingsDialog.gd" id="1_k8bl3"]
+
+[node name="TerrainSettingsDialog" type="Window"]
+auto_translate_mode = 1
+title = "New Terrain"
+position = Vector2i(325, 200)
+size = Vector2i(500, 300)
+script = ExtResource("1_k8bl3")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_right = 500.0
+offset_bottom = 300.0
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Terrain Name"
+
+[node name="NewTerrainTitle" type="LineEdit" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Title"
+
+[node name="SizeLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Size in meters"
+
+[node name="Size" type="HBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="XLabel" type="Label" parent="VBoxContainer/Size"]
+layout_mode = 2
+text = "X"
+
+[node name="X" type="SpinBox" parent="VBoxContainer/Size"]
+layout_mode = 2
+min_value = 1000.0
+max_value = 10000.0
+value = 2000.0
+suffix = "m"
+
+[node name="YLabel" type="Label" parent="VBoxContainer/Size"]
+layout_mode = 2
+text = "Y"
+
+[node name="Y" type="SpinBox" parent="VBoxContainer/Size"]
+layout_mode = 2
+min_value = 1000.0
+max_value = 10000.0
+value = 2000.0
+suffix = "m"
+
+[node name="GridLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Grid Start Number"
+
+[node name="GridStart" type="HBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="XLabel" type="Label" parent="VBoxContainer/GridStart"]
+layout_mode = 2
+text = "X"
+
+[node name="X" type="SpinBox" parent="VBoxContainer/GridStart"]
+layout_mode = 2
+max_value = 899.0
+value = 100.0
+
+[node name="YLabel" type="Label" parent="VBoxContainer/GridStart"]
+layout_mode = 2
+text = "Y"
+
+[node name="Y" type="SpinBox" parent="VBoxContainer/GridStart"]
+layout_mode = 2
+max_value = 899.0
+value = 100.0
+
+[node name="ElevationLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Base Elevation in meters"
+
+[node name="BaseElevation" type="SpinBox" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 5000.0
+value = 110.0
+
+[node name="Spacer" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActionsRow" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Cancel" type="Button" parent="VBoxContainer/ActionsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Cancel"
+
+[node name="Spacer" type="Control" parent="VBoxContainer/ActionsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Create" type="Button" parent="VBoxContainer/ActionsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Create"
