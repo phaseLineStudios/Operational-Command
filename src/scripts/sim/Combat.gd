@@ -4,14 +4,16 @@ extends Node
 ## Applies firepower, defense, morale, terrain, elevation, surprise, and posture
 ## to produce losses, suppression, retreats, or destruction.
 
-##listing all units for testing purposes
+##for processing of possible combat outcomes
 signal notify_health
 signal unit_destroyed
 signal unit_retreated
 signal unit_surrendered
 
+##imported units manually for testing purposes
 var imported_attacker: UnitData = ContentDB.get_unit("infantry_plt_1")
 var imported_defender: UnitData = ContentDB.get_unit("infantry_plt_2")
+
 var abort_condition = false
 var called_retreat = false
 
@@ -78,7 +80,7 @@ func check_abort_condition(attacker: UnitData, defender: UnitData) -> void:
 		abort_condition = 1
 		return
 
-##check unit mid combat status
+##check unit mid combat status for testing of combat status
 func print_unit_status(attacker: UnitData, defender: UnitData) -> void:
 	print(attacker.id)
 	print(attacker.morale)
