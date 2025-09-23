@@ -1,6 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://5wbc83x6ecek"]
+[gd_scene load_steps=5 format=3 uid="uid://5wbc83x6ecek"]
 
 [ext_resource type="Script" uid="uid://c2ou0jfby4bkd" path="res://scripts/radio/Radio.gd" id="1_ilbh7"]
+[ext_resource type="AudioStream" uid="uid://cthkfrms7wc8y" path="res://audio/sfx/radioResponses/missedCommand.ogg" id="2_0wu01"]
+[ext_resource type="Script" uid="uid://brq4v1a35wcae" path="res://scripts/radio/RadioFeedback.gd" id="3_yxjyo"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_xor53"]
 
@@ -11,3 +13,11 @@ script = ExtResource("1_ilbh7")
 stream = SubResource("AudioStreamMicrophone_xor53")
 autoplay = true
 bus = &"Capture"
+
+[node name="ErrorSound" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("2_0wu01")
+bus = &"Radio"
+
+[node name="RadioFeedback" type="Node" parent="."]
+script = ExtResource("3_yxjyo")

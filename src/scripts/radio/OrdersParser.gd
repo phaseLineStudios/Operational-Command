@@ -26,9 +26,11 @@ func _ready() -> void:
 
 ## Parse a full STT sentence into one or more structured orders.
 func parse(text: String) -> Array:
+	print("start")
 	var tokens := _normalize_and_tokenize(text)
 	if tokens.is_empty():
 		emit_signal("parse_error", "No tokens.")
+		print("error test")
 		return []
 	var orders := _extract_orders(tokens)
 	if orders.is_empty():
