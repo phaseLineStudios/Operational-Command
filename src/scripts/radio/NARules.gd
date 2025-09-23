@@ -10,7 +10,7 @@ func get_parser_tables() -> Dictionary:
 		"callsigns": {
 			"alpha":"ALPHA","bravo":"BRAVO","charlie":"CHARLIE","delta":"DELTA",
 			"echo":"ECHO","foxtrot":"FOXTROT","golf":"GOLF","hotel":"HOTEL",
-			"india":"INDIA","juliet":"JULIET","kilo":"KILO","lima":"LIMA",
+			"india":"INDIA","juliett":"JULIETT","kilo":"KILO","lima":"LIMA", #juliett with teo t's
 			"mike":"MIKE","november":"NOVEMBER","oscar":"OSCAR","papa":"PAPA",
 			"quebec":"QUEBEC","romeo":"ROMEO","sierra":"SIERRA","tango":"TANGO",
 			"uniform":"UNIFORM","victor":"VICTOR","whiskey":"WHISKEY",

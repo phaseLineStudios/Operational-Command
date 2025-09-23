@@ -20,6 +20,9 @@
 		"equipment_ratio": 0.90,
 		"cohesion": 0.70
 	},
+	"editor": {
+		"unit_category": "us_army"
+	},
 	"throughput": {},
 	"equipment_tags": [],
 	"icon": "",

@@ -29,9 +29,9 @@ func combat_loop(attacker: UnitData, defender: UnitData) -> void:
 	notify_health.emit(attacker, defender)
 	
 	while !abort_condition :
-		await calculate_damage(attacker, defender)
+		calculate_damage(attacker, defender)
 		notify_health.emit(attacker, defender)
-		await check_abort_condition(attacker, defender)
+		check_abort_condition(attacker, defender)
 		await get_tree().create_timer(5.0, true, false, false).timeout
 		unit_switch = attacker
 		attacker = defender

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://o3h5jon6ffip"]
+[gd_scene load_steps=4 format=3 uid="uid://o3h5jon6ffip"]
 
 [ext_resource type="Script" uid="uid://bbr2ohjdpwwns" path="res://scripts/ui/Briefing.gd" id="1_opxbr"]
 [ext_resource type="Texture2D" uid="uid://dbxpaosafo8ty" path="res://assets/textures/ui/whiteboard.png" id="2_siir0"]
+[ext_resource type="Script" uid="uid://dq8m3cwvv276y" path="res://scripts/sim/Combat.gd" id="3_siir0"]
 
 [node name="Briefing" type="Control"]
 layout_mode = 3
@@ -47,3 +48,9 @@ horizontal_alignment = 1
 [node name="Continue" type="Button" parent="Root/BottomBar/Row"]
 layout_mode = 2
 text = "Continue"
+
+[node name="Control" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_siir0")
