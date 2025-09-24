@@ -143,7 +143,7 @@ func _try_begin_drag(mouse_pos: Vector2) -> void:
 ## Parameters:
 ##  - place_now: [see implementation]
 ## Returns: void
-func _end_drag(place_now: bool = false) -> void:
+func _end_drag(_place_now: bool = false) -> void:
 	if not _dragging:
 		return
 	_dragging = false
