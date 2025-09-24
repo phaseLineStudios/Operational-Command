@@ -5,6 +5,8 @@ class_name PickupItem
 @export var held_rotation: Vector3 = Vector3.ZERO
 ## Should pick be a toggle action or a held action
 @export var pick_toggle: bool = false
+## Should the mouse be hidden when object is held
+@export var hide_mouse: bool = false
 
 @export_group("Drop logic")
 ## Snap back to origin position on drop
@@ -39,6 +41,8 @@ func on_pickup() -> void:
 	_pre_pick_freeze = freeze
 	freeze = true
 	global_rotation_degrees = held_rotation
+	if hide_mouse:
+		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 
 ## Runs on drop
 func on_drop() -> void:
@@ -52,6 +56,9 @@ func on_drop() -> void:
 		freeze = false
 	else:
 		freeze = false
+	
+	if hide_mouse:
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 ## Runs on inspect start
 func start_inspect(camera: Camera3D) -> void:

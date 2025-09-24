@@ -158,6 +158,9 @@ func _plane_hit_to_map_px(hit_world: Vector3) -> Variant:
 
 ## Grid hover label update
 func _update_mouse_grid_ui() -> void:
+	if Input.mouse_mode == Input.MOUSE_MODE_HIDDEN:
+		_grid_label.visible = false
+		return
 	var mouse := get_viewport().get_mouse_position()
 	var res: Variant = screen_to_map_and_terrain(mouse)
 	if res == null:

@@ -289,6 +289,7 @@ physics_material_override = SubResource("PhysicsMaterial_cx6my")
 continuous_cd = true
 script = ExtResource("1_oof4l")
 pick_toggle = true
+hide_mouse = true
 snap_to_origin_position = true
 snap_to_origin_rotation = true
 
@@ -307,6 +308,7 @@ physics_material_override = SubResource("PhysicsMaterial_cx6my")
 continuous_cd = true
 script = ExtResource("1_oof4l")
 pick_toggle = true
+hide_mouse = true
 snap_to_origin_position = true
 snap_to_origin_rotation = true
 
@@ -325,6 +327,7 @@ physics_material_override = SubResource("PhysicsMaterial_cx6my")
 continuous_cd = true
 script = ExtResource("1_oof4l")
 pick_toggle = true
+hide_mouse = true
 snap_to_origin_position = true
 snap_to_origin_rotation = true
 
