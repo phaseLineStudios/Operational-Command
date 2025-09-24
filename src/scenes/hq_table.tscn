@@ -370,10 +370,11 @@ horizontal_alignment = 1
 [node name="CameraController" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("3_3f477")
-move_speed = 0.75
+move_speed = Vector2(1, 0.6)
+move_smooth = 5.0
 z_tilt_min_deg = -85.0
 z_tilt_max_deg = -36.0
-tilt_smooth = 5.0
+tilt_smooth = 15.0
 
 [node name="CameraBounds" type="MeshInstance3D" parent="CameraController"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0213583, 0.2977755)
