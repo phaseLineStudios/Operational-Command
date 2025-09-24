@@ -10,6 +10,8 @@ class_name MapController
 
 ## Pixel offset from the mouse to place the label
 @export var grid_label_offset: Vector2 = Vector2(16, 16)
+## Render the TerrainViewport at N× resolution for anti-aliasing (1=off)
+@export var viewport_oversample: int = 2
 
 ## Emitted after the mesh has been resized (world XZ)
 signal map_resized(new_world_size: Vector2)
@@ -30,6 +32,7 @@ func _ready() -> void:
 	_start_world_max = Vector2(_plane.size.x * sx, _plane.size.y * sz)
 
 	_mat = map.get_active_material(0)
+	_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
 	_apply_viewport_texture()
 
 	if not terrain_viewport.is_connected("size_changed", Callable(self, "_on_viewport_size_changed")):
@@ -65,12 +68,16 @@ func _apply_viewport_texture() -> void:
 func _update_viewport_to_renderer() -> void:
 	if renderer == null:
 		return
-	var s: Vector2 = renderer.size
-	var w: int = max(1, int(ceil(s.x)))
-	var h: int = max(1, int(ceil(s.y)))
-	var new_size := Vector2i(w, h)
+	var os: int = max(viewport_oversample, 1)
+	var logical := renderer.size
+	var new_size := Vector2i(
+		max(1, int(ceil(logical.x)) * os),
+		max(1, int(ceil(logical.y)) * os)
+	)
 	if terrain_viewport.size != new_size:
 		terrain_viewport.size = new_size
+		# Make the 2D canvas draw scaled up to fill the larger viewport:
+		terrain_viewport.canvas_transform = Transform2D.IDENTITY.scaled(Vector2(os, os))
 
 ## Fit PlaneMesh to the viewport aspect ratio, clamped to _start_world_max
 func _update_mesh_fit() -> void:
@@ -112,7 +119,8 @@ func screen_to_map_and_terrain(screen_pos: Vector2) -> Variant:
 	var map_px: Variant = _plane_hit_to_map_px(hit)
 	if map_px == null or renderer == null:
 		return null
-	var terrain_pos: Vector2 = renderer.map_to_terrain(map_px)
+	var logical_px: Vector2 = map_px / float(max(viewport_oversample, 1))
+	var terrain_pos: Vector2 = renderer.map_to_terrain(logical_px)
 	return {"map_px": map_px, "terrain": terrain_pos}
 
 ## World-space hit on the plane under a screen position; null if none
