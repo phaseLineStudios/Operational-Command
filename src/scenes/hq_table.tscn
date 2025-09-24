@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=39 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -25,7 +25,11 @@ size = Vector3(1, 0.75, 0.7)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3f477"]
 albedo_color = Color(0.375626, 0.28718, 0.13782, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ge8rp"]
+shading_mode = 0
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_p1n4g"]
+material = SubResource("StandardMaterial3D_ge8rp")
 size = Vector2(0.5, 0.5)
 
 [sub_resource type="BoxMesh" id="BoxMesh_py2wd"]
@@ -157,7 +161,7 @@ size = Vector3(1.37492, 1.76648, 2.76892)
 
 [node name="Map" type="MeshInstance3D" parent="StaticObjects"]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.731886, 0.0681208)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.731, 0.068)
 mesh = SubResource("PlaneMesh_p1n4g")
 skeleton = NodePath("../../Table/Mesh")
 
@@ -343,7 +347,6 @@ mesh = SubResource("PlaneMesh_ge8rp")
 
 [node name="MapController" type="Node" parent="."]
 script = ExtResource("5_lmes1")
-double_sided = false
 
 [node name="TerrainViewport" type="SubViewport" parent="MapController"]
 unique_name_in_owner = true
@@ -352,6 +355,17 @@ render_target_update_mode = 4
 
 [node name="TerrainRender" parent="MapController/TerrainViewport" instance=ExtResource("6_cx6my")]
 unique_name_in_owner = true
+
+[node name="GridUI" type="PanelContainer" parent="MapController"]
+editor_description = "Temporary UI"
+visible = false
+offset_right = 64.0
+offset_bottom = 27.0
+
+[node name="Label" type="Label" parent="MapController/GridUI"]
+layout_mode = 2
+text = "139280"
+horizontal_alignment = 1
 
 [node name="CameraController" type="Node" parent="."]
 unique_name_in_owner = true
