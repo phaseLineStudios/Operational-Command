@@ -43,6 +43,9 @@ func _ready() -> void:
 			renderer.connect("map_resize", Callable(self, "_on_renderer_map_resize"))
 		if not renderer.is_connected("resized", Callable(self, "_on_renderer_map_resize")):
 			renderer.connect("resized", Callable(self, "_on_renderer_map_resize"))
+		
+		if Game.current_scenario != null and Game.current_scenario.terrain != null:
+			renderer.data = Game.current_scenario.terrain
 
 	_update_viewport_to_renderer()
 	_update_mesh_fit()
