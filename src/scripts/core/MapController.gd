@@ -104,7 +104,7 @@ func _on_viewport_size_changed() -> void:
 func _on_renderer_map_resize() -> void:
 	_update_viewport_to_renderer()
 
-## Helper: from screen pos to map pixels & terrain meters. Returns null if not on map.
+## Helper: from screen pos to map pixels & terrain meters. Returns null if not on map
 func screen_to_map_and_terrain(screen_pos: Vector2) -> Variant:
 	var hit: Variant = _raycast_to_map_plane(screen_pos)
 	if hit == null:
@@ -115,7 +115,7 @@ func screen_to_map_and_terrain(screen_pos: Vector2) -> Variant:
 	var terrain_pos: Vector2 = renderer.map_to_terrain(map_px)
 	return {"map_px": map_px, "terrain": terrain_pos}
 
-## World-space hit on the plane under a screen position; null if none.
+## World-space hit on the plane under a screen position; null if none
 func _raycast_to_map_plane(screen_pos: Vector2) -> Variant:
 	if _camera == null:
 		_camera = get_viewport().get_camera_3d()
@@ -131,7 +131,7 @@ func _raycast_to_map_plane(screen_pos: Vector2) -> Variant:
 	var plane := Plane(plane_normal.normalized(), map.global_transform.origin)
 	return plane.intersects_ray(ray_from, ray_dir)
 
-## Convert a world hit on the plane to map pixels (0..viewport size).
+## Convert a world hit on the plane to map pixels (0..viewport size)
 func _plane_hit_to_map_px(hit_world: Vector3) -> Variant:
 	if map == null or _plane == null:
 		return null
@@ -145,7 +145,7 @@ func _plane_hit_to_map_px(hit_world: Vector3) -> Variant:
 	var vp := terrain_viewport.size
 	return Vector2(clamp(u, 0.0, 1.0) * vp.x, clamp(v, 0.0, 1.0) * vp.y)
 
-## Grid hover label update.
+## Grid hover label update
 func _update_mouse_grid_ui() -> void:
 	var mouse := get_viewport().get_mouse_position()
 	var res: Variant = screen_to_map_and_terrain(mouse)
@@ -159,8 +159,7 @@ func _update_mouse_grid_ui() -> void:
 		_grid_label.global_position = mouse + grid_label_offset
 		_grid_label.visible = true
 
-
-## Public: Force-refresh the texture and refit.
+## Force-refresh the texture and refit
 func refresh() -> void:
 	_apply_viewport_texture()
 	_update_viewport_to_renderer()
