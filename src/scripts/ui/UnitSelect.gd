@@ -17,12 +17,12 @@ class_name UnitSelect
 @onready var _btn_reset: Button = %Reset
 @onready var _btn_deploy: Button = %Deploy
 
-@onready var _filter_all: Button = $"Root/Main/LeftTray/AvailableUnits/Filters/All"
-@onready var _filter_armor: Button = $"Root/Main/LeftTray/AvailableUnits/Filters/Armor"
-@onready var _filter_inf: Button = $"Root/Main/LeftTray/AvailableUnits/Filters/Inf"
-@onready var _filter_mech: Button = $"Root/Main/LeftTray/AvailableUnits/Filters/Mech"
-@onready var _filter_motor: Button = $"Root/Main/LeftTray/AvailableUnits/Filters/Motor"
-@onready var _filter_support: Button = $"Root/Main/LeftTray/AvailableUnits/Filters/Support"
+@onready var _filter_all: Button = %"Filters/All"
+@onready var _filter_armor: Button = %"Filters/Armor"
+@onready var _filter_inf: Button = %"Filters/Inf"
+@onready var _filter_mech: Button = %"Filters/Mech"
+@onready var _filter_motor: Button = %"Filters/Motor"
+@onready var _filter_support: Button = %"Filters/Support"
 
 @onready var _search: LineEdit = %Search
 @onready var _pool: PoolDropArea = %Pool/List
@@ -76,7 +76,7 @@ func _connect_ui() -> void:
 	_btn_deploy.pressed.connect(_on_deploy_pressed)
 
 	for b in [_filter_all, _filter_armor, _filter_inf, _filter_mech, _filter_motor, _filter_support]:
-		b.toggled.connect(_on_filter_changed)
+		b.toggled.connect(func(_p): _on_filter_changed(b))
 	_search.text_changed.connect(_on_filter_text_changed)
 
 	_slots_list.request_assign_drop.connect(_on_request_assign_drop)
@@ -140,10 +140,9 @@ func _build_pool() -> void:
 	_refresh_pool_filter()
 
 ## Handle filter button toggled
-func _on_filter_changed(_pressed: bool) -> void:
-	# "All" behaves as a quick toggle to show everything
-	if _filter_all.button_pressed:
-		for b in [_filter_armor, _filter_inf, _filter_mech, _filter_motor, _filter_support]:
+func _on_filter_changed(button: Button) -> void:
+	for b in [_filter_all, _filter_armor, _filter_inf, _filter_mech, _filter_motor, _filter_support]:
+		if b != button:
 			b.set_pressed_no_signal(false)
 	_refresh_pool_filter()
 
@@ -171,9 +170,9 @@ func _refresh_pool_filter() -> void:
 		var card: UnitCard = _cards_by_unit[unit_id]
 		if not is_instance_valid(card):
 			continue
-		var u: Variant = _units_by_id[unit_id]
-		var role_ok := roles.is_empty() or roles.has(String(u.get("role", "")))
-		var text_ok := search.is_empty() or String(u.get("title", "")).to_lower().find(search) >= 0 or String(unit_id).to_lower().find(search) >= 0
+		var u: UnitData = _units_by_id[unit_id]
+		var role_ok := roles.is_empty() or roles.has(u.role)
+		var text_ok := search.is_empty() or u.title.to_lower().find(search) >= 0 or String(unit_id).to_lower().find(search) >= 0
 		var in_use := _assigned_by_unit.has(unit_id)
 		card.visible = role_ok and text_ok and not in_use
 
@@ -255,8 +254,8 @@ func _unassign_slot(slot_id: String) -> void:
 		return
 
 	# Refund points
-	var u: Variant = _units_by_id[unit_id]
-	_used_points -= int(u.get("cost", 0))
+	var u: UnitData = _units_by_id[unit_id]
+	_used_points -= int(u.cost)
 	_used_points = max(_used_points, 0)
 
 	# Clear maps

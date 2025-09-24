@@ -178,13 +178,15 @@ func _on_data_changed() -> void:
 
 ## Show a render error
 func render_error(error: String = "") -> void:
-	if error_layer == null: return
+	if error_layer == null:
+		return
 	error_layer.visible = true
 	error_label.text = error
 
 ## Hide the render error
 func clear_render_error() -> void:
-	if error_layer == null: return
+	if error_layer == null:
+		return
 	error_layer.visible = false
 
 ## Mark elements as dirty to redraw
