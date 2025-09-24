@@ -21,13 +21,9 @@ data = {
 [resource]
 script = ExtResource("5_g0iu5")
 name = "Fulda Gap"
-width_m = 2000
-height_m = 2000
-elevation_resolution_m = 20
 grid_start_x = 150
 grid_start_y = 120
 base_elevation_m = 326
-contour_interval_m = 10
 elevation = SubResource("Image_41udq")
 surfaces = [{
 "brush": ExtResource("6_n40c8"),

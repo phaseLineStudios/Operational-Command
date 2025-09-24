@@ -23,11 +23,9 @@ script = ExtResource("5_e87hn")
 name = "Bergen-Hohne Training Area"
 width_m = 3600
 height_m = 3600
-elevation_resolution_m = 20
 grid_start_x = 340
 grid_start_y = 790
 base_elevation_m = 71
-contour_interval_m = 10
 elevation = SubResource("Image_0dcst")
 surfaces = [{
 "brush": ExtResource("6_2r5rb"),
