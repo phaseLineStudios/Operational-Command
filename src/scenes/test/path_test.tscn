@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=3 uid="uid://dp480b0e1a80r"]
+
+[ext_resource type="Script" uid="uid://bstxrx84skdye" path="res://scripts/test/PathTest.gd" id="1_041fv"]
+[ext_resource type="Script" uid="uid://cjsu4sh4wfvmg" path="res://scripts/editors/TerrainCamera.gd" id="2_bf7yg"]
+[ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="3_u7v15"]
+[ext_resource type="Script" uid="uid://celjogma1c0c3" path="res://scripts/ai/MovementAgent.gd" id="4_fcfp8"]
+
+[node name="PathTest" type="Node2D"]
+script = ExtResource("1_041fv")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+offset_right = 1151.0
+offset_bottom = 649.0
+stretch = true
+mouse_target = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(1151, 649)
+render_target_update_mode = 4
+
+[node name="TerrainCamera" type="Camera2D" parent="SubViewportContainer/SubViewport"]
+unique_name_in_owner = true
+offset = Vector2(575, 325)
+script = ExtResource("2_bf7yg")
+metadata/_custom_type_script = "uid://cjsu4sh4wfvmg"
+
+[node name="TerrainRender" parent="SubViewportContainer/SubViewport" instance=ExtResource("3_u7v15")]
+unique_name_in_owner = true
+offset_left = 1.0
+offset_top = -1.0
+
+[node name="InputOverlay" type="Control" parent="SubViewportContainer/SubViewport/TerrainRender"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ExampleUnit" type="Node2D" parent="SubViewportContainer/SubViewport/TerrainRender"]
+unique_name_in_owner = true
+position = Vector2(99, 101)
+script = ExtResource("4_fcfp8")
+profile = 2
+base_speed_mps = 13.0
+sim_pos_m = Vector2(475, 100)
+debug_draw = true
+debug_show_hud = true
+debug_show_cells = true
+debug_show_path = true
+debug_show_vectors = true
+metadata/_custom_type_script = "uid://celjogma1c0c3"

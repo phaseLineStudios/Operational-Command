@@ -35,7 +35,6 @@ class_name TerrainRender
 ## Font size of grid number text
 @export var label_size: int = 14
 
-
 @export_group("Grid")
 ## Color of grid lines for every 100m
 @export var grid_100m_color: Color = Color(0.2, 0.2, 0.2, 0.25)
@@ -78,6 +77,14 @@ class_name TerrainRender
 ## Extra space beyond plaque width
 @export var contour_label_gap_extra_px: float = 2.0
 
+@export_group("Navigation")
+## reference to the PathGrid used for movement/pathfinding.
+@export var path_grid: PathGrid
+## If true, rebuild the grid automatically when data is set/changed.
+@export var nav_auto_build := true
+## Default profile to rebuild for when auto-building.
+@export var nav_default_profile: int = TerrainBrush.MoveProfile.FOOT
+
 @onready var margin: PanelContainer = %MapMargin
 @onready var base_layer: PanelContainer = %TerrainBase
 @onready var surface_layer: SurfaceLayer = %SurfaceLayer
@@ -105,6 +112,11 @@ func _ready():
 	
 	if not data:
 		render_error("NO TERRAIN DATA")
+	
+	if data and path_grid:
+			path_grid.data = data
+			if nav_auto_build:
+				path_grid.rebuild(nav_default_profile)
 
 ## Build base style
 func _apply_base_style_if_needed() -> void:
@@ -121,6 +133,10 @@ func _set_data(d: TerrainData):
 	if data:
 		data.changed.connect(_on_data_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
 		clear_render_error()
+		if path_grid:
+			path_grid.data = data
+			if nav_auto_build:
+				path_grid.rebuild(nav_default_profile)
 	else:
 		render_error("NO TERRAIN DATA")
 	call_deferred("_draw_map_size")
@@ -157,6 +173,8 @@ func _push_data_to_layers() -> void:
 ## Reconfigure if terrain data is changed
 func _on_data_changed() -> void:
 	_debounce_relayout_and_push()
+	if path_grid and nav_auto_build:
+		path_grid.rebuild(nav_default_profile)
 
 ## Show a render error
 func render_error(error: String = "") -> void:
@@ -236,6 +254,9 @@ func terrain_to_map(pos: Vector2) -> Vector2:
 	var map_margins := Vector2(margin_left_px, margin_top_px)
 	var map_borders := Vector2(terrain_border_px, terrain_border_px)
 	return pos + map_margins + map_borders
+
+func to_local(pos: Vector2) -> Vector2:
+	return pos - global_position
 
 ## API to check if position is inside map
 func is_inside_map(pos: Vector2) -> bool:
@@ -371,3 +392,15 @@ func get_surface_at_terrain_position(terrain_pos: Vector2) -> Dictionary:
 				best_idx = i
 
 	return best
+
+## Request a path in terrain meters via attached PathGrid
+func nav_find_path_m(start_m: Vector2, goal_m: Vector2) -> PackedVector2Array:
+	if not path_grid:
+		return PackedVector2Array()
+	return path_grid.find_path_m(start_m, goal_m)
+
+## Estimate travel time (seconds) along a path for a given base speed and profile
+func nav_estimate_time_s(path_m: PackedVector2Array, base_speed_mps: float, profile: int) -> float:
+	if not path_grid:
+		return INF
+	return path_grid.estimate_travel_time_s(path_m, base_speed_mps, profile)

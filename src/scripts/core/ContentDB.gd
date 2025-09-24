@@ -126,8 +126,8 @@ func list_campaigns() -> Array:
 	for c in camps:
 		if c.is_empty():
 			continue
-		var ord := int(c.get("order", 2147483647)) # missing => bottom
-		decorated.append([ord, i, c])
+		var order := int(c.get("order", 2147483647)) # missing => bottom
+		decorated.append([order, i, c])
 		i += 1
 
 	decorated.sort_custom(func(a, b):
@@ -189,15 +189,15 @@ func list_scenarios_for_campaign(campaign_id: StringName) -> Array[ScenarioData]
 	for id_val in ids:
 		var id_str := String(id_val)
 		var m_dict := get_object("scenarios", id_str)
-		var ord := 2147483647
+		var order := 2147483647
 		if not m_dict.is_empty():
 			if m_dict.has("order"):
-				ord = int(m_dict["order"])
+				order = int(m_dict["order"])
 			elif m_dict.has("scenario_order"):
-				ord = int(m_dict["scenario_order"])
+				order = int(m_dict["scenario_order"])
 		else:
 			push_warning("Scenario not found for id: %s" % id_str)
-		decorated.append([ord, i, id_str])
+		decorated.append([order, i, id_str])
 		i += 1
 
 	decorated.sort_custom(func(a, b):
