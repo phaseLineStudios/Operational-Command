@@ -5,6 +5,7 @@
 	"terrain": "",
 	"description": "Annual NATO exercise held in West Germany.",
 	"preview_path": "res://campaigns/previews/wg_exercise_reforger.png",
+	"terrain_path": "res://campaigns/terrains/exercise_reforger.tres",
 	"difficulty": 0,
 	"map_position": [0.44, 0.40],
 	"scenario_order": 0,
