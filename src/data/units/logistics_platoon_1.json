@@ -4,7 +4,7 @@
 	"role": "SUPPORT",
 	"cost": 50,
 	"size": "platoon",
-	"personnel": 15,
+	"strength": 15,
 	"equipment": { "M925A2": 2, "M932A2_FUEL": 2, "M1026A0": 1 },
 	"veterancy": "REGULAR",
 	"stats": {
