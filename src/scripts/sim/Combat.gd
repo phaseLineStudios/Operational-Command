@@ -76,8 +76,12 @@ func combat_loop(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
 func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
 	if attacker == null or defender == null or attacker.unit == null or defender.unit == null:
 		return
-	var base_attack: float = attacker.unit.strength * attacker.unit.morale * attacker.unit.attack
-	var base_defense: float = defender.unit.strength * defender.unit.morale * defender.unit.defense
+
+	var atk_str: float = max(0.0, attacker.unit.state_strength)
+	var def_str: float = max(0.0, defender.unit.state_strength)
+
+	var base_attack: float = atk_str * attacker.unit.morale * attacker.unit.attack
+	var base_defense: float = def_str * defender.unit.morale * defender.unit.defense
 
 	var env := {
 		"renderer": terrain_renderer,
@@ -87,36 +91,39 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
 		"attacker_moving": (attacker.move_state() == ScenarioUnit.MoveState.moving)
 	}
 
-	var factors := TerrainEffects.compute_terrain_factors(attacker, defender, env)
-	if factors.blocked:
+	var f := TerrainEffects.compute_terrain_factors(attacker, defender, env)
+	if f.blocked:
 		if attacker.unit.morale > 0.1:
 			attacker.unit.morale = max(0.0, attacker.unit.morale - 0.01)
 		return
 
-	var attackpower := base_attack * float(factors.accuracy_mul) * float(factors.damage_mul)
+	var attackpower := base_attack * float(f.accuracy_mul) * float(f.damage_mul)
 	var defensepower := base_defense
 
 	if attackpower - defensepower > 0.0:
-		var denom: float = max(defender.unit.strength, 1.0)
-		var loss: float = floor((attackpower - defensepower) * 0.1 / denom)
-		defender.unit.strength -= max(loss, 1)
-		if defender.unit.morale > 0.0:
+		var denom: float = max(def_str, 1.0)
+		var raw_loss: int = int(floor((attackpower - defensepower) * 0.1 / denom))
+		var applied := _apply_casualties(defender.unit, max(raw_loss, 1))
+		if defender.unit.morale > 0.0 and applied > 0:
 			defender.unit.morale = max(0.0, defender.unit.morale - 0.05)
 	else:
-		defender.unit.strength -= 1
-		if attacker.unit.morale < 1.0:
-			attacker.unit.morale = max(0.0, attacker.unit.morale - 0.05)
+		var applied := _apply_casualties(defender.unit, 1)
+		if attacker.unit.morale > 0.0 and applied == 0:
+			attacker.unit.morale = max(0.0, attacker.unit.morale - 0.02)
 
 ## Check the various conditions for if the combat is finished
 func check_abort_condition(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
-	if defender.strength <= 0:
+	if defender == null or defender.unit == null or attacker == null or attacker.unit == null:
+		return
+
+	if defender.unit.state_strength <= 0.5:
 		print(defender.callsign + " is destroyed")
-		if attacker.morale <= 0.8:
-			attacker.morale += 0.2
+		if attacker.unit.morale <= 0.8:
+			attacker.unit.morale += 0.2
 		unit_destroyed.emit()
 		abort_condition = true
 		return
-	elif defender.morale <= 0.2:
+	elif defender.unit.morale <= 0.2:
 		print(defender.callsign + " is surrendering")
 		unit_surrendered.emit()
 		abort_condition = true
@@ -125,6 +132,23 @@ func check_abort_condition(attacker: ScenarioUnit, defender: ScenarioUnit) -> vo
 		print(defender.callsign + " is retreating")
 		unit_retreated.emit()
 		abort_condition = true
+
+## Apply casualties to runtime state. Returns actual KIA + WIA applied
+func _apply_casualties(u: UnitData, raw_losses: int) -> int:
+	if u == null or raw_losses <= 0: return 0
+	var before := int(round(u.state_strength))
+	var loss: int = clamp(raw_losses, 0, before)
+	u.state_strength = float(before - loss)
+
+	var WIA_RATIO := 0.6
+	u.state_injured = max(0.0, u.state_injured + float(round(loss * WIA_RATIO)))
+
+	var COH_PER_CAS := 0.01
+	u.cohesion = clamp(u.cohesion - float(loss) * COH_PER_CAS, 0.0, 1.0)
+
+	var EQP_PER_CAS := 0.01
+	u.state_equipment = max(0.0, u.state_equipment - float(loss) * EQP_PER_CAS)
+	return loss
 
 ## Debug - build and emit a snapshot (for overlays/logging)
 func _emit_debug_snapshot(attacker: ScenarioUnit, defender: ScenarioUnit, at_resolution: bool) -> void:
@@ -139,8 +163,11 @@ func _emit_debug_snapshot(attacker: ScenarioUnit, defender: ScenarioUnit, at_res
 	}
 	var f := TerrainEffects.compute_terrain_factors(attacker, defender, env)
 
-	var base_attack := attacker.unit.strength * attacker.unit.morale * attacker.unit.attack
-	var base_defense := defender.unit.strength * defender.unit.morale * defender.unit.defense
+	var atk_str: float = max(0.0, attacker.unit.state_strength if attacker.unit.state_strength > 0.0 else attacker.unit.strength)
+	var def_str: float = max(0.0, defender.unit.state_strength if defender.unit.state_strength > 0.0 else defender.unit.strength)
+
+	var base_attack := atk_str * attacker.unit.morale * attacker.unit.attack
+	var base_defense := def_str * defender.unit.morale * defender.unit.defense
 	var attackpower := base_attack * float(f.get("accuracy_mul", 1.0)) * float(f.get("damage_mul", 1.0))
 	var defensepower := base_defense
 
@@ -157,19 +184,23 @@ func _emit_debug_snapshot(attacker: ScenarioUnit, defender: ScenarioUnit, at_res
 		"attackpower": attackpower,
 		"defensepower": defensepower,
 		"attacker": {
-			"id": attacker.unit.id,
-			"cs": attacker.callsign,
+			"id": attacker.unit.id, 
+			"cs": attacker.callsign, 
 			"pos_m": attacker.position_m,
-			"morale": attacker.unit.morale,
-			"strength": attacker.unit.strength,
+			"morale": attacker.unit.morale, 
+			"strength": atk_str, 
+			"cohesion": attacker.unit.cohesion,
+			"equip": attacker.unit.state_equipment, 
 			"moving": env.attacker_moving
 		},
 		"defender": {
-			"id": defender.unit.id,
-			"cs": defender.callsign,
+			"id": defender.unit.id, 
+			"cs": defender.callsign, 
 			"pos_m": defender.position_m,
-			"morale": defender.unit.morale,
-			"strength": defender.unit.strength
+			"morale": defender.unit.morale, 
+			"strength": def_str, 
+			"cohesion": defender.unit.cohesion,
+			"equip": defender.unit.state_equipment
 		},
 		"components": f.get("debug", {})
 	}

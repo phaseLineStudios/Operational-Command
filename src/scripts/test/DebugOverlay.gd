@@ -61,10 +61,20 @@ func _draw_unit_glyphs(su: ScenarioUnit, _idx: int) -> void:
 	if show_bars and su.unit:
 		var w := 60.0
 		var h := 5.0
-		var s_t: float = clamp(float(su.unit.strength) / 100.0, 0.0, 1.0)
+		var s_t := 0.0
+		var m_t := 0.0
+		if _dbg.has("attacker") and su == _units[0]:
+			s_t = clamp(float(_dbg.attacker.strength) / float(max(su.unit.strength, 1)), 0.0, 1.0)
+			m_t = clamp(float(_dbg.attacker.morale), 0.0, 1.0)
+		elif _dbg.has("defender") and su == _units[1]:
+			s_t = clamp(float(_dbg.defender.strength) / float(max(su.unit.strength, 1)), 0.0, 1.0)
+			m_t = clamp(float(_dbg.defender.morale), 0.0, 1.0)
+		# Fallback if no snapshot yet:
+		if s_t == 0.0 and m_t == 0.0:
+			s_t = clamp((su.unit.state_strength if su.unit.state_strength > 0.0 else su.unit.strength) / float(max(su.unit.strength, 1)), 0.0, 1.0)
+			m_t = clamp(su.unit.morale, 0.0, 1.0)
 		draw_rect(Rect2(p + Vector2(-w*0.5, -20), Vector2(w, h)), Color(0,0,0,0.5), true)
 		draw_rect(Rect2(p + Vector2(-w*0.5, -20), Vector2(w * s_t, h)), Color(0.15, 0.7, 0.2, 0.95), true)
-		var m_t: float = clamp(float(su.unit.morale), 0.0, 1.0)
 		draw_rect(Rect2(p + Vector2(-w*0.5, -12), Vector2(w, h)), Color(0,0,0,0.5), true)
 		draw_rect(Rect2(p + Vector2(-w*0.5, -12), Vector2(w * m_t, h)), Color(0.2, 0.4, 1.0, 0.85), true)
 
