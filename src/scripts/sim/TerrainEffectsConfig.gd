@@ -1,7 +1,6 @@
 extends Resource
 class_name TerrainEffectsConfig
 ## Tunables for terrain & environment modifiers.
-## @tutorial: https://docs.godotengine.org/en/4.4/
 ## @experimental
 
 ## Elevation: accuracy *= 1 + k_elev_acc_per_m * clamp(Δh, -elev_cap_m, +elev_cap_m)
