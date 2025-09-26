@@ -18,9 +18,6 @@ signal unit_surrendered
 ## TerrainEffectConfig reference
 @export var terrain_config: TerrainEffectsConfig = preload("res://assets/configs/terrain_effects.tres")
 
-@export_group("Debug")
-@export_custom(PROPERTY_HINT_GROUP_ENABLE, "enable debug") var debug_enabled: bool = false
-
 var attacker_su: ScenarioUnit
 var defender_su: ScenarioUnit
 
