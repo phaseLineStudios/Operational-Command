@@ -60,12 +60,21 @@ static func compute_terrain_factors(attacker: ScenarioUnit, defender: ScenarioUn
 	acc = max(acc, cfg.min_accuracy)
 	dmg = max(dmg, cfg.min_damage)
 	spot = max(spot, 0.05)
+	
+	var dbg := {
+		"dh_m": dh,
+		"cover": cover,
+		"conceal": conceal,
+		"atten_integral": float(los.atten_integral),
+		"weather_severity": weather_severity,
+		"is_moving": is_moving,
+		"is_dug_in": is_dug_in
+	}
 
-	if cfg.debug:
-		print("[TerrainEffects] range=%.1f acc=%.3f dmg=%.3f spot=%.3f dh=%.1f atten=%.3f blocked=%s" % \
-			[range_m, acc, dmg, spot, dh, float(los.atten_integral), str(false)])
-
-	return { "accuracy_mul": acc, "damage_mul": dmg, "spotting_mul": spot, "blocked": false, "range_m": range_m }
+	var ret := { "accuracy_mul": acc, "damage_mul": dmg, "spotting_mul": spot, "blocked": false, "range_m": range_m }
+	if env.get("debug", false) or cfg.debug:
+		ret["debug"] = dbg
+	return ret
 
 ## Derive 0..1 weather severity from ScenarioData (fog/rain)
 static func weather_severity_from_scenario(s: ScenarioData) -> float:
@@ -117,7 +126,6 @@ static func _brush_fields(renderer: TerrainRender, _terrain: TerrainData, p: Vec
 					"los_attenuation_per_m": _try_field(b, "los_attenuation_per_m")
 				}
 	
-	push_warning("Failed to get brush at ", p)
 	return { "cover_reduction": 0.0, "concealment": 0.0, "los_attenuation_per_m": 0.0 }
 
 static func _try_field(src: TerrainBrush, name: String, def: float = 0.0) -> float:
