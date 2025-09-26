@@ -1,28 +1,23 @@
 extends RefCounted
 class_name TerrainEffects
-## Compute terrain/weather multipliers for combat/spotting.
+## Compute terrain/weather multipliers for combat/spotting
 ## @experimental
 
-## Returns accuracy/damage/spotting multipliers and LOS state.
-## env:
-## - "renderer": TerrainRender            # preferred source for surfaces
-## - "terrain": TerrainData               # fallback for heights/brush
-## - "scenario": ScenarioData             # derives weather if severity not set
-## - "config": TerrainEffectsConfig
+## Returns accuracy/damage/spotting multipliers and LOS state
 static func compute_terrain_factors(attacker: ScenarioUnit, defender: ScenarioUnit, env: Dictionary) -> Dictionary:
 	var cfg: TerrainEffectsConfig = env.get("config", TerrainEffectsConfig.new())
-	var renderer: Variant = env.get("renderer", null)
-	var terrain: Variant = env.get("terrain", null)
-	var scenario: Variant = env.get("scenario", null)
+	var renderer: TerrainRender = env.get("renderer")
+	var terrain: TerrainData = env.get("terrain")
+	var scenario: ScenarioData = env.get("scenario")
 	if terrain == null and renderer != null and "data" in renderer:
 		terrain = renderer.data
 
-	var weather_severity: float = 0.0
+	var weather_severity := 0.0
 	if scenario != null:
-		weather_severity = weather_severity_from_scenario(env.scenario)
+		weather_severity = weather_severity_from_scenario(scenario)
 
-	var pos_a: Vector2 = _extract_pos(attacker, Vector2.ZERO)
-	var pos_d: Vector2 = _extract_pos(defender, Vector2.ZERO)
+	var pos_a := _extract_pos(attacker, Vector2.ZERO)
+	var pos_d := _extract_pos(defender, Vector2.ZERO)
 	var range_m := pos_a.distance_to(pos_d)
 
 	var acc := 1.0
@@ -31,7 +26,13 @@ static func compute_terrain_factors(attacker: ScenarioUnit, defender: ScenarioUn
 
 	var los := _compute_los_and_atten(pos_a, pos_d, renderer, terrain, cfg)
 	if los.blocked:
-		return { "accuracy_mul": 0.0, "damage_mul": 0.0, "spotting_mul": 0.0, "blocked": true, "range_m": range_m }
+		var ret0 := {
+			"accuracy_mul": 0.0, "damage_mul": 0.0, "spotting_mul": 0.0,
+			"blocked": true, "block_reason": "terrain_occlusion", "range_m": range_m
+		}
+		if env.get("debug", false) or cfg.debug:
+			ret0["debug"] = {"atten_integral": float(los.atten_integral), "weather_severity": weather_severity}
+		return ret0
 
 	var dh: float = clamp(_get_h(terrain, pos_a) - _get_h(terrain, pos_d), -cfg.elev_cap_m, cfg.elev_cap_m)
 	acc *= 1.0 + cfg.k_elev_acc_per_m * dh
@@ -39,6 +40,7 @@ static func compute_terrain_factors(attacker: ScenarioUnit, defender: ScenarioUn
 	var br := _brush_fields(renderer, terrain, pos_d)
 	var cover: float = clamp(br.cover_reduction, 0.0, 1.0)
 	var conceal: float = clamp(br.concealment, 0.0, 1.0)
+
 	dmg *= 1.0 - cover * cfg.cover_damage_scale
 
 	var conceal_scale: float = clamp(range_m / max(cfg.conceal_full_effect_range_m, 1.0), 0.0, 1.0)
@@ -52,15 +54,22 @@ static func compute_terrain_factors(attacker: ScenarioUnit, defender: ScenarioUn
 
 	acc *= (1.0 - weather_severity * cfg.weather_acc_penalty_at_severity1)
 
-	var is_moving := bool(env.attacker_moving) if env.has("attacker_moving") else _is_moving(attacker)
-	if is_moving: acc *= (1.0 - cfg.moving_fire_penalty)
-	var is_dug_in := bool(env.defender_dug_in) if env.has("defender_dug_in") else _is_dug_in(defender)
-	if is_dug_in: dmg *= (1.0 - cfg.dug_in_cover_bonus)
+	var is_moving := (env.has("attacker_moving") and bool(env.get("attacker_moving"))) or _is_moving(attacker)
+	if is_moving:
+		acc *= (1.0 - cfg.moving_fire_penalty)
 
-	acc = max(acc, cfg.min_accuracy)
-	dmg = max(dmg, cfg.min_damage)
-	spot = max(spot, 0.05)
-	
+	var is_dug_in := (env.has("defender_dug_in") and bool(env.get("defender_dug_in"))) or _is_dug_in(defender)
+	if is_dug_in:
+		dmg *= (1.0 - cfg.dug_in_cover_bonus)
+
+	acc = max(acc, 0.0)
+	var blocked := acc < cfg.min_accuracy
+	var block_reason := ( "below_min_accuracy" if blocked else "" )
+
+	var out_acc := acc
+	var out_dmg: float = max(dmg, cfg.min_damage)
+	var out_spot: float = max(spot, 0.05)
+
 	var dbg := {
 		"dh_m": dh,
 		"cover": cover,
@@ -71,22 +80,29 @@ static func compute_terrain_factors(attacker: ScenarioUnit, defender: ScenarioUn
 		"is_dug_in": is_dug_in
 	}
 
-	var ret := { "accuracy_mul": acc, "damage_mul": dmg, "spotting_mul": spot, "blocked": false, "range_m": range_m }
+	var ret := {
+		"accuracy_mul": out_acc,
+		"damage_mul": out_dmg,
+		"spotting_mul": out_spot,
+		"blocked": blocked,
+		"block_reason": block_reason,
+		"range_m": range_m
+	}
 	if env.get("debug", false) or cfg.debug:
 		ret["debug"] = dbg
 	return ret
 
-## Derive 0..1 weather severity from ScenarioData (fog/rain)
+## Derive 0..1 weather severity from ScenarioData (fog/rain).
 static func weather_severity_from_scenario(s: ScenarioData) -> float:
 	if s == null: return 0.0
 	var fog: float = clamp(1.0 - float(s.fog_m) / 8000.0, 0.0, 1.0)
 	var rain: float = clamp(float(s.rain) / 50.0, 0.0, 1.0)
 	return clamp(max(fog, rain), 0.0, 1.0)
 
-## LOS ray test + integral attenuation using TerrainRender surfaces when available
+## LOS test + integral attenuation via TerrainRender surfaces if available.
 static func _compute_los_and_atten(a: Vector2, d: Vector2, renderer: TerrainRender, terrain: TerrainData, cfg: TerrainEffectsConfig) -> Dictionary:
 	if a == d:
-		return { "blocked": false, "atten_integral": 0.0 }
+		return {"blocked": false, "atten_integral": 0.0}
 
 	var terr := terrain
 	if terr == null and renderer != null and "data" in renderer:
@@ -95,7 +111,8 @@ static func _compute_los_and_atten(a: Vector2, d: Vector2, renderer: TerrainRend
 	var ha := _get_h(terr, a) + cfg.los_attacker_eye_h_m
 	var hd := _get_h(terr, d) + cfg.los_target_h_m
 	var dist := a.distance_to(d)
-	var steps := int(max(1.0, ceil(dist / max(cfg.los_raycast_step_m, 1.0))))
+	var step_m: float = max(cfg.los_raycast_step_m, 1.0)
+	var steps := int(max(1.0, ceil(dist / step_m)))
 	var dir := (d - a) / float(steps)
 
 	var atten := 0.0
@@ -110,10 +127,10 @@ static func _compute_los_and_atten(a: Vector2, d: Vector2, renderer: TerrainRend
 			break
 		var br := _brush_fields(renderer, terr, p)
 		var per_m: float = max(br.los_attenuation_per_m, 0.0)
-		atten += per_m * min(cfg.los_raycast_step_m, dist)
-	return { "blocked": blocked, "atten_integral": atten }
+		atten += per_m * min(step_m, dist)
+	return {"blocked": blocked, "atten_integral": atten}
 
-## Brush field adapter for either TerrainRender or TerrainData
+## Brush field adapter for either TerrainRender or TerrainData (area features only).
 static func _brush_fields(renderer: TerrainRender, _terrain: TerrainData, p: Vector2) -> Dictionary:
 	if renderer != null and renderer.has_method("get_surface_at_terrain_position"):
 		var s := renderer.get_surface_at_terrain_position(p)
@@ -125,8 +142,7 @@ static func _brush_fields(renderer: TerrainRender, _terrain: TerrainData, p: Vec
 					"concealment": _try_field(b, "concealment"),
 					"los_attenuation_per_m": _try_field(b, "los_attenuation_per_m")
 				}
-	
-	return { "cover_reduction": 0.0, "concealment": 0.0, "los_attenuation_per_m": 0.0 }
+	return {"cover_reduction": 0.0, "concealment": 0.0, "los_attenuation_per_m": 0.0}
 
 static func _try_field(src: TerrainBrush, name: String, def: float = 0.0) -> float:
 	if src == null: return def
@@ -156,10 +172,7 @@ static func _is_moving(x: ScenarioUnit) -> bool:
 		return int(x._move_state) == 2
 	return false
 
-## Currently has no effect. reserved for the future
+## Reserved for future posture logic.
 ## @experimental
-static func _is_dug_in(x: ScenarioUnit) -> bool:
-	if x == null: return false
-	if "dug_in" in x: return bool(x.dug_in)
-	if x.has_method("is_dug_in"): return bool(x.is_dug_in())
+static func _is_dug_in(_x: ScenarioUnit) -> bool:
 	return false

@@ -36,7 +36,18 @@ unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("4_gih1r")
 
-[node name="Combat" type="Node" parent="."]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport"]
+offset_left = 10.0
+offset_top = 2.0
+offset_right = 208.0
+offset_bottom = 51.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "LMB to move Bluefor unit
+RMB to move Opfor unit"
+
+[node name="Combat" type="Node" parent="." node_paths=PackedStringArray("debug_overlay")]
 unique_name_in_owner = true
 script = ExtResource("5_hmct3")
+debug_enabled = true
+debug_overlay = NodePath("../SubViewportContainer/SubViewport/TerrainRender/DebugOverlay")
 metadata/_custom_type_script = "uid://dq8m3cwvv276y"

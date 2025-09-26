@@ -69,9 +69,8 @@ func _draw_unit_glyphs(su: ScenarioUnit, _idx: int) -> void:
 		elif _dbg.has("defender") and su == _units[1]:
 			s_t = clamp(float(_dbg.defender.strength) / float(max(su.unit.strength, 1)), 0.0, 1.0)
 			m_t = clamp(float(_dbg.defender.morale), 0.0, 1.0)
-		# Fallback if no snapshot yet:
 		if s_t == 0.0 and m_t == 0.0:
-			s_t = clamp((su.unit.state_strength if su.unit.state_strength > 0.0 else su.unit.strength) / float(max(su.unit.strength, 1)), 0.0, 1.0)
+			s_t = clamp((su.unit.state_strength if su.unit.state_strength > 0.0 else float(su.unit.strength)) / float(max(su.unit.strength, 1)), 0.0, 1.0)
 			m_t = clamp(su.unit.morale, 0.0, 1.0)
 		draw_rect(Rect2(p + Vector2(-w*0.5, -20), Vector2(w, h)), Color(0,0,0,0.5), true)
 		draw_rect(Rect2(p + Vector2(-w*0.5, -20), Vector2(w * s_t, h)), Color(0.15, 0.7, 0.2, 0.95), true)
@@ -94,7 +93,7 @@ func _draw_text_panel(d: Dictionary) -> void:
 	var f := get_theme_default_font()
 	var lines := PackedStringArray()
 
-	lines.append("r=%.0fm  LOS=%s  @res=%s" % [float(d.get("range_m", 0.0)), str(d.get("blocked", false)), str(d.get("at_resolution", false))])
+	lines.append("r=%.0fm  LOS=%s  @res=%s" % [float(d.get("range_m", 0.0)), str(!d.get("blocked", false)), str(d.get("at_resolution", false))])
 	lines.append("ACC=%.2f  DMG=%.2f  SPT=%.2f" % [float(d.get("accuracy_mul", 1.0)), float(d.get("damage_mul", 1.0)), float(d.get("spotting_mul", 1.0))])
 	var c: Variant = d.get("components", {})
 	lines.append("dh=%.1f  cover=%.2f  conceal=%.2f  atten=%.2f  wx=%.2f" % [
