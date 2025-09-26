@@ -93,14 +93,9 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
 	if dist > attacker.unit.spot_m * float(f.get("spotting_mul", 1.0)):
 		return
 	
-	var min_acc: float = (terrain_config.min_accuracy if "min_accuracy" in terrain_config else 0.02)
+	var min_acc: float = terrain_config.min_accuracy
 	var acc: float = float(f.get("accuracy_mul", 1.0))
 	if bool(f.get("blocked", false)) or acc < min_acc:
-		if attacker.unit.morale > 0.1:
-			attacker.unit.morale = max(0.0, attacker.unit.morale - 0.01)
-		return
-	
-	if f.blocked:
 		if attacker.unit.morale > 0.1:
 			attacker.unit.morale = max(0.0, attacker.unit.morale - 0.01)
 		return
@@ -176,8 +171,8 @@ func _emit_debug_snapshot(attacker: ScenarioUnit, defender: ScenarioUnit, at_res
 	}
 	var f := TerrainEffects.compute_terrain_factors(attacker, defender, env)
 
-	var atk_str: float = max(0.0, attacker.unit.state_strength as Variant if attacker.unit.state_strength > 0.0 else attacker.unit.strength)
-	var def_str: float = max(0.0, defender.unit.state_strength as Variant if defender.unit.state_strength > 0.0 else defender.unit.strength)
+	var atk_str: float = max(0.0, attacker.unit.state_strength if attacker.unit.state_strength > 0.0 else float(attacker.unit.strength))
+	var def_str: float = max(0.0, defender.unit.state_strength if defender.unit.state_strength > 0.0 else float(defender.unit.strength))
 
 	var base_attack := atk_str * attacker.unit.morale * attacker.unit.attack
 	var base_defense := def_str * defender.unit.morale * defender.unit.defense
@@ -204,7 +199,7 @@ func _emit_debug_snapshot(attacker: ScenarioUnit, defender: ScenarioUnit, at_res
 			"strength": atk_str, 
 			"cohesion": attacker.unit.cohesion,
 			"equip": attacker.unit.state_equipment, 
-			"moving": env.attacker_moving
+			"moving": bool(env.get("attacker_moving", false))
 		},
 		"defender": {
 			"id": defender.unit.id, 
