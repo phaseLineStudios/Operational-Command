@@ -1,5 +1,5 @@
 extends Node2D
-class_name SetupController
+class_name CombatTest
 ## Minimal combat/movement + combat debug harness.
 
 ## Scenario JSON file
