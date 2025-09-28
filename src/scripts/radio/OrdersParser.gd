@@ -38,7 +38,7 @@ func parse(text: String) -> Array:
 		
 		# Print hr orders for debugging
 		for order in orders:
-			LogService.trace("Order: %s" % order_to_string(order), "OrdersParser.gd:41")
+			LogService.info("Order: %s" % order_to_string(order), "OrdersParser.gd:41")
 	return orders
 	
 ## Scan tokens left→right and extract orders.

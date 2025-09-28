@@ -9,6 +9,7 @@ enum LogLevel { LOG, INFO, ERROR, WARNING, TRACE }
 signal line(text: String, level: LogLevel)
 
 var _tap: LogTap
+var _project_level: LogLevel = ProjectSettings.get_setting("debug/settings/stdout/log_level")
 
 func _enter_tree() -> void:
 	_tap = LogTap.new()
@@ -28,26 +29,30 @@ func _captured_log(_level, msg: String):
 ## Log INFO level rich message
 func info(msg: String, src := ""):
 	var fmt_msg := _fmt_msg(msg, LogLevel.INFO, src)
-	print_rich(fmt_msg)
 	emit_signal("line", fmt_msg, LogLevel.INFO)
+	if _project_level >= LogLevel.INFO:
+		print_rich(fmt_msg)
 
 ## Log WARNING level rich message
 func warning(msg: String, src := ""):
 	var fmt_msg := _fmt_msg(msg, LogLevel.WARNING, src)
-	print_rich(fmt_msg)
 	emit_signal("line", fmt_msg, LogLevel.WARNING)
+	if _project_level >= LogLevel.WARNING:
+		print_rich(fmt_msg)
 	
 ## Log ERROR level rich message
 func error(msg: String, src := ""):
 	var fmt_msg := _fmt_msg(msg, LogLevel.ERROR, src)
-	print_rich(fmt_msg)
 	emit_signal("line", fmt_msg, LogLevel.ERROR)
+	if _project_level >= LogLevel.ERROR:
+		print_rich(fmt_msg)
 
 ## Log TRACE level rich message
 func trace(msg: String, src := ""):
 	var fmt_msg := _fmt_msg(msg, LogLevel.TRACE, src)
-	print_rich(fmt_msg)
 	emit_signal("line", fmt_msg, LogLevel.TRACE)
+	if _project_level >= LogLevel.TRACE:
+		print_rich(fmt_msg)
 
 ## get formatted time
 func _get_fmt_time() -> String:

@@ -35,8 +35,8 @@ func _unhandled_input(event: InputEvent) -> void:
 ## Temporary for testing
 ## TODO Remove this
 func _on_result(t):
+	LogService.trace("Heard: %s" % t, "Radio.gd:39")
 	OrdersParser.parse(t)
-	LogService.trace("[Radio] Heard: %s" % t, "Radio.gd:39")
 	emit_signal("radio_result", t)
 
 ## Manually enable the radio / STT.

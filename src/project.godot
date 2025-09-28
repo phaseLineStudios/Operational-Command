@@ -30,6 +30,10 @@ NARules="*res://scripts/radio/NARules.gd"
 OrdersParser="*res://scripts/radio/OrdersParser.gd"
 LogService="*res://scripts/core/LogService.gd"
 
+[debug]
+
+settings/stdout/log_level=3
+
 [input]
 
 ptt={
