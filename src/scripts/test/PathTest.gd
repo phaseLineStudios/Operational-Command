@@ -3,6 +3,9 @@ class_name SetupController
 
 ## Wires TerrainRender, PathGrid, and a MovementAgent, then handles click-to-move.
 
+## Terrain to load
+@export var terrain: TerrainData = preload("res://campaigns/terrains/fulda_gap.tres")
+
 @onready var renderer: TerrainRender = %TerrainRender
 @onready var camera: Camera2D = %TerrainCamera
 @onready var unit: MovementAgent = %ExampleUnit
@@ -21,6 +24,7 @@ func _ready() -> void:
 
 	unit.grid = renderer.path_grid
 	unit.renderer = renderer
+	renderer.data = terrain
 
 	renderer.path_grid.rebuild(unit.profile)
 

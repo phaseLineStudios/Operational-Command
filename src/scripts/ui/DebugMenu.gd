@@ -1,9 +1,19 @@
 extends Window
+class_name DebugMenu
 
 @onready var metrics_display: DebugMetricsDisplay = %MetricsDisplay
-@onready var metrics_visibility: OptionButton = $Column/MetricsControl/MetricsVisibility
-@onready var scene_loader_scene: OptionButton = $Column/SceneLoader/Scene
-@onready var scene_loader_button: Button = $Column/SceneLoader/Load
+@onready var metrics_visibility: OptionButton = $TabContainer/General/Column/MetricsControl/MetricsVisibility
+@onready var scene_loader_scene: OptionButton = $TabContainer/General/Column/SceneLoader/Scene
+@onready var scene_loader_button: Button = $TabContainer/General/Column/SceneLoader/Load
+@onready var event_log_content: RichTextLabel = $TabContainer/Log/Column/Log/LogContent
+@onready var event_log_clear: Button = $TabContainer/Log/Column/ActionsRow/ClearLog
+@onready var event_log_filter_log: Button = %FilterLog
+@onready var event_log_filter_info: Button = %FilterInfo
+@onready var event_log_filter_warning: Button = %FilterWarning
+@onready var event_log_filter_error: Button = %FilterError
+@onready var event_log_filter_trace: Button = %FilterTrace
+
+var _log_lines: Array = []
 
 func _ready():
 	hide()
@@ -11,7 +21,15 @@ func _ready():
 	connect("close_requested", _close)
 	scene_loader_button.pressed.connect(_on_load_pressed)
 	_populate_scene_list()
+	LogService.line.connect(_log_msg)
 	set_process(true)
+	
+	event_log_filter_log.pressed.connect(_refresh_log)
+	event_log_filter_info.pressed.connect(_refresh_log)
+	event_log_filter_warning.pressed.connect(_refresh_log)
+	event_log_filter_error.pressed.connect(_refresh_log)
+	event_log_filter_trace.pressed.connect(_refresh_log)
+	event_log_clear.pressed.connect(_clear_log)
 
 ## Set visibility for metrics display
 func _set_metrics_visibility(visibility: int):
@@ -68,6 +86,31 @@ func _pretty_scene_name(p: String) -> String:
 	var rel := p.replace("res://", "")
 	var dot := rel.rfind(".")
 	return (rel.substr(0, dot) if dot >= 0 else rel)
+
+## Capture and store log message
+func _log_msg(msg: String, lvl: LogService.LogLevel) -> void:
+	_log_lines.append({ "msg": msg, "lvl": lvl })
+	_refresh_log()
+
+## refresh log display
+func _refresh_log():
+	var filtered_lines := []
+	for line in _log_lines:
+		var lvl: LogService.LogLevel = line["lvl"]
+		var txt: String = line["msg"]
+		
+		if (lvl == LogService.LogLevel.LOG and event_log_filter_log.button_pressed) \
+		or (lvl == LogService.LogLevel.INFO and event_log_filter_info.button_pressed) \
+		or (lvl == LogService.LogLevel.WARNING and event_log_filter_warning.button_pressed) \
+		or (lvl == LogService.LogLevel.ERROR and event_log_filter_error.button_pressed) \
+		or (lvl == LogService.LogLevel.TRACE and event_log_filter_trace.button_pressed):
+			filtered_lines.append(txt)
+			
+	event_log_content.text = "\n".join(filtered_lines)
+
+func _clear_log():
+	_log_lines = []
+	_refresh_log()
 
 func _process(_dt: float) -> void:
 	if Input.is_action_just_pressed("open_debug_menu"):
