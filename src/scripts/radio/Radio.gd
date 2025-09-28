@@ -36,14 +36,14 @@ func _unhandled_input(event: InputEvent) -> void:
 ## TODO Remove this
 func _on_result(t):
 	OrdersParser.parse(t)
-	print("[Radio] Heard: %s" % t)
+	LogService.trace("[Radio] Heard: %s" % t, "Radio.gd:39")
 	emit_signal("radio_result", t)
 
 ## Manually enable the radio / STT.
 func _start_tx() -> void:
 	if _tx:
 		return
-	print("PTT Pressed")
+	LogService.info("PTT Pressed", "Radio.gd:46")
 	_tx = true
 	STTService.start()
 	emit_signal("radio_on")
@@ -55,7 +55,7 @@ func _stop_tx() -> void:
 	_tx = false
 	STTService.stop()
 	emit_signal("radio_off")
-	print("PTT Released")
+	LogService.info("PTT Released", "Radio.gd:58")
 
 ## Ensure we stop capture when the radio node leaves.
 func _exit_tree() -> void:
