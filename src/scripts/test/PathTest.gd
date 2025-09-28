@@ -30,7 +30,7 @@ func _ready() -> void:
 
 	renderer.path_grid.build_ready.connect(func(p):
 		if p == unit.profile:
-			print("PathGrid ready for profile:", p)
+			LogService.info("PathGrid ready for profile: " + str(p), "PathTest.gd:33")
 	)
 	renderer.path_grid.build_failed.connect(func(reason):
 		push_warning("PathGrid build failed: " + reason)
@@ -47,9 +47,7 @@ func _input(e: InputEvent) -> void:
 			return
 		var pos := (e as InputEventMouseButton).position
 		if not renderer.is_inside_terrain(pos):
-			print("outside terrain: ", pos)
+			LogService.warning("Outside terrain: " + str(pos), "PathTest.gd:51")
 			return
 		var terrain_pos := renderer.map_to_terrain(pos)
-		print(renderer.map_to_terrain(terrain_pos))
-		print(renderer.pos_to_grid(terrain_pos))
 		unit.move_to_m(terrain_pos)

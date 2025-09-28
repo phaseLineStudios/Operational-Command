@@ -418,7 +418,6 @@ theme_override_fonts/italics_font = ExtResource("3_jtkf4")
 theme_override_fonts/mono_font = ExtResource("3_jtkf4")
 theme_override_font_sizes/normal_font_size = 12
 bbcode_enabled = true
-text = "[bgcolor=#3b3b3f][color=white] 14:02:02 [/color][/bgcolor][bgcolor=#399b9c][color=black]  INFO   [/color][/bgcolor] my message"
 
 [node name="ActionsRow" type="HBoxContainer" parent="Menu/TabContainer/Log/Column"]
 layout_mode = 2
