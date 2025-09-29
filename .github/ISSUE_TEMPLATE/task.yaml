@@ -1,0 +1,28 @@
+name: "Task"
+description: Detail task
+title: "Task Stub"
+labels: ["Type: Feature"]
+projects: ["operationalCommandTeam/1"]
+body:
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose
+      description: |
+        What is the purpose of this task?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What is the scope of this task?
+    validations:
+      required: true
+  - type: textarea
+    id: deliverables
+    attributes:
+      label: Deliverables
+      description: What should be delivered for this task to be completed?
+    validation:
+      required: true
