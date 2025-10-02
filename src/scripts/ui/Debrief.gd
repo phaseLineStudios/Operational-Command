@@ -71,10 +71,92 @@ func set_outcome(outcome: String) -> void:
 	_outcome = outcome
 	_update_title()
 
-func set_objectives_results(results: Array) -> void: pass
-func set_score(score: Dictionary) -> void: pass
-func set_casualties(c: Dictionary) -> void: pass
-func set_units(units: Array) -> void: pass
+func set_objectives_results(results: Array) -> void:
+	# Each item can be {title, completed} or {objective: Resource(.title/.name), completed}
+	_objectives_list.clear()
+	for r in results:
+		var title := ""
+		var completed := false
+		if r is Dictionary:
+			if r.has("title"):
+				title = str(r["title"])
+			elif r.has("objective"):
+				var obj = r["objective"]
+				if obj != null:
+					if obj is Object and obj.has_method("title"):
+						title = str(obj.title)
+					elif obj is Object and obj.has_method("name"):
+						title = str(obj.name)
+					else:
+						title = "Objective"
+			completed = bool(r.get("completed", false))
+		else:
+			title = str(r)
+		var prefix := "✔ " if completed else "✖ "
+		_objectives_list.add_item(prefix + title)
+	_request_align()
+
+func set_score(score: Dictionary) -> void:
+	_score = score.duplicate(true)
+	var base := int(_score.get("base", 0))
+	var bonus := int(_score.get("bonus", 0))
+	var penalty := int(_score.get("penalty", 0))
+	var total := int(_score.get("total", base + bonus - penalty))
+	_score["total"] = total
+	_score_base.text = str(base)
+	_score_bonus.text = str(bonus)
+	_score_penalty.text = str(penalty)
+	_score_total.text = str(total)
+	_request_align()
+
+func set_casualties(c: Dictionary) -> void:
+	_casualties = c.duplicate(true)
+	var f : Dictionary = _casualties.get("friendly", {})
+	var e : Dictionary = _casualties.get("enemy", {})
+	_cas_friend.text = "[b]Friendly[/b]\nKIA: %d\nWIA: %d\nVehicles: %d" % [
+		int(f.get("kia", 0)), int(f.get("wia", 0)), int(f.get("vehicles", 0))
+	]
+	_cas_enemy.text = "[b]Enemy[/b]\nKIA: %d\nWIA: %d\nVehicles: %d" % [
+		int(e.get("kia", 0)), int(e.get("wia", 0)), int(e.get("vehicles", 0))
+	]
+	_request_align()
+
+func set_units(units: Array) -> void:
+	_units_tree.clear()
+	_init_units_tree_columns()
+	var root := _units_tree.create_item()
+	for u in units:
+		var name := ""
+		var status := ""
+		var kills := 0
+		var wia := 0
+		var kia := 0
+		var xp := 0
+		if u is Dictionary:
+			if u.has("name"):
+				name = str(u["name"])
+			elif u.has("unit"):
+				var uu = u["unit"]
+				if uu != null:
+					if uu is Object and uu.has_method("title"):
+						name = str(uu.title)
+					elif uu is Object and uu.has_method("name"):
+						name = str(uu.name)
+			status = str(u.get("status", ""))
+			kills = int(u.get("kills", 0))
+			wia   = int(u.get("wia", 0))
+			kia   = int(u.get("kia", 0))
+			xp    = int(u.get("xp", 0))
+		else:
+			name = str(u)
+		var it := _units_tree.create_item(root)
+		it.set_text(0, name)
+		it.set_text(1, status)
+		it.set_text(2, str(kills))
+		it.set_text(3, str(wia))
+		it.set_text(4, str(kia))
+		it.set_text(5, str(xp))
+
 func set_recipients_from_units() -> void: pass
 func set_commendation_options(options: Array) -> void: pass
 func populate_from_dict(d: Dictionary) -> void: pass
