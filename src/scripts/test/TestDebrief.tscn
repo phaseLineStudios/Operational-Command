@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://7njq6nsmwena"]
+
+[ext_resource type="Script" uid="uid://bghtagsfgepjr" path="res://scripts/test/TestDebrief.gd" id="1_7v0hr"]
+[ext_resource type="PackedScene" uid="uid://dnbl0gfptk3h7" path="res://scenes/debrief.tscn" id="2_vooye"]
+
+[node name="TestDebrief" type="Node"]
+script = ExtResource("1_7v0hr")
+debrief_scene = ExtResource("2_vooye")
