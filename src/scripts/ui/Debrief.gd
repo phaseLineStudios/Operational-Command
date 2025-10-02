@@ -157,11 +157,38 @@ func set_units(units: Array) -> void:
 		it.set_text(4, str(kia))
 		it.set_text(5, str(xp))
 
-func set_recipients_from_units() -> void: pass
-func set_commendation_options(options: Array) -> void: pass
-func populate_from_dict(d: Dictionary) -> void: pass
-func get_selected_commendation() -> String: return ""
-func get_selected_recipient() -> String: return ""
+func set_recipients_from_units() -> void:
+	_recipient_dd.clear()
+	var root := _units_tree.get_root()
+	if root:
+		var ch := root.get_first_child()
+		while ch:
+			_recipient_dd.add_item(ch.get_text(0))
+			ch = ch.get_next()
+
+func set_commendation_options(options: Array) -> void:
+	_award_dd.clear()
+	for o in options:
+		_award_dd.add_item(str(o))
+
+func populate_from_dict(d: Dictionary) -> void:
+	if d.has("mission_name"): set_mission_name(str(d["mission_name"]))
+	if d.has("outcome"): set_outcome(str(d["outcome"]))
+	if d.has("objectives"): set_objectives_results(d["objectives"])
+	if d.has("score"): set_score(d["score"])
+	if d.has("casualties"): set_casualties(d["casualties"])
+	if d.has("units"):
+		set_units(d["units"])
+		set_recipients_from_units()
+	if d.has("commendations"): set_commendation_options(d["commendations"])
+	
+func get_selected_commendation() -> String:
+	if _award_dd.item_count == 0 or _award_dd.get_selected_id() == -1: return ""
+	return _award_dd.get_item_text(_award_dd.get_selected())
+
+func get_selected_recipient() -> String:
+	if _recipient_dd.item_count == 0 or _recipient_dd.get_selected_id() == -1: return ""
+	return _recipient_dd.get_item_text(_recipient_dd.get_selected())
 
 # ============ Buttons and payload ============
 
