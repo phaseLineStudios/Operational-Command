@@ -192,10 +192,27 @@ func get_selected_recipient() -> String:
 
 # ============ Buttons and payload ============
 
-func _on_assign_pressed() -> void: pass
-func _on_continue_pressed() -> void: pass
-func _on_retry_pressed() -> void: pass
-func _collect_payload() -> Dictionary: return {}
+func _on_assign_pressed() -> void:
+	var award := get_selected_commendation()
+	var recip := get_selected_recipient()
+	if award != "" and recip != "":
+		emit_signal("commendation_assigned", award, recip)
+
+func _on_continue_pressed() -> void:
+	emit_signal("continue_requested", _collect_payload())
+
+func _on_retry_pressed() -> void:
+	emit_signal("retry_requested", _collect_payload())
+
+func _collect_payload() -> Dictionary:
+	return {
+		"mission_name": _mission_name,
+		"outcome": _outcome,
+		"score": _score,
+		"casualties": _casualties,
+		"selected_commendation": get_selected_commendation(),
+		"selected_recipient": get_selected_recipient()
+	}
 
 # ============ Helpers ============
 
