@@ -1,18 +1,15 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://dnbl0gfptk3h7"]
 
 [node name="Debrief" type="Control"]
 layout_mode = 3
 anchors_preset = 15
-anchor_left = 0.0
-anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Root" type="VBoxContainer" parent="."]
-layout_mode = 2
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -31,19 +28,16 @@ theme_override_constants/separation = 10
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-size_flags_stretch_ratio = 1.0
 theme_override_constants/separation = 8
 
-; ============== LEFT: OBJECTIVES ==============
 [node name="ObjectivesPanel" type="Panel" parent="Root/Content/LeftCol"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 160)
-size_flags_horizontal = 3
-size_flags_vertical = 1
 clip_contents = true
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Root/Content/LeftCol/ObjectivesPanel"]
-layout_mode = 2
+layout_mode = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 6
@@ -58,16 +52,14 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 focus_mode = 0
 
-; ============== LEFT: SCORE (2×2) ==============
 [node name="ScorePanel" type="Panel" parent="Root/Content/LeftCol"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 110)
-size_flags_horizontal = 3
-size_flags_vertical = 1
 clip_contents = true
+custom_minimum_size = Vector2(0, 110)
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Root/Content/LeftCol/ScorePanel"]
-layout_mode = 2
+layout_mode = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 6
@@ -78,51 +70,53 @@ text = "Score"
 
 [node name="ScoreGrid" type="GridContainer" parent="Root/Content/LeftCol/ScorePanel/VBoxContainer"]
 layout_mode = 2
-columns = 4
 size_flags_horizontal = 3
+columns = 4
 
-; Row 1
 [node name="BaseKey" type="Label" parent="Root/Content/LeftCol/ScorePanel/VBoxContainer/ScoreGrid"]
 layout_mode = 2
 text = "Base"
+
 [node name="BaseValue" type="Label" parent="Root/Content/LeftCol/ScorePanel/VBoxContainer/ScoreGrid"]
 layout_mode = 2
 text = "0"
 horizontal_alignment = 2
+
 [node name="PenaltyKey" type="Label" parent="Root/Content/LeftCol/ScorePanel/VBoxContainer/ScoreGrid"]
 layout_mode = 2
 text = "Penalty"
+
 [node name="PenaltyValue" type="Label" parent="Root/Content/LeftCol/ScorePanel/VBoxContainer/ScoreGrid"]
 layout_mode = 2
 text = "0"
 horizontal_alignment = 2
 
-; Row 2
 [node name="BonusKey" type="Label" parent="Root/Content/LeftCol/ScorePanel/VBoxContainer/ScoreGrid"]
 layout_mode = 2
 text = "Bonus"
+
 [node name="BonusValue" type="Label" parent="Root/Content/LeftCol/ScorePanel/VBoxContainer/ScoreGrid"]
 layout_mode = 2
 text = "0"
 horizontal_alignment = 2
+
 [node name="TotalKey" type="Label" parent="Root/Content/LeftCol/ScorePanel/VBoxContainer/ScoreGrid"]
 layout_mode = 2
 text = "Total"
+
 [node name="TotalValue" type="Label" parent="Root/Content/LeftCol/ScorePanel/VBoxContainer/ScoreGrid"]
 layout_mode = 2
 text = "0"
 horizontal_alignment = 2
 
-; ============== LEFT: CASUALTIES ==============
 [node name="CasualtiesPanel" type="Panel" parent="Root/Content/LeftCol"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 170)
-size_flags_horizontal = 3
-size_flags_vertical = 1
 clip_contents = true
+custom_minimum_size = Vector2(0, 170)
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Root/Content/LeftCol/CasualtiesPanel"]
-layout_mode = 2
+layout_mode = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 6
@@ -133,19 +127,23 @@ text = "Casualties"
 
 [node name="Friendlies" type="RichTextLabel" parent="Root/Content/LeftCol/CasualtiesPanel/VBoxContainer"]
 layout_mode = 2
-bbcode_enabled = true
-fit_content = false
-scroll_active = false
 size_flags_horizontal = 3
-text = "[b]Friendly[/b]\nKIA: 0\nWIA: 0\nVehicles: 0"
+bbcode_enabled = true
+text = "[b]Friendly[/b]
+KIA: 0
+WIA: 0
+Vehicles: 0"
+scroll_active = false
 
 [node name="Enemies" type="RichTextLabel" parent="Root/Content/LeftCol/CasualtiesPanel/VBoxContainer"]
 layout_mode = 2
-bbcode_enabled = true
-fit_content = false
-scroll_active = false
 size_flags_horizontal = 3
-text = "[b]Enemy[/b]\nKIA: 0\nWIA: 0\nVehicles: 0"
+bbcode_enabled = true
+text = "[b]Enemy[/b]
+KIA: 0
+WIA: 0
+Vehicles: 0"
+scroll_active = false
 
 [node name="RightCol" type="VBoxContainer" parent="Root/Content"]
 layout_mode = 2
@@ -154,15 +152,14 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
 theme_override_constants/separation = 8
 
-; ============== RIGHT: UNITS ==============
 [node name="UnitsPanel" type="Panel" parent="Root/Content/RightCol"]
+clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-clip_contents = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Root/Content/RightCol/UnitsPanel"]
-layout_mode = 2
+layout_mode = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 6
@@ -173,28 +170,26 @@ text = "Units"
 
 [node name="Units" type="Tree" parent="Root/Content/RightCol/UnitsPanel/VBoxContainer"]
 layout_mode = 2
-columns = 6
-column_titles_visible = true
 size_flags_horizontal = 3
 size_flags_vertical = 3
+columns = 6
+column_titles_visible = true
 
-; ============== RIGHT: COMMENDATION ==============
 [node name="CommendationPanel" type="Panel" parent="Root/Content/RightCol"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 140)  ; default; script will auto-align on resize
-size_flags_horizontal = 3
-size_flags_vertical = 1
 clip_contents = true
+custom_minimum_size = Vector2(0, 140)
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Root/Content/RightCol/CommendationPanel"]
-layout_mode = 2
+layout_mode = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
 [node name="Label" type="Label" parent="Root/Content/RightCol/CommendationPanel/VBoxContainer"]
 layout_mode = 2
-text = "Commendation"
+text = "Commendation (or similar functionality if we need it alter, se as a placeholder)"
 
 [node name="RecipientRow" type="HBoxContainer" parent="Root/Content/RightCol/CommendationPanel/VBoxContainer"]
 layout_mode = 2
@@ -224,14 +219,12 @@ size_flags_horizontal = 3
 
 [node name="Assign" type="Button" parent="Root/Content/RightCol/CommendationPanel/VBoxContainer"]
 layout_mode = 2
-text = "Assign"
 size_flags_horizontal = 3
+text = "Assign"
 
-; ============== BOTTOM BAR ==============
 [node name="BottomBar" type="HBoxContainer" parent="Root"]
-layout_mode = 2
 custom_minimum_size = Vector2(0, 40)
-size_flags_vertical = 1
+layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="Retry" type="Button" parent="Root/BottomBar"]
@@ -240,8 +233,8 @@ text = "Retry"
 
 [node name="Title" type="Label" parent="Root/BottomBar"]
 layout_mode = 2
-text = "Debrief: <mission> (<outcome>)"
 size_flags_horizontal = 3
+text = "Debrief: <mission> (<outcome>)"
 horizontal_alignment = 1
 
 [node name="Continue" type="Button" parent="Root/BottomBar"]
