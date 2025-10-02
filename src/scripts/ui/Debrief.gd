@@ -6,12 +6,15 @@ signal continue_requested(payload: Dictionary)
 signal retry_requested(payload: Dictionary)
 signal commendation_assigned(commendation: String, recipient: String)
 
-# Bottom bar
+# --- Constants ---
+const MIN_COMMEND_PANEL_HEIGHT := 120.0
+
+# --- Bottom bar ---
 @onready var _title: Label         = $Root/BottomBar/Title
 @onready var _btn_retry: Button    = $Root/BottomBar/Retry
 @onready var _btn_continue: Button = $Root/BottomBar/Continue
 
-# Left column
+# --- Left column ---
 @onready var _objectives_list: ItemList = $Root/Content/LeftCol/ObjectivesPanel/VBoxContainer/Objectives
 @onready var _score_base: Label         = $Root/Content/LeftCol/ScorePanel/VBoxContainer/ScoreGrid/BaseValue
 @onready var _score_bonus: Label        = $Root/Content/LeftCol/ScorePanel/VBoxContainer/ScoreGrid/BonusValue
@@ -20,13 +23,13 @@ signal commendation_assigned(commendation: String, recipient: String)
 @onready var _cas_friend: RichTextLabel = $Root/Content/LeftCol/CasualtiesPanel/VBoxContainer/Friendlies
 @onready var _cas_enemy: RichTextLabel  = $Root/Content/LeftCol/CasualtiesPanel/VBoxContainer/Enemies
 
-# Right column
+# --- Right column ---
 @onready var _units_tree: Tree            = $Root/Content/RightCol/UnitsPanel/VBoxContainer/Units
 @onready var _recipient_dd: OptionButton  = $Root/Content/RightCol/CommendationPanel/VBoxContainer/RecipientRow/Recipient
 @onready var _award_dd: OptionButton      = $Root/Content/RightCol/CommendationPanel/VBoxContainer/AwardRow/Commendation
 @onready var _assign_btn: Button          = $Root/Content/RightCol/CommendationPanel/VBoxContainer/Assign
 
-# For right-side split alignment
+# --- For right-side split alignment ---
 @onready var _left_col: VBoxContainer        = $Root/Content/LeftCol
 @onready var _right_col: VBoxContainer       = $Root/Content/RightCol
 @onready var _left_objectives_panel: Panel   = $Root/Content/LeftCol/ObjectivesPanel
@@ -34,7 +37,7 @@ signal commendation_assigned(commendation: String, recipient: String)
 @onready var _left_casualties_panel: Panel   = $Root/Content/LeftCol/CasualtiesPanel
 @onready var _right_commend_panel: Panel     = $Root/Content/RightCol/CommendationPanel
 
-# State
+# --- State ---
 var _mission_name := ""
 var _outcome := "Failure"
 var _score := {"base": 0, "bonus": 0, "penalty": 0, "total": 0}
@@ -82,8 +85,10 @@ func set_objectives_results(results: Array) -> void:
 				var obj = r["objective"]
 				if obj != null:
 					if typeof(obj) == TYPE_DICTIONARY:
-						if obj.has("title"): title = str(obj["title"])
-						elif obj.has("name"): title = str(obj["name"])
+						if obj.has("title"):
+							title = str(obj["title"])
+						elif obj.has("name"):
+							title = str(obj["name"])
 					elif obj is Object:
 						var t = obj.get("title")
 						if t == null or str(t) == "":
@@ -113,8 +118,8 @@ func set_score(score: Dictionary) -> void:
 
 func set_casualties(c: Dictionary) -> void:
 	_casualties = c.duplicate(true)
-	var f : Dictionary = _casualties.get("friendly", {})
-	var e : Dictionary = _casualties.get("enemy", {})
+	var f: Dictionary = _casualties.get("friendly", {})
+	var e: Dictionary = _casualties.get("enemy", {})
 	_cas_friend.text = "[b]Friendly[/b]\nKIA: %d\nWIA: %d\nVehicles: %d" % [
 		int(f.get("kia", 0)), int(f.get("wia", 0)), int(f.get("vehicles", 0))
 	]
@@ -165,6 +170,8 @@ func set_units(units: Array) -> void:
 		it.set_text(4, str(kia))
 		it.set_text(5, str(xp))
 
+	_request_align() # if content size affects overall layout
+
 func set_recipients_from_units() -> void:
 	_recipient_dd.clear()
 	var root := _units_tree.get_root()
@@ -191,12 +198,12 @@ func populate_from_dict(d: Dictionary) -> void:
 	if d.has("commendations"): set_commendation_options(d["commendations"])
 
 func get_selected_commendation() -> String:
-	if _award_dd.item_count == 0 or _award_dd.get_selected_id() == -1: return ""
-	return _award_dd.get_item_text(_award_dd.get_selected())
+	var idx := _award_dd.get_selected()
+	return "" if idx == -1 else _award_dd.get_item_text(idx)
 
 func get_selected_recipient() -> String:
-	if _recipient_dd.item_count == 0 or _recipient_dd.get_selected_id() == -1: return ""
-	return _recipient_dd.get_item_text(_recipient_dd.get_selected())
+	var idx := _recipient_dd.get_selected()
+	return "" if idx == -1 else _recipient_dd.get_item_text(idx)
 
 # ============ Buttons and payload ============
 
@@ -258,13 +265,14 @@ func _init_units_tree_columns() -> void:
 			_units_tree.set_column_expand(i, true)
 			_units_tree.set_column_expand_ratio(i, 1)
 	else:
-		if _units_tree.has_method("set_column_custom_minimum_width"):
-			_units_tree.set_column_expand(0, true)
-			_units_tree.call("set_column_custom_minimum_width", 0, 180)
+		# Fallback for older builds
+		_units_tree.set_column_expand(0, true)
+		_units_tree.set_column_custom_minimum_width(0, 180)
 		for i in range(1, 6):
 			_units_tree.set_column_expand(i, false)
 
 func _request_align() -> void:
+	# Defer to next frame so Control sizes are up-to-date
 	call_deferred("_align_right_split")
 
 func _align_right_split() -> void:
@@ -281,7 +289,6 @@ func _align_right_split() -> void:
 		sep_l +
 		_left_casualties_panel.size.y
 	)
-	var min_comm := 120
-	var desired_comm: float = max(min_comm, _right_col.size.y - target_units_h - sep_r)
+	var desired_comm: float = max(MIN_COMMEND_PANEL_HEIGHT, _right_col.size.y - target_units_h - float(sep_r))
 
 	_right_commend_panel.custom_minimum_size = Vector2(0, desired_comm)
