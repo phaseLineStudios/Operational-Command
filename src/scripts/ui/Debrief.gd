@@ -60,6 +60,8 @@ func _ready() -> void:
 	
 	_units_tree.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_units_tree.custom_minimum_size = Vector2(0, 260)  # any sensible floor
+	_objectives_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_objectives_list.custom_minimum_size = Vector2(0, 120)
 	_align_right_split()
 
 func _notification(what):
@@ -103,7 +105,7 @@ func set_objectives_results(results: Array) -> void:
 
 		var prefix := "✔ " if completed else "✖ "
 		_objectives_list.add_item(prefix + title)
-
+	
 	_request_align()
 
 func set_score(score: Dictionary) -> void:
