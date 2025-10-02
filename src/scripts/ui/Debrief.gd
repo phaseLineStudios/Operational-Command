@@ -96,7 +96,46 @@ func _update_title() -> void:
 		_outcome
 	]
 
-func _assert_nodes() -> void: pass
-func _init_units_tree_columns() -> void: pass
-func _request_align() -> void: pass
-func _align_right_split() -> void: pass
+func _assert_nodes() -> void:
+	if _objectives_list == null: push_warning("Objectives ItemList missing.")
+	if _units_tree == null: push_warning("Units Tree missing.")
+	if _recipient_dd == null or _award_dd == null: push_warning("Commendation dropdowns missing.")
+	if _assign_btn == null: push_warning("Assign Button missing.")
+
+func _init_units_tree_columns() -> void:
+	if _units_tree == null:
+		return
+	_units_tree.columns = 6
+	_units_tree.column_titles_visible = true
+	_units_tree.set_column_title(0, "Unit")
+	_units_tree.set_column_title(1, "Status")
+	_units_tree.set_column_title(2, "Kills")
+	_units_tree.set_column_title(3, "WIA")
+	_units_tree.set_column_title(4, "KIA")
+	_units_tree.set_column_title(5, "XP")
+	_units_tree.set_column_expand(0, true)
+	for i in range(1, 6):
+		_units_tree.set_column_expand(i, false)
+
+func _request_align() -> void:
+	# Defer to the next frame so Control sizes have updated
+	call_deferred("_align_right_split")
+
+func _align_right_split() -> void:
+	# Target: bottom of Units equals bottom of Casualties
+	if _left_col == null or _right_col == null:
+		return
+	var sep_l := _left_col.get_theme_constant("separation")
+	var sep_r := _right_col.get_theme_constant("separation")
+
+	var target_units_h := (
+		_left_objectives_panel.size.y +
+		sep_l +
+		_left_score_panel.size.y +
+		sep_l +
+		_left_casualties_panel.size.y
+	)
+	var min_comm := 120
+	var desired_comm: float = max(min_comm, _right_col.size.y - target_units_h - sep_r)
+
+	_right_commend_panel.custom_minimum_size = Vector2(0, desired_comm)
