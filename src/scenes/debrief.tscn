@@ -40,7 +40,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Root/Content/LeftCol/ObjectivesPanel"]
-layout_mode = 3
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -55,10 +55,10 @@ layout_mode = 2
 text = "Objectives"
 
 [node name="Objectives" type="ItemList" parent="Root/Content/LeftCol/ObjectivesPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_minimum_size = Vector2(0, 120)
 focus_mode = 0
 
 [node name="ScorePanel" type="Panel" parent="Root/Content/LeftCol"]
@@ -68,7 +68,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Root/Content/LeftCol/ScorePanel"]
-layout_mode = 3
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -130,7 +130,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Root/Content/LeftCol/CasualtiesPanel"]
-layout_mode = 3
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -178,7 +178,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Root/Content/RightCol/UnitsPanel"]
-layout_mode = 3
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -193,10 +193,10 @@ layout_mode = 2
 text = "Units"
 
 [node name="Units" type="Tree" parent="Root/Content/RightCol/UnitsPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 260)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_minimum_size = Vector2(0, 260)
 columns = 6
 column_titles_visible = true
 
@@ -207,7 +207,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Root/Content/RightCol/CommendationPanel"]
-layout_mode = 3
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
