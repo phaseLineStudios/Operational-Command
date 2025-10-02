@@ -56,10 +56,6 @@ func _ready() -> void:
 	await get_tree().process_frame
 	_align_right_split()
 
-	# Editor preview
-	if Engine.is_editor_hint():
-		_show_placeholder()
-
 func _notification(what):
 	if what == NOTIFICATION_RESIZED:
 		_align_right_split()
@@ -104,4 +100,3 @@ func _assert_nodes() -> void: pass
 func _init_units_tree_columns() -> void: pass
 func _request_align() -> void: pass
 func _align_right_split() -> void: pass
-func _show_placeholder() -> void: pass
