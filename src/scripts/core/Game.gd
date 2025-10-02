@@ -5,6 +5,9 @@ extends Node
 ## to global services. Orchestrates the campaign loop: menus → briefing →
 ## tactical map → debrief → unit management.
 
+@export var debug_display_scene: PackedScene = preload("res://scenes/system/debug_display.tscn")
+var debug_display: CanvasLayer
+
 ## Emitted when a campaign is selected.
 signal campaign_selected(campaign_id: StringName)
 
@@ -21,6 +24,10 @@ var current_campaign: CampaignData
 var current_save_id: StringName = &""
 var current_scenario: ScenarioData
 var current_scenario_loadout: Dictionary = {}
+
+func _ready() -> void:
+	debug_display = debug_display_scene.instantiate()
+	get_tree().root.add_child.call_deferred(debug_display)
 
 ## Change to scene at [param path]; logs error if missing.
 func goto_scene(path: String) -> void:
