@@ -1,3 +1,92 @@
 [gd_scene format=3 uid="uid://dnbl0gfptk3h7"]
 
-[node name="Debrief" type="Node3D"]
+[node name="Debrief" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Root" type="VBoxContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+
+[node name="Content" type="HBoxContainer" parent="Root"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LeftCol" type="VBoxContainer" parent="Root/Content"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ObjectivesPanel" type="Panel" parent="Root/Content/LeftCol"]
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Root/Content/LeftCol/ObjectivesPanel"]
+layout_mode = 0
+text = "Objectives"
+
+[node name="ScorePanel" type="Panel" parent="Root/Content/LeftCol"]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Root/Content/LeftCol/ScorePanel"]
+layout_mode = 0
+text = "Score"
+
+[node name="CasualtiesPanel" type="Panel" parent="Root/Content/LeftCol"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Root/Content/LeftCol/CasualtiesPanel"]
+layout_mode = 0
+text = "Casualties"
+
+[node name="RightCol" type="VBoxContainer" parent="Root/Content"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="UnitsPanel" type="Panel" parent="Root/Content/RightCol"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Root/Content/RightCol/UnitsPanel"]
+layout_mode = 0
+text = "Units"
+
+[node name="CommendationPanel" type="Panel" parent="Root/Content/RightCol"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Root/Content/RightCol/CommendationPanel"]
+layout_mode = 0
+text = "Commendation"
+
+[node name="BottomBar" type="HBoxContainer" parent="Root"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="Retry" type="Button" parent="Root/BottomBar"]
+layout_mode = 2
+text = "Retry"
+
+[node name="Title" type="Label" parent="Root/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Debrief: <mission> (<outcome>)"
+horizontal_alignment = 1
+
+[node name="Continue" type="Button" parent="Root/BottomBar"]
+layout_mode = 2
+text = "Continue"
