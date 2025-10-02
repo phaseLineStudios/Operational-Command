@@ -253,10 +253,10 @@ func _init_units_tree_columns() -> void:
 	# Make col 0 take most of the width; others narrow
 	_units_tree.set_column_expand(0, true)
 	if _units_tree.has_method("set_column_expand_ratio"):
-		_units_tree.set_column_expand_ratio(0, 6.0)
+		_units_tree.set_column_expand_ratio(0, 6)
 		for i in range(1, 6):
 			_units_tree.set_column_expand(i, true)
-			_units_tree.set_column_expand_ratio(i, 1.0)
+			_units_tree.set_column_expand_ratio(i, 1)
 	else:
 		if _units_tree.has_method("set_column_custom_minimum_width"):
 			_units_tree.set_column_expand(0, true)
