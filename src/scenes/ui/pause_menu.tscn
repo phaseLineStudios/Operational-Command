@@ -1,0 +1,62 @@
+[gd_scene load_steps=4 format=3 uid="uid://7ta8ojkjg5rg"]
+
+[ext_resource type="Script" uid="uid://bhpoq688iquia" path="res://scripts/ui/PauseMenu.gd" id="1_6tw0m"]
+[ext_resource type="PackedScene" uid="uid://vwwe2bp0x2mn" path="res://scenes/settings.tscn" id="2_0lmf7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pu0qw"]
+content_margin_left = 300.0
+content_margin_top = 100.0
+content_margin_right = 300.0
+content_margin_bottom = 100.0
+bg_color = Color(0, 0, 0, 0.3254902)
+
+[node name="PauseMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6tw0m")
+
+[node name="MenuContainer" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_pu0qw")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Resume" type="Button" parent="MenuContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Resume"
+
+[node name="Restart" type="Button" parent="MenuContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Restart"
+
+[node name="Settings" type="Button" parent="MenuContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Settings"
+
+[node name="Scenarios" type="Button" parent="MenuContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Back to scenarios"
+
+[node name="MainMenu" type="Button" parent="MenuContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Back to main menu"
+
+[node name="SettingsDisplay" parent="." instance=ExtResource("2_0lmf7")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+back_scene = null
