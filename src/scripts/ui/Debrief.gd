@@ -32,7 +32,6 @@ signal commendation_assigned(commendation: String, recipient: String)
 @onready var _left_objectives_panel: Panel   = $Root/Content/LeftCol/ObjectivesPanel
 @onready var _left_score_panel: Panel        = $Root/Content/LeftCol/ScorePanel
 @onready var _left_casualties_panel: Panel   = $Root/Content/LeftCol/CasualtiesPanel
-@onready var _right_units_panel: Panel       = $Root/Content/RightCol/UnitsPanel
 @onready var _right_commend_panel: Panel     = $Root/Content/RightCol/CommendationPanel
 
 # State
@@ -51,29 +50,20 @@ func _ready() -> void:
 	_assign_btn.pressed.connect(_on_assign_pressed)
 	_init_units_tree_columns()
 	_update_title()
-	
 
-	# Use the panel so it’s not “unused” and ensure it expands
-	_right_units_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	# Initial alignment after one frame so sizes are valid
+	# Wait a frame so Control sizes are valid, then align
 	await get_tree().process_frame
-	
-	_units_tree.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_units_tree.custom_minimum_size = Vector2(0, 260)  # any sensible floor
-	_objectives_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_objectives_list.custom_minimum_size = Vector2(0, 120)
 	_align_right_split()
 
 func _notification(what):
 	if what == NOTIFICATION_RESIZED:
 		_align_right_split()
-		
+
 # ============ Public API ============
 
 func set_mission_name(mission_name: String) -> void:
 	_mission_name = mission_name
 	_update_title()
-	
 
 func set_outcome(outcome: String) -> void:
 	_outcome = outcome
@@ -105,7 +95,7 @@ func set_objectives_results(results: Array) -> void:
 
 		var prefix := "✔ " if completed else "✖ "
 		_objectives_list.add_item(prefix + title)
-	
+
 	_request_align()
 
 func set_score(score: Dictionary) -> void:
@@ -136,10 +126,8 @@ func set_casualties(c: Dictionary) -> void:
 func set_units(units: Array) -> void:
 	_units_tree.clear()
 	_init_units_tree_columns()
-	_units_tree.hide_root = true  # show only rows
 
 	var root := _units_tree.create_item()
-
 	for u in units:
 		var unit_name := ""
 		var status := ""
@@ -149,10 +137,8 @@ func set_units(units: Array) -> void:
 		var xp := 0
 
 		if u is Dictionary:
-			# direct name (fallback test data)
 			if u.has("name"):
 				unit_name = str(u["name"])
-			# UnitData object under "unit" (your project types)
 			elif u.has("unit"):
 				var ud = u["unit"]
 				if ud != null:
@@ -169,7 +155,6 @@ func set_units(units: Array) -> void:
 			kia    = int(u.get("kia", 0))
 			xp     = int(u.get("xp", 0))
 		else:
-			# plain string
 			unit_name = str(u)
 
 		var it := _units_tree.create_item(root)
@@ -179,11 +164,6 @@ func set_units(units: Array) -> void:
 		it.set_text(3, str(wia))
 		it.set_text(4, str(kia))
 		it.set_text(5, str(xp))
-
-	# keep first column flexible
-	_units_tree.set_column_expand(0, true)
-	for i in range(1, 6):
-		_units_tree.set_column_expand(i, false)
 
 func set_recipients_from_units() -> void:
 	_recipient_dd.clear()
@@ -209,7 +189,7 @@ func populate_from_dict(d: Dictionary) -> void:
 		set_units(d["units"])
 		set_recipients_from_units()
 	if d.has("commendations"): set_commendation_options(d["commendations"])
-	
+
 func get_selected_commendation() -> String:
 	if _award_dd.item_count == 0 or _award_dd.get_selected_id() == -1: return ""
 	return _award_dd.get_item_text(_award_dd.get_selected())
@@ -272,14 +252,12 @@ func _init_units_tree_columns() -> void:
 
 	# Make col 0 take most of the width; others narrow
 	_units_tree.set_column_expand(0, true)
-	# Godot 4: ratios are supported; guard in case of older API
 	if _units_tree.has_method("set_column_expand_ratio"):
 		_units_tree.set_column_expand_ratio(0, 6.0)
 		for i in range(1, 6):
 			_units_tree.set_column_expand(i, true)
 			_units_tree.set_column_expand_ratio(i, 1.0)
 	else:
-		# Fallback: force a minimum width on col 0 so it’s visible
 		if _units_tree.has_method("set_column_custom_minimum_width"):
 			_units_tree.set_column_expand(0, true)
 			_units_tree.call("set_column_custom_minimum_width", 0, 180)
@@ -287,7 +265,6 @@ func _init_units_tree_columns() -> void:
 			_units_tree.set_column_expand(i, false)
 
 func _request_align() -> void:
-	# Defer to the next frame so Control sizes have updated
 	call_deferred("_align_right_split")
 
 func _align_right_split() -> void:
