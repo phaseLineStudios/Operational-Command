@@ -52,6 +52,8 @@ func _ready() -> void:
 	_init_units_tree_columns()
 	_update_title()
 
+	# Use the panel so it’s not “unused” and ensure it expands
+	_right_units_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	# Initial alignment after one frame so sizes are valid
 	await get_tree().process_frame
 	_align_right_split()
@@ -62,8 +64,8 @@ func _notification(what):
 		
 # ============ Public API ============
 
-func set_mission_name(name: String) -> void:
-	_mission_name = name
+func set_mission_name(mission_name: String) -> void:
+	_mission_name = mission_name
 	_update_title()
 	
 
@@ -126,7 +128,7 @@ func set_units(units: Array) -> void:
 	_init_units_tree_columns()
 	var root := _units_tree.create_item()
 	for u in units:
-		var name := ""
+		var unit_name  := ""
 		var status := ""
 		var kills := 0
 		var wia := 0
@@ -134,7 +136,7 @@ func set_units(units: Array) -> void:
 		var xp := 0
 		if u is Dictionary:
 			if u.has("name"):
-				name = str(u["name"])
+				unit_name  = str(u["name"])
 			elif u.has("unit"):
 				var uu = u["unit"]
 				if uu != null:
@@ -150,7 +152,7 @@ func set_units(units: Array) -> void:
 		else:
 			name = str(u)
 		var it := _units_tree.create_item(root)
-		it.set_text(0, name)
+		it.set_text(0, unit_name )
 		it.set_text(1, status)
 		it.set_text(2, str(kills))
 		it.set_text(3, str(wia))
