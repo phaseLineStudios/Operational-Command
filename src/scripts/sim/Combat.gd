@@ -56,36 +56,28 @@ func calculate_damage(attacker: UnitData, defender: UnitData) -> void:
 
 ## Check the various conditions for if the combat is finished
 func check_abort_condition(attacker: UnitData, defender: UnitData) -> void:
-	
-	## insert how destroyed units should be handled here and emit signal
 	if defender.strength <= 0: 
-		print(defender.id + " is destroyed")
+		LogService.info(defender.id + " is [b]destroyed[/b]", "Combat.gd:62")
 		if attacker.morale <= 0.8:
 			attacker.morale += 0.2
 		unit_destroyed.emit()
 		abort_condition = 1
 		return
-		
-	## insert how surrendering defenders should be handled here and emit signal
+
 	elif defender.morale <= 0.2:
-		print(defender.id + " is surrendering")
+		LogService.info(defender.id + " is [b]surrendering[/b]", "Combat.gd:71")
 		unit_surrendered.emit()
 		abort_condition = 1
 		return
-		
-	## insert how retreating units should be handled here and emit signal
+
 	if called_retreat:
-		print(defender.id + " is retreating")
+		LogService.info(defender.id + " is [b]retreating[/b]", "Combat.gd:78")
 		unit_retreated.emit()
 		abort_condition = 1
 		return
 
 ##check unit mid combat status for testing of combat status
 func print_unit_status(attacker: UnitData, defender: UnitData) -> void:
-	print(attacker.id)
-	print(attacker.morale)
-	print(attacker.strength)
-	print(defender.id)
-	print(defender.morale)
-	print(defender.strength)
+	LogService.info("[b]Attacker(%s)[/b]\n\t%s\n\t%s" % [attacker.id, attacker.morale, attacker.strength], "Combat.gd:85")
+	LogService.info("[b]Defender(%s)[/b]\n\t%s\n\t%s" % [defender.id, defender.morale, defender.strength], "Combat.gd:86")
 	return
