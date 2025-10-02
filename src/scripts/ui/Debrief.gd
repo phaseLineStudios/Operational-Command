@@ -71,7 +71,10 @@ func set_mission_name(name: String) -> void:
 	_update_title()
 	
 
-func set_outcome(outcome: String) -> void: pass
+func set_outcome(outcome: String) -> void:
+	_outcome = outcome
+	_update_title()
+
 func set_objectives_results(results: Array) -> void: pass
 func set_score(score: Dictionary) -> void: pass
 func set_casualties(c: Dictionary) -> void: pass
