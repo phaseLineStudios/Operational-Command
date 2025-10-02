@@ -98,9 +98,9 @@ func _verify_project_types() -> void:
 					props.append(p.name)
 			print("[Verify] Props for", n, ":", props)
 
-func _global_class_path(name: String) -> String:
+func _global_class_path(class_path_name: String) -> String:
 	for cls in ProjectSettings.get_global_class_list():
-		if cls.get("class", "") == name:
+		if cls.get("class", "") == class_path_name:
 			return cls.get("path", "")
 	return ""
 

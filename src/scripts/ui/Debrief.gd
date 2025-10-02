@@ -74,28 +74,32 @@ func set_outcome(outcome: String) -> void:
 	_update_title()
 
 func set_objectives_results(results: Array) -> void:
-	# Each item can be {title, completed} or {objective: Resource(.title/.name), completed}
 	_objectives_list.clear()
 	for r in results:
 		var title := ""
 		var completed := false
+
 		if r is Dictionary:
 			if r.has("title"):
 				title = str(r["title"])
 			elif r.has("objective"):
 				var obj = r["objective"]
 				if obj != null:
-					if obj is Object and obj.has_method("title"):
-						title = str(obj.title)
-					elif obj is Object and obj.has_method("name"):
-						title = str(obj.name)
-					else:
-						title = "Objective"
+					if typeof(obj) == TYPE_DICTIONARY:
+						if obj.has("title"): title = str(obj["title"])
+						elif obj.has("name"): title = str(obj["name"])
+					elif obj is Object:
+						var t = obj.get("title")
+						if t == null or str(t) == "":
+							t = obj.get("name")
+						title = str(t if t != null else "Objective")
 			completed = bool(r.get("completed", false))
 		else:
 			title = str(r)
+
 		var prefix := "✔ " if completed else "✖ "
 		_objectives_list.add_item(prefix + title)
+
 	_request_align()
 
 func set_score(score: Dictionary) -> void:
@@ -127,37 +131,52 @@ func set_units(units: Array) -> void:
 	_units_tree.clear()
 	_init_units_tree_columns()
 	var root := _units_tree.create_item()
+
 	for u in units:
-		var unit_name  := ""
+		var unit_name := ""
 		var status := ""
 		var kills := 0
 		var wia := 0
 		var kia := 0
 		var xp := 0
+
 		if u is Dictionary:
+			# 1) prefer direct name field
 			if u.has("name"):
-				unit_name  = str(u["name"])
+				unit_name = str(u["name"])
+			# 2) or a UnitData object in "unit" with .title/.name
 			elif u.has("unit"):
 				var uu = u["unit"]
 				if uu != null:
-					if uu is Object and uu.has_method("title"):
-						name = str(uu.title)
-					elif uu is Object and uu.has_method("name"):
-						name = str(uu.name)
+					var t = uu.get("title")
+					if t != null and str(t) != "":
+						unit_name = str(t)
+					else:
+						var n = uu.get("name")
+						if n != null and str(n) != "":
+							unit_name = str(n)
+
 			status = str(u.get("status", ""))
-			kills = int(u.get("kills", 0))
-			wia   = int(u.get("wia", 0))
-			kia   = int(u.get("kia", 0))
-			xp    = int(u.get("xp", 0))
+			kills  = int(u.get("kills", 0))
+			wia    = int(u.get("wia", 0))
+			kia    = int(u.get("kia", 0))
+			xp     = int(u.get("xp", 0))
 		else:
-			name = str(u)
+			# 3) fallback: plain string
+			unit_name = str(u)
+
 		var it := _units_tree.create_item(root)
-		it.set_text(0, unit_name )
+		it.set_text(0, unit_name)
 		it.set_text(1, status)
 		it.set_text(2, str(kills))
 		it.set_text(3, str(wia))
 		it.set_text(4, str(kia))
 		it.set_text(5, str(xp))
+
+	# keep column 0 stretchy for readability
+	_units_tree.set_column_expand(0, true)
+	for i in range(1, 6):
+		_units_tree.set_column_expand(i, false)
 
 func set_recipients_from_units() -> void:
 	_recipient_dd.clear()
