@@ -44,7 +44,7 @@ func start(prim: Array[StringName], scenario: StringName = &"") -> void:
 	for id in prim:
 		_objective_states[id] = ObjectiveState.PENDING
 	_recompute_score()
-
+	LogService.info("Started Scenario", "MissionResolution.gd:47")
 
 ## Advance internal timer. Call from mission loop.
 func tick(dt: float) -> void:
@@ -64,6 +64,7 @@ func set_objective_state(id: StringName, state: ObjectiveState) -> void:
 	_objective_states[id] = state
 	emit_signal("objective_updated", id, state)
 	_recompute_score()
+	LogService.trace("Changed %s's Objective state" % id, "MissionResolution.gd:67")
 
 ## Record casualties (aggregated).
 func add_casualties(friendly: int = 0, enemy: int = 0) -> void:
@@ -72,6 +73,7 @@ func add_casualties(friendly: int = 0, enemy: int = 0) -> void:
 	_casualties.friendly += max(0, friendly)
 	_casualties.enemy += max(0, enemy)
 	_recompute_score()
+	LogService.trace("Updated casualties", "MissionResolution.gd:76")
 
 ## Record fully destroyed friendly unit(s) (e.g., wiped marker).
 func add_units_lost(count: int = 1) -> void:
@@ -79,6 +81,7 @@ func add_units_lost(count: int = 1) -> void:
 		return
 	_units_lost += max(count, 0)
 	_recompute_score()
+	LogService.trace("Updated lost units", "MissionResolution.gd:84")
 
 ## Compute current best-guess outcome (not final).
 func evaluate_outcome() -> MissionOutcome:
@@ -111,6 +114,7 @@ func finalize(abort: bool = false) -> Dictionary:
 	_outcome = MissionOutcome.ABORTED if abort else evaluate_outcome()
 	var summary := to_summary_payload()
 	emit_signal("mission_finalized", _outcome, summary)
+	LogService.info("Finalized Scenario with outcome: %s" % str(MissionOutcome.keys()[_outcome]), "MissionResolution.gd:117")
 	return summary
 
 ## Debrief/persistence payload; stable contract for other screens.
