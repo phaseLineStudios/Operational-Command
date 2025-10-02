@@ -32,7 +32,7 @@ func _reset_values():
 ## Show/hide dialog
 func show_dialog(state: bool):
 	if not editor.ctx.data:
-		print("Must create a scenario first")
+		LogService.warning("Must create a scenario first", "WeatherDialog.gd:35")
 		return
 		
 	if state:

@@ -125,19 +125,19 @@ func check_abort_condition(attacker: ScenarioUnit, defender: ScenarioUnit) -> vo
 		return
 
 	if defender.unit.state_strength <= 0.5:
-		print(defender.callsign + " is destroyed")
+		LogService.info(defender.id + " is [b]destroyed[/b]", "Combat.gd:62")
 		if attacker.unit.morale <= 0.8:
 			attacker.unit.morale += 0.2
 		unit_destroyed.emit()
 		abort_condition = true
 		return
 	elif defender.unit.morale <= 0.2:
-		print(defender.callsign + " is surrendering")
+		LogService.info(defender.id + " is [b]surrendering[/b]", "Combat.gd:71")
 		unit_surrendered.emit()
 		abort_condition = true
 		return
 	if called_retreat:
-		print(defender.callsign + " is retreating")
+		LogService.info(defender.id + " is [b]retreating[/b]", "Combat.gd:78")
 		unit_retreated.emit()
 		abort_condition = true
 

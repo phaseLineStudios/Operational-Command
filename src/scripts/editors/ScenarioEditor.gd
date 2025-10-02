@@ -277,7 +277,7 @@ func _set_tool(tool: ScenarioToolBase) -> void:
 
 ## Clear current tool
 func _clear_tool() -> void:
-	print("clear")
+	LogService.trace("clear tool", "ScenarioEditor.gd:280")
 	_set_tool(null)
 
 ## Remove all hint widgets from the hint bar
