@@ -51,11 +51,15 @@ func _ready() -> void:
 	_assign_btn.pressed.connect(_on_assign_pressed)
 	_init_units_tree_columns()
 	_update_title()
+	
 
 	# Use the panel so it’s not “unused” and ensure it expands
 	_right_units_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	# Initial alignment after one frame so sizes are valid
 	await get_tree().process_frame
+	
+	_units_tree.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_units_tree.custom_minimum_size = Vector2(0, 260)  # any sensible floor
 	_align_right_split()
 
 func _notification(what):
@@ -130,6 +134,8 @@ func set_casualties(c: Dictionary) -> void:
 func set_units(units: Array) -> void:
 	_units_tree.clear()
 	_init_units_tree_columns()
+	_units_tree.hide_root = true  # show only rows
+
 	var root := _units_tree.create_item()
 
 	for u in units:
@@ -141,28 +147,27 @@ func set_units(units: Array) -> void:
 		var xp := 0
 
 		if u is Dictionary:
-			# 1) prefer direct name field
+			# direct name (fallback test data)
 			if u.has("name"):
 				unit_name = str(u["name"])
-			# 2) or a UnitData object in "unit" with .title/.name
+			# UnitData object under "unit" (your project types)
 			elif u.has("unit"):
-				var uu = u["unit"]
-				if uu != null:
-					var t = uu.get("title")
+				var ud = u["unit"]
+				if ud != null:
+					var t = ud.get("title")
 					if t != null and str(t) != "":
 						unit_name = str(t)
 					else:
-						var n = uu.get("name")
+						var n = ud.get("name")
 						if n != null and str(n) != "":
 							unit_name = str(n)
-
 			status = str(u.get("status", ""))
 			kills  = int(u.get("kills", 0))
 			wia    = int(u.get("wia", 0))
 			kia    = int(u.get("kia", 0))
 			xp     = int(u.get("xp", 0))
 		else:
-			# 3) fallback: plain string
+			# plain string
 			unit_name = str(u)
 
 		var it := _units_tree.create_item(root)
@@ -173,7 +178,7 @@ func set_units(units: Array) -> void:
 		it.set_text(4, str(kia))
 		it.set_text(5, str(xp))
 
-	# keep column 0 stretchy for readability
+	# keep first column flexible
 	_units_tree.set_column_expand(0, true)
 	for i in range(1, 6):
 		_units_tree.set_column_expand(i, false)
@@ -254,15 +259,30 @@ func _init_units_tree_columns() -> void:
 		return
 	_units_tree.columns = 6
 	_units_tree.column_titles_visible = true
+	_units_tree.hide_root = true
+
 	_units_tree.set_column_title(0, "Unit")
 	_units_tree.set_column_title(1, "Status")
 	_units_tree.set_column_title(2, "Kills")
 	_units_tree.set_column_title(3, "WIA")
 	_units_tree.set_column_title(4, "KIA")
 	_units_tree.set_column_title(5, "XP")
+
+	# Make col 0 take most of the width; others narrow
 	_units_tree.set_column_expand(0, true)
-	for i in range(1, 6):
-		_units_tree.set_column_expand(i, false)
+	# Godot 4: ratios are supported; guard in case of older API
+	if _units_tree.has_method("set_column_expand_ratio"):
+		_units_tree.set_column_expand_ratio(0, 6.0)
+		for i in range(1, 6):
+			_units_tree.set_column_expand(i, true)
+			_units_tree.set_column_expand_ratio(i, 1.0)
+	else:
+		# Fallback: force a minimum width on col 0 so it’s visible
+		if _units_tree.has_method("set_column_custom_minimum_width"):
+			_units_tree.set_column_expand(0, true)
+			_units_tree.call("set_column_custom_minimum_width", 0, 180)
+		for i in range(1, 6):
+			_units_tree.set_column_expand(i, false)
 
 func _request_align() -> void:
 	# Defer to the next frame so Control sizes have updated
