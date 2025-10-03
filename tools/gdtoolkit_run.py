@@ -67,6 +67,19 @@ def _run(color: bool, title: str, cmd: List[str]) -> int:
         print(_colorize(color, "✖ Failed", Ansi.RED))
     return proc.returncode
 
+def _run_format(color: bool, paths: list[str], check: bool, line_length: int) -> int:
+    """Run gdformat on the given paths."""
+    cmd = ["gdformat"]
+    if check:
+        cmd.append("--check")
+    cmd += ["--line-length", str(line_length), *paths]
+    return _run(color, "gdformat", cmd)
+
+def _run_lint(color: bool, paths: list[str]) -> int:
+    """Run gdlint on the given paths."""
+    cmd = ["gdlint", *paths]
+    return _run(color, "gdlint", cmd)
+
 def main() -> None:
     ap = argparse.ArgumentParser(
         description="Format & lint GDScript."
@@ -89,12 +102,26 @@ def main() -> None:
         help="Colorize output (default: auto).",
     )
     ap.add_argument(
+        "--format-only", 
+        action="store_true", 
+        help="Run formatter only."
+    )
+    ap.add_argument(
+        "--lint-only", 
+        action="store_true", 
+        help="Run linter only."
+    )
+    ap.add_argument(
         "paths",
         nargs="*",
         default=["."],
         help="Files/dirs to process (default: current directory).",
     )
     args = ap.parse_args()
+
+    if args.format_only and args.lint_only:
+        print("Choose either --format-only or --lint-only (not both).", file=sys.stderr)
+        sys.exit(2)
 
     if args.color == "always":
         color = True
@@ -116,22 +143,23 @@ def main() -> None:
             )
         )
 
-    gdformat_cmd = ["gdformat"]
-    if args.check:
-        gdformat_cmd.append("--check")
-    gdformat_cmd += ["--line-length", str(args.line_length), *args.paths]
+    if args.format_only:
+        print(_colorize(color, "[2/2] Running formatter", Ansi.BOLD, Ansi.CYAN))
+        sys.exit(_run_format(color, args.paths, args.check, args.line_length))
 
-    gdlint_cmd = ["gdlint", *args.paths]
+    if args.lint_only:
+        print(_colorize(color, "[2/2] Running linter", Ansi.BOLD, Ansi.CYAN))
+        sys.exit(_run_lint(color, args.paths))
 
     print(_colorize(color, "[2/3] Running formatter", Ansi.BOLD, Ansi.CYAN))
-    rc_fmt = _run(color, "gdformat", gdformat_cmd)
+    rc_fmt = _run_format(color, args.paths, args.check, args.line_length)
     if rc_fmt != 0:
         if args.check:
             print(_colorize(color, "Hint: run without --check to apply formatting.", Ansi.DIM))
         sys.exit(rc_fmt)
 
     print(_colorize(color, "[3/3] Running linter", Ansi.BOLD, Ansi.CYAN))
-    rc_lint = _run(color, "gdlint", gdlint_cmd)
+    rc_lint = _run_lint(color, args.paths)
     sys.exit(rc_lint)
 
 if __name__ == "__main__":

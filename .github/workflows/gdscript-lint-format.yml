@@ -1,35 +1,36 @@
+# .github/workflows/gdscript-lint-format.yml
 name: GDScript Lint & Format
 
 on:
-    pull_request:
-      paths:
-        - "**/*.gd"
-        - "**/*.gdshader"
-        - "tools/gdtoolkit_run.py"
-    push:
-      branches: [ main ]
-      paths:
-        - "**/*.gd"
-        - "**/*.gdshader"
-        - "tools/gdtoolkit_run.py"
+  pull_request:
+    paths:
+      - "**/*.gd"
+      - "**/*.gdshader"
+      - "tools/gdtoolkit_run.py"
+      - "tools/requirements-gdtoolkit.txt"
+  push:
+    branches: [ main ]
+    paths:
+      - "**/*.gd"
+      - "**/*.gdshader"
+      - "tools/gdtoolkit_run.py"
+      - "tools/requirements-gdtoolkit.txt"
 
 concurrency:
   group: gdtoolkit-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  gdtoolkit:
+  format:
+    name: Format (check-only)
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
-        
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
       - name: Create cache manifest
         run: |
           mkdir -p tools
@@ -45,6 +46,39 @@ jobs:
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
 
-      - name: Format & Lint (check-only)
+      - name: gdformat --check
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
-          python tools/gdtoolkit_run.py --check --line-length 100 ./src/
+          python tools/gdtoolkit_run.py --format-only --check --line-length 100 --color=always ./src/
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Create cache manifest
+        run: |
+          mkdir -p tools
+          echo 'gdtoolkit==4.*' > tools/requirements-gdtoolkit.txt
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: "tools/requirements-gdtoolkit.txt"
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: gdlint
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          python tools/gdtoolkit_run.py --lint-only --color=always ./src/
