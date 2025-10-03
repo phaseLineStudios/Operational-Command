@@ -153,7 +153,7 @@ func _drop_data(_pos: Vector2, data: Variant) -> void:
 
 ## When filled, allow dragging the assigned unit out to pool or another slot.
 func _get_drag_data(_pos: Vector2) -> Variant:
-	if _assigned_unit.is_empty():
+	if _assigned_unit == null:
 		return null
 	var p := Label.new()
 	p.text = _assigned_unit.title
