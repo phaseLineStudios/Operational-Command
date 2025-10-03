@@ -28,7 +28,7 @@ enum unitSize { Team, Squad, Platoon, Company, Battalion }
 ## Number of personnel in the unit at full strength
 @export var strength: int = 36
 ## Dictionary of equipment definitions
-@export var equipment: Dictionary
+@export var equipment: Dictionary = {}
 ## Average experience level
 @export var experience: float = 0.0
 
@@ -60,7 +60,7 @@ enum unitSize { Team, Squad, Platoon, Company, Battalion }
 ## Supply throughput { "supply_type": (int)amount }
 @export var throughput: Dictionary = {}
 ## Equipment tag codes associated with this unit [ "AMMO_PALLET" ]
-@export var equipment_tags: Array[String]
+@export var equipment_tags: Array[String] = []
 
 @export_category("AI")
 ## Doctrine code used by the AI for this unit.
