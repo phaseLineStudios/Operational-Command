@@ -7,12 +7,12 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 offset_left = 8.0
 offset_top = 8.0
 offset_right = -8.0
 offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1")
 
 [node name="Root" type="VBoxContainer" parent="."]
@@ -48,12 +48,12 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 offset_left = 6.0
 offset_top = 3.0
 offset_right = -3.0
 offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 6
@@ -80,12 +80,12 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 offset_left = 6.0
 offset_top = 3.0
 offset_right = -3.0
 offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 6
@@ -147,12 +147,12 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 offset_left = 6.0
 offset_top = 3.0
 offset_right = -3.0
 offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 6
@@ -165,23 +165,23 @@ text = "Casualties"
 layout_mode = 2
 size_flags_horizontal = 3
 bbcode_enabled = true
-fit_content = true
-scroll_active = false
 text = "[b]Friendly[/b]
 KIA: 0
 WIA: 0
 Vehicles: 0"
+fit_content = true
+scroll_active = false
 
 [node name="Enemies" type="RichTextLabel" parent="Root/Content/LeftCol/CasualtiesPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 bbcode_enabled = true
-fit_content = true
-scroll_active = false
 text = "[b]Enemy[/b]
 KIA: 0
 WIA: 0
 Vehicles: 0"
+fit_content = true
+scroll_active = false
 
 [node name="RightCol" type="VBoxContainer" parent="Root/Content"]
 layout_mode = 2
@@ -202,12 +202,12 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 offset_left = 6.0
 offset_top = 3.0
 offset_right = -3.0
 offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 6
@@ -237,12 +237,12 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 offset_left = 6.0
 offset_top = 3.0
 offset_right = -3.0
 offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 6
