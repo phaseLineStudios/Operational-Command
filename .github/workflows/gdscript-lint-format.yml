@@ -1,5 +1,4 @@
-# .github/workflows/gdscript-lint-format.yml
-name: GDScript Lint & Format
+name: GDScript
 
 on:
   pull_request:
@@ -22,7 +21,7 @@ concurrency:
 
 jobs:
   format:
-    name: Format (check-only)
+    name: Format
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
