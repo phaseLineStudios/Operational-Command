@@ -121,7 +121,7 @@ func _apply_style() -> void:
 ## On click, emit inspect signal if a unit is assigned.
 func _gui_input(e: InputEvent) -> void:
 	if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
-		if not _assigned_unit.is_empty():
+		if _assigned_unit != null:
 			emit_signal("request_inspect_unit", _assigned_unit)
 
 ## Validate payload type and role compatibility for dropping onto this slot.
