@@ -46,44 +46,68 @@ class_name MarginLayer
 var data: TerrainData
 var _dirty := false
 
+
 ## API to set terrain data
 func set_data(d: TerrainData) -> void:
 	data = d
 	queue_redraw()
 
+
 ## Apply root style
 func apply_style(from: Node) -> void:
-	if from == null: 
+	if from == null:
 		return
-	if "title_size" in from: title_size = from.title_size
-	if "margin_color" in from: margin_color = from.margin_color
-	if "margin_top_px" in from: margin_top_px = from.margin_top_px
-	if "margin_bottom_px" in from: margin_bottom_px = from.margin_bottom_px
-	if "margin_left_px" in from: margin_left_px = from.margin_left_px
-	if "margin_right_px" in from: margin_right_px = from.margin_right_px
-	if "margin_label_every_m" in from: margin_label_every_m = from.margin_label_every_m
-	if "label_color" in from: label_color = from.label_color
-	if "label_font" in from: label_font = from.label_font
-	if "label_size" in from: label_size = from.label_size
-	if "show_top" in from: show_top = from.show_top
-	if "show_bottom" in from: show_bottom = from.show_bottom
-	if "show_left" in from: show_left = from.show_left
-	if "show_right" in from: show_right = from.show_right
-	if "base_border_px" in from: base_border_px = from.base_border_px
-	if "offset_top_px" in from: offset_top_px = from.offset_top_px
-	if "offset_bottom_px" in from: offset_bottom_px = from.offset_bottom_px
-	if "offset_left_px" in from: offset_left_px = from.offset_left_px
-	if "offset_right_px" in from: offset_right_px = from.offset_right_px
+	if "title_size" in from:
+		title_size = from.title_size
+	if "margin_color" in from:
+		margin_color = from.margin_color
+	if "margin_top_px" in from:
+		margin_top_px = from.margin_top_px
+	if "margin_bottom_px" in from:
+		margin_bottom_px = from.margin_bottom_px
+	if "margin_left_px" in from:
+		margin_left_px = from.margin_left_px
+	if "margin_right_px" in from:
+		margin_right_px = from.margin_right_px
+	if "margin_label_every_m" in from:
+		margin_label_every_m = from.margin_label_every_m
+	if "label_color" in from:
+		label_color = from.label_color
+	if "label_font" in from:
+		label_font = from.label_font
+	if "label_size" in from:
+		label_size = from.label_size
+	if "show_top" in from:
+		show_top = from.show_top
+	if "show_bottom" in from:
+		show_bottom = from.show_bottom
+	if "show_left" in from:
+		show_left = from.show_left
+	if "show_right" in from:
+		show_right = from.show_right
+	if "base_border_px" in from:
+		base_border_px = from.base_border_px
+	if "offset_top_px" in from:
+		offset_top_px = from.offset_top_px
+	if "offset_bottom_px" in from:
+		offset_bottom_px = from.offset_bottom_px
+	if "offset_left_px" in from:
+		offset_left_px = from.offset_left_px
+	if "offset_right_px" in from:
+		offset_right_px = from.offset_right_px
+
 
 ## Mark dirty for redraw
 func mark_dirty():
 	_dirty = true
 	queue_redraw()
 
+
 ## Redraw margin on resize
 func _notification(what):
 	if what == NOTIFICATION_THEME_CHANGED or what == NOTIFICATION_RESIZED:
 		queue_redraw()
+
 
 func _draw() -> void:
 	var margin_sb := StyleBoxFlat.new()
@@ -93,7 +117,7 @@ func _draw() -> void:
 	margin_sb.content_margin_left = margin_left_px
 	margin_sb.content_margin_right = margin_right_px
 	add_theme_stylebox_override("panel", margin_sb)
-	
+
 	if data == null or label_font == null:
 		return
 
@@ -110,7 +134,7 @@ func _draw() -> void:
 	var map_h := float(data.height_m) - base_border_px * 2.0
 	var map_right := map_left + map_w
 	var map_bottom := map_top + map_h
-	
+
 	var ascent: float
 	var height: float
 	if data.name != "":
@@ -126,8 +150,10 @@ func _draw() -> void:
 	var start_y := 0
 	if data.has_method("get"):
 		if data.has_method("_get") or true:
-			if "grid_start_x" in data: start_x = int(data.grid_start_x)
-			if "grid_start_y" in data: start_y = int(data.grid_start_y)
+			if "grid_start_x" in data:
+				start_x = int(data.grid_start_x)
+			if "grid_start_y" in data:
+				start_y = int(data.grid_start_y)
 
 	var every := float(max(1, margin_label_every_m))
 	ascent = label_font.get_ascent(label_size)
@@ -137,7 +163,8 @@ func _draw() -> void:
 		var i := 0
 		while true:
 			var m := i * every
-			if m > map_w: break
+			if m > map_w:
+				break
 			var screen_x := map_left + m
 			var num := str(start_x + i)
 			if show_top:
@@ -149,8 +176,9 @@ func _draw() -> void:
 	if every > 0.0 and (show_left or show_right):
 		var j := 0
 		while true:
-			var m2 := (j * every)
-			if m2 > map_h: break
+			var m2 := j * every
+			if m2 > map_h:
+				break
 			var screen_y := map_top + m2
 			var num2 := str(start_y + j)
 			if show_left:
@@ -159,14 +187,18 @@ func _draw() -> void:
 				_draw_text_middle(num2, Vector2(map_right + offset_right_px, screen_y), false, ascent, height)
 			j += 1
 
+
 ## Helper function to draw horizontally centered text
 func _draw_text_center(text: String, pos: Vector2, font_size: int = label_size) -> void:
 	var s := font_size
 	var fm := label_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, s)
 	draw_string(label_font, pos - Vector2(fm.x * 0.5, 0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, s, label_color)
 
+
 ## Helper function to draw vertically centered text
-func _draw_text_middle(text: String, pos: Vector2, align_right: bool, ascent: float, height: float, font_size: int = label_size) -> void:
+func _draw_text_middle(
+	text: String, pos: Vector2, align_right: bool, ascent: float, height: float, font_size: int = label_size
+) -> void:
 	var s := font_size
 	var fm := label_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, s)
 	var baseline_y := pos.y + (height - ascent)

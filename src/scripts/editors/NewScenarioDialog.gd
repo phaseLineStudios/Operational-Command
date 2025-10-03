@@ -25,6 +25,7 @@ var thumbnail: Texture2D
 var dialog_mode: DialogMode = DialogMode.CREATE
 var working: ScenarioData
 
+
 func _ready():
 	create_btn.pressed.connect(_on_primary_pressed)
 	close_btn.pressed.connect(func(): show_dialog(false))
@@ -32,6 +33,7 @@ func _ready():
 	terrain_btn.pressed.connect(_on_terrain_select)
 	thumb_btn.pressed.connect(_on_thumbnail_select)
 	thumb_clear.pressed.connect(_on_thumbnail_clear)
+
 
 func _on_primary_pressed() -> void:
 	match dialog_mode:
@@ -56,6 +58,7 @@ func _on_primary_pressed() -> void:
 			emit_signal("request_update", working)
 	show_dialog(false)
 
+
 func _on_terrain_select() -> void:
 	var dlg := FileDialog.new()
 	dlg.file_mode = FileDialog.FILE_MODE_OPEN_FILE
@@ -63,16 +66,18 @@ func _on_terrain_select() -> void:
 	dlg.add_filter("*.tres, *.res ; TerrainData")
 	add_child(dlg)
 	dlg.popup_centered_ratio(0.5)
-	dlg.file_selected.connect(func(path):
-		var res := ResourceLoader.load(path)
-		if res is TerrainData:
-			terrain = res
-			terrain_path.text = path
-		else:
-			push_error("Not a TerrainData: %s" % path)
-		dlg.queue_free()
+	dlg.file_selected.connect(
+		func(path):
+			var res := ResourceLoader.load(path)
+			if res is TerrainData:
+				terrain = res
+				terrain_path.text = path
+			else:
+				push_error("Not a TerrainData: %s" % path)
+			dlg.queue_free()
 	)
 	dlg.canceled.connect(func(): dlg.queue_free())
+
 
 func _on_thumbnail_select() -> void:
 	var dlg := FileDialog.new()
@@ -81,26 +86,29 @@ func _on_thumbnail_select() -> void:
 	dlg.add_filter("*.png, *.jpg ; Images")
 	add_child(dlg)
 	dlg.popup_centered_ratio(0.5)
-	dlg.file_selected.connect(func(path):
-		var res := Image.new()
-		var err := res.load(path)
-		if err == OK:
-			var tex = ImageTexture.create_from_image(res)
-			
-			thumbnail = tex
-			thumb_path.text = path
-			thumb_preview.texture = tex
-		else:
-			push_error("Not an Image: %s" % path)
-		dlg.queue_free()
+	dlg.file_selected.connect(
+		func(path):
+			var res := Image.new()
+			var err := res.load(path)
+			if err == OK:
+				var tex = ImageTexture.create_from_image(res)
+
+				thumbnail = tex
+				thumb_path.text = path
+				thumb_preview.texture = tex
+			else:
+				push_error("Not an Image: %s" % path)
+			dlg.queue_free()
 	)
 	dlg.canceled.connect(func(): dlg.queue_free())
+
 
 func _on_thumbnail_clear() -> void:
 	thumb_path.text = ""
 	thumb_preview.texture = null
 	thumbnail = null
 	pass
+
 
 ## Reset values before popup (only when hiding)
 func _reset_values() -> void:
@@ -115,6 +123,7 @@ func _reset_values() -> void:
 	dialog_mode = DialogMode.CREATE
 	_title_button_from_mode()
 
+
 ## Preload fields from existing ScenarioData.
 func _load_from_data(d: ScenarioData) -> void:
 	title_input.text = d.title
@@ -127,6 +136,7 @@ func _load_from_data(d: ScenarioData) -> void:
 	else:
 		terrain_path.text = ""
 
+
 ## Update window title and primary button text to reflect mode.
 func _title_button_from_mode() -> void:
 	if dialog_mode == DialogMode.CREATE:
@@ -135,6 +145,7 @@ func _title_button_from_mode() -> void:
 	else:
 		title = "Edit Scenario"
 		create_btn.text = "Save"
+
 
 ## Show/hide dialog.
 func show_dialog(state: bool, existing: ScenarioData = null) -> void:

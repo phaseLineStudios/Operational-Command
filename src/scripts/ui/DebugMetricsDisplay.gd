@@ -42,7 +42,7 @@ enum Style {
 	HIDDEN,
 	VISIBLE_COMPACT,
 	VISIBLE_DETAILED,
-	MAX,  
+	MAX,
 }
 
 var style := Style.HIDDEN:
@@ -80,8 +80,10 @@ var frametime_gpu_avg := GRAPH_MIN_FRAMETIME
 var frames_per_second := float(GRAPH_MIN_FPS)
 var frame_time_gradient := Gradient.new()
 
+
 func _init() -> void:
 	visible = false
+
 
 func _ready() -> void:
 	fps_graph.draw.connect(_fps_graph_draw)
@@ -107,14 +109,16 @@ func _ready() -> void:
 		func():
 			if Engine.get_version_info()["hex"] >= 0x040100:
 				Callable(Thread, "set_thread_safety_checks_enabled").call(false)
-				
+
 			RenderingServer.viewport_set_measure_render_time(get_viewport().get_viewport_rid(), true)
 			update_information_label()
 			update_settings_label()
 	)
 
+
 func _exit_tree() -> void:
 	thread.wait_to_finish()
+
 
 ## Update hardware information label
 func update_settings_label() -> void:
@@ -139,7 +143,10 @@ func update_settings_label() -> void:
 
 	if viewport.content_scale_mode == Window.CONTENT_SCALE_MODE_VIEWPORT:
 		viewport_render_size = viewport.get_visible_rect().size
-		settings.text += "Viewport: %d×%d, Window: %d×%d\n" % [viewport.get_visible_rect().size.x, viewport.get_visible_rect().size.y, viewport.size.x, viewport.size.y]
+		settings.text += (
+			"Viewport: %d×%d, Window: %d×%d\n"
+			% [viewport.get_visible_rect().size.x, viewport.get_visible_rect().size.y, viewport.size.x, viewport.size.y]
+		)
 	else:
 		viewport_render_size = viewport.size
 		settings.text += "Viewport: %d×%d\n" % [viewport.size.x, viewport.size.y]
@@ -160,16 +167,21 @@ func update_settings_label() -> void:
 		if viewport.scaling_3d_mode != Viewport.SCALING_3D_MODE_FSR2 and viewport.use_taa:
 			antialiasing_3d_string += (" + " if not antialiasing_3d_string.is_empty() else "") + "TAA"
 		if viewport.msaa_3d >= Viewport.MSAA_2X:
-			antialiasing_3d_string += (" + " if not antialiasing_3d_string.is_empty() else "") + "%d× MSAA" % pow(2, viewport.msaa_3d)
+			antialiasing_3d_string += (
+				(" + " if not antialiasing_3d_string.is_empty() else "") + "%d× MSAA" % pow(2, viewport.msaa_3d)
+			)
 		if viewport.screen_space_aa == Viewport.SCREEN_SPACE_AA_FXAA:
 			antialiasing_3d_string += (" + " if not antialiasing_3d_string.is_empty() else "") + "FXAA"
 
-		settings.text += "3D scale (%s): %d%% = %d×%d" % [
+		settings.text += (
+			"3D scale (%s): %d%% = %d×%d"
+			% [
 				scaling_3d_mode_string,
 				viewport.scaling_3d_scale * 100,
 				viewport_render_size.x * viewport.scaling_3d_scale,
 				viewport_render_size.y * viewport.scaling_3d_scale,
-		]
+			]
+		)
 
 		if not antialiasing_3d_string.is_empty():
 			settings.text += "\n3D Antialiasing: %s" % antialiasing_3d_string
@@ -199,13 +211,21 @@ func update_settings_label() -> void:
 	if not antialiasing_2d_string.is_empty():
 		settings.text += "\n2D Antialiasing: %s" % antialiasing_2d_string
 
+
 ## Update hardware/software information label
 func update_information_label() -> void:
 	var adapter_string := ""
-	if RenderingServer.get_video_adapter_vendor().trim_suffix(" Corporation") in RenderingServer.get_video_adapter_name():
+	if (
+		RenderingServer.get_video_adapter_vendor().trim_suffix(" Corporation")
+		in RenderingServer.get_video_adapter_name()
+	):
 		adapter_string = RenderingServer.get_video_adapter_name().trim_suffix("/PCIe/SSE2")
 	else:
-		adapter_string = RenderingServer.get_video_adapter_vendor() + " - " + RenderingServer.get_video_adapter_name().trim_suffix("/PCIe/SSE2")
+		adapter_string = (
+			RenderingServer.get_video_adapter_vendor()
+			+ " - "
+			+ RenderingServer.get_video_adapter_name().trim_suffix("/PCIe/SSE2")
+		)
 
 	var driver_info := OS.get_video_adapter_driver_info()
 	var driver_info_string := ""
@@ -246,50 +266,103 @@ func update_information_label() -> void:
 			graphics_api_string = "OpenGL"
 
 	information.text = (
-			"%s, %d threads\n" % [OS.get_processor_name().replace("(R)", "").replace("(TM)", ""), OS.get_processor_count()]
-			+ "%s %s (%s %s), %s %s\n" % [OS.get_name(), "64-bit" if OS.has_feature("64") else "32-bit", release_string, "double" if OS.has_feature("double") else "single", graphics_api_string, RenderingServer.get_video_adapter_api_version()]
-			+ "%s, %s" % [adapter_string, driver_info_string]
+		"%s, %d threads\n" % [OS.get_processor_name().replace("(R)", "").replace("(TM)", ""), OS.get_processor_count()]
+		+ (
+			"%s %s (%s %s), %s %s\n"
+			% [
+				OS.get_name(),
+				"64-bit" if OS.has_feature("64") else "32-bit",
+				release_string,
+				"double" if OS.has_feature("double") else "single",
+				graphics_api_string,
+				RenderingServer.get_video_adapter_api_version()
+			]
+		)
+		+ "%s, %s" % [adapter_string, driver_info_string]
 	)
+
 
 func _fps_graph_draw() -> void:
 	var fps_polyline := PackedVector2Array()
 	fps_polyline.resize(HISTORY_NUM_FRAMES)
 	for fps_index in fps_history.size():
 		fps_polyline[fps_index] = Vector2(
-				remap(fps_index, 0, fps_history.size(), 0, GRAPH_SIZE.x),
-				remap(clampf(fps_history[fps_index], GRAPH_MIN_FPS, GRAPH_MAX_FPS), GRAPH_MIN_FPS, GRAPH_MAX_FPS, GRAPH_SIZE.y, 0.0)
+			remap(fps_index, 0, fps_history.size(), 0, GRAPH_SIZE.x),
+			remap(
+				clampf(fps_history[fps_index], GRAPH_MIN_FPS, GRAPH_MAX_FPS),
+				GRAPH_MIN_FPS,
+				GRAPH_MAX_FPS,
+				GRAPH_SIZE.y,
+				0.0
+			)
 		)
-	fps_graph.draw_polyline(fps_polyline, frame_time_gradient.sample(remap(frames_per_second, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)), 1.0)
+	fps_graph.draw_polyline(
+		fps_polyline, frame_time_gradient.sample(remap(frames_per_second, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)), 1.0
+	)
+
 
 func _total_graph_draw() -> void:
 	var total_polyline := PackedVector2Array()
 	total_polyline.resize(HISTORY_NUM_FRAMES)
 	for total_index in frame_history_total.size():
 		total_polyline[total_index] = Vector2(
-				remap(total_index, 0, frame_history_total.size(), 0, GRAPH_SIZE.x),
-				remap(clampf(frame_history_total[total_index], GRAPH_MIN_FPS, GRAPH_MAX_FPS), GRAPH_MIN_FPS, GRAPH_MAX_FPS, GRAPH_SIZE.y, 0.0)
+			remap(total_index, 0, frame_history_total.size(), 0, GRAPH_SIZE.x),
+			remap(
+				clampf(frame_history_total[total_index], GRAPH_MIN_FPS, GRAPH_MAX_FPS),
+				GRAPH_MIN_FPS,
+				GRAPH_MAX_FPS,
+				GRAPH_SIZE.y,
+				0.0
+			)
 		)
-	total_graph.draw_polyline(total_polyline, frame_time_gradient.sample(remap(1000.0 / frametime_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)), 1.0)
+	total_graph.draw_polyline(
+		total_polyline,
+		frame_time_gradient.sample(remap(1000.0 / frametime_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)),
+		1.0
+	)
+
 
 func _cpu_graph_draw() -> void:
 	var cpu_polyline := PackedVector2Array()
 	cpu_polyline.resize(HISTORY_NUM_FRAMES)
 	for cpu_index in frame_history_cpu.size():
 		cpu_polyline[cpu_index] = Vector2(
-				remap(cpu_index, 0, frame_history_cpu.size(), 0, GRAPH_SIZE.x),
-				remap(clampf(frame_history_cpu[cpu_index], GRAPH_MIN_FPS, GRAPH_MAX_FPS), GRAPH_MIN_FPS, GRAPH_MAX_FPS, GRAPH_SIZE.y, 0.0)
+			remap(cpu_index, 0, frame_history_cpu.size(), 0, GRAPH_SIZE.x),
+			remap(
+				clampf(frame_history_cpu[cpu_index], GRAPH_MIN_FPS, GRAPH_MAX_FPS),
+				GRAPH_MIN_FPS,
+				GRAPH_MAX_FPS,
+				GRAPH_SIZE.y,
+				0.0
+			)
 		)
-	cpu_graph.draw_polyline(cpu_polyline, frame_time_gradient.sample(remap(1000.0 / frametime_cpu_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)), 1.0)
+	cpu_graph.draw_polyline(
+		cpu_polyline,
+		frame_time_gradient.sample(remap(1000.0 / frametime_cpu_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)),
+		1.0
+	)
+
 
 func _gpu_graph_draw() -> void:
 	var gpu_polyline := PackedVector2Array()
 	gpu_polyline.resize(HISTORY_NUM_FRAMES)
 	for gpu_index in frame_history_gpu.size():
 		gpu_polyline[gpu_index] = Vector2(
-				remap(gpu_index, 0, frame_history_gpu.size(), 0, GRAPH_SIZE.x),
-				remap(clampf(frame_history_gpu[gpu_index], GRAPH_MIN_FPS, GRAPH_MAX_FPS), GRAPH_MIN_FPS, GRAPH_MAX_FPS, GRAPH_SIZE.y, 0.0)
+			remap(gpu_index, 0, frame_history_gpu.size(), 0, GRAPH_SIZE.x),
+			remap(
+				clampf(frame_history_gpu[gpu_index], GRAPH_MIN_FPS, GRAPH_MAX_FPS),
+				GRAPH_MIN_FPS,
+				GRAPH_MAX_FPS,
+				GRAPH_SIZE.y,
+				0.0
+			)
 		)
-	gpu_graph.draw_polyline(gpu_polyline, frame_time_gradient.sample(remap(1000.0 / frametime_gpu_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)), 1.0)
+	gpu_graph.draw_polyline(
+		gpu_polyline,
+		frame_time_gradient.sample(remap(1000.0 / frametime_gpu_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)),
+		1.0
+	)
+
 
 func _process(_delta: float) -> void:
 	if visible:
@@ -306,39 +379,58 @@ func _process(_delta: float) -> void:
 
 		frametime_avg = frame_history_total.reduce(sum_func) / frame_history_total.size()
 		frame_history_total_avg.text = str(frametime_avg).pad_decimals(2)
-		frame_history_total_avg.modulate = frame_time_gradient.sample(remap(1000.0 / frametime_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0))
+		frame_history_total_avg.modulate = frame_time_gradient.sample(
+			remap(1000.0 / frametime_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)
+		)
 
 		var frametime_min: float = frame_history_total.min()
 		frame_history_total_min.text = str(frametime_min).pad_decimals(2)
-		frame_history_total_min.modulate = frame_time_gradient.sample(remap(1000.0 / frametime_min, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0))
+		frame_history_total_min.modulate = frame_time_gradient.sample(
+			remap(1000.0 / frametime_min, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)
+		)
 
 		var frametime_max: float = frame_history_total.max()
 		frame_history_total_max.text = str(frametime_max).pad_decimals(2)
-		frame_history_total_max.modulate = frame_time_gradient.sample(remap(1000.0 / frametime_max, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0))
+		frame_history_total_max.modulate = frame_time_gradient.sample(
+			remap(1000.0 / frametime_max, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)
+		)
 
 		frame_history_total_last.text = str(frametime).pad_decimals(2)
-		frame_history_total_last.modulate = frame_time_gradient.sample(remap(1000.0 / frametime, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0))
+		frame_history_total_last.modulate = frame_time_gradient.sample(
+			remap(1000.0 / frametime, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)
+		)
 
 		var viewport_rid := get_viewport().get_viewport_rid()
-		var frametime_cpu := RenderingServer.viewport_get_measured_render_time_cpu(viewport_rid) + RenderingServer.get_frame_setup_time_cpu()
+		var frametime_cpu := (
+			RenderingServer.viewport_get_measured_render_time_cpu(viewport_rid)
+			+ RenderingServer.get_frame_setup_time_cpu()
+		)
 		frame_history_cpu.push_back(frametime_cpu)
 		if frame_history_cpu.size() > HISTORY_NUM_FRAMES:
 			frame_history_cpu.pop_front()
 
 		frametime_cpu_avg = frame_history_cpu.reduce(sum_func) / frame_history_cpu.size()
 		frame_history_cpu_avg.text = str(frametime_cpu_avg).pad_decimals(2)
-		frame_history_cpu_avg.modulate = frame_time_gradient.sample(remap(1000.0 / frametime_cpu_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0))
+		frame_history_cpu_avg.modulate = frame_time_gradient.sample(
+			remap(1000.0 / frametime_cpu_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)
+		)
 
 		var frametime_cpu_min: float = frame_history_cpu.min()
 		frame_history_cpu_min.text = str(frametime_cpu_min).pad_decimals(2)
-		frame_history_cpu_min.modulate = frame_time_gradient.sample(remap(1000.0 / frametime_cpu_min, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0))
+		frame_history_cpu_min.modulate = frame_time_gradient.sample(
+			remap(1000.0 / frametime_cpu_min, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)
+		)
 
 		var frametime_cpu_max: float = frame_history_cpu.max()
 		frame_history_cpu_max.text = str(frametime_cpu_max).pad_decimals(2)
-		frame_history_cpu_max.modulate = frame_time_gradient.sample(remap(1000.0 / frametime_cpu_max, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0))
+		frame_history_cpu_max.modulate = frame_time_gradient.sample(
+			remap(1000.0 / frametime_cpu_max, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)
+		)
 
 		frame_history_cpu_last.text = str(frametime_cpu).pad_decimals(2)
-		frame_history_cpu_last.modulate = frame_time_gradient.sample(remap(1000.0 / frametime_cpu, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0))
+		frame_history_cpu_last.modulate = frame_time_gradient.sample(
+			remap(1000.0 / frametime_cpu, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)
+		)
 
 		var frametime_gpu := RenderingServer.viewport_get_measured_render_time_gpu(viewport_rid)
 		frame_history_gpu.push_back(frametime_gpu)
@@ -347,18 +439,26 @@ func _process(_delta: float) -> void:
 
 		frametime_gpu_avg = frame_history_gpu.reduce(sum_func) / frame_history_gpu.size()
 		frame_history_gpu_avg.text = str(frametime_gpu_avg).pad_decimals(2)
-		frame_history_gpu_avg.modulate = frame_time_gradient.sample(remap(1000.0 / frametime_gpu_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0))
+		frame_history_gpu_avg.modulate = frame_time_gradient.sample(
+			remap(1000.0 / frametime_gpu_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)
+		)
 
 		var frametime_gpu_min: float = frame_history_gpu.min()
 		frame_history_gpu_min.text = str(frametime_gpu_min).pad_decimals(2)
-		frame_history_gpu_min.modulate = frame_time_gradient.sample(remap(1000.0 / frametime_gpu_min, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0))
+		frame_history_gpu_min.modulate = frame_time_gradient.sample(
+			remap(1000.0 / frametime_gpu_min, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)
+		)
 
 		var frametime_gpu_max: float = frame_history_gpu.max()
 		frame_history_gpu_max.text = str(frametime_gpu_max).pad_decimals(2)
-		frame_history_gpu_max.modulate = frame_time_gradient.sample(remap(1000.0 / frametime_gpu_max, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0))
+		frame_history_gpu_max.modulate = frame_time_gradient.sample(
+			remap(1000.0 / frametime_gpu_max, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)
+		)
 
 		frame_history_gpu_last.text = str(frametime_gpu).pad_decimals(2)
-		frame_history_gpu_last.modulate = frame_time_gradient.sample(remap(1000.0 / frametime_gpu, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0))
+		frame_history_gpu_last.modulate = frame_time_gradient.sample(
+			remap(1000.0 / frametime_gpu, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)
+		)
 
 		frames_per_second = 1000.0 / frametime_avg
 		fps_history.push_back(frames_per_second)
@@ -366,7 +466,9 @@ func _process(_delta: float) -> void:
 			fps_history.pop_front()
 
 		fps.text = str(floor(frames_per_second)) + " FPS"
-		var frame_time_color := frame_time_gradient.sample(remap(frames_per_second, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0))
+		var frame_time_color := frame_time_gradient.sample(
+			remap(frames_per_second, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)
+		)
 		fps.modulate = frame_time_color
 
 		frame_time.text = str(frametime).pad_decimals(2) + " mspf"
@@ -400,6 +502,7 @@ func _process(_delta: float) -> void:
 
 	last_tick = Time.get_ticks_usec()
 
+
 func _on_visibility_changed() -> void:
 	if visible:
 		var frametime_last := (Time.get_ticks_usec() - last_tick) * 0.001
@@ -409,6 +512,11 @@ func _on_visibility_changed() -> void:
 		frame_history_total.fill(frametime_last)
 		frame_history_cpu.resize(HISTORY_NUM_FRAMES)
 		var viewport_rid := get_viewport().get_viewport_rid()
-		frame_history_cpu.fill(RenderingServer.viewport_get_measured_render_time_cpu(viewport_rid) + RenderingServer.get_frame_setup_time_cpu())
+		frame_history_cpu.fill(
+			(
+				RenderingServer.viewport_get_measured_render_time_cpu(viewport_rid)
+				+ RenderingServer.get_frame_setup_time_cpu()
+			)
+		)
 		frame_history_gpu.resize(HISTORY_NUM_FRAMES)
 		frame_history_gpu.fill(RenderingServer.viewport_get_measured_render_time_gpu(viewport_rid))

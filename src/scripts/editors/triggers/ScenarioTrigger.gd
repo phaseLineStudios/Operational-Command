@@ -4,7 +4,9 @@ class_name ScenarioTrigger
 ## Evaluates each frame. runs on_activate/on_deactivate when switching state.
 
 ## Presence mode
-enum PresenceMode { NONE, PLAYER_INSIDE, FRIEND_INSIDE, ENEMY_INSIDE, PLAYER_NOT_INSIDE, FRIEND_NOT_INSIDE, ENEMY_NOT_INSIDE }
+enum PresenceMode {
+	NONE, PLAYER_INSIDE, FRIEND_INSIDE, ENEMY_INSIDE, PLAYER_NOT_INSIDE, FRIEND_NOT_INSIDE, ENEMY_NOT_INSIDE
+}
 ## Area Shape type
 enum AreaShape { CIRCLE, RECT }
 
@@ -40,6 +42,7 @@ var _active: bool = false
 @warning_ignore("unused_private_class_variable")
 var _accum_true: float = 0.0
 
+
 func serialize() -> Dictionary:
 	return {
 		"id": id,
@@ -56,8 +59,9 @@ func serialize() -> Dictionary:
 		"synced_tasks": synced_tasks.duplicate(),
 	}
 
+
 static func deserialize(d: Variant) -> ScenarioTrigger:
-	if typeof(d) != TYPE_DICTIONARY: 
+	if typeof(d) != TYPE_DICTIONARY:
 		return null
 	var t := ScenarioTrigger.new()
 	t.id = d.get("id", "")
@@ -74,13 +78,13 @@ static func deserialize(d: Variant) -> ScenarioTrigger:
 	var su = d.get("synced_units", [])
 	if typeof(su) == TYPE_ARRAY:
 		var out_u: Array[int] = []
-		for v in su: 
+		for v in su:
 			out_u.append(int(v))
 		t.synced_units = out_u
 	var st = d.get("synced_tasks", [])
 	if typeof(st) == TYPE_ARRAY:
 		var out_t: Array[int] = []
-		for v in st: 
+		for v in st:
 			out_t.append(int(v))
 		t.synced_tasks = out_t
 	return t

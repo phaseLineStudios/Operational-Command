@@ -13,6 +13,7 @@ var _items: Dictionary = {}
 var _draw_items: Array = []
 var _draw_dirty := true
 
+
 ## Assigns TerrainData, resets caches, wires signals, and schedules redraw
 func set_data(d: TerrainData) -> void:
 	if _data_conn and data and data.is_connected("points_changed", Callable(self, "_on_points_changed")):
@@ -27,12 +28,14 @@ func set_data(d: TerrainData) -> void:
 		_data_conn = true
 	queue_redraw()
 
+
 ## Marks the whole layer as dirty and queues a redraw (forces full rebuild)
 func mark_dirty() -> void:
 	_items.clear()
 	_draw_items.clear()
 	_draw_dirty = true
 	queue_redraw()
+
 
 ## Handles TerrainData point mutations and marks affected points dirty
 func _on_points_changed(kind: String, ids: PackedInt32Array) -> void:
@@ -58,10 +61,12 @@ func _on_points_changed(kind: String, ids: PackedInt32Array) -> void:
 			_draw_dirty = true
 	queue_redraw()
 
+
 ## Redraw on resize so points match current Control rect.
 func _notification(what):
 	if what == NOTIFICATION_RESIZED:
 		queue_redraw()
+
 
 func _draw() -> void:
 	if data == null:
@@ -89,6 +94,7 @@ func _draw() -> void:
 		draw_set_transform(pos_local, rot, Vector2.ONE)
 		draw_texture_rect(tex, rect, false)
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
 
 ## Insert/update a point by id, recomputing size/tex/visibility as needed
 func _upsert_from_data(id: int, rebuild_all: bool) -> void:
@@ -122,15 +128,18 @@ func _upsert_from_data(id: int, rebuild_all: bool) -> void:
 
 	var p_visible := _is_terrain_pos_visible(pos)
 
-	var it: Dictionary = _items.get(id, {
-		"pos": Vector2.ZERO,
-		"rot": 0.0,
-		"scale": 1.0,
-		"size": p_size,
-		"tex": tex,
-		"z": int(brush.z_index),
-		"visible": p_visible
-	})
+	var it: Dictionary = _items.get(
+		id,
+		{
+			"pos": Vector2.ZERO,
+			"rot": 0.0,
+			"scale": 1.0,
+			"size": p_size,
+			"tex": tex,
+			"z": int(brush.z_index),
+			"visible": p_visible
+		}
+	)
 
 	it.pos = pos
 	it.rot = rot
@@ -143,6 +152,7 @@ func _upsert_from_data(id: int, rebuild_all: bool) -> void:
 
 	_items[id] = it
 	_draw_dirty = true
+
 
 ## Update only pos/rot/scale/size/visibility
 func _refresh_pose(id: int) -> void:
@@ -172,6 +182,7 @@ func _refresh_pose(id: int) -> void:
 	_items[id] = it
 	_draw_dirty = true
 
+
 ## Build/refresh array used by _draw(), sorted by z
 func _rebuild_draw_items() -> void:
 	_draw_dirty = false
@@ -185,19 +196,20 @@ func _rebuild_draw_items() -> void:
 		if it.visible and it.tex != null:
 			tmp.append(it)
 
-	tmp.sort_custom(func(a, b):
-		return (str(a.tex) < str(b.tex)) if (int(a.z) == int(b.z)) else (int(a.z) < int(b.z))
-	)
+	tmp.sort_custom(func(a, b): return (str(a.tex) < str(b.tex)) if (int(a.z) == int(b.z)) else (int(a.z) < int(b.z)))
 
 	_draw_items = tmp
+
 
 ## Reuse your original visibility test against terrain rect
 func _is_terrain_pos_visible(pos_local: Vector2) -> bool:
 	return renderer.is_inside_terrain(pos_local + Vector2(renderer.margin_left_px, renderer.margin_top_px))
 
+
 ## Find a point dictionary in TerrainData by id
 func _find_point_by_id(id: int) -> Variant:
-	if data == null: return null
+	if data == null:
+		return null
 	for s in data.points:
 		if s is Dictionary and int(s.get("id", 0)) == id:
 			return s

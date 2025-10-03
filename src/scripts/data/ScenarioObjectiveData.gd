@@ -10,14 +10,10 @@ class_name ScenarioObjectiveData
 ## Score awarded for completing this objective
 @export var score: int = 100
 
+
 ## Serialize into JSON
 func serialize() -> Dictionary:
-	return {
-		"id": id,
-		"title": title,
-		"success": success,
-		"score": score
-	}
+	return {"id": id, "title": title, "success": success, "score": score}
 
 
 ## Deserialize from JSON

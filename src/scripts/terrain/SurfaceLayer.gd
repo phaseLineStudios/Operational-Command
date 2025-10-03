@@ -17,7 +17,7 @@ class_name SurfaceLayer
 @onready var renderer: TerrainRender = get_owner()
 
 ## Emitted when any group’s merged geometry was rebuilt (only dirty groups)
-signal batches_rebuilt()
+signal batches_rebuilt
 
 var data: TerrainData
 var _data_conn := false
@@ -30,6 +30,7 @@ var _tri_cache: Dictionary = {}
 
 var _threads: Dictionary = {}
 var _pending_ver: Dictionary = {}
+
 
 ## Assigns TerrainData, resets caches, wires signals, and schedules redraw
 func set_data(d: TerrainData) -> void:
@@ -50,10 +51,12 @@ func set_data(d: TerrainData) -> void:
 
 	queue_redraw()
 
+
 ## Marks the whole layer as dirty and queues a redraw (forces full rebuild)
 func mark_dirty() -> void:
 	_dirty_all = true
 	queue_redraw()
+
 
 ## Handles TerrainData surface mutations and marks affected groups dirty
 func _on_surfaces_changed(kind: String, ids: PackedInt32Array) -> void:
@@ -61,17 +64,22 @@ func _on_surfaces_changed(kind: String, ids: PackedInt32Array) -> void:
 		"reset":
 			_dirty_all = true
 		"added":
-			for id in ids: _upsert_from_data(id, false)
+			for id in ids:
+				_upsert_from_data(id, false)
 		"removed":
-			for id in ids: _remove_id(id)
+			for id in ids:
+				_remove_id(id)
 		"points":
-			for id in ids: _refresh_geometry_same_group(id)
+			for id in ids:
+				_refresh_geometry_same_group(id)
 		"brush", "meta":
-			for id in ids: _move_if_key_changed(id)
+			for id in ids:
+				_move_if_key_changed(id)
 		_:
 			_dirty_all = true
 
 	queue_redraw()
+
 
 func _draw() -> void:
 	if data == null:
@@ -87,11 +95,11 @@ func _draw() -> void:
 
 	for b in batches:
 		var rec: Dictionary = b.rec
-		var fill_col: Color = (rec.fill.color if rec.has("fill") and "color" in rec.fill else Color(0,0,0,0))
-		var stroke_col: Color = (rec.stroke.color if rec.has("stroke") and "color" in rec.stroke else Color(0,0,0,0))
-		var stroke_w: float = (rec.stroke.width_px if rec.has("stroke") and "width_px" in rec.stroke else 1.0)
+		var fill_col: Color = rec.fill.color if rec.has("fill") and "color" in rec.fill else Color(0, 0, 0, 0)
+		var stroke_col: Color = rec.stroke.color if rec.has("stroke") and "color" in rec.stroke else Color(0, 0, 0, 0)
+		var stroke_w: float = rec.stroke.width_px if rec.has("stroke") and "width_px" in rec.stroke else 1.0
 		var mode: int = int(rec.mode if rec.has("mode") else TerrainBrush.DrawMode.SOLID)
-		var tex: Texture2D = (rec.symbol.tex if rec.has("symbol") and "tex" in rec.symbol else null)
+		var tex: Texture2D = rec.symbol.tex if rec.has("symbol") and "tex" in rec.symbol else null
 
 		for poly: PackedVector2Array in b.polys:
 			match mode:
@@ -99,7 +107,7 @@ func _draw() -> void:
 					if fill_col.a > 0.0 and poly.size() >= 3:
 						var cols := PackedColorArray()
 						cols.resize(poly.size())
-						for i in poly.size(): 
+						for i in poly.size():
 							cols[i] = fill_col
 						if not Geometry2D.triangulate_polygon(poly).is_empty():
 							draw_polygon(poly, cols, PackedVector2Array(), null)
@@ -110,7 +118,7 @@ func _draw() -> void:
 					elif fill_col.a > 0.0 and poly.size() >= 3:
 						var cols2 := PackedColorArray()
 						cols2.resize(poly.size())
-						for i in poly.size(): 
+						for i in poly.size():
 							cols2[i] = fill_col
 						if not Geometry2D.triangulate_polygon(poly).is_empty():
 							draw_polygon(poly, cols2, PackedVector2Array(), null)
@@ -118,7 +126,7 @@ func _draw() -> void:
 					if fill_col.a > 0.0 and poly.size() >= 3:
 						var cols3 := PackedColorArray()
 						cols3.resize(poly.size())
-						for i in poly.size(): 
+						for i in poly.size():
 							cols3[i] = fill_col
 						if not Geometry2D.triangulate_polygon(poly).is_empty():
 							draw_polygon(poly, cols3, PackedVector2Array(), null)
@@ -128,6 +136,7 @@ func _draw() -> void:
 				if snap_half_px_for_thin_strokes and int(round(stroke_w)) % 2 != 0:
 					outline = _offset_half_px(outline)
 				_draw_polyline_closed(_closed_copy(outline, true), stroke_col, stroke_w)
+
 
 ## Full rebuild from TerrainData
 func _rebuild_all_from_data() -> void:
@@ -141,17 +150,24 @@ func _rebuild_all_from_data() -> void:
 		return
 
 	for s in data.surfaces:
-		if s == null or typeof(s) != TYPE_DICTIONARY: continue
-		if s.get("type","") != "polygon": continue
+		if s == null or typeof(s) != TYPE_DICTIONARY:
+			continue
+		if s.get("type", "") != "polygon":
+			continue
 		var brush: TerrainBrush = s.get("brush", null)
-		if brush == null or brush.feature_type != TerrainBrush.FeatureType.AREA: continue
-		var id := int(s.get("id", 0)); if id <= 0: continue
+		if brush == null or brush.feature_type != TerrainBrush.FeatureType.AREA:
+			continue
+		var id := int(s.get("id", 0))
+		if id <= 0:
+			continue
 
 		var pts: PackedVector2Array = s.get("points", PackedVector2Array())
-		if pts.size() < 3: continue
+		if pts.size() < 3:
+			continue
 
 		var clamped := renderer.clamp_shape_to_terrain(pts)
-		if clamped.size() < 3: continue
+		if clamped.size() < 3:
+			continue
 
 		var key := _brush_key(brush)
 		_ensure_group(key, brush)
@@ -168,6 +184,7 @@ func _rebuild_all_from_data() -> void:
 
 	emit_signal("batches_rebuilt")
 
+
 ## Starts asynchronous unions for any groups currently marked dirty
 func _rebuild_dirty_groups() -> void:
 	var kicked_any := false
@@ -180,18 +197,24 @@ func _rebuild_dirty_groups() -> void:
 	if kicked_any:
 		pass
 
+
 ## Inserts/updates one surface from data, moving between groups if needed
 func _upsert_from_data(id: int, rebuild_old_key: bool) -> void:
 	var item: Variant = _find_surface_by_id(id)
-	if item == null: return
-	if item.get("type","") != "polygon": return
+	if item == null:
+		return
+	if item.get("type", "") != "polygon":
+		return
 	var brush: TerrainBrush = item.get("brush", null)
-	if brush == null or brush.feature_type != TerrainBrush.FeatureType.AREA: return
+	if brush == null or brush.feature_type != TerrainBrush.FeatureType.AREA:
+		return
 	var pts: PackedVector2Array = item.get("points", PackedVector2Array())
-	if pts.size() < 3: return
+	if pts.size() < 3:
+		return
 
 	var clamped := renderer.clamp_shape_to_terrain(pts)
-	if clamped.size() < 3: return
+	if clamped.size() < 3:
+		return
 
 	var new_key := _brush_key(brush)
 	_ensure_group(new_key, brush)
@@ -209,16 +232,20 @@ func _upsert_from_data(id: int, rebuild_old_key: bool) -> void:
 	_id_to_key[id] = new_key
 	_start_union_thread(new_key)
 
+
 ## Removes a surface by id and marks its group dirty
 func _remove_id(id: int) -> void:
 	var key: Variant = _id_to_key.get(id, null)
-	if key == null: return
+	if key == null:
+		return
 	_id_to_key.erase(id)
-	if not _groups.has(key): return
+	if not _groups.has(key):
+		return
 	_groups[key].polys.erase(id)
 	_groups[key].bboxes.erase(id)
 	_groups[key].dirty = true
 	_start_union_thread(key)
+
 
 ## Refreshes geometry when points changed but the brush grouping stayed the same
 func _refresh_geometry_same_group(id: int) -> void:
@@ -249,6 +276,7 @@ func _refresh_geometry_same_group(id: int) -> void:
 		_groups[key].dirty = true
 		_start_union_thread(key)
 
+
 ## Moves a surface between groups if its brush (draw recipe) changed
 func _move_if_key_changed(id: int) -> void:
 	var item: Variant = _find_surface_by_id(id)
@@ -256,8 +284,7 @@ func _move_if_key_changed(id: int) -> void:
 		_remove_id(id)
 		return
 	var brush: TerrainBrush = item.get("brush", null)
-	@warning_ignore("incompatible_ternary")
-	var new_key: Variant = _brush_key(brush) if brush else null
+	@warning_ignore("incompatible_ternary") var new_key: Variant = _brush_key(brush) if brush else null
 	var old_key: Variant = _id_to_key.get(id, null)
 	if new_key == null:
 		_remove_id(id)
@@ -267,26 +294,25 @@ func _move_if_key_changed(id: int) -> void:
 	else:
 		_upsert_from_data(id, true)
 
+
 ## Ensures a group record exists for the given brush key
 func _ensure_group(key: String, brush: TerrainBrush) -> void:
-	if _groups.has(key): return
+	if _groups.has(key):
+		return
 	var rec := brush.get_draw_recipe()
 	_groups[key] = {
-		"brush": brush,
-		"z": int(brush.z_index),
-		"rec": rec,
-		"polys": {},
-		"bboxes": {},
-		"merged": [],
-		"dirty": true
+		"brush": brush, "z": int(brush.z_index), "rec": rec, "polys": {}, "bboxes": {}, "merged": [], "dirty": true
 	}
+
 
 ## Returns groups sorted by z-index
 func _sorted_groups() -> Array:
 	var arr: Array = []
-	for key in _groups.keys(): arr.append(_groups[key])
+	for key in _groups.keys():
+		arr.append(_groups[key])
 	arr.sort_custom(func(a, b): return int(a.z) < int(b.z))
 	return arr
+
 
 ## Starts/queues a worker thread to compute AABB-filtered union for a group
 func _start_union_thread(key: String) -> void:
@@ -309,10 +335,12 @@ func _start_union_thread(key: String) -> void:
 	var callable := Callable(self, "_union_worker").bind(key, polys, bboxes, ver)
 	thrd.start(callable, Thread.PRIORITY_NORMAL)
 
+
 ## Worker entry, performs AABB clustering and unions the cluster polygons
 func _union_worker(key: String, polys: Array, bboxes: Array, ver: int) -> void:
 	var merged := _union_group_aabb(polys, bboxes)
 	call_deferred("_apply_union_result", key, merged, ver)
+
 
 ## Applies a finished union result to the group if still up-to-date
 func _apply_union_result(key: String, merged: Array, ver: int) -> void:
@@ -328,6 +356,7 @@ func _apply_union_result(key: String, merged: Array, ver: int) -> void:
 	emit_signal("batches_rebuilt")
 	queue_redraw()
 
+
 ## Joins the worker thread for a group (if running) and clears it
 func _join_and_clear_thread(key: String) -> void:
 	if _threads.has(key):
@@ -337,12 +366,14 @@ func _join_and_clear_thread(key: String) -> void:
 				th.wait_to_finish()
 			_threads.erase(key)
 
+
 ## Cancels and clears all worker threads and pending versions
 func _cancel_all_threads() -> void:
 	for key in _threads.keys():
 		_join_and_clear_thread(key)
 	_threads.clear()
 	_pending_ver.clear()
+
 
 ## Unions polygons using connected AABB clusters to minimize pairwise merges
 func _union_group_aabb(polys: Array, bboxes: Array) -> Array:
@@ -362,7 +393,8 @@ func _union_group_aabb(polys: Array, bboxes: Array) -> Array:
 	visited.resize(n)
 	var clusters: Array = []
 	for i in n:
-		if visited[i] != 0: continue
+		if visited[i] != 0:
+			continue
 		var stack := [i]
 		visited[i] = 1
 		var cluster_idx := []
@@ -371,7 +403,8 @@ func _union_group_aabb(polys: Array, bboxes: Array) -> Array:
 			cluster_idx.append(a)
 			var bb_a: Rect2 = items[a].bbox
 			for j in n:
-				if visited[j] != 0: continue
+				if visited[j] != 0:
+					continue
 				var bb_b: Rect2 = items[j].bbox
 				if bb_a.intersects(bb_b, true):
 					visited[j] = 1
@@ -385,22 +418,29 @@ func _union_group_aabb(polys: Array, bboxes: Array) -> Array:
 
 	return clusters
 
+
 ## Convenience passthrough to the non-AABB union implementation
 func _union_group(polys: Array) -> Array:
 	return _union_polys(polys)
 
+
 ## Returns a closed copy of a polyline (appends first point if needed)
 func _closed_copy(pts: PackedVector2Array, closed: bool) -> PackedVector2Array:
 	if closed:
-		if pts[0].distance_to(pts[pts.size()-1]) > 1e-5:
-			var c := pts.duplicate(); c.append(pts[0]); return c
+		if pts[0].distance_to(pts[pts.size() - 1]) > 1e-5:
+			var c := pts.duplicate()
+			c.append(pts[0])
+			return c
 	return pts.duplicate()
+
 
 ## Offsets all points by (0.5, 0.5) to align odd-width strokes to pixel centers
 func _offset_half_px(pts: PackedVector2Array) -> PackedVector2Array:
 	var out := PackedVector2Array()
-	for p in pts: out.append(p + Vector2(0.5, 0.5))
+	for p in pts:
+		out.append(p + Vector2(0.5, 0.5))
 	return out
+
 
 ## Computes axis-aligned bounding box for a polygon
 func _poly_bbox(pts: PackedVector2Array) -> Rect2:
@@ -408,31 +448,40 @@ func _poly_bbox(pts: PackedVector2Array) -> Rect2:
 	var maxp := pts[0]
 	for i in range(1, pts.size()):
 		var p := pts[i]
-		minp.x = min(minp.x, p.x); minp.y = min(minp.y, p.y)
-		maxp.x = max(maxp.x, p.x); maxp.y = max(maxp.y, p.y)
+		minp.x = min(minp.x, p.x)
+		minp.y = min(minp.y, p.y)
+		maxp.x = max(maxp.x, p.x)
+		maxp.y = max(maxp.y, p.y)
 	return Rect2(minp, maxp - minp)
+
 
 ## Draws a closed polyline with optional last segment if not already closed
 func _draw_polyline_closed(pts: PackedVector2Array, color: Color, width: float) -> void:
-	if pts.size() < 2: return
+	if pts.size() < 2:
+		return
 	draw_polyline(pts, color, width, antialias)
-	if pts[0].distance_to(pts[pts.size()-1]) > 1e-5:
-		draw_line(pts[pts.size()-1], pts[0], color, width, antialias)
+	if pts[0].distance_to(pts[pts.size() - 1]) > 1e-5:
+		draw_line(pts[pts.size() - 1], pts[0], color, width, antialias)
+
 
 ## Builds a stable key string for grouping surfaces by brush/recipe
 func _brush_key(brush: TerrainBrush) -> String:
-	if brush == null: return ""
-	return (brush.resource_path if brush.resource_path != "" else "id:%s" % brush.get_instance_id())
+	if brush == null:
+		return ""
+	return brush.resource_path if brush.resource_path != "" else "id:%s" % brush.get_instance_id()
+
 
 ## Unions an array of polygons pairwise (fallback/slow path)
 func _union_polys(polys: Array) -> Array:
-	if polys.is_empty(): return []
+	if polys.is_empty():
+		return []
 	var clean: Array = []
 	for p in polys:
 		var s := _sanitize_polygon(p)
 		if s.size() >= 3 and abs(_polygon_area(s)) > 1e-6:
 			clean.append(s)
-	if clean.is_empty(): return []
+	if clean.is_empty():
+		return []
 	var acc: Array = [clean[0]]
 	for i in range(1, clean.size()):
 		var b: PackedVector2Array = clean[i]
@@ -443,20 +492,23 @@ func _union_polys(polys: Array) -> Array:
 			if res.is_empty():
 				new_acc.append(a)
 			else:
-				for r in res: new_acc.append(r)
+				for r in res:
+					new_acc.append(r)
 				merged_any = true
 		if not merged_any:
 			new_acc.append(b)
 		acc = new_acc
 	return acc
 
+
 ## Removes duplicate/adjacent points and optional duplicated closing vertex
 func _sanitize_polygon(pts_in: PackedVector2Array) -> PackedVector2Array:
 	var out := PackedVector2Array()
-	if pts_in.size() < 3: return out
+	if pts_in.size() < 3:
+		return out
 	var n := pts_in.size()
 	var first := pts_in[0]
-	var last  := pts_in[n - 1]
+	var last := pts_in[n - 1]
 	var end_n := n - 1 if first.distance_squared_to(last) < 1e-12 else n
 	var eps2 := 1e-10
 	var prev := Vector2.INF
@@ -465,26 +517,32 @@ func _sanitize_polygon(pts_in: PackedVector2Array) -> PackedVector2Array:
 		if not prev.is_finite() or prev.distance_squared_to(p) > eps2:
 			out.append(p)
 		prev = p
-	if out.size() < 3: return PackedVector2Array()
+	if out.size() < 3:
+		return PackedVector2Array()
 	return out
+
 
 ## Returns polygon signed area (positive for CCW)
 static func _polygon_area(pts: PackedVector2Array) -> float:
 	var n := pts.size()
-	if n < 3: return 0.0
+	if n < 3:
+		return 0.0
 	var area := 0.0
 	for i in n:
 		var j := (i + 1) % n
 		area += pts[i].x * pts[j].y - pts[j].x * pts[i].y
 	return area * 0.5
 
+
 ## Finds a surface dictionary in TerrainData by id
 func _find_surface_by_id(id: int) -> Variant:
-	if data == null: return null
+	if data == null:
+		return null
 	for s in data.surfaces:
 		if s is Dictionary and int(s.get("id", 0)) == id:
 			return s
 	return null
+
 
 ## Builds draw batches by merging consecutive groups with identical recipes
 func _build_draw_batches(sorted_groups: Array) -> Array:
@@ -498,11 +556,7 @@ func _build_draw_batches(sorted_groups: Array) -> Array:
 		if (not has_current) or key != current_key:
 			if has_current:
 				out.append(current)
-			current = {
-				"key": key,
-				"rec": rec,
-				"polys": []
-			}
+			current = {"key": key, "rec": rec, "polys": []}
 			current_key = key
 			has_current = true
 		for p in g.merged:
@@ -511,12 +565,13 @@ func _build_draw_batches(sorted_groups: Array) -> Array:
 		out.append(current)
 	return out
 
+
 ## Produces a stable batching key based on draw state (z/mode/colors/texture)
 func _rec_key(rec: Dictionary) -> String:
 	var z := str(int(rec.z_index if rec.has("z_index") else 0))
 	var mode := str(int(rec.mode if rec.has("mode") else 0))
-	var fcol: Color = Color(rec.fill.color) if (rec.has("fill") and "color" in rec.fill) else Color(0,0,0,0)
-	var scol: Color = Color(rec.stroke.color) if (rec.has("stroke") and "color" in rec.stroke) else Color(0,0,0,0)
+	var fcol: Color = Color(rec.fill.color) if (rec.has("fill") and "color" in rec.fill) else Color(0, 0, 0, 0)
+	var scol: Color = Color(rec.stroke.color) if (rec.has("stroke") and "color" in rec.stroke) else Color(0, 0, 0, 0)
 	var sw: float = float(rec.stroke.width_px if rec.has("stroke") and "width_px" in rec.stroke else 1.0)
 	var tex: Texture2D = rec.symbol.tex if (rec.has("symbol") and "tex" in rec.symbol) else null
 	var tex_id := ""

@@ -7,6 +7,7 @@ extends Node
 ## Cache loaded objects by absolute path.
 var _cache: Dictionary = {}
 
+
 ## Normalize to res:// and remove trailing slash.
 func _norm_dir(dir_path: String) -> String:
 	var p := dir_path
@@ -15,6 +16,7 @@ func _norm_dir(dir_path: String) -> String:
 	if p.ends_with("/"):
 		p = p.substr(0, p.length() - 1)
 	return p
+
 
 ## Recursively convert special string literals to engine types (minimal).
 func _postprocess(v: Variant) -> Variant:
@@ -42,6 +44,7 @@ func _postprocess(v: Variant) -> Variant:
 		_:
 			return v
 
+
 ## Load a JSON file to Dictionary. Uses cache.
 func _load_json(abs_path: String) -> Dictionary:
 	if _cache.has(abs_path):
@@ -60,10 +63,12 @@ func _load_json(abs_path: String) -> Dictionary:
 	_cache[abs_path] = cooked
 	return cooked
 
+
 ## Get absolute file path for id in a directory.
 func _resolve_id_path(dir_abs: String, id: String) -> String:
 	var candidate := "%s/%s.json" % [dir_abs, id]
 	return candidate if FileAccess.file_exists(candidate) else ""
+
 
 ## Read all objects in a directory.
 func get_all_objects(dir_path: String) -> Array:
@@ -81,11 +86,13 @@ func get_all_objects(dir_path: String) -> Array:
 			out.append(obj)
 	return out
 
+
 ## Read a single object by id.
 func get_object(dir_path: String, id: String) -> Dictionary:
 	var dir_abs := _norm_dir(dir_path)
 	var path := _resolve_id_path(dir_abs, id)
 	return {} if path == "" else _load_json(path)
+
 
 ## Read multiple objects by ids (keeps order).
 func get_objects(dir_path: String, ids: Array) -> Array:
@@ -98,6 +105,7 @@ func get_objects(dir_path: String, ids: Array) -> Array:
 		out[i] = {} if path == "" else _load_json(path)
 	return out
 
+
 ## Campaigns helpers.
 ## Get Campaign by ID
 func get_campaign(id: String) -> CampaignData:
@@ -107,13 +115,16 @@ func get_campaign(id: String) -> CampaignData:
 		return null
 	return CampaignData.deserialize(d)
 
+
 ## Get multiple campaigns by IDs
 func get_campaigns(ids: Array) -> Array:
 	var out: Array[CampaignData] = []
 	for raw in ids:
 		var s := get_campaign(String(raw))
-		if s: out.append(s)
+		if s:
+			out.append(s)
 	return out
+
 
 ## List all campaigns
 func list_campaigns() -> Array:
@@ -126,20 +137,20 @@ func list_campaigns() -> Array:
 	for c in camps:
 		if c.is_empty():
 			continue
-		var order := int(c.get("order", 2147483647)) # missing => bottom
+		var order := int(c.get("order", 2147483647))  # missing => bottom
 		decorated.append([order, i, c])
 		i += 1
 
-	decorated.sort_custom(func(a, b):
-		return a[1] < b[1] if a[0] == b[0] else a[0] < b[0]
-	)
+	decorated.sort_custom(func(a, b): return a[1] < b[1] if a[0] == b[0] else a[0] < b[0])
 
 	var out: Array[CampaignData] = []
 	for item in decorated:
 		var d: Dictionary = item[2]
 		var res := CampaignData.deserialize(d)
-		if res != null: out.append(res)
+		if res != null:
+			out.append(res)
 	return out
+
 
 ## Missions helpers.
 ## Get Mission by ID
@@ -150,13 +161,16 @@ func get_scenario(id: String) -> ScenarioData:
 		return null
 	return ScenarioData.deserialize(d)
 
+
 ## Get multiple scenarios by IDs
 func get_scenarios(ids: Array) -> Array[CampaignData]:
 	var out: Array[CampaignData] = []
 	for raw in ids:
 		var s := get_campaign(String(raw))
-		if s: out.append(s)
+		if s:
+			out.append(s)
 	return out
+
 
 ## list all scenarios
 func list_scenarios() -> Array[ScenarioData]:
@@ -167,8 +181,10 @@ func list_scenarios() -> Array[ScenarioData]:
 	var out: Array[ScenarioData] = []
 	for item in camps:
 		var res := ScenarioData.deserialize(item)
-		if res != null: out.append(res)
+		if res != null:
+			out.append(res)
 	return out
+
 
 ## List all scenarios for a campaign by ID
 func list_scenarios_for_campaign(campaign_id: StringName) -> Array[ScenarioData]:
@@ -200,9 +216,7 @@ func list_scenarios_for_campaign(campaign_id: StringName) -> Array[ScenarioData]
 		decorated.append([order, i, id_str])
 		i += 1
 
-	decorated.sort_custom(func(a, b):
-		return a[1] < b[1] if a[0] == b[0] else a[0] < b[0]
-	)
+	decorated.sort_custom(func(a, b): return a[1] < b[1] if a[0] == b[0] else a[0] < b[0])
 
 	var out: Array[ScenarioData] = []
 	for item in decorated:
@@ -211,6 +225,7 @@ func list_scenarios_for_campaign(campaign_id: StringName) -> Array[ScenarioData]
 		if m_res != null:
 			out.append(m_res)
 	return out
+
 
 ## Briefing helpers.
 ## Get a briefing by id or by mission id
@@ -233,6 +248,7 @@ func get_briefing(id_or_mission_id: String) -> BriefData:
 				return null
 	return BriefData.deserialize(brief_d)
 
+
 ## Get multiple briefings by ids
 func get_briefings(ids: Array) -> Array[BriefData]:
 	var out: Array[BriefData] = []
@@ -241,6 +257,7 @@ func get_briefings(ids: Array) -> Array[BriefData]:
 		if u != null:
 			out.append(u)
 	return out
+
 
 ## List all briefings
 func list_briefings() -> Array[BriefData]:
@@ -251,12 +268,15 @@ func list_briefings() -> Array[BriefData]:
 	var out: Array[BriefData] = []
 	for item in camps:
 		var res := BriefData.deserialize(item)
-		if res != null: out.append(res)
+		if res != null:
+			out.append(res)
 	return out
+
 
 ## Convenience explicit mission briefing resolver.
 func get_briefing_for_mission(mission_id: String) -> BriefData:
 	return get_briefing(mission_id)
+
 
 ## Units helpers.
 ## Get unit by ID
@@ -267,6 +287,7 @@ func get_unit(id: String) -> UnitData:
 		return null
 	return UnitData.deserialize(d)
 
+
 ## Get units by IDs
 func get_units(ids: Array) -> Array[UnitData]:
 	var out: Array[UnitData] = []
@@ -275,6 +296,7 @@ func get_units(ids: Array) -> Array[UnitData]:
 		if u != null:
 			out.append(u)
 	return out
+
 
 ## List all units
 func list_units() -> Array[UnitData]:
@@ -285,9 +307,11 @@ func list_units() -> Array[UnitData]:
 	var out: Array[UnitData] = []
 	for item in camps:
 		var res := UnitData.deserialize(item)
-		if res != null: out.append(res)
+		if res != null:
+			out.append(res)
 	return out
-	
+
+
 ## Unit Category helpers.
 ## Get unit category by ID
 func get_unit_category(id: String) -> UnitCategoryData:
@@ -296,6 +320,7 @@ func get_unit_category(id: String) -> UnitCategoryData:
 		push_warning("Unit category not found: %s" % id)
 		return null
 	return UnitCategoryData.deserialize(d)
+
 
 ## Get unit categories by IDs
 func get_unit_categories(ids: Array) -> Array[UnitCategoryData]:
@@ -306,6 +331,7 @@ func get_unit_categories(ids: Array) -> Array[UnitCategoryData]:
 			out.append(u)
 	return out
 
+
 ## List all unit categories
 func list_unit_categories() -> Array[UnitCategoryData]:
 	var camps := get_all_objects("unit_categories")
@@ -315,8 +341,10 @@ func list_unit_categories() -> Array[UnitCategoryData]:
 	var out: Array[UnitCategoryData] = []
 	for item in camps:
 		var res := UnitCategoryData.deserialize(item)
-		if res != null: out.append(res)
+		if res != null:
+			out.append(res)
 	return out
+
 
 ## Get list of reqreuitable units for scenario
 func list_recruitable_units(mission_id: String) -> Array[UnitData]:
@@ -349,10 +377,12 @@ func list_recruitable_units(mission_id: String) -> Array[UnitData]:
 			push_warning("Unit not found for id: %s" % String(id_val))
 	return out
 
+
 ## Serialization helpers
 ## Serialize Vector2
 func v2(v: Vector2) -> Dictionary:
 	return {"x": v.x, "y": v.y}
+
 
 ## Deserialize Vector2
 func v2_from(d: Variant) -> Vector2:
@@ -362,12 +392,14 @@ func v2_from(d: Variant) -> Vector2:
 		return Vector2(float(d[0]), float(d[1]))
 	return Vector2.ZERO
 
+
 ## Serialize PackedVector2Array
 func v2arr_serialize(a: PackedVector2Array) -> Array:
 	var out: Array = []
 	for p in a:
 		out.append(v2(p))
 	return out
+
 
 ## deserialize PackedVector2Array
 func v2arr_deserialize(a: Variant) -> PackedVector2Array:
@@ -379,15 +411,16 @@ func v2arr_deserialize(a: Variant) -> PackedVector2Array:
 		out[i] = v2_from(a[i])
 	return out
 
+
 ## serialize a resource
 func res_path_or_null(res: Variant) -> Variant:
 	if typeof(res) == TYPE_STRING:
 		var s := String(res)
-		@warning_ignore("incompatible_ternary")
-		return s if s != "" else null
+		@warning_ignore("incompatible_ternary") return s if s != "" else null
 	if res is Resource and String(res.resource_path) != "":
 		return res.resource_path
 	return null
+
 
 ## Deserialize a resource
 func load_res(path: Variant) -> Variant:
@@ -397,12 +430,14 @@ func load_res(path: Variant) -> Variant:
 			return load(s)
 	return null
 
+
 ## Serialize a image to Base 64
 func image_to_png_b64(img: Image) -> String:
 	if img == null or img.is_empty():
 		return ""
 	var png: PackedByteArray = img.save_png_to_buffer()
 	return Marshalls.raw_to_base64(png)
+
 
 ## Deserialize a image from Base 64
 func png_b64_to_image(b64: Variant) -> Image:
@@ -413,6 +448,7 @@ func png_b64_to_image(b64: Variant) -> Image:
 	var err := img.load_png_from_buffer(bytes)
 	return img if err == OK else Image.new()
 
+
 ## Serialize resources to IDs
 func ids_from_resources(arr: Array, id_prop: String = "id") -> Array:
 	var out: Array = []
@@ -422,6 +458,7 @@ func ids_from_resources(arr: Array, id_prop: String = "id") -> Array:
 			if rid != null and String(rid) != "":
 				out.append(String(rid))
 	return out
+
 
 ## Deserialize resources from IDs
 func resources_from_ids(ids: Array, loader: Callable) -> Array:
@@ -435,9 +472,13 @@ func resources_from_ids(ids: Array, loader: Callable) -> Array:
 			out.append(res)
 	return out
 
+
 ## Safely duplicate a dictionary or array
 func safe_dup(v: Variant) -> Variant:
 	match typeof(v):
-		TYPE_DICTIONARY: return (v as Dictionary).duplicate(true)
-		TYPE_ARRAY: return (v as Array).duplicate(true)
-		_: return v
+		TYPE_DICTIONARY:
+			return (v as Dictionary).duplicate(true)
+		TYPE_ARRAY:
+			return (v as Array).duplicate(true)
+		_:
+			return v

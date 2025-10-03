@@ -6,13 +6,13 @@ extends Control
 ## Internal state for submenu visibility.
 enum SubmenuState { COLLAPSED, EXPANDED }
 
-@onready var menu_hbox: VBoxContainer   = $"MenuContainer"
-@onready var btn_campaign: Button       = %CampaignButton
-@onready var btn_scenarios: Button      = %ScenariosButton
-@onready var btn_multiplayer: Button    = %MultiplayerButton
-@onready var btn_editor: Button         = %EditorButton
-@onready var btn_settings: Button       = %SettingsButton
-@onready var btn_quit: Button           = %CloseButton
+@onready var menu_hbox: VBoxContainer = $"MenuContainer"
+@onready var btn_campaign: Button = %CampaignButton
+@onready var btn_scenarios: Button = %ScenariosButton
+@onready var btn_multiplayer: Button = %MultiplayerButton
+@onready var btn_editor: Button = %EditorButton
+@onready var btn_settings: Button = %SettingsButton
+@onready var btn_quit: Button = %CloseButton
 
 ## Scene registry.
 const SCENES := {
@@ -34,20 +34,42 @@ const SUB_BUTTON_TEXT := {
 
 var _state: SubmenuState = SubmenuState.COLLAPSED
 var _editor_wrapper: VBoxContainer
-var _submenu_holder: VBoxContainer 
+var _submenu_holder: VBoxContainer
+
 
 func _ready() -> void:
-	btn_campaign.pressed.connect(func(): _collapse_if_needed(); _go("campaign"))
-	btn_scenarios.pressed.connect(func(): _collapse_if_needed(); _go("scenarios"))
-	btn_multiplayer.pressed.connect(func(): _collapse_if_needed(); _go("multiplayer"))
-	btn_settings.pressed.connect(func(): _collapse_if_needed(); _go("settings"))
-	btn_quit.pressed.connect(func(): _collapse_if_needed(); _quit())
+	btn_campaign.pressed.connect(
+		func():
+			_collapse_if_needed()
+			_go("campaign")
+	)
+	btn_scenarios.pressed.connect(
+		func():
+			_collapse_if_needed()
+			_go("scenarios")
+	)
+	btn_multiplayer.pressed.connect(
+		func():
+			_collapse_if_needed()
+			_go("multiplayer")
+	)
+	btn_settings.pressed.connect(
+		func():
+			_collapse_if_needed()
+			_go("settings")
+	)
+	btn_quit.pressed.connect(
+		func():
+			_collapse_if_needed()
+			_quit()
+	)
 
 	_wrap_editor_button()
 
 	btn_editor.pressed.connect(_on_editor_pressed)
 
 	_collapse_submenu()
+
 
 ## Change scene by key in SCENES.
 func _go(key: String) -> void:
@@ -107,9 +129,10 @@ func _build_submenu_buttons() -> void:
 	var b_campaign := Button.new()
 	b_campaign.text = SUB_BUTTON_TEXT["campaign_editor"]
 	b_campaign.focus_mode = Control.FOCUS_ALL
-	b_campaign.pressed.connect(func():
-		_collapse_submenu()
-		_go("campaign_editor")
+	b_campaign.pressed.connect(
+		func():
+			_collapse_submenu()
+			_go("campaign_editor")
 	)
 	_submenu_holder.add_child(b_campaign)
 
@@ -117,9 +140,10 @@ func _build_submenu_buttons() -> void:
 	var b_scenario := Button.new()
 	b_scenario.text = SUB_BUTTON_TEXT["scenario_editor"]
 	b_scenario.focus_mode = Control.FOCUS_ALL
-	b_scenario.pressed.connect(func():
-		_collapse_submenu()
-		_go("scenario_editor")
+	b_scenario.pressed.connect(
+		func():
+			_collapse_submenu()
+			_go("scenario_editor")
 	)
 	_submenu_holder.add_child(b_scenario)
 
@@ -127,9 +151,10 @@ func _build_submenu_buttons() -> void:
 	var b_terrain := Button.new()
 	b_terrain.text = SUB_BUTTON_TEXT["terrain_editor"]
 	b_terrain.focus_mode = Control.FOCUS_ALL
-	b_terrain.pressed.connect(func():
-		_collapse_submenu()
-		_go("terrain_editor")
+	b_terrain.pressed.connect(
+		func():
+			_collapse_submenu()
+			_go("terrain_editor")
 	)
 	_submenu_holder.add_child(b_terrain)
 
@@ -163,6 +188,7 @@ func _collapse_if_needed() -> void:
 static func _queue_free_children(node: Node) -> void:
 	for c in node.get_children():
 		c.queue_free()
+
 
 static func _clear_children(node: Node) -> void:
 	for c in node.get_children():

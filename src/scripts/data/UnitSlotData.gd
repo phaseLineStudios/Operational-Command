@@ -10,6 +10,7 @@ class_name UnitSlotData
 ## Unit starting position
 @export var start_position: Vector2
 
+
 ## Serialize data to JSON
 func serialize() -> Dictionary:
 	return {
@@ -18,6 +19,7 @@ func serialize() -> Dictionary:
 		"allowed_roles": allowed_roles.duplicate(),
 		"start_position": ContentDB.v2(start_position)
 	}
+
 
 ## Deserialize data from JSON
 static func deserialize(data: Variant) -> UnitSlotData:

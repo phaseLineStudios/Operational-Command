@@ -8,13 +8,25 @@ class_name UnitTask_Defend
 ## Optional time to hold (seconds)
 @export var hold_time_s: float = 0.0
 
+
 func _init() -> void:
 	type_id = &"defend"
 	display_name = "Defend"
 	color = Color.ORANGE
 	icon = preload("res://assets/textures/ui/editors_task_defend.png")
 
-func draw_glyph(canvas: Control, center: Vector2, hovered: bool, hover_scale: float, px: int, inner_px: int, inst, to_map: Callable, scale_icon: Callable) -> void:
+
+func draw_glyph(
+	canvas: Control,
+	center: Vector2,
+	hovered: bool,
+	hover_scale: float,
+	px: int,
+	inner_px: int,
+	inst,
+	to_map: Callable,
+	scale_icon: Callable
+) -> void:
 	var r := px * 0.5 * (hover_scale if hovered else 1.0)
 	canvas.draw_circle(center, r, color.darkened(0.1) if hovered else Color(color.darkened(0.1), 0.5))
 
@@ -31,7 +43,7 @@ func draw_glyph(canvas: Control, center: Vector2, hovered: bool, hover_scale: fl
 			var half := itex.get_size() * 0.5
 			if hovered:
 				canvas.draw_set_transform(center, 0.0, Vector2.ONE * hover_scale)
-				canvas.draw_texture(itex, -half, Color.WHITE if hovered else Color(1,1,1,0.5))
+				canvas.draw_texture(itex, -half, Color.WHITE if hovered else Color(1, 1, 1, 0.5))
 				canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 			else:
 				canvas.draw_texture(itex, center - half)

@@ -36,9 +36,9 @@ signal move_arrived(dest_m: Vector2)
 ## Emitted when movement cannot proceed
 signal move_blocked(reason: String)
 ## Emitted when paused
-signal move_paused()
+signal move_paused
 ## Emitted when resumed
-signal move_resumed()
+signal move_resumed
 
 const ARRIVE_EPSILON := 1.0
 
@@ -48,6 +48,7 @@ var _move_path: PackedVector2Array = []
 var _move_path_idx := 0
 var _move_last_eta_s := 0.0
 var _move_paused := false
+
 
 ## Plan a path from current position to dest_m using PathGrid.
 func plan_move(grid: PathGrid, dest_m: Vector2) -> bool:
@@ -83,6 +84,7 @@ func plan_move(grid: PathGrid, dest_m: Vector2) -> bool:
 	emit_signal("move_planned", dest_m, _move_last_eta_s)
 	return true
 
+
 ## Start movement; will plan if needed or if dest is provided.
 func start_move(grid: PathGrid, dest_m: Vector2 = Vector2(INF, INF)) -> void:
 	if dest_m.x == INF:
@@ -95,12 +97,14 @@ func start_move(grid: PathGrid, dest_m: Vector2 = Vector2(INF, INF)) -> void:
 	_move_state = MoveState.moving
 	emit_signal("move_started", _move_dest_m)
 
+
 ## Pause.
 func pause_move() -> void:
 	if _move_state == MoveState.moving:
 		_move_paused = true
 		_move_state = MoveState.paused
 		emit_signal("move_paused")
+
 
 ## Resume.
 func resume_move() -> void:
@@ -109,12 +113,14 @@ func resume_move() -> void:
 		_move_state = MoveState.moving
 		emit_signal("move_resumed")
 
+
 ## Cancel ongoing movement.
 func cancel_move() -> void:
 	_move_path = []
 	_move_path_idx = 0
 	_move_dest_m = position_m
 	_move_state = MoveState.idle
+
 
 ## Advance movement by dt seconds on PathGrid (virtual position only).
 func tick(dt: float, grid: PathGrid) -> void:
@@ -150,6 +156,7 @@ func tick(dt: float, grid: PathGrid) -> void:
 		position_m = _move_dest_m
 		emit_signal("move_arrived", _move_dest_m)
 
+
 ## Estimate remaining time using grid weights (cheap mid-segment sampling).
 func estimate_eta_s(grid: PathGrid) -> float:
 	if grid == null or _move_path.size() < 1:
@@ -160,11 +167,23 @@ func estimate_eta_s(grid: PathGrid) -> float:
 		pts.append(_move_path[i])
 	return _estimate_time_along(grid, pts)
 
+
 ## Query helpers (for UI/AI).
-func move_state() -> MoveState: return _move_state
-func destination_m() -> Vector2: return _move_dest_m
-func current_path() -> PackedVector2Array: return _move_path
-func path_index() -> int: return _move_path_idx
+func move_state() -> MoveState:
+	return _move_state
+
+
+func destination_m() -> Vector2:
+	return _move_dest_m
+
+
+func current_path() -> PackedVector2Array:
+	return _move_path
+
+
+func path_index() -> int:
+	return _move_path_idx
+
 
 ## Terrain-modified speed at a point using PathGrid weight.
 func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
@@ -178,9 +197,11 @@ func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 	var w: float = max(grid._astar.get_point_weight_scale(c), 0.001)
 	return _kph_to_mps(unit.speed_kph) / w
 
+
 ## Sum time for a polyline using mid-segment speed.
 func _estimate_time_along(grid: PathGrid, pts: PackedVector2Array) -> float:
-	if pts.size() < 2: return 0.0
+	if pts.size() < 2:
+		return 0.0
 	var t := 0.0
 	for i in range(1, pts.size()):
 		var a := pts[i - 1]
@@ -188,13 +209,16 @@ func _estimate_time_along(grid: PathGrid, pts: PackedVector2Array) -> float:
 		var d := a.distance_to(b)
 		var mid := (a + b) * 0.5
 		var v := _speed_here_mps(grid, mid)
-		if v <= 0.0: return INF
+		if v <= 0.0:
+			return INF
 		t += d / v
 	return t
+
 
 ## Convert kph to mps
 func _kph_to_mps(speed_kph: float) -> float:
 	return max(0.0, speed_kph) * (1000.0 / 3600.0)
+
 
 ## Serialize to JSON.
 func serialize() -> Dictionary:
@@ -207,6 +231,7 @@ func serialize() -> Dictionary:
 		"combat_mode": int(combat_mode),
 		"behaviour": int(behaviour)
 	}
+
 
 ## Deserialzie from JSON.
 static func deserialize(d: Dictionary) -> ScenarioUnit:

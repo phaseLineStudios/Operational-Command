@@ -16,9 +16,11 @@ var _stroke_active := false
 var _img_before: Image = null
 var _stroke_rect: Rect2i = Rect2i()
 
+
 func _init():
 	tool_icon = preload("res://assets/textures/ui/editors_elevation_tool.png")
 	tool_hint = "Elevation Tool"
+
 
 func build_preview(overlay_parent: Node) -> Control:
 	var p := BrushPreviewCircle.new()
@@ -32,6 +34,7 @@ func build_preview(overlay_parent: Node) -> Control:
 	overlay_parent.add_child(p)
 	return p
 
+
 func _place_preview(local_px: Vector2) -> void:
 	if _preview is Control:
 		var p := _preview as Control
@@ -42,6 +45,7 @@ func _place_preview(local_px: Vector2) -> void:
 			(p as BrushPreviewCircle).strength_m = strength_m
 		p.visible = true
 		p.queue_redraw()
+
 
 func build_options_ui(p: Control) -> void:
 	var vb := VBoxContainer.new()
@@ -54,7 +58,6 @@ func build_options_ui(p: Control) -> void:
 	lb.item_selected.connect(func(i): mode = i)
 	vb.add_child(_label("Mode"))
 	vb.add_child(lb)
-
 
 	var r := HSlider.new()
 	r.min_value = 5
@@ -83,19 +86,23 @@ func build_options_ui(p: Control) -> void:
 	vb.add_child(_label("Strength (m)"))
 	vb.add_child(s)
 
+
 func build_info_ui(parent: Control) -> void:
 	var l = Label.new()
 	l.text = "Edit Terrain Elevation"
 	parent.add_child(l)
 
+
 func build_hint_ui(parent: Control) -> void:
 	parent.add_child(_label("LMB - Draw"))
+
 
 ## Helper function to create a new label
 func _label(t: String) -> Label:
 	var l := Label.new()
 	l.text = t
 	return l
+
 
 func handle_view_input(event: InputEvent) -> bool:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
@@ -106,7 +113,9 @@ func handle_view_input(event: InputEvent) -> bool:
 			_is_drag = true
 			_stroke_active = true
 			_stroke_rect = Rect2i()
-			_img_before = (data.elevation.duplicate() if data and data.elevation and not data.elevation.is_empty() else null)
+			_img_before = (
+				data.elevation.duplicate() if data and data.elevation and not data.elevation.is_empty() else null
+			)
 			_apply(event.position)
 		else:
 			_is_drag = false
@@ -114,7 +123,9 @@ func handle_view_input(event: InputEvent) -> bool:
 				var before_block := _block_from_image(_img_before, _stroke_rect)
 				var after_block := data.get_elevation_block(_stroke_rect)
 				if editor and editor.history:
-					editor.history.push_elevation_patch(data, _stroke_rect, before_block, after_block, "Elevation stroke")
+					editor.history.push_elevation_patch(
+						data, _stroke_rect, before_block, after_block, "Elevation stroke"
+					)
 			_stroke_active = false
 			_img_before = null
 			_stroke_rect = Rect2i()
@@ -128,25 +139,26 @@ func handle_view_input(event: InputEvent) -> bool:
 
 	return false
 
+
 ## Draw elevation change
 func _apply(pos: Vector2) -> void:
 	var img := data.elevation
-	if img.is_empty(): 
+	if img.is_empty():
 		return
 
 	if not pos.is_finite():
 		return
-	
+
 	var local_terrain := editor.map_to_terrain(pos)
 	var px := data.world_to_elev_px(local_terrain)
 
 	var r_px := int(round(brush_radius_m / data.elevation_resolution_m))
-	
+
 	if _stroke_active and data and data.elevation and not data.elevation.is_empty():
 		var cp := Vector2i(px.x, px.y)
 		var rr := _brush_rect_px(cp, r_px, data.elevation)
 		_stroke_rect = rr if _stroke_rect.size.x == 0 else _rect_union(_stroke_rect, rr)
-	
+
 	var r_px_i := int(round(r_px))
 	var r_hard: float = r_px * clamp(falloff_p, 0.0, 1.0)
 	var soft_band: float = max(r_px - r_hard, 0.0001)
@@ -192,10 +204,12 @@ func _apply(pos: Vector2) -> void:
 
 			data.set_elev_px(p, e)
 
+
 ## Helper for smooth fade
 func _smooth01(x: float) -> float:
 	var t: float = clamp(x, 0.0, 1.0)
 	return t * t * (3.0 - 2.0 * t)
+
 
 ## Helper function to union join a rect
 func _rect_union(a: Rect2i, b: Rect2i) -> Rect2i:
@@ -204,6 +218,7 @@ func _rect_union(a: Rect2i, b: Rect2i) -> Rect2i:
 	var x1 = max(a.position.x + a.size.x, b.position.x + b.size.x)
 	var y1 = max(a.position.y + a.size.y, b.position.y + b.size.y)
 	return Rect2i(Vector2i(x0, y0), Vector2i(max(0, x1 - x0), max(0, y1 - y0)))
+
 
 ## Helper function to get brush rect
 func _brush_rect_px(center_px: Vector2i, r_px: int, img: Image) -> Rect2i:
@@ -218,6 +233,7 @@ func _brush_rect_px(center_px: Vector2i, r_px: int, img: Image) -> Rect2i:
 	var rh: int = clamp(rect.size.y - (y - rect.position.y), 0, h - y)
 	return Rect2i(Vector2i(x, y), Vector2i(rw, rh))
 
+
 ## Returns a row-major block of elevation samples for the clipped rect.
 func _block_from_image(img: Image, rect: Rect2i) -> PackedFloat32Array:
 	var out := PackedFloat32Array()
@@ -231,13 +247,16 @@ func _block_from_image(img: Image, rect: Rect2i) -> PackedFloat32Array:
 			k += 1
 	return out
 
+
 ## Inner Class for a circle preview
-class BrushPreviewCircle extends Control:
+class BrushPreviewCircle:
+	extends Control
 	var meters_per_pixel := 1.0
 	var radius_m := 32.0
 	var falloff := 0.5
 	var strength_m := 1.0
 	var antialias := true
+
 	func _draw() -> void:
 		var r_px := radius_m / meters_per_pixel
 		var r_hard: float = r_px * clamp(falloff, 0.0, 1.0)
@@ -245,6 +264,6 @@ class BrushPreviewCircle extends Control:
 		var col_inner := Color(0.2, 0.6, 1.0, 0.4)
 		var w_outer: float = clamp(r_px * 0.03, 1.0, 3.0)
 		var w_inner: float = clamp(r_px * 0.02, 1.0, 2.0)
-		draw_arc(Vector2.ZERO, r_px,   0.0, TAU, int(clamp(r_px * 0.8, 24.0, 128.0)), col_outer, w_outer, antialias)
+		draw_arc(Vector2.ZERO, r_px, 0.0, TAU, int(clamp(r_px * 0.8, 24.0, 128.0)), col_outer, w_outer, antialias)
 		if r_hard > 0.5:
 			draw_arc(Vector2.ZERO, r_hard, 0.0, TAU, int(clamp(r_px * 0.8, 24.0, 128.0)), col_inner, w_inner, antialias)

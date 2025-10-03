@@ -6,7 +6,7 @@ class_name LabelLayer
 ## Outline thickness in pixels (>=1 draws outline)
 @export var outline_size := 1
 ## Fill color for label text
-@export var text_color: Color = Color(0.05,0.05,0.05,1.0)
+@export var text_color: Color = Color(0.05, 0.05, 0.05, 1.0)
 ## Font resource used for labels
 @export var font: Font
 ## Unused by text, kept for consistency
@@ -20,6 +20,7 @@ var _data_conn := false
 var _items: Dictionary = {}
 var _draw_items: Array = []
 var _draw_dirty := true
+
 
 ## Assigns TerrainData, resets caches, wires signals, and schedules redraw
 func set_data(d: TerrainData) -> void:
@@ -35,17 +36,24 @@ func set_data(d: TerrainData) -> void:
 		_data_conn = true
 	queue_redraw()
 
+
 ## Apply style fields from TerrainRender
 func apply_style(from: Node):
 	if from == null:
 		return
-	if "outline_color" in from: outline_color = from.outline_color
-	if "outline_size" in from: outline_size = from.outline_size
-	if "text_color" in from: text_color = from.text_color
-	if "font" in from: font = from.font
-	if "antialias" in from: antialias = from.antialias
+	if "outline_color" in from:
+		outline_color = from.outline_color
+	if "outline_size" in from:
+		outline_size = from.outline_size
+	if "text_color" in from:
+		text_color = from.text_color
+	if "font" in from:
+		font = from.font
+	if "antialias" in from:
+		antialias = from.antialias
 	_draw_dirty = true
 	queue_redraw()
+
 
 ## Marks the whole layer as dirty and queues a redraw (forces full rebuild)
 func mark_dirty():
@@ -53,6 +61,7 @@ func mark_dirty():
 	_draw_items.clear()
 	_draw_dirty = true
 	queue_redraw()
+
 
 ## Handles TerrainData label mutations and marks affected labels dirty
 func _on_labels_changed(kind: String, ids: PackedInt32Array):
@@ -78,10 +87,12 @@ func _on_labels_changed(kind: String, ids: PackedInt32Array):
 			_draw_dirty = true
 	queue_redraw()
 
+
 ## Redraw on resize so strokes match current Control rect
 func _notification(what):
 	if what == NOTIFICATION_RESIZED:
 		queue_redraw()
+
 
 func _draw() -> void:
 	if data == null or font == null:
@@ -99,6 +110,7 @@ func _draw() -> void:
 
 	for it in _draw_items:
 		_draw_label_centered(it.pos, it.text, it.size, it.rot)
+
 
 ## Insert/update a label from TerrainData
 func _upsert_from_data(id: int) -> void:
@@ -125,9 +137,9 @@ func _upsert_from_data(id: int) -> void:
 	var rot: float = float(L.get("rot", 0.0))
 	var l_visible := _is_terrain_pos_visible(pos)
 
-	var it: Variant = _items.get(id, {
-		"pos": pos, "text": txt, "size": l_size, "rot": rot, "z": z, "visible": l_visible
-	})
+	var it: Variant = _items.get(
+		id, {"pos": pos, "text": txt, "size": l_size, "rot": rot, "z": z, "visible": l_visible}
+	)
 	it.pos = pos
 	it.text = txt
 	it.size = l_size
@@ -137,6 +149,7 @@ func _upsert_from_data(id: int) -> void:
 
 	_items[id] = it
 	_draw_dirty = true
+
 
 ## Update position/rotation only (fast path for drags)
 func _refresh_pose_only(id: int) -> void:
@@ -161,6 +174,7 @@ func _refresh_pose_only(id: int) -> void:
 	_items[id] = it
 	_draw_dirty = true
 
+
 ## Build sorted list from cache
 func _rebuild_draw_items() -> void:
 	_draw_dirty = false
@@ -172,10 +186,9 @@ func _rebuild_draw_items() -> void:
 		var it = _items[id]
 		if it.visible and it.text != "":
 			tmp.append(it)
-	tmp.sort_custom(func(a, b):
-		return int(a.z) < int(b.z)
-	)
+	tmp.sort_custom(func(a, b): return int(a.z) < int(b.z))
 	_draw_items = tmp
+
 
 ## Draw a centered label with a robust outline (multi-offset fallback)
 func _draw_label_centered(pos_local: Vector2, text: String, font_size: int, rot_deg: float) -> void:
@@ -188,12 +201,20 @@ func _draw_label_centered(pos_local: Vector2, text: String, font_size: int, rot_
 	draw_set_transform(pos_local, ang, Vector2.ONE)
 
 	if outline_size > 0 and outline_color.a > 0.0:
-		draw_string_outline(font, baseline_local, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_size, outline_color)
+		draw_string_outline(
+			font, baseline_local, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_size, outline_color
+		)
 
 		var r: int = max(1, int(outline_size))
 		var offsets := [
-			Vector2(-r, 0), Vector2(r, 0), Vector2(0, -r), Vector2(0, r),
-			Vector2(-r, -r), Vector2(-r, r), Vector2(r, -r), Vector2(r, r)
+			Vector2(-r, 0),
+			Vector2(r, 0),
+			Vector2(0, -r),
+			Vector2(0, r),
+			Vector2(-r, -r),
+			Vector2(-r, r),
+			Vector2(r, -r),
+			Vector2(r, r)
 		]
 		for o in offsets:
 			draw_string(font, baseline_local + o, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_color)
@@ -201,13 +222,16 @@ func _draw_label_centered(pos_local: Vector2, text: String, font_size: int, rot_
 	draw_string(font, baseline_local, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, text_color)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
+
 ## Visibility test against terrain rect (same as other layers)
 func _is_terrain_pos_visible(pos_local: Vector2) -> bool:
 	return renderer.is_inside_terrain(pos_local + Vector2(renderer.margin_left_px, renderer.margin_top_px))
 
+
 ## Find a label dictionary in TerrainData by id
 func _find_label_by_id(id: int) -> Variant:
-	if data == null: return null
+	if data == null:
+		return null
 	for s in data.labels:
 		if s is Dictionary and int(s.get("id", 0)) == id:
 			return s

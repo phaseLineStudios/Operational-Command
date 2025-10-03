@@ -31,10 +31,12 @@ var _inspecting := false
 var _inspect_camera: Camera3D
 var _pre_inspect_transform: Transform3D
 
+
 func _ready():
 	collision_layer = 2
 	origin_position = global_transform.origin
 	origin_rotation = global_rotation
+
 
 ## Runs on pickup
 func on_pickup() -> void:
@@ -43,6 +45,7 @@ func on_pickup() -> void:
 	global_rotation_degrees = held_rotation
 	if hide_mouse:
 		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+
 
 ## Runs on drop
 func on_drop() -> void:
@@ -56,9 +59,10 @@ func on_drop() -> void:
 		freeze = false
 	else:
 		freeze = false
-	
+
 	if hide_mouse:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
 
 ## Runs on inspect start
 func start_inspect(camera: Camera3D) -> void:
@@ -69,6 +73,7 @@ func start_inspect(camera: Camera3D) -> void:
 	_pre_inspect_transform = global_transform
 	freeze = true
 
+
 ## Runs on inspect close
 func end_inspect() -> void:
 	if not _inspecting:
@@ -77,14 +82,17 @@ func end_inspect() -> void:
 	_inspect_camera = null
 	global_rotation_degrees = held_rotation
 
+
 func toggle_inspect(camera: Camera3D) -> void:
 	if _inspecting:
 		end_inspect()
 	else:
 		start_inspect(camera)
 
+
 func is_inspecting() -> bool:
 	return _inspecting
+
 
 func handle_inspect_input(event: InputEvent) -> bool:
 	if not _inspecting:
@@ -95,7 +103,8 @@ func handle_inspect_input(event: InputEvent) -> bool:
 		return true
 
 	if event is InputEventMouseButton and event.pressed:
-		if not event.button_index == MOUSE_BUTTON_RIGHT: return false
+		if not event.button_index == MOUSE_BUTTON_RIGHT:
+			return false
 		if _inspect_camera == null or not is_instance_valid(_inspect_camera):
 			end_inspect()
 			return true
@@ -120,6 +129,7 @@ func handle_inspect_input(event: InputEvent) -> bool:
 		return true
 
 	return false
+
 
 func _process(delta: float) -> void:
 	if not _inspecting or _inspect_camera == null or not is_instance_valid(_inspect_camera):

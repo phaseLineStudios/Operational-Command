@@ -15,15 +15,22 @@ enum ItemType { document, image }
 ## Position of the item on the briefing board.
 @export var board_position: Vector2
 
+
 ## Serializes Briefing Item to JSON
 func serialize() -> Dictionary:
 	return {
 		"id": id,
 		"title": title,
 		"type": int(type),
-		"resource_path": (resource if typeof(resource) == TYPE_STRING else (resource.resource_path if resource and resource.resource_path != "" else null)),
-		"board_position": { "x": board_position.x, "y": board_position.y }
+		"resource_path":
+		(
+			resource
+			if typeof(resource) == TYPE_STRING
+			else (resource.resource_path if resource and resource.resource_path != "" else null)
+		),
+		"board_position": {"x": board_position.x, "y": board_position.y}
 	}
+
 
 ## Deserializes briefing item from JSON
 static func deserialize(data: Variant) -> BriefItemData:

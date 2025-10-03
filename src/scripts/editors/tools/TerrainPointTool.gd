@@ -13,9 +13,11 @@ var _is_drag := false
 var _drag_before: Dictionary = {}
 var _pick_radius_px := 12.0
 
+
 func _init():
 	tool_icon = preload("res://assets/textures/ui/editors_point_tool.png")
 	tool_hint = "Point Tool"
+
 
 func _load_brushes() -> void:
 	brushes.clear()
@@ -26,6 +28,7 @@ func _load_brushes() -> void:
 				var r := ResourceLoader.load("res://assets/terrain_brushes/%s" % f)
 				if r is TerrainBrush and r.feature_type == TerrainBrush.FeatureType.POINT:
 					brushes.append(r)
+
 
 func build_options_ui(p: Control) -> void:
 	_load_brushes()
@@ -46,11 +49,12 @@ func build_options_ui(p: Control) -> void:
 		var b: TerrainBrush = brushes[i]
 		list.add_item(b.legend_title)
 		map_index.append(i)
-	list.item_selected.connect(func(i):
-		if i >= 0 and i < map_index.size():
-			active_brush = brushes[map_index[i]]
-			_rebuild_info_ui()
-			_update_preview_appearance()
+	list.item_selected.connect(
+		func(i):
+			if i >= 0 and i < map_index.size():
+				active_brush = brushes[map_index[i]]
+				_rebuild_info_ui()
+				_update_preview_appearance()
 	)
 	vb.add_child(list)
 
@@ -59,31 +63,36 @@ func build_options_ui(p: Control) -> void:
 	s.max_value = 4.0
 	s.step = 0.1
 	s.value = symbol_scale
-	s.value_changed.connect(func(v):
-		symbol_scale = v
-		_update_preview_appearance()
+	s.value_changed.connect(
+		func(v):
+			symbol_scale = v
+			_update_preview_appearance()
 	)
 	vb.add_child(_label("Symbol scale"))
 	vb.add_child(s)
-	
+
 	var rot_slider := HSlider.new()
 	rot_slider.min_value = -180.0
 	rot_slider.max_value = 180.0
 	rot_slider.step = 1.0
 	rot_slider.value = symbol_rotation_deg
-	rot_slider.value_changed.connect(func(v):
-		symbol_rotation_deg = v
-		_update_preview_appearance()
+	rot_slider.value_changed.connect(
+		func(v):
+			symbol_rotation_deg = v
+			_update_preview_appearance()
 	)
 	vb.add_child(_label("Rotation (°)"))
 	vb.add_child(rot_slider)
+
 
 func build_info_ui(parent: Control) -> void:
 	_info_ui_parent = parent
 	_rebuild_info_ui()
 
+
 func build_hint_ui(parent: Control) -> void:
 	parent.add_child(_label("LMB - Place"))
+
 
 func _rebuild_info_ui() -> void:
 	if not _info_ui_parent or not active_brush:
@@ -95,6 +104,7 @@ func _rebuild_info_ui() -> void:
 	l.text = "Place point features"
 	_info_ui_parent.add_child(l)
 
+
 func build_preview(overlay_parent: Node) -> Control:
 	_preview = SymbolPreview.new()
 	_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -104,6 +114,7 @@ func build_preview(overlay_parent: Node) -> Control:
 	_update_preview_appearance()
 	return _preview
 
+
 func _place_preview(local_px: Vector2) -> void:
 	if _preview == null:
 		return
@@ -111,8 +122,9 @@ func _place_preview(local_px: Vector2) -> void:
 	_preview.visible = _preview is SymbolPreview and (active_brush != null and active_brush.symbol != null)
 	_preview.queue_redraw()
 
+
 func _update_preview_appearance() -> void:
-	if _preview == null: 
+	if _preview == null:
 		return
 	if _preview is SymbolPreview:
 		var sp := _preview as SymbolPreview
@@ -121,6 +133,7 @@ func _update_preview_appearance() -> void:
 		sp.rotation_deg = symbol_rotation_deg
 		sp.brush = active_brush
 		sp.queue_redraw()
+
 
 func handle_view_input(event: InputEvent) -> bool:
 	if event is InputEventMouseMotion:
@@ -142,7 +155,9 @@ func handle_view_input(event: InputEvent) -> bool:
 			if _hover_idx >= 0:
 				_is_drag = true
 				_drag_idx = _hover_idx
-				_drag_before = (data.points[_drag_idx].duplicate(true) if _drag_idx >= 0 and _drag_idx < data.points.size() else {})
+				_drag_before = (
+					data.points[_drag_idx].duplicate(true) if _drag_idx >= 0 and _drag_idx < data.points.size() else {}
+				)
 			else:
 				if active_brush == null or active_brush.feature_type != TerrainBrush.FeatureType.POINT:
 					return true
@@ -176,26 +191,23 @@ func handle_view_input(event: InputEvent) -> bool:
 
 	return false
 
+
 func _ensure_surfaces():
-	if data == null: 
+	if data == null:
 		return
 	if !("surfaces" in data) or data.points == null:
 		data.points = []
 
+
 func _add_point(local_m: Vector2) -> void:
-	if data == null: 
+	if data == null:
 		return
 	_ensure_surfaces()
 	var pid := randi()
-	var point := {
-		"id": pid,
-		"brush": active_brush,
-		"pos": local_m,
-		"scale": symbol_scale,
-		"rot": symbol_rotation_deg
-	}
+	var point := {"id": pid, "brush": active_brush, "pos": local_m, "scale": symbol_scale, "rot": symbol_rotation_deg}
 	data.add_point(point)
 	editor.history.push_item_insert(data, "points", point, "Add point", data.points.size())
+
 
 func _set_point_pos(idx_in_points: int, local_m: Vector2) -> void:
 	if data == null or idx_in_points < 0 or idx_in_points >= data.points.size():
@@ -205,16 +217,18 @@ func _set_point_pos(idx_in_points: int, local_m: Vector2) -> void:
 	data.points[idx_in_points] = s
 	data.set_point_transform(s.id, local_m, symbol_rotation_deg, symbol_scale)
 
+
 func _remove_point(idx_in_points: int) -> void:
 	if data == null or idx_in_points < 0 or idx_in_points >= data.points.size():
 		return
 	var s: Dictionary = data.points[idx_in_points]
 	var id = s.get("id", null)
-	if id == null: 
+	if id == null:
 		return
 	var copy := s.duplicate(true)
 	editor.history.push_item_erase_by_id(data, "points", id, copy, "Delete point", idx_in_points)
 	data.remove_point(data.points[idx_in_points].id)
+
 
 func _pick_point(mouse_global: Vector2) -> int:
 	if data == null or data.points == null:
@@ -223,10 +237,10 @@ func _pick_point(mouse_global: Vector2) -> int:
 	var best_d2 := _pick_radius_px * _pick_radius_px
 	for i in data.points.size():
 		var s = data.points[i]
-		if typeof(s) != TYPE_DICTIONARY: 
+		if typeof(s) != TYPE_DICTIONARY:
 			continue
 		var p_local: Vector2 = s.get("pos", Vector2.INF)
-		if not p_local.is_finite(): 
+		if not p_local.is_finite():
 			continue
 		var p_map := editor.map_to_terrain(p_local)
 		var d2 := p_map.distance_squared_to(mouse_global)
@@ -235,15 +249,20 @@ func _pick_point(mouse_global: Vector2) -> int:
 			best_d2 = d2
 	return best
 
+
 func _label(t: String) -> Label:
 	var l := Label.new()
 	l.text = t
 	return l
 
-func _queue_free_children(node: Control):
-	for n in node.get_children(): n.queue_free()
 
-class SymbolPreview extends Control:
+func _queue_free_children(node: Control):
+	for n in node.get_children():
+		n.queue_free()
+
+
+class SymbolPreview:
+	extends Control
 	var tex: Texture2D
 	var brush: TerrainBrush
 	var scale_factor := 1.0
@@ -251,7 +270,7 @@ class SymbolPreview extends Control:
 	var antialias := true
 
 	func _get_minimum_size() -> Vector2:
-		if tex == null: 
+		if tex == null:
 			return Vector2.ZERO
 		return Vector2(tex.get_width(), tex.get_height()) * max(0.01, scale_factor)
 

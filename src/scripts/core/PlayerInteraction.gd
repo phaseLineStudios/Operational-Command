@@ -14,10 +14,12 @@ var _have_valid_plane_point := false
 var _half_x := 0.0
 var _half_z := 0.0
 
+
 func _ready():
 	bounds.transparency = 1
 	_half_x = bounds.mesh.size.x * 0.5
 	_half_z = bounds.mesh.size.y * 0.5
+
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _held != null and _held.is_inspecting():
@@ -57,10 +59,11 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 			return
 
+
 func _process(delta: float) -> void:
 	if _held == null:
 		return
-	
+
 	if _held.is_inspecting():
 		return
 
@@ -74,9 +77,11 @@ func _process(delta: float) -> void:
 		var target := _last_valid_plane_point - world_offset
 		if follow_smooth > 0.0:
 			_held.global_transform.origin = _held.global_transform.origin.lerp(
-				target, clamp(follow_smooth * delta, 0.0, 1.0))
+				target, clamp(follow_smooth * delta, 0.0, 1.0)
+			)
 		else:
 			_held.global_transform.origin = target
+
 
 func _try_pickup(mouse_pos: Vector2) -> void:
 	var from := camera.project_ray_origin(mouse_pos)
@@ -114,12 +119,14 @@ func _try_pickup(mouse_pos: Vector2) -> void:
 	else:
 		_have_valid_plane_point = false
 
+
 func _drop_held() -> void:
 	if _held != null:
 		if _held.has_method("on_drop"):
 			_held.call("on_drop")
 	_held = null
 	_have_valid_plane_point = false
+
 
 func _project_mouse_to_finite_plane(mouse_pos: Vector2) -> Variant:
 	var from := camera.project_ray_origin(mouse_pos)
@@ -128,7 +135,7 @@ func _project_mouse_to_finite_plane(mouse_pos: Vector2) -> Variant:
 	var gt := bounds.global_transform
 	var world_point_on_plane := gt.origin
 	var world_normal := (gt.basis * Vector3.UP).normalized()
-	
+
 	var denom := world_normal.dot(dir)
 	if is_equal_approx(denom, 0.0):
 		return null
@@ -136,11 +143,11 @@ func _project_mouse_to_finite_plane(mouse_pos: Vector2) -> Variant:
 	if t < 0.0:
 		return null
 	var hit_world := from + dir * t
-	
+
 	var local := gt.affine_inverse() * hit_world
 	if absf(local.y) > 0.01:
 		return null
 	if absf(local.x) > _half_x or absf(local.z) > _half_z:
 		return null
-	
+
 	return hit_world

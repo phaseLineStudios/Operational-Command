@@ -11,6 +11,7 @@ class_name SetupController
 @onready var unit: MovementAgent = %ExampleUnit
 @onready var input_overlay: Control = %InputOverlay
 
+
 func _ready() -> void:
 	if renderer == null or renderer.data == null:
 		push_warning("Setup: TerrainRender or TerrainData missing.")
@@ -28,18 +29,18 @@ func _ready() -> void:
 
 	renderer.path_grid.rebuild(unit.profile)
 
-	renderer.path_grid.build_ready.connect(func(p):
-		if p == unit.profile:
-			LogService.info("PathGrid ready for profile: " + str(p), "PathTest.gd:33")
+	renderer.path_grid.build_ready.connect(
+		func(p):
+			if p == unit.profile:
+				LogService.info("PathGrid ready for profile: " + str(p), "PathTest.gd:33")
 	)
-	renderer.path_grid.build_failed.connect(func(reason):
-		push_warning("PathGrid build failed: " + reason)
-	)
+	renderer.path_grid.build_failed.connect(func(reason): push_warning("PathGrid build failed: " + reason))
 
 	renderer.path_grid.debug_enabled = true
 	renderer.path_grid.debug_layer = PathGrid.DebugLayer.WEIGHT
-	
+
 	input_overlay.gui_input.connect(_input)
+
 
 func _input(e: InputEvent) -> void:
 	if e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_LEFT and e.pressed:

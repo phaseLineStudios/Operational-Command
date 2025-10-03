@@ -25,9 +25,11 @@ var current_save_id: StringName = &""
 var current_scenario: ScenarioData
 var current_scenario_loadout: Dictionary = {}
 
+
 func _ready() -> void:
 	debug_display = debug_display_scene.instantiate()
 	get_tree().root.add_child.call_deferred(debug_display)
+
 
 ## Change to scene at [param path]; logs error if missing.
 func goto_scene(path: String) -> void:
@@ -36,20 +38,24 @@ func goto_scene(path: String) -> void:
 	else:
 		push_error("Scene not found: %s" % path)
 
+
 ## Set current campaign and emit [signal campaign_selected].
 func select_campaign(campaign: CampaignData) -> void:
 	current_campaign = campaign
 	emit_signal("campaign_selected", campaign.id)
+
 
 ## Set current save and emit [signal save_selected].
 func select_save(save_id: StringName) -> void:
 	current_save_id = save_id
 	emit_signal("save_selected", save_id)
 
+
 ## Set current mission and emit [signal mission_selected].
 func select_scenario(scenario: ScenarioData) -> void:
 	current_scenario = scenario
 	emit_signal("scenario_selected", scenario.id)
+
 
 ## Set current mission loadout and emit [signal mission_loadout_selected]
 func set_scenario_loadout(loadout: Dictionary) -> void:

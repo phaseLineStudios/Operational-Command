@@ -14,7 +14,7 @@ signal request_inspect_unit(unit: Dictionary)
 ## Style when the slot is filled
 @export var filled_style: StyleBox
 ## Hover style when the slot is filled.
-@export var hover_style_filled: StyleBox 
+@export var hover_style_filled: StyleBox
 ## Style to show while hovering with an invalid payload (deny-hover).
 @export var deny_hover_style: StyleBox
 ## Icon used when slot is empty or unit lacks icon.
@@ -32,35 +32,50 @@ var _is_hovered := false
 var _deny_hover := false
 
 @onready var _row: HBoxContainer = $"Row"
-@onready var _icon: TextureRect  = $"Row/Icon"
-@onready var _vb: VBoxContainer  = $"Row/Column"
-@onready var _lbl_title: Label   = $"Row/Column/Title"
-@onready var _lbl_slot: Label    = $"Row/Column/Slot"
+@onready var _icon: TextureRect = $"Row/Icon"
+@onready var _vb: VBoxContainer = $"Row/Column"
+@onready var _lbl_title: Label = $"Row/Column/Title"
+@onready var _lbl_slot: Label = $"Row/Column/Slot"
+
 
 ## Cache base style, wire hover, set mouse filters, and refresh visuals.
 func _ready() -> void:
 	var sb := get_theme_stylebox("panel")
-	if sb: 
+	if sb:
 		_base_style = sb.duplicate()
-		
+
 	_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_vb.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_lbl_title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_lbl_slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	mouse_entered.connect(func(): _is_hovered = true; _apply_style())
-	mouse_exited.connect(func(): _is_hovered = false; _deny_hover = false; _apply_style())
+	mouse_entered.connect(
+		func():
+			_is_hovered = true
+			_apply_style()
+	)
+	mouse_exited.connect(
+		func():
+			_is_hovered = false
+			_deny_hover = false
+			_apply_style()
+	)
 	_refresh_labels()
 	_update_icon()
 	_apply_style()
 
+
 ## Initialize slot metadata (id/title/roles/index/total) and update UI.
 func configure(id: String, slot_title: String, roles: Array, i: int, m: int) -> void:
-	slot_id = id; title = slot_title
-	allowed_roles = roles.duplicate(); index = i; max_count = m
+	slot_id = id
+	title = slot_title
+	allowed_roles = roles.duplicate()
+	index = i
+	max_count = m
 	_refresh_labels()
 	_update_icon()
 	_apply_style()
+
 
 ## Assign a unit to this slot and refresh visuals.
 func set_assignment(unit: UnitData) -> void:
@@ -69,12 +84,14 @@ func set_assignment(unit: UnitData) -> void:
 	_update_icon()
 	_apply_style()
 
+
 ## Clear the assigned unit and refresh visuals.
 func clear_assignment() -> void:
 	_assigned_unit = null
 	_refresh_labels()
 	_update_icon()
 	_apply_style()
+
 
 ## Update Title, and Type.
 func _refresh_labels() -> void:
@@ -85,9 +102,10 @@ func _refresh_labels() -> void:
 	else:
 		var unit_title: String = _assigned_unit.title
 		_lbl_title.text = "%s • %s" % [unit_title, title]
-		
+
 		var unit_role: String = _assigned_unit.role
 		_lbl_slot.text = "Slot %d/%d • %s" % [index, max_count, unit_role]
+
 
 ## Set icon to assigned unit's icon or fall back to exported default.
 func _update_icon() -> void:
@@ -98,6 +116,7 @@ func _update_icon() -> void:
 	if tex == null:
 		tex = default_icon
 	_icon.texture = tex
+
 
 ## Apply style
 func _apply_style() -> void:
@@ -118,11 +137,13 @@ func _apply_style() -> void:
 		else:
 			remove_theme_stylebox_override("panel")
 
+
 ## On click, emit inspect signal if a unit is assigned.
 func _gui_input(e: InputEvent) -> void:
 	if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
 		if not _assigned_unit.is_empty():
 			emit_signal("request_inspect_unit", _assigned_unit)
+
 
 ## Validate payload type and role compatibility for dropping onto this slot.
 func _can_drop_data(_pos: Vector2, data: Variant) -> bool:
@@ -132,7 +153,7 @@ func _can_drop_data(_pos: Vector2, data: Variant) -> bool:
 		_apply_style()
 		return false
 	var t := String(data["type"])
-	var is_valid_type := (t == "unit" or t == "assigned_unit")
+	var is_valid_type := t == "unit" or t == "assigned_unit"
 	if not is_valid_type:
 		_deny_hover = false
 		_apply_style()
@@ -143,6 +164,7 @@ func _can_drop_data(_pos: Vector2, data: Variant) -> bool:
 	_apply_style()
 	return can
 
+
 ## Emit assignment request for valid drops, else briefly flash deny.
 func _drop_data(_pos: Vector2, data: Variant) -> void:
 	if not _can_drop_data(_pos, data):
@@ -151,6 +173,7 @@ func _drop_data(_pos: Vector2, data: Variant) -> void:
 	var source_sid := String(data.get("slot_id", ""))
 	emit_signal("request_assign_drop", slot_id, unit, source_sid)
 
+
 ## When filled, allow dragging the assigned unit out to pool or another slot.
 func _get_drag_data(_pos: Vector2) -> Variant:
 	if _assigned_unit.is_empty():
@@ -158,11 +181,8 @@ func _get_drag_data(_pos: Vector2) -> Variant:
 	var p := Label.new()
 	p.text = _assigned_unit.title
 	set_drag_preview(p)
-	return {
-		"type":"assigned_unit",
-		"unit":_assigned_unit,
-		"slot_id":slot_id
-	}
+	return {"type": "assigned_unit", "unit": _assigned_unit, "slot_id": slot_id}
+
 
 ## Clear deny-hover at drag end to restore normal styling.
 func _notification(what: int) -> void:

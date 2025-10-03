@@ -25,10 +25,15 @@ var _mat: StandardMaterial3D
 var _plane: PlaneMesh
 var _camera: Camera3D
 
+
 func _ready() -> void:
 	_plane = map.mesh as PlaneMesh
-	var sx: float = abs(map.scale.x); if sx == 0.0: sx = 1.0
-	var sz: float = abs(map.scale.z); if sz == 0.0: sz = 1.0
+	var sx: float = abs(map.scale.x)
+	if sx == 0.0:
+	sx = 1.0
+	var sz: float = abs(map.scale.z)
+	if sz == 0.0:
+	sz = 1.0
 	_start_world_max = Vector2(_plane.size.x * sx, _plane.size.y * sz)
 
 	_mat = map.get_active_material(0)
@@ -43,15 +48,17 @@ func _ready() -> void:
 			renderer.connect("map_resize", Callable(self, "_on_renderer_map_resize"))
 		if not renderer.is_connected("resized", Callable(self, "_on_renderer_map_resize")):
 			renderer.connect("resized", Callable(self, "_on_renderer_map_resize"))
-		
+
 		if Game.current_scenario != null and Game.current_scenario.terrain != null:
 			renderer.data = Game.current_scenario.terrain
 
 	_update_viewport_to_renderer()
 	_update_mesh_fit()
 
+
 func _process(_dt: float) -> void:
 	_update_mouse_grid_ui()
+
 
 ## Handle *unhandled* input and emit when it hits the map.
 func _unhandled_input(event: InputEvent) -> void:
@@ -63,9 +70,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	emit_signal("map_unhandled_mouse", event, res.map_px, res.terrain)
 
+
 ## Assign the terrain viewport as the map texture
 func _apply_viewport_texture() -> void:
 	_mat.albedo_texture = terrain_viewport.get_texture()
+
 
 ## Resize the Viewport to match the renderer's pixel size (including margins)
 func _update_viewport_to_renderer() -> void:
@@ -73,14 +82,12 @@ func _update_viewport_to_renderer() -> void:
 		return
 	var os: int = max(viewport_oversample, 1)
 	var logical := renderer.size
-	var new_size := Vector2i(
-		max(1, int(ceil(logical.x)) * os),
-		max(1, int(ceil(logical.y)) * os)
-	)
+	var new_size := Vector2i(max(1, int(ceil(logical.x)) * os), max(1, int(ceil(logical.y)) * os))
 	if terrain_viewport.size != new_size:
 		terrain_viewport.size = new_size
 		# Make the 2D canvas draw scaled up to fill the larger viewport:
 		terrain_viewport.canvas_transform = Transform2D.IDENTITY.scaled(Vector2(os, os))
+
 
 ## Fit PlaneMesh to the viewport aspect ratio, clamped to _start_world_max
 func _update_mesh_fit() -> void:
@@ -98,21 +105,28 @@ func _update_mesh_fit() -> void:
 		fit_h = max_h
 		fit_w = fit_h * target_r
 
-	var sx: float = abs(map.scale.x); if sx == 0.0: sx = 1.0
-	var sz: float = abs(map.scale.z); if sz == 0.0: sz = 1.0
+	var sx: float = abs(map.scale.x)
+	if sx == 0.0:
+		sx = 1.0
+	var sz: float = abs(map.scale.z)
+	if sz == 0.0:
+		sz = 1.0
 	_plane.size = Vector2(fit_w / sx, fit_h / sz)
 	map.mesh = _plane
 
 	emit_signal("map_resized", Vector2(fit_w, fit_h))
+
 
 ## Viewport callback: refit plane on texture size change
 func _on_viewport_size_changed() -> void:
 	_apply_viewport_texture()
 	_update_mesh_fit()
 
+
 ## Renderer callback: sync viewport to new map pixel size
 func _on_renderer_map_resize() -> void:
 	_update_viewport_to_renderer()
+
 
 ## Helper: from screen pos to map pixels & terrain meters. Returns null if not on map
 func screen_to_map_and_terrain(screen_pos: Vector2) -> Variant:
@@ -125,6 +139,7 @@ func screen_to_map_and_terrain(screen_pos: Vector2) -> Variant:
 	var logical_px: Vector2 = map_px / float(max(viewport_oversample, 1))
 	var terrain_pos: Vector2 = renderer.map_to_terrain(logical_px)
 	return {"map_px": map_px, "terrain": terrain_pos}
+
 
 ## World-space hit on the plane under a screen position; null if none
 func _raycast_to_map_plane(screen_pos: Vector2) -> Variant:
@@ -142,6 +157,7 @@ func _raycast_to_map_plane(screen_pos: Vector2) -> Variant:
 	var plane := Plane(plane_normal.normalized(), map.global_transform.origin)
 	return plane.intersects_ray(ray_from, ray_dir)
 
+
 ## Convert a world hit on the plane to map pixels (0..viewport size)
 func _plane_hit_to_map_px(hit_world: Vector3) -> Variant:
 	if map == null or _plane == null:
@@ -156,6 +172,7 @@ func _plane_hit_to_map_px(hit_world: Vector3) -> Variant:
 	var vp := terrain_viewport.size
 	return Vector2(clamp(u, 0.0, 1.0) * vp.x, clamp(v, 0.0, 1.0) * vp.y)
 
+
 ## Grid hover label update
 func _update_mouse_grid_ui() -> void:
 	if Input.mouse_mode == Input.MOUSE_MODE_HIDDEN:
@@ -164,7 +181,8 @@ func _update_mouse_grid_ui() -> void:
 	var mouse := get_viewport().get_mouse_position()
 	var res: Variant = screen_to_map_and_terrain(mouse)
 	if res == null:
-		if _grid_label: _grid_label.visible = false
+		if _grid_label:
+			_grid_label.visible = false
 		return
 	var grid: String = renderer.pos_to_grid(res.terrain)
 	emit_signal("mouse_grid_changed", res.terrain, grid)
@@ -172,6 +190,7 @@ func _update_mouse_grid_ui() -> void:
 		_grid_label.get_node("Label").text = grid
 		_grid_label.global_position = mouse + grid_label_offset
 		_grid_label.visible = true
+
 
 ## Force-refresh the texture and refit
 func refresh() -> void:

@@ -15,6 +15,7 @@ class_name DebugMenu
 
 var _log_lines: Array = []
 
+
 func _ready():
 	hide()
 	metrics_visibility.item_selected.connect(_set_metrics_visibility)
@@ -23,7 +24,7 @@ func _ready():
 	_populate_scene_list()
 	LogService.line.connect(_log_msg)
 	set_process(true)
-	
+
 	event_log_filter_log.pressed.connect(_refresh_log)
 	event_log_filter_info.pressed.connect(_refresh_log)
 	event_log_filter_warning.pressed.connect(_refresh_log)
@@ -31,9 +32,11 @@ func _ready():
 	event_log_filter_trace.pressed.connect(_refresh_log)
 	event_log_clear.pressed.connect(_clear_log)
 
+
 ## Set visibility for metrics display
 func _set_metrics_visibility(visibility: int):
 	metrics_display.style = visibility as DebugMetricsDisplay.Style
+
 
 ## Load scene
 func _on_load_pressed() -> void:
@@ -43,9 +46,10 @@ func _on_load_pressed() -> void:
 	var path: String = scene_loader_scene.get_item_metadata(idx)
 	if path == "" or path == null:
 		return
-	
+
 	Game.goto_scene(path)
 	hide()
+
 
 ## populate optionbutton with scenes
 func _populate_scene_list() -> void:
@@ -62,11 +66,13 @@ func _populate_scene_list() -> void:
 	if scene_loader_scene.item_count > 0:
 		scene_loader_scene.select(0)
 
+
 ## Collect all scenes
 func _collect_scenes(root: String) -> Array:
 	var out: Array = []
 	_recursive_collect_scenes(root, out)
 	return out
+
 
 ## recursivly collect all scenes in project
 func _recursive_collect_scenes(path: String, out: Array) -> void:
@@ -81,16 +87,19 @@ func _recursive_collect_scenes(path: String, out: Array) -> void:
 			continue
 		_recursive_collect_scenes(path.path_join(d), out)
 
+
 ## Prettify scene name
 func _pretty_scene_name(p: String) -> String:
 	var rel := p.replace("res://", "")
 	var dot := rel.rfind(".")
-	return (rel.substr(0, dot) if dot >= 0 else rel)
+	return rel.substr(0, dot) if dot >= 0 else rel
+
 
 ## Capture and store log message
 func _log_msg(msg: String, lvl: LogService.LogLevel) -> void:
-	_log_lines.append({ "msg": msg, "lvl": lvl })
+	_log_lines.append({"msg": msg, "lvl": lvl})
 	_refresh_log()
+
 
 ## refresh log display
 func _refresh_log():
@@ -98,19 +107,23 @@ func _refresh_log():
 	for line in _log_lines:
 		var lvl: LogService.LogLevel = line["lvl"]
 		var txt: String = line["msg"]
-		
-		if (lvl == LogService.LogLevel.LOG and event_log_filter_log.button_pressed) \
-		or (lvl == LogService.LogLevel.INFO and event_log_filter_info.button_pressed) \
-		or (lvl == LogService.LogLevel.WARNING and event_log_filter_warning.button_pressed) \
-		or (lvl == LogService.LogLevel.ERROR and event_log_filter_error.button_pressed) \
-		or (lvl == LogService.LogLevel.TRACE and event_log_filter_trace.button_pressed):
+
+		if (
+			(lvl == LogService.LogLevel.LOG and event_log_filter_log.button_pressed)
+			or (lvl == LogService.LogLevel.INFO and event_log_filter_info.button_pressed)
+			or (lvl == LogService.LogLevel.WARNING and event_log_filter_warning.button_pressed)
+			or (lvl == LogService.LogLevel.ERROR and event_log_filter_error.button_pressed)
+			or (lvl == LogService.LogLevel.TRACE and event_log_filter_trace.button_pressed)
+		):
 			filtered_lines.append(txt)
-			
+
 	event_log_content.text = "\n".join(filtered_lines)
+
 
 func _clear_log():
 	_log_lines = []
 	_refresh_log()
+
 
 func _process(_dt: float) -> void:
 	if Input.is_action_just_pressed("open_debug_menu"):
@@ -119,6 +132,7 @@ func _process(_dt: float) -> void:
 			grab_focus()
 		else:
 			hide()
+
 
 func _close():
 	hide()

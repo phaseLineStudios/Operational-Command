@@ -20,10 +20,12 @@ var editor: ScenarioEditor
 var trigger_index := -1
 var _before: ScenarioTrigger
 
+
 func _ready() -> void:
 	save_btn.pressed.connect(_on_save)
 	close_btn.pressed.connect(func(): visible = false)
 	close_requested.connect(func(): visible = false)
+
 
 func show_for(_editor: ScenarioEditor, index: int) -> void:
 	if _editor == null or index < 0 or index >= _editor.ctx.data.triggers.size():
@@ -52,8 +54,10 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 
 	visible = true
 
+
 func _on_save() -> void:
-	if editor == null or trigger_index < 0 or trigger_index >= editor.ctx.data.triggers.size(): return
+	if editor == null or trigger_index < 0 or trigger_index >= editor.ctx.data.triggers.size():
+		return
 	var live: ScenarioTrigger = editor.ctx.data.triggers[trigger_index]
 
 	var after := live.duplicate(true)

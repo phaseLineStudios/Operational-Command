@@ -13,11 +13,13 @@ signal radio_result(text: String)
 ## Turn on/off the radio stream
 var _tx := false
 
+
 ## Connect to STTService signals.
 func _ready() -> void:
-	STTService.partial.connect(func(t):emit_signal("radio_partial", t))
+	STTService.partial.connect(func(t): emit_signal("radio_partial", t))
 	STTService.result.connect(_on_result)
 	STTService.error.connect(func(m): push_error("[Radio] STT error: %s" % m))
+
 
 ## Handle PTT input.
 func _unhandled_input(event: InputEvent) -> void:
@@ -32,12 +34,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		_stop_tx()
 		get_viewport().set_input_as_handled()
 
+
 ## Temporary for testing
 ## TODO Remove this
 func _on_result(t):
 	LogService.trace("Heard: %s" % t, "Radio.gd:39")
 	OrdersParser.parse(t)
 	emit_signal("radio_result", t)
+
 
 ## Manually enable the radio / STT.
 func _start_tx() -> void:
@@ -48,6 +52,7 @@ func _start_tx() -> void:
 	STTService.start()
 	emit_signal("radio_on")
 
+
 ## Manually disable the radio / STT.
 func _stop_tx() -> void:
 	if not _tx:
@@ -56,6 +61,7 @@ func _stop_tx() -> void:
 	STTService.stop()
 	emit_signal("radio_off")
 	LogService.info("PTT Released", "Radio.gd:58")
+
 
 ## Ensure we stop capture when the radio node leaves.
 func _exit_tree() -> void:

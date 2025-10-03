@@ -20,18 +20,28 @@ signal request_edit(terrain_data)
 var _is_edit_mode := false
 var _target_data: TerrainData = null
 
+
 func _ready():
 	create_btn.pressed.connect(_on_primary_pressed)
 	cancel_btn.pressed.connect(func(): show_dialog(false))
 	close_requested.connect(func(): show_dialog(false))
 
+
 ## Open the dialog for creating a new terrain (optionally pass defaults).
-func open_for_create(title_text: String = "",size_x_m: int = 2000, size_y_m: int = 2000, grid_start_x_m: int = 100, grid_start_y_m: int = 100, base_elev_m: float = 110.0) -> void:
+func open_for_create(
+	title_text: String = "",
+	size_x_m: int = 2000,
+	size_y_m: int = 2000,
+	grid_start_x_m: int = 100,
+	grid_start_y_m: int = 100,
+	base_elev_m: float = 110.0
+) -> void:
 	_is_edit_mode = false
 	_target_data = null
 	_window_title_and_cta()
 	_fill_fields_for_create(title_text, size_x_m, size_y_m, grid_start_x_m, grid_start_y_m, base_elev_m)
 	show_dialog(true)
+
 
 ## Open the dialog for editing an existing TerrainData
 func open_for_edit(data: TerrainData) -> void:
@@ -44,6 +54,7 @@ func open_for_edit(data: TerrainData) -> void:
 	_window_title_and_cta()
 	_fill_fields_from_data(data)
 	show_dialog(true)
+
 
 func _on_primary_pressed():
 	var sx := int(terrain_size_x.value)
@@ -74,13 +85,17 @@ func _on_primary_pressed():
 		show_dialog(false)
 		emit_signal("request_create", data)
 
-func _fill_fields_for_create(title_text: String, size_x_m: int, size_y_m: int, grid_start_x_m: int, grid_start_y_m: int, base_elev_m: float) -> void:
+
+func _fill_fields_for_create(
+	title_text: String, size_x_m: int, size_y_m: int, grid_start_x_m: int, grid_start_y_m: int, base_elev_m: float
+) -> void:
 	terrain_title.text = title_text
 	terrain_size_x.value = size_x_m
 	terrain_size_y.value = size_y_m
 	terrain_grid_x.value = grid_start_x_m
 	terrain_grid_y.value = grid_start_y_m
 	base_elevation.value = base_elev_m
+
 
 func _fill_fields_from_data(data: TerrainData) -> void:
 	terrain_title.text = data.name
@@ -90,9 +105,11 @@ func _fill_fields_from_data(data: TerrainData) -> void:
 	terrain_grid_y.value = int(data.grid_start_y)
 	base_elevation.value = float(data.base_elevation_m)
 
+
 func _window_title_and_cta() -> void:
 	title = "Edit Terrain" if _is_edit_mode else "Create New Terrain"
 	create_btn.text = "Save" if _is_edit_mode else "Create"
+
 
 ## Reset values before popup (only when hiding)
 func _reset_values():
@@ -102,6 +119,7 @@ func _reset_values():
 	terrain_grid_x.value = 100
 	terrain_grid_y.value = 100
 	base_elevation.value = 110
+
 
 ## Show/hide dialog
 func show_dialog(state: bool):

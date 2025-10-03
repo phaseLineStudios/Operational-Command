@@ -4,8 +4,10 @@ class_name RadioFeedback
 
 @onready var error_player: AudioStreamPlayer2D = %ErrorSound
 
+
 func _ready() -> void:
 	OrdersParser.parse_error.connect(_on_parseError)
+
 
 func _on_parseError(error: String) -> void:
 	LogService.error("error: %s, playing audio..." % error, "RadioFeedback.gd:11")

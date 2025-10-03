@@ -5,6 +5,7 @@ class_name UnitTask_Move
 ##
 ## Keeps default params empty for now; extend as needed.
 
+
 func _init() -> void:
 	type_id = &"move"
 	display_name = "Move"

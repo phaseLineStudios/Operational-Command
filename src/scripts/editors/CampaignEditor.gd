@@ -7,8 +7,10 @@ extends Control
 
 const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 
+
 func _ready():
 	back_btn.connect("pressed", _on_back_pressed)
+
 
 func _on_back_pressed():
 	Game.goto_scene(MAIN_MENU_SCENE)

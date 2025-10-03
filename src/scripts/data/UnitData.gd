@@ -69,22 +69,22 @@ enum unitSize { Team, Squad, Platoon, Company, Battalion }
 @export_category("Editor meta")
 @export var unit_category: UnitCategoryData
 
+
 ## Serialzie this unit to JSON
 func serialize() -> Dictionary:
 	return {
 		"id": id,
 		"title": title,
-		"icon_path": (icon.resource_path as Variant if icon and icon.resource_path != "" else null as Variant),
+		"icon_path": icon.resource_path as Variant if icon and icon.resource_path != "" else null as Variant,
 		"role": role,
 		"allowed_slots": allowed_slots.duplicate(),
 		"cost": cost,
-
 		"size": int(size),
 		"strength": strength,
 		"equipment": equipment.duplicate(),
 		"experience": experience,
-
-		"stats": {
+		"stats":
+		{
 			"attack": attack,
 			"defense": defense,
 			"spot_m": spot_m,
@@ -92,22 +92,19 @@ func serialize() -> Dictionary:
 			"morale": morale,
 			"speed_kph": speed_kph
 		},
-
-		"state": {
+		"state":
+		{
 			"state_strength": state_strength,
 			"state_injured": state_injured,
 			"state_equipment": state_equipment,
 			"cohesion": cohesion
 		},
-		
-		"editor": {
-			"unit_category": unit_category.id
-		},
-
+		"editor": {"unit_category": unit_category.id},
 		"throughput": throughput.duplicate(),
 		"equipment_tags": equipment_tags.duplicate(),
 		"doctrine": doctrine
 	}
+
 
 ## Deserialize Unit JSON
 static func deserialize(data: Variant) -> UnitData:
@@ -153,7 +150,7 @@ static func deserialize(data: Variant) -> UnitData:
 		u.state_injured = float(state.get("state_injured", u.state_injured))
 		u.state_equipment = float(state.get("state_equipment", u.state_equipment))
 		u.cohesion = float(state.get("cohesion", u.cohesion))
-		
+
 	var editor: Dictionary = data.get("editor", {})
 	if typeof(editor) == TYPE_DICTIONARY:
 		u.unit_category = ContentDB.get_unit_category(editor.get("unit_category", u.unit_category))
