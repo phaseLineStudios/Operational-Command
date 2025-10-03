@@ -1,0 +1,41 @@
+name: GDScript Lint & Format
+
+on:
+    pull_request:
+      paths:
+        - "**/*.gd"
+        - "**/*.gdshader"
+        - "tools/gdtoolkit_run.py"
+    push:
+      branches: [ main ]
+      paths:
+        - "**/*.gd"
+        - "**/*.gdshader"
+        - "tools/gdtoolkit_run.py"
+
+concurrency:
+  group: gdtoolkit-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gdtoolkit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Format & Lint (check-only)
+        run: |
+          python tools/gdtoolkit_run.py --check --line-length 120 ./src/
