@@ -69,7 +69,7 @@ def _run(color: bool, title: str, cmd: List[str]) -> int:
 
 def main() -> None:
     ap = argparse.ArgumentParser(
-        description="Install/ensure gdtoolkit then format & lint GDScript."
+        description="Format & lint GDScript."
     )
     ap.add_argument(
         "--check",
