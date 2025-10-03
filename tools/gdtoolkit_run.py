@@ -79,8 +79,8 @@ def main() -> None:
     ap.add_argument(
         "--line-length",
         type=int,
-        default=120,
-        help="Max line length for gdformat (default: 120).",
+        default=100,
+        help="Max line length for gdformat (default: 100).",
     )
     ap.add_argument(
         "--color",
