@@ -26,12 +26,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        
+      - name: Create cache manifest
+        run: |
+          mkdir -p tools
+          echo 'gdtoolkit==4.*' > tools/requirements-gdtoolkit.txt
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: "pip"
+          cache-dependency-path: "tools/requirements-gdtoolkit.txt"
 
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
