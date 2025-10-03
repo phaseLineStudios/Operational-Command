@@ -13,12 +13,12 @@ func setup(ctx: ScenarioEditorContext) -> void:
 
 func _init_defs() -> void:
 	defs.clear()
-	defs.append(UnitTask_Move.new())
-	defs.append(UnitTask_Defend.new())
-	defs.append(UnitTask_Wait.new())
-	defs.append(UnitTask_Patrol.new())
-	defs.append(UnitTask_SetBehaviour.new())
-	defs.append(UnitTask_SetCombatMode.new())
+	defs.append(UnitTaskMove.new())
+	defs.append(UnitTaskDefend.new())
+	defs.append(UnitTaskWait.new())
+	defs.append(UnitTaskPatrol.new())
+	defs.append(UnitTaskSetBehaviour.new())
+	defs.append(UnitTaskSetCombatMode.new())
 
 
 func _build_list(ctx: ScenarioEditorContext) -> void:

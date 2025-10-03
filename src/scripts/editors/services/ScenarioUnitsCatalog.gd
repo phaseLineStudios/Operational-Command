@@ -35,17 +35,17 @@ func _build_categories(ctx: ScenarioEditorContext) -> void:
 
 	ctx.unit_search.text_changed.connect(func(_t): _refresh(ctx))
 	ctx.unit_faction_friend.pressed.connect(
-		func(): _set_faction(ctx, ScenarioUnit.Affiliation.friend)
+		func(): _set_faction(ctx, ScenarioUnit.Affiliation.FRIEND)
 	)
 	ctx.unit_faction_enemy.pressed.connect(
-		func(): _set_faction(ctx, ScenarioUnit.Affiliation.enemy)
+		func(): _set_faction(ctx, ScenarioUnit.Affiliation.ENEMY)
 	)
 
 
 func _set_faction(ctx: ScenarioEditorContext, aff) -> void:
 	ctx.selected_unit_affiliation = aff
-	ctx.unit_faction_friend.set_pressed_no_signal(aff == ScenarioUnit.Affiliation.friend)
-	ctx.unit_faction_enemy.set_pressed_no_signal(aff == ScenarioUnit.Affiliation.enemy)
+	ctx.unit_faction_friend.set_pressed_no_signal(aff == ScenarioUnit.Affiliation.FRIEND)
+	ctx.unit_faction_enemy.set_pressed_no_signal(aff == ScenarioUnit.Affiliation.ENEMY)
 	_refresh(ctx)
 
 
@@ -112,7 +112,7 @@ func _refresh(ctx: ScenarioEditorContext) -> void:
 
 		var icon := (
 			unit.icon
-			if ctx.selected_unit_affiliation == ScenarioUnit.Affiliation.friend
+			if ctx.selected_unit_affiliation == ScenarioUnit.Affiliation.FRIEND
 			else unit.enemy_icon
 		)
 		if icon == null:
@@ -120,7 +120,7 @@ func _refresh(ctx: ScenarioEditorContext) -> void:
 				load(
 					(
 						"res://assets/textures/units/nato_unknown_platoon.png"
-						if ctx.selected_unit_affiliation == ScenarioUnit.Affiliation.friend
+						if ctx.selected_unit_affiliation == ScenarioUnit.Affiliation.FRIEND
 						else "res://assets/textures/units/enemy_unknown_platoon.png"
 					)
 				)
