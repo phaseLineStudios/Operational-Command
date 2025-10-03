@@ -1,47 +1,46 @@
+## Debrief UI control.
+## Renders a mission debrief screen with a left column (objectives, score, casualties),
+## a right column (unit performance table and commendation assignment), and a bottom bar
+## (Retry and Continue buttons with a dynamic title).
+##
+## Public API for filling the UI from game logic:
+## - set_mission_name(), set_outcome(), set_objectives_results()
+## - set_score(), set_casualties(), set_units()
+## - set_recipients_from_units(), set_commendation_options()
+## - populate_from_dict()
+##
+## Emits signals so the parent scene can react:
+## - continue_requested(payload: Dictionary)
+## - retry_requested(payload: Dictionary)
+## - commendation_assigned(commendation: String, recipient: String)
+##
+## All set_* methods are idempotent. The layout adjusts the commendation panel height
+## so the bottom of the Units panel aligns with the bottom of the Casualties panel.
 extends Control
 class_name Debrief
 
-# -----------------------------------------------------------------------------
-# Debrief
-# -----------------------------------------------------------------------------
-# A reusable UI Control that renders a mission debrief screen:
-# - Left column: objectives, score breakdown, casualties (friendly/enemy).
-# - Right column: unit performance table + commendation assignment panel.
-# - Bottom bar: Retry / Continue buttons and dynamic title.
-#
-# The class exposes a small public API for filling the UI from game logic:
-#   set_mission_name(), set_outcome(), set_objectives_results(),
-#   set_score(), set_casualties(), set_units(),
-#   set_recipients_from_units(), set_commendation_options(),
-#   populate_from_dict().
-#
-# It emits three signals so the parent scene/flow can react:
-#   - continue_requested(payload: Dictionary)
-#   - retry_requested(payload: Dictionary)
-#   - commendation_assigned(commendation: String, recipient: String)
-#
-# All "set_*" methods are idempotent and safe to call multiple times.
-# The layout auto-adjusts the height of the commendation panel so that the
-# bottom of the Units panel aligns with the bottom of the Casualties panel.
-# -----------------------------------------------------------------------------
+# --- Signals ---
 
-
-## Signals for higher-level flow
+## Emitted when the user continues the flow. Carries a snapshot payload.
 signal continue_requested(payload: Dictionary)
+## Emitted when the user requests a retry. Carries the same payload as continue.
 signal retry_requested(payload: Dictionary)
+## Emitted when a commendation is assigned to a recipient.
 signal commendation_assigned(commendation: String, recipient: String)
 
 # --- Constants ---
-# Minimum vertical space reserved for the commendation panel so the "Assign"
-# button never gets cramped when the left column grows tall.
+
+## Minimum vertical size reserved for the commendation panel to keep controls usable.
 const MIN_COMMEND_PANEL_HEIGHT := 120.0
 
 # --- Bottom bar ---
+
 @onready var _title: Label         = $Root/BottomBar/Title
 @onready var _btn_retry: Button    = $Root/BottomBar/Retry
 @onready var _btn_continue: Button = $Root/BottomBar/Continue
 
 # --- Left column ---
+
 @onready var _objectives_list: ItemList = $Root/Content/LeftCol/ObjectivesPanel/VBoxContainer/Objectives
 @onready var _score_base: Label         = $Root/Content/LeftCol/ScorePanel/VBoxContainer/ScoreGrid/BaseValue
 @onready var _score_bonus: Label        = $Root/Content/LeftCol/ScorePanel/VBoxContainer/ScoreGrid/BonusValue
@@ -51,12 +50,14 @@ const MIN_COMMEND_PANEL_HEIGHT := 120.0
 @onready var _cas_enemy: RichTextLabel  = $Root/Content/LeftCol/CasualtiesPanel/VBoxContainer/Enemies
 
 # --- Right column ---
+
 @onready var _units_tree: Tree            = $Root/Content/RightCol/UnitsPanel/VBoxContainer/Units
 @onready var _recipient_dd: OptionButton  = $Root/Content/RightCol/CommendationPanel/VBoxContainer/RecipientRow/Recipient
 @onready var _award_dd: OptionButton      = $Root/Content/RightCol/CommendationPanel/VBoxContainer/AwardRow/Commendation
 @onready var _assign_btn: Button          = $Root/Content/RightCol/CommendationPanel/VBoxContainer/Assign
 
 # --- For right-side split alignment ---
+
 @onready var _left_col: VBoxContainer        = $Root/Content/LeftCol
 @onready var _right_col: VBoxContainer       = $Root/Content/RightCol
 @onready var _left_objectives_panel: Panel   = $Root/Content/LeftCol/ObjectivesPanel
@@ -65,8 +66,9 @@ const MIN_COMMEND_PANEL_HEIGHT := 120.0
 @onready var _right_commend_panel: Panel     = $Root/Content/RightCol/CommendationPanel
 
 # --- State ---
-# Backing fields for the payload collected on Continue/Retry.
-# "score" and "casualties" mirror the structure accepted by the set_* methods.
+
+## Backing fields for the payload collected on Continue and Retry.
+## "score" and "casualties" mirror the structure accepted by the set_* methods.
 var _mission_name := ""
 var _outcome := "Failure"
 var _score := {"base": 0, "bonus": 0, "penalty": 0, "total": 0}
@@ -75,47 +77,43 @@ var _casualties := {
 	"enemy": {"kia": 0, "wia": 0, "vehicles": 0}
 }
 
+## Initializes node references, connects button handlers, prepares the Units tree,
+## draws the initial title, and aligns the right split after the first layout pass.
 func _ready() -> void:
-	# Verify that important scene nodes are present before wiring signals.
 	_assert_nodes()
-	# Hook up buttons to public signals via tiny handlers below.
 	_btn_retry.pressed.connect(_on_retry_pressed)
 	_btn_continue.pressed.connect(_on_continue_pressed)
 	_assign_btn.pressed.connect(_on_assign_pressed)
-	# Prepare the Units tree (column count, headers, sizing rules).
 	_init_units_tree_columns()
-	# Draw initial title from default state (or from values set before _ready()).
 	_update_title()
 
-	# Wait one frame to let the UI finish a layout pass so size.y values are valid.
 	await get_tree().process_frame
-	# Apply the right-side alignment rule once sizes are known.
 	_align_right_split()
 
+## Reapplies alignment when the control is resized by the parent or user.
 func _notification(what):
-	# Reapply the alignment rule if the control is resized by the user/parent.
 	if what == NOTIFICATION_RESIZED:
 		_align_right_split()
 
 # ============ Public API ============
 
+## Sets the mission name and refreshes the title label.
 func set_mission_name(mission_name: String) -> void:
-	# Assign and refresh the title label.
 	_mission_name = mission_name
 	_update_title()
 
+## Sets the outcome label text and refreshes the title label.
 func set_outcome(outcome: String) -> void:
-	# Assign and refresh the title label.
 	_outcome = outcome
 	_update_title()
 
+## Populates the objectives list with checkmarks and crosses.
+## Accepted per-item shapes:
+## - String: "Seize objective"
+## - Dictionary: {"title": String, "completed": bool}
+## - Dictionary: {"objective": Object|Dictionary, "completed": bool}
+##   For nested objects or dictionaries, "title" is preferred, then "name".
 func set_objectives_results(results: Array) -> void:
-	# Populates the ItemList with checkmarks/crosses.
-	# Accepted element shapes per item:
-	#   - String:        "Seize objective"
-	#   - Dictionary:    {"title": String, "completed": bool}
-	#   - Dictionary:    {"objective": <Object or Dictionary>, "completed": bool}
-	#       If an Object/Dictionary is provided, "title" is preferred, then "name".
 	_objectives_list.clear()
 	for r in results:
 		var title := ""
@@ -144,12 +142,11 @@ func set_objectives_results(results: Array) -> void:
 		var prefix := "✔ " if completed else "✖ "
 		_objectives_list.add_item(prefix + title)
 
-	# Any change to the left column may affect the alignment rule.
 	_request_align()
 
+## Sets base, bonus, penalty, and total score fields.
+## "total" is derived as base + bonus - penalty if omitted.
 func set_score(score: Dictionary) -> void:
-	# Expects keys: base, bonus, penalty; total is derived if omitted.
-	# Values are coerced to int for display and stored back into _score.
 	_score = score.duplicate(true)
 	var base := int(_score.get("base", 0))
 	var bonus := int(_score.get("bonus", 0))
@@ -162,13 +159,14 @@ func set_score(score: Dictionary) -> void:
 	_score_total.text = str(total)
 	_request_align()
 
+## Sets friendly and enemy casualty figures and updates the RichText labels.
+## Missing values default to 0.
+## Shape:
+## {
+##   "friendly": {"kia": int, "wia": int, "vehicles": int},
+##   "enemy":    {"kia": int, "wia": int, "vehicles": int}
+## }
 func set_casualties(c: Dictionary) -> void:
-	# Expects:
-	# {
-	#   "friendly": {"kia": int, "wia": int, "vehicles": int},
-	#   "enemy":    {"kia": int, "wia": int, "vehicles": int}
-	# }
-	# Values are optional and default to 0.
 	_casualties = c.duplicate(true)
 	var f: Dictionary = _casualties.get("friendly", {})
 	var e: Dictionary = _casualties.get("enemy", {})
@@ -180,13 +178,11 @@ func set_casualties(c: Dictionary) -> void:
 	]
 	_request_align()
 
+## Populates the Units tree with per-unit rows.
+## Accepted per-row shapes:
+## - {"name": String, "kills"?: int, "wia"?: int, "kia"?: int, "xp"?: int, "status"?: String}
+## - {"unit": Object with "title" or "name", same optional stats as above}
 func set_units(units: Array) -> void:
-	# Populates the Tree with per-unit rows.
-	# Accepted element shapes per row:
-	#   - Dictionary with "name": String, and optional stats.
-	#   - Dictionary with "unit": Object that has "title" or "name" properties,
-	#     plus optional stats.
-	# Optional numeric keys: kills, wia, kia, xp. Optional "status": String.
 	_units_tree.clear()
 	_init_units_tree_columns()
 
@@ -228,11 +224,10 @@ func set_units(units: Array) -> void:
 		it.set_text(4, str(kia))
 		it.set_text(5, str(xp))
 
-	# Rows can affect overall panel height; re-run alignment.
-	_request_align() # if content size affects overall layout
+	_request_align()
 
+## Copies the unit names currently displayed into the Recipient dropdown.
 func set_recipients_from_units() -> void:
-	# Copies the unit names currently shown in the Tree into the Recipient dropdown.
 	_recipient_dd.clear()
 	var root := _units_tree.get_root()
 	if root:
@@ -241,23 +236,24 @@ func set_recipients_from_units() -> void:
 			_recipient_dd.add_item(ch.get_text(0))
 			ch = ch.get_next()
 
+## Sets the available commendation names in the Award dropdown.
 func set_commendation_options(options: Array) -> void:
-	# Fills the Award dropdown from a list of strings.
 	_award_dd.clear()
 	for o in options:
 		_award_dd.add_item(str(o))
 
+## Populates the entire UI from a single dictionary.
+## Keys:
+## {
+##   "mission_name": String,
+##   "outcome": String,
+##   "objectives": Array,      see set_objectives_results()
+##   "score": Dictionary,      see set_score()
+##   "casualties": Dictionary, see set_casualties()
+##   "units": Array,           see set_units()
+##   "commendations": Array    list of award names
+## }
 func populate_from_dict(d: Dictionary) -> void:
-	# Convenience method to drive the whole UI from one object. Accepted keys:
-	# {
-	#   "mission_name": String,
-	#   "outcome": String,
-	#   "objectives": Array,      see set_objectives_results()
-	#   "score": Dictionary,      see set_score()
-	#   "casualties": Dictionary, see set_casualties()
-	#   "units": Array,           see set_units()
-	#   "commendations": Array    list of award names
-	# }
 	if d.has("mission_name"): set_mission_name(str(d["mission_name"]))
 	if d.has("outcome"): set_outcome(str(d["outcome"]))
 	if d.has("objectives"): set_objectives_results(d["objectives"])
@@ -268,35 +264,35 @@ func populate_from_dict(d: Dictionary) -> void:
 		set_recipients_from_units()
 	if d.has("commendations"): set_commendation_options(d["commendations"])
 
+## Returns the currently selected award, or an empty string if none is selected.
 func get_selected_commendation() -> String:
-	# Returns the currently selected award, or "" if nothing selected.
 	var idx := _award_dd.get_selected()
 	return "" if idx == -1 else _award_dd.get_item_text(idx)
 
+## Returns the selected recipient name, or an empty string if none is selected.
 func get_selected_recipient() -> String:
-	# Returns the currently selected recipient, or "" if nothing selected.
 	var idx := _recipient_dd.get_selected()
 	return "" if idx == -1 else _recipient_dd.get_item_text(idx)
 
 # ============ Buttons and payload ============
 
+## Emits "commendation_assigned" only when both selection fields are non-empty.
 func _on_assign_pressed() -> void:
-	# Emits "commendation_assigned" only when both fields are non-empty.
 	var award := get_selected_commendation()
 	var recip := get_selected_recipient()
 	if award != "" and recip != "":
 		emit_signal("commendation_assigned", award, recip)
 
+## Emits "continue_requested" with a snapshot of the current debrief state.
 func _on_continue_pressed() -> void:
-	# Caller can read the full debrief state from the payload.
 	emit_signal("continue_requested", _collect_payload())
 
+## Emits "retry_requested" with the same payload format as continue.
 func _on_retry_pressed() -> void:
-	# Same payload as continue; downstream can decide how to interpret.
 	emit_signal("retry_requested", _collect_payload())
 
+## Collects a snapshot of all user-visible state for higher-level flow management.
 func _collect_payload() -> Dictionary:
-	# Snapshot of all user-visible state for higher-level flow management.
 	return {
 		"mission_name": _mission_name,
 		"outcome": _outcome,
@@ -308,22 +304,23 @@ func _collect_payload() -> Dictionary:
 
 # ============ Helpers ============
 
+## Keeps the bottom title in sync with the latest mission and outcome.
 func _update_title() -> void:
-	# Keep the bottom title in sync with the latest mission/outcome state.
 	_title.text = "Debrief: %s (%s)" % [
 		_mission_name if _mission_name != "" else "<mission>",
 		_outcome
 	]
 
+## Emits editor warnings if required scene nodes are missing.
 func _assert_nodes() -> void:
-	# Fail fast with actionable editor warnings if the scene wiring changes.
 	if _objectives_list == null: push_warning("Objectives ItemList missing.")
 	if _units_tree == null: push_warning("Units Tree missing.")
 	if _recipient_dd == null or _award_dd == null: push_warning("Commendation dropdowns missing.")
 	if _assign_btn == null: push_warning("Assign Button missing.")
 
+## Applies headers and column sizing rules to the Units tree.
+## Safe to call multiple times.
 func _init_units_tree_columns() -> void:
-	# Applies headers and column sizing rules. Safe to call multiple times.
 	if _units_tree == null:
 		return
 	_units_tree.columns = 6
@@ -337,7 +334,6 @@ func _init_units_tree_columns() -> void:
 	_units_tree.set_column_title(4, "KIA")
 	_units_tree.set_column_title(5, "XP")
 
-	# Make col 0 take most of the width; others narrow but visible.
 	_units_tree.set_column_expand(0, true)
 	if _units_tree.has_method("set_column_expand_ratio"):
 		_units_tree.set_column_expand_ratio(0, 6)
@@ -345,20 +341,19 @@ func _init_units_tree_columns() -> void:
 			_units_tree.set_column_expand(i, true)
 			_units_tree.set_column_expand_ratio(i, 1)
 	else:
-		# Fallback for older builds
 		_units_tree.set_column_expand(0, true)
 		_units_tree.set_column_custom_minimum_width(0, 180)
 		for i in range(1, 6):
 			_units_tree.set_column_expand(i, false)
 
+## Defers alignment one frame so container sizes update before measuring.
 func _request_align() -> void:
-	# Defer one frame so container sizes have updated before measuring.
 	call_deferred("_align_right_split")
 
+## Computes the required commendation panel height so the bottom of the Units area
+## aligns with the bottom of the Casualties panel, without shrinking below
+## MIN_COMMEND_PANEL_HEIGHT.
 func _align_right_split() -> void:
-	# Computes how tall the commendation panel should be so the bottom of the
-	# Units area aligns to the bottom of the Casualties panel, while never
-	# shrinking the commendation panel below MIN_COMMEND_PANEL_HEIGHT.
 	if _left_col == null or _right_col == null:
 		return
 	var sep_l := _left_col.get_theme_constant("separation")
