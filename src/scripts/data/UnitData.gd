@@ -69,7 +69,19 @@ enum unitSize { Team, Squad, Platoon, Company, Battalion }
 @export_category("Editor meta")
 @export var unit_category: UnitCategoryData
 
-## Serialzie this unit to JSON
+## Ammunition variables
+@export_category("Ammunition")
+@export var ammunition: Dictionary = {}                 # {type: cap}
+@export var state_ammunition: Dictionary = {}           # {type: current}
+@export_range(0.0, 1.0, 0.01) var ammunition_low_threshold: float = 0.25
+@export_range(0.0, 1.0, 0.01) var ammunition_critical_threshold: float = 0.1
+
+@export_category("Logistics")
+@export var supply_transfer_rate: float = 10.0          # rounds per second
+@export var supply_transfer_radius_m: float = 30.0
+
+
+## Serialize this unit to JSON
 func serialize() -> Dictionary:
 	return {
 		"id": id,
@@ -106,8 +118,17 @@ func serialize() -> Dictionary:
 
 		"throughput": throughput.duplicate(),
 		"equipment_tags": equipment_tags.duplicate(),
-		"doctrine": doctrine
+		"doctrine": doctrine,
+
+		# --- new ammo + logistics fields ---
+		"ammunition": ammunition.duplicate(),
+		"state_ammunition": state_ammunition.duplicate(),
+		"ammunition_low_threshold": ammunition_low_threshold,
+		"ammunition_critical_threshold": ammunition_critical_threshold,
+		"supply_transfer_rate": supply_transfer_rate,
+		"supply_transfer_radius_m": supply_transfer_radius_m,
 	}
+
 
 ## Deserialize Unit JSON
 static func deserialize(data: Variant) -> UnitData:
@@ -161,10 +182,29 @@ static func deserialize(data: Variant) -> UnitData:
 	u.throughput = data.get("throughput", u.throughput)
 	u.doctrine = data.get("doctrine", u.doctrine)
 	var equipment_t = data.get("equipment_tags", null)
-	if typeof(slots) == TYPE_ARRAY:
-		var tmp_slots: Array[String] = []
+	if typeof(equipment_t) == TYPE_ARRAY:
+		var tmp_tags: Array[String] = []
 		for e in equipment_t:
-			tmp_slots.append(str(e))
-		u.equipment_tags = tmp_slots
+			tmp_tags.append(str(e))
+		u.equipment_tags = tmp_tags
+
+	# --- new ammo + logistics fields ---
+	var am_caps = data.get("ammunition", null)
+	if typeof(am_caps) == TYPE_DICTIONARY:
+		u.ammunition = am_caps
+
+	var am_state = data.get("state_ammunition", null)
+	if typeof(am_state) == TYPE_DICTIONARY:
+		u.state_ammunition = am_state
+
+	u.ammunition_low_threshold = float(data.get("ammunition_low_threshold", u.ammunition_low_threshold))
+	u.ammunition_critical_threshold = float(data.get("ammunition_critical_threshold", u.ammunition_critical_threshold))
+	u.supply_transfer_rate = float(data.get("supply_transfer_rate", u.supply_transfer_rate))
+	u.supply_transfer_radius_m = float(data.get("supply_transfer_radius_m", u.supply_transfer_radius_m))
+
+	# Backfill ammo state if missing (for older saves)
+	if u.state_ammunition.is_empty() and not u.ammunition.is_empty():
+		for k in u.ammunition.keys():
+			u.state_ammunition[k] = int(u.ammunition[k])
 
 	return u
