@@ -1,5 +1,5 @@
-extends PanelContainer
 class_name MarginLayer
+extends PanelContainer
 
 ## Font size for map title
 @export var title_size: int
@@ -182,9 +182,13 @@ func _draw() -> void:
 			var screen_y := map_top + m2
 			var num2 := str(start_y + j)
 			if show_left:
-				_draw_text_middle(num2, Vector2(map_left + offset_left_px, screen_y), true, ascent, height)
+				_draw_text_middle(
+					num2, Vector2(map_left + offset_left_px, screen_y), true, ascent, height
+				)
 			if show_right:
-				_draw_text_middle(num2, Vector2(map_right + offset_right_px, screen_y), false, ascent, height)
+				_draw_text_middle(
+					num2, Vector2(map_right + offset_right_px, screen_y), false, ascent, height
+				)
 			j += 1
 
 
@@ -192,15 +196,30 @@ func _draw() -> void:
 func _draw_text_center(text: String, pos: Vector2, font_size: int = label_size) -> void:
 	var s := font_size
 	var fm := label_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, s)
-	draw_string(label_font, pos - Vector2(fm.x * 0.5, 0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, s, label_color)
+	draw_string(
+		label_font,
+		pos - Vector2(fm.x * 0.5, 0),
+		text,
+		HORIZONTAL_ALIGNMENT_LEFT,
+		-1,
+		s,
+		label_color
+	)
 
 
 ## Helper function to draw vertically centered text
 func _draw_text_middle(
-	text: String, pos: Vector2, align_right: bool, ascent: float, height: float, font_size: int = label_size
+	text: String,
+	pos: Vector2,
+	align_right: bool,
+	ascent: float,
+	height: float,
+	font_size: int = label_size
 ) -> void:
 	var s := font_size
 	var fm := label_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, s)
 	var baseline_y := pos.y + (height - ascent)
 	var draw_x := pos.x - fm.x if align_right else pos.x
-	draw_string(label_font, Vector2(draw_x, baseline_y), text, HORIZONTAL_ALIGNMENT_LEFT, -1, s, label_color)
+	draw_string(
+		label_font, Vector2(draw_x, baseline_y), text, HORIZONTAL_ALIGNMENT_LEFT, -1, s, label_color
+	)

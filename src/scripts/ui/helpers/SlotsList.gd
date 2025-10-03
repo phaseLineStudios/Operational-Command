@@ -1,5 +1,5 @@
-extends VBoxContainer
 class_name SlotsList
+extends VBoxContainer
 ## Container for SlotItem panels.
 ##
 ## Builds one SlotItem per mission slot instance and relays signals upward.
@@ -10,11 +10,11 @@ signal request_assign_drop(slot_id: String, unit: Dictionary, source_slot_id: St
 ## Emitted when a SlotItem requests to inspect its assigned unit.
 signal request_inspect_unit(unit: Dictionary)
 
-## Slot Scene
-@export var slot_item_scene: PackedScene
-
 ## Duration (seconds) for the denied flash fallback effect.
 const DENY_FLASH_TIME := 0.15
+
+## Slot Scene
+@export var slot_item_scene: PackedScene
 
 var _items_by_slot: Dictionary = {}
 
@@ -31,9 +31,12 @@ func build_from_slots(slots: Dictionary) -> void:
 		var meta: Dictionary = slots[sid]
 		var item: SlotItem = slot_item_scene.instantiate() as SlotItem
 		add_child(item)
-		item.configure(sid, String(meta["title"]), meta["allowed_roles"], int(meta["index"]), int(meta["max"]))
+		item.configure(
+			sid, String(meta["title"]), meta["allowed_roles"], int(meta["index"]), int(meta["max"])
+		)
 		item.request_assign_drop.connect(
-			func(slot_id, unit, source_sid): emit_signal("request_assign_drop", slot_id, unit, source_sid)
+			func(slot_id, unit, source_sid):
+				emit_signal("request_assign_drop", slot_id, unit, source_sid)
 		)
 		item.request_inspect_unit.connect(func(unit): emit_signal("request_inspect_unit", unit))
 		_items_by_slot[sid] = item

@@ -1,8 +1,12 @@
-extends Window
 class_name TriggerConfigDialog
+extends Window
 ## Config dialog for ScenarioTrigger.
 
 signal saved(index: int, trigger: ScenarioTrigger)
+
+var editor: ScenarioEditor
+var trigger_index := -1
+var _before: ScenarioTrigger
 
 @onready var save_btn: Button = %Save
 @onready var close_btn: Button = %Close
@@ -15,10 +19,6 @@ signal saved(index: int, trigger: ScenarioTrigger)
 @onready var trig_condition: TextEdit = %Condition
 @onready var trig_on_activate: TextEdit = %OnActivate
 @onready var trig_on_deactivate: TextEdit = %OnDeactivate
-
-var editor: ScenarioEditor
-var trigger_index := -1
-var _before: ScenarioTrigger
 
 
 func _ready() -> void:
@@ -72,7 +72,9 @@ func _on_save() -> void:
 
 	if editor.history:
 		var desc := "Edit Trigger %s" % String(_before.id)
-		editor.history.push_res_edit_by_id(editor.ctx.data, "triggers", "id", String(live.id), _before, after, desc)
+		editor.history.push_res_edit_by_id(
+			editor.ctx.data, "triggers", "id", String(live.id), _before, after, desc
+		)
 	else:
 		live.title = after.title
 		live.area_shape = after.area_shape

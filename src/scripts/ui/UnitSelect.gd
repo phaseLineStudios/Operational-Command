@@ -1,13 +1,30 @@
-extends Control
 class_name UnitSelect
+extends Control
 ## Unit selection controller.
 ##
 ## Loads mission, builds pool and slots, handles drag/drop, points and logistics.
+
+## Path to briefing scene
+const SCENE_BRIEFING := "res://scenes/briefing.tscn"
+
+## Path to hq table scene
+const SCENE_HQ_TABLE := "res://scenes/hq_table.tscn"
 
 ## Default fallback icon for units.
 @export var default_unit_icon: Texture2D
 ## Scene used for unit cards
 @export var unit_card_scene: PackedScene
+
+var _total_points: int = 0
+var _total_slots: int = 0
+
+var _cards_by_unit: Dictionary = {}
+var _units_by_id: Dictionary = {}
+var _slot_data: Dictionary = {}
+var _assigned_by_unit: Dictionary = {}
+var _used_points: int = 0
+
+var _selected_card: UnitCard = null
 
 @onready var _lbl_title: Label = %Title
 @onready var _lbl_points: Label = %Points
@@ -43,23 +60,6 @@ class_name UnitSelect
 @onready var _lbl_speed: Label = $"Root/Main/LeftTray/AvailableUnits/UnitStats/GroundSpeed"
 @onready var _lbl_coh: Label = $"Root/Main/LeftTray/AvailableUnits/UnitStats/Cohesion"
 
-## Path to briefing scene
-const SCENE_BRIEFING := "res://scenes/briefing.tscn"
-
-## Path to hq table scene
-const SCENE_HQ_TABLE := "res://scenes/hq_table.tscn"
-
-var _total_points: int = 0
-var _total_slots: int = 0
-
-var _cards_by_unit: Dictionary = {}
-var _units_by_id: Dictionary = {}
-var _slot_data: Dictionary = {}
-var _assigned_by_unit: Dictionary = {}
-var _used_points: int = 0
-
-var _selected_card: UnitCard = null
-
 
 ## Build UI, load mission
 func _ready() -> void:
@@ -77,7 +77,9 @@ func _connect_ui() -> void:
 	_btn_reset.pressed.connect(_on_reset_pressed)
 	_btn_deploy.pressed.connect(_on_deploy_pressed)
 
-	for b in [_filter_all, _filter_armor, _filter_inf, _filter_mech, _filter_motor, _filter_support]:
+	for b in [
+		_filter_all, _filter_armor, _filter_inf, _filter_mech, _filter_motor, _filter_support
+	]:
 		b.toggled.connect(func(_p): _on_filter_changed(b))
 	_search.text_changed.connect(_on_filter_text_changed)
 
@@ -147,7 +149,9 @@ func _build_pool() -> void:
 
 ## Handle filter button toggled
 func _on_filter_changed(button: Button) -> void:
-	for b in [_filter_all, _filter_armor, _filter_inf, _filter_mech, _filter_motor, _filter_support]:
+	for b in [
+		_filter_all, _filter_armor, _filter_inf, _filter_mech, _filter_motor, _filter_support
+	]:
 		if b != button:
 			b.set_pressed_no_signal(false)
 	_refresh_pool_filter()
@@ -187,7 +191,9 @@ func _refresh_pool_filter() -> void:
 		var u: UnitData = _units_by_id[unit_id]
 		var role_ok := roles.is_empty() or roles.has(u.role)
 		var text_ok := (
-			search.is_empty() or u.title.to_lower().find(search) >= 0 or String(unit_id).to_lower().find(search) >= 0
+			search.is_empty()
+			or u.title.to_lower().find(search) >= 0
+			or String(unit_id).to_lower().find(search) >= 0
 		)
 		var in_use := _assigned_by_unit.has(unit_id)
 		card.visible = role_ok and text_ok and not in_use

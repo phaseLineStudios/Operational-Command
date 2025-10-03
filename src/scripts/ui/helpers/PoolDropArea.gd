@@ -1,5 +1,5 @@
-extends VBoxContainer
 class_name PoolDropArea
+extends VBoxContainer
 ## Vertical list that can live directly in a ScrollContainer.
 
 signal request_return_to_pool(slot_id: String, unit: Dictionary)

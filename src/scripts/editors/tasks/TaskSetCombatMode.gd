@@ -1,8 +1,9 @@
+class_name UnitTaskSetCombatMode
 extends UnitBaseTask
-class_name UnitTask_SetCombatMode
 ## Set unit combat mode.
 
-@export_enum("forced_hold_fire", "do_not_fire_unless_fired_upon", "open_fire") var combat_mode: int = 2
+@export_enum("forced_hold_fire", "do_not_fire_unless_fired_upon", "open_fire")
+var combat_mode: int = 2
 
 
 func _init() -> void:

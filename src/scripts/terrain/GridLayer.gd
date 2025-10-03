@@ -1,6 +1,6 @@
 ## GridLayer.gd
-extends Control
 class_name GridLayer
+extends Control
 
 @export var grid_100m_color: Color
 @export var grid_1km_color: Color

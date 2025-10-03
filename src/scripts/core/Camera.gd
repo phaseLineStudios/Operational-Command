@@ -1,5 +1,5 @@
-extends Node
 class_name TableCamera
+extends Node
 
 ## Camera movement speed
 @export var move_speed: Vector2 = Vector2(12.0, 12.0)
@@ -12,13 +12,13 @@ class_name TableCamera
 ## Camera tilt smoothing
 @export var tilt_smooth: float = 10.0
 
-@onready var bounds: MeshInstance3D = $CameraBounds
-@onready var camera: Camera3D = $CameraBounds/Camera
-
 var _half_x := 0.0
 var _half_z := 0.0
 var _target_tilt_rad := 0.0
 var _target_pos := Vector3.ZERO
+
+@onready var bounds: MeshInstance3D = $CameraBounds
+@onready var camera: Camera3D = $CameraBounds/Camera
 
 
 func _ready():
@@ -38,8 +38,12 @@ func _ready():
 
 func _physics_process(delta: float) -> void:
 	var input_vec := Vector2.ZERO
-	input_vec.x = int(Input.is_action_pressed("move_right")) - int(Input.is_action_pressed("move_left"))
-	input_vec.y = int(Input.is_action_pressed("move_backward")) - int(Input.is_action_pressed("move_forward"))
+	input_vec.x = (
+		int(Input.is_action_pressed("move_right")) - int(Input.is_action_pressed("move_left"))
+	)
+	input_vec.y = (
+		int(Input.is_action_pressed("move_backward")) - int(Input.is_action_pressed("move_forward"))
+	)
 	if input_vec.length() > 0.0:
 		input_vec = input_vec.normalized()
 

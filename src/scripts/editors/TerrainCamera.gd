@@ -1,5 +1,5 @@
-extends Camera2D
 class_name TerrainCamera
+extends Camera2D
 
 @export var pan_button: MouseButton = MOUSE_BUTTON_MIDDLE
 @export var pan_speed: float = 1.0

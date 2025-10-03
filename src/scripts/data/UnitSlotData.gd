@@ -1,5 +1,5 @@
-extends Resource
 class_name UnitSlotData
+extends Resource
 
 ## A unique key identifying this slot.
 @export var key: String

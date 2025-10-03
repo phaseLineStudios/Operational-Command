@@ -1,5 +1,5 @@
-extends PanelContainer
 class_name SlotItem
+extends PanelContainer
 ## Unit slot. Accepts drops and shows current assigned unit.
 ##
 ## @experimental

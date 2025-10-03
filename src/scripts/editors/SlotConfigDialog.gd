@@ -1,5 +1,10 @@
-extends Window
 class_name SlotConfigDialog
+extends Window
+
+var editor: ScenarioEditor
+var slot_index := -1
+var _roles: Array[String] = []
+var _before: UnitSlotData
 
 @onready var key_input: LineEdit = %Key
 @onready var title_input: LineEdit = %Title
@@ -8,11 +13,6 @@ class_name SlotConfigDialog
 @onready var roles_list: VBoxContainer = %RoleVBox
 @onready var save_btn: Button = %Save
 @onready var close_btn: Button = %Close
-
-var editor: ScenarioEditor
-var slot_index := -1
-var _roles: Array[String] = []
-var _before: UnitSlotData
 
 
 func _ready() -> void:

@@ -1,15 +1,15 @@
-extends Resource
 class_name BriefItemData
+extends Resource
 
 ## Types of briefing item
-enum ItemType { document, image }
+enum ItemType { DOCUMENT, IMAGE }
 
 ## Unique identifier for this briefing item
 @export var id: String
 ## Human-readable title of the briefing item
 @export var title: String
 ## Type of the briefing item
-@export var type: ItemType = ItemType.document
+@export var type: ItemType = ItemType.DOCUMENT
 ## Path to the resource backing this item
 @export_file("*.* ; Any Resource") var resource
 ## Position of the item on the briefing board.

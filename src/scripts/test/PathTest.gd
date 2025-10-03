@@ -1,5 +1,5 @@
-extends Node2D
 class_name SetupController
+extends Node2D
 
 ## Wires TerrainRender, PathGrid, and a MovementAgent, then handles click-to-move.
 
@@ -34,7 +34,9 @@ func _ready() -> void:
 			if p == unit.profile:
 				LogService.info("PathGrid ready for profile: " + str(p), "PathTest.gd:33")
 	)
-	renderer.path_grid.build_failed.connect(func(reason): push_warning("PathGrid build failed: " + reason))
+	renderer.path_grid.build_failed.connect(
+		func(reason): push_warning("PathGrid build failed: " + reason)
+	)
 
 	renderer.path_grid.debug_enabled = true
 	renderer.path_grid.debug_layer = PathGrid.DebugLayer.WEIGHT

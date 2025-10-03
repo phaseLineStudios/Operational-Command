@@ -1,12 +1,10 @@
-extends Control
 class_name LineLayer
+extends Control
 
 ## Antialiasing for draw_polyline/draw_line.
 @export var antialias: bool = true
 ## Snap odd-pixel strokes by offsetting geometry by (0.5, 0.5).
 @export var snap_half_px_for_thin_strokes := true
-
-@onready var renderer: TerrainRender = get_owner()
 
 var data: TerrainData
 var _data_conn := false
@@ -15,10 +13,16 @@ var _items: Dictionary = {}
 var _strokes_dirty := true
 var _strokes: Array = []
 
+@onready var renderer: TerrainRender = get_owner()
+
 
 ## Assigns TerrainData, resets caches, wires signals, and schedules redraw
 func set_data(d: TerrainData) -> void:
-	if _data_conn and data and data.is_connected("lines_changed", Callable(self, "_on_lines_changed")):
+	if (
+		_data_conn
+		and data
+		and data.is_connected("lines_changed", Callable(self, "_on_lines_changed"))
+	):
 		data.disconnect("lines_changed", Callable(self, "_on_lines_changed"))
 		_data_conn = false
 	data = d
@@ -83,36 +87,38 @@ func _draw() -> void:
 	if _strokes_dirty:
 		_rebuild_stroke_batches()
 
-	for S in _strokes:
-		if S.color.a <= 0.0:
+	for stroke in _strokes:
+		if stroke.color.a <= 0.0:
 			continue
-		if S.width <= 0.0:
+		if stroke.width <= 0.0:
 			continue
-		for chain in S.chains:
-			match S.mode:
+		for chain in stroke.chains:
+			match stroke.mode:
 				TerrainBrush.DrawMode.SOLID:
-					_draw_polyline_solid(chain, S.color, S.width)
+					_draw_polyline_solid(chain, stroke.color, stroke.width)
 				TerrainBrush.DrawMode.DASHED:
-					_draw_polyline_dashed(chain, S.color, S.width, S.dash, S.gap)
+					_draw_polyline_dashed(
+						chain, stroke.color, stroke.width, stroke.dash, stroke.gap
+					)
 				TerrainBrush.DrawMode.DOTTED:
-					_draw_polyline_dotted(chain, S.color, S.width, max(2.0, S.gap))
+					_draw_polyline_dotted(chain, stroke.color, stroke.width, max(2.0, stroke.gap))
 				_:
-					_draw_polyline_solid(chain, S.color, S.width)
+					_draw_polyline_solid(chain, stroke.color, stroke.width)
 
 
 ## Insert/update a line by id from TerrainData and (optionally) rebuild recipe
 func _upsert_from_data(id: int, rebuild_recipe: bool) -> void:
-	var L: Variant = _find_line_by_id(id)
-	if L == null:
+	var line: Variant = _find_line_by_id(id)
+	if line == null:
 		_items.erase(id)
 		_strokes_dirty = true
 		return
-	var brush: TerrainBrush = L.get("brush", null)
+	var brush: TerrainBrush = line.get("brush", null)
 	if brush == null or brush.feature_type != TerrainBrush.FeatureType.LINEAR:
 		_items.erase(id)
 		_strokes_dirty = true
 		return
-	var pts: PackedVector2Array = L.get("points", PackedVector2Array())
+	var pts: PackedVector2Array = line.get("points", PackedVector2Array())
 	if pts.size() < 2:
 		_items.erase(id)
 		_strokes_dirty = true
@@ -141,10 +147,16 @@ func _upsert_from_data(id: int, rebuild_recipe: bool) -> void:
 
 	if rebuild_recipe or it.rec == {}:
 		var rec := brush.get_draw_recipe()
-		var stroke_col: Color = rec.stroke.color if rec.has("stroke") and "color" in rec.stroke else Color(0, 0, 0, 0)
-		var fill_col: Color = rec.fill.color if rec.has("fill") and "color" in rec.fill else Color(0, 0, 0, 0)
-		var stroke_w: float = rec.stroke.width_px if rec.has("stroke") and "width_px" in rec.stroke else 1.0
-		var core_w: float = float(L.get("width_px", 0.0))
+		var stroke_col: Color = (
+			rec.stroke.color if rec.has("stroke") and "color" in rec.stroke else Color(0, 0, 0, 0)
+		)
+		var fill_col: Color = (
+			rec.fill.color if rec.has("fill") and "color" in rec.fill else Color(0, 0, 0, 0)
+		)
+		var stroke_w: float = (
+			rec.stroke.width_px if rec.has("stroke") and "width_px" in rec.stroke else 1.0
+		)
+		var core_w: float = float(line.get("width_px", 0.0))
 		if core_w <= 0.0:
 			core_w = max(1.0, stroke_w)
 
@@ -154,7 +166,9 @@ func _upsert_from_data(id: int, rebuild_recipe: bool) -> void:
 		it.stroke_col = stroke_col
 		it.fill_col = fill_col
 		it.core_w = core_w
-		it.dash = float(rec.stroke.dash_px if rec.has("stroke") and "dash_px" in rec.stroke else 8.0)
+		it.dash = float(
+			rec.stroke.dash_px if rec.has("stroke") and "dash_px" in rec.stroke else 8.0
+		)
 		it.gap = float(rec.stroke.gap_px if rec.has("stroke") and "gap_px" in rec.stroke else 6.0)
 
 	_items[id] = it
@@ -165,12 +179,12 @@ func _refresh_geometry(id: int) -> void:
 	if not _items.has(id):
 		_upsert_from_data(id, false)
 		return
-	var L: Variant = _find_line_by_id(id)
-	if L == null:
+	var line: Variant = _find_line_by_id(id)
+	if line == null:
 		_items.erase(id)
 		_strokes_dirty = true
 		return
-	var pts: PackedVector2Array = L.get("points", PackedVector2Array())
+	var pts: PackedVector2Array = line.get("points", PackedVector2Array())
 	if pts.size() < 2:
 		_items.erase(id)
 		_strokes_dirty = true
@@ -257,7 +271,9 @@ func _draw_polyline_solid(pts: PackedVector2Array, color: Color, width: float) -
 
 
 ## Draw a dashed polyline with dash/gap in pixels
-func _draw_polyline_dashed(pts: PackedVector2Array, color: Color, width: float, dash_px: float, gap_px: float) -> void:
+func _draw_polyline_dashed(
+	pts: PackedVector2Array, color: Color, width: float, dash_px: float, gap_px: float
+) -> void:
 	if pts.size() < 2:
 		return
 	var dash: float = max(0.5, dash_px)
@@ -288,7 +304,9 @@ func _draw_polyline_dashed(pts: PackedVector2Array, color: Color, width: float, 
 
 
 ## Draw a dotted polyline using circles spaced by step_px
-func _draw_polyline_dotted(pts: PackedVector2Array, color: Color, width: float, step_px: float) -> void:
+func _draw_polyline_dotted(
+	pts: PackedVector2Array, color: Color, width: float, step_px: float
+) -> void:
 	if pts.size() < 2:
 		return
 	var step: float = max(1.0, step_px)

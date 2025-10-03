@@ -139,7 +139,12 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 	# Flush tail if meaningful.
 	if (
 		cur.callsign != ""
-		and (cur.type != OrderType.UNKNOWN or cur.direction != "" or cur.quantity != 0 or cur.target_callsign != "")
+		and (
+			cur.type != OrderType.UNKNOWN
+			or cur.direction != ""
+			or cur.quantity != 0
+			or cur.target_callsign != ""
+		)
 	):
 		out.append(_finalize(cur))
 
@@ -183,7 +188,14 @@ func _normalize_and_tokenize(text: String) -> PackedStringArray:
 	var cleaned := ""
 	for i in s.length():
 		var cp := s.unicode_at(i)
-		if _is_ascii_alpha_cp(cp) or _is_ascii_digit_cp(cp) or cp == 32 or cp == 45 or cp == 91 or cp == 93:
+		if (
+			_is_ascii_alpha_cp(cp)
+			or _is_ascii_digit_cp(cp)
+			or cp == 32
+			or cp == 45
+			or cp == 91
+			or cp == 93
+		):
 			cleaned += char(cp)
 
 	# Collapse spaces and split.
@@ -198,10 +210,10 @@ func _normalize_and_tokenize(text: String) -> PackedStringArray:
 
 ## Read a verbal or digit number from tokens[idx..]; sets 'consumed'.
 func _read_number(tokens: PackedStringArray, idx: int, number_words: Dictionary) -> Dictionary:
-	var NIL := {"value": 0, "consumed": 0}
+	var nil := {"value": 0, "consumed": 0}
 
 	if idx >= tokens.size():
-		return NIL
+		return nil
 
 	if _is_int_literal(tokens[idx]):
 		@warning_ignore("confusable_local_declaration") var j := idx
@@ -221,7 +233,7 @@ func _read_number(tokens: PackedStringArray, idx: int, number_words: Dictionary)
 		j += 1
 
 	if vals.is_empty():
-		return NIL
+		return nil
 
 	var all_under_ten := true
 	for v in vals:

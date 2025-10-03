@@ -1,11 +1,13 @@
-extends Control
 class_name SurfaceLayer
-
+extends Control
 ## Renders area surfaces (polygons) with per-id caching and minimal rebuilds.
 ##
 ## Only recalculates groups affected by TerrainData.surfaces_changed.
 ##
 ## @experimental For further optimization consider switching to Meshinstance2D.
+
+## Emitted when any group’s merged geometry was rebuilt (only dirty groups)
+signal batches_rebuilt
 
 ## Enable antialiasing for polylines and strokes
 @export var antialias: bool = true
@@ -13,11 +15,6 @@ class_name SurfaceLayer
 @export var snap_half_px_for_thin_strokes := true
 ## Maximum allowed pattern/texture size in pixels (for tiled symbol fills)
 @export var max_pattern_size_px: int = 2048
-
-@onready var renderer: TerrainRender = get_owner()
-
-## Emitted when any group’s merged geometry was rebuilt (only dirty groups)
-signal batches_rebuilt
 
 var data: TerrainData
 var _data_conn := false
@@ -31,10 +28,16 @@ var _tri_cache: Dictionary = {}
 var _threads: Dictionary = {}
 var _pending_ver: Dictionary = {}
 
+@onready var renderer: TerrainRender = get_owner()
+
 
 ## Assigns TerrainData, resets caches, wires signals, and schedules redraw
 func set_data(d: TerrainData) -> void:
-	if _data_conn and data and data.is_connected("surfaces_changed", Callable(self, "_on_surfaces_changed")):
+	if (
+		_data_conn
+		and data
+		and data.is_connected("surfaces_changed", Callable(self, "_on_surfaces_changed"))
+	):
 		data.disconnect("surfaces_changed", Callable(self, "_on_surfaces_changed"))
 		_data_conn = false
 
@@ -46,7 +49,9 @@ func set_data(d: TerrainData) -> void:
 	_cancel_all_threads()
 
 	if data:
-		data.surfaces_changed.connect(_on_surfaces_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
+		data.surfaces_changed.connect(
+			_on_surfaces_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED
+		)
 		_data_conn = true
 
 	queue_redraw()
@@ -95,9 +100,15 @@ func _draw() -> void:
 
 	for b in batches:
 		var rec: Dictionary = b.rec
-		var fill_col: Color = rec.fill.color if rec.has("fill") and "color" in rec.fill else Color(0, 0, 0, 0)
-		var stroke_col: Color = rec.stroke.color if rec.has("stroke") and "color" in rec.stroke else Color(0, 0, 0, 0)
-		var stroke_w: float = rec.stroke.width_px if rec.has("stroke") and "width_px" in rec.stroke else 1.0
+		var fill_col: Color = (
+			rec.fill.color if rec.has("fill") and "color" in rec.fill else Color(0, 0, 0, 0)
+		)
+		var stroke_col: Color = (
+			rec.stroke.color if rec.has("stroke") and "color" in rec.stroke else Color(0, 0, 0, 0)
+		)
+		var stroke_w: float = (
+			rec.stroke.width_px if rec.has("stroke") and "width_px" in rec.stroke else 1.0
+		)
 		var mode: int = int(rec.mode if rec.has("mode") else TerrainBrush.DrawMode.SOLID)
 		var tex: Texture2D = rec.symbol.tex if rec.has("symbol") and "tex" in rec.symbol else null
 
@@ -177,9 +188,9 @@ func _rebuild_all_from_data() -> void:
 		_id_to_key[id] = key
 
 	for key in _groups.keys():
-		var G = _groups[key]
-		G.merged = G.polys.values()
-		G.dirty = true
+		var group = _groups[key]
+		group.merged = group.polys.values()
+		group.dirty = true
 		_start_union_thread(key)
 
 	emit_signal("batches_rebuilt")
@@ -189,8 +200,8 @@ func _rebuild_all_from_data() -> void:
 func _rebuild_dirty_groups() -> void:
 	var kicked_any := false
 	for key in _groups.keys():
-		var G = _groups[key]
-		if not G.dirty:
+		var group = _groups[key]
+		if not group.dirty:
 			continue
 		_start_union_thread(key)
 		kicked_any = true
@@ -284,7 +295,8 @@ func _move_if_key_changed(id: int) -> void:
 		_remove_id(id)
 		return
 	var brush: TerrainBrush = item.get("brush", null)
-	@warning_ignore("incompatible_ternary") var new_key: Variant = _brush_key(brush) if brush else null
+	@warning_ignore("incompatible_ternary")
+	var new_key: Variant = _brush_key(brush) if brush else null
 	var old_key: Variant = _id_to_key.get(id, null)
 	if new_key == null:
 		_remove_id(id)
@@ -301,7 +313,13 @@ func _ensure_group(key: String, brush: TerrainBrush) -> void:
 		return
 	var rec := brush.get_draw_recipe()
 	_groups[key] = {
-		"brush": brush, "z": int(brush.z_index), "rec": rec, "polys": {}, "bboxes": {}, "merged": [], "dirty": true
+		"brush": brush,
+		"z": int(brush.z_index),
+		"rec": rec,
+		"polys": {},
+		"bboxes": {},
+		"merged": [],
+		"dirty": true
 	}
 
 
@@ -318,16 +336,16 @@ func _sorted_groups() -> Array:
 func _start_union_thread(key: String) -> void:
 	if not _groups.has(key):
 		return
-	var G = _groups[key]
+	var group = _groups[key]
 	if _threads.has(key):
 		var th: Thread = _threads[key]
 		if th and th.is_started():
 			_pending_ver[key] = int(_pending_ver.get(key, 0)) + 1
 			return
-	var polys: Array = G.polys.values()
+	var polys: Array = group.polys.values()
 	var bboxes: Array = []
-	for id in G.bboxes.keys():
-		bboxes.append(G.bboxes[id])
+	for id in group.bboxes.keys():
+		bboxes.append(group.bboxes[id])
 	var ver := int(_pending_ver.get(key, 0)) + 1
 	_pending_ver[key] = ver
 	var thrd := Thread.new()
@@ -383,7 +401,9 @@ func _union_group_aabb(polys: Array, bboxes: Array) -> Array:
 	for i in polys.size():
 		var s := _sanitize_polygon(polys[i])
 		if s.size() >= 3 and abs(_polygon_area(s)) > 1e-6:
-			var bb: Rect2 = bboxes[i] if (i < bboxes.size() and bboxes[i] is Rect2) else _poly_bbox(s)
+			var bb: Rect2 = (
+				bboxes[i] if (i < bboxes.size() and bboxes[i] is Rect2) else _poly_bbox(s)
+			)
 			items.append({"poly": s, "bbox": bb})
 	if items.is_empty():
 		return []
@@ -570,11 +590,21 @@ func _build_draw_batches(sorted_groups: Array) -> Array:
 func _rec_key(rec: Dictionary) -> String:
 	var z := str(int(rec.z_index if rec.has("z_index") else 0))
 	var mode := str(int(rec.mode if rec.has("mode") else 0))
-	var fcol: Color = Color(rec.fill.color) if (rec.has("fill") and "color" in rec.fill) else Color(0, 0, 0, 0)
-	var scol: Color = Color(rec.stroke.color) if (rec.has("stroke") and "color" in rec.stroke) else Color(0, 0, 0, 0)
-	var sw: float = float(rec.stroke.width_px if rec.has("stroke") and "width_px" in rec.stroke else 1.0)
+	var fcol: Color = (
+		Color(rec.fill.color) if (rec.has("fill") and "color" in rec.fill) else Color(0, 0, 0, 0)
+	)
+	var scol: Color = (
+		Color(rec.stroke.color)
+		if (rec.has("stroke") and "color" in rec.stroke)
+		else Color(0, 0, 0, 0)
+	)
+	var sw: float = float(
+		rec.stroke.width_px if rec.has("stroke") and "width_px" in rec.stroke else 1.0
+	)
 	var tex: Texture2D = rec.symbol.tex if (rec.has("symbol") and "tex" in rec.symbol) else null
 	var tex_id := ""
 	if tex != null:
-		tex_id = (tex.resource_path if tex.resource_path != "" else "rid:%s" % tex.get_instance_id())
+		tex_id = (
+			tex.resource_path if tex.resource_path != "" else "rid:%s" % tex.get_instance_id()
+		)
 	return "%s|%s|%s|%s|%f|%s" % [z, mode, fcol.to_html(), scol.to_html(), sw, tex_id]

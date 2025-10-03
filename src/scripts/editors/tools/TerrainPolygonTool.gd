@@ -1,5 +1,5 @@
-extends TerrainToolBase
 class_name TerrainPolygonTool
+extends TerrainToolBase
 
 ## Elevation editing: raise/lower/smooth brush.
 
@@ -196,7 +196,12 @@ func handle_view_input(event: InputEvent) -> bool:
 						var after := before.duplicate(true)
 						after["points"] = pts
 						editor.history.push_item_edit_by_id(
-							data, "surfaces", before.get("id"), before, after, "Remove polygon point"
+							data,
+							"surfaces",
+							before.get("id"),
+							before,
+							after,
+							"Remove polygon point"
 						)
 						data.surfaces[_edit_idx] = after
 						data.set_surface_points(_edit_id, pts)
@@ -233,9 +238,9 @@ func _rebuild_info_ui():
 	l.bbcode_enabled = true
 	l.text = (
 		"""
-	[b]Selected feature[/b] 
+	[b]Selected feature[/b]
 	%s
-	
+
 	[b]Movement Cost[/b]
 	Foot: %d
 	Wheeled: %d
@@ -305,7 +310,13 @@ func _start_new_polygon() -> void:
 	var pid := _next_id
 	_next_id += 1
 
-	var poly := {"id": pid, "brush": active_brush, "type": "polygon", "points": PackedVector2Array(), "closed": true}
+	var poly := {
+		"id": pid,
+		"brush": active_brush,
+		"type": "polygon",
+		"points": PackedVector2Array(),
+		"closed": true
+	}
 	data.add_surface(poly)
 	editor.history.push_item_insert(data, "surfaces", poly, "Add polygon", data.surfaces.size())
 	_edit_id = pid

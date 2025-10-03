@@ -1,7 +1,18 @@
-extends Control
 class_name ScenarioEditorOverlay
+extends Control
 ## Draws editor overlays: placed units, selection, and active tool ghosts.
 ## The TerrainRender handles map<->terrain transforms; this node just draws.
+
+## Context menu id: open slot configuration
+const MI_CONFIG_SLOT := 1001
+## Context menu id: open unit configuration
+const MI_CONFIG_UNIT := 1002
+## Context menu id: open task configuration
+const MI_CONFIG_TASK := 1003
+## Context menu id: open trigger configuration
+const MI_CONFIG_TRIGGER := 1004
+## Context menu id: delete picked entity
+const MI_DELETE := 1099
 
 ## Owning editor reference (provides ctx, data, and services)
 @export var editor: ScenarioEditor
@@ -33,17 +44,6 @@ class_name ScenarioEditorOverlay
 @export var link_gap_px: float = 3.0
 ## Arrow head length (pixels) for link arrows
 @export var arrow_head_len_px: float = 10.0
-
-## Context menu id: open slot configuration
-const MI_CONFIG_SLOT := 1001
-## Context menu id: open unit configuration
-const MI_CONFIG_UNIT := 1002
-## Context menu id: open task configuration
-const MI_CONFIG_TASK := 1003
-## Context menu id: open trigger configuration
-const MI_CONFIG_TRIGGER := 1004
-## Context menu id: delete picked entity
-const MI_DELETE := 1099
 
 var _icon_cache := {}
 var _ctx: PopupMenu
@@ -281,7 +281,9 @@ func _draw_task_links() -> void:
 		var dst_center := editor.terrain_render.terrain_to_map(inst.position_m)
 		var dst_radius := _glyph_radius(&"task", i)
 
-		var a_b := _trim_segment(src_center, dst_center, src_radius + link_gap_px, dst_radius + link_gap_px)
+		var a_b := _trim_segment(
+			src_center, dst_center, src_radius + link_gap_px, dst_radius + link_gap_px
+		)
 		var a := a_b[0]
 		var b := a_b[1]
 		if a.distance_to(b) < 2.0:
@@ -329,7 +331,8 @@ func _draw_trigger_shape(trig: ScenarioTrigger, center_px: Vector2, hi: bool) ->
 		var half_w_px: float = abs(p_x.x - center_px.x)
 		var half_h_px: float = abs(p_y.y - center_px.y)
 		var rect := Rect2(
-			Vector2(center_px.x - half_w_px, center_px.y - half_h_px), Vector2(half_w_px * 2.0, half_h_px * 2.0)
+			Vector2(center_px.x - half_w_px, center_px.y - half_h_px),
+			Vector2(half_w_px * 2.0, half_h_px * 2.0)
 		)
 		draw_rect(rect, fill, true)
 		draw_rect(rect, line, false, 2.0)
@@ -391,7 +394,12 @@ func _screen_pos_for_pick(pick: Dictionary) -> Vector2:
 		return _hover_pos
 	match t:
 		&"unit":
-			if editor.ctx.data.units and idx >= 0 and idx < editor.ctx.data.units.size() and editor.ctx.data.units[idx]:
+			if (
+				editor.ctx.data.units
+				and idx >= 0
+				and idx < editor.ctx.data.units.size()
+				and editor.ctx.data.units[idx]
+			):
 				return editor.terrain_render.terrain_to_map(editor.ctx.data.units[idx].position_m)
 		&"slot":
 			if (
@@ -400,9 +408,16 @@ func _screen_pos_for_pick(pick: Dictionary) -> Vector2:
 				and idx < editor.ctx.data.unit_slots.size()
 				and editor.ctx.data.unit_slots[idx]
 			):
-				return editor.terrain_render.terrain_to_map(editor.ctx.data.unit_slots[idx].start_position)
+				return editor.terrain_render.terrain_to_map(
+					editor.ctx.data.unit_slots[idx].start_position
+				)
 		&"task":
-			if editor.ctx.data.tasks and idx >= 0 and idx < editor.ctx.data.tasks.size() and editor.ctx.data.tasks[idx]:
+			if (
+				editor.ctx.data.tasks
+				and idx >= 0
+				and idx < editor.ctx.data.tasks.size()
+				and editor.ctx.data.tasks[idx]
+			):
 				return editor.terrain_render.terrain_to_map(editor.ctx.data.tasks[idx].position_m)
 		&"trigger":
 			if (
@@ -411,7 +426,9 @@ func _screen_pos_for_pick(pick: Dictionary) -> Vector2:
 				and idx < editor.ctx.data.triggers.size()
 				and editor.ctx.data.triggers[idx]
 			):
-				return editor.terrain_render.terrain_to_map(editor.ctx.data.triggers[idx].area_center_m)
+				return editor.terrain_render.terrain_to_map(
+					editor.ctx.data.triggers[idx].area_center_m
+				)
 	return _hover_pos
 
 
@@ -445,7 +462,15 @@ func _draw_title(text: String, center: Vector2) -> void:
 	var w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 	var rect := Rect2(Vector2(pos.x - w * 0.5 - 4, pos.y - fs - 4), Vector2(w + 8, fs + 8))
 	draw_rect(rect, Color(0, 0, 0, 0.55), true)
-	draw_string(font, Vector2(pos.x - w * 0.5, pos.y), text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(1, 1, 1, 0.96))
+	draw_string(
+		font,
+		Vector2(pos.x - w * 0.5, pos.y),
+		text,
+		HORIZONTAL_ALIGNMENT_LEFT,
+		-1,
+		fs,
+		Color(1, 1, 1, 0.96)
+	)
 
 
 ## Delegate task glyph drawing to the task resource
@@ -454,7 +479,9 @@ func _draw_task_glyph(inst: ScenarioTask, center: Vector2, hi: bool) -> void:
 		return
 	var to_map := Callable(editor.terrain_render, "terrain_to_map")
 	var scale_icon := Callable(self, "_scale_icon")
-	inst.task.draw_glyph(self, center, hi, hover_scale, task_icon_px, task_icon_inner_px, inst, to_map, scale_icon)
+	inst.task.draw_glyph(
+		self, center, hi, hover_scale, task_icon_px, task_icon_inner_px, inst, to_map, scale_icon
+	)
 	if hi and inst.task:
 		_draw_title(inst.task.display_name, center)
 
@@ -541,7 +568,7 @@ func _slot_pos_m(entry) -> Vector2:
 func _get_scaled_icon_unit(u: ScenarioUnit) -> Texture2D:
 	var base: Texture2D = null
 	if u and u.unit:
-		if ScenarioUnit.Affiliation.friend == u.affiliation:
+		if ScenarioUnit.Affiliation.FRIEND == u.affiliation:
 			base = u.unit.icon if u.unit.icon else null
 		else:
 			base = u.unit.enemy_icon if u.unit.enemy_icon else null
@@ -549,7 +576,7 @@ func _get_scaled_icon_unit(u: ScenarioUnit) -> Texture2D:
 		base = load(
 			(
 				"res://assets/textures/units/nato_unknown_platoon.png"
-				if ScenarioUnit.Affiliation.friend == u.affiliation
+				if ScenarioUnit.Affiliation.FRIEND == u.affiliation
 				else "res://assets/textures/units/enemy_unknown_platoon.png"
 			)
 		)
@@ -569,7 +596,10 @@ func _get_scaled_icon_task(inst: ScenarioTask) -> Texture2D:
 	if not inst or not inst.task or not inst.task.icon:
 		return null
 	var base: Texture2D = inst.task.icon
-	var key := "TASK:%s:%s:%d" % [String(inst.task.type_id), String(inst.task.resource_path), task_icon_inner_px]
+	var key := (
+		"TASK:%s:%s:%d"
+		% [String(inst.task.type_id), String(inst.task.resource_path), task_icon_inner_px]
+	)
 	return _scaled_cached(key, base, task_icon_inner_px)
 
 
@@ -607,11 +637,17 @@ func _scaled_cached(key: String, base: Texture2D, px: int) -> Texture2D:
 func _glyph_radius(kind: StringName, idx: int) -> float:
 	match kind:
 		&"task":
-			return float(task_icon_px) * 0.5 * (hover_scale if _is_highlighted(&"task", idx) else 1.0)
+			return (
+				float(task_icon_px) * 0.5 * (hover_scale if _is_highlighted(&"task", idx) else 1.0)
+			)
 		&"unit":
-			return float(unit_icon_px) * 0.5 * (hover_scale if _is_highlighted(&"unit", idx) else 1.0)
+			return (
+				float(unit_icon_px) * 0.5 * (hover_scale if _is_highlighted(&"unit", idx) else 1.0)
+			)
 		&"slot":
-			return float(slot_icon_px) * 0.5 * (hover_scale if _is_highlighted(&"slot", idx) else 1.0)
+			return (
+				float(slot_icon_px) * 0.5 * (hover_scale if _is_highlighted(&"slot", idx) else 1.0)
+			)
 		_:
 			return 0.0
 
@@ -619,10 +655,10 @@ func _glyph_radius(kind: StringName, idx: int) -> float:
 ## Shorten a segment at both ends by given trims (pixels)
 func _trim_segment(src: Vector2, dst: Vector2, src_trim: float, dst_trim: float) -> Array[Vector2]:
 	var dir := dst - src
-	var L := dir.length()
-	if L <= 1.0:
+	var l := dir.length()
+	if l <= 1.0:
 		return [src, dst]
-	var n := dir / L
+	var n := dir / l
 	var a := src + n * src_trim
 	var b := dst - n * dst_trim
 	return [a, b]

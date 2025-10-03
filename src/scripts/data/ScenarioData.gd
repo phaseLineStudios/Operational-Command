@@ -1,8 +1,8 @@
-extends Resource
 class_name ScenarioData
+extends Resource
 
 ## Enumeration of scenario difficulty levels
-enum scenarioDifficulty { easy, normal, hard }
+enum ScenarioDifficulty { EASY, NORMAL, HARD }
 
 ## Unique identifier for this scenario
 @export var id: String
@@ -19,7 +19,7 @@ enum scenarioDifficulty { easy, normal, hard }
 
 @export_category("Meta")
 ## Difficulty of the scenario
-@export var difficulty: scenarioDifficulty
+@export var difficulty: ScenarioDifficulty
 ## Position of the scenario on the campaign/selection map
 @export var map_position: Vector2
 ## Order index of the scenario in a campaign sequence
@@ -106,7 +106,8 @@ func serialize() -> Dictionary:
 		"difficulty": int(difficulty),
 		"map_position": _vec2_to_dict(map_position),
 		"scenario_order": scenario_order,
-		"weather": {"rain": rain, "fog_m": fog_m, "wind_dir": wind_dir, "wind_speed_m": wind_speed_m},
+		"weather":
+		{"rain": rain, "fog_m": fog_m, "wind_dir": wind_dir, "wind_speed_m": wind_speed_m},
 		"datetime": {"year": year, "month": month, "day": day, "hour": hour, "minute": minute},
 		"units":
 		{
@@ -115,7 +116,13 @@ func serialize() -> Dictionary:
 			"unit_recruits_ids": recruit_ids,
 			"unit_reserves": _serialize_unit_slots(unit_reserves)
 		},
-		"content": {"units": placed_units, "triggers": placed_triggers, "tasks": placed_tasks, "drawings": drawings}
+		"content":
+		{
+			"units": placed_units,
+			"triggers": placed_triggers,
+			"tasks": placed_tasks,
+			"drawings": drawings
+		}
 	}
 
 
@@ -142,7 +149,8 @@ static func deserialize(json: Variant) -> ScenarioData:
 		if brief is BriefData:
 			s.briefing = brief
 
-	@warning_ignore("int_as_enum_without_cast") s.difficulty = _difficulty_from(json.get("difficulty", s.difficulty))
+	@warning_ignore("int_as_enum_without_cast")
+	s.difficulty = _difficulty_from(json.get("difficulty", s.difficulty))
 	s.map_position = _dict_to_vec2(json.get("map_position", _vec2_to_dict(s.map_position)))
 	s.scenario_order = int(json.get("scenario_order", s.scenario_order))
 
@@ -248,9 +256,9 @@ static func _difficulty_from(json_value: Variant) -> int:
 	if typeof(json_value) == TYPE_STRING:
 		match String(json_value).to_lower():
 			"easy":
-				return scenarioDifficulty.easy
+				return ScenarioDifficulty.EASY
 			"normal":
-				return scenarioDifficulty.normal
+				return ScenarioDifficulty.NORMAL
 			"hard":
-				return scenarioDifficulty.hard
-	return scenarioDifficulty.normal
+				return ScenarioDifficulty.HARD
+	return ScenarioDifficulty.NORMAL

@@ -1,8 +1,22 @@
-extends Control
 class_name TerrainEditor
+extends Control
 ## In-game terrain editor for custom terrains.
 ##
 ## Lets creators create terrains to use in scenarios.
+
+## Action on exit
+const _EXIT_DISCARD_ACTION := "discard"
+
+## Order of editor tools
+const TOOL_ORDER := [
+	"res://scripts/editors/tools/TerrainElevationTool.gd",
+	"res://scripts/editors/tools/TerrainPolygonTool.gd",
+	"res://scripts/editors/tools/TerrainLineTool.gd",
+	"res://scripts/editors/tools/TerrainPointTool.gd",
+	"res://scripts/editors/tools/TerrainLabelTool.gd"
+]
+
+const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 
 ## Initial Terrain Data
 @export var data: TerrainData
@@ -10,22 +24,6 @@ class_name TerrainEditor
 @export_group("Tools")
 ## Icon size for tool buttons
 @export var tool_icon_size: Vector2 = Vector2(25, 25)
-
-@onready var history := TerrainHistory.new()
-@onready var file_menu: MenuButton = %File
-@onready var edit_menu: MenuButton = %Edit
-@onready var tools_grid: GridContainer = %Tools
-@onready var terrain_render: TerrainRender = %World
-@onready var terrainview_container: SubViewportContainer = %TerrainView
-@onready var terrainview: SubViewport = %TerrainView/View
-@onready var brush_overlay: Control = %BrushOverlay
-@onready var terrain_settings_dialog: NewTerrainDialog = %TerrainSettingsDialog
-@onready var tools_options: VBoxContainer = %"Tool Options"
-@onready var tools_info: VBoxContainer = %"Tool Info"
-@onready var tools_hint: HBoxContainer = %"ToolHint"
-@onready var history_container: VBoxContainer = %History
-@onready var camera: TerrainCamera = %Camera
-@onready var mouse_position_l: Label = %MousePosition
 
 var brushes: Array[TerrainBrush] = []
 var features: Array[Variant] = []
@@ -42,19 +40,21 @@ var _pending_exit_kind: String = ""
 var _pending_quit_after_save: bool = false
 var _exit_dialog: ConfirmationDialog
 
-## Action on exit
-const _EXIT_DISCARD_ACTION := "discard"
-
-## Order of editor tools
-const TOOL_ORDER := [
-	"res://scripts/editors/tools/TerrainElevationTool.gd",
-	"res://scripts/editors/tools/TerrainPolygonTool.gd",
-	"res://scripts/editors/tools/TerrainLineTool.gd",
-	"res://scripts/editors/tools/TerrainPointTool.gd",
-	"res://scripts/editors/tools/TerrainLabelTool.gd"
-]
-
-const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
+@onready var history := TerrainHistory.new()
+@onready var file_menu: MenuButton = %File
+@onready var edit_menu: MenuButton = %Edit
+@onready var tools_grid: GridContainer = %Tools
+@onready var terrain_render: TerrainRender = %World
+@onready var terrainview_container: SubViewportContainer = %TerrainView
+@onready var terrainview: SubViewport = %TerrainView/View
+@onready var brush_overlay: Control = %BrushOverlay
+@onready var terrain_settings_dialog: NewTerrainDialog = %TerrainSettingsDialog
+@onready var tools_options: VBoxContainer = %"Tool Options"
+@onready var tools_info: VBoxContainer = %"Tool Info"
+@onready var tools_hint: HBoxContainer = %"ToolHint"
+@onready var history_container: VBoxContainer = %History
+@onready var camera: TerrainCamera = %Camera
+@onready var mouse_position_l: Label = %MousePosition
 
 
 func _ready():

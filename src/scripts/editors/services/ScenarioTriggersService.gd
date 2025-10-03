@@ -1,5 +1,5 @@
-extends RefCounted
 class_name ScenarioTriggersService
+extends RefCounted
 
 
 func build_palette(ctx: ScenarioEditorContext) -> void:

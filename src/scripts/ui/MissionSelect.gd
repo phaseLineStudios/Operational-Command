@@ -3,23 +3,11 @@ extends Control
 ##
 ## Shows campaign map, mission pins, and a details card.
 
-@onready var _container: Panel = $"Container"
-@onready var _btn_back: Button = $"BackToCampaign"
-@onready var _map_rect: TextureRect = $"Container/Map"
-@onready var _pins_layer: Control = $"Container/PinsLayer"
+## Path to campaign select scene
+const SCENE_CAMPAIGN_SELECT := "res://scenes/campaign_select.tscn"
 
-@onready var _card: Panel = $"Container/MissionCard"
-@onready var _card_title: Label = $"Container/MissionCard/VBoxContainer/Title"
-@onready var _card_desc: RichTextLabel = $"Container/MissionCard/VBoxContainer/HBoxContainer/Desc"
-@onready var _card_image: TextureRect = $"Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer/Image"
-@onready var _card_diff: Label = $"Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer/Difficulty"
-@onready var _card_start: Button = $"Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer/StartMission"
-@onready var _click_catcher: Control = $"Container/ClickCatcher"
-
-var _selected_mission: ScenarioData
-var _campaign: CampaignData
-var _scenarios: Array[ScenarioData] = []
-var _card_pin_button: BaseButton
+## Path to unit select scene
+const SCENE_BRIEFING := "res://scenes/briefing.tscn"
 
 ## Size of each mission pin in pixels.
 @export var pin_size := Vector2i(24, 24)
@@ -40,11 +28,23 @@ var _card_pin_button: BaseButton
 ## Extra padding inside the label panel (px).
 @export var pin_label_padding := Vector2(6, 3)
 
-## Path to campaign select scene
-const SCENE_CAMPAIGN_SELECT := "res://scenes/campaign_select.tscn"
+var _selected_mission: ScenarioData
+var _campaign: CampaignData
+var _scenarios: Array[ScenarioData] = []
+var _card_pin_button: BaseButton
 
-## Path to unit select scene
-const SCENE_BRIEFING := "res://scenes/briefing.tscn"
+@onready var _container: Panel = $"Container"
+@onready var _btn_back: Button = $"BackToCampaign"
+@onready var _map_rect: TextureRect = $"Container/Map"
+@onready var _pins_layer: Control = $"Container/PinsLayer"
+
+@onready var _card: Panel = $"Container/MissionCard"
+@onready var _card_title: Label = $"Container/MissionCard/VBoxContainer/Title"
+@onready var _card_desc: RichTextLabel = $"Container/MissionCard/VBoxContainer/HBoxContainer/Desc"
+@onready var _card_image: TextureRect = %CardImage
+@onready var _card_diff: Label = %CardDifficulty
+@onready var _card_start: Button = %CardStartMission
+@onready var _click_catcher: Control = $"Container/ClickCatcher"
 
 
 ## Build UI, load map, place pins, hook resizes.

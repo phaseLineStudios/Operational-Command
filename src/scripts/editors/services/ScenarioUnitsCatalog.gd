@@ -1,5 +1,5 @@
-extends RefCounted
 class_name ScenarioUnitsCatalog
+extends RefCounted
 
 var all_units: Array[UnitData]
 var unit_categories: Array[UnitCategoryData]
@@ -34,8 +34,12 @@ func _build_categories(ctx: ScenarioEditorContext) -> void:
 	)
 
 	ctx.unit_search.text_changed.connect(func(_t): _refresh(ctx))
-	ctx.unit_faction_friend.pressed.connect(func(): _set_faction(ctx, ScenarioUnit.Affiliation.friend))
-	ctx.unit_faction_enemy.pressed.connect(func(): _set_faction(ctx, ScenarioUnit.Affiliation.enemy))
+	ctx.unit_faction_friend.pressed.connect(
+		func(): _set_faction(ctx, ScenarioUnit.Affiliation.friend)
+	)
+	ctx.unit_faction_enemy.pressed.connect(
+		func(): _set_faction(ctx, ScenarioUnit.Affiliation.enemy)
+	)
 
 
 func _set_faction(ctx: ScenarioEditorContext, aff) -> void:
@@ -90,7 +94,11 @@ func _refresh(ctx: ScenarioEditorContext) -> void:
 			continue
 		if unit.unit_category.id != selected_category.id:
 			continue
-		var text_ok := query.is_empty() or unit.title.to_lower().find(query) >= 0 or unit.id.to_lower().find(query) >= 0
+		var text_ok := (
+			query.is_empty()
+			or unit.title.to_lower().find(query) >= 0
+			or unit.id.to_lower().find(query) >= 0
+		)
 		if not text_ok:
 			continue
 
@@ -102,7 +110,11 @@ func _refresh(ctx: ScenarioEditorContext) -> void:
 			role_item.set_selectable(0, false)
 			role_items[role_key] = role_item
 
-		var icon := unit.icon if ctx.selected_unit_affiliation == ScenarioUnit.Affiliation.friend else unit.enemy_icon
+		var icon := (
+			unit.icon
+			if ctx.selected_unit_affiliation == ScenarioUnit.Affiliation.friend
+			else unit.enemy_icon
+		)
 		if icon == null:
 			icon = (
 				load(

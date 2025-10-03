@@ -1,5 +1,5 @@
-extends Resource
 class_name UnitCategoryData
+extends Resource
 
 ## Unique key identifying this category
 @export var id: String
@@ -15,7 +15,14 @@ func serialize() -> Dictionary:
 		"id": id,
 		"title": title,
 		"editor_icon_path":
-		editor_icon.resource_path as Variant if editor_icon and editor_icon.resource_path != "" else null as Variant,
+		(
+			(
+				editor_icon.resource_path as Variant
+				if editor_icon and editor_icon.resource_path != ""
+				else null
+			)
+			as Variant
+		),
 	}
 
 

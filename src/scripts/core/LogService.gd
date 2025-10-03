@@ -1,12 +1,11 @@
 extends Node
-
 # Provide a custom logger service which can be displayed in the debug menu.
-
-## Log Level for message
-enum LogLevel { LOG, INFO, ERROR, WARNING, TRACE }
 
 ## Emits on a new log line
 signal line(text: String, level: LogLevel)
+
+## Log Level for message
+enum LogLevel { LOG, INFO, ERROR, WARNING, TRACE }
 
 var _tap: LogTap
 var _project_level: LogLevel = ProjectSettings.get_setting("debug/settings/stdout/log_level")

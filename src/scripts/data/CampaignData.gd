@@ -1,5 +1,5 @@
-extends Resource
 class_name CampaignData
+extends Resource
 
 ## Unique identifier for this campaign
 @export var id: String
@@ -32,9 +32,19 @@ func serialize() -> Dictionary:
 		"title": title,
 		"description": description,
 		"preview_path":
-		preview.resource_path as Variant if preview and preview.resource_path != "" else null as Variant,
+		(
+			preview.resource_path as Variant if preview and preview.resource_path != "" else null
+			as Variant
+		),
 		"scenario_bg_path":
-		scenario_bg.resource_path as Variant if scenario_bg and scenario_bg.resource_path != "" else null as Variant,
+		(
+			(
+				scenario_bg.resource_path as Variant
+				if scenario_bg and scenario_bg.resource_path != ""
+				else null
+			)
+			as Variant
+		),
 		"scenarios": scenario_dicts,
 		"order": order,
 		"saves": saves.duplicate()

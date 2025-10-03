@@ -1,5 +1,5 @@
-extends Control
 class_name LabelLayer
+extends Control
 
 ## Outline color for labels
 @export var outline_color: Color = Color.WHITE
@@ -12,8 +12,6 @@ class_name LabelLayer
 ## Unused by text, kept for consistency
 @export var antialias: bool = true
 
-@onready var renderer: TerrainRender = get_owner()
-
 var data: TerrainData
 var _data_conn := false
 
@@ -21,10 +19,16 @@ var _items: Dictionary = {}
 var _draw_items: Array = []
 var _draw_dirty := true
 
+@onready var renderer: TerrainRender = get_owner()
+
 
 ## Assigns TerrainData, resets caches, wires signals, and schedules redraw
 func set_data(d: TerrainData) -> void:
-	if _data_conn and data and data.is_connected("labels_changed", Callable(self, "_on_labels_changed")):
+	if (
+		_data_conn
+		and data
+		and data.is_connected("labels_changed", Callable(self, "_on_labels_changed"))
+	):
 		data.disconnect("labels_changed", Callable(self, "_on_labels_changed"))
 		_data_conn = false
 	data = d
@@ -32,7 +36,9 @@ func set_data(d: TerrainData) -> void:
 	_draw_items.clear()
 	_draw_dirty = true
 	if data:
-		data.labels_changed.connect(_on_labels_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
+		data.labels_changed.connect(
+			_on_labels_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED
+		)
 		_data_conn = true
 	queue_redraw()
 
@@ -114,27 +120,27 @@ func _draw() -> void:
 
 ## Insert/update a label from TerrainData
 func _upsert_from_data(id: int) -> void:
-	var L: Variant = _find_label_by_id(id)
-	if L == null:
+	var l: Variant = _find_label_by_id(id)
+	if l == null:
 		_items.erase(id)
 		_draw_dirty = true
 		return
 
-	var pos: Vector2 = L.get("pos", Vector2.INF)
+	var pos: Vector2 = l.get("pos", Vector2.INF)
 	if not pos.is_finite():
 		_items.erase(id)
 		_draw_dirty = true
 		return
 
-	var txt: String = String(L.get("text", ""))
+	var txt: String = String(l.get("text", ""))
 	if txt == "":
 		_items.erase(id)
 		_draw_dirty = true
 		return
 
-	var l_size: int = int(L.get("size", 16))
-	var z: int = int(L.get("z", 0))
-	var rot: float = float(L.get("rot", 0.0))
+	var l_size: int = int(l.get("size", 16))
+	var z: int = int(l.get("z", 0))
+	var rot: float = float(l.get("rot", 0.0))
 	var l_visible := _is_terrain_pos_visible(pos)
 
 	var it: Variant = _items.get(
@@ -156,17 +162,17 @@ func _refresh_pose_only(id: int) -> void:
 	if not _items.has(id):
 		_upsert_from_data(id)
 		return
-	var L: Variant = _find_label_by_id(id)
-	if L == null:
+	var l: Variant = _find_label_by_id(id)
+	if l == null:
 		_items.erase(id)
 		_draw_dirty = true
 		return
-	var pos: Vector2 = L.get("pos", Vector2.INF)
+	var pos: Vector2 = l.get("pos", Vector2.INF)
 	if not pos.is_finite():
 		_items.erase(id)
 		_draw_dirty = true
 		return
-	var rot: float = float(L.get("rot", 0.0))
+	var rot: float = float(l.get("rot", 0.0))
 	var it = _items[id]
 	it.pos = pos
 	it.rot = rot
@@ -202,7 +208,14 @@ func _draw_label_centered(pos_local: Vector2, text: String, font_size: int, rot_
 
 	if outline_size > 0 and outline_color.a > 0.0:
 		draw_string_outline(
-			font, baseline_local, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_size, outline_color
+			font,
+			baseline_local,
+			text,
+			HORIZONTAL_ALIGNMENT_LEFT,
+			-1,
+			font_size,
+			outline_size,
+			outline_color
 		)
 
 		var r: int = max(1, int(outline_size))
@@ -217,7 +230,15 @@ func _draw_label_centered(pos_local: Vector2, text: String, font_size: int, rot_
 			Vector2(r, r)
 		]
 		for o in offsets:
-			draw_string(font, baseline_local + o, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_color)
+			draw_string(
+				font,
+				baseline_local + o,
+				text,
+				HORIZONTAL_ALIGNMENT_LEFT,
+				-1,
+				font_size,
+				outline_color
+			)
 
 	draw_string(font, baseline_local, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, text_color)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
@@ -225,7 +246,9 @@ func _draw_label_centered(pos_local: Vector2, text: String, font_size: int, rot_
 
 ## Visibility test against terrain rect (same as other layers)
 func _is_terrain_pos_visible(pos_local: Vector2) -> bool:
-	return renderer.is_inside_terrain(pos_local + Vector2(renderer.margin_left_px, renderer.margin_top_px))
+	return renderer.is_inside_terrain(
+		pos_local + Vector2(renderer.margin_left_px, renderer.margin_top_px)
+	)
 
 
 ## Find a label dictionary in TerrainData by id

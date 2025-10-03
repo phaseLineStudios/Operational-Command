@@ -48,7 +48,9 @@ func calculate_damage(attacker: UnitData, defender: UnitData) -> void:
 	if attacker_final_attackpower - defender_final_defensepower > 0:
 		defender.strength = (
 			defender.strength
-			- floor((attacker_final_attackpower - defender_final_defensepower) * 0.1 / defender.strength)
+			- floor(
+				(attacker_final_attackpower - defender_final_defensepower) * 0.1 / defender.strength
+			)
 		)
 		if defender.morale > 0:
 			defender.morale -= 0.05
@@ -85,9 +87,11 @@ func check_abort_condition(attacker: UnitData, defender: UnitData) -> void:
 ##check unit mid combat status for testing of combat status
 func print_unit_status(attacker: UnitData, defender: UnitData) -> void:
 	LogService.info(
-		"[b]Attacker(%s)[/b]\n\t%s\n\t%s" % [attacker.id, attacker.morale, attacker.strength], "Combat.gd:85"
+		"[b]Attacker(%s)[/b]\n\t%s\n\t%s" % [attacker.id, attacker.morale, attacker.strength],
+		"Combat.gd:85"
 	)
 	LogService.info(
-		"[b]Defender(%s)[/b]\n\t%s\n\t%s" % [defender.id, defender.morale, defender.strength], "Combat.gd:86"
+		"[b]Defender(%s)[/b]\n\t%s\n\t%s" % [defender.id, defender.morale, defender.strength],
+		"Combat.gd:86"
 	)
 	return

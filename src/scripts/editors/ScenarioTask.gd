@@ -1,6 +1,12 @@
-extends Resource
 class_name ScenarioTask
+extends Resource
 ## A placed task for a unit with per-instance params and linking
+
+## Where to find task scripts
+const TASKS_DIR := "res://scripts/editors/tasks"
+
+static var _task_by_typeid: Dictionary = {}
+static var _task_index_built := false
 
 ## Unique Id within scenario
 @export var id: String
@@ -16,12 +22,6 @@ class_name ScenarioTask
 @export var next_index: int = -1
 ## Link to previous ScenarioTask in the chain
 @export var prev_index: int = -1
-
-## Where to find task scripts
-const TASKS_DIR := "res://scripts/editors/tasks"
-
-static var _task_by_typeid: Dictionary = {}
-static var _task_index_built := false
 
 
 ## Convert this task into a JSON-safe dictionary

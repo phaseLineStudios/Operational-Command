@@ -1,5 +1,5 @@
-extends ScenarioToolBase
 class_name TaskPlaceTool
+extends ScenarioToolBase
 
 @export var task: UnitBaseTask
 @export var snap_to_grid := false
@@ -94,7 +94,9 @@ func _place() -> void:
 			editor.ctx.toast("Select a unit or a task first.")
 			return
 
-	var new_idx := editor.tasks.place_task_for_unit(editor.ctx, unit_idx, task, _hover_map_pos, after_idx)
+	var new_idx := editor.tasks.place_task_for_unit(
+		editor.ctx, unit_idx, task, _hover_map_pos, after_idx
+	)
 	if new_idx < 0:
 		return
 	emit_signal("request_redraw_overlay")

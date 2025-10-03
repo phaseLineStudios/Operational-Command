@@ -1,5 +1,5 @@
+class_name UnitTaskWait
 extends UnitBaseTask
-class_name UnitTask_Wait
 ## Wait/hold for a duration.
 
 @export_range(0.0, 36000.0, 1.0) var duration_s: float = 60.0

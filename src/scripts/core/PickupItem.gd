@@ -1,5 +1,5 @@
-extends RigidBody3D
 class_name PickupItem
+extends RigidBody3D
 
 ## Rotation of object when held
 @export var held_rotation: Vector3 = Vector3.ZERO

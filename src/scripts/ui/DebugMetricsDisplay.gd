@@ -1,32 +1,13 @@
-extends Control
 class_name DebugMetricsDisplay
+extends Control
 
-@onready var fps: Label = %MetricsDisplay/VBoxContainer/FPS
-@onready var frame_time: Label = %MetricsDisplay/VBoxContainer/FrameTime
-@onready var frame_number: Label = %MetricsDisplay/VBoxContainer/FrameNumber
-@onready var frame_history: GridContainer = %MetricsDisplay/VBoxContainer/FrameTimeHistory
-@onready var frame_history_total_avg: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/TotalAvg
-@onready var frame_history_total_min: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/TotalMin
-@onready var frame_history_total_max: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/TotalMax
-@onready var frame_history_total_last: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/TotalLast
-@onready var frame_history_cpu_avg: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/CPUAvg
-@onready var frame_history_cpu_min: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/CPUMin
-@onready var frame_history_cpu_max: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/CPUMax
-@onready var frame_history_cpu_last: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/CPULast
-@onready var frame_history_gpu_avg: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/GPUAvg
-@onready var frame_history_gpu_min: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/GPUMin
-@onready var frame_history_gpu_max: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/GPUMax
-@onready var frame_history_gpu_last: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/GPULast
-@onready var fps_graph_container: HBoxContainer = %MetricsDisplay/VBoxContainer/FPSGraph
-@onready var fps_graph: Panel = %MetricsDisplay/VBoxContainer/FPSGraph/Graph
-@onready var total_graph_container: HBoxContainer = %MetricsDisplay/VBoxContainer/TotalGraph
-@onready var total_graph: Panel = %MetricsDisplay/VBoxContainer/TotalGraph/Graph
-@onready var cpu_graph_container: HBoxContainer = %MetricsDisplay/VBoxContainer/CPUGraph
-@onready var cpu_graph: Panel = %MetricsDisplay/VBoxContainer/CPUGraph/Graph
-@onready var gpu_graph_container: HBoxContainer = %MetricsDisplay/VBoxContainer/GPUGraph
-@onready var gpu_graph: Panel = %MetricsDisplay/VBoxContainer/GPUGraph/Graph
-@onready var information: Label = %MetricsDisplay/VBoxContainer/Information
-@onready var settings: Label = %MetricsDisplay/VBoxContainer/Settings
+## Debug menu display style
+enum Style {
+	HIDDEN,
+	VISIBLE_COMPACT,
+	VISIBLE_DETAILED,
+	MAX,
+}
 
 ## The number of frames to keep in history for graph drawing and best/worst calculations
 const HISTORY_NUM_FRAMES = 150
@@ -36,14 +17,6 @@ const GRAPH_MIN_FPS = 10
 const GRAPH_MAX_FPS = 160
 const GRAPH_MIN_FRAMETIME = 1.0 / GRAPH_MIN_FPS
 const GRAPH_MAX_FRAMETIME = 1.0 / GRAPH_MAX_FPS
-
-## Debug menu display style
-enum Style {
-	HIDDEN,
-	VISIBLE_COMPACT,
-	VISIBLE_DETAILED,
-	MAX,
-}
 
 var style := Style.HIDDEN:
 	set(value):
@@ -80,6 +53,33 @@ var frametime_gpu_avg := GRAPH_MIN_FRAMETIME
 var frames_per_second := float(GRAPH_MIN_FPS)
 var frame_time_gradient := Gradient.new()
 
+@onready var fps: Label = %MetricsDisplay/VBoxContainer/FPS
+@onready var frame_time: Label = %MetricsDisplay/VBoxContainer/FrameTime
+@onready var frame_number: Label = %MetricsDisplay/VBoxContainer/FrameNumber
+@onready var frame_history: GridContainer = %MetricsDisplay/VBoxContainer/FrameTimeHistory
+@onready var frame_history_total_avg: Label = %TotalAvg
+@onready var frame_history_total_min: Label = %TotalMin
+@onready var frame_history_total_max: Label = %TotalMax
+@onready var frame_history_total_last: Label = %TotalLast
+@onready var frame_history_cpu_avg: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/CPUAvg
+@onready var frame_history_cpu_min: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/CPUMin
+@onready var frame_history_cpu_max: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/CPUMax
+@onready var frame_history_cpu_last: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/CPULast
+@onready var frame_history_gpu_avg: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/GPUAvg
+@onready var frame_history_gpu_min: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/GPUMin
+@onready var frame_history_gpu_max: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/GPUMax
+@onready var frame_history_gpu_last: Label = %MetricsDisplay/VBoxContainer/FrameTimeHistory/GPULast
+@onready var fps_graph_container: HBoxContainer = %MetricsDisplay/VBoxContainer/FPSGraph
+@onready var fps_graph: Panel = %MetricsDisplay/VBoxContainer/FPSGraph/Graph
+@onready var total_graph_container: HBoxContainer = %MetricsDisplay/VBoxContainer/TotalGraph
+@onready var total_graph: Panel = %MetricsDisplay/VBoxContainer/TotalGraph/Graph
+@onready var cpu_graph_container: HBoxContainer = %MetricsDisplay/VBoxContainer/CPUGraph
+@onready var cpu_graph: Panel = %MetricsDisplay/VBoxContainer/CPUGraph/Graph
+@onready var gpu_graph_container: HBoxContainer = %MetricsDisplay/VBoxContainer/GPUGraph
+@onready var gpu_graph: Panel = %MetricsDisplay/VBoxContainer/GPUGraph/Graph
+@onready var information: Label = %MetricsDisplay/VBoxContainer/Information
+@onready var settings: Label = %MetricsDisplay/VBoxContainer/Settings
+
 
 func _init() -> void:
 	visible = false
@@ -110,7 +110,9 @@ func _ready() -> void:
 			if Engine.get_version_info()["hex"] >= 0x040100:
 				Callable(Thread, "set_thread_safety_checks_enabled").call(false)
 
-			RenderingServer.viewport_set_measure_render_time(get_viewport().get_viewport_rid(), true)
+			RenderingServer.viewport_set_measure_render_time(
+				get_viewport().get_viewport_rid(), true
+			)
 			update_information_label()
 			update_settings_label()
 	)
@@ -124,9 +126,13 @@ func _exit_tree() -> void:
 func update_settings_label() -> void:
 	settings.text = ""
 	if ProjectSettings.has_setting("application/config/version"):
-		settings.text += "Project Version: %s\n" % ProjectSettings.get_setting("application/config/version")
+		settings.text += (
+			"Project Version: %s\n" % ProjectSettings.get_setting("application/config/version")
+		)
 
-	var rendering_method := str(ProjectSettings.get_setting_with_override("rendering/renderer/rendering_method"))
+	var rendering_method := str(
+		ProjectSettings.get_setting_with_override("rendering/renderer/rendering_method")
+	)
 	var rendering_method_string := rendering_method
 	match rendering_method:
 		"forward_plus":
@@ -145,7 +151,12 @@ func update_settings_label() -> void:
 		viewport_render_size = viewport.get_visible_rect().size
 		settings.text += (
 			"Viewport: %d×%d, Window: %d×%d\n"
-			% [viewport.get_visible_rect().size.x, viewport.get_visible_rect().size.y, viewport.size.x, viewport.size.y]
+			% [
+				viewport.get_visible_rect().size.x,
+				viewport.get_visible_rect().size.y,
+				viewport.size.x,
+				viewport.size.y
+			]
 		)
 	else:
 		viewport_render_size = viewport.size
@@ -163,15 +174,22 @@ func update_settings_label() -> void:
 
 		var antialiasing_3d_string := ""
 		if viewport.scaling_3d_mode == Viewport.SCALING_3D_MODE_FSR2:
-			antialiasing_3d_string += (" + " if not antialiasing_3d_string.is_empty() else "") + "FSR 2.2"
+			antialiasing_3d_string += (
+				(" + " if not antialiasing_3d_string.is_empty() else "") + "FSR 2.2"
+			)
 		if viewport.scaling_3d_mode != Viewport.SCALING_3D_MODE_FSR2 and viewport.use_taa:
-			antialiasing_3d_string += (" + " if not antialiasing_3d_string.is_empty() else "") + "TAA"
+			antialiasing_3d_string += (
+				(" + " if not antialiasing_3d_string.is_empty() else "") + "TAA"
+			)
 		if viewport.msaa_3d >= Viewport.MSAA_2X:
 			antialiasing_3d_string += (
-				(" + " if not antialiasing_3d_string.is_empty() else "") + "%d× MSAA" % pow(2, viewport.msaa_3d)
+				(" + " if not antialiasing_3d_string.is_empty() else "")
+				+ "%d× MSAA" % pow(2, viewport.msaa_3d)
 			)
 		if viewport.screen_space_aa == Viewport.SCREEN_SPACE_AA_FXAA:
-			antialiasing_3d_string += (" + " if not antialiasing_3d_string.is_empty() else "") + "FXAA"
+			antialiasing_3d_string += (
+				(" + " if not antialiasing_3d_string.is_empty() else "") + "FXAA"
+			)
 
 		settings.text += (
 			"3D scale (%s): %d%% = %d×%d"
@@ -242,8 +260,12 @@ func update_information_label() -> void:
 	else:
 		release_string = "release"
 
-	var rendering_method := str(ProjectSettings.get_setting_with_override("rendering/renderer/rendering_method"))
-	var rendering_driver := str(ProjectSettings.get_setting_with_override("rendering/rendering_device/driver"))
+	var rendering_method := str(
+		ProjectSettings.get_setting_with_override("rendering/renderer/rendering_method")
+	)
+	var rendering_driver := str(
+		ProjectSettings.get_setting_with_override("rendering/rendering_device/driver")
+	)
 	var graphics_api_string := rendering_driver
 	if rendering_method != "gl_compatibility":
 		if rendering_driver == "d3d12":
@@ -266,7 +288,13 @@ func update_information_label() -> void:
 			graphics_api_string = "OpenGL"
 
 	information.text = (
-		"%s, %d threads\n" % [OS.get_processor_name().replace("(R)", "").replace("(TM)", ""), OS.get_processor_count()]
+		(
+			"%s, %d threads\n"
+			% [
+				OS.get_processor_name().replace("(R)", "").replace("(TM)", ""),
+				OS.get_processor_count()
+			]
+		)
 		+ (
 			"%s %s (%s %s), %s %s\n"
 			% [
@@ -297,7 +325,11 @@ func _fps_graph_draw() -> void:
 			)
 		)
 	fps_graph.draw_polyline(
-		fps_polyline, frame_time_gradient.sample(remap(frames_per_second, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)), 1.0
+		fps_polyline,
+		frame_time_gradient.sample(
+			remap(frames_per_second, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)
+		),
+		1.0
 	)
 
 
@@ -317,7 +349,9 @@ func _total_graph_draw() -> void:
 		)
 	total_graph.draw_polyline(
 		total_polyline,
-		frame_time_gradient.sample(remap(1000.0 / frametime_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)),
+		frame_time_gradient.sample(
+			remap(1000.0 / frametime_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)
+		),
 		1.0
 	)
 
@@ -338,7 +372,9 @@ func _cpu_graph_draw() -> void:
 		)
 	cpu_graph.draw_polyline(
 		cpu_polyline,
-		frame_time_gradient.sample(remap(1000.0 / frametime_cpu_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)),
+		frame_time_gradient.sample(
+			remap(1000.0 / frametime_cpu_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)
+		),
 		1.0
 	)
 
@@ -359,7 +395,9 @@ func _gpu_graph_draw() -> void:
 		)
 	gpu_graph.draw_polyline(
 		gpu_polyline,
-		frame_time_gradient.sample(remap(1000.0 / frametime_gpu_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)),
+		frame_time_gradient.sample(
+			remap(1000.0 / frametime_gpu_avg, GRAPH_MIN_FPS, GRAPH_MAX_FPS, 0.0, 1.0)
+		),
 		1.0
 	)
 

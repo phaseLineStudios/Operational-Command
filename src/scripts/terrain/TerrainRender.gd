@@ -1,7 +1,13 @@
-extends Control
 class_name TerrainRender
+extends Control
 
 ## Renders map: grid, margins, contours, surfaces, features, labels
+
+## Emits when the map is resized
+signal map_resize
+
+## Grid cell size in meters
+const GRID_SIZE_M = 100
 
 ## Terrain Data
 @export var data: TerrainData:
@@ -86,6 +92,9 @@ class_name TerrainRender
 ## Default profile to rebuild for when auto-building.
 @export var nav_default_profile: int = TerrainBrush.MoveProfile.FOOT
 
+var _base_sb: StyleBoxFlat
+var _debounce_timer: SceneTreeTimer
+
 @onready var margin: PanelContainer = %MapMargin
 @onready var base_layer: PanelContainer = %TerrainBase
 @onready var surface_layer: SurfaceLayer = %SurfaceLayer
@@ -96,15 +105,6 @@ class_name TerrainRender
 @onready var label_layer: LabelLayer = %LabelLayer
 @onready var error_layer: CenterContainer = %ErrorLayer
 @onready var error_label: Label = %ErrorLayer/ErrorLabel
-
-## Emits when the map is resized
-signal map_resize
-
-## Grid cell size in meters
-const GRID_SIZE_M = 100
-
-var _base_sb: StyleBoxFlat
-var _debounce_timer: SceneTreeTimer
 
 
 func _ready():
@@ -251,7 +251,9 @@ func _on_base_layer_resize():
 ## Clamp a single point to the terrain (local map coordinates)
 func clamp_point_to_terrain(p: Vector2) -> Vector2:
 	var sz: Vector2 = get_terrain_size()
-	return Vector2(clamp(p.x, 0.0, sz.x - terrain_border_px * 2), clamp(p.y, 0.0, sz.y - terrain_border_px * 2))
+	return Vector2(
+		clamp(p.x, 0.0, sz.x - terrain_border_px * 2), clamp(p.y, 0.0, sz.y - terrain_border_px * 2)
+	)
 
 
 ## Clamp an entire polygon (without mutating the source array)
@@ -295,7 +297,9 @@ func is_inside_terrain(pos: Vector2) -> bool:
 func pos_to_grid(pos: Vector2, total_digits: int = 6) -> String:
 	@warning_ignore("integer_division") var per_axis := total_digits / 2
 	if per_axis != 3 and per_axis != 4 and per_axis != 5:
-		push_warning("pos_to_grid: total_digits must be 6, 8, or 10; got %d. Using 6." % total_digits)
+		push_warning(
+			"pos_to_grid: total_digits must be 6, 8, or 10; got %d. Using 6." % total_digits
+		)
 		per_axis = 3
 
 	var cell_x := floori(pos.x / GRID_SIZE_M)

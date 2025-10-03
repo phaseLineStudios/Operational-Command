@@ -1,8 +1,11 @@
-extends Window
 class_name DebugMenu
+extends Window
+
+var _log_lines: Array = []
 
 @onready var metrics_display: DebugMetricsDisplay = %MetricsDisplay
-@onready var metrics_visibility: OptionButton = $TabContainer/General/Column/MetricsControl/MetricsVisibility
+@onready
+var metrics_visibility: OptionButton = $TabContainer/General/Column/MetricsControl/MetricsVisibility
 @onready var scene_loader_scene: OptionButton = $TabContainer/General/Column/SceneLoader/Scene
 @onready var scene_loader_button: Button = $TabContainer/General/Column/SceneLoader/Load
 @onready var event_log_content: RichTextLabel = $TabContainer/Log/Column/Log/LogContent
@@ -12,8 +15,6 @@ class_name DebugMenu
 @onready var event_log_filter_warning: Button = %FilterWarning
 @onready var event_log_filter_error: Button = %FilterError
 @onready var event_log_filter_trace: Button = %FilterTrace
-
-var _log_lines: Array = []
 
 
 func _ready():

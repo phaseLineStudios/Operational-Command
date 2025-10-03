@@ -1,5 +1,5 @@
-extends Control
 class_name PathGridDebugLayer
+extends Control
 
 ## Simple on-canvas PathGrid visualizer
 

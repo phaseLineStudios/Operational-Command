@@ -1,9 +1,9 @@
 @tool
-extends Resource
 class_name UnitData
+extends Resource
 
 ## Enumeration of unit sizes
-enum unitSize { Team, Squad, Platoon, Company, Battalion }
+enum UnitSize { TEAM, SQUAD, PLATOON, COMPANY, BATTALION }
 
 ## Unique identifier for the unit
 @export var id: String
@@ -24,7 +24,7 @@ enum unitSize { Team, Squad, Platoon, Company, Battalion }
 
 @export_category("Meta")
 ## Organizational size of the unit
-@export var size: unitSize = unitSize.Platoon
+@export var size: UnitSize = UnitSize.PLATOON
 ## Number of personnel in the unit at full strength
 @export var strength: int = 36
 ## Dictionary of equipment definitions
@@ -75,7 +75,8 @@ func serialize() -> Dictionary:
 	return {
 		"id": id,
 		"title": title,
-		"icon_path": icon.resource_path as Variant if icon and icon.resource_path != "" else null as Variant,
+		"icon_path":
+		icon.resource_path as Variant if icon and icon.resource_path != "" else null as Variant,
 		"role": role,
 		"allowed_slots": allowed_slots.duplicate(),
 		"cost": cost,
@@ -130,7 +131,7 @@ static func deserialize(data: Variant) -> UnitData:
 		if tex is Texture2D:
 			u.icon = tex
 
-	u.size = int(data.get("size", u.size)) as unitSize
+	u.size = int(data.get("size", u.size)) as UnitSize
 	u.strength = int(data.get("strength", u.strength))
 	u.equipment = data.get("equipment", u.equipment)
 	u.experience = float(data.get("experience", u.experience))

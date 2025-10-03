@@ -1,5 +1,5 @@
-extends RefCounted
 class_name TerrainToolBase
+extends RefCounted
 
 ## Base class for terrain editor tools.
 
@@ -18,11 +18,10 @@ var data: TerrainData
 var brushes: Array[TerrainBrush] = []
 var features: Array[Variant] = []
 
+var tool_hint := ""
 var tool_icon: Texture2D
-var _preview: Control
-
-var tool_hint: String = ""
 var _inside := false
+var _preview: Control
 
 
 ## Assign Metadata

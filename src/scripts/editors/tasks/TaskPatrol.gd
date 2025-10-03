@@ -1,5 +1,5 @@
+class_name UnitTaskPatrol
 extends UnitBaseTask
-class_name UnitTask_Patrol
 ## Patrol within a radius around the point.
 
 @export_range(10.0, 5000.0, 1.0) var radius_m: float = 150.0
@@ -25,7 +25,9 @@ func draw_glyph(
 	scale_icon: Callable
 ) -> void:
 	var r := px * 0.5 * (hover_scale if hovered else 1.0)
-	canvas.draw_circle(center, r, color.darkened(0.08) if hovered else Color(color.darkened(0.08), 0.5))
+	canvas.draw_circle(
+		center, r, color.darkened(0.08) if hovered else Color(color.darkened(0.08), 0.5)
+	)
 	var rad_m := float(inst.params.get("radius_m", radius_m))
 	if rad_m > 0.0 and to_map.is_valid():
 		var edge: Vector2 = to_map.call(inst.position_m + Vector2(rad_m, 0))

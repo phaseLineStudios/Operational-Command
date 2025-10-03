@@ -1,11 +1,8 @@
-extends Node
 class_name InteractionController
+extends Node
 
 @export var pickable_mask: int = 2 << 0
 @export var follow_smooth: float = 18.0
-
-@onready var camera: Camera3D = %CameraController/CameraBounds/Camera
-@onready var bounds: MeshInstance3D = $InteractionBounds
 
 var _held: PickupItem = null
 var _grab_offset_local := Vector3.ZERO
@@ -13,6 +10,9 @@ var _last_valid_plane_point := Vector3.ZERO
 var _have_valid_plane_point := false
 var _half_x := 0.0
 var _half_z := 0.0
+
+@onready var camera: Camera3D = %CameraController/CameraBounds/Camera
+@onready var bounds: MeshInstance3D = $InteractionBounds
 
 
 func _ready():

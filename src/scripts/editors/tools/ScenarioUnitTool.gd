@@ -1,9 +1,9 @@
-extends ScenarioToolBase
 class_name UnitPlaceTool
+extends ScenarioToolBase
 
-var payload
 @export var snap_to_grid := false
 
+var payload
 var _hover_map_pos := Vector2.ZERO
 var _hover_valid := false
 var _icon_tex: Texture2D
@@ -13,7 +13,7 @@ func _on_activated() -> void:
 	if not payload:
 		return
 	if payload is UnitData:
-		if editor.ctx.selected_unit_affiliation == ScenarioUnit.Affiliation.friend:
+		if editor.ctx.selected_unit_affiliation == ScenarioUnit.Affiliation.FRIEND:
 			_icon_tex = payload.icon
 		else:
 			_icon_tex = payload.enemy_icon
@@ -24,7 +24,7 @@ func _on_activated() -> void:
 			load(
 				(
 					"res://assets/textures/units/nato_unknown_platoon.png"
-					if editor.ctx.selected_unit_affiliation == ScenarioUnit.Affiliation.friend
+					if editor.ctx.selected_unit_affiliation == ScenarioUnit.Affiliation.FRIEND
 					else "res://assets/textures/units/enemy_unknown_platoon.png"
 				)
 			)

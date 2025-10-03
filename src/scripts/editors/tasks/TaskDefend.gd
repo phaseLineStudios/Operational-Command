@@ -1,6 +1,6 @@
 @icon("res://assets/textures/ui/editors_task_defend.png")
+class_name UnitTaskDefend
 extends UnitBaseTask
-class_name UnitTask_Defend
 ## Defend an area around the position.
 
 ## Radius of the defended area (meters)
@@ -28,7 +28,9 @@ func draw_glyph(
 	scale_icon: Callable
 ) -> void:
 	var r := px * 0.5 * (hover_scale if hovered else 1.0)
-	canvas.draw_circle(center, r, color.darkened(0.1) if hovered else Color(color.darkened(0.1), 0.5))
+	canvas.draw_circle(
+		center, r, color.darkened(0.1) if hovered else Color(color.darkened(0.1), 0.5)
+	)
 
 	var rad_m := float(inst.params.get("radius_m", radius_m))
 	if rad_m > 0.0 and to_map.is_valid():

@@ -1,11 +1,17 @@
-extends Resource
 class_name ScenarioTrigger
+extends Resource
 ## Generic, scriptable trigger with optional area/presence and timer.
 ## Evaluates each frame. runs on_activate/on_deactivate when switching state.
 
 ## Presence mode
 enum PresenceMode {
-	NONE, PLAYER_INSIDE, FRIEND_INSIDE, ENEMY_INSIDE, PLAYER_NOT_INSIDE, FRIEND_NOT_INSIDE, ENEMY_NOT_INSIDE
+	NONE,
+	PLAYER_INSIDE,
+	FRIEND_INSIDE,
+	ENEMY_INSIDE,
+	PLAYER_NOT_INSIDE,
+	FRIEND_NOT_INSIDE,
+	ENEMY_NOT_INSIDE
 }
 ## Area Shape type
 enum AreaShape { CIRCLE, RECT }

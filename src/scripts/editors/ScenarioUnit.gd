@@ -1,29 +1,5 @@
-extends Resource
 class_name ScenarioUnit
-
-## Unit Rules of Engagement
-enum CombatMode { forced_hold_fire, do_not_fire_unless_fired_upon, open_fire }
-## Unit movement behaviour
-enum Behaviour { careless, safe, aware, combat, stealth }
-## Unit affiliation
-enum Affiliation { friend, enemy }
-## Runtime movement states.
-enum MoveState { idle, planning, moving, paused, blocked, arrived }
-
-## Unique identifier
-@export var id: String
-## Callsign
-@export var callsign: String
-## Unit Data
-@export var unit: UnitData
-## Unit Position
-@export var position_m: Vector2
-## Unit Affiliation
-@export var affiliation: Affiliation
-## Unit Combat Mode
-@export var combat_mode: CombatMode = CombatMode.open_fire
-## Unit Behaviour
-@export var behaviour: Behaviour = Behaviour.safe
+extends Resource
 
 ## Emitted when a path is planned
 signal move_planned(dest_m: Vector2, eta_s: float)
@@ -40,9 +16,33 @@ signal move_paused
 ## Emitted when resumed
 signal move_resumed
 
+## Unit Rules of Engagement
+enum CombatMode { FORCED_HOLD_FIRE, DO_NOT_FIRE_UNLESS_FIRED_UPON, OPEN_FIRE }
+## Unit movement behaviour
+enum Behaviour { CARELESS, SAFE, AWARE, COMBAT, STEALTH }
+## Unit affiliation
+enum Affiliation { FRIEND, ENEMY }
+## Runtime movement states.
+enum MoveState { IDLE, PLANNING, MOVING, PAUSED, BLOCKED, ARRIVED }
+
 const ARRIVE_EPSILON := 1.0
 
-var _move_state: MoveState = MoveState.idle
+## Unique identifier
+@export var id: String
+## Callsign
+@export var callsign: String
+## Unit Data
+@export var unit: UnitData
+## Unit Position
+@export var position_m: Vector2
+## Unit Affiliation
+@export var affiliation: Affiliation
+## Unit Combat Mode
+@export var combat_mode: CombatMode = CombatMode.OPEN_FIRE
+## Unit Behaviour
+@export var behaviour: Behaviour = Behaviour.SAFE
+
+var _move_state: MoveState = MoveState.IDLE
 var _move_dest_m: Vector2 = Vector2.ZERO
 var _move_path: PackedVector2Array = []
 var _move_path_idx := 0
@@ -65,21 +65,21 @@ func plan_move(grid: PathGrid, dest_m: Vector2) -> bool:
 		_move_dest_m = dest_m
 		_move_path = [position_m, dest_m]
 		_move_path_idx = 1
-		_move_state = MoveState.arrived
+		_move_state = MoveState.ARRIVED
 		position_m = dest_m
 		emit_signal("move_arrived", dest_m)
 		return true
 	_move_dest_m = dest_m
 	var p := grid.find_path_m(position_m, dest_m)
 	if p.is_empty():
-		_move_state = MoveState.blocked
+		_move_state = MoveState.BLOCKED
 		_move_path = []
 		_move_path_idx = 0
 		emit_signal("move_blocked", "no_path")
 		return false
 	_move_path = p
 	_move_path_idx = 0
-	_move_state = MoveState.planning
+	_move_state = MoveState.PLANNING
 	_move_last_eta_s = estimate_eta_s(grid)
 	emit_signal("move_planned", dest_m, _move_last_eta_s)
 	return true
@@ -94,23 +94,23 @@ func start_move(grid: PathGrid, dest_m: Vector2 = Vector2(INF, INF)) -> void:
 		if not plan_move(grid, dest_m):
 			return
 	_move_paused = false
-	_move_state = MoveState.moving
+	_move_state = MoveState.MOVING
 	emit_signal("move_started", _move_dest_m)
 
 
 ## Pause.
 func pause_move() -> void:
-	if _move_state == MoveState.moving:
+	if _move_state == MoveState.MOVING:
 		_move_paused = true
-		_move_state = MoveState.paused
+		_move_state = MoveState.PAUSED
 		emit_signal("move_paused")
 
 
 ## Resume.
 func resume_move() -> void:
-	if _move_state == MoveState.paused:
+	if _move_state == MoveState.PAUSED:
 		_move_paused = false
-		_move_state = MoveState.moving
+		_move_state = MoveState.MOVING
 		emit_signal("move_resumed")
 
 
@@ -119,18 +119,18 @@ func cancel_move() -> void:
 	_move_path = []
 	_move_path_idx = 0
 	_move_dest_m = position_m
-	_move_state = MoveState.idle
+	_move_state = MoveState.IDLE
 
 
 ## Advance movement by dt seconds on PathGrid (virtual position only).
 func tick(dt: float, grid: PathGrid) -> void:
-	if _move_state != MoveState.moving or _move_paused or _move_path.is_empty():
+	if _move_state != MoveState.MOVING or _move_paused or _move_path.is_empty():
 		return
 
 	var cur := position_m
 	var speed := _speed_here_mps(grid, cur)
 	if speed <= 0.0:
-		_move_state = MoveState.blocked
+		_move_state = MoveState.BLOCKED
 		emit_signal("move_blocked", "blocked_cell")
 		return
 
@@ -151,8 +151,11 @@ func tick(dt: float, grid: PathGrid) -> void:
 	_move_last_eta_s = estimate_eta_s(grid)
 	emit_signal("move_progress", position_m, _move_last_eta_s)
 
-	if _move_path_idx >= _move_path.size() or position_m.distance_to(_move_dest_m) <= ARRIVE_EPSILON:
-		_move_state = MoveState.arrived
+	if (
+		_move_path_idx >= _move_path.size()
+		or position_m.distance_to(_move_dest_m) <= ARRIVE_EPSILON
+	):
+		_move_state = MoveState.ARRIVED
 		position_m = _move_dest_m
 		emit_signal("move_arrived", _move_dest_m)
 

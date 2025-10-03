@@ -1,5 +1,5 @@
-extends Node
 class_name Radio
+extends Node
 ## Simulated field radio: PTT state, audio FX, and routing to STT.
 ##
 ## Plays squelch/static, shows UI state, and opens/closes the mic path to the

@@ -1,5 +1,5 @@
-extends Logger
 class_name LogTap
+extends Logger
 
 ## Emits on a new log message
 signal message(level: int, text: String)

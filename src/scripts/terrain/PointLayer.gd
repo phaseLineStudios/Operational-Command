@@ -1,10 +1,8 @@
-extends Control
 class_name PointLayer
+extends Control
 
 ## Enable antialiasing
 @export var antialias: bool = true
-
-@onready var renderer: TerrainRender = get_owner()
 
 var data: TerrainData
 var _data_conn := false
@@ -13,10 +11,16 @@ var _items: Dictionary = {}
 var _draw_items: Array = []
 var _draw_dirty := true
 
+@onready var renderer: TerrainRender = get_owner()
+
 
 ## Assigns TerrainData, resets caches, wires signals, and schedules redraw
 func set_data(d: TerrainData) -> void:
-	if _data_conn and data and data.is_connected("points_changed", Callable(self, "_on_points_changed")):
+	if (
+		_data_conn
+		and data
+		and data.is_connected("points_changed", Callable(self, "_on_points_changed"))
+	):
 		data.disconnect("points_changed", Callable(self, "_on_points_changed"))
 		_data_conn = false
 	data = d
@@ -24,7 +28,9 @@ func set_data(d: TerrainData) -> void:
 	_draw_items.clear()
 	_draw_dirty = true
 	if data:
-		data.points_changed.connect(_on_points_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
+		data.points_changed.connect(
+			_on_points_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED
+		)
 		_data_conn = true
 	queue_redraw()
 
@@ -98,13 +104,13 @@ func _draw() -> void:
 
 ## Insert/update a point by id, recomputing size/tex/visibility as needed
 func _upsert_from_data(id: int, rebuild_all: bool) -> void:
-	var P: Variant = _find_point_by_id(id)
-	if P == null:
+	var point: Variant = _find_point_by_id(id)
+	if point == null:
 		_items.erase(id)
 		_draw_dirty = true
 		return
 
-	var brush: TerrainBrush = P.get("brush", null)
+	var brush: TerrainBrush = point.get("brush", null)
 	if brush == null or brush.feature_type != TerrainBrush.FeatureType.POINT:
 		_items.erase(id)
 		_draw_dirty = true
@@ -116,14 +122,14 @@ func _upsert_from_data(id: int, rebuild_all: bool) -> void:
 		_draw_dirty = true
 		return
 
-	var pos: Vector2 = P.get("pos", Vector2.INF)
+	var pos: Vector2 = point.get("pos", Vector2.INF)
 	if not pos.is_finite():
 		_items.erase(id)
 		_draw_dirty = true
 		return
 
-	var rot: float = float(P.get("rot", 0.0))
-	var p_scale: float = float(P.get("scale", 1.0))
+	var rot: float = float(point.get("rot", 0.0))
+	var p_scale: float = float(point.get("scale", 1.0))
 	var p_size: float = brush.symbol_size_m * max(0.01, p_scale)
 
 	var p_visible := _is_terrain_pos_visible(pos)
@@ -159,19 +165,19 @@ func _refresh_pose(id: int) -> void:
 	if not _items.has(id):
 		_upsert_from_data(id, false)
 		return
-	var P: Variant = _find_point_by_id(id)
-	if P == null:
+	var point: Variant = _find_point_by_id(id)
+	if point == null:
 		_items.erase(id)
 		_draw_dirty = true
 		return
-	var pos: Vector2 = P.get("pos", Vector2.INF)
+	var pos: Vector2 = point.get("pos", Vector2.INF)
 	if not pos.is_finite():
 		_items.erase(id)
 		_draw_dirty = true
 		return
-	var rot: float = float(P.get("rot", 0.0))
-	var p_scale: float = float(P.get("scale", 1.0))
-	var brush: TerrainBrush = P.get("brush", null)
+	var rot: float = float(point.get("rot", 0.0))
+	var p_scale: float = float(point.get("scale", 1.0))
+	var brush: TerrainBrush = point.get("brush", null)
 	var p_size: float = (brush.symbol_size_m if brush else 1.0) * max(0.01, p_scale)
 	var it = _items[id]
 	it.pos = pos
@@ -196,14 +202,19 @@ func _rebuild_draw_items() -> void:
 		if it.visible and it.tex != null:
 			tmp.append(it)
 
-	tmp.sort_custom(func(a, b): return (str(a.tex) < str(b.tex)) if (int(a.z) == int(b.z)) else (int(a.z) < int(b.z)))
+	tmp.sort_custom(
+		func(a, b):
+			return (str(a.tex) < str(b.tex)) if (int(a.z) == int(b.z)) else (int(a.z) < int(b.z))
+	)
 
 	_draw_items = tmp
 
 
 ## Reuse your original visibility test against terrain rect
 func _is_terrain_pos_visible(pos_local: Vector2) -> bool:
-	return renderer.is_inside_terrain(pos_local + Vector2(renderer.margin_left_px, renderer.margin_top_px))
+	return renderer.is_inside_terrain(
+		pos_local + Vector2(renderer.margin_left_px, renderer.margin_top_px)
+	)
 
 
 ## Find a point dictionary in TerrainData by id

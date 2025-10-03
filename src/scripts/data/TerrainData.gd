@@ -1,11 +1,20 @@
-extends Resource
 class_name TerrainData
-
+extends Resource
 ## Terrain model: size, elevation, surfaces, features, labels.
+
+## Emits when the elevation image block changes.
+signal elevation_changed(rect: Rect2i)
+## Emits when surfaces mutate. kind: "reset|added|removed|points|brush|meta".
+signal surfaces_changed(kind: String, ids: PackedInt32Array)
+## Emits when lines mutate. kind: "reset|added|removed|points|style|brush|meta".
+signal lines_changed(kind: String, ids: PackedInt32Array)
+## Emits when points mutate. kind: "reset|added|removed|move|style|meta".
+signal points_changed(kind: String, ids: PackedInt32Array)
+## Emits when labels mutate. kind: "reset|added|removed|move|style|meta".
+signal labels_changed(kind: String, ids: PackedInt32Array)
 
 ## Name of the terrain.
 @export var name: String
-
 ## Width of the map in meters.
 @export var width_m: int = 2000:
 	set = _set_width
@@ -49,17 +58,6 @@ class_name TerrainData
 	set = _set_labels
 
 var _px_per_m: float = 1.0
-
-## Emits when the elevation image block changes.
-signal elevation_changed(rect: Rect2i)
-## Emits when surfaces mutate. kind: "reset|added|removed|points|brush|meta".
-signal surfaces_changed(kind: String, ids: PackedInt32Array)
-## Emits when lines mutate. kind: "reset|added|removed|points|style|brush|meta".
-signal lines_changed(kind: String, ids: PackedInt32Array)
-## Emits when points mutate. kind: "reset|added|removed|move|style|meta".
-signal points_changed(kind: String, ids: PackedInt32Array)
-## Emits when labels mutate. kind: "reset|added|removed|move|style|meta".
-signal labels_changed(kind: String, ids: PackedInt32Array)
 
 @warning_ignore("unused_private_class_variable")
 var _next_surface_id := 1
@@ -394,7 +392,9 @@ func set_elev_px(px: Vector2i, meters: float) -> void:
 
 ## Convert world meters to elevation pixel coords.
 func world_to_elev_px(p: Vector2) -> Vector2i:
-	return Vector2i(int(round(p.x / elevation_resolution_m)), int(round(p.y / elevation_resolution_m)))
+	return Vector2i(
+		int(round(p.x / elevation_resolution_m)), int(round(p.y / elevation_resolution_m))
+	)
 
 
 ## Convert elevation pixel coords to world meters (top-left origin).
@@ -555,7 +555,8 @@ func serialize() -> Dictionary:
 		"elevation_resolution_m": elevation_resolution_m,
 		"grid": {"start_x": grid_start_x, "start_y": grid_start_y},
 		"elevation": {"png_b64": elev_b64},
-		"elev_meta": {"base_elevation_m": base_elevation_m, "contour_interval_m": contour_interval_m},
+		"elev_meta":
+		{"base_elevation_m": base_elevation_m, "contour_interval_m": contour_interval_m},
 		"content": {"surfaces": srf_out, "lines": ln_out, "points": pt_out, "labels": lab_out}
 	}
 

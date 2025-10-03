@@ -1,6 +1,6 @@
 @tool
-extends Node
 class_name TerrainHistory
+extends Node
 
 ## Wrapper around Godot's UndoRedo system
 ##
@@ -49,7 +49,9 @@ func push_item_insert(
 	assert(item.has("id"), "Inserted item must have an 'id'")
 	var item_copy: Dictionary = _deep_copy(item)
 	_ur.create_action(desc)
-	_ur.add_do_method(Callable(self, "_insert_item_with_id").bind(data, array_name, item_copy, at_index))
+	_ur.add_do_method(
+		Callable(self, "_insert_item_with_id").bind(data, array_name, item_copy, at_index)
+	)
 	_ur.add_undo_method(Callable(self, "_erase_item_by_id").bind(data, array_name, item_copy.id))
 	_ur.commit_action()
 	_record_commit(desc)
@@ -57,20 +59,32 @@ func push_item_insert(
 
 ## Edit (replace) an item by its `id_value` in `data[array_name]`
 func push_item_edit_by_id(
-	data: TerrainData, array_name: String, id_value, before: Dictionary, after: Dictionary, desc: String
+	data: TerrainData,
+	array_name: String,
+	id_value,
+	before: Dictionary,
+	after: Dictionary,
+	desc: String
 ) -> void:
 	var before_c: Dictionary = _deep_copy(before)
 	var after_c: Dictionary = _deep_copy(after)
 	_ur.create_action(desc)
 	_ur.add_do_method(Callable(self, "_apply_item_by_id").bind(data, array_name, id_value, after_c))
-	_ur.add_undo_method(Callable(self, "_apply_item_by_id").bind(data, array_name, id_value, before_c))
+	_ur.add_undo_method(
+		Callable(self, "_apply_item_by_id").bind(data, array_name, id_value, before_c)
+	)
 	_ur.commit_action()
 	_record_commit(desc)
 
 
 ## Erase an item by `id_value` from `data[array_name]`
 func push_item_erase_by_id(
-	data: TerrainData, array_name: String, id_value, item_copy: Dictionary, desc: String, original_index: int = -1
+	data: TerrainData,
+	array_name: String,
+	id_value,
+	item_copy: Dictionary,
+	desc: String,
+	original_index: int = -1
 ) -> void:
 	var item_c: Dictionary = _deep_copy(item_copy)
 
@@ -78,13 +92,17 @@ func push_item_erase_by_id(
 		original_index = _find_index_by_id(data.get(array_name), id_value)
 	_ur.create_action(desc)
 	_ur.add_do_method(Callable(self, "_erase_item_by_id").bind(data, array_name, id_value))
-	_ur.add_undo_method(Callable(self, "_insert_item_with_id").bind(data, array_name, item_c, original_index))
+	_ur.add_undo_method(
+		Callable(self, "_insert_item_with_id").bind(data, array_name, item_c, original_index)
+	)
 	_ur.commit_action()
 	_record_commit(desc)
 
 
 ## Replace the entire `data[array_name]` with `after`, undo to `before`
-func push_array_replace(data: TerrainData, array_name: String, before: Array, after: Array, desc: String) -> void:
+func push_array_replace(
+	data: TerrainData, array_name: String, before: Array, after: Array, desc: String
+) -> void:
 	_ur.create_action(desc)
 	_ur.add_do_method(Callable(self, "_apply_array").bind(data, array_name, _deep_copy(after)))
 	_ur.add_undo_method(Callable(self, "_apply_array").bind(data, array_name, _deep_copy(before)))
@@ -94,7 +112,11 @@ func push_array_replace(data: TerrainData, array_name: String, before: Array, af
 
 ## Push an elevation patch operation over a `rect`:
 func push_elevation_patch(
-	data: TerrainData, rect: Rect2i, before_block: PackedFloat32Array, after_block: PackedFloat32Array, desc: String
+	data: TerrainData,
+	rect: Rect2i,
+	before_block: PackedFloat32Array,
+	after_block: PackedFloat32Array,
+	desc: String
 ) -> void:
 	_ur.create_action(desc)
 	_ur.add_do_method(Callable(self, "_apply_elev_block").bind(data, rect, after_block))
@@ -130,7 +152,9 @@ func _erase_item_by_id(data: TerrainData, array_name: String, id_value) -> void:
 
 
 ## Insert `item` into `data[array_name]` at `at_index` (or append if < 0), then emit.
-func _insert_item_with_id(data: TerrainData, array_name: String, item: Dictionary, at_index: int) -> void:
+func _insert_item_with_id(
+	data: TerrainData, array_name: String, item: Dictionary, at_index: int
+) -> void:
 	var arr: Array = data.get(array_name)
 	var existing := _find_index_by_id(arr, item.id if item.has("id") else null)
 	if existing >= 0:

@@ -5,20 +5,17 @@ extends Node
 ## to global services. Orchestrates the campaign loop: menus → briefing →
 ## tactical map → debrief → unit management.
 
-@export var debug_display_scene: PackedScene = preload("res://scenes/system/debug_display.tscn")
-var debug_display: CanvasLayer
-
 ## Emitted when a campaign is selected.
 signal campaign_selected(campaign_id: StringName)
-
 ## Emitted when a save is selected.
 signal save_selected(save_id: StringName)
-
 ## Emitted when a mission is selected.
 signal scenario_selected(mission_id: StringName)
-
 ## Emitted when a mission loadout is selected
 signal scenario_loadout_selected(loadout: Dictionary)
+
+@export var debug_display_scene: PackedScene = preload("res://scenes/system/debug_display.tscn")
+var debug_display: CanvasLayer
 
 var current_campaign: CampaignData
 var current_save_id: StringName = &""

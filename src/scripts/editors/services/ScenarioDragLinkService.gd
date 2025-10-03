@@ -1,5 +1,5 @@
-extends RefCounted
 class_name ScenarioDragLinkService
+extends RefCounted
 
 var dragging := false
 var drag_pick: Dictionary = {}
@@ -67,7 +67,12 @@ func _get_pos(ctx: ScenarioEditorContext, pick: Dictionary) -> Vector2:
 				return ctx.data.units[i].position_m
 		&"slot":
 			var s := int(pick["index"])
-			if ctx.data.unit_slots and s >= 0 and s < ctx.data.unit_slots.size() and ctx.data.unit_slots[s]:
+			if (
+				ctx.data.unit_slots
+				and s >= 0
+				and s < ctx.data.unit_slots.size()
+				and ctx.data.unit_slots[s]
+			):
 				return ctx.data.unit_slots[s].start_position
 		&"task":
 			var t := int(pick["index"])
@@ -75,7 +80,12 @@ func _get_pos(ctx: ScenarioEditorContext, pick: Dictionary) -> Vector2:
 				return ctx.data.tasks[t].position_m
 		&"trigger":
 			var g := int(pick["index"])
-			if ctx.data.triggers and g >= 0 and g < ctx.data.triggers.size() and ctx.data.triggers[g]:
+			if (
+				ctx.data.triggers
+				and g >= 0
+				and g < ctx.data.triggers.size()
+				and ctx.data.triggers[g]
+			):
 				return ctx.data.triggers[g].area_center_m
 	return Vector2.ZERO
 
@@ -88,7 +98,12 @@ func _set_pos(ctx: ScenarioEditorContext, pick: Dictionary, p: Vector2) -> void:
 				ctx.data.units[i].position_m = p
 		&"slot":
 			var s := int(pick["index"])
-			if ctx.data.unit_slots and s >= 0 and s < ctx.data.unit_slots.size() and ctx.data.unit_slots[s]:
+			if (
+				ctx.data.unit_slots
+				and s >= 0
+				and s < ctx.data.unit_slots.size()
+				and ctx.data.unit_slots[s]
+			):
 				ctx.data.unit_slots[s].start_position = p
 		&"task":
 			var t := int(pick["index"])
@@ -96,11 +111,18 @@ func _set_pos(ctx: ScenarioEditorContext, pick: Dictionary, p: Vector2) -> void:
 				ctx.data.tasks[t].position_m = p
 		&"trigger":
 			var g := int(pick["index"])
-			if ctx.data.triggers and g >= 0 and g < ctx.data.triggers.size() and ctx.data.triggers[g]:
+			if (
+				ctx.data.triggers
+				and g >= 0
+				and g < ctx.data.triggers.size()
+				and ctx.data.triggers[g]
+			):
 				ctx.data.triggers[g].area_center_m = p
 
 
-func _commit_move(ctx: ScenarioEditorContext, pick: Dictionary, before: Vector2, after: Vector2) -> void:
+func _commit_move(
+	ctx: ScenarioEditorContext, pick: Dictionary, before: Vector2, after: Vector2
+) -> void:
 	if before.distance_squared_to(after) <= 0.001:
 		return
 
@@ -109,10 +131,14 @@ func _commit_move(ctx: ScenarioEditorContext, pick: Dictionary, before: Vector2,
 
 	if t == &"unit":
 		var su: ScenarioUnit = ctx.data.units[idx]
-		ctx.history.push_entity_move(ctx.data, &"unit", su.id, before, after, "Move Unit %s" % su.callsign)
+		ctx.history.push_entity_move(
+			ctx.data, &"unit", su.id, before, after, "Move Unit %s" % su.callsign
+		)
 	elif t == &"slot":
 		var sl: UnitSlotData = ctx.data.unit_slots[idx]
-		ctx.history.push_entity_move(ctx.data, &"slot", sl.key, before, after, "Move Slot %s" % sl.title, "key")
+		ctx.history.push_entity_move(
+			ctx.data, &"slot", sl.key, before, after, "Move Slot %s" % sl.title, "key"
+		)
 	elif t == &"task":
 		var ti: ScenarioTask = ctx.data.tasks[idx]
 		var tname := ti.task.display_name if ti.task else "Task"
@@ -131,5 +157,9 @@ func _commit_move(ctx: ScenarioEditorContext, pick: Dictionary, before: Vector2,
 			(after_snap[idx] as ScenarioTrigger).area_center_m = after
 
 		ctx.history.push_array_replace(
-			ctx.data, "triggers", before_snap, after_snap, "Move Trigger %s" % String(ctx.data.triggers[idx].id)
+			ctx.data,
+			"triggers",
+			before_snap,
+			after_snap,
+			"Move Trigger %s" % String(ctx.data.triggers[idx].id)
 		)

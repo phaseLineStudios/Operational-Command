@@ -1,5 +1,14 @@
-extends Window
 class_name NewTerrainDialog
+extends Window
+
+## Request terrain create
+signal request_create(terrain_data)
+## Request terrain edit
+signal request_edit(terrain_data)
+
+var editor: TerrainEditor
+var _is_edit_mode := false
+var _target_data: TerrainData = null
 
 @onready var terrain_title: LineEdit = %NewTerrainTitle
 @onready var terrain_size_x: SpinBox = %Size/X
@@ -9,16 +18,6 @@ class_name NewTerrainDialog
 @onready var base_elevation: SpinBox = %BaseElevation
 @onready var create_btn: Button = %Create
 @onready var cancel_btn: Button = %Cancel
-
-var editor: TerrainEditor
-
-## Request terrain create
-signal request_create(terrain_data)
-## Request terrain edit
-signal request_edit(terrain_data)
-
-var _is_edit_mode := false
-var _target_data: TerrainData = null
 
 
 func _ready():
@@ -39,7 +38,9 @@ func open_for_create(
 	_is_edit_mode = false
 	_target_data = null
 	_window_title_and_cta()
-	_fill_fields_for_create(title_text, size_x_m, size_y_m, grid_start_x_m, grid_start_y_m, base_elev_m)
+	_fill_fields_for_create(
+		title_text, size_x_m, size_y_m, grid_start_x_m, grid_start_y_m, base_elev_m
+	)
 	show_dialog(true)
 
 
@@ -87,7 +88,12 @@ func _on_primary_pressed():
 
 
 func _fill_fields_for_create(
-	title_text: String, size_x_m: int, size_y_m: int, grid_start_x_m: int, grid_start_y_m: int, base_elev_m: float
+	title_text: String,
+	size_x_m: int,
+	size_y_m: int,
+	grid_start_x_m: int,
+	grid_start_y_m: int,
+	base_elev_m: float
 ) -> void:
 	terrain_title.text = title_text
 	terrain_size_x.value = size_x_m

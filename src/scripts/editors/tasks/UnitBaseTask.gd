@@ -1,5 +1,5 @@
-extends Resource
 class_name UnitBaseTask
+extends Resource
 ## Base task definition.
 ##
 ## A UnitTask describes a configurable behavior (e.g. Move, Defend).
@@ -64,7 +64,12 @@ func draw_glyph(
 	var r := px * 0.5
 	var s := r * (hover_scale if hovered else 1.0)
 	var pts := PackedVector2Array(
-		[center + Vector2(0, -s), center + Vector2(s, 0), center + Vector2(0, s), center + Vector2(-s, 0)]
+		[
+			center + Vector2(0, -s),
+			center + Vector2(s, 0),
+			center + Vector2(0, s),
+			center + Vector2(-s, 0)
+		]
 	)
 	canvas.draw_polygon(pts, [color if hovered else Color(color, 0.5)])
 

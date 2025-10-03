@@ -13,8 +13,12 @@ const CONFIG_PATH := "user://settings.cfg"
 ## Actions to rebind (must exist in InputMap).
 @export var actions_to_rebind: Array[String] = ["ptt"]
 ## Resolution list.
-@export
-var resolutions: Array[Vector2i] = [Vector2i(1920, 1080), Vector2i(1600, 900), Vector2i(1366, 768), Vector2i(1280, 720)]
+@export var resolutions: Array[Vector2i] = [
+	Vector2i(1920, 1080), Vector2i(1600, 900), Vector2i(1366, 768), Vector2i(1280, 720)
+]
+
+var _bus_rows: Dictionary = {}  # name -> {slider: HSlider, label: Label, mute: CheckBox}
+var _cfg := ConfigFile.new()
 
 @onready var _btn_back: Button = %Back
 @onready var _btn_apply: Button = %Apply
@@ -35,9 +39,6 @@ var resolutions: Array[Vector2i] = [Vector2i(1920, 1080), Vector2i(1600, 900), V
 @onready var _controls_list: VBoxContainer = %ControlsList
 @onready var _reset_bindings: Button = %ResetBindings
 @onready var _rebind_template: Button = $"RebindTemplate"
-
-var _bus_rows: Dictionary = {}  # name -> {slider: HSlider, label: Label, mute: CheckBox}
-var _cfg := ConfigFile.new()
 
 
 ## Build UI and load config.

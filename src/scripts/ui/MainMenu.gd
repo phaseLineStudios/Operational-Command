@@ -6,14 +6,6 @@ extends Control
 ## Internal state for submenu visibility.
 enum SubmenuState { COLLAPSED, EXPANDED }
 
-@onready var menu_hbox: VBoxContainer = $"MenuContainer"
-@onready var btn_campaign: Button = %CampaignButton
-@onready var btn_scenarios: Button = %ScenariosButton
-@onready var btn_multiplayer: Button = %MultiplayerButton
-@onready var btn_editor: Button = %EditorButton
-@onready var btn_settings: Button = %SettingsButton
-@onready var btn_quit: Button = %CloseButton
-
 ## Scene registry.
 const SCENES := {
 	"campaign": "res://scenes/campaign_select.tscn",
@@ -35,6 +27,14 @@ const SUB_BUTTON_TEXT := {
 var _state: SubmenuState = SubmenuState.COLLAPSED
 var _editor_wrapper: VBoxContainer
 var _submenu_holder: VBoxContainer
+
+@onready var menu_hbox: VBoxContainer = $"MenuContainer"
+@onready var btn_campaign: Button = %CampaignButton
+@onready var btn_scenarios: Button = %ScenariosButton
+@onready var btn_multiplayer: Button = %MultiplayerButton
+@onready var btn_editor: Button = %EditorButton
+@onready var btn_settings: Button = %SettingsButton
+@onready var btn_quit: Button = %CloseButton
 
 
 func _ready() -> void:

@@ -1,5 +1,5 @@
-extends RefCounted
 class_name ScenarioTasksService
+extends RefCounted
 
 var defs: Array[UnitBaseTask] = []
 var selected_def: UnitBaseTask
@@ -44,7 +44,11 @@ func _on_selected(ctx: ScenarioEditorContext, index: int) -> void:
 
 # --- API used by editor/tool ---
 func place_task_for_unit(
-	ctx: ScenarioEditorContext, unit_index: int, task: UnitBaseTask, pos_m: Vector2, after_index := -1
+	ctx: ScenarioEditorContext,
+	unit_index: int,
+	task: UnitBaseTask,
+	pos_m: Vector2,
+	after_index := -1
 ) -> int:
 	if ctx.data == null or task == null:
 		return -1
@@ -138,4 +142,7 @@ func _find_tail(tasks: Array, unit_index: int) -> int:
 
 
 func _snap(ctx: ScenarioEditorContext) -> Dictionary:
-	return {"tasks": ScenarioHistory._deep_copy_array_res(ctx.data.tasks if ctx.data and ctx.data.tasks else [])}
+	return {
+		"tasks":
+		ScenarioHistory._deep_copy_array_res(ctx.data.tasks if ctx.data and ctx.data.tasks else [])
+	}

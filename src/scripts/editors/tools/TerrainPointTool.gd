@@ -1,5 +1,5 @@
-extends TerrainToolBase
 class_name TerrainPointTool
+extends TerrainToolBase
 
 @export var active_brush: TerrainBrush
 @export_range(0.1, 4.0, 0.1) var symbol_scale: float = 1.0
@@ -119,7 +119,9 @@ func _place_preview(local_px: Vector2) -> void:
 	if _preview == null:
 		return
 	_preview.position = local_px
-	_preview.visible = _preview is SymbolPreview and (active_brush != null and active_brush.symbol != null)
+	_preview.visible = (
+		_preview is SymbolPreview and (active_brush != null and active_brush.symbol != null)
+	)
 	_preview.queue_redraw()
 
 
@@ -156,10 +158,15 @@ func handle_view_input(event: InputEvent) -> bool:
 				_is_drag = true
 				_drag_idx = _hover_idx
 				_drag_before = (
-					data.points[_drag_idx].duplicate(true) if _drag_idx >= 0 and _drag_idx < data.points.size() else {}
+					data.points[_drag_idx].duplicate(true)
+					if _drag_idx >= 0 and _drag_idx < data.points.size()
+					else {}
 				)
 			else:
-				if active_brush == null or active_brush.feature_type != TerrainBrush.FeatureType.POINT:
+				if (
+					active_brush == null
+					or active_brush.feature_type != TerrainBrush.FeatureType.POINT
+				):
 					return true
 				if event.position.is_finite():
 					var local_m := editor.map_to_terrain(event.position)
@@ -172,7 +179,9 @@ func handle_view_input(event: InputEvent) -> bool:
 				if after != _drag_before:
 					var id: int = after.get("id", null)
 					if id != null:
-						editor.history.push_item_edit_by_id(data, "points", id, _drag_before, after, "Move point")
+						editor.history.push_item_edit_by_id(
+							data, "points", id, _drag_before, after, "Move point"
+						)
 			_drag_idx = -1
 			_drag_before = {}
 			return true
@@ -204,7 +213,13 @@ func _add_point(local_m: Vector2) -> void:
 		return
 	_ensure_surfaces()
 	var pid := randi()
-	var point := {"id": pid, "brush": active_brush, "pos": local_m, "scale": symbol_scale, "rot": symbol_rotation_deg}
+	var point := {
+		"id": pid,
+		"brush": active_brush,
+		"pos": local_m,
+		"scale": symbol_scale,
+		"rot": symbol_rotation_deg
+	}
 	data.add_point(point)
 	editor.history.push_item_insert(data, "points", point, "Add point", data.points.size())
 

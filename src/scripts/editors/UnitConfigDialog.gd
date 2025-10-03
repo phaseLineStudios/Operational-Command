@@ -1,9 +1,13 @@
-extends Window
 class_name UnitConfigDialog
+extends Window
 
 ## Edit a ScenarioUnit (callsign, affiliation, combat, behaviour)
 ##
 ## Double-click or context menu opens this dialog
+
+var editor: ScenarioEditor
+var unit_index := -1
+var _before: ScenarioUnit
 
 @onready var callsign_in: LineEdit = %Callsign
 @onready var aff_in: OptionButton = %Affiliation
@@ -11,10 +15,6 @@ class_name UnitConfigDialog
 @onready var beh_in: OptionButton = %Behaviour
 @onready var save_btn: Button = %Save
 @onready var close_btn: Button = %Close
-
-var editor: ScenarioEditor
-var unit_index := -1
-var _before: ScenarioUnit
 
 
 func _ready() -> void:
@@ -78,7 +78,9 @@ func _on_save() -> void:
 
 	if editor.history:
 		var desc := "Edit Unit %s" % String(_before.callsign)
-		editor.history.push_res_edit_by_id(editor.ctx.data, "units", "id", String(su_live.id), _before, after, desc)
+		editor.history.push_res_edit_by_id(
+			editor.ctx.data, "units", "id", String(su_live.id), _before, after, desc
+		)
 	else:
 		su_live.callsign = after.callsign
 		su_live.affiliation = after.affiliation

@@ -17,7 +17,7 @@ offset_right = 1152.0
 offset_bottom = 648.0
 
 [node name="Map" type="TextureRect" parent="Container"]
-layout_mode = 2
+layout_mode = 0
 offset_right = 1152.0
 offset_bottom = 648.0
 size_flags_horizontal = 3
@@ -27,7 +27,6 @@ stretch_mode = 4
 
 [node name="PinsLayer" type="Control" parent="Container"]
 z_index = 2
-layout_mode = 2
 anchors_preset = 0
 offset_right = 1152.0
 offset_bottom = 648.0
@@ -79,22 +78,25 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 21
 
-[node name="Image" type="TextureRect" parent="Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="CardImage" type="TextureRect" parent="Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(210, 139.453)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Difficulty" type="Label" parent="Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="CardDifficulty" type="Label" parent="Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Difficulty: Normal"
 
-[node name="StartMission" type="Button" parent="Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="CardStartMission" type="Button" parent="Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Start Mission"
 
 [node name="BackToCampaign" type="Button" parent="."]
-layout_mode = 2
+layout_mode = 0
 offset_left = 6.0
 offset_top = 6.0
 offset_right = 228.0

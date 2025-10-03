@@ -1,5 +1,5 @@
-extends RefCounted
 class_name ScenarioPersistenceService
+extends RefCounted
 
 const JSON_FILTER: PackedStringArray = ["*.json ; Scenario JSON"]
 

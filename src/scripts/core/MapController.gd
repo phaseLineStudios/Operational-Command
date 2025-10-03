@@ -1,17 +1,6 @@
-extends Node
 class_name MapController
-
+extends Node
 ## Handles map interaction and applies terrain renderer as a texture
-
-@onready var terrain_viewport: SubViewport = %TerrainViewport
-@onready var renderer: TerrainRender = %TerrainRender
-@onready var map: MeshInstance3D = %Map
-@onready var _grid_label: PanelContainer = $GridUI
-
-## Pixel offset from the mouse to place the label
-@export var grid_label_offset: Vector2 = Vector2(16, 16)
-## Render the TerrainViewport at N× resolution for anti-aliasing (1=off)
-@export var viewport_oversample: int = 2
 
 ## Emitted after the mesh has been resized (world XZ)
 signal map_resized(new_world_size: Vector2)
@@ -20,27 +9,39 @@ signal mouse_grid_changed(terrain_pos: Vector2, grid: String)
 ## Emitted on unhandled mouse input that hits the map
 signal map_unhandled_mouse(event, map_pos: Vector2, terrain_pos: Vector2)
 
+## Pixel offset from the mouse to place the label
+@export var grid_label_offset: Vector2 = Vector2(16, 16)
+## Render the TerrainViewport at N× resolution for anti-aliasing (1=off)
+@export var viewport_oversample: int = 2
+
 var _start_world_max: Vector2
 var _mat: StandardMaterial3D
 var _plane: PlaneMesh
 var _camera: Camera3D
+
+@onready var terrain_viewport: SubViewport = %TerrainViewport
+@onready var renderer: TerrainRender = %TerrainRender
+@onready var map: MeshInstance3D = %Map
+@onready var _grid_label: PanelContainer = $GridUI
 
 
 func _ready() -> void:
 	_plane = map.mesh as PlaneMesh
 	var sx: float = abs(map.scale.x)
 	if sx == 0.0:
-	sx = 1.0
+		sx = 1.0
 	var sz: float = abs(map.scale.z)
 	if sz == 0.0:
-	sz = 1.0
+		sz = 1.0
 	_start_world_max = Vector2(_plane.size.x * sx, _plane.size.y * sz)
 
 	_mat = map.get_active_material(0)
 	_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
 	_apply_viewport_texture()
 
-	if not terrain_viewport.is_connected("size_changed", Callable(self, "_on_viewport_size_changed")):
+	if not terrain_viewport.is_connected(
+		"size_changed", Callable(self, "_on_viewport_size_changed")
+	):
 		terrain_viewport.connect("size_changed", Callable(self, "_on_viewport_size_changed"))
 
 	if renderer:

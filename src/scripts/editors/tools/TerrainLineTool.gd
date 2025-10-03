@@ -1,5 +1,5 @@
-extends TerrainToolBase
 class_name TerrainLineTool
+extends TerrainToolBase
 
 @export var active_brush: TerrainBrush
 @export_range(0.5, 12.0, 0.5) var line_width_px: float = 2.0
@@ -158,9 +158,9 @@ func _rebuild_info_ui():
 	l.bbcode_enabled = true
 	l.text = (
 		"""
-	[b]Selected feature[/b] 
+	[b]Selected feature[/b]
 	%s
-	
+
 	[b]Movement Cost[/b]
 	Foot: %d
 	Wheeled: %d
@@ -308,7 +308,11 @@ func _start_new_line() -> void:
 	var pid := _next_id
 	_next_id += 1
 	var line := {
-		"id": pid, "brush": active_brush, "points": PackedVector2Array(), "closed": false, "width_px": line_width_px
+		"id": pid,
+		"brush": active_brush,
+		"points": PackedVector2Array(),
+		"closed": false,
+		"width_px": line_width_px
 	}
 	data.add_line(line)
 	editor.history.push_item_insert(data, "lines", line, "Add line", data.lines.size())

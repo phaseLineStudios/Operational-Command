@@ -7,13 +7,6 @@ extends Control
 ## 2) Details placeholder updates and action buttons become visible.
 ## 3) "Create new save" creates/selects a save and advances to Mission Select.
 
-@onready var list_campaigns: ItemList = $"HBoxContainer/VBoxContainer/CampaignList"
-@onready var details_root: VBoxContainer = $"HBoxContainer/DetailsRoot"
-@onready var btn_continue_last: Button = $"HBoxContainer/DetailsRoot/Options/ContinueLast"
-@onready var btn_select_save: Button = $"HBoxContainer/DetailsRoot/Options/SelectSave"
-@onready var btn_new_save: Button = $"HBoxContainer/DetailsRoot/Options/NewSave"
-@onready var btn_back: Button = $"HBoxContainer/VBoxContainer/HBoxContainer/BackToMainMenu"
-
 ## Path to Mission Select Scene
 const MISSION_SELECT_SCENE := "res://scenes/mission_select.tscn"
 
@@ -23,6 +16,13 @@ const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 # Track mapping from ItemList index -> campaign_id
 var _campaign_rows: Array[CampaignData] = []
 var _selected_campaign: CampaignData
+
+@onready var list_campaigns: ItemList = $"HBoxContainer/VBoxContainer/CampaignList"
+@onready var details_root: VBoxContainer = $"HBoxContainer/DetailsRoot"
+@onready var btn_continue_last: Button = $"HBoxContainer/DetailsRoot/Options/ContinueLast"
+@onready var btn_select_save: Button = $"HBoxContainer/DetailsRoot/Options/SelectSave"
+@onready var btn_new_save: Button = $"HBoxContainer/DetailsRoot/Options/NewSave"
+@onready var btn_back: Button = $"HBoxContainer/VBoxContainer/HBoxContainer/BackToMainMenu"
 
 
 ## Init UI, populate list, connect signals.
@@ -49,7 +49,7 @@ func _populate_campaigns() -> void:
 	var campaigns := ContentDB.list_campaigns()
 	for c in campaigns:
 		var title: String = c.title
-		var _idx := list_campaigns.add_item(title)
+		list_campaigns.add_item(title)
 		_campaign_rows.append(c)
 
 	if list_campaigns.item_count > 0:

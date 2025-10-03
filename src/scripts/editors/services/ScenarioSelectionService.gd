@@ -1,5 +1,5 @@
-extends RefCounted
 class_name ScenarioSelectionService
+extends RefCounted
 
 
 func set_selection(ctx: ScenarioEditorContext, pick: Dictionary, from_tree := false) -> void:

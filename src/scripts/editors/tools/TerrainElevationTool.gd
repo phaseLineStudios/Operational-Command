@@ -1,5 +1,5 @@
-extends TerrainToolBase
 class_name TerrainElevationTool
+extends TerrainToolBase
 
 ## Elevation editing: raise/lower/smooth brush.
 
@@ -114,12 +114,19 @@ func handle_view_input(event: InputEvent) -> bool:
 			_stroke_active = true
 			_stroke_rect = Rect2i()
 			_img_before = (
-				data.elevation.duplicate() if data and data.elevation and not data.elevation.is_empty() else null
+				data.elevation.duplicate()
+				if data and data.elevation and not data.elevation.is_empty()
+				else null
 			)
 			_apply(event.position)
 		else:
 			_is_drag = false
-			if _stroke_active and _img_before and _stroke_rect.size.x > 0 and _stroke_rect.size.y > 0:
+			if (
+				_stroke_active
+				and _img_before
+				and _stroke_rect.size.x > 0
+				and _stroke_rect.size.y > 0
+			):
 				var before_block := _block_from_image(_img_before, _stroke_rect)
 				var after_block := data.get_elevation_block(_stroke_rect)
 				if editor and editor.history:
@@ -193,7 +200,12 @@ func _apply(pos: Vector2) -> void:
 					for yy in range(-1, 2):
 						for xx in range(-1, 2):
 							var q := Vector2i(p.x + xx, p.y + yy)
-							if q.x < 0 or q.y < 0 or q.x >= img.get_width() or q.y >= img.get_height():
+							if (
+								q.x < 0
+								or q.y < 0
+								or q.x >= img.get_width()
+								or q.y >= img.get_height()
+							):
 								continue
 							sum += img.get_pixel(q.x, q.y).r
 							cnt += 1
@@ -264,6 +276,24 @@ class BrushPreviewCircle:
 		var col_inner := Color(0.2, 0.6, 1.0, 0.4)
 		var w_outer: float = clamp(r_px * 0.03, 1.0, 3.0)
 		var w_inner: float = clamp(r_px * 0.02, 1.0, 2.0)
-		draw_arc(Vector2.ZERO, r_px, 0.0, TAU, int(clamp(r_px * 0.8, 24.0, 128.0)), col_outer, w_outer, antialias)
+		draw_arc(
+			Vector2.ZERO,
+			r_px,
+			0.0,
+			TAU,
+			int(clamp(r_px * 0.8, 24.0, 128.0)),
+			col_outer,
+			w_outer,
+			antialias
+		)
 		if r_hard > 0.5:
-			draw_arc(Vector2.ZERO, r_hard, 0.0, TAU, int(clamp(r_px * 0.8, 24.0, 128.0)), col_inner, w_inner, antialias)
+			draw_arc(
+				Vector2.ZERO,
+				r_hard,
+				0.0,
+				TAU,
+				int(clamp(r_px * 0.8, 24.0, 128.0)),
+				col_inner,
+				w_inner,
+				antialias
+			)

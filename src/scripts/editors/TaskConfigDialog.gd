@@ -1,18 +1,18 @@
-extends Window
 class_name TaskConfigDialog
+extends Window
 ## Dynamic config dialog for TaskInstance/UnitTask.
 ##
 ## Generates fields from the task's exported properties.
 
 signal saved(instance: ScenarioTask)
 
-@onready var form: VBoxContainer = %Form
-@onready var save_btn: Button = %Save
-@onready var close_btn: Button = %Close
-
 var editor: ScenarioEditor
 var instance: ScenarioTask
 var _before: ScenarioTask
+
+@onready var form: VBoxContainer = %Form
+@onready var save_btn: Button = %Save
+@onready var close_btn: Button = %Close
 
 
 func _ready() -> void:

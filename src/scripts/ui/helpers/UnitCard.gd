@@ -1,5 +1,5 @@
-extends PanelContainer
 class_name UnitCard
+extends PanelContainer
 ## Recruitable unit card.
 
 ## Emitted when user clicks the card.

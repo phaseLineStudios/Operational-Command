@@ -1,5 +1,7 @@
-extends Window
 class_name ScenarioWeatherDialog
+extends Window
+
+var editor: ScenarioEditor
 
 @onready var rain: SpinBox = %Rain
 @onready var fog: SpinBox = %Fog
@@ -7,8 +9,6 @@ class_name ScenarioWeatherDialog
 @onready var wind_spd: SpinBox = %WindSpeed
 @onready var close_btn: Button = %Close
 @onready var save_btn: Button = %Save
-
-var editor: ScenarioEditor
 
 
 func _ready():

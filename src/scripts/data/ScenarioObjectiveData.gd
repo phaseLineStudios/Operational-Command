@@ -1,5 +1,5 @@
-extends Resource
 class_name ScenarioObjectiveData
+extends Resource
 
 ## Unique identifier for this objective
 @export var id: String

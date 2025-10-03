@@ -1,5 +1,5 @@
-extends Resource
 class_name BriefData
+extends Resource
 
 ## Unique identifier for this briefing
 @export var id: String
@@ -63,7 +63,11 @@ func serialize() -> Dictionary:
 		{
 			"board_texture_path":
 			(
-				board_texture.resource_path as Variant if board_texture and board_texture.resource_path != "" else null
+				(
+					board_texture.resource_path as Variant
+					if board_texture and board_texture.resource_path != ""
+					else null
+				)
 				as Variant
 			),
 			"items": items

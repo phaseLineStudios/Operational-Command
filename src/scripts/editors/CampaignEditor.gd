@@ -3,9 +3,9 @@ extends Control
 ##
 ## Lets creators create campaigns
 
-@onready var back_btn: Button = %Back
-
 const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
+
+@onready var back_btn: Button = %Back
 
 
 func _ready():

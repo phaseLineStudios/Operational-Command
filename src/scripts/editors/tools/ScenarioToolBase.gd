@@ -1,12 +1,8 @@
-extends Node
 class_name ScenarioToolBase
+extends Node
 ## Base class for editor tools (units, triggers, tasks, etc.).
 ##
 ## Tools receive overlay input and can draw a preview overlay.
-
-## Editor this tool is running under.
-var editor: ScenarioEditor
-var terrain: TerrainData
 
 ## Emit when the overlay should redraw
 @warning_ignore("unused_signal")
@@ -17,6 +13,10 @@ signal finished
 ## Emit when tool cancelled
 @warning_ignore("unused_signal")
 signal canceled
+
+# Editor this tool is running under.
+var editor: ScenarioEditor
+var terrain: TerrainData
 
 
 ## Called by the editor when tool becomes active

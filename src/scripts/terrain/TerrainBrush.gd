@@ -1,6 +1,6 @@
 @icon("res://icons/TerrainBrush.svg")
-extends Resource
 class_name TerrainBrush
+extends Resource
 
 ## Defines how a terrain feature is drawn on the tactical map and how it
 ## influences simulation (movement, LOS, combat).
@@ -116,7 +116,19 @@ func get_draw_recipe() -> Dictionary:
 		"type": feature_type,
 		"mode": draw_mode,
 		"z_index": z_index,
-		"stroke": {"color": stroke_color, "width_px": stroke_width_px, "dash_px": dash_px, "gap_px": gap_px},
-		"fill": {"color": fill_color, "hatch_spacing_px": hatch_spacing_px, "hatch_angle_deg": hatch_angle_deg},
-		"symbol": {"tex": symbol, "spacing_px": symbol_spacing_px, "size": symbol_size_m, "align": symbol_align}
+		"stroke":
+		{"color": stroke_color, "width_px": stroke_width_px, "dash_px": dash_px, "gap_px": gap_px},
+		"fill":
+		{
+			"color": fill_color,
+			"hatch_spacing_px": hatch_spacing_px,
+			"hatch_angle_deg": hatch_angle_deg
+		},
+		"symbol":
+		{
+			"tex": symbol,
+			"spacing_px": symbol_spacing_px,
+			"size": symbol_size_m,
+			"align": symbol_align
+		}
 	}

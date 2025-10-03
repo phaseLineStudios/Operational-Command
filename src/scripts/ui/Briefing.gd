@@ -6,23 +6,22 @@ extends Control
 ## Types of briefing items.
 enum ItemType { IMAGE, TEXT, OPORD, SKETCH }
 
-## Whiteboard Texture
-@export var default_whiteboard: Texture2D
-
-@onready var _btn_back: Button = $"Root/BottomBar/Row/Back"
-@onready var _btn_next: Button = $"Root/BottomBar/Row/Continue"
-@onready var _title: Label = $"Root/BottomBar/Row/Title"
-
-@onready var _whiteboard: TextureRect = $"Root/Board/Whiteboard"
-
 const SCENE_MISSION_SELECT = "res://scenes/mission_select.tscn"
 const SCENE_UNIT_SELECT = "res://scenes/unit_select.tscn"
 
 ## Default thumb size.
 const DEFAULT_THUMB_SIZE := Vector2i(128, 96)
 
+## Whiteboard Texture
+@export var default_whiteboard: Texture2D
+
 var _brief: BriefData
 var _items: Array = []
+
+@onready var _btn_back: Button = $"Root/BottomBar/Row/Back"
+@onready var _btn_next: Button = $"Root/BottomBar/Row/Continue"
+@onready var _title: Label = $"Root/BottomBar/Row/Title"
+@onready var _whiteboard: TextureRect = $"Root/Board/Whiteboard"
 
 
 ## Init: load data, build board, wire UI.

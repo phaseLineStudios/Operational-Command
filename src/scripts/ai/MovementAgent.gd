@@ -1,8 +1,16 @@
-extends Node2D
 class_name MovementAgent
-
+extends Node2D
 ## Moves this node over PathGrid in world meters.
 ## Uses base speed modified by PathGrid cell weight and terrain lines/areas.
+
+## Emitted when the agent starts following a path.
+signal movement_started
+## Emitted when the agent arrives at its final waypoint.
+signal movement_arrived
+## Emitted if the agent cannot find a path or hits a blocked cell.
+signal movement_blocked(reason: String)
+## Emitted whenever a new path is set.
+signal path_updated(path: PackedVector2Array)
 
 ## Pathfinding grid (provide in inspector or at runtime).
 @export var grid: PathGrid
@@ -34,15 +42,6 @@ class_name MovementAgent
 @export var debug_marker_r_m := 2.5
 
 var renderer: TerrainRender = null
-
-## Emitted when the agent starts following a path.
-signal movement_started
-## Emitted when the agent arrives at its final waypoint.
-signal movement_arrived
-## Emitted if the agent cannot find a path or hits a blocked cell.
-signal movement_blocked(reason: String)
-## Emitted whenever a new path is set.
-signal path_updated(path: PackedVector2Array)
 
 var _path: PackedVector2Array = []
 var _path_idx := 0
@@ -204,7 +203,11 @@ func _draw() -> void:
 			draw_line(a, b, Color(0.08, 0.08, 0.08, 1), 1.5)
 			draw_circle(b, debug_marker_r_m, Color(0.0, 0.7, 0.0, 0.9))
 		if _path_idx < _path.size():
-			draw_circle(_to_local_from_terrain(_path[_path_idx]), debug_marker_r_m, Color(1.0, 0.45, 0.1, 0.9))
+			draw_circle(
+				_to_local_from_terrain(_path[_path_idx]),
+				debug_marker_r_m,
+				Color(1.0, 0.45, 0.1, 0.9)
+			)
 
 	if debug_show_cells and grid:
 		var cur := grid.world_to_cell(sim_pos_m)
@@ -229,14 +232,20 @@ func _draw() -> void:
 		var base_m := sim_pos_m
 		var heading := Vector2.RIGHT.rotated(rotation) * (debug_marker_r_m * 3.0)
 		draw_line(
-			_to_local_from_terrain(base_m), _to_local_from_terrain(base_m + heading), Color(0.2, 0.6, 1.0, 0.8), 2.0
+			_to_local_from_terrain(base_m),
+			_to_local_from_terrain(base_m + heading),
+			Color(0.2, 0.6, 1.0, 0.8),
+			2.0
 		)
 		if _trail.size() >= 2:
 			var v: Vector2 = (_trail[_trail.size() - 1] - _trail[_trail.size() - 2]).limit_length(
 				debug_marker_r_m * 4.0
 			)
 			draw_line(
-				_to_local_from_terrain(base_m), _to_local_from_terrain(base_m + v), Color(0.2, 1.0, 0.2, 0.8), 2.0
+				_to_local_from_terrain(base_m),
+				_to_local_from_terrain(base_m + v),
+				Color(0.2, 1.0, 0.2, 0.8),
+				2.0
 			)
 
 	if _trail.size() >= 2:
@@ -259,12 +268,23 @@ func _draw() -> void:
 		var inst_v := _debug_instant_speed(get_process_delta_time())
 		var txt := (
 			"w=%.2f  v=%.1f/%.1f m/s  ETA=%.1fs  idx:%d/%d"
-			% [w if w < INF else -1.0, inst_v, base_speed_mps / (w if w < INF else 1.0), eta, _path_idx, _path.size()]
+			% [
+				w if w < INF else -1.0,
+				inst_v,
+				base_speed_mps / (w if w < INF else 1.0),
+				eta,
+				_path_idx,
+				_path.size()
+			]
 		)
 
 		draw_set_transform(hud_local, -rotation, Vector2.ONE)
-		draw_string(font, Vector2(1, 1), txt, HORIZONTAL_ALIGNMENT_LEFT, -1.0, fsize, Color(0, 0, 0, 0.8))
-		draw_string(font, Vector2.ZERO, txt, HORIZONTAL_ALIGNMENT_LEFT, -1.0, fsize, Color(1, 1, 1, 0.95))
+		draw_string(
+			font, Vector2(1, 1), txt, HORIZONTAL_ALIGNMENT_LEFT, -1.0, fsize, Color(0, 0, 0, 0.8)
+		)
+		draw_string(
+			font, Vector2.ZERO, txt, HORIZONTAL_ALIGNMENT_LEFT, -1.0, fsize, Color(1, 1, 1, 0.95)
+		)
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 

@@ -1,5 +1,5 @@
-extends ScenarioToolBase
 class_name ScenarioTriggerTool
+extends ScenarioToolBase
 
 @export var icon_px := 40
 
@@ -91,7 +91,8 @@ func draw_overlay(canvas: Control) -> void:
 		var half_w_px: float = abs(p_x.x - center_px.x)
 		var half_h_px: float = abs(p_y.y - center_px.y)
 		var rect := Rect2(
-			Vector2(center_px.x - half_w_px, center_px.y - half_h_px), Vector2(half_w_px * 2.0, half_h_px * 2.0)
+			Vector2(center_px.x - half_w_px, center_px.y - half_h_px),
+			Vector2(half_w_px * 2.0, half_h_px * 2.0)
 		)
 		canvas.draw_rect(rect, col, true)
 		canvas.draw_rect(rect, outline, false, 2.0)

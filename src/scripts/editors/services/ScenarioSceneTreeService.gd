@@ -1,5 +1,5 @@
-extends RefCounted
 class_name ScenarioSceneTreeService
+extends RefCounted
 
 var tasks: ScenarioTasksService
 
@@ -34,7 +34,11 @@ func rebuild(ctx: ScenarioEditorContext) -> void:
 			var u_item := tree.create_item(units)
 			u_item.set_text(0, su.callsign)
 			u_item.set_metadata(0, {"type": &"unit", "index": ui})
-			var icon := su.unit.icon if su.affiliation == ScenarioUnit.Affiliation.friend else su.unit.enemy_icon
+			var icon := (
+				su.unit.icon
+				if su.affiliation == ScenarioUnit.Affiliation.friend
+				else su.unit.enemy_icon
+			)
 			if icon:
 				var img := icon.get_image()
 				if not img.is_empty():

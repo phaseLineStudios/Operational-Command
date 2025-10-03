@@ -1,7 +1,17 @@
-extends Window
 class_name NewScenarioDialog
+extends Window
+
+## Emitted when user confirms new.
+signal request_create(scenario_data: ScenarioData)
+## Emitted when user confirms edit.
+signal request_update(scenario_data: ScenarioData)
 
 enum DialogMode { CREATE, EDIT }
+
+var terrain: TerrainData
+var thumbnail: Texture2D
+var dialog_mode: DialogMode = DialogMode.CREATE
+var working: ScenarioData
 
 @onready var title_input: LineEdit = %Title
 @onready var desc_input: TextEdit = %Description
@@ -13,17 +23,6 @@ enum DialogMode { CREATE, EDIT }
 @onready var terrain_btn: Button = %SelectTerrain
 @onready var close_btn: Button = %Close
 @onready var create_btn: Button = %Create
-
-## Emitted when user confirms new.
-signal request_create(scenario_data: ScenarioData)
-## Emitted when user confirms edit.
-signal request_update(scenario_data: ScenarioData)
-
-var terrain: TerrainData
-var thumbnail: Texture2D
-
-var dialog_mode: DialogMode = DialogMode.CREATE
-var working: ScenarioData
 
 
 func _ready():
@@ -107,7 +106,6 @@ func _on_thumbnail_clear() -> void:
 	thumb_path.text = ""
 	thumb_preview.texture = null
 	thumbnail = null
-	pass
 
 
 ## Reset values before popup (only when hiding)

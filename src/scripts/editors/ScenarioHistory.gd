@@ -1,5 +1,5 @@
-extends Node
 class_name ScenarioHistory
+extends Node
 ## Wrapper around Godot's UndoRedo for ScenarioData edits.
 ##
 ## Records actions, supports inserting/removing/replacing resource items in arrays.
@@ -41,12 +41,21 @@ func _record_commit(desc: String) -> void:
 
 ## Insert/replace a Resource in data[array_name] by unique id field (e.g. "id" or "key")
 func push_res_insert(
-	data: Resource, array_name: String, id_prop: String, res: Resource, desc: String, at_index: int = -1
+	data: Resource,
+	array_name: String,
+	id_prop: String,
+	res: Resource,
+	desc: String,
+	at_index: int = -1
 ) -> void:
 	var res_copy: Resource = _dup_res(res)
 	_ur.create_action(desc)
-	_ur.add_do_method(Callable(self, "_insert_res_with_id").bind(data, array_name, id_prop, res_copy, at_index))
-	_ur.add_undo_method(Callable(self, "_erase_res_by_id").bind(data, array_name, id_prop, _get_id(res_copy)))
+	_ur.add_do_method(
+		Callable(self, "_insert_res_with_id").bind(data, array_name, id_prop, res_copy, at_index)
+	)
+	_ur.add_undo_method(
+		Callable(self, "_erase_res_by_id").bind(data, array_name, id_prop, _get_id(res_copy))
+	)
 	_ur.commit_action()
 	_record_commit(desc)
 
@@ -64,8 +73,12 @@ func push_res_edit_by_id(
 	var b: Variant = _dup_res(before_res)
 	var a: Variant = _dup_res(after_res)
 	_ur.create_action(desc)
-	_ur.add_do_method(Callable(self, "_apply_res_by_id").bind(data, array_name, id_prop, id_value, a))
-	_ur.add_undo_method(Callable(self, "_apply_res_by_id").bind(data, array_name, id_prop, id_value, b))
+	_ur.add_do_method(
+		Callable(self, "_apply_res_by_id").bind(data, array_name, id_prop, id_value, a)
+	)
+	_ur.add_undo_method(
+		Callable(self, "_apply_res_by_id").bind(data, array_name, id_prop, id_value, b)
+	)
 	_ur.commit_action()
 	_record_commit(desc)
 
@@ -83,16 +96,24 @@ func push_res_erase_by_id(
 	var b: Variant = _dup_res(backup_res)
 	_ur.create_action(desc)
 	_ur.add_do_method(Callable(self, "_erase_res_by_id").bind(data, array_name, id_prop, id_value))
-	_ur.add_undo_method(Callable(self, "_insert_res_with_id").bind(data, array_name, id_prop, b, original_index))
+	_ur.add_undo_method(
+		Callable(self, "_insert_res_with_id").bind(data, array_name, id_prop, b, original_index)
+	)
 	_ur.commit_action()
 	_record_commit(desc)
 
 
 ## Replace entire array (atomic). Provide deep copies of before/after
-func push_array_replace(data: Resource, array_name: String, before: Array, after: Array, desc: String) -> void:
+func push_array_replace(
+	data: Resource, array_name: String, before: Array, after: Array, desc: String
+) -> void:
 	_ur.create_action(desc)
-	_ur.add_do_method(Callable(self, "_apply_array").bind(data, array_name, _deep_copy_array_res(after)))
-	_ur.add_undo_method(Callable(self, "_apply_array").bind(data, array_name, _deep_copy_array_res(before)))
+	_ur.add_do_method(
+		Callable(self, "_apply_array").bind(data, array_name, _deep_copy_array_res(after))
+	)
+	_ur.add_undo_method(
+		Callable(self, "_apply_array").bind(data, array_name, _deep_copy_array_res(before))
+	)
 	_ur.commit_action()
 	_record_commit(desc)
 
@@ -128,10 +149,14 @@ func push_entity_move(
 ) -> void:
 	_ur.create_action(desc)
 	_ur.add_do_method(
-		Callable(self, "_set_entity_pos_by_id").bind(data, ent_type, id_value, after_pos, id_prop_override)
+		Callable(self, "_set_entity_pos_by_id").bind(
+			data, ent_type, id_value, after_pos, id_prop_override
+		)
 	)
 	_ur.add_undo_method(
-		Callable(self, "_set_entity_pos_by_id").bind(data, ent_type, id_value, before_pos, id_prop_override)
+		Callable(self, "_set_entity_pos_by_id").bind(
+			data, ent_type, id_value, before_pos, id_prop_override
+		)
 	)
 	_ur.commit_action()
 	_record_commit(desc)
@@ -153,7 +178,9 @@ func _apply_array(data: Resource, array_name: String, value: Array) -> void:
 	_emit_changed(data)
 
 
-func _apply_res_by_id(data: Resource, array_name: String, id_prop: String, id_value: String, res: Resource) -> void:
+func _apply_res_by_id(
+	data: Resource, array_name: String, id_prop: String, id_value: String, res: Resource
+) -> void:
 	var arr: Array = data.get(array_name)
 	var idx := _find_index_by_id_res(arr, id_prop, id_value)
 	if idx >= 0:
@@ -162,7 +189,9 @@ func _apply_res_by_id(data: Resource, array_name: String, id_prop: String, id_va
 		_emit_changed(data)
 
 
-func _erase_res_by_id(data: Resource, array_name: String, id_prop: String, id_value: String) -> void:
+func _erase_res_by_id(
+	data: Resource, array_name: String, id_prop: String, id_value: String
+) -> void:
 	var arr: Array = data.get(array_name)
 	var idx := _find_index_by_id_res(arr, id_prop, id_value)
 	if idx >= 0:
@@ -171,7 +200,9 @@ func _erase_res_by_id(data: Resource, array_name: String, id_prop: String, id_va
 		_emit_changed(data)
 
 
-func _insert_res_with_id(data: Resource, array_name: String, id_prop: String, res: Resource, at_index: int) -> void:
+func _insert_res_with_id(
+	data: Resource, array_name: String, id_prop: String, res: Resource, at_index: int
+) -> void:
 	var arr: Array = data.get(array_name)
 	var rid := _get_id(res)
 	var existing := _find_index_by_id_res(arr, id_prop, rid)
@@ -206,11 +237,17 @@ static func _find_index_by_id_res(arr: Array, id_prop: String, id_value: String)
 
 ## Set entity world position by id
 func _set_entity_pos_by_id(
-	data: Resource, ent_type: StringName, id_value: String, p: Vector2, id_prop_override: String = ""
+	data: Resource,
+	ent_type: StringName,
+	id_value: String,
+	p: Vector2,
+	id_prop_override: String = ""
 ) -> void:
 	var t := ent_type
 	if t == &"unit":
-		var idx := _find_index_by_id_res(data.units, id_prop_override if id_prop_override != "" else "id", id_value)
+		var idx := _find_index_by_id_res(
+			data.units, id_prop_override if id_prop_override != "" else "id", id_value
+		)
 		if idx >= 0:
 			data.units[idx].position_m = p
 	elif t == &"slot":
@@ -220,11 +257,15 @@ func _set_entity_pos_by_id(
 		if idx >= 0:
 			data.unit_slots[idx].start_position = p
 	elif t == &"task":
-		var idx := _find_index_by_id_res(data.tasks, id_prop_override if id_prop_override != "" else "id", id_value)
+		var idx := _find_index_by_id_res(
+			data.tasks, id_prop_override if id_prop_override != "" else "id", id_value
+		)
 		if idx >= 0:
 			data.tasks[idx].position_m = p
 	elif t == &"trigger":
-		var idx := _find_index_by_id_res(data.triggers, id_prop_override if id_prop_override != "" else "id", id_value)
+		var idx := _find_index_by_id_res(
+			data.triggers, id_prop_override if id_prop_override != "" else "id", id_value
+		)
 		if idx >= 0:
 			if _has_prop(data.triggers[idx], "area_center_m"):
 				data.triggers[idx].area_center_m = p

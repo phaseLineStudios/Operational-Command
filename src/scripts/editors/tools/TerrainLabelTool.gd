@@ -1,5 +1,5 @@
-extends TerrainToolBase
 class_name TerrainLabelTool
+extends TerrainToolBase
 
 @export var label_text: String = "Label"
 @export var label_size: int = 16
@@ -127,7 +127,9 @@ func handle_view_input(event: InputEvent) -> bool:
 				_is_drag = true
 				_drag_idx = _hover_idx
 				_drag_before = (
-					data.labels[_drag_idx].duplicate(true) if _drag_idx >= 0 and _drag_idx < data.labels.size() else {}
+					data.labels[_drag_idx].duplicate(true)
+					if _drag_idx >= 0 and _drag_idx < data.labels.size()
+					else {}
 				)
 			else:
 				if event.position.is_finite():
@@ -141,7 +143,9 @@ func handle_view_input(event: InputEvent) -> bool:
 				if after != _drag_before:
 					var id: int = after.get("id", null)
 					if id != null:
-						editor.history.push_item_edit_by_id(data, "labels", id, _drag_before, after, "Move label")
+						editor.history.push_item_edit_by_id(
+							data, "labels", id, _drag_before, after, "Move label"
+						)
 			_drag_idx = -1
 			_drag_before = {}
 			return true
@@ -172,7 +176,9 @@ func _add_label(local_pos: Vector2, text: String, size: int) -> void:
 	if data == null:
 		return
 	_ensure_surfaces()
-	var label := {"id": randi(), "text": text, "pos": local_pos, "rot": label_rotation_deg, "size": size}
+	var label := {
+		"id": randi(), "text": text, "pos": local_pos, "rot": label_rotation_deg, "size": size
+	}
 	data.add_label(label)
 	editor.history.push_item_insert(data, "labels", label, "Add label", data.labels.size())
 
@@ -262,7 +268,9 @@ class LabelPreview:
 			Vector2(1, 1)
 		]
 		for o in offs:
-			draw_string(font, baseline + o, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_color)
+			draw_string(
+				font, baseline + o, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_color
+			)
 		draw_string(font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, fill_color)
 
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

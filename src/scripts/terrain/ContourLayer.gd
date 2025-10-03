@@ -1,5 +1,5 @@
-extends Control
 class_name ContourLayer
+extends Control
 
 ## Base contour color
 @export var contour_color: Color = Color(0.15, 0.15, 0.15, 0.7)
@@ -31,6 +31,8 @@ class_name ContourLayer
 @export var contour_label_size: int = 12
 ## Extra space beyond plaque width
 @export var contour_label_gap_extra_px: float = 2.0
+## Rebuild delay in seconds
+@export var rebuild_delay_sec := 0.05
 
 var data: TerrainData
 var _data_conn := false
@@ -41,7 +43,6 @@ var _polylines_by_level: Dictionary = {}
 var _dirty := true
 
 var _rebuild_scheduled := false
-@export var rebuild_delay_sec := 0.05
 
 
 ## API to set Terrain Data
@@ -65,7 +66,9 @@ func set_data(d: TerrainData) -> void:
 		data.changed.connect(_on_data_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
 		_data_conn = true
 		if data.has_signal("elevation_changed"):
-			data.elevation_changed.connect(_on_elevation_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
+			data.elevation_changed.connect(
+				_on_elevation_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED
+			)
 			_data_conn_elev = true
 
 	_schedule_rebuild()
@@ -172,7 +175,9 @@ func _draw() -> void:
 		var label_text := str(int(round(level + _get_base_offset())))
 		var label_rect_size := Vector2.ZERO
 		if place_labels and label_this_level:
-			var ts := contour_label_font.get_string_size(label_text, HORIZONTAL_ALIGNMENT_LEFT, -1, contour_label_size)
+			var ts := contour_label_font.get_string_size(
+				label_text, HORIZONTAL_ALIGNMENT_LEFT, -1, contour_label_size
+			)
 			label_rect_size = ts + Vector2.ONE * (contour_label_padding_px * 2.0)
 
 		for line: PackedVector2Array in polylines:
@@ -212,7 +217,7 @@ func _rebuild_contours() -> void:
 		return
 
 	var step_m := float(max(1, data.elevation_resolution_m))
-	var dH := float(max(1, data.contour_interval_m))
+	var dh := float(max(1, data.contour_interval_m))
 
 	var min_e := INF
 	var max_e := -INF
@@ -225,14 +230,14 @@ func _rebuild_contours() -> void:
 				max_e = e
 
 	var base := _get_base_offset()
-	var start_level: float = floor((min_e + base) / dH) * dH - base
+	var start_level: float = floor((min_e + base) / dh) * dh - base
 	var level := start_level
 	while level <= max_e + 0.0001:
 		_levels.append(level)
-		level += dH
+		level += dh
 
-	for L in _levels:
-		var segments := _march_level_segments(img, w, h, step_m, L)
+	for l in _levels:
+		var segments := _march_level_segments(img, w, h, step_m, l)
 		var polylines := _stitch_segments_to_polylines(segments)
 
 		if smooth_segment_len_m > 0.0:
@@ -246,9 +251,9 @@ func _rebuild_contours() -> void:
 				for _i in smooth_iterations:
 					s = _chaikin_once(s, closed, smooth_keep_ends)
 				smoothed.append(s)
-			_polylines_by_level[L] = smoothed
+			_polylines_by_level[l] = smoothed
 		else:
-			_polylines_by_level[L] = polylines
+			_polylines_by_level[l] = polylines
 
 
 ## March over segments for a level
@@ -257,10 +262,10 @@ func _march_level_segments(img: Image, w: int, h: int, step_m: float, level: flo
 
 	for j in range(0, h - 1):
 		for i in range(0, w - 1):
-			var zTL := img.get_pixel(i, j).r
-			var zTR := img.get_pixel(i + 1, j).r
-			var zBR := img.get_pixel(i + 1, j + 1).r
-			var zBL := img.get_pixel(i, j + 1).r
+			var ztl := img.get_pixel(i, j).r
+			var ztr := img.get_pixel(i + 1, j).r
+			var zbr := img.get_pixel(i + 1, j + 1).r
+			var zbl := img.get_pixel(i, j + 1).r
 
 			var x0 := i * step_m
 			var y0 := j * step_m
@@ -268,13 +273,13 @@ func _march_level_segments(img: Image, w: int, h: int, step_m: float, level: flo
 			var y1 := (j + 1) * step_m
 
 			var c := 0
-			if zTL > level:
+			if ztl > level:
 				c |= 1
-			if zTR > level:
+			if ztr > level:
 				c |= 2
-			if zBR > level:
+			if zbr > level:
 				c |= 4
-			if zBL > level:
+			if zbl > level:
 				c |= 8
 			if c == 0 or c == 15:
 				continue
@@ -286,16 +291,16 @@ func _march_level_segments(img: Image, w: int, h: int, step_m: float, level: flo
 			var pts := {}
 
 			if (c & 1) != (c & 2):
-				var t0: float = lerp_t.call(zTL, zTR)
+				var t0: float = lerp_t.call(ztl, ztr)
 				pts[0] = Vector2(lerp(x0, x1, t0), y0)
 			if (c & 2) != (c & 4):
-				var t1: float = lerp_t.call(zTR, zBR)
+				var t1: float = lerp_t.call(ztr, zbr)
 				pts[1] = Vector2(x1, lerp(y0, y1, t1))
 			if (c & 4) != (c & 8):
-				var t2: float = lerp_t.call(zBR, zBL)
+				var t2: float = lerp_t.call(zbr, zbl)
 				pts[2] = Vector2(lerp(x1, x0, t2), y1)
 			if (c & 8) != (c & 1):
-				var t3: float = lerp_t.call(zBL, zTL)
+				var t3: float = lerp_t.call(zbl, ztl)
 				pts[3] = Vector2(x0, lerp(y1, y0, t3))
 
 			match c:
@@ -312,8 +317,8 @@ func _march_level_segments(img: Image, w: int, h: int, step_m: float, level: flo
 				6, 9:
 					segs.append(PackedVector2Array([pts[0], pts[2]]))
 				5, 10:
-					var zC := (zTL + zTR + zBR + zBL) * 0.25
-					if zC > level:
+					var zc := (ztl + ztr + zbr + zbl) * 0.25
+					if zc > level:
 						segs.append(PackedVector2Array([pts[0], pts[1]]))
 						segs.append(PackedVector2Array([pts[2], pts[3]]))
 					else:
@@ -332,7 +337,8 @@ func _stitch_segments_to_polylines(segments: Array) -> Array:
 		return polylines
 
 	var eps := 0.001
-	var key = func(p: Vector2) -> Vector2: return Vector2(round(p.x / eps) * eps, round(p.y / eps) * eps)
+	var key = func(p: Vector2) -> Vector2:
+		return Vector2(round(p.x / eps) * eps, round(p.y / eps) * eps)
 
 	var start_map: Dictionary = {}
 	var end_map: Dictionary = {}
@@ -400,7 +406,9 @@ func _polyline_is_closed(pl: PackedVector2Array, eps := 0.01) -> bool:
 
 
 ## Resample a polyline to (roughly) uniform segment length 'step'.
-func _resample_polyline_equal_step(pl: PackedVector2Array, step: float, closed: bool) -> PackedVector2Array:
+func _resample_polyline_equal_step(
+	pl: PackedVector2Array, step: float, closed: bool
+) -> PackedVector2Array:
 	var pts := pl
 	var n := pts.size()
 	if n < 2:
@@ -413,9 +421,9 @@ func _resample_polyline_equal_step(pl: PackedVector2Array, step: float, closed: 
 	for i in count - 1:
 		var a := pts[i]
 		var b := pts[(i + 1) % n]
-		var L := a.distance_to(b)
-		seg_len.append(L)
-		total_len += L
+		var l := a.distance_to(b)
+		seg_len.append(l)
+		total_len += l
 
 	if total_len <= step:
 		return pts.duplicate()
@@ -440,8 +448,8 @@ func _resample_polyline_equal_step(pl: PackedVector2Array, step: float, closed: 
 		var a := pts[a_i]
 		var b := pts[(a_i + 1) % n]
 		var within := target - seg_acc
-		var Lseg: float = max(1e-6, seg_len[seg_idx])
-		var alpha := within / Lseg
+		var level_seg: float = max(1e-6, seg_len[seg_idx])
+		var alpha := within / level_seg
 		out.append(a.lerp(b, alpha))
 	# End point for open lines
 	if not closed:
@@ -470,10 +478,10 @@ func _chaikin_once(pl: PackedVector2Array, closed: bool, keep_ends: bool) -> Pac
 			var p0 := pl[(i - 1 + n) % n]
 			var p1 := pl[i]
 			var p2 := pl[(i + 1) % n]
-			var Q := p0 * 0.75 + p1 * 0.25
-			var R := p1 * 0.75 + p2 * 0.25
-			out.append(Q)
-			out.append(R)
+			var q := p0 * 0.75 + p1 * 0.25
+			var r := p1 * 0.75 + p2 * 0.25
+			out.append(q)
+			out.append(r)
 		# close loop
 		if out[0].distance_to(out[out.size() - 1]) > 1e-5:
 			out.append(out[0])
@@ -484,10 +492,10 @@ func _chaikin_once(pl: PackedVector2Array, closed: bool, keep_ends: bool) -> Pac
 			var p0 := pl[i - 1]
 			var p1 := pl[i]
 			var p2 := pl[i + 1]
-			var Q := p0 * 0.75 + p1 * 0.25
-			var R := p1 * 0.75 + p2 * 0.25
-			out.append(Q)
-			out.append(R)
+			var q := p0 * 0.75 + p1 * 0.25
+			var r := p1 * 0.75 + p2 * 0.25
+			out.append(q)
+			out.append(r)
 		if keep_ends:
 			out.append(pl[n - 1])
 	return out
@@ -514,26 +522,26 @@ func _layout_labels_on_line(line: PackedVector2Array, spacing: float) -> Array:
 	var min_seg := 1e-6
 	spacing = max(1.0, spacing)
 
-	var L := PackedFloat32Array()
-	L.resize(line.size())
-	L[0] = 0.0
+	var l := PackedFloat32Array()
+	l.resize(line.size())
+	l[0] = 0.0
 	for i in range(1, line.size()):
-		L[i] = L[i - 1] + line[i - 1].distance_to(line[i])
+		l[i] = l[i - 1] + line[i - 1].distance_to(line[i])
 
-	var total := L[L.size() - 1]
+	var total := l[l.size() - 1]
 	if total < spacing:
 		return out
 
 	var next_s := spacing
 	var i := 0
 	while next_s <= total + 1e-5:
-		while i < L.size() - 1 and L[i + 1] < next_s:
+		while i < l.size() - 1 and l[i + 1] < next_s:
 			i += 1
-		if i >= L.size() - 1:
+		if i >= l.size() - 1:
 			break
 
 		var seg_len: float = max(min_seg, line[i].distance_to(line[i + 1]))
-		var s_on_seg := next_s - L[i]
+		var s_on_seg := next_s - l[i]
 		var t: float = clamp(s_on_seg / seg_len, 0.0, 1.0)
 		var a := line[i]
 		var b := line[i + 1]
@@ -551,7 +559,9 @@ func _layout_labels_on_line(line: PackedVector2Array, spacing: float) -> Array:
 
 
 ## Draw polyline while skipping arclength windows in `gaps`.
-func _draw_polyline_with_gaps(line: PackedVector2Array, gaps: Array, color: Color, width: float) -> void:
+func _draw_polyline_with_gaps(
+	line: PackedVector2Array, gaps: Array, color: Color, width: float
+) -> void:
 	if line.size() < 2:
 		return
 
@@ -599,7 +609,14 @@ func _draw_polyline_with_gaps(line: PackedVector2Array, gaps: Array, color: Colo
 
 ## Draw subrange of a single segment given absolute arclengths
 func _draw_segment_subrange(
-	a: Vector2, b: Vector2, seg_s0: float, seg_len: float, s0: float, s1: float, color: Color, width: float
+	a: Vector2,
+	b: Vector2,
+	seg_s0: float,
+	seg_len: float,
+	s0: float,
+	s1: float,
+	color: Color,
+	width: float
 ) -> void:
 	s0 = clamp(s0, seg_s0, seg_s0 + seg_len)
 	s1 = clamp(s1, seg_s0, seg_s0 + seg_len)
@@ -630,5 +647,13 @@ func _draw_labels_for_placements(placements: Array, text: String) -> void:
 		if contour_label_bg.a > 0.0:
 			draw_rect(rect, contour_label_bg, true)
 			draw_rect(rect, contour_label_bg.darkened(0.2), false, 1.0, true)
-		draw_string(font, Vector2(-half.x, half.y), text, HORIZONTAL_ALIGNMENT_CENTER, -1, fsize, contour_label_color)
+		draw_string(
+			font,
+			Vector2(-half.x, half.y),
+			text,
+			HORIZONTAL_ALIGNMENT_CENTER,
+			-1,
+			fsize,
+			contour_label_color
+		)
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

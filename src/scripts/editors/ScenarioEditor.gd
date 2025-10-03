@@ -1,36 +1,5 @@
-extends Control
 class_name ScenarioEditor
-
-## Active scenario data resource bound to the editor UI
-@export var data: ScenarioData
-## Global undo/redo history stack for scenario edits
-@export var history: ScenarioHistory
-
-@onready var file_menu: MenuButton = %File
-@onready var attribute_menu: MenuButton = %Attributes
-@onready var title_label: Label = %ScenarioTitle
-@onready var terrain_render: TerrainRender = %World
-@onready var new_scenario_dialog: NewScenarioDialog = %NewScenarioDialog
-@onready var weather_dialog: ScenarioWeatherDialog = %WeatherDialog
-@onready var terrain_overlay: ScenarioEditorOverlay = %Overlay
-@onready var tool_hint: HBoxContainer = %ToolHint
-@onready var mouse_position_label: Label = %MousePosition
-@onready var scene_tree: Tree = %"Scene Tree"
-@onready var history_list: VBoxContainer = %History
-
-@onready var unit_faction_friend: Button = %FactionRow/Friend
-@onready var unit_faction_enemy: Button = %FactionRow/Enemy
-@onready var unit_category_opt: OptionButton = %UnitCategory
-@onready var unit_search: LineEdit = %UnitSearch
-@onready var unit_list: Tree = %Units
-
-@onready var task_list: ItemList = %Tasks
-@onready var trigger_list: ItemList = %Triggers
-
-@onready var _slot_cfg: SlotConfigDialog = %SlotConfigDialog
-@onready var _unit_cfg: UnitConfigDialog = %UnitConfigDialog
-@onready var _task_cfg: TaskConfigDialog = %TaskConfigDialog
-@onready var _trigger_cfg: TriggerConfigDialog = %TriggerConfigDialog
+extends Control
 
 ## Path to return to main menu scene
 const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
@@ -99,6 +68,11 @@ const DEFAULT_ENEMY_CALLSIGNS: Array[String] = [
 	"LEONID"
 ]
 
+## Active scenario data resource bound to the editor UI
+@export var data: ScenarioData
+## Global undo/redo history stack for scenario edits
+@export var history: ScenarioHistory
+
 var ctx := ScenarioEditorContext.new()
 var persistence := ScenarioPersistenceService.new()
 var units := ScenarioUnitsCatalog.new()
@@ -112,6 +86,32 @@ var _open_dlg: FileDialog
 var _save_dlg: FileDialog
 var _current_path := ""
 var _dirty := false
+
+@onready var file_menu: MenuButton = %File
+@onready var attribute_menu: MenuButton = %Attributes
+@onready var title_label: Label = %ScenarioTitle
+@onready var terrain_render: TerrainRender = %World
+@onready var new_scenario_dialog: NewScenarioDialog = %NewScenarioDialog
+@onready var weather_dialog: ScenarioWeatherDialog = %WeatherDialog
+@onready var terrain_overlay: ScenarioEditorOverlay = %Overlay
+@onready var tool_hint: HBoxContainer = %ToolHint
+@onready var mouse_position_label: Label = %MousePosition
+@onready var scene_tree: Tree = %"Scene Tree"
+@onready var history_list: VBoxContainer = %History
+
+@onready var unit_faction_friend: Button = %FactionRow/Friend
+@onready var unit_faction_enemy: Button = %FactionRow/Enemy
+@onready var unit_category_opt: OptionButton = %UnitCategory
+@onready var unit_search: LineEdit = %UnitSearch
+@onready var unit_list: Tree = %Units
+
+@onready var task_list: ItemList = %Tasks
+@onready var trigger_list: ItemList = %Triggers
+
+@onready var _slot_cfg: SlotConfigDialog = %SlotConfigDialog
+@onready var _unit_cfg: UnitConfigDialog = %UnitConfigDialog
+@onready var _task_cfg: TaskConfigDialog = %TaskConfigDialog
+@onready var _trigger_cfg: TriggerConfigDialog = %TriggerConfigDialog
 
 
 ## Initialize context, services, signals, UI, and dialogs
@@ -300,7 +300,7 @@ func _place_slot_from_tool(slot_def: UnitSlotData, pos_m: Vector2) -> void:
 		return
 	var inst := UnitSlotData.new()
 	inst.key = _next_slot_key()
-	inst.title = _generate_callsign(ScenarioUnit.Affiliation.friend)
+	inst.title = _generate_callsign(ScenarioUnit.Affiliation.FRIEND)
 	inst.allowed_roles = slot_def.allowed_roles.duplicate()
 	inst.start_position = pos_m
 	if ctx.data.unit_slots == null:
@@ -376,7 +376,7 @@ func _on_overlay_gui_input(event: InputEvent) -> void:
 				if draglink.linking:
 					var dst := terrain_overlay.get_pick_at(event.position)
 					draglink.end_link(ctx)
-					ScenarioTriggersService.new().try_sync_link(ctx, draglink.link_src_pick, dst)  # stateless call is fine
+					ScenarioTriggersService.new().try_sync_link(ctx, draglink.link_src_pick, dst)
 					return
 				if draglink.dragging:
 					draglink.end_drag(ctx, true)
@@ -396,7 +396,10 @@ func _on_overlay_gui_input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.ctrl_pressed:
 				var src := terrain_overlay.get_pick_at(event.position)
-				if not src.is_empty() and StringName(src.get("type", "")) in [&"unit", &"task", &"trigger"]:
+				if (
+					not src.is_empty()
+					and StringName(src.get("type", "")) in [&"unit", &"task", &"trigger"]
+				):
 					draglink.begin_link(ctx, src, event.position)
 					return
 			if event.double_click:
@@ -532,7 +535,9 @@ func _delete_slot(slot_index: int) -> void:
 	var before := _snapshot_arrays()
 	var after := _snapshot_arrays()
 	(after["unit_slots"] as Array).remove_at(slot_index)
-	history.push_array_replace(ctx.data, "unit_slots", before["unit_slots"], after["unit_slots"], "Delete Slot")
+	history.push_array_replace(
+		ctx.data, "unit_slots", before["unit_slots"], after["unit_slots"], "Delete Slot"
+	)
 	selection.clear_selection(ctx)
 	ctx.request_overlay_redraw()
 	_rebuild_scene_tree()
@@ -605,7 +610,9 @@ func _delete_trigger(trigger_index: int) -> void:
 	var before := _snapshot_arrays()
 	var after := _snapshot_arrays()
 	(after["triggers"] as Array).remove_at(trigger_index)
-	history.push_array_replace(ctx.data, "triggers", before["triggers"], after["triggers"], "Delete Trigger")
+	history.push_array_replace(
+		ctx.data, "triggers", before["triggers"], after["triggers"], "Delete Trigger"
+	)
 	selection.clear_selection(ctx)
 	ctx.request_overlay_redraw()
 	_rebuild_scene_tree()
@@ -804,7 +811,7 @@ func _generate_callsign(affiliation: ScenarioUnit.Affiliation) -> String:
 ## Get callsign pool for faction (uses defaults if scenario lacks overrides)
 func _get_callsign_pool(affiliation: ScenarioUnit.Affiliation) -> Array[String]:
 	var pool: Array[String]
-	if affiliation == ScenarioUnit.Affiliation.friend:
+	if affiliation == ScenarioUnit.Affiliation.FRIEND:
 		if data and data.friendly_callsigns and data.friendly_callsigns.size() > 0:
 			pool = data.friendly_callsigns
 		else:
@@ -831,7 +838,7 @@ func _collect_used_callsigns(affiliation: ScenarioUnit.Affiliation) -> Dictionar
 				var cs := String(su.callsign).strip_edges()
 				if not cs.is_empty():
 					used[cs] = true
-	if ctx.data.unit_slots and affiliation == ScenarioUnit.Affiliation.friend:
+	if ctx.data.unit_slots and affiliation == ScenarioUnit.Affiliation.FRIEND:
 		for s in ctx.data.unit_slots:
 			if s:
 				var title := String(s.title).strip_edges()
@@ -887,11 +894,18 @@ func _show_info(msg: String) -> void:
 ## Deep-copy key arrays for history operations
 func _snapshot_arrays() -> Dictionary:
 	return {
-		"units": ScenarioHistory._deep_copy_array_res(ctx.data.units if ctx.data and ctx.data.units else []),
+		"units":
+		ScenarioHistory._deep_copy_array_res(ctx.data.units if ctx.data and ctx.data.units else []),
 		"unit_slots":
-		ScenarioHistory._deep_copy_array_res(ctx.data.unit_slots if ctx.data and ctx.data.unit_slots else []),
-		"tasks": ScenarioHistory._deep_copy_array_res(ctx.data.tasks if ctx.data and ctx.data.tasks else []),
-		"triggers": ScenarioHistory._deep_copy_array_res(ctx.data.triggers if ctx.data and ctx.data.triggers else []),
+		ScenarioHistory._deep_copy_array_res(
+			ctx.data.unit_slots if ctx.data and ctx.data.unit_slots else []
+		),
+		"tasks":
+		ScenarioHistory._deep_copy_array_res(ctx.data.tasks if ctx.data and ctx.data.tasks else []),
+		"triggers":
+		ScenarioHistory._deep_copy_array_res(
+			ctx.data.triggers if ctx.data and ctx.data.triggers else []
+		),
 	}
 
 
