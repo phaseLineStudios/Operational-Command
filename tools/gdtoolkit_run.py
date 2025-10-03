@@ -39,12 +39,12 @@ def _ensure_pkg(color: bool) -> None:
     try:
         ver = version(PKG)
         if not ver.startswith("4."):
-            print(_colorize(color, f"{PKG} {ver} found, but not {SPEC}; installing {PKG}{SPEC}…", Ansi.YELLOW))
+            print(_colorize(color, f"{PKG} {ver} found, but not {SPEC}; installing {PKG}{SPEC}...", Ansi.YELLOW))
             _pip_install()
         else:
             print(_colorize(color, f"{PKG} {ver} OK.", Ansi.GREEN))
     except PackageNotFoundError:
-        print(_colorize(color, f"{PKG} not installed; installing {PKG}{SPEC}…", Ansi.YELLOW))
+        print(_colorize(color, f"{PKG} not installed; installing {PKG}{SPEC}...", Ansi.YELLOW))
         _pip_install()
 
 def _echo_cmd(color: bool, cmd: List[str]) -> None:
@@ -103,7 +103,7 @@ def main() -> None:
     else:
         color = sys.stdout.isatty() and os.environ.get("NO_COLOR") is None
 
-    print(_colorize(color, "[1/3] Ensuring gdtoolkit 4.* …", Ansi.BOLD, Ansi.CYAN))
+    print(_colorize(color, "[1/3] Ensuring gdtoolkit 4.* ...", Ansi.BOLD, Ansi.CYAN))
     _ensure_pkg(color)
 
     if which("gdformat") is None or which("gdlint") is None:
