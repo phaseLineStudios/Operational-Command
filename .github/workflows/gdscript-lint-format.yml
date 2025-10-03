@@ -44,4 +44,4 @@ jobs:
 
       - name: Format & Lint (check-only)
         run: |
-          python tools/gdtoolkit_run.py --check --line-length 120 ./src/
+          python tools/gdtoolkit_run.py --check --line-length 100 ./src/
