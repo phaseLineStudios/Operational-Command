@@ -12,6 +12,7 @@ src/.godot/
 src/.godot/tmp/**
 src/.godot/editor_settings-*.tres
 src/.godot/editor_state-*.cfg
+build/**
 
 # Godot cache
 src/.cache/
