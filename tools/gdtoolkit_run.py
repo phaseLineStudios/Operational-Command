@@ -27,25 +27,36 @@ def _colorize(enabled: bool, text: str, *codes: str) -> str:
         return text
     return "".join(codes) + text + Ansi.RESET
 
-def _pip_install() -> None:
+def _pip_install(color: bool, quiet: int = 2) -> None:
     """Install or upgrade the package to the specified version."""
-    subprocess.run(
-        [sys.executable, "-m", "pip", "install", "--upgrade", f"{PKG}{SPEC}"],
-        check=True,
-    )
+    q = ["-q"] * max(0, min(quiet, 3))
+    cmd = [
+        sys.executable, "-m", "pip", "install",
+        "--upgrade", f"{PKG}{SPEC}",
+        "--disable-pip-version-check", "--no-input",
+        "--progress-bar", "off",
+        *q,
+    ]
+    proc = subprocess.run(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    if proc.returncode != 0:
+        sys.stderr.write(proc.stdout)
+        print(_colorize(color, f"Failed to install {PKG}{SPEC}.", Ansi.RED))
+        proc.check_returncode()
+    else:
+        print(_colorize(color, f"Installed {PKG}{SPEC} successfully.", Ansi.GREEN))
 
-def _ensure_pkg(color: bool) -> None:
+def _ensure_pkg(color: bool, pip_quiet: int) -> None:
     """Ensure the package is installed and at the correct version."""
     try:
         ver = version(PKG)
         if not ver.startswith("4."):
             print(_colorize(color, f"{PKG} {ver} found, but not {SPEC}; installing {PKG}{SPEC}...", Ansi.YELLOW))
-            _pip_install()
+            _pip_install(color, pip_quiet)
         else:
             print(_colorize(color, f"{PKG} {ver} OK.", Ansi.GREEN))
     except PackageNotFoundError:
         print(_colorize(color, f"{PKG} not installed; installing {PKG}{SPEC}...", Ansi.YELLOW))
-        _pip_install()
+        _pip_install(color, pip_quiet)
 
 def _echo_cmd(color: bool, cmd: List[str]) -> None:
     """Echo the command to be run, nicely formatted."""
@@ -112,6 +123,12 @@ def main() -> None:
         help="Run linter only."
     )
     ap.add_argument(
+        "--pip-quiet", 
+        type=int, 
+        default=2, 
+        help="0..3, number of -q flags for pip (default: 2)"
+    )
+    ap.add_argument(
         "paths",
         nargs="*",
         default=["."],
@@ -130,8 +147,8 @@ def main() -> None:
     else:
         color = sys.stdout.isatty() and os.environ.get("NO_COLOR") is None
 
-    print(_colorize(color, "[1/3] Ensuring gdtoolkit 4.* ...", Ansi.BOLD, Ansi.CYAN))
-    _ensure_pkg(color)
+    print(_colorize(color, "[1/3] Ensuring gdtoolkit 4.*", Ansi.BOLD, Ansi.CYAN))
+    _ensure_pkg(color, args.pip_quiet)
 
     if which("gdformat") is None or which("gdlint") is None:
         print(
