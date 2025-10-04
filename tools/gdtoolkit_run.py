@@ -341,7 +341,7 @@ def main() -> None:
     else:
         color = sys.stdout.isatty() and os.environ.get("NO_COLOR") is None
 
-    print(_colorize(color, f"[1/{ "2" if single_modes == 1 else "5" }] Ensuring gdtoolkit 4.*", Ansi.BOLD, Ansi.CYAN))
+    print(_colorize(color, f"[1/{ '2' if single_modes == 1 else '5' }] Ensuring gdtoolkit 4.*", Ansi.BOLD, Ansi.CYAN))
     _ensure_pkg(color, args.pip_quiet)
 
     if which("gdformat") is None or which("gdlint") is None:
