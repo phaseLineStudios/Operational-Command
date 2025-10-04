@@ -56,12 +56,12 @@ def _ensure_pkg(color: bool, pip_quiet: int) -> None:
     try:
         ver = version(PKG)
         if not ver.startswith("4."):
-            print(_colorize(color, f"{PKG} {ver} found, but not {SPEC}; installing {PKG}{SPEC}...", Ansi.YELLOW))
+            print(_colorize(color, f"{PKG} {ver} found, but not {SPEC}\ninstalling {PKG}{SPEC}...", Ansi.YELLOW))
             _pip_install(color, pip_quiet)
         else:
             print(_colorize(color, f"{PKG} {ver} OK.", Ansi.GREEN))
     except PackageNotFoundError:
-        print(_colorize(color, f"{PKG} not installed; installing {PKG}{SPEC}...", Ansi.YELLOW))
+        print(_colorize(color, f"{PKG} not installed\ninstalling {PKG}{SPEC}...", Ansi.YELLOW))
         _pip_install(color, pip_quiet)
 
 def _echo_cmd(color: bool, cmd: List[str]) -> None:
