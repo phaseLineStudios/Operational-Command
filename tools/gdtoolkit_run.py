@@ -2,9 +2,15 @@ import argparse
 import os
 import subprocess
 import sys
+from pathlib import Path
 from importlib.metadata import PackageNotFoundError, version
 from shutil import which
 from typing import List
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from tools import scene_linter
 
 PKG = "gdtoolkit"   # package name
 SPEC = "==4.*"      # version specifier
@@ -91,6 +97,26 @@ def _run_lint(color: bool, paths: list[str]) -> int:
     cmd = ["gdlint", *paths]
     return _run(color, "gdlint", cmd)
 
+def _run_scene_lint(color: bool, paths: list[str]) -> int:
+    print(_colorize(color, "\nscene-linter", Ansi.BOLD, Ansi.BLUE))
+    problems = scene_linter.lint(paths)
+    if not problems:
+        print(_colorize(color, "✔ Success", Ansi.GREEN))
+        return 0
+
+    by_file: dict[str, list[tuple[int, str]]] = {}
+    for path, line, msg in problems:
+        by_file.setdefault(str(path), []).append((line, msg))
+
+    for file, items in sorted(by_file.items()):
+        print(_colorize(color, file, Ansi.MAGENTA))
+        for line, msg in sorted(items, key=lambda t: t[0]):
+            loc = f"{line}: " if line > 0 else ""
+            print(f"  {loc}{msg}")
+
+    print(_colorize(color, "✖ Failed", Ansi.RED))
+    return 1
+
 def main() -> None:
     ap = argparse.ArgumentParser(
         description="Format & lint GDScript."
@@ -123,6 +149,12 @@ def main() -> None:
         help="Run linter only."
     )
     ap.add_argument(
+        "--scene-lint-only", 
+        action="store_true", 
+        help="Run scene linter only."
+    )
+
+    ap.add_argument(
         "--pip-quiet", 
         type=int, 
         default=2, 
@@ -136,8 +168,9 @@ def main() -> None:
     )
     args = ap.parse_args()
 
-    if args.format_only and args.lint_only:
-        print("Choose either --format-only or --lint-only (not both).", file=sys.stderr)
+    single_modes = sum(bool(x) for x in (args.format_only, args.lint_only, args.scene_lint_only))
+    if single_modes > 1:
+        print("Choose only one of --format-only, --lint-only, --only-scene-linter.", file=sys.stderr)
         sys.exit(2)
 
     if args.color == "always":
@@ -147,7 +180,7 @@ def main() -> None:
     else:
         color = sys.stdout.isatty() and os.environ.get("NO_COLOR") is None
 
-    print(_colorize(color, "[1/3] Ensuring gdtoolkit 4.*", Ansi.BOLD, Ansi.CYAN))
+    print(_colorize(color, "[1/4] Ensuring gdtoolkit 4.*", Ansi.BOLD, Ansi.CYAN))
     _ensure_pkg(color, args.pip_quiet)
 
     if which("gdformat") is None or which("gdlint") is None:
@@ -168,16 +201,25 @@ def main() -> None:
         print(_colorize(color, "[2/2] Running linter", Ansi.BOLD, Ansi.CYAN))
         sys.exit(_run_lint(color, args.paths))
 
-    print(_colorize(color, "[2/3] Running formatter", Ansi.BOLD, Ansi.CYAN))
+    if args.scene_lint_only:
+        print(_colorize(color, "[2/2] Running scene linter", Ansi.BOLD, Ansi.CYAN))
+        sys.exit(_run_scene_lint(color, args.paths))
+
+    print(_colorize(color, "[2/4] Running formatter", Ansi.BOLD, Ansi.CYAN))
     rc_fmt = _run_format(color, args.paths, args.check, args.line_length)
     if rc_fmt != 0:
         if args.check:
             print(_colorize(color, "Hint: run without --check to apply formatting.", Ansi.DIM))
         sys.exit(rc_fmt)
 
-    print(_colorize(color, "[3/3] Running linter", Ansi.BOLD, Ansi.CYAN))
+    print(_colorize(color, "[3/4] Running linter", Ansi.BOLD, Ansi.CYAN))
     rc_lint = _run_lint(color, args.paths)
-    sys.exit(rc_lint)
+    if rc_lint != 0:
+        sys.exit(rc_lint)
+
+    print(_colorize(color, "[4/4] Running scene linter", Ansi.BOLD, Ansi.CYAN))
+    rc_scene = _run_scene_lint(color, args.paths)
+    sys.exit(rc_scene)
 
 if __name__ == "__main__":
     main()

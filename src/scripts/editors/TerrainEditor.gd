@@ -49,12 +49,14 @@ var _exit_dialog: ConfirmationDialog
 @onready var terrainview: SubViewport = %TerrainView/View
 @onready var brush_overlay: Control = %BrushOverlay
 @onready var terrain_settings_dialog: NewTerrainDialog = %TerrainSettingsDialog
-@onready var tools_options: VBoxContainer = %"Tool Options"
-@onready var tools_info: VBoxContainer = %"Tool Info"
+@onready var tools_options: VBoxContainer = %ToolOptions
+@onready var tools_info: VBoxContainer = %ToolInfo
 @onready var tools_hint: HBoxContainer = %"ToolHint"
 @onready var history_container: VBoxContainer = %History
 @onready var camera: TerrainCamera = %Camera
 @onready var mouse_position_l: Label = %MousePosition
+@onready var tab_container_2: TabContainer = %TabContainer2
+@onready var tab_container_3: TabContainer = %TabContainer3
 
 
 func _ready():
@@ -74,6 +76,9 @@ func _ready():
 
 	get_tree().set_auto_accept_quit(false)
 	_build_exit_dialog()
+
+	tab_container_2.set_tab_title(0, "Tool Options")
+	tab_container_3.set_tab_title(0, "Tool Info")
 
 
 ## Catch resize and close notifications

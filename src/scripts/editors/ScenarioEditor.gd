@@ -96,7 +96,7 @@ var _dirty := false
 @onready var terrain_overlay: ScenarioEditorOverlay = %Overlay
 @onready var tool_hint: HBoxContainer = %ToolHint
 @onready var mouse_position_label: Label = %MousePosition
-@onready var scene_tree: Tree = %"Scene Tree"
+@onready var scene_tree: Tree = %SceneTree
 @onready var history_list: VBoxContainer = %History
 
 @onready var unit_faction_friend: Button = %FactionRow/Friend
@@ -112,6 +112,8 @@ var _dirty := false
 @onready var _unit_cfg: UnitConfigDialog = %UnitConfigDialog
 @onready var _task_cfg: TaskConfigDialog = %TaskConfigDialog
 @onready var _trigger_cfg: TriggerConfigDialog = %TriggerConfigDialog
+
+@onready var _tab_container1: TabContainer = %TabContainer1
 
 
 ## Initialize context, services, signals, UI, and dialogs
@@ -163,10 +165,11 @@ func _ready():
 
 	history.history_changed.connect(_on_history_changed)
 	_on_history_changed([], [])
-
 	_init_file_dialogs()
-
 	_update_title()
+
+	# fix tab container name
+	_tab_container1.set_tab_title(0, "Scene Tree")
 
 
 ## Create and configure FileDialog instances
