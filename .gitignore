@@ -16,6 +16,11 @@ src/.godot/editor_state-*.cfg
 # Godot cache
 src/.cache/
 
+# CI Tools
+tools/GODOT_BIN
+tools/*.lnk
+tools/*.bat
+
 # IDE metadata
 .vscode/
 .idea/

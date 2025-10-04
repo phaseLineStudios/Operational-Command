@@ -36,7 +36,7 @@ func rebuild(ctx: ScenarioEditorContext) -> void:
 			u_item.set_metadata(0, {"type": &"unit", "index": ui})
 			var icon := (
 				su.unit.icon
-				if su.affiliation == ScenarioUnit.Affiliation.friend
+				if su.affiliation == ScenarioUnit.Affiliation.FRIEND
 				else su.unit.enemy_icon
 			)
 			if icon:

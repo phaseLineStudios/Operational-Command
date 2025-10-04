@@ -2,6 +2,11 @@ import argparse
 import os
 import subprocess
 import sys
+import itertools
+import threading
+import time
+import re
+from subprocess import Popen, PIPE, STDOUT
 from pathlib import Path
 from importlib.metadata import PackageNotFoundError, version
 from shutil import which
@@ -15,6 +20,30 @@ from tools import scene_linter
 PKG = "gdtoolkit"   # package name
 SPEC = "==4.*"      # version specifier
 
+# Error patterns from godot
+ERROR_PATTERNS = (
+    r"\bSCRIPT ERROR:",
+    r"\bERROR:",
+    r"\bFATAL:",
+    r"\bCRASH:",
+)
+
+WARN_PATTERNS = (
+    r"\bWARNING\b",
+    r"\bWARN\b",
+)
+
+SUPPRESS_PATTERNS = (
+    "LOG (",          # Kaldi/Vosk info
+    "WARNING (Vosk",  # Vosk warnings
+    "WARNING (Kaldi", # Kaldi warnings
+)
+
+CLEAR_LEN = 120  # width for clearing spinner line
+
+_error_re = re.compile("|".join(ERROR_PATTERNS))
+_warn_re = re.compile("|".join(WARN_PATTERNS))
+
 class Ansi:
     """ANSI escape codes for terminal colors."""
     RESET = "\033[0m"
@@ -26,6 +55,13 @@ class Ansi:
     BLUE = "\033[34m"
     MAGENTA = "\033[35m"
     CYAN = "\033[36m"
+
+def _color_line(enabled: bool, line: str) -> str:
+    if _error_re.search(line):
+        return _colorize(enabled, line.rstrip("\n"), Ansi.RED) + "\n"
+    if _warn_re.search(line):
+        return _colorize(enabled, line.rstrip("\n"), Ansi.YELLOW) + "\n"
+    return line
 
 def _colorize(enabled: bool, text: str, *codes: str) -> str:
     """Wrap text in ANSI codes if enabled."""
@@ -64,9 +100,120 @@ def _ensure_pkg(color: bool, pip_quiet: int) -> None:
         print(_colorize(color, f"{PKG} not installed\ninstalling {PKG}{SPEC}...", Ansi.YELLOW))
         _pip_install(color, pip_quiet)
 
+def _resolve_godot_bin(cli_path: str | None) -> str | None:
+    """
+    Find a usable Godot binary. Search order: CLI arg, GODOT_BIN env, PATH, 
+    tools/GODOT_BIN file, tools dir.
+    """
+    candidates: list[str] = []
+
+    if cli_path:
+        candidates.append(cli_path)
+
+    env = os.environ.get("GODOT_BIN")
+    if env:
+        candidates.append(env)
+
+    for name in ("godot", "godot-headless", "Godot"):
+        p = which(name)
+        if p:
+            candidates.append(p)
+
+    root = Path(__file__).resolve().parent.parent
+    tools = root / "tools"
+
+    marker = tools / "GODOT_BIN"
+    if marker.exists():
+        try:
+            candidates.append(marker.read_text(encoding="utf-8").strip())
+        except Exception:
+            pass
+
+    for pat in ("godot", "godot-headless", "Godot*", "Godot"):
+        for found in tools.glob(pat):
+            candidates.append(str(found))
+        for found in tools.glob(pat + ".exe"):
+            candidates.append(str(found))
+
+    mac = tools / "Godot.app" / "Contents" / "MacOS" / "Godot"
+    if mac.exists():
+        candidates.append(str(mac))
+
+    for c in candidates:
+        if not c:
+            continue
+        p = Path(c)
+        try:
+            if p.exists() and os.access(str(p), os.X_OK):
+                return str(p)
+        except Exception:
+            continue
+    return None
+
+def _hint_godot_setup() -> None:
+    """Print hints for setting up Godot binary."""
+    print("\nCould not find Godot. Try one of these:", file=sys.stderr)
+    print("  • Pass --godot-bin PATH/TO/Godot", file=sys.stderr)
+    print("  • Set env var:  GODOT_BIN=PATH/TO/Godot", file=sys.stderr)
+    print("  • Put the binary (or symlink/wrapper) in ./tools/ as 'godot' or 'godot.exe'", file=sys.stderr)
+    print("  • Or create ./tools/GODOT_BIN file containing the absolute path to your Godot binary", file=sys.stderr)
+
 def _echo_cmd(color: bool, cmd: List[str]) -> None:
     """Echo the command to be run, nicely formatted."""
     print(_colorize(color, ">", Ansi.DIM), _colorize(color, " ".join(cmd), Ansi.DIM))
+
+def _run_stream(color: bool, title: str, cmd: list[str], env: dict | None = None,
+                suppress_logs: bool = False, enable_spinner: bool = False) -> int:
+    """Run a command, streaming output live with a spinner."""
+    print(_colorize(color, f"\n{title}", Ansi.BOLD, Ansi.BLUE))
+    _echo_cmd(color, cmd)
+
+    proc = Popen(cmd, stdout=PIPE, stderr=STDOUT, text=True, bufsize=1, env=env)
+    stop = threading.Event()
+    spinner = itertools.cycle("|/-\\")
+    last_output = [time.time()]
+    spinner_drawn = [False]
+    seen_error = [False]
+
+    def spin():
+        if not enable_spinner:
+            return
+        while not stop.is_set():
+            # only draw when it's been quiet for a moment
+            if time.time() - last_output[0] > 0.3:
+                sys.stdout.write("\r" + _colorize(color, f"Working {next(spinner)}", Ansi.DIM))
+                sys.stdout.flush()
+                spinner_drawn[0] = True
+            time.sleep(0.1)
+
+        if spinner_drawn[0]:
+            sys.stdout.write("\r" + (" " * CLEAR_LEN) + "\r")
+            sys.stdout.flush()
+
+    t = threading.Thread(target=spin, daemon=True); t.start()
+
+    try:
+        if proc.stdout:
+            for raw in proc.stdout:
+                last_output[0] = time.time()
+                line = raw
+                if suppress_logs and (raw.startswith("LOG (") or raw.startswith("WARNING (Vosk") or raw.startswith("WARNING (Kaldi")):
+                    continue
+                if _error_re.search(raw):
+                    seen_error[0] = True
+                # colorize per-line
+                sys.stdout.write(_color_line(color, line))
+    finally:
+        stop.set(); t.join()
+
+    rc = proc.wait()
+    if rc == 0 and seen_error[0]:
+        print(_colorize(color, "✖ Failed", Ansi.RED))
+    elif rc == 0:
+        print(_colorize(color, "✔ Success", Ansi.GREEN))
+    else:
+        print(_colorize(color, "✖ Failed", Ansi.RED))
+    return rc
 
 def _run(color: bool, title: str, cmd: List[str]) -> int:
     """Run a command, capturing and formatting output."""
@@ -117,15 +264,31 @@ def _run_scene_lint(color: bool, paths: list[str]) -> int:
     print(_colorize(color, "✖ Failed", Ansi.RED))
     return 1
 
+def _run_smoke(color: bool, project_root: str, godot_bin_cli: str | None = None,
+               report_every: int = 50, exclude_dirs: list[str] | None = None,
+               spinner_mode: str = "auto") -> int:
+    """Run Godot in headless mode to smoke-compile the project."""
+    godot = _resolve_godot_bin(godot_bin_cli)
+    if not godot:
+        print(_colorize(color, "Godot binary not found.", Ansi.RED))
+        _hint_godot_setup()
+        return 3
+
+    subprocess.run([godot, "--headless", "--version"], check=False, text=True)
+
+    env = os.environ.copy()
+    env["SMOKE_REPORT_EVERY"] = str(report_every)
+    if exclude_dirs:
+        env["SMOKE_EXCLUDE_DIRS"] = ";".join(exclude_dirs)
+
+    cmd = [godot, "--headless", "--quiet", "--path", project_root,
+           "--script", "res://tools/ci/smoke_compile.gd"]
+    enable_spinner = (spinner_mode == "on") or (spinner_mode == "auto" and sys.stdout.isatty())
+    return _run_stream(color, "godot-smoke", cmd, env=env, suppress_logs=True, enable_spinner=enable_spinner)
+
 def main() -> None:
-    ap = argparse.ArgumentParser(
-        description="Format & lint GDScript."
-    )
-    ap.add_argument(
-        "--check",
-        action="store_true",
-        help="Check formatting instead of writing (good for CI).",
-    )
+    ap = argparse.ArgumentParser(description="Format & lint GDScript.")
+    ap.add_argument("--check", action="store_true", help="Check formatting instead of writing (good for CI).",)
     ap.add_argument(
         "--line-length",
         type=int,
@@ -138,39 +301,37 @@ def main() -> None:
         default="auto",
         help="Colorize output (default: auto).",
     )
-    ap.add_argument(
-        "--format-only", 
-        action="store_true", 
-        help="Run formatter only."
-    )
-    ap.add_argument(
-        "--lint-only", 
-        action="store_true", 
-        help="Run linter only."
-    )
-    ap.add_argument(
-        "--scene-lint-only", 
-        action="store_true", 
-        help="Run scene linter only."
-    )
-
+    ap.add_argument("--format-only", action="store_true", help="Run formatter only.")
+    ap.add_argument("--lint-only", action="store_true", help="Run linter only.")
+    ap.add_argument("--scene-lint-only", action="store_true", help="Run scene linter only.")
+    ap.add_argument("--smoke-only", action="store_true", help="Run Godot smoke-compile only.")
     ap.add_argument(
         "--pip-quiet", 
         type=int, 
         default=2, 
         help="0..3, number of -q flags for pip (default: 2)"
     )
+    ap.add_argument("--godot-bin", default=None, help="Path to Godot binary (overrides env/auto-detect).")
+    ap.add_argument("--project-root", default="./src/", help="Project root for Godot (--path).")
+    ap.add_argument("--smoke-report-every", type=int, default=50, help="Progress interval for smoke.")
+    ap.add_argument("--smoke-exclude", action="append", default=[], help="Exclude dir (res:// prefix). Repeatable.")
+    ap.add_argument(
+        "--smoke-spinner",
+        choices=("auto", "on", "off"),
+        default="auto",
+        help="Spinner during smoke run: auto (TTY only), on, or off.",
+    )
     ap.add_argument(
         "paths",
         nargs="*",
-        default=["."],
+        default=["./src/"],
         help="Files/dirs to process (default: current directory).",
     )
     args = ap.parse_args()
 
-    single_modes = sum(bool(x) for x in (args.format_only, args.lint_only, args.scene_lint_only))
+    single_modes = sum(bool(x) for x in (args.format_only, args.lint_only, args.scene_lint_only, args.smoke_only))
     if single_modes > 1:
-        print("Choose only one of --format-only, --lint-only, --only-scene-linter.", file=sys.stderr)
+        print("Choose only one of --format-only, --lint-only, --only-scene-linter, --smoke-only.", file=sys.stderr)
         sys.exit(2)
 
     if args.color == "always":
@@ -180,7 +341,7 @@ def main() -> None:
     else:
         color = sys.stdout.isatty() and os.environ.get("NO_COLOR") is None
 
-    print(_colorize(color, "[1/4] Ensuring gdtoolkit 4.*", Ansi.BOLD, Ansi.CYAN))
+    print(_colorize(color, f"[1/{ "2" if single_modes == 1 else "5" }] Ensuring gdtoolkit 4.*", Ansi.BOLD, Ansi.CYAN))
     _ensure_pkg(color, args.pip_quiet)
 
     if which("gdformat") is None or which("gdlint") is None:
@@ -204,22 +365,31 @@ def main() -> None:
     if args.scene_lint_only:
         print(_colorize(color, "[2/2] Running scene linter", Ansi.BOLD, Ansi.CYAN))
         sys.exit(_run_scene_lint(color, args.paths))
+    
+    if args.smoke_only:
+        print(_colorize(color, "[2/2] Running smoke compile", Ansi.BOLD, Ansi.CYAN))
+        sys.exit(_run_smoke(color, args.project_root, args.godot_bin, args.smoke_report_every, args.smoke_exclude, args.smoke_spinner))
 
-    print(_colorize(color, "[2/4] Running formatter", Ansi.BOLD, Ansi.CYAN))
+    print(_colorize(color, "[2/5] Running formatter", Ansi.BOLD, Ansi.CYAN))
     rc_fmt = _run_format(color, args.paths, args.check, args.line_length)
     if rc_fmt != 0:
         if args.check:
             print(_colorize(color, "Hint: run without --check to apply formatting.", Ansi.DIM))
         sys.exit(rc_fmt)
 
-    print(_colorize(color, "[3/4] Running linter", Ansi.BOLD, Ansi.CYAN))
+    print(_colorize(color, "[3/5] Running linter", Ansi.BOLD, Ansi.CYAN))
     rc_lint = _run_lint(color, args.paths)
     if rc_lint != 0:
         sys.exit(rc_lint)
 
-    print(_colorize(color, "[4/4] Running scene linter", Ansi.BOLD, Ansi.CYAN))
+    print(_colorize(color, "[4/5] Running scene linter", Ansi.BOLD, Ansi.CYAN))
     rc_scene = _run_scene_lint(color, args.paths)
-    sys.exit(rc_scene)
+    if rc_scene != 0:
+        sys.exit(rc_scene)
+
+    print(_colorize(color, "[5/5] Running smoke compile", Ansi.BOLD, Ansi.GREEN))
+    rc_smoke = _run_smoke(color, args.project_root, args.godot_bin, args.smoke_report_every, args.smoke_exclude, args.smoke_spinner)
+    sys.exit(rc_smoke)
 
 if __name__ == "__main__":
     main()
