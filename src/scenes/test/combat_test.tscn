@@ -1,0 +1,53 @@
+[gd_scene load_steps=6 format=3 uid="uid://djl6y3i0vn6a6"]
+
+[ext_resource type="Script" uid="uid://esw34qdqbjok" path="res://scripts/test/CombatTest.gd" id="1_gih1r"]
+[ext_resource type="Script" uid="uid://cjsu4sh4wfvmg" path="res://scripts/editors/TerrainCamera.gd" id="1_ip5bg"]
+[ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="2_gih1r"]
+[ext_resource type="Script" uid="uid://dsffofmchmfg4" path="res://scripts/test/DebugOverlay.gd" id="4_gih1r"]
+[ext_resource type="Script" uid="uid://dq8m3cwvv276y" path="res://scripts/sim/Combat.gd" id="5_hmct3"]
+
+[node name="CombatTest" type="Node2D"]
+script = ExtResource("1_gih1r")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+offset_right = 1151.0
+offset_bottom = 649.0
+stretch = true
+mouse_target = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(1151, 649)
+render_target_update_mode = 4
+
+[node name="TerrainCamera" type="Camera2D" parent="SubViewportContainer/SubViewport"]
+unique_name_in_owner = true
+offset = Vector2(575, 325)
+script = ExtResource("1_ip5bg")
+metadata/_custom_type_script = "uid://cjsu4sh4wfvmg"
+
+[node name="TerrainRender" parent="SubViewportContainer/SubViewport" instance=ExtResource("2_gih1r")]
+unique_name_in_owner = true
+offset_left = 1.0
+offset_top = -1.0
+
+[node name="DebugOverlay" type="Control" parent="SubViewportContainer/SubViewport/TerrainRender"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("4_gih1r")
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport"]
+offset_left = 10.0
+offset_top = 2.0
+offset_right = 208.0
+offset_bottom = 51.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "LMB to move Bluefor unit
+RMB to move Opfor unit"
+
+[node name="Combat" type="Node" parent="." node_paths=PackedStringArray("debug_overlay")]
+unique_name_in_owner = true
+script = ExtResource("5_hmct3")
+debug_enabled = true
+debug_overlay = NodePath("../SubViewportContainer/SubViewport/TerrainRender/DebugOverlay")
+metadata/_custom_type_script = "uid://dq8m3cwvv276y"
