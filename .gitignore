@@ -17,6 +17,12 @@ build/**
 # Godot cache
 src/.cache/
 
+# Code signing certificates
+signing/
+*.pfx
+*.p12
+*.b64
+
 # CI Tools
 tools/GODOT_BIN
 tools/*.lnk
