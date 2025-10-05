@@ -21,7 +21,13 @@ var _sliders: Dictionary = {}     # ammo_type -> HSlider
 var _pending: Dictionary = {}     # { uid: { ammo_type: +delta } }
 
 func load_units(units: Array, depot_stock: Dictionary) -> void:
-	_units = units
+	# Safely convert the generic Array to Array[UnitData]
+	var typed: Array[UnitData] = []
+	for e in units:
+		if e is UnitData:
+			typed.append(e as UnitData)
+	_units = typed
+
 	_depot = depot_stock.duplicate(true)
 	_refresh_units()
 	_update_depot_label()
