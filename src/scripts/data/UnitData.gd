@@ -72,9 +72,9 @@ enum UnitSize { TEAM, SQUAD, PLATOON, COMPANY, BATTALION }
 ## Ammunition variables
 @export_category("Ammunition")
 ## Ammo capacity per type, e.g. `{ "small_arms": 30, "he": 10 }`.
-@export var ammunition: Dictionary = {}                 # {type: cap}
+@export var ammunition: Dictionary = {}  # {type: cap}
 ## Current ammo per type for this unit, same keys as `ammunition`.
-@export var state_ammunition: Dictionary = {}           # {type: current}
+@export var state_ammunition: Dictionary = {}  # {type: current}
 ## Ratio (0..1): when `current/capacity <= ammunition_low_threshold` emit “Bingo ammo”.
 @export_range(0.0, 1.0, 0.01) var ammunition_low_threshold: float = 0.25
 ## Ratio (0..1): when `current/capacity <= ammunition_critical_threshold` emit “Ammo critical”.
@@ -122,7 +122,6 @@ func serialize() -> Dictionary:
 		"throughput": throughput.duplicate(),
 		"equipment_tags": equipment_tags.duplicate(),
 		"doctrine": doctrine,
-
 		# --- Ammo + Logistics persistence ---
 		"ammunition": ammunition.duplicate(),
 		"state_ammunition": state_ammunition.duplicate(),
@@ -200,10 +199,16 @@ static func deserialize(data: Variant) -> UnitData:
 	if typeof(am_state) == TYPE_DICTIONARY:
 		u.state_ammunition = am_state
 
-	u.ammunition_low_threshold = float(data.get("ammunition_low_threshold", u.ammunition_low_threshold))
-	u.ammunition_critical_threshold = float(data.get("ammunition_critical_threshold", u.ammunition_critical_threshold))
+	u.ammunition_low_threshold = float(
+		data.get("ammunition_low_threshold", u.ammunition_low_threshold)
+	)
+	u.ammunition_critical_threshold = float(
+		data.get("ammunition_critical_threshold", u.ammunition_critical_threshold)
+	)
 	u.supply_transfer_rate = float(data.get("supply_transfer_rate", u.supply_transfer_rate))
-	u.supply_transfer_radius_m = float(data.get("supply_transfer_radius_m", u.supply_transfer_radius_m))
+	u.supply_transfer_radius_m = float(
+		data.get("supply_transfer_radius_m", u.supply_transfer_radius_m)
+	)
 
 	# Backfill ammo state if missing (for older saves)
 	if u.state_ammunition.is_empty() and not u.ammunition.is_empty():
