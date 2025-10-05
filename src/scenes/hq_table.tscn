@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=46 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://c3rgrbya520ur" path="res://scripts/sim/systems/AmmoSystem.gd" id="7_ge8rp"]
 [ext_resource type="Resource" uid="uid://dv3cjce0fasfa" path="res://data/ammo/default_caps.tres" id="8_vxnyp"]
 [ext_resource type="Script" uid="uid://dy2uex65i3y4m" path="res://scripts/sim/CombatAdapter.gd" id="9_vxnyp"]
+[ext_resource type="Script" uid="uid://dq8m3cwvv276y" path="res://scripts/sim/Combat.gd" id="10_of8da"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
 size = Vector2(10, 30)
@@ -413,3 +414,7 @@ ammo_profile = ExtResource("8_vxnyp")
 [node name="CombatAdapter" type="Node" parent="."]
 script = ExtResource("9_vxnyp")
 ammo_system_path = NodePath("../AmmoSystem")
+
+[node name="Combat" type="Node" parent="."]
+script = ExtResource("10_of8da")
+combat_adapter_path = NodePath("../CombatAdapter")

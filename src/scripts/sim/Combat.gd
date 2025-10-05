@@ -10,6 +10,10 @@ signal unit_destroyed
 signal unit_retreated
 signal unit_surrendered
 
+## Ammo 
+@export var combat_adapter_path: NodePath
+var _adapter: CombatAdapter
+
 ##imported units manually for testing purposes
 var imported_attacker: UnitData = ContentDB.get_unit("infantry_plt_1")
 var imported_defender: UnitData = ContentDB.get_unit("infantry_plt_2")
@@ -21,6 +25,12 @@ var called_retreat = false
 func _ready() -> void:
 	notify_health.connect(print_unit_status) 
 	combat_loop(imported_attacker, imported_defender)
+	
+	## ammo initialization
+	if combat_adapter_path != NodePath(""):
+		_adapter = get_node(combat_adapter_path) as CombatAdapter
+	if _adapter == null:
+		_adapter = get_tree().get_first_node_in_group("CombatAdapter") as CombatAdapter
 
 ##Loop triggered every turn to simulate unit behavior in combat
 func combat_loop(attacker: UnitData, defender: UnitData) -> void:
@@ -42,6 +52,11 @@ func combat_loop(attacker: UnitData, defender: UnitData) -> void:
 func calculate_damage(attacker: UnitData, defender: UnitData) -> void:
 	var attacker_final_attackpower: float = attacker.strength * attacker.morale * attacker.attack
 	var defender_final_defensepower: float = defender.strength * defender.morale * defender.defense
+	
+	# consume ammo before calculating effects
+	if _adapter and not _adapter.request_fire(attacker.id, "small_arms", 5):
+		LogService.info("%s cannot fire: out of ammo" % attacker.id, "Combat")
+		return
 	
 	if attacker_final_attackpower - defender_final_defensepower > 0:
 		defender.strength = defender.strength - floor((attacker_final_attackpower 
@@ -81,3 +96,10 @@ func print_unit_status(attacker: UnitData, defender: UnitData) -> void:
 	LogService.info("[b]Attacker(%s)[/b]\n\t%s\n\t%s" % [attacker.id, attacker.morale, attacker.strength], "Combat.gd:85")
 	LogService.info("[b]Defender(%s)[/b]\n\t%s\n\t%s" % [defender.id, defender.morale, defender.strength], "Combat.gd:86")
 	return
+	
+	
+## consume ammo
+func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> bool:
+	if _adapter == null:
+		return true
+	return _adapter.request_fire(attacker.id, ammo_type, rounds)

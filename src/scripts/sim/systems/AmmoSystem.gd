@@ -1,6 +1,5 @@
 extends Node
 class_name AmmoSystem
-## Tracks ammo, consumes on fire, runs in-field resupply.
 
 signal ammo_low(unit_id: String)
 signal ammo_critical(unit_id: String)
@@ -10,13 +9,17 @@ signal resupply_completed(src_unit_id: String, dst_unit_id: String)
 
 @export var ammo_profile: AmmoProfile
 
-var _units: Dictionary[String, UnitData] = {}          # unit_id -> UnitData
+var _units: Dictionary = {}          # unit_id -> UnitData
 var _positions: Dictionary = {}      # unit_id -> Vector3
 var _logi: Dictionary = {}           # unit_id -> bool
 var _active_links: Dictionary = {}   # dst_id -> src_id
+var _xfer_accum: Dictionary = {}     # dst_id -> float (carry fractional budget)
 
 func _ready() -> void:
 	add_to_group("AmmoSystem")
+
+func _physics_process(delta: float) -> void:
+	tick(delta)
 
 func register_unit(u: UnitData) -> void:
 	_units[u.id] = u
@@ -31,6 +34,7 @@ func unregister_unit(unit_id: String) -> void:
 	for dst in _active_links.keys().duplicate():
 		if _active_links[dst] == unit_id or dst == unit_id:
 			_active_links.erase(dst)
+	_xfer_accum.erase(unit_id)
 
 func set_unit_position(unit_id: String, pos: Vector3) -> void:
 	_positions[unit_id] = pos
@@ -39,30 +43,30 @@ func get_unit(unit_id: String) -> UnitData:
 	return _units.get(unit_id, null)
 
 func is_low(u: UnitData, t: String) -> bool:
-	var cap: int = int(u.ammunition.get(t, 0))
+	var cap := int(u.ammunition.get(t, 0))
 	if cap <= 0: return false
-	var cur: int = int(u.state_ammunition.get(t, 0))
-	return cur > 0 and float(cur) / float(cap) <= u.ammunition_low_threshold
+	var cur := int(u.state_ammunition.get(t, 0))
+	return cur > 0 and float(cur)/float(cap) <= u.ammunition_low_threshold
 
 func is_critical(u: UnitData, t: String) -> bool:
-	var cap: int = int(u.ammunition.get(t, 0))
+	var cap := int(u.ammunition.get(t, 0))
 	if cap <= 0: return false
-	var cur: int = int(u.state_ammunition.get(t, 0))
-	return cur > 0 and float(cur) / float(cap) <= u.ammunition_critical_threshold
+	var cur := int(u.state_ammunition.get(t, 0))
+	return cur > 0 and float(cur)/float(cap) <= u.ammunition_critical_threshold
 
 func is_empty(u: UnitData, t: String) -> bool:
 	return int(u.state_ammunition.get(t, 0)) <= 0
 
 func consume(unit_id: String, t: String, amount: int = 1) -> bool:
-	var u: UnitData = _units.get(unit_id, null)
+	var u : UnitData= _units.get(unit_id, null)
 	if u == null or not u.state_ammunition.has(t):
 		return false
-	var cur: int = int(u.state_ammunition[t])
+	var cur := int(u.state_ammunition[t])
 	if cur <= 0:
 		u.state_ammunition[t] = 0
 		emit_signal("ammo_empty", unit_id)
 		return false
-	var newv : float = max(0, cur - max(1, amount))
+	var newv : int = max(0, cur - max(1, amount))
 	u.state_ammunition[t] = newv
 	if newv <= 0:
 		emit_signal("ammo_empty", unit_id)
@@ -73,17 +77,17 @@ func consume(unit_id: String, t: String, amount: int = 1) -> bool:
 	return true
 
 func tick(delta: float) -> void:
-	# Start links for units that need ammo
+	# start links for any needy unit
 	for uid in _units.keys():
 		if _active_links.has(uid):
 			continue
-		var dst := _units[uid]
+		var dst : UnitData = _units[uid]
 		if not _needs_ammo(dst):
 			continue
 		var src_id := _pick_link_for(dst)
 		if src_id != "":
 			_begin_link(src_id, uid)
-	# Transfer along existing links
+	# transfer along active links
 	_transfer_tick(delta)
 
 func _within_radius(src: UnitData, dst: UnitData) -> bool:
@@ -96,7 +100,10 @@ func _within_radius(src: UnitData, dst: UnitData) -> bool:
 func _is_logistics(u: UnitData) -> bool:
 	if u.throughput is Dictionary and not u.throughput.is_empty():
 		return true
-	if u.equipment_tags is Array and (u.equipment_tags.has("AMMO_PALLET") or u.equipment_tags.has("LOGISTICS")):
+	if u.equipment_tags is Array and (
+		u.equipment_tags.has("AMMO_PALLET") or
+		u.equipment_tags.has("AMMUNITION_PALLET") or
+		u.equipment_tags.has("LOGISTICS")):
 		return true
 	return false
 
@@ -128,6 +135,7 @@ func _pick_link_for(dst: UnitData) -> String:
 
 func _begin_link(src_id: String, dst_id: String) -> void:
 	_active_links[dst_id] = src_id
+	_xfer_accum[dst_id] = 0.0
 	emit_signal("resupply_started", src_id, dst_id)
 
 func _finish_link(dst_id: String) -> void:
@@ -135,6 +143,7 @@ func _finish_link(dst_id: String) -> void:
 	if src_id != "":
 		emit_signal("resupply_completed", src_id, dst_id)
 	_active_links.erase(dst_id)
+	_xfer_accum.erase(dst_id)
 
 func _transfer_tick(delta: float) -> void:
 	for dst_id in _active_links.keys().duplicate():
@@ -144,9 +153,19 @@ func _transfer_tick(delta: float) -> void:
 			_finish_link(dst_id)
 			continue
 
-		var budget : float = max(0.0, src.supply_transfer_rate) * delta
+		# accumulate fractional budget so low rates still transfer at 60 FPS
+		var acc := float(_xfer_accum.get(dst_id, 0.0))
+		acc += max(0.0, src.supply_transfer_rate) * delta
+		var transferable := int(floor(acc))
+		if transferable <= 0:
+			_xfer_accum[dst_id] = acc
+			continue
+
+		var remaining := transferable
+		var transferred := 0
+
 		for t in dst.ammunition.keys():
-			if budget <= 0.0:
+			if remaining <= 0:
 				break
 			var cap := int(dst.ammunition[t])
 			var cur := int(dst.state_ammunition.get(t, 0))
@@ -156,13 +175,16 @@ func _transfer_tick(delta: float) -> void:
 			var stock := int(src.throughput.get(t, 0))
 			if stock <= 0:
 				continue
-
-			var xfer := int(min(need, stock, floor(budget)))
+			var xfer : int = min(need, stock, remaining)
 			if xfer <= 0:
 				continue
+
 			dst.state_ammunition[t] = cur + xfer
 			src.throughput[t] = stock - xfer
-			budget -= float(xfer)
+			remaining -= xfer
+			transferred += xfer
+
+		_xfer_accum[dst_id] = acc - float(transferred)
 
 		if not _needs_ammo(dst) or not _has_stock(src):
 			_finish_link(dst_id)
