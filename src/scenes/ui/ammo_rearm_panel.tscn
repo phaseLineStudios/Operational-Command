@@ -1,0 +1,74 @@
+[gd_scene load_steps=2 format=3 uid="uid://boljn7j1t4k8j"]
+
+[ext_resource type="Script" uid="uid://c84x24o0ougkv" path="res://scripts/ui/AmmoRearmPanel.gd" id="1"]
+
+[node name="AmmoRearmPanel" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 1 )
+
+[node name="Root" type="VBoxContainer" parent="."]
+unique_name_in_owner = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="Header" type="HBoxContainer" parent="Root"]
+theme_override_constants/separation = 8
+size_flags_horizontal = 3
+
+[node name="Title" type="Label" parent="Root/Header"]
+text = "Rearm"
+size_flags_horizontal = 3
+
+[node name="Depot" type="Label" parent="Root/Header"]
+unique_name_in_owner = true
+text = "Depot: -"
+
+[node name="Body" type="HBoxContainer" parent="Root"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="UnitList" type="ItemList" parent="Root/Body"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 200)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+auto_height = false
+same_column_width = false
+allow_reselect = true
+
+[node name="Right" type="VBoxContainer" parent="Root/Body"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="AmmoContainer" type="VBoxContainer" parent="Root/Body/Right"]
+unique_name_in_owner = true
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="RowButtons" type="HBoxContainer" parent="Root/Body/Right"]
+theme_override_constants/separation = 8
+
+[node name="BtnFull" type="Button" parent="Root/Body/Right/RowButtons"]
+unique_name_in_owner = true
+text = "Full"
+
+[node name="BtnHalf" type="Button" parent="Root/Body/Right/RowButtons"]
+unique_name_in_owner = true
+text = "Half"
+
+[node name="BtnCommit" type="Button" parent="Root/Body/Right/RowButtons"]
+unique_name_in_owner = true
+text = "Commit"
