@@ -71,13 +71,20 @@ enum unitSize { Team, Squad, Platoon, Company, Battalion }
 
 ## Ammunition variables
 @export_category("Ammunition")
+## Ammo capacity per type, e.g. `{ "small_arms": 30, "he": 10 }`.
 @export var ammunition: Dictionary = {}                 # {type: cap}
+## Current ammo per type for this unit, same keys as `ammunition`.
 @export var state_ammunition: Dictionary = {}           # {type: current}
+## Ratio (0..1): when `current/capacity <= ammunition_low_threshold` emit “Bingo ammo”.
 @export_range(0.0, 1.0, 0.01) var ammunition_low_threshold: float = 0.25
+## Ratio (0..1): when `current/capacity <= ammunition_critical_threshold` emit “Ammo critical”.
 @export_range(0.0, 1.0, 0.01) var ammunition_critical_threshold: float = 0.1
 
+## Logistics variables, is part of ammunition and we can add stuff here later, like fuel
 @export_category("Logistics")
-@export var supply_transfer_rate: float = 10.0          # rounds per second
+## Transfer rate (rounds per second) a logistics unit can push to a recipient in range.
+@export var supply_transfer_rate: float = 10.0
+## Transfer radius in meters within which resupply is possible.
 @export var supply_transfer_radius_m: float = 30.0
 
 
@@ -120,7 +127,7 @@ func serialize() -> Dictionary:
 		"equipment_tags": equipment_tags.duplicate(),
 		"doctrine": doctrine,
 
-		# --- new ammo + logistics fields ---
+		# --- Ammo + Logistics persistence ---
 		"ammunition": ammunition.duplicate(),
 		"state_ammunition": state_ammunition.duplicate(),
 		"ammunition_low_threshold": ammunition_low_threshold,
@@ -188,7 +195,7 @@ static func deserialize(data: Variant) -> UnitData:
 			tmp_tags.append(str(e))
 		u.equipment_tags = tmp_tags
 
-	# --- new ammo + logistics fields ---
+	# --- Ammo + Logistics fields ---
 	var am_caps = data.get("ammunition", null)
 	if typeof(am_caps) == TYPE_DICTIONARY:
 		u.ammunition = am_caps

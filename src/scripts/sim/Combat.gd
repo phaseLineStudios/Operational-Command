@@ -98,7 +98,27 @@ func print_unit_status(attacker: UnitData, defender: UnitData) -> void:
 	return
 	
 	
-## consume ammo
+## Gate a fire attempt by ammunition and consume rounds when allowed.
+##
+## Returns:
+## - `true`  → firing is allowed and (if the adapter is present) ammo was consumed.
+## - `false` → firing is blocked due to empty ammo.
+##
+## Parameters:
+## - `attacker`   : UnitData that is attempting to fire (must be registered in AmmoSystem).
+## - `ammo_type`  : String key into `UnitData.state_ammunition` (e.g., "small_arms").
+## - `rounds`     : Number of rounds to attempt to spend for this shot/burst.
+##
+## Behavior:
+## - If `_adapter` is `null`, the check **fails open** and returns `true` so tests don’t break.
+## - Otherwise delegates to `CombatAdapter.request_fire(...)`, which:
+##     * blocks and emits `fire_blocked_empty` when empty,
+##     * consumes rounds on success (calling into `AmmoSystem.consume`),
+##     * causes `AmmoSystem` to emit `ammo_low` / `ammo_critical` / `ammo_empty` as thresholds are crossed.
+##
+## Side effects:
+## - On success, `attacker.state_ammunition[ammo_type]` is reduced.
+## - On empty, a bound `RadioFeedback` will typically log “Winchester”.
 func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> bool:
 	if _adapter == null:
 		return true
