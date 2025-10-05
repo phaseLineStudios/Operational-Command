@@ -5,6 +5,11 @@ extends Node
 ## to global services. Orchestrates the campaign loop: menus → briefing →
 ## tactical map → debrief → unit management.
 
+@export var debug_display_scene: PackedScene = preload("res://scenes/system/debug_display.tscn")
+var debug_display: CanvasLayer
+
+@onready var resolution: MissionResolution = MissionResolution.new()
+
 ## Emitted when a campaign is selected.
 signal campaign_selected(campaign_id: StringName)
 ## Emitted when a save is selected.
@@ -21,6 +26,10 @@ var current_campaign: CampaignData
 var current_save_id: StringName = &""
 var current_scenario: ScenarioData
 var current_scenario_loadout: Dictionary = {}
+var current_scenario_summary: Dictionary = {}
+
+func ready() -> void:
+	add_child(resolution)
 
 
 func _ready() -> void:
@@ -58,3 +67,36 @@ func select_scenario(scenario: ScenarioData) -> void:
 func set_scenario_loadout(loadout: Dictionary) -> void:
 	current_scenario_loadout = loadout
 	emit_signal("scenario_loadout_selected", loadout)
+
+## Start mission
+func start_scenario(prim: Array[StringName]) -> void:
+	if current_scenario == null:
+		push_error("No scenario loaded. Cannot start scenario")
+		return
+	resolution.start(prim, current_scenario.id)
+
+## Call from mission tick.
+func update_loop(dt: float) -> void:
+	if is_instance_valid(resolution):
+		resolution.tick(dt)
+
+## Complete objective
+func complete_objective(id: StringName) -> void:
+	resolution.set_objective_state(id, MissionResolution.ObjectiveState.SUCCESS)
+
+## Fail objective
+func fail_objective(id: StringName) -> void:
+	resolution.set_objective_state(id, MissionResolution.ObjectiveState.FAILED)
+
+## Record casualties
+func record_casualties(fr: int, en: int) -> void:
+	resolution.add_casualties(fr, en)
+
+## record lost units
+func record_unit_lost(count: int = 1) -> void:
+	resolution.add_units_lost(count)
+
+## End mission and navigate to debrief
+func end_scenario_and_go_to_debrief() -> void:
+	current_scenario_summary = resolution.finalize(false)
+	goto_scene("res://scenes/debrief.tscn")
