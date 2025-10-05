@@ -237,14 +237,14 @@ func _embed_rearm_panel() -> void:
 	_rearm_panel.rearm_committed.connect(_on_rearm_committed)
 
 
-func _on_rearm_committed(units_map: Dictionary, depot_after: Dictionary) -> void:
-	# units_map example: { "alpha": {"small_arms": 12} }
-	_print("[REARM] committed: %s" % [str(units_map)])
-	_update_hud()
-
+func _on_rearm_committed() -> void:
+	# units_map like { "alpha": {"small_arms": +12, "stock:small_arms": +50} }
+	# At this point UnitData has already been updated by the panel.
+	# Persist your campaign state here:
+	_save_campaign_state()
 
 func _save_campaign_state() -> void:
-	# TODO: plug into your existing save system
+	# TODO: plug into save system
 	# Example:
 	# CampaignService.save_units(_current_units)
 	# CampaignService.save_depot(depot_after)

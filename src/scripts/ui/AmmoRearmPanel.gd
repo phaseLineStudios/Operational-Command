@@ -223,7 +223,7 @@ func _on_commit() -> void:
 
 	_refresh_units()
 	_update_depot_label()
-	emit_signal("rearm_committed", _pending.duplicate(true), _depot.duplicate(true))
+	emit_signal("rearm_committed")
 	_pending.clear()
 
 # ---------- helpers ----------
