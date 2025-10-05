@@ -23,14 +23,14 @@ var called_retreat = false
 
 ##for testing
 func _ready() -> void:
-	notify_health.connect(print_unit_status) 
-	combat_loop(imported_attacker, imported_defender)
-	
-	## ammo initialization
+	## ammo initialization (moved before starting the loop)
 	if combat_adapter_path != NodePath(""):
 		_adapter = get_node(combat_adapter_path) as CombatAdapter
 	if _adapter == null:
 		_adapter = get_tree().get_first_node_in_group("CombatAdapter") as CombatAdapter
+
+	notify_health.connect(print_unit_status)
+	combat_loop(imported_attacker, imported_defender)
 
 ##Loop triggered every turn to simulate unit behavior in combat
 func combat_loop(attacker: UnitData, defender: UnitData) -> void:
@@ -53,14 +53,19 @@ func calculate_damage(attacker: UnitData, defender: UnitData) -> void:
 	var attacker_final_attackpower: float = attacker.strength * attacker.morale * attacker.attack
 	var defender_final_defensepower: float = defender.strength * defender.morale * defender.defense
 	
-	# consume ammo before calculating effects
-	if _adapter and not _adapter.request_fire(attacker.id, "small_arms", 5):
+	# --- ammo gate + penalty (minimal change: use helper, then scale local var) ---
+	var ammo_type := "small_arms"
+	var fire := _gate_and_consume(attacker, ammo_type, 5)  # Dictionary
+	if not bool(fire.get("allow", true)):
 		LogService.info("%s cannot fire: out of ammo" % attacker.id, "Combat")
 		return
-	
+	attacker_final_attackpower *= float(fire.get("attack_power_mult", 1.0))
+	# (If you later model ROF/suppression timing, you can also read:
+	#   fire.get("attack_cycle_mult", 1.0), fire.get("suppression_mult", 1.0))
+
 	if attacker_final_attackpower - defender_final_defensepower > 0:
 		defender.strength = defender.strength - floor((attacker_final_attackpower 
-				- defender_final_defensepower) * 0.1 / defender.strength)
+				- defender_final_defensepower) * 0.1 / max(1, defender.strength))
 		if defender.morale > 0:
 			defender.morale -= 0.05
 	else:
@@ -100,26 +105,39 @@ func print_unit_status(attacker: UnitData, defender: UnitData) -> void:
 	
 ## Gate a fire attempt by ammunition and consume rounds when allowed.
 ##
-## Returns:
-## - `true`  → firing is allowed and (if the adapter is present) ammo was consumed.
-## - `false` → firing is blocked due to empty ammo.
-##
-## Parameters:
-## - `attacker`   : UnitData that is attempting to fire (must be registered in AmmoSystem).
-## - `ammo_type`  : String key into `UnitData.state_ammunition` (e.g., "small_arms").
-## - `rounds`     : Number of rounds to attempt to spend for this shot/burst.
+## Returns a Dictionary with at least:
+##  { allow: bool, state: String, attack_power_mult: float,
+##    attack_cycle_mult: float, suppression_mult: float, morale_delta: int,
+##    ai_recommendation: String }
 ##
 ## Behavior:
-## - If `_adapter` is `null`, the check **fails open** and returns `true` so tests don’t break.
-## - Otherwise delegates to `CombatAdapter.request_fire(...)`, which:
-##     * blocks and emits `fire_blocked_empty` when empty,
-##     * consumes rounds on success (calling into `AmmoSystem.consume`),
-##     * causes `AmmoSystem` to emit `ammo_low` / `ammo_critical` / `ammo_empty` as thresholds are crossed.
-##
-## Side effects:
-## - On success, `attacker.state_ammunition[ammo_type]` is reduced.
-## - On empty, a bound `RadioFeedback` will typically log “Winchester”.
-func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> bool:
+## - If `_adapter` is null → allow=true with neutral multipliers (keeps tests running).
+## - If `CombatAdapter.request_fire_with_penalty()` exists → use it.
+## - Else fall back to `request_fire()` and map to a neutral response.
+func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> Dictionary:
 	if _adapter == null:
-		return true
-	return _adapter.request_fire(attacker.id, ammo_type, rounds)
+		return {
+			"allow": true,
+			"state": "normal",
+			"attack_power_mult": 1.0,
+			"attack_cycle_mult": 1.0,
+			"suppression_mult": 1.0,
+			"morale_delta": 0,
+			"ai_recommendation": "normal",
+		}
+
+	# Preferred path (penalties + consume)
+	if _adapter.has_method("request_fire_with_penalty"):
+		return _adapter.request_fire_with_penalty(attacker.id, ammo_type, rounds)
+
+	# Fallback: just block/consume via request_fire, no penalties
+	var ok := _adapter.request_fire(attacker.id, ammo_type, rounds)
+	return {
+		"allow": ok,
+		"state": ("normal" if ok else "empty"),
+		"attack_power_mult": 1.0,
+		"attack_cycle_mult": 1.0,
+		"suppression_mult": 1.0,
+		"morale_delta": 0,
+		"ai_recommendation": "normal",
+	}
