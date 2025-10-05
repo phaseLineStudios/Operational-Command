@@ -13,12 +13,16 @@ extends Node
 
 ## Central mission-scoped AmmoSystem instance. Created at runtime here.
 @onready var _ammo: AmmoSystem = AmmoSystem.new()
+@onready var _adapter: CombatAdapter = CombatAdapter.new()
 
 ## Create and configure AmmoSystem; optionally hook up RadioFeedback.
 func _ready() -> void:
 	add_child(_ammo)
 	_ammo.ammo_profile = preload("res://data/ammo/default_caps.tres")
 
+	add_child(_adapter)
+	_adapter.add_to_group("CombatAdapter")
+	_adapter.ammo_system_path = _ammo.get_path()
 	# Register units once roster is ready (left commented for now; call from roster code):
 	# for u in _current_units:
 	#     _ammo.register_unit(u)
