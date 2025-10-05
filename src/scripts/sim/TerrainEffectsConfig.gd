@@ -1,5 +1,5 @@
-extends Resource
 class_name TerrainEffectsConfig
+extends Resource
 ## Tunables for terrain & environment modifiers.
 ## @experimental
 
