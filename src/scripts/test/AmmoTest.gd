@@ -241,3 +241,11 @@ func _on_rearm_committed(units_map: Dictionary, depot_after: Dictionary) -> void
 	# units_map example: { "alpha": {"small_arms": 12} }
 	_print("[REARM] committed: %s" % [str(units_map)])
 	_update_hud()
+
+
+func _save_campaign_state() -> void:
+	# TODO: plug into your existing save system
+	# Example:
+	# CampaignService.save_units(_current_units)
+	# CampaignService.save_depot(depot_after)
+	pass

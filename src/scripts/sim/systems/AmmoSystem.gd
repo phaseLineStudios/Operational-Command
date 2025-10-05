@@ -33,10 +33,6 @@ var _xfer_accum: Dictionary = {}     ## dst_id -> float (carry fractional budget
 func _ready() -> void:
 	add_to_group("AmmoSystem")
 
-## Drive the system every frame if present in a scene.
-func _physics_process(delta: float) -> void:
-	tick(delta)
-
 # --- Public API: roster management ---
 
 ## Register a unit so AmmoSystem tracks it and applies defaults if missing.
