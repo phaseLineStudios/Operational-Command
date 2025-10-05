@@ -3,10 +3,10 @@
 	"title": "1st Infantry",
 	"role": "INF",
 	"cost": 50,
-	"size": "platoon",
+	"size": 2,
 	"strength": 40,
-	"equipment": { },
-	"veterancy": "REGULAR",
+	"equipment": {},
+	"experience": 0.0,
 	"stats": {
 		"attack": 55,
 		"defense": 35,
@@ -16,16 +16,16 @@
 		"speed_kph": 6
 	},
 	"state": {
-		"personnel_ratio": 0.85,
-		"equipment_ratio": 0.90,
-		"cohesion": 0.70
+		"state_strength": 40.0,
+		"state_injured": 0.0,
+		"state_equipment": 1.0,
+		"cohesion": 1.0
 	},
 	"editor": {
 		"unit_category": "us_army"
 	},
 	"throughput": {},
 	"equipment_tags": [],
-	"icon": "",
 	"allowed_slots": ["INF_SLOT", "RESERVE_ANY", "RESERVE_INF"],
 	"doctrine": "nato_inf_1985"
 }
