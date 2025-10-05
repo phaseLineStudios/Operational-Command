@@ -5,5 +5,6 @@ extends Node
 ## visibility LOS.gd and combat Combat.gd and
 ## exposes read-only views for UI.
 
+
 func _ready():
 	Game.start_scenario([])

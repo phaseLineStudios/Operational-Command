@@ -1,5 +1,5 @@
-extends Node
 class_name MissionResolution
+extends Node
 
 ## Tracks mission progress and computes a placeholder outcome + score.
 ## Use as a helper owned by your Game singleton / mission scene.
@@ -46,11 +46,13 @@ func start(prim: Array[StringName], scenario: StringName = &"") -> void:
 	_recompute_score()
 	LogService.info("Started Scenario", "MissionResolution.gd:47")
 
+
 ## Advance internal timer. Call from mission loop.
 func tick(dt: float) -> void:
 	if _is_final:
 		return
 	_elapsed_s += dt
+
 
 ## Update an objective state.
 func set_objective_state(id: StringName, state: ObjectiveState) -> void:
@@ -66,6 +68,7 @@ func set_objective_state(id: StringName, state: ObjectiveState) -> void:
 	_recompute_score()
 	LogService.trace("Changed %s's Objective state" % id, "MissionResolution.gd:67")
 
+
 ## Record casualties (aggregated).
 func add_casualties(friendly: int = 0, enemy: int = 0) -> void:
 	if _is_final:
@@ -75,6 +78,7 @@ func add_casualties(friendly: int = 0, enemy: int = 0) -> void:
 	_recompute_score()
 	LogService.trace("Updated casualties", "MissionResolution.gd:76")
 
+
 ## Record fully destroyed friendly unit(s) (e.g., wiped marker).
 func add_units_lost(count: int = 1) -> void:
 	if _is_final:
@@ -82,6 +86,7 @@ func add_units_lost(count: int = 1) -> void:
 	_units_lost += max(count, 0)
 	_recompute_score()
 	LogService.trace("Updated lost units", "MissionResolution.gd:84")
+
 
 ## Compute current best-guess outcome (not final).
 func evaluate_outcome() -> MissionOutcome:
@@ -92,8 +97,10 @@ func evaluate_outcome() -> MissionOutcome:
 	var prim_failed := 0
 	for id in primary_objectives:
 		match _objective_states.get(id, ObjectiveState.PENDING):
-			ObjectiveState.SUCCESS: prim_success += 1
-			ObjectiveState.FAILED: prim_failed += 1
+			ObjectiveState.SUCCESS:
+				prim_success += 1
+			ObjectiveState.FAILED:
+				prim_failed += 1
 	if prim_failed > 0:
 		return MissionOutcome.FAILED
 	if prim_success == prim_total and prim_total > 0:
@@ -114,8 +121,12 @@ func finalize(abort: bool = false) -> Dictionary:
 	_outcome = MissionOutcome.ABORTED if abort else evaluate_outcome()
 	var summary := to_summary_payload()
 	emit_signal("mission_finalized", _outcome, summary)
-	LogService.info("Finalized Scenario with outcome: %s" % str(MissionOutcome.keys()[_outcome]), "MissionResolution.gd:117")
+	LogService.info(
+		"Finalized Scenario with outcome: %s" % str(MissionOutcome.keys()[_outcome]),
+		"MissionResolution.gd:117"
+	)
 	return summary
+
 
 ## Debrief/persistence payload; stable contract for other screens.
 func to_summary_payload() -> Dictionary:
@@ -131,6 +142,7 @@ func to_summary_payload() -> Dictionary:
 		"outcome": _outcome,
 	}
 
+
 ## Clear all state.
 func _reset() -> void:
 	_objective_states.clear()
@@ -140,6 +152,7 @@ func _reset() -> void:
 	_total_score = 0
 	_outcome = MissionOutcome.UNDECIDED
 	_is_final = false
+
 
 func _recompute_score() -> void:
 	var score := 0
@@ -154,13 +167,20 @@ func _recompute_score() -> void:
 		_total_score = score
 		emit_signal("score_changed", _total_score)
 
+
 func _score_breakdown() -> Dictionary:
+	var objective_states := func(id):
+		return _objective_states.get(id, ObjectiveState.PENDING) == ObjectiveState.SUCCESS
+
 	return {
-		"primary_success": primary_objectives.filter(
-			func(id): return _objective_states.get(id, ObjectiveState.PENDING) == ObjectiveState.SUCCESS
-		).size() * score_primary_success,
+		"primary_success":
+		(
+			(primary_objectives.filter(func(id): return objective_states.call(id)).size())
+			* score_primary_success
+		),
 		"friendly_casualties": _casualties.friendly * score_friendly_casualty,
 		"enemy_casualties": _casualties.enemy * score_enemy_casualty,
 		"units_lost": _units_lost * score_unit_lost,
-		"time_penalty_applied_on_finalize": int(floor((_elapsed_s / 60.0) * score_time_penalty_per_min)),
+		"time_penalty_applied_on_finalize":
+		int(floor((_elapsed_s / 60.0) * score_time_penalty_per_min)),
 	}
