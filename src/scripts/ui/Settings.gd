@@ -1,4 +1,5 @@
 extends Control
+class_name Settings
 ## Settings controller
 ## Tabs: Video, Audio, Controls, Gameplay. Loads/applies/saves config.
 
@@ -16,8 +17,10 @@ const CONFIG_PATH := "user://settings.cfg"
 @export var resolutions: Array[Vector2i] = [
 	Vector2i(1920,1080), Vector2i(1600,900), Vector2i(1366,768), Vector2i(1280,720)
 ]
+## Scene to navigate to on back (leave empty for no action)
+@export var back_scene: PackedScene
 
-@onready var _btn_back: Button = %Back
+@onready var btn_back: Button = %Back
 @onready var _btn_apply: Button = %Apply
 @onready var _btn_defaults: Button = %Defaults
 
@@ -36,6 +39,8 @@ const CONFIG_PATH := "user://settings.cfg"
 @onready var _controls_list: VBoxContainer = %ControlsList
 @onready var _reset_bindings: Button = %ResetBindings
 @onready var _rebind_template: Button = $"RebindTemplate"
+
+signal back_requested()
 
 var _bus_rows: Dictionary = {} # name -> {slider: HSlider, label: Label, mute: CheckBox}
 var _cfg := ConfigFile.new()
@@ -113,7 +118,10 @@ func _build_controls_ui() -> void:
 
 ## Wire up buttons and live labels.
 func _connect_signals() -> void:
-	_btn_back.pressed.connect(func(): Game.goto_scene("res://scenes/main_menu.tscn"))
+	btn_back.pressed.connect(func(): 
+		if back_scene != null: Game.goto_scene(back_scene.resource_path)
+		emit_signal("back_requested")
+	)
 	_btn_apply.pressed.connect(_apply_and_save)
 	_btn_defaults.pressed.connect(_reset_defaults)
 	_reset_bindings.pressed.connect(_reset_all_bindings)
@@ -253,3 +261,8 @@ func _set_bus_mute(bus_name: String, on: bool) -> void:
 ## Linear→dB helper.
 func linear_to_db(v: float) -> float:
 	return -80.0 if v <= 0.0001 else 20.0 * (log(v) / log(10.0))
+
+## API to set settigns visibility
+func set_visibility(state: bool):
+	visible = state
+	modulate = Color.WHITE # Some engine bug modulates to color(0,0,0,0) on hide
