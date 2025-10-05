@@ -33,8 +33,8 @@ signal debug_updated(data: Dictionary)
 @export var combat_adapter_path: NodePath
 var _adapter: CombatAdapter
 
-## Define Cooldown, mainly used for applying penalties for low ammo
-var _rof_cooldown: Dictionary = {}  # uid -> next_time_allowed (float)
+## Per-unit ROF cooldown (seconds since epoch when the next shot is allowed)
+var _rof_cooldown: Dictionary = {}  # uid -> float(next_time_allowed_s)
 
 ##imported units manually for testing purposes
 var imported_attacker: UnitData = ContentDB.get_unit("infantry_plt_1")
@@ -51,14 +51,21 @@ var _debug_timer: Timer
 
 ## Init
 func _ready() -> void:
-	## ammo initialization (moved before starting the loop)
+	# Ammo adapter wiring
 	if combat_adapter_path != NodePath(""):
 		_adapter = get_node(combat_adapter_path) as CombatAdapter
 	if _adapter == null:
 		_adapter = get_tree().get_first_node_in_group("CombatAdapter") as CombatAdapter
 
+	# Build ScenarioUnit wrappers for the imported UnitData (test harness)
+	attacker_su = _make_su(imported_attacker, "ALPHA", Vector2(0, 0))
+	defender_su = _make_su(imported_defender, "BRAVO",  Vector2(300, 0))
+
 	notify_health.connect(print_unit_status)
-	combat_loop(imported_attacker, imported_defender)
+
+	# Start loop with ScenarioUnits
+	combat_loop(attacker_su, defender_su)
+
 	_debug_timer = Timer.new()
 	_debug_timer.one_shot = false
 	add_child(_debug_timer)
@@ -67,6 +74,24 @@ func _ready() -> void:
 			_emit_debug_snapshot(_cur_att, _cur_def, false)
 	)
 	_set_debug_rate()
+
+## Minimal factory for a ScenarioUnit used by this controller (test harness)
+func _make_su(u: UnitData, cs: String, pos: Variant) -> ScenarioUnit:
+	var su := ScenarioUnit.new()
+	su.unit = u
+	su.callsign = cs
+
+	# Accept Vector2 or Vector3; convert 3D ground coords (x,z) -> 2D
+	var p2: Vector2
+	if pos is Vector2:
+		p2 = pos
+	elif pos is Vector3:
+		p2 = Vector2((pos as Vector3).x, (pos as Vector3).z)
+	else:
+		p2 = Vector2.ZERO
+
+	su.position_m = p2
+	return su
 
 ##Loop triggered every turn to simulate unit behavior in combat
 func combat_loop(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
@@ -167,27 +192,25 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
 		if attacker.unit.morale > 0.0 and applied2 == 0:
 			attacker.unit.morale = max(0.0, attacker.unit.morale - 0.02)
 
-
-
 ## Check the various conditions for if the combat is finished
 func check_abort_condition(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
 	if defender == null or defender.unit == null or attacker == null or attacker.unit == null:
 		return
 
 	if defender.unit.state_strength <= 0.5:
-		LogService.info(defender.id + " is [b]destroyed[/b]", "Combat.gd:62")
+		LogService.info(defender.unit.id + " is [b]destroyed[/b]", "Combat.gd:62")
 		if attacker.unit.morale <= 0.8:
 			attacker.unit.morale += 0.2
 		unit_destroyed.emit()
 		abort_condition = true
 		return
 	elif defender.unit.morale <= 0.2:
-		LogService.info(defender.id + " is [b]surrendering[/b]", "Combat.gd:71")
+		LogService.info(defender.unit.id + " is [b]surrendering[/b]", "Combat.gd:71")
 		unit_surrendered.emit()
 		abort_condition = true
 		return
 	if called_retreat:
-		LogService.info(defender.id + " is [b]retreating[/b]", "Combat.gd:78")
+		LogService.info(defender.unit.id + " is [b]retreating[/b]", "Combat.gd:78")
 		unit_retreated.emit()
 		abort_condition = true
 
@@ -196,8 +219,7 @@ func print_unit_status(attacker: UnitData, defender: UnitData) -> void:
 	LogService.info("[b]Attacker(%s)[/b]\n\t%s\n\t%s" % [attacker.id, attacker.morale, attacker.strength], "Combat.gd:85")
 	LogService.info("[b]Defender(%s)[/b]\n\t%s\n\t%s" % [defender.id, defender.morale, defender.strength], "Combat.gd:86")
 	return
-	
-	
+
 ## Gate a fire attempt by ammunition and consume rounds when allowed.
 ##
 ## Returns a Dictionary with at least:
@@ -236,6 +258,7 @@ func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> Di
 		"morale_delta": 0,
 		"ai_recommendation": "normal",
 	}
+
 ## Apply casualties to runtime state. Returns actual KIA + WIA applied
 func _apply_casualties(u: UnitData, raw_losses: int) -> int:
 	if u == null or raw_losses <= 0: return 0
