@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="TerrainEffectsConfig" load_steps=2 format=3 uid="uid://nnv60cu0j2f6"]
+
+[ext_resource type="Script" uid="uid://d4egsiev7h4v6" path="res://scripts/sim/TerrainEffectsConfig.gd" id="1_qt4cy"]
+
+[resource]
+script = ExtResource("1_qt4cy")
+metadata/_custom_type_script = "uid://d4egsiev7h4v6"

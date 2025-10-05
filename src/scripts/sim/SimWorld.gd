@@ -2,7 +2,7 @@ extends Node
 ## Authoritative battlefield simulation (state, movement, combat, LOS).
 ##
 ## Holds all unit entities and resolves ticks deterministically. Integrates
-## visibility ([code]LOS.gd[/code]) and combat ([code]Combat.gd[/code]) and
+## visibility LOS.gd and combat Combat.gd and
 ## exposes read-only views for UI.
 ## 
 ## Ammo integration:
@@ -32,6 +32,9 @@ func _ready() -> void:
 	if radio:
 		radio.bind_ammo(_ammo)
 
+
+	Game.start_scenario([])
+
 ## Drive AmmoSystem every frame so in-field resupply progresses over time.
 func _physics_process(delta: float) -> void:
 	_ammo.tick(delta)
@@ -40,3 +43,4 @@ func _physics_process(delta: float) -> void:
 ## `pos` is world-space (meters). For 2D maps, use Vector3(x, 0, y).
 func on_unit_position(uid: String, pos: Vector3) -> void:
 	_ammo.set_unit_position(uid, pos)
+	
