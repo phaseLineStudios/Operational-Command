@@ -30,6 +30,24 @@ var terrain_config: TerrainEffectsConfig = preload("res://assets/configs/terrain
 ## Also print compact line to console
 @export var debug_log_console := false
 
+##for processing of possible combat outcomes
+signal notify_health
+signal unit_destroyed
+signal unit_retreated
+signal unit_surrendered
+## Emitted whenever a debug snapshot is produced
+signal debug_updated(data: Dictionary)
+
+## Ammo 
+@export var combat_adapter_path: NodePath
+var _adapter: CombatAdapter
+
+## Per-unit ROF cooldown (seconds since epoch when the next shot is allowed)
+var _rof_cooldown: Dictionary = {}  # uid -> float(next_time_allowed_s)
+
+##imported units manually for testing purposes
+var imported_attacker: UnitData = ContentDB.get_unit("infantry_plt_1")
+var imported_defender: UnitData = ContentDB.get_unit("infantry_plt_2")
 var attacker_su: ScenarioUnit
 var defender_su: ScenarioUnit
 
@@ -43,6 +61,21 @@ var _debug_timer: Timer
 
 ## Init
 func _ready() -> void:
+	# Ammo adapter wiring
+	if combat_adapter_path != NodePath(""):
+		_adapter = get_node(combat_adapter_path) as CombatAdapter
+	if _adapter == null:
+		_adapter = get_tree().get_first_node_in_group("CombatAdapter") as CombatAdapter
+
+	# Build ScenarioUnit wrappers for the imported UnitData (test harness)
+	attacker_su = _make_su(imported_attacker, "ALPHA", Vector2(0, 0))
+	defender_su = _make_su(imported_defender, "BRAVO",  Vector2(300, 0))
+
+	notify_health.connect(print_unit_status)
+
+	# Start loop with ScenarioUnits
+	combat_loop(attacker_su, defender_su)
+
 	_debug_timer = Timer.new()
 	_debug_timer.one_shot = false
 	add_child(_debug_timer)
@@ -53,6 +86,23 @@ func _ready() -> void:
 	)
 	_set_debug_rate()
 
+## Minimal factory for a ScenarioUnit used by this controller (test harness)
+func _make_su(u: UnitData, cs: String, pos: Variant) -> ScenarioUnit:
+	var su := ScenarioUnit.new()
+	su.unit = u
+	su.callsign = cs
+
+	# Accept Vector2 or Vector3; convert 3D ground coords (x,z) -> 2D
+	var p2: Vector2
+	if pos is Vector2:
+		p2 = pos
+	elif pos is Vector3:
+		p2 = Vector2((pos as Vector3).x, (pos as Vector3).z)
+	else:
+		p2 = Vector2.ZERO
+
+	su.position_m = p2
+	return su
 
 ##Loop triggered every turn to simulate unit behavior in combat
 func combat_loop(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
@@ -76,12 +126,12 @@ func combat_loop(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
 		_cur_att = attacker
 		_cur_def = defender
 
-
-## Combat damage calculation with terrain/environment multipliers
+## Combat damage calculation with terrain/environment multipliers + ammo gating/penalties + ROF cooldown
 func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
 	if attacker == null or defender == null or attacker.unit == null or defender.unit == null:
 		return
-
+	
+	# --- range & terrain/spotting gates ---
 	var dist := attacker.position_m.distance_to(defender.position_m)
 	if dist > attacker.unit.range_m:
 		return
@@ -100,20 +150,49 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
 		return
 
 	var min_acc: float = terrain_config.min_accuracy
-	var acc: float = float(f.get("accuracy_mul", 1.0))
-	if bool(f.get("blocked", false)) or acc < min_acc:
+	var acc_mul: float = float(f.get("accuracy_mul", 1.0))
+	if bool(f.get("blocked", false)) or acc_mul < min_acc:
 		if attacker.unit.morale > 0.1:
 			attacker.unit.morale = max(0.0, attacker.unit.morale - 0.01)
 		return
 
+	# --- ROF cooldown (per attacking unit) ---
+	var uid := attacker.unit.id
+	var now := Time.get_ticks_msec() / 1000.0
+	var next_ok := float(_rof_cooldown.get(uid, 0.0))
+	if now < next_ok:
+		return
+
+	# --- ammo gate + penalties ---
+	var fire := _gate_and_consume(attacker.unit, "small_arms", 5)  # returns {allow, attack_power_mult, attack_cycle_mult, suppression_mult, ...}
+	if not bool(fire.get("allow", true)):
+		LogService.info("%s cannot fire: out of ammo" % attacker.unit.id, "Combat")
+		return
+
+	# --- base strengths ---
 	var atk_str: float = max(0.0, attacker.unit.state_strength)
 	var def_str: float = max(0.0, defender.unit.state_strength)
 	var base_attack: float = atk_str * attacker.unit.morale * attacker.unit.attack
 	var base_defense: float = def_str * defender.unit.morale * defender.unit.defense
 
-	var attackpower := base_attack * float(f.accuracy_mul) * float(f.damage_mul)
-	var defensepower := base_defense
+	# --- apply terrain multipliers ---
+	var dmg_mul: float = float(f.get("damage_mul", 1.0))
+	var attackpower: float = base_attack * acc_mul * dmg_mul
+	var defensepower: float = base_defense
 
+	# --- apply ammo penalties ---
+	attackpower *= float(fire.get("attack_power_mult", 1.0))
+
+	# --- apply ROF penalty as delay until next allowed shot ---
+	var cycle_mult := float(fire.get("attack_cycle_mult", 1.0))
+	var base_cycle := 1.0  # seconds between shots (tune to taste)
+	_rof_cooldown[uid] = now + base_cycle * cycle_mult
+
+	# TODO (if you model suppression):
+	# var sup_mult := float(fire.get("suppression_mult", 1.0))
+	# _apply_suppression(attacker, defender, sup_mult)
+
+	# --- outcome ---
 	if attackpower - defensepower > 0.0:
 		var denom: float = max(def_str, 1.0)
 		var raw_loss: int = int(floor((attackpower - defensepower) * 0.1 / denom))
@@ -121,8 +200,8 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
 		if defender.unit.morale > 0.0 and applied > 0:
 			defender.unit.morale = max(0.0, defender.unit.morale - 0.05)
 	else:
-		var applied := _apply_casualties(defender.unit, 1)
-		if attacker.unit.morale > 0.0 and applied == 0:
+		var applied2 := _apply_casualties(defender.unit, 1)
+		if attacker.unit.morale > 0.0 and applied2 == 0:
 			attacker.unit.morale = max(0.0, attacker.unit.morale - 0.02)
 
 
@@ -132,22 +211,66 @@ func check_abort_condition(attacker: ScenarioUnit, defender: ScenarioUnit) -> vo
 		return
 
 	if defender.unit.state_strength <= 0.5:
-		LogService.info(defender.id + " is [b]destroyed[/b]", "Combat.gd:62")
+		LogService.info(defender.unit.id + " is [b]destroyed[/b]", "Combat.gd:62")
 		if attacker.unit.morale <= 0.8:
 			attacker.unit.morale += 0.2
 		unit_destroyed.emit()
 		abort_condition = true
 		return
 	elif defender.unit.morale <= 0.2:
-		LogService.info(defender.id + " is [b]surrendering[/b]", "Combat.gd:71")
+		LogService.info(defender.unit.id + " is [b]surrendering[/b]", "Combat.gd:71")
 		unit_surrendered.emit()
 		abort_condition = true
 		return
 	if called_retreat:
-		LogService.info(defender.id + " is [b]retreating[/b]", "Combat.gd:78")
+		LogService.info(defender.unit.id + " is [b]retreating[/b]", "Combat.gd:78")
 		unit_retreated.emit()
 		abort_condition = true
 
+##check unit mid combat status for testing of combat status
+func print_unit_status(attacker: UnitData, defender: UnitData) -> void:
+	LogService.info("[b]Attacker(%s)[/b]\n\t%s\n\t%s" % [attacker.id, attacker.morale, attacker.strength], "Combat.gd:85")
+	LogService.info("[b]Defender(%s)[/b]\n\t%s\n\t%s" % [defender.id, defender.morale, defender.strength], "Combat.gd:86")
+	return
+
+## Gate a fire attempt by ammunition and consume rounds when allowed.
+##
+## Returns a Dictionary with at least:
+##  { allow: bool, state: String, attack_power_mult: float,
+##    attack_cycle_mult: float, suppression_mult: float, morale_delta: int,
+##    ai_recommendation: String }
+##
+## Behavior:
+## - If `_adapter` is null → allow=true with neutral multipliers (keeps tests running).
+## - If `CombatAdapter.request_fire_with_penalty()` exists → use it.
+## - Else fall back to `request_fire()` and map to a neutral response.
+func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> Dictionary:
+	if _adapter == null:
+		return {
+			"allow": true,
+			"state": "normal",
+			"attack_power_mult": 1.0,
+			"attack_cycle_mult": 1.0,
+			"suppression_mult": 1.0,
+			"morale_delta": 0,
+			"ai_recommendation": "normal",
+		}
+
+	# Preferred path (penalties + consume)
+	if _adapter.has_method("request_fire_with_penalty"):
+		return _adapter.request_fire_with_penalty(attacker.id, ammo_type, rounds)
+
+	# Fallback: just block/consume via request_fire, no penalties
+	var ok := _adapter.request_fire(attacker.id, ammo_type, rounds)
+	return {
+		"allow": ok,
+		"state": ("normal" if ok else "empty"),
+		"attack_power_mult": 1.0,
+		"attack_cycle_mult": 1.0,
+		"suppression_mult": 1.0,
+		"morale_delta": 0,
+		"ai_recommendation": "normal",
+	}
 
 ## Apply casualties to runtime state. Returns actual KIA + WIA applied
 func _apply_casualties(u: UnitData, raw_losses: int) -> int:
