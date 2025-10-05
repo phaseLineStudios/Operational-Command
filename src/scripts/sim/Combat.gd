@@ -14,6 +14,9 @@ signal unit_surrendered
 @export var combat_adapter_path: NodePath
 var _adapter: CombatAdapter
 
+## Define Cooldown, mainly used for applying penalties for low ammo
+var _rof_cooldown: Dictionary = {}  # uid -> next_time_allowed (float)
+
 ##imported units manually for testing purposes
 var imported_attacker: UnitData = ContentDB.get_unit("infantry_plt_1")
 var imported_defender: UnitData = ContentDB.get_unit("infantry_plt_2")
@@ -52,17 +55,32 @@ func combat_loop(attacker: UnitData, defender: UnitData) -> void:
 func calculate_damage(attacker: UnitData, defender: UnitData) -> void:
 	var attacker_final_attackpower: float = attacker.strength * attacker.morale * attacker.attack
 	var defender_final_defensepower: float = defender.strength * defender.morale * defender.defense
-	
-	# --- ammo gate + penalty (minimal change: use helper, then scale local var) ---
-	var ammo_type := "small_arms"
-	var fire := _gate_and_consume(attacker, ammo_type, 5)  # Dictionary
+
+	# --- ROF cooldown (per attacker) ---
+	var now := Time.get_ticks_msec() / 1000.0
+	var next_ok := float(_rof_cooldown.get(attacker.id, 0.0))
+	if now < next_ok:
+		return
+
+	# --- ammo gate + penalties ---
+	var fire := _gate_and_consume(attacker, "small_arms", 5)  # Dictionary
 	if not bool(fire.get("allow", true)):
 		LogService.info("%s cannot fire: out of ammo" % attacker.id, "Combat")
 		return
-	attacker_final_attackpower *= float(fire.get("attack_power_mult", 1.0))
-	# (If you later model ROF/suppression timing, you can also read:
-	#   fire.get("attack_cycle_mult", 1.0), fire.get("suppression_mult", 1.0))
 
+	# Apply power penalty (low/critical)
+	attacker_final_attackpower *= float(fire.get("attack_power_mult", 1.0))
+
+	# Apply ROF penalty as a delay until next allowed shot
+	var cycle_mult := float(fire.get("attack_cycle_mult", 1.0))
+	var base_cycle := 1.0  # seconds between shots (tune to taste)
+	_rof_cooldown[attacker.id] = now + base_cycle * cycle_mult
+
+	# TODO (if you model suppression):
+	# var sup_mult := float(fire.get("suppression_mult", 1.0))
+	# _apply_suppression(attacker, defender, sup_mult)
+
+	# --- simple outcome (unchanged) ---
 	if attacker_final_attackpower - defender_final_defensepower > 0:
 		defender.strength = defender.strength - floor((attacker_final_attackpower 
 				- defender_final_defensepower) * 0.1 / max(1, defender.strength))
@@ -73,6 +91,7 @@ func calculate_damage(attacker: UnitData, defender: UnitData) -> void:
 		if attacker.morale < 1:
 			attacker.morale -= 0.05
 	return
+
 
 ## Check the various conditions for if the combat is finished
 func check_abort_condition(attacker: UnitData, defender: UnitData) -> void:
