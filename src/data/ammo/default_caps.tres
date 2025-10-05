@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="AmmoProfile" load_steps=2 format=3 uid="uid://dv3cjce0fasfa"]
+
+[ext_resource type="Script" uid="uid://ch73kyybwrkb8" path="res://scripts/data/AmmoProfile.gd" id="1_p7n8q"]
+
+[resource]
+script = ExtResource("1_p7n8q")
+metadata/_custom_type_script = "uid://ch73kyybwrkb8"
