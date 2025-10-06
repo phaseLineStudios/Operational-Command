@@ -398,3 +398,40 @@ func _refuel_tick(delta: float) -> void:
 
 		if not _needs_fuel(dst2) or not _has_stock(src):
 			_finish_link(dst_id2)
+
+## Directly add fuel to a unit (UI/depot use). Returns amount actually added.
+func add_fuel(uid: String, amount: float) -> float:
+	var st: UnitFuelState = _fuel.get(uid) as UnitFuelState
+	if st == null or amount <= 0.0:
+		return 0.0
+	var su: ScenarioUnit = _su.get(uid) as ScenarioUnit
+	var cap: float = st.fuel_capacity
+	var cur: float = st.state_fuel
+	var add: float = min(amount, max(0.0, cap - cur))
+	if add <= 0.0:
+		return 0.0
+	var before: float = cur
+	st.state_fuel = cur + add
+	_check_thresholds(uid, before, st.state_fuel, su)
+	return add
+
+## Compact UI snapshot for overlays / panels.
+func fuel_debug(uid: String) -> Dictionary:
+	var st: UnitFuelState = _fuel.get(uid) as UnitFuelState
+	if st == null:
+		return {"percent": null, "state": "n/a", "mult": 1.0, "penalty_pct": 0}
+	var pct: int = int(round(st.ratio() * 100.0))
+	var tag := "NORMAL"
+	if is_empty(uid):
+		tag = "EMPTY"
+	elif is_critical(uid):
+		tag = "CRITICAL"
+	elif is_low(uid):
+		tag = "LOW"
+	var mult: float = speed_mult(uid)
+	return {
+		"percent": pct,
+		"state": tag,
+		"mult": mult,
+		"penalty_pct": int(round((1.0 - mult) * 100.0))
+	}
