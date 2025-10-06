@@ -1,7 +1,7 @@
 extends Control
 ## Stand-alone test for the Fuel system (panel placed under the test HUD block).
 
-# ---------- UI refs (filled in _wire_ui) ----------
+# ---------- UI refs (filled in _wire_ui) ---------- 
 var btn_move: Button
 var btn_drain: Button
 var btn_tp: Button
