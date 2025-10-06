@@ -3,8 +3,8 @@
 </p>
 
 <p align="center">
-    <img alt="Project Status" src="https://img.shields.io/badge/Project%20Status-Prototype-%2397c900?style=flat"/>
-    <img alt="License" src="https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg"/>
+    <a href="#"><img alt="Project Status" src="https://img.shields.io/badge/Project%20Status-Prototype-%2397c900?style=flat"/></a>
+    <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg"/></a>
 </p>
 
 <p align="center">
