@@ -1,14 +1,17 @@
 PY            ?= python
 SRC           ?= ./src
+DOCS          ?= ./docs
 PATHS         ?= $(SRC)
 LINE_LEN      ?= 100
 COLOR         ?= always
 PIP_QUIET     ?= 2
 PROJECT_ROOT  ?= $(SRC)
+DOCS_ROOT     ?= $(SRC)
+GAME_DOCS	  ?= $(DOCS)/game
 GODOT_BIN     ?=
 GODOT_ARG      = $(if $(GODOT_BIN),--godot-bin "$(GODOT_BIN)",)
 
-.PHONY: all all-fix format fix-format lint parse scene smoke help
+.PHONY: all all-fix format fix-format lint parse scene smoke docs help
 
 all: 
 	$(PY) -m tools.gdtoolkit_run --check --line-length $(LINE_LEN) --pip-quiet $(PIP_QUIET) --color=$(COLOR) --project-root $(PROJECT_ROOT) $(PATHS)
@@ -46,3 +49,6 @@ scene:
 
 smoke:
 	$(PY) -m tools.gdtoolkit_run --smoke-only --project-root $(PROJECT_ROOT) $(GODOT_ARG) --color=$(COLOR)
+
+docs:
+	$(PY) -m tools.generate_docs $(PATHS) --out $(GAME_DOCS) --make-index --extra --keep-structure --split-functions
