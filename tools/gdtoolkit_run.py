@@ -38,6 +38,11 @@ SUPPRESS_PATTERNS = (
     "LOG (",          # Kaldi/Vosk info
     "WARNING (Vosk",  # Vosk warnings
     "WARNING (Kaldi", # Kaldi warnings
+    "VLOG[2] (VoskAPI",
+    "ERROR: 1 resources still in use at exit (run with --verbose for details).",
+    "   at: clear (core/io/resource.cpp:795)",
+    "WARNING: ObjectDB instances leaked at exit (run with --verbose for details).",
+    "   at: cleanup (core/object/object.cpp:2514)"
 )
 
 CLEAR_LEN = 120  # width for clearing spinner line
@@ -198,11 +203,10 @@ def _run_stream(color: bool, title: str, cmd: list[str], env: dict | None = None
             for raw in proc.stdout:
                 last_output[0] = time.time()
                 line = raw
-                if suppress_logs and (raw.startswith("LOG (") or raw.startswith("WARNING (Vosk") or raw.startswith("WARNING (Kaldi")):
+                if suppress_logs and any(line.startswith(p) for p in SUPPRESS_PATTERNS):
                     continue
                 if _error_re.search(raw):
                     seen_error[0] = True
-                # colorize per-line
                 sys.stdout.write(_color_line(color, line))
     finally:
         stop.set(); t.join()
