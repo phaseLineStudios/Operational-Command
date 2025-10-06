@@ -1,7 +1,14 @@
-# Operational Command (working title)
-<p>
-  <img alt="Project Status" src="https://img.shields.io/badge/Project%20Status-Prototype-%2397c900?style=flat"/>
-  <img alt="License" src="https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg"/>
+<p align="center">
+    <img src="extras/logo/logo_badge.png" width="480">
+</p>
+
+<p align="center">
+    <img alt="Project Status" src="https://img.shields.io/badge/Project%20Status-Prototype-%2397c900?style=flat"/>
+    <img alt="License" src="https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg"/>
+</p>
+
+<p align="center">
+    <sup><strong>Requires the latest version of <a href="https://godotengine.org/releases/4.5/index.html">Godot 4.5</a> and <a href="https://www.python.org/downloads/">Python3.</a><br/>
 </p>
 
 *A Cold War RTS where you command from the map, not the turret.*
@@ -71,7 +78,7 @@ tools/
 - **In-code docs**: Prefer short, precise comments next to implementations.
 
 ## Contributing
-- Read [CONTRIBUTING.md](https://github.com/operationalCommandTeam/Operational-Command/blob/main/CONTRIBUTING.md) for:
+- Read [CONTRIBUTING.md](CONTRIBUTING.md) for:
   - Dev setup and Workflow (branching, PRs, reviews)
   - Coding standards (GDScript docs format)
   - Testing & CI expectations
