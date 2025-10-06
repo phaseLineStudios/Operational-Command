@@ -42,9 +42,11 @@ Active development (prototype/alpha). Expect breaking changes while systems sett
 # Example: Format, lint and smoke compile all scripts and scenes
 make all-fix
 ```
->Tip: Run `make help` for a comprehensive list of all make targets.
+>[!TIP]
+>Run `make help` for a comprehensive list of all make targets.
 
->Note: For smoke compile to work you need to have godot 4.5 on path, inside `tools/` or linked in `tools/GODOT_BIN`.
+>[!NOTE]
+>For smoke compile to work you need to have godot 4.5 on path, inside `tools/` or linked in `tools/GODOT_BIN`.
 
 ## Project Layout
 ```bash
