@@ -78,6 +78,15 @@ tools/
 - **High-level**: [game_design.md](docs/game_design.md) (vision, gameplay, campaign).
 - **Code style**: Following the [GDScript Style Guide](https://docs.godotengine.org/en/4.5/tutorials/scripting/gdscript/gdscript_styleguide.html). GDScript doc comments on `scripts`, `signals`, `enums`, `constants`, `@exports`, and `functions`.
 - **In-code docs**: Prefer short, precise comments next to implementations.
+- **Browse the API docs:** [docs/game/INDEX.md](./docs/game/INDEX.md)
+
+### Regenerate docs
+```bash
+# with make
+make docs
+# or
+python -m tools.generate_docs ./src --out ./docs/game --make-index --extra --keep-structure --split-functions
+```
 
 ## Contributing
 - Read [CONTRIBUTING.md](CONTRIBUTING.md) for:
