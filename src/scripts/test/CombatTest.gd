@@ -18,7 +18,12 @@ var _scenario: ScenarioData
 var _su_a: ScenarioUnit
 var _su_b: ScenarioUnit
 
+## Using FuelSystem
+@onready var fuel: FuelSystem = FuelSystem.new()
+
 func _ready() -> void:
+	# add the fuel system
+	add_child(fuel)
 	if renderer == null or renderer.data == null:
 		push_warning("Setup: TerrainRender or TerrainData missing."); return
 	if renderer.path_grid == null:
@@ -33,6 +38,10 @@ func _ready() -> void:
 	_su_b = _find_su(_scenario.units, unit_b_id)
 	if _su_a == null or _su_b == null:
 		push_warning("Setup: Could not find both units in scenario."); return
+
+	# register the fuel for the units
+	fuel.register_scenario_unit(_su_a); _su_a.bind_fuel_system(fuel)
+	fuel.register_scenario_unit(_su_b); _su_b.bind_fuel_system(fuel)
 
 	renderer.path_grid.rebuild(TerrainBrush.MoveProfile.FOOT)
 	renderer.path_grid.build_ready.connect(func(_p): print("PathGrid ready."))
@@ -54,6 +63,7 @@ func _process(dt: float) -> void:
 		if _su_a: _su_a.tick(dt, renderer.path_grid)
 		if _su_b: _su_b.tick(dt, renderer.path_grid)
 	if input_overlay: input_overlay.queue_redraw()
+	fuel.tick(dt)
 
 func _input(e: InputEvent) -> void:
 	if not (e is InputEventMouseButton and e.pressed): return
