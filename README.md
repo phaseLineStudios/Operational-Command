@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-    <sup><strong>Requires the latest version of <a href="https://godotengine.org/releases/4.5/index.html">Godot 4.5</a> and <a href="https://www.python.org/downloads/">Python3.</a><br/>
+    <sup><strong>Requires the latest version of <a href="https://godotengine.org/releases/4.5/index.html">Godot 4.5</a> and <a href="https://www.python.org/downloads/">Python3.</a><br/></strong></sup>
 </p>
 
 *A Cold War RTS where you command from the map, not the turret.*
