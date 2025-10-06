@@ -13,6 +13,9 @@ class_name UnitFuelState
 ## Movement burn in fuel units per meter traveled.
 @export var fuel_move_rate_per_m: float = 0.02
 
+## Calculates and returns the current fuel ratio for the unit.
+## The value is clamped between 0.0 and 1.0 to represent the percentage of fuel remaining.
+## Returns 0.0 if the unit has no valid fuel capacity defined.
 func ratio() -> float:
 	if fuel_capacity <= 0.0:
 		return 0.0
