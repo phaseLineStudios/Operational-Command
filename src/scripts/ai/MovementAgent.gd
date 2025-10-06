@@ -49,10 +49,15 @@ var _path_idx := 0
 var _moving := false
 var _trail: PackedVector2Array = []
 
+## link to FuelSystem for slowdown/stop.
+@export var unit_id: String = ""
+var _fuel: FuelSystem = null
+
 func _ready() -> void:
 	if grid and wait_for_grid_ready:
 		grid.build_ready.connect(_on_grid_ready)
 		grid.grid_rebuilt.connect(func(): _on_grid_ready(grid._build_profile))
+	_fuel = get_tree().get_first_node_in_group("FuelSystem") as FuelSystem
 
 func _physics_process(delta: float) -> void:
 	if not _moving or _path.size() == 0:
@@ -87,18 +92,32 @@ func _physics_process(delta: float) -> void:
 		_debug_push_trail()
 		queue_redraw()
 
+## Function does also include the fuel system penalties for the AI
 func _effective_speed_at(p_m: Vector2) -> float:
 	if not grid:
-		return base_speed_mps
+		var v := base_speed_mps
+		if _fuel and unit_id != "":
+			v *= _fuel.speed_mult(unit_id)
+		return v
+
 	var cell := grid.world_to_cell(p_m)
 	if not grid._in_bounds(cell):
-		return base_speed_mps
+		var v := base_speed_mps
+		if _fuel and unit_id != "":
+			v *= _fuel.speed_mult(unit_id)
+		return v
+
 	if grid._astar and grid._astar.is_in_boundsv(cell) and grid._astar.is_point_solid(cell):
 		return 0.0
+
 	var w := 1.0
 	if grid._astar and grid._astar.is_in_boundsv(cell):
 		w = max(grid._astar.get_point_weight_scale(cell), 0.001)
-	return base_speed_mps / w
+
+	var v := base_speed_mps / w
+	if _fuel and unit_id != "":
+		v *= _fuel.speed_mult(unit_id)
+	return v
 
 ## Command pathfind and start moving to a world-meter destination.
 func move_to_m(dest_m: Vector2) -> void:

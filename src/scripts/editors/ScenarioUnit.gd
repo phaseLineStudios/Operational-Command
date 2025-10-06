@@ -175,6 +175,7 @@ func current_path() -> PackedVector2Array: return _move_path
 func path_index() -> int: return _move_path_idx
 
 ## Terrain-modified speed at a point using PathGrid weight.
+## _speed_here_mps also includes speed penalties for low fuel
 func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 	if grid == null or grid._astar == null:
 		var v := _kph_to_mps(unit.speed_kph)
