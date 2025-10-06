@@ -57,6 +57,8 @@ func bind_fuel(fuel: FuelSystem) -> void:
 	fuel.unit_mobilized_after_refuel.connect(_on_unit_mobilized_after_refuel)
 
 
+# AMMO SYSTEM RADIO FEEDBACK
+
 ## “Bingo ammo” — remaining ammo <= low threshold but > 0.
 func _on_ammo_low(uid: String) -> void:
 	LogService.info("%s: Bingo ammo" % uid, "Radio")
@@ -77,6 +79,7 @@ func _on_resupply_started(src: String, dst: String) -> void:
 func _on_resupply_completed(src: String, dst: String) -> void:
 	LogService.info("%s -> %s: Resupply complete" % [src, dst], "Radio")
 
+# FUEL SYSTEM RADIO FEEDBACK
 
 ## “Low fuel” — remaining fuel <= low threshold but > critical.
 func _on_fuel_low(uid: String) -> void:
