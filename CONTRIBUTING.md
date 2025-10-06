@@ -47,7 +47,7 @@
 - Keep comments **short and precise**.
 - Use Godot’s [GDScript documentation comment format](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html) (Godot 4.5).
 - Example:
-```python
+```gdscript
   class_name MissionFlow
   extends Node
   ## Controls mission state and transitions.
