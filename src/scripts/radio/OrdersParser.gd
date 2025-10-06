@@ -15,14 +15,21 @@ enum OrderType { MOVE, HOLD, ATTACK, DEFEND, RECON, FIRE, REPORT, CANCEL, UNKNOW
 
 ## Minimal schema returned per order.
 const ORDER_KEYS := {
-	"callsign": "", "type": OrderType.UNKNOWN, "direction": "",
-	"quantity": 0, "zone": "", "target_callsign": "", "raw": []
+	"callsign": "",
+	"type": OrderType.UNKNOWN,
+	"direction": "",
+	"quantity": 0,
+	"zone": "",
+	"target_callsign": "",
+	"raw": []
 }
 
 var _tables: Dictionary
 
+
 func _ready() -> void:
 	_tables = NARules.get_parser_tables()
+
 
 ## Parse a full STT sentence into one or more structured orders.
 func parse(text: String) -> Array:
@@ -35,21 +42,22 @@ func parse(text: String) -> Array:
 		emit_signal("parse_error", "No orders found.")
 	else:
 		emit_signal("parsed", orders)
-		
+
 		# Print hr orders for debugging
 		for order in orders:
 			LogService.info("Order: %s" % order_to_string(order), "OrdersParser.gd:41")
 	return orders
-	
+
+
 ## Scan tokens left→right and extract orders.
 func _extract_orders(tokens: PackedStringArray) -> Array:
-	var callsigns: Dictionary     = _tables.get("callsigns", {})
-	var actions: Dictionary       = _tables.get("action_synonyms", {})
-	var directions: Dictionary    = _tables.get("directions", {})
-	var stopwords: Dictionary     = _tables.get("stopwords", {})
-	var number_words: Dictionary  = _tables.get("number_words", {})
-	var prepositions: Dictionary  = _tables.get("prepositions", {})
-	var qty_labels: Dictionary    = _tables.get("quantity_labels", {})
+	var callsigns: Dictionary = _tables.get("callsigns", {})
+	var actions: Dictionary = _tables.get("action_synonyms", {})
+	var directions: Dictionary = _tables.get("directions", {})
+	var stopwords: Dictionary = _tables.get("stopwords", {})
+	var number_words: Dictionary = _tables.get("number_words", {})
+	var prepositions: Dictionary = _tables.get("prepositions", {})
+	var qty_labels: Dictionary = _tables.get("quantity_labels", {})
 
 	var out: Array = []
 	var cur := _new_order_builder()
@@ -129,10 +137,19 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 		i += 1
 
 	# Flush tail if meaningful.
-	if cur.callsign != "" and (cur.type != OrderType.UNKNOWN or cur.direction != "" or cur.quantity != 0 or cur.target_callsign != ""):
+	if (
+		cur.callsign != ""
+		and (
+			cur.type != OrderType.UNKNOWN
+			or cur.direction != ""
+			or cur.quantity != 0
+			or cur.target_callsign != ""
+		)
+	):
 		out.append(_finalize(cur))
 
 	return out
+
 
 ## Builder for a fresh order dictionary.
 func _new_order_builder() -> Dictionary:
@@ -145,6 +162,7 @@ func _new_order_builder() -> Dictionary:
 		"target_callsign": "",
 		"raw": PackedStringArray()
 	}
+
 
 ## Finalize a builder into an immutable order dictionary.
 func _finalize(cur: Dictionary) -> Dictionary:
@@ -162,6 +180,7 @@ func _finalize(cur: Dictionary) -> Dictionary:
 		"raw": (cur.raw as PackedStringArray).duplicate()
 	}
 
+
 ## Lowercase, strip, keep letters/digits/space/hyphen/brackets, and split.
 func _normalize_and_tokenize(text: String) -> PackedStringArray:
 	var s := text.to_lower().strip_edges()
@@ -169,9 +188,16 @@ func _normalize_and_tokenize(text: String) -> PackedStringArray:
 	var cleaned := ""
 	for i in s.length():
 		var cp := s.unicode_at(i)
-		if _is_ascii_alpha_cp(cp) or _is_ascii_digit_cp(cp) or cp == 32 or cp == 45 or cp == 91 or cp == 93:
+		if (
+			_is_ascii_alpha_cp(cp)
+			or _is_ascii_digit_cp(cp)
+			or cp == 32
+			or cp == 45
+			or cp == 91
+			or cp == 93
+		):
 			cleaned += char(cp)
-			
+
 	# Collapse spaces and split.
 	cleaned = cleaned.strip_edges()
 	var parts := cleaned.split(" ", false)
@@ -181,16 +207,16 @@ func _normalize_and_tokenize(text: String) -> PackedStringArray:
 			out.append(p)
 	return out
 
+
 ## Read a verbal or digit number from tokens[idx..]; sets 'consumed'.
 func _read_number(tokens: PackedStringArray, idx: int, number_words: Dictionary) -> Dictionary:
-	var NIL := {"value": 0, "consumed": 0}
+	var nil := {"value": 0, "consumed": 0}
 
 	if idx >= tokens.size():
-		return NIL
+		return nil
 
 	if _is_int_literal(tokens[idx]):
-		@warning_ignore("confusable_local_declaration")
-		var j := idx
+		@warning_ignore("confusable_local_declaration") var j := idx
 		var digits := ""
 		while j < tokens.size() and _is_int_literal(tokens[j]):
 			digits += tokens[j]  # concat tokens
@@ -207,7 +233,7 @@ func _read_number(tokens: PackedStringArray, idx: int, number_words: Dictionary)
 		j += 1
 
 	if vals.is_empty():
-		return NIL
+		return nil
 
 	var all_under_ten := true
 	for v in vals:
@@ -248,6 +274,7 @@ func _read_number(tokens: PackedStringArray, idx: int, number_words: Dictionary)
 			sum += int(v)
 		return {"value": sum, "consumed": vals.size()}
 
+
 ## True if s consists only of ASCII digits (uses unicode_at()).
 func _is_int_literal(s: String) -> bool:
 	if s.length() == 0:
@@ -258,6 +285,7 @@ func _is_int_literal(s: String) -> bool:
 			return false
 	return true
 
+
 ## True if all numbers in array are 0..9.
 func _all_under_ten(vals: Array) -> bool:
 	for v in vals:
@@ -266,13 +294,16 @@ func _all_under_ten(vals: Array) -> bool:
 			return false
 	return true
 
+
 ## ASCII alpha test for a code point.
 func _is_ascii_alpha_cp(cp: int) -> bool:
 	return (cp >= 65 and cp <= 90) or (cp >= 97 and cp <= 122)
 
+
 ## ASCII digit test for a code point.
 func _is_ascii_digit_cp(cp: int) -> bool:
-	return (cp >= 48 and cp <= 57)
+	return cp >= 48 and cp <= 57
+
 
 ## Human-friendly summary for a single order.
 func order_to_string(o: Dictionary) -> String:
@@ -296,15 +327,25 @@ func order_to_string(o: Dictionary) -> String:
 		s += " -> %s" % tgt
 	return s.strip_edges()
 
+
 ## String name for OrderType.
 func _order_type_to_string(t: int) -> String:
 	match t:
-		OrderType.MOVE: return "MOVE"
-		OrderType.HOLD: return "HOLD"
-		OrderType.DEFEND: return "DEFEND"
-		OrderType.ATTACK: return "ATTACK"
-		OrderType.RECON: return "RECON"
-		OrderType.FIRE: return "FIRE"
-		OrderType.REPORT: return "REPORT"
-		OrderType.CANCEL: return "CANCEL"
-		_: return "UNKNOWN"
+		OrderType.MOVE:
+			return "MOVE"
+		OrderType.HOLD:
+			return "HOLD"
+		OrderType.DEFEND:
+			return "DEFEND"
+		OrderType.ATTACK:
+			return "ATTACK"
+		OrderType.RECON:
+			return "RECON"
+		OrderType.FIRE:
+			return "FIRE"
+		OrderType.REPORT:
+			return "REPORT"
+		OrderType.CANCEL:
+			return "CANCEL"
+		_:
+			return "UNKNOWN"

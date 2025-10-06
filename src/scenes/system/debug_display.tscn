@@ -123,6 +123,7 @@ text = "Total:"
 horizontal_alignment = 2
 
 [node name="TotalAvg" type="Label" parent="MetricsDisplay/VBoxContainer/FrameTimeHistory"]
+unique_name_in_owner = true
 modulate = Color(0, 1, 0, 1)
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
@@ -133,6 +134,7 @@ text = "123.45"
 horizontal_alignment = 2
 
 [node name="TotalMin" type="Label" parent="MetricsDisplay/VBoxContainer/FrameTimeHistory"]
+unique_name_in_owner = true
 modulate = Color(0, 1, 0, 1)
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
@@ -143,6 +145,7 @@ text = "123.45"
 horizontal_alignment = 2
 
 [node name="TotalMax" type="Label" parent="MetricsDisplay/VBoxContainer/FrameTimeHistory"]
+unique_name_in_owner = true
 modulate = Color(0, 1, 0, 1)
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
@@ -153,6 +156,7 @@ text = "123.45"
 horizontal_alignment = 2
 
 [node name="TotalLast" type="Label" parent="MetricsDisplay/VBoxContainer/FrameTimeHistory"]
+unique_name_in_owner = true
 modulate = Color(0, 1, 0, 1)
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2

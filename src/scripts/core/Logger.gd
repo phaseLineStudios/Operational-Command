@@ -1,11 +1,12 @@
-extends Logger
 class_name LogTap
+extends Logger
 
 ## Emits on a new log message
 signal message(level: int, text: String)
 
+
 ## Log a message
 func _log_message(msg, _err):
-	if msg.begins_with("[48"): 
+	if msg.begins_with("[48"):
 		return
 	emit_signal("message", 0, str(msg.trim_suffix("\n")))

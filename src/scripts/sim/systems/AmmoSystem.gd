@@ -1,5 +1,5 @@
-extends Node
 class_name AmmoSystem
+extends Node
 ## Centralized ammunition logistics for all units in a mission.
 ##
 ## Responsibilities:
@@ -23,17 +23,20 @@ signal resupply_completed(src_unit_id: String, dst_unit_id: String)
 @export var ammo_profile: AmmoProfile
 
 # --- Internal state ---
-var _units: Dictionary = {}          ## unit_id -> UnitData
-var _positions: Dictionary = {}      ## unit_id -> Vector3 (world XZ; Y ignored)
-var _logi: Dictionary = {}           ## unit_id -> bool (is logistics)
-var _active_links: Dictionary = {}   ## dst_id -> src_id (current resupply pair)
-var _xfer_accum: Dictionary = {}     ## dst_id -> float (carry fractional budget)
+var _units: Dictionary = {}  ## unit_id -> UnitData
+var _positions: Dictionary = {}  ## unit_id -> Vector3 (world XZ; Y ignored)
+var _logi: Dictionary = {}  ## unit_id -> bool (is logistics)
+var _active_links: Dictionary = {}  ## dst_id -> src_id (current resupply pair)
+var _xfer_accum: Dictionary = {}  ## dst_id -> float (carry fractional budget)
+
 
 ## Add to a group for convenient lookups.
 func _ready() -> void:
 	add_to_group("AmmoSystem")
 
+
 # --- Public API: roster management ---
+
 
 ## Register a unit so AmmoSystem tracks it and applies defaults if missing.
 func register_unit(u: UnitData) -> void:
@@ -41,6 +44,7 @@ func register_unit(u: UnitData) -> void:
 	if ammo_profile:
 		ammo_profile.apply_defaults_if_missing(u)
 	_logi[u.id] = _is_logistics(u)
+
 
 ## Stop tracking a unit and tear down any active resupply links.
 func unregister_unit(unit_id: String) -> void:
@@ -52,33 +56,42 @@ func unregister_unit(unit_id: String) -> void:
 			_active_links.erase(dst)
 	_xfer_accum.erase(unit_id)
 
+
 ## Update a unit's world-space position (meters; XZ used, Y ignored).
 func set_unit_position(unit_id: String, pos: Vector3) -> void:
 	_positions[unit_id] = pos
+
 
 ## Retrieve the UnitData previously registered (or null if unknown).
 func get_unit(unit_id: String) -> UnitData:
 	return _units.get(unit_id, null)
 
+
 # --- Public API: queries + consumption ---
+
 
 ## True if current/cap <= low threshold (and > 0).
 func is_low(u: UnitData, t: String) -> bool:
 	var cap := int(u.ammunition.get(t, 0))
-	if cap <= 0: return false
+	if cap <= 0:
+		return false
 	var cur := int(u.state_ammunition.get(t, 0))
-	return cur > 0 and float(cur)/float(cap) <= u.ammunition_low_threshold
+	return cur > 0 and float(cur) / float(cap) <= u.ammunition_low_threshold
+
 
 ## True if current/cap <= critical threshold (and > 0).
 func is_critical(u: UnitData, t: String) -> bool:
 	var cap := int(u.ammunition.get(t, 0))
-	if cap <= 0: return false
+	if cap <= 0:
+		return false
 	var cur := int(u.state_ammunition.get(t, 0))
-	return cur > 0 and float(cur)/float(cap) <= u.ammunition_critical_threshold
+	return cur > 0 and float(cur) / float(cap) <= u.ammunition_critical_threshold
+
 
 ## True if current ammo is zero.
 func is_empty(u: UnitData, t: String) -> bool:
 	return int(u.state_ammunition.get(t, 0)) <= 0
+
 
 ## Decrease ammo for `unit_id` of type `t` by `amount`.
 ## Returns true if ammo was consumed; false if blocked (missing type or empty).
@@ -104,7 +117,9 @@ func consume(unit_id: String, t: String, amount: int = 1) -> bool:
 		emit_signal("ammo_low", unit_id)
 	return true
 
+
 # --- Main loop ---
+
 
 ## Start links for needy units and transfer rounds along active links.
 func tick(delta: float) -> void:
@@ -119,7 +134,9 @@ func tick(delta: float) -> void:
 			_begin_link(src_id, uid)
 	_transfer_tick(delta)
 
+
 # --- Internals: selection, radius, transfer ---
+
 
 ## True if src is within its transfer radius of dst.
 func _within_radius(src: UnitData, dst: UnitData) -> bool:
@@ -129,16 +146,22 @@ func _within_radius(src: UnitData, dst: UnitData) -> bool:
 	var b: Vector3 = _positions[dst.id]
 	return a.distance_to(b) <= max(src.supply_transfer_radius_m, 0.0)
 
+
 ## True if the unit should act as a logistics source.
 func _is_logistics(u: UnitData) -> bool:
 	if u.throughput is Dictionary and not u.throughput.is_empty():
 		return true
-	if u.equipment_tags is Array and (
-		u.equipment_tags.has("AMMO_PALLET") or
-		u.equipment_tags.has("AMMUNITION_PALLET") or
-		u.equipment_tags.has("LOGISTICS")):
+	if (
+		u.equipment_tags is Array
+		and (
+			u.equipment_tags.has("AMMO_PALLET")
+			or u.equipment_tags.has("AMMUNITION_PALLET")
+			or u.equipment_tags.has("LOGISTICS")
+		)
+	):
 		return true
 	return false
+
 
 ## True if any ammo type is below its cap.
 func _needs_ammo(u: UnitData) -> bool:
@@ -147,12 +170,14 @@ func _needs_ammo(u: UnitData) -> bool:
 			return true
 	return false
 
+
 ## True if unit has any stock left to transfer.
 func _has_stock(u: UnitData) -> bool:
 	for t in u.throughput.keys():
 		if int(u.throughput[t]) > 0:
 			return true
 	return false
+
 
 ## Pick a logistics source within radius that has stock (simple first-match).
 func _pick_link_for(dst: UnitData) -> String:
@@ -169,11 +194,13 @@ func _pick_link_for(dst: UnitData) -> String:
 		return sid
 	return ""
 
+
 ## Begin a resupply link from `src_id` to `dst_id`.
 func _begin_link(src_id: String, dst_id: String) -> void:
 	_active_links[dst_id] = src_id
 	_xfer_accum[dst_id] = 0.0
 	emit_signal("resupply_started", src_id, dst_id)
+
 
 ## Finish an active resupply link for `dst_id`.
 func _finish_link(dst_id: String) -> void:
@@ -182,6 +209,7 @@ func _finish_link(dst_id: String) -> void:
 		emit_signal("resupply_completed", src_id, dst_id)
 	_active_links.erase(dst_id)
 	_xfer_accum.erase(dst_id)
+
 
 ## Transfer rounds for all active links using a fractional-rate accumulator so
 ## low rates still work at high frame rates (e.g., 20 rps @ 60 FPS).

@@ -1,5 +1,5 @@
-extends Resource
 class_name ScenarioObjectiveData
+extends Resource
 
 ## Unique identifier for this objective
 @export var id: String
@@ -10,14 +10,10 @@ class_name ScenarioObjectiveData
 ## Score awarded for completing this objective
 @export var score: int = 100
 
+
 ## Serialize into JSON
 func serialize() -> Dictionary:
-	return {
-		"id": id,
-		"title": title,
-		"success": success,
-		"score": score
-	}
+	return {"id": id, "title": title, "success": success, "score": score}
 
 
 ## Deserialize from JSON

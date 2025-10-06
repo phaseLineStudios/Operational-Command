@@ -3,23 +3,11 @@ extends Control
 ##
 ## Shows campaign map, mission pins, and a details card.
 
-@onready var _container: Panel = $"Container"
-@onready var _btn_back: Button = $"BackToCampaign"
-@onready var _map_rect: TextureRect = $"Container/Map"
-@onready var _pins_layer: Control = $"Container/PinsLayer"
+## Path to campaign select scene
+const SCENE_CAMPAIGN_SELECT := "res://scenes/campaign_select.tscn"
 
-@onready var _card: Panel = $"Container/MissionCard"
-@onready var _card_title: Label = $"Container/MissionCard/VBoxContainer/Title"
-@onready var _card_desc: RichTextLabel = $"Container/MissionCard/VBoxContainer/HBoxContainer/Desc"
-@onready var _card_image: TextureRect = $"Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer/Image"
-@onready var _card_diff: Label = $"Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer/Difficulty"
-@onready var _card_start: Button = $"Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer/StartMission"
-@onready var _click_catcher: Control = $"Container/ClickCatcher"
-
-var _selected_mission: ScenarioData
-var _campaign: CampaignData
-var _scenarios: Array[ScenarioData] = []
-var _card_pin_button: BaseButton
+## Path to unit select scene
+const SCENE_BRIEFING := "res://scenes/briefing.tscn"
 
 ## Size of each mission pin in pixels.
 @export var pin_size := Vector2i(24, 24)
@@ -40,11 +28,24 @@ var _card_pin_button: BaseButton
 ## Extra padding inside the label panel (px).
 @export var pin_label_padding := Vector2(6, 3)
 
-## Path to campaign select scene
-const SCENE_CAMPAIGN_SELECT := "res://scenes/campaign_select.tscn"
+var _selected_mission: ScenarioData
+var _campaign: CampaignData
+var _scenarios: Array[ScenarioData] = []
+var _card_pin_button: BaseButton
 
-## Path to unit select scene
-const SCENE_BRIEFING := "res://scenes/briefing.tscn"
+@onready var _container: Panel = $"Container"
+@onready var _btn_back: Button = $"BackToCampaign"
+@onready var _map_rect: TextureRect = $"Container/Map"
+@onready var _pins_layer: Control = $"Container/PinsLayer"
+
+@onready var _card: Panel = $"Container/MissionCard"
+@onready var _card_title: Label = $"Container/MissionCard/VBoxContainer/Title"
+@onready var _card_desc: RichTextLabel = $"Container/MissionCard/VBoxContainer/HBoxContainer/Desc"
+@onready var _card_image: TextureRect = %CardImage
+@onready var _card_diff: Label = %CardDifficulty
+@onready var _card_start: Button = %CardStartMission
+@onready var _click_catcher: Control = $"Container/ClickCatcher"
+
 
 ## Build UI, load map, place pins, hook resizes.
 func _ready() -> void:
@@ -63,13 +64,14 @@ func _ready() -> void:
 	if not _card_start.pressed.is_connected(_on_start_pressed):
 		_card_start.pressed.connect(_on_start_pressed)
 
+
 ## Load current campaign + map.
 func _load_campaign_and_map() -> void:
 	_campaign = Game.current_campaign
 	if not _campaign:
 		push_warning("MissionSelect: No current campaign set.")
 		return
-	
+
 	if _campaign.scenario_bg:
 		_map_rect.texture = _campaign.scenario_bg
 	else:
@@ -78,6 +80,7 @@ func _load_campaign_and_map() -> void:
 	_scenarios = ContentDB.list_scenarios_for_campaign(_campaign.id)
 	if _scenarios.is_empty():
 		push_warning("MissionSelect: Campaign has no missions.")
+
 
 ## Create pins and position them (normalized coords).
 func _build_pins() -> void:
@@ -89,6 +92,7 @@ func _build_pins() -> void:
 		pin.pressed.connect(func(): _on_pin_pressed(m, pin))
 		_pins_layer.add_child(pin)
 	_update_pin_positions()
+
 
 ## Builds a pin control.
 func _make_pin(m: ScenarioData) -> BaseButton:
@@ -113,6 +117,7 @@ func _make_pin(m: ScenarioData) -> BaseButton:
 		_attach_pin_label(b, title)
 		return b
 
+
 ## Remove all button styleboxes so only icon/text remains.
 func _apply_transparent_button_style(btn: Button) -> void:
 	var empty := StyleBoxEmpty.new()
@@ -121,6 +126,7 @@ func _apply_transparent_button_style(btn: Button) -> void:
 	btn.add_theme_stylebox_override("pressed", empty)
 	btn.add_theme_stylebox_override("disabled", empty)
 	btn.add_theme_stylebox_override("focus", empty)
+
 
 ## Create and attach a readable label to a pin button.
 func _attach_pin_label(pin_btn: BaseButton, title: String) -> void:
@@ -163,6 +169,7 @@ func _attach_pin_label(pin_btn: BaseButton, title: String) -> void:
 	panel.add_child(lab)
 	pin_btn.add_child(panel)
 
+
 ## Refresh label visibility on all pins.
 func _refresh_pin_labels() -> void:
 	for node in _pins_layer.get_children():
@@ -175,12 +182,15 @@ func _refresh_pin_labels() -> void:
 				if node.has_node("PinLabel"):
 					node.get_node("PinLabel").queue_free()
 
+
 ## Reposition pins with letterbox awareness.
 func _update_pin_positions() -> void:
 	var tex := _map_rect.texture
-	if tex == null: return
+	if tex == null:
+		return
 	var tex_size: Vector2 = tex.get_size()
-	if tex_size == Vector2.ZERO: return
+	if tex_size == Vector2.ZERO:
+		return
 
 	var rect_size: Vector2 = _map_rect.size
 	var pin_scale: float = min(rect_size.x / tex_size.x, rect_size.y / tex_size.y)
@@ -197,6 +207,7 @@ func _update_pin_positions() -> void:
 	if _card.visible and is_instance_valid(_card_pin_button):
 		_position_card_near_pin(_card_pin_button)
 
+
 ## Open the mission card; create/remove image node depending on presence.
 func _on_pin_pressed(mission: ScenarioData, pin_btn: BaseButton) -> void:
 	_selected_mission = mission
@@ -207,28 +218,32 @@ func _on_pin_pressed(mission: ScenarioData, pin_btn: BaseButton) -> void:
 
 	_card_desc.text = mission.description
 	_card_diff.text = "Difficulty: %s" % [mission.difficulty]
-	
+
 	# BUG Unhiding card removes theme
 	_card.visible = true
 	_click_catcher.visible = true
 	_card.reset_size()
 	show_pin_labels = false
 	_refresh_pin_labels()
-	
+
 	call_deferred("_position_card_near_pin", pin_btn)
+
 
 ## Start current mission.
 func _on_start_pressed() -> void:
 	Game.select_scenario(_selected_mission)
 	Game.goto_scene(SCENE_BRIEFING)
 
+
 ## Return to campaign select.
 func _on_back_pressed() -> void:
 	Game.goto_scene(SCENE_CAMPAIGN_SELECT)
 
+
 ## Decide if an overlay click should close the card.
 func _on_backdrop_gui_input(event: InputEvent) -> void:
-	if not _card.visible: return
+	if not _card.visible:
+		return
 	var mb := event as InputEventMouseButton
 	if mb and mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
 		var pt: Vector2 = mb.position
@@ -236,12 +251,14 @@ func _on_backdrop_gui_input(event: InputEvent) -> void:
 			return
 		_close_card()
 
+
 ## True if the viewport point lies over any mission pin.
 func _point_over_any_pin(view_pt: Vector2) -> bool:
 	for node in _pins_layer.get_children():
 		if node is Control and (node as Control).get_global_rect().has_point(view_pt):
 			return true
 	return false
+
 
 ## Place the card near a pin and keep it on-screen.
 func _position_card_near_pin(pin_btn: BaseButton) -> void:
@@ -273,6 +290,7 @@ func _position_card_near_pin(pin_btn: BaseButton) -> void:
 	_card.anchor_bottom = 0.0
 	_card.position = pos
 
+
 ## Hide card and clear selection.
 func _close_card() -> void:
 	_card.visible = false
@@ -281,6 +299,7 @@ func _close_card() -> void:
 	_refresh_pin_labels()
 	_selected_mission = null
 	_card_pin_button = null
+
 
 ## Remove all children from a node.
 func _clear_children(node: Node) -> void:

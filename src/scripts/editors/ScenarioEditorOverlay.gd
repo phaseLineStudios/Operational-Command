@@ -1,7 +1,18 @@
-extends Control
 class_name ScenarioEditorOverlay
+extends Control
 ## Draws editor overlays: placed units, selection, and active tool ghosts.
 ## The TerrainRender handles map<->terrain transforms; this node just draws.
+
+## Context menu id: open slot configuration
+const MI_CONFIG_SLOT := 1001
+## Context menu id: open unit configuration
+const MI_CONFIG_UNIT := 1002
+## Context menu id: open task configuration
+const MI_CONFIG_TASK := 1003
+## Context menu id: open trigger configuration
+const MI_CONFIG_TRIGGER := 1004
+## Context menu id: delete picked entity
+const MI_DELETE := 1099
 
 ## Owning editor reference (provides ctx, data, and services)
 @export var editor: ScenarioEditor
@@ -34,17 +45,6 @@ class_name ScenarioEditorOverlay
 ## Arrow head length (pixels) for link arrows
 @export var arrow_head_len_px: float = 10.0
 
-## Context menu id: open slot configuration
-const MI_CONFIG_SLOT := 1001
-## Context menu id: open unit configuration
-const MI_CONFIG_UNIT := 1002
-## Context menu id: open task configuration
-const MI_CONFIG_TASK := 1003
-## Context menu id: open trigger configuration
-const MI_CONFIG_TRIGGER := 1004
-## Context menu id: delete picked entity
-const MI_DELETE := 1099
-
 var _icon_cache := {}
 var _ctx: PopupMenu
 var _last_pick: Dictionary = {}
@@ -56,6 +56,7 @@ var _link_preview_active := false
 var _link_preview_src: Dictionary = {}
 var _link_preview_pos := Vector2.ZERO
 
+
 ## Initialize popup menu and mouse handling
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -64,6 +65,7 @@ func _ready() -> void:
 	_ctx = PopupMenu.new()
 	add_child(_ctx)
 	_ctx.id_pressed.connect(_on_ctx_pressed)
+
 
 ## Main overlay draw: links first, then glyphs, then active tool
 func _draw() -> void:
@@ -83,27 +85,33 @@ func _draw() -> void:
 	if editor and editor.ctx and editor.ctx.current_tool:
 		editor.ctx.current_tool.draw_overlay(self)
 
+
 ## Request a redraw of the overlay
 func request_redraw() -> void:
 	queue_redraw()
+
 
 ## Set current selection highlight
 func set_selected(pick: Dictionary) -> void:
 	_selected_pick = pick if pick != null else {}
 	queue_redraw()
 
+
 ## Clear current selection highlight
 func clear_selected() -> void:
 	_selected_pick = {}
 	queue_redraw()
 
+
 ## Return the closest pickable entity under the given screen position
 func get_pick_at(pos: Vector2) -> Dictionary:
 	return _pick_at(pos)
 
+
 ## Open context menu at mouse position using current pick
 func on_ctx_open(event: InputEventMouseButton):
-	if not event: return
+	if not event:
+		return
 	_last_pick = _pick_at(event.position)
 
 	_ctx.clear()
@@ -136,9 +144,11 @@ func on_ctx_open(event: InputEventMouseButton):
 	_ctx.reset_size()
 	_ctx.popup()
 
+
 ## Handle double-click on a glyph (open config)
 func on_dbl_click(event: InputEventMouseButton):
-	if not event: return
+	if not event:
+		return
 	var pick := _pick_at(event.position)
 	match pick.get("type", &""):
 		&"slot":
@@ -152,11 +162,13 @@ func on_dbl_click(event: InputEventMouseButton):
 		_:
 			pass
 
+
 ## Update hover state and schedule redraw
 func on_mouse_move(pos: Vector2) -> void:
 	_hover_pos = pos
 	_hover_pick = _pick_at(pos)
 	queue_redraw()
+
 
 ## Handle context menu actions for the last pick
 func _on_ctx_pressed(id: int) -> void:
@@ -177,9 +189,16 @@ func _on_ctx_pressed(id: int) -> void:
 			if not _last_pick.is_empty():
 				editor._delete_pick(_last_pick)
 
+
 ## Draw all unit glyphs and hover titles
 func _draw_units() -> void:
-	if not editor or not editor.ctx or not editor.ctx.data or not editor.ctx.data.terrain or editor.ctx.data.units == null:
+	if (
+		not editor
+		or not editor.ctx
+		or not editor.ctx.data
+		or not editor.ctx.data.terrain
+		or editor.ctx.data.units == null
+	):
 		return
 	for i in editor.ctx.data.units.size():
 		var su: ScenarioUnit = editor.ctx.data.units[i]
@@ -194,9 +213,16 @@ func _draw_units() -> void:
 		if hi:
 			_draw_title(su.callsign, pos)
 
+
 ## Draw all player slot glyphs and hover titles
 func _draw_slots() -> void:
-	if not editor or not editor.ctx or not editor.ctx.data or not editor.ctx.data.terrain or editor.ctx.data.unit_slots == null:
+	if (
+		not editor
+		or not editor.ctx
+		or not editor.ctx.data
+		or not editor.ctx.data.terrain
+		or editor.ctx.data.unit_slots == null
+	):
 		return
 	var tex := _get_scaled_icon_slot()
 	if tex == null:
@@ -213,16 +239,19 @@ func _draw_slots() -> void:
 				title = (entry as UnitSlotData).title
 			_draw_title(title, pos)
 
+
 ## Draw all task glyphs and hover titles
 func _draw_tasks() -> void:
 	if not editor or not editor.ctx or not editor.ctx.data or editor.ctx.data.tasks == null:
 		return
 	for i in editor.ctx.data.tasks.size():
 		var inst: ScenarioTask = editor.ctx.data.tasks[i]
-		if inst == null: continue
+		if inst == null:
+			continue
 		var p := editor.terrain_render.terrain_to_map(inst.position_m)
 		var hi := _is_highlighted(&"task", i)
 		_draw_task_glyph(inst, p, hi)
+
 
 ## Draw task chain arrows between unit/task and next task
 func _draw_task_links() -> void:
@@ -253,9 +282,7 @@ func _draw_task_links() -> void:
 		var dst_radius := _glyph_radius(&"task", i)
 
 		var a_b := _trim_segment(
-			src_center, dst_center,
-			src_radius + link_gap_px,
-			dst_radius + link_gap_px
+			src_center, dst_center, src_radius + link_gap_px, dst_radius + link_gap_px
 		)
 		var a := a_b[0]
 		var b := a_b[1]
@@ -264,6 +291,7 @@ func _draw_task_links() -> void:
 
 		var col := inst.task.color if inst.task else Color.CYAN
 		_draw_arrow(a, b, col, arrow_head_len_px)
+
 
 ## Draw trigger areas (circle/rect), outlines, and optional icon/title
 func _draw_triggers() -> void:
@@ -278,6 +306,7 @@ func _draw_triggers() -> void:
 		_draw_trigger_shape(trig, center_px, hi)
 		if hi and trig.title != "":
 			_draw_title(trig.title, center_px)
+
 
 ## Draw a single trigger's shape + icon with hover colors
 func _draw_trigger_shape(trig: ScenarioTrigger, center_px: Vector2, hi: bool) -> void:
@@ -311,12 +340,14 @@ func _draw_trigger_shape(trig: ScenarioTrigger, center_px: Vector2, hi: bool) ->
 		var p := editor.terrain_render.terrain_to_map(trig.area_center_m)
 		_draw_icon_with_hover(tex, p, hi)
 
+
 ## Draw all synchronization lines from triggers to units/tasks
 func _draw_sync_links() -> void:
 	if not editor or not editor.ctx or not editor.ctx.data or editor.ctx.data.triggers == null:
 		return
 	for trig: ScenarioTrigger in editor.ctx.data.triggers:
-		if trig == null: continue
+		if trig == null:
+			continue
 		var tp := editor.terrain_render.terrain_to_map(trig.area_center_m)
 		if trig.synced_units:
 			for ui in trig.synced_units:
@@ -333,11 +364,13 @@ func _draw_sync_links() -> void:
 						var p := editor.terrain_render.terrain_to_map(inst.position_m)
 						draw_line(p, tp, sync_line_color, sync_line_width, true)
 
+
 ## Begin live link line preview from a source pick
 func begin_link_preview(src_pick: Dictionary) -> void:
 	_link_preview_active = true
 	_link_preview_src = src_pick
 	queue_redraw()
+
 
 ## Update live link preview endpoint (mouse)
 func update_link_preview(mouse_pos: Vector2) -> void:
@@ -345,37 +378,67 @@ func update_link_preview(mouse_pos: Vector2) -> void:
 	if _link_preview_active:
 		queue_redraw()
 
+
 ## End live link preview and clear state
 func end_link_preview() -> void:
 	_link_preview_active = false
 	_link_preview_src = {}
 	queue_redraw()
 
+
 ## Return on-screen center of a given pick (fallback to hover pos)
 func _screen_pos_for_pick(pick: Dictionary) -> Vector2:
-	var t := StringName(pick.get("type",""))
-	var idx := int(pick.get("index",-1))
+	var t := StringName(pick.get("type", ""))
+	var idx := int(pick.get("index", -1))
 	if not editor or not editor.ctx or not editor.ctx.data:
 		return _hover_pos
 	match t:
 		&"unit":
-			if editor.ctx.data.units and idx >= 0 and idx < editor.ctx.data.units.size() and editor.ctx.data.units[idx]:
+			if (
+				editor.ctx.data.units
+				and idx >= 0
+				and idx < editor.ctx.data.units.size()
+				and editor.ctx.data.units[idx]
+			):
 				return editor.terrain_render.terrain_to_map(editor.ctx.data.units[idx].position_m)
 		&"slot":
-			if editor.ctx.data.unit_slots and idx >= 0 and idx < editor.ctx.data.unit_slots.size() and editor.ctx.data.unit_slots[idx]:
-				return editor.terrain_render.terrain_to_map(editor.ctx.data.unit_slots[idx].start_position)
+			if (
+				editor.ctx.data.unit_slots
+				and idx >= 0
+				and idx < editor.ctx.data.unit_slots.size()
+				and editor.ctx.data.unit_slots[idx]
+			):
+				return editor.terrain_render.terrain_to_map(
+					editor.ctx.data.unit_slots[idx].start_position
+				)
 		&"task":
-			if editor.ctx.data.tasks and idx >= 0 and idx < editor.ctx.data.tasks.size() and editor.ctx.data.tasks[idx]:
+			if (
+				editor.ctx.data.tasks
+				and idx >= 0
+				and idx < editor.ctx.data.tasks.size()
+				and editor.ctx.data.tasks[idx]
+			):
 				return editor.terrain_render.terrain_to_map(editor.ctx.data.tasks[idx].position_m)
 		&"trigger":
-			if editor.ctx.data.triggers and idx >= 0 and idx < editor.ctx.data.triggers.size() and editor.ctx.data.triggers[idx]:
-				return editor.terrain_render.terrain_to_map(editor.ctx.data.triggers[idx].area_center_m)
+			if (
+				editor.ctx.data.triggers
+				and idx >= 0
+				and idx < editor.ctx.data.triggers.size()
+				and editor.ctx.data.triggers[idx]
+			):
+				return editor.terrain_render.terrain_to_map(
+					editor.ctx.data.triggers[idx].area_center_m
+				)
 	return _hover_pos
+
 
 ## Check if a glyph of type/index is hovered or selected
 func _is_highlighted(t: StringName, idx: int) -> bool:
-	return (_hover_pick.get("type", &"") == t and _hover_pick.get("index", -1) == idx) \
+	return (
+		(_hover_pick.get("type", &"") == t and _hover_pick.get("index", -1) == idx)
 		or (_selected_pick.get("type", &"") == t and _selected_pick.get("index", -1) == idx)
+	)
+
 
 ## Draw a texture centered, with hover scale/opacity feedback
 func _draw_icon_with_hover(tex: Texture2D, center: Vector2, hovered: bool) -> void:
@@ -386,18 +449,29 @@ func _draw_icon_with_hover(tex: Texture2D, center: Vector2, hovered: bool) -> vo
 		draw_texture(tex, -half)
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	else:
-		draw_texture(tex, center - half, Color(1,1,1,0.75))
+		draw_texture(tex, center - half, Color(1, 1, 1, 0.75))
+
 
 ## Draw a small label next to a glyph
 func _draw_title(text: String, center: Vector2) -> void:
 	var font := get_theme_default_font()
 	var fs := get_theme_default_font_size()
-	if font == null: return
+	if font == null:
+		return
 	var pos := center + hover_title_offset
 	var w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 	var rect := Rect2(Vector2(pos.x - w * 0.5 - 4, pos.y - fs - 4), Vector2(w + 8, fs + 8))
 	draw_rect(rect, Color(0, 0, 0, 0.55), true)
-	draw_string(font, Vector2(pos.x - w * 0.5, pos.y), text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(1,1,1,0.96))
+	draw_string(
+		font,
+		Vector2(pos.x - w * 0.5, pos.y),
+		text,
+		HORIZONTAL_ALIGNMENT_LEFT,
+		-1,
+		fs,
+		Color(1, 1, 1, 0.96)
+	)
+
 
 ## Delegate task glyph drawing to the task resource
 func _draw_task_glyph(inst: ScenarioTask, center: Vector2, hi: bool) -> void:
@@ -405,9 +479,12 @@ func _draw_task_glyph(inst: ScenarioTask, center: Vector2, hi: bool) -> void:
 		return
 	var to_map := Callable(editor.terrain_render, "terrain_to_map")
 	var scale_icon := Callable(self, "_scale_icon")
-	inst.task.draw_glyph(self, center, hi, hover_scale, task_icon_px, task_icon_inner_px, inst, to_map, scale_icon)
+	inst.task.draw_glyph(
+		self, center, hi, hover_scale, task_icon_px, task_icon_inner_px, inst, to_map, scale_icon
+	)
 	if hi and inst.task:
 		_draw_title(inst.task.display_name, center)
+
 
 ## Draw an arrow line with two head strokes
 func _draw_arrow(a: Vector2, b: Vector2, col: Color, head_len: float = arrow_head_len_px) -> void:
@@ -417,6 +494,7 @@ func _draw_arrow(a: Vector2, b: Vector2, col: Color, head_len: float = arrow_hea
 	var side2 := dir.rotated(-0.8) * head_len
 	draw_line(b, b - side, col, 2.0, true)
 	draw_line(b, b - side2, col, 2.0, true)
+
 
 ## Hit-test the closest entity under the overlay position
 func _pick_at(overlay_pos: Vector2) -> Dictionary:
@@ -434,7 +512,7 @@ func _pick_at(overlay_pos: Vector2) -> Dictionary:
 			var d2 := sp.distance_squared_to(overlay_pos)
 			if d2 <= slot_r * slot_r and d2 < best_d2:
 				best_d2 = d2
-				best = { "type": &"slot", "index": i }
+				best = {"type": &"slot", "index": i}
 
 	var unit_r := float(unit_icon_px) * 0.5 + 2.0
 	if editor and editor.ctx and editor.ctx.data and editor.ctx.data.units:
@@ -446,7 +524,7 @@ func _pick_at(overlay_pos: Vector2) -> Dictionary:
 			var d2 := up.distance_squared_to(overlay_pos)
 			if d2 <= unit_r * unit_r and d2 < best_d2:
 				best_d2 = d2
-				best = { "type": &"unit", "index": i }
+				best = {"type": &"unit", "index": i}
 
 	var task_r := float(task_icon_px) * 0.5 + 4.0
 	if editor and editor.ctx and editor.ctx.data and editor.ctx.data.tasks:
@@ -458,7 +536,7 @@ func _pick_at(overlay_pos: Vector2) -> Dictionary:
 			var d2 := tp.distance_squared_to(overlay_pos)
 			if d2 <= task_r * task_r and d2 < best_d2:
 				best_d2 = d2
-				best = { "type": &"task", "index": i }
+				best = {"type": &"task", "index": i}
 
 	var trig_r := float(trigger_icon_px) * 0.5 + 4.0
 	if editor and editor.ctx and editor.ctx.data and editor.ctx.data.triggers:
@@ -474,6 +552,7 @@ func _pick_at(overlay_pos: Vector2) -> Dictionary:
 
 	return best
 
+
 ## Extract slot world position from either dict or resource
 func _slot_pos_m(entry) -> Vector2:
 	if typeof(entry) == TYPE_DICTIONARY:
@@ -484,38 +563,45 @@ func _slot_pos_m(entry) -> Vector2:
 		return entry.position_m
 	return Vector2.ZERO
 
+
 ## Get (and cache) a scaled unit icon respecting affiliation
 func _get_scaled_icon_unit(u: ScenarioUnit) -> Texture2D:
 	var base: Texture2D = null
 	if u and u.unit:
-		if ScenarioUnit.Affiliation.friend == u.affiliation:
+		if ScenarioUnit.Affiliation.FRIEND == u.affiliation:
 			base = u.unit.icon if u.unit.icon else null
 		else:
 			base = u.unit.enemy_icon if u.unit.enemy_icon else null
 	if base == null:
-		base = load("res://assets/textures/units/nato_unknown_platoon.png" \
-			if ScenarioUnit.Affiliation.friend == u.affiliation \
-			else "res://assets/textures/units/enemy_unknown_platoon.png")
-	var id_str := (u.unit.id if u and u.unit and u.unit.id else "unknown")
+		base = load(
+			(
+				"res://assets/textures/units/nato_unknown_platoon.png"
+				if ScenarioUnit.Affiliation.FRIEND == u.affiliation
+				else "res://assets/textures/units/enemy_unknown_platoon.png"
+			)
+		)
+	var id_str := u.unit.id if u and u.unit and u.unit.id else "unknown"
 	var key := "UNIT:%s:%d:%d" % [id_str, unit_icon_px, u.affiliation]
 	return _scaled_cached(key, base, unit_icon_px)
+
 
 ## Get (and cache) the scaled slot icon
 func _get_scaled_icon_slot() -> Texture2D:
 	var key := "SLOT:%d" % slot_icon_px
 	return _scaled_cached(key, slot_icon, slot_icon_px)
 
+
 ## Get (and cache) the scaled inner task icon
 func _get_scaled_icon_task(inst: ScenarioTask) -> Texture2D:
 	if not inst or not inst.task or not inst.task.icon:
 		return null
 	var base: Texture2D = inst.task.icon
-	var key := "TASK:%s:%s:%d" % [
-		String(inst.task.type_id),
-		String(inst.task.resource_path),
-		task_icon_inner_px
-	]
+	var key := (
+		"TASK:%s:%s:%d"
+		% [String(inst.task.type_id), String(inst.task.resource_path), task_icon_inner_px]
+	)
 	return _scaled_cached(key, base, task_icon_inner_px)
+
 
 ## Get (and cache) the scaled trigger center icon
 func _get_scaled_icon_trigger(trig: ScenarioTrigger) -> Texture2D:
@@ -525,41 +611,54 @@ func _get_scaled_icon_trigger(trig: ScenarioTrigger) -> Texture2D:
 	var key := "TRIGGER:%s:%d" % [rpath, trigger_icon_px]
 	return _scaled_cached(key, trig.icon, trigger_icon_px)
 
+
 ## Utility used by task glyphs to request scaled textures
 func _scale_icon(tex: Texture2D, key: String, px: int) -> Texture2D:
 	return _scaled_cached(key, tex, px)
 
+
 ## Scale and cache a texture by key and target pixel size
 func _scaled_cached(key: String, base: Texture2D, px: int) -> Texture2D:
 	var cached: Texture2D = _icon_cache.get(key)
-	if cached: return cached
-	if base == null: return null
+	if cached:
+		return cached
+	if base == null:
+		return null
 	var img := base.get_image()
-	if img.is_empty(): return base
+	if img.is_empty():
+		return base
 	img.resize(px, px, Image.INTERPOLATE_LANCZOS)
 	var tex := ImageTexture.create_from_image(img)
 	_icon_cache[key] = tex
 	return tex
 
+
 ## Return approximate visual radius for a glyph kind/index
 func _glyph_radius(kind: StringName, idx: int) -> float:
 	match kind:
 		&"task":
-			return float(task_icon_px) * 0.5 * (hover_scale if _is_highlighted(&"task", idx) else 1.0)
+			return (
+				float(task_icon_px) * 0.5 * (hover_scale if _is_highlighted(&"task", idx) else 1.0)
+			)
 		&"unit":
-			return float(unit_icon_px) * 0.5 * (hover_scale if _is_highlighted(&"unit", idx) else 1.0)
+			return (
+				float(unit_icon_px) * 0.5 * (hover_scale if _is_highlighted(&"unit", idx) else 1.0)
+			)
 		&"slot":
-			return float(slot_icon_px) * 0.5 * (hover_scale if _is_highlighted(&"slot", idx) else 1.0)
+			return (
+				float(slot_icon_px) * 0.5 * (hover_scale if _is_highlighted(&"slot", idx) else 1.0)
+			)
 		_:
 			return 0.0
+
 
 ## Shorten a segment at both ends by given trims (pixels)
 func _trim_segment(src: Vector2, dst: Vector2, src_trim: float, dst_trim: float) -> Array[Vector2]:
 	var dir := dst - src
-	var L := dir.length()
-	if L <= 1.0:
+	var l := dir.length()
+	if l <= 1.0:
 		return [src, dst]
-	var n := dir / L
+	var n := dir / l
 	var a := src + n * src_trim
 	var b := dst - n * dst_trim
 	return [a, b]
