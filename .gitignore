@@ -12,9 +12,21 @@ src/.godot/
 src/.godot/tmp/**
 src/.godot/editor_settings-*.tres
 src/.godot/editor_state-*.cfg
+build
 
 # Godot cache
 src/.cache/
+
+# Code signing certificates
+signing/
+*.pfx
+*.p12
+*.b64
+
+# CI Tools
+tools/GODOT_BIN
+tools/*.lnk
+tools/*.bat
 
 # IDE metadata
 .vscode/

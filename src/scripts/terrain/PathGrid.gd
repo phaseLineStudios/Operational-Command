@@ -1,8 +1,19 @@
-extends Node
 class_name PathGrid
+extends Node
 
 ## Grid weights + A* over TerrainData.
 ## Builds per-profile movement costs from surfaces + slope.
+
+## Emitted when the grid is rebuilt.
+signal grid_rebuilt
+## Emits when an async build starts.
+signal build_started(profile: int)
+## Emits progress (0..1).
+signal build_progress(p: float)
+## Emits when a fresh grid is ready (and installed).
+signal build_ready(profile: int)
+## Emits on failure/cancel.
+signal build_failed(reason: String)
 
 ## What to visualize.
 enum DebugLayer { NONE, WEIGHT, SLOPE, LINE_DIST, SOLIDS }
@@ -42,17 +53,6 @@ enum DebugLayer { NONE, WEIGHT, SLOPE, LINE_DIST, SOLIDS }
 ## Clamp max heat color to this weight (for contrast)
 @export var debug_weight_vis_max := 5.0
 
-## Emitted when the grid is rebuilt.
-signal grid_rebuilt()
-## Emits when an async build starts.
-signal build_started(profile: int)
-## Emits progress (0..1).
-signal build_progress(p: float)
-## Emits when a fresh grid is ready (and installed).
-signal build_ready(profile: int)
-## Emits on failure/cancel.
-signal build_failed(reason: String)
-
 var _astar := AStarGrid2D.new()
 var _cols := 0
 var _rows := 0
@@ -73,9 +73,11 @@ var _build_cancel := false
 var _build_running := false
 var _build_profile := TerrainBrush.MoveProfile.FOOT
 
+
 func _ready() -> void:
 	astar_setup_defaults()
 	_bind_terrain_signals()
+
 
 func _exit_tree() -> void:
 	if _build_running:
@@ -85,26 +87,26 @@ func _exit_tree() -> void:
 		_build_thread.wait_to_finish()
 		_build_thread = null
 
+
 func astar_setup_defaults() -> void:
-	_astar.diagonal_mode = (AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES if allow_diagonals else AStarGrid2D.DIAGONAL_MODE_NEVER)
+	_astar.diagonal_mode = (
+		AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
+		if allow_diagonals
+		else AStarGrid2D.DIAGONAL_MODE_NEVER
+	)
 	_astar.default_compute_heuristic = AStarGrid2D.HEURISTIC_EUCLIDEAN
 	_astar.default_estimate_heuristic = AStarGrid2D.HEURISTIC_EUCLIDEAN
 	_astar.jumping_enabled = false
 
+
 func _bind_terrain_signals() -> void:
-	if data == null: return
-	data.changed.connect(func ():
-		_terrain_epoch += 1
-	)
-	data.elevation_changed.connect(func (_r: Rect2i):
-		_elev_epoch += 1
-	)
-	data.surfaces_changed.connect(func (_k: String, _ids: PackedInt32Array):
-		_surfaces_epoch += 1
-	)
-	data.lines_changed.connect(func (_k: String, _ids: PackedInt32Array):
-		_lines_epoch += 1
-	)
+	if data == null:
+		return
+	data.changed.connect(func(): _terrain_epoch += 1)
+	data.elevation_changed.connect(func(_r: Rect2i): _elev_epoch += 1)
+	data.surfaces_changed.connect(func(_k: String, _ids: PackedInt32Array): _surfaces_epoch += 1)
+	data.lines_changed.connect(func(_k: String, _ids: PackedInt32Array): _lines_epoch += 1)
+
 
 ## Build/rebuild grid for a movement profile
 func rebuild(profile: int) -> void:
@@ -129,7 +131,7 @@ func rebuild(profile: int) -> void:
 	if _build_running:
 		_build_cancel = true
 		await get_tree().process_frame
-		
+
 	var elev_img := data.elevation
 	var elev_copy := Image.new()
 	if elev_img and not elev_img.is_empty():
@@ -137,32 +139,44 @@ func rebuild(profile: int) -> void:
 
 	var areas := []
 	for it in _area_features:
-		areas.append({
-			"poly": it.poly,
-			"mv": {
-				"t": it.brush.mv_tracked,
-				"w": it.brush.mv_wheeled,
-				"f": it.brush.mv_foot,
-				"r": it.brush.mv_riverine,
-			},
-			"z": it.brush.z_index
-		})
+		(
+			areas
+			. append(
+				{
+					"poly": it.poly,
+					"mv":
+					{
+						"t": it.brush.mv_tracked,
+						"w": it.brush.mv_wheeled,
+						"f": it.brush.mv_foot,
+						"r": it.brush.mv_riverine,
+					},
+					"z": it.brush.z_index
+				}
+			)
+		)
 
 	var lines := []
 	for it in _line_features:
-		lines.append({
-			"pts": it.pts,
-			"mv": {
-				"t": it.brush.mv_tracked,
-				"w": it.brush.mv_wheeled,
-				"f": it.brush.mv_foot,
-				"r": it.brush.mv_riverine,
-			},
-			"road_bias": it.brush.road_bias,
-			"width_px": float(it.get("width_px", 0.0)),
-			"aabb": it.aabb,
-			"bridge_cap": float(it.brush.bridge_capacity_tons)
-		})
+		(
+			lines
+			. append(
+				{
+					"pts": it.pts,
+					"mv":
+					{
+						"t": it.brush.mv_tracked,
+						"w": it.brush.mv_wheeled,
+						"f": it.brush.mv_foot,
+						"r": it.brush.mv_riverine,
+					},
+					"road_bias": it.brush.road_bias,
+					"width_px": float(it.get("width_px", 0.0)),
+					"aabb": it.aabb,
+					"bridge_cap": float(it.brush.bridge_capacity_tons)
+				}
+			)
+		)
 
 	var snap := {
 		"cols": _cols,
@@ -193,6 +207,7 @@ func rebuild(profile: int) -> void:
 		_build_thread = null
 	_build_thread = Thread.new()
 	_build_thread.start(Callable(self, "_thread_build").bind(snap), Thread.PRIORITY_LOW)
+
 
 ## Internal: worker function (runs off the main thread)
 func _thread_build(snap: Dictionary) -> void:
@@ -225,7 +240,7 @@ func _thread_build(snap: Dictionary) -> void:
 		var e_d: float = elev_at_m.call(p + Vector2(0, sy))
 		var dx: float = (e_r - e_l) / max(cell, 0.001)
 		var dy: float = (e_d - e_u) / max(cell, 0.001)
-		var grade := sqrt(dx*dx + dy*dy)
+		var grade := sqrt(dx * dx + dy * dy)
 		if grade >= float(snap.maxGrade):
 			return INF
 		return 1.0 + float(snap.slopeK) * grade
@@ -242,10 +257,14 @@ func _thread_build(snap: Dictionary) -> void:
 				if z > best_z:
 					best_z = z
 					match int(snap.profile):
-						TerrainBrush.MoveProfile.TRACKED: best = max(float(it.mv.t), 0.0)
-						TerrainBrush.MoveProfile.WHEELED: best = max(float(it.mv.w), 0.0)
-						TerrainBrush.MoveProfile.FOOT:    best = max(float(it.mv.f), 0.0)
-						TerrainBrush.MoveProfile.RIVERINE:best = max(float(it.mv.r), 0.0)
+						TerrainBrush.MoveProfile.TRACKED:
+							best = max(float(it.mv.t), 0.0)
+						TerrainBrush.MoveProfile.WHEELED:
+							best = max(float(it.mv.w), 0.0)
+						TerrainBrush.MoveProfile.FOOT:
+							best = max(float(it.mv.f), 0.0)
+						TerrainBrush.MoveProfile.RIVERINE:
+							best = max(float(it.mv.r), 0.0)
 		return best
 
 	var mv_mult_line_at = func(p: Vector2) -> Dictionary:
@@ -255,20 +274,29 @@ func _thread_build(snap: Dictionary) -> void:
 		var hit := false
 		for it in snap.lines:
 			var aabb: Rect2 = it.aabb
-			if not aabb.has_point(p): continue
-			var eff_r_m: float = (float(snap.line_r) if float(snap.line_r) > 0.0 else max(0.0, float(it.width_px) * 0.5))
+			if not aabb.has_point(p):
+				continue
+			var eff_r_m: float = (
+				float(snap.line_r)
+				if float(snap.line_r) > 0.0
+				else max(0.0, float(it.width_px) * 0.5)
+			)
 			var d := _dist_point_polyline(p, it.pts)
 			if d <= eff_r_m:
 				hit = true
 				match int(snap.profile):
-					TerrainBrush.MoveProfile.TRACKED: mult = min(mult, max(float(it.mv.t), 0.0))
-					TerrainBrush.MoveProfile.WHEELED: mult = min(mult, max(float(it.mv.w), 0.0))
-					TerrainBrush.MoveProfile.FOOT:    mult = min(mult, max(float(it.mv.f), 0.0))
-					TerrainBrush.MoveProfile.RIVERINE:mult = min(mult, max(float(it.mv.r), 0.0))
+					TerrainBrush.MoveProfile.TRACKED:
+						mult = min(mult, max(float(it.mv.t), 0.0))
+					TerrainBrush.MoveProfile.WHEELED:
+						mult = min(mult, max(float(it.mv.w), 0.0))
+					TerrainBrush.MoveProfile.FOOT:
+						mult = min(mult, max(float(it.mv.f), 0.0))
+					TerrainBrush.MoveProfile.RIVERINE:
+						mult = min(mult, max(float(it.mv.r), 0.0))
 				pref = min(pref, max(0.05, float(it.road_bias)))
 				if float(it.get("bridge_cap", 0.0)) > 0.0:
 					has_bridge = true
-		return { "m": mult, "pref": pref, "bridge": has_bridge, "hit": hit }
+		return {"m": mult, "pref": pref, "bridge": has_bridge, "hit": hit}
 
 	for cy in rows:
 		if _build_cancel:
@@ -277,12 +305,14 @@ func _thread_build(snap: Dictionary) -> void:
 		for cx in cols:
 			var idx := cy * cols + cx
 			var pos := Vector2((cx + 0.5) * cell, (cy + 0.5) * cell)
-			
+
 			var area_m: float = mv_mult_area_at.call(pos)
 			var line_res: Dictionary = mv_mult_line_at.call(pos)
 			var slope_mult: float = slope_mult_at.call(cx, cy)
-			var on_bridge := bool(line_res.bridge) and int(snap.profile) != TerrainBrush.MoveProfile.RIVERINE
-			
+			var on_bridge := (
+				bool(line_res.bridge) and int(snap.profile) != TerrainBrush.MoveProfile.RIVERINE
+			)
+
 			if not on_bridge and bool(snap.zero_blocks) and area_m <= 0.0:
 				solids[idx] = 1
 				weights[idx] = 1.0
@@ -291,14 +321,16 @@ func _thread_build(snap: Dictionary) -> void:
 				solids[idx] = 1
 				weights[idx] = 1.0
 				continue
-			
+
 			var mv_mult: float = (
 				float(line_res.m)
 				if on_bridge
 				else (min(area_m, float(line_res.m)) if bool(line_res.hit) else area_m)
 			)
-			var road_pref := mix(1.0, float(line_res.pref), clamp(float(snap.road_bias_weight), 0.0, 1.0))
-			
+			var road_pref := mix(
+				1.0, float(line_res.pref), clamp(float(snap.road_bias_weight), 0.0, 1.0)
+			)
+
 			var w := mv_mult * slope_mult * road_pref
 			if w >= 1e6:
 				solids[idx] = 1
@@ -306,23 +338,29 @@ func _thread_build(snap: Dictionary) -> void:
 			else:
 				solids[idx] = 0
 				weights[idx] = clamp(w, 0.001, 1e4)
-		
+
 		if cy % 8 == 0:
 			_call_main("_emit_build_progress", float(cy) / float(rows))
 
-	_call_main("_thread_finish", {
-		"weights": weights,
-		"solids": solids,
-		"profile": int(snap.profile),
-		"cols": cols,
-		"rows": rows,
-		"key": String(snap.key),
-	}, "")
+	_call_main(
+		"_thread_finish",
+		{
+			"weights": weights,
+			"solids": solids,
+			"profile": int(snap.profile),
+			"cols": cols,
+			"rows": rows,
+			"key": String(snap.key),
+		},
+		""
+	)
+
 
 ## Cancel an ongoing async build (best-effort)
 func rebuild_async_cancel() -> void:
 	if _build_running:
 		_build_cancel = true
+
 
 ## Create A* on main thread, cache it, swap in, and emit signals.
 func _thread_finish(result: Variant, err: String) -> void:
@@ -343,7 +381,11 @@ func _thread_finish(result: Variant, err: String) -> void:
 	var g := AStarGrid2D.new()
 	g.region = Rect2i(0, 0, cols, rows)
 	g.cell_size = Vector2(cell_size_m, cell_size_m)
-	g.diagonal_mode = (AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES if allow_diagonals else AStarGrid2D.DIAGONAL_MODE_NEVER)
+	g.diagonal_mode = (
+		AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
+		if allow_diagonals
+		else AStarGrid2D.DIAGONAL_MODE_NEVER
+	)
 	g.default_compute_heuristic = AStarGrid2D.HEURISTIC_EUCLIDEAN
 	g.default_estimate_heuristic = AStarGrid2D.HEURISTIC_EUCLIDEAN
 	g.jumping_enabled = false
@@ -366,6 +408,7 @@ func _thread_finish(result: Variant, err: String) -> void:
 	_emit_grid_rebuilt()
 	_emit_build_ready(int(result.profile))
 
+
 ## Find a path (meters) for a profile. Returns PackedVector2Array world positions (m)
 func find_path_m(start_m: Vector2, goal_m: Vector2) -> PackedVector2Array:
 	var a := _to_cell(start_m)
@@ -380,14 +423,17 @@ func find_path_m(start_m: Vector2, goal_m: Vector2) -> PackedVector2Array:
 		out[i] = _cell_center_m(cells[i])
 	return out
 
+
 ## Estimate travel time (seconds) along path for unit base speed and profile
-func estimate_travel_time_s(path_m: PackedVector2Array, base_speed_mps: float, _profile: int) -> float:
+func estimate_travel_time_s(
+	path_m: PackedVector2Array, base_speed_mps: float, _profile: int
+) -> float:
 	if path_m.size() < 2 or base_speed_mps <= 0.0:
 		return 0.0
 
 	var t := 0.0
 	for i in range(1, path_m.size()):
-		var a := path_m[i-1]
+		var a := path_m[i - 1]
 		var b := path_m[i]
 		var d := a.distance_to(b)
 		var mid := (a + b) * 0.5
@@ -399,34 +445,55 @@ func estimate_travel_time_s(path_m: PackedVector2Array, base_speed_mps: float, _
 		t += d / max(v, 0.001)
 	return t
 
+
 ## Create a stable cache key for A* instances (includes everything that changes weights)
 func _astar_key(profile: int) -> String:
-	return "%s|v=%d/%d/%d/%d|cell=%.1f|diag=%s|smax=%.3f|slopeK=%.3f|lineR=%.1f|roadBias=%.3f" % [
-		str(data.get_instance_id()),
-		_terrain_epoch, _elev_epoch, _surfaces_epoch, _lines_epoch,
-		cell_size_m,
-		str(allow_diagonals),
-		max_traversable_grade,
-		slope_multiplier_per_grade,
-		line_influence_radius_m,
-		road_bias_weight
-	] + "|p=%d" % profile
+	return (
+		(
+			"%s|v=%d/%d/%d/%d|cell=%.1f|diag=%s|smax=%.3f|slopeK=%.3f|lineR=%.1f|roadBias=%.3f"
+			% [
+				str(data.get_instance_id()),
+				_terrain_epoch,
+				_elev_epoch,
+				_surfaces_epoch,
+				_lines_epoch,
+				cell_size_m,
+				str(allow_diagonals),
+				max_traversable_grade,
+				slope_multiplier_per_grade,
+				line_influence_radius_m,
+				road_bias_weight
+			]
+		)
+		+ "|p=%d" % profile
+	)
+
 
 ## Keys for intermediate rasters (don’t include profile so they can be reused)
 func _raster_key(kind: String) -> String:
-	return "%s|%s|v=%d/%d/%d/%d|cell=%.1f" % [
-		str(data.get_instance_id()), kind,
-		_terrain_epoch, _elev_epoch, _surfaces_epoch, _lines_epoch,
-		cell_size_m
-	]
+	return (
+		"%s|%s|v=%d/%d/%d/%d|cell=%.1f"
+		% [
+			str(data.get_instance_id()),
+			kind,
+			_terrain_epoch,
+			_elev_epoch,
+			_surfaces_epoch,
+			_lines_epoch,
+			cell_size_m
+		]
+	)
+
 
 ## Convert world meters -> grid cell.
 func world_to_cell(p_m: Vector2) -> Vector2i:
 	return _to_cell(p_m)
 
+
 ## Convert grid cell -> world meters (cell center).
 func cell_to_world_center_m(c: Vector2i) -> Vector2:
 	return _cell_center_m(c)
+
 
 func _weight_for_cell(cx: int, cy: int, profile: int, _r_solid: bool) -> float:
 	var pos_m := _cell_center_m(Vector2i(cx, cy))
@@ -438,12 +505,20 @@ func _weight_for_cell(cx: int, cy: int, profile: int, _r_solid: bool) -> float:
 	var hit := false
 	for it in _line_features:
 		var aabb: Rect2 = it.aabb
-		if not aabb.has_point(pos_m): continue
-		var eff_r_m := (line_influence_radius_m if line_influence_radius_m > 0.0 else _line_px_to_meters(float(it.width_px)) * 0.5)
+		if not aabb.has_point(pos_m):
+			continue
+		var eff_r_m := (
+			line_influence_radius_m
+			if line_influence_radius_m > 0.0
+			else _line_px_to_meters(float(it.width_px)) * 0.5
+		)
 		var d := _dist_point_polyline(pos_m, it.pts)
 		if d <= eff_r_m:
 			hit = true
-			if float(it.get("bridge_cap", 0.0)) > 0.0 and profile != TerrainBrush.MoveProfile.RIVERINE:
+			if (
+				float(it.get("bridge_cap", 0.0)) > 0.0
+				and profile != TerrainBrush.MoveProfile.RIVERINE
+			):
 				on_bridge = true
 			line_mult = min(line_mult, max(it.brush.movement_multiplier(profile), 0.0))
 			pref = min(pref, max(0.05, it.brush.road_bias))
@@ -453,12 +528,18 @@ func _weight_for_cell(cx: int, cy: int, profile: int, _r_solid: bool) -> float:
 		return 1.0
 
 	var sl_key := _raster_key("slope")
-	var slope_mult: float = _slope_cache[sl_key][cy * _cols + cx] if _slope_cache.has(sl_key) else _slope_multiplier_at_cell(cx, cy)
+	var slope_mult: float = (
+		_slope_cache[sl_key][cy * _cols + cx]
+		if _slope_cache.has(sl_key)
+		else _slope_multiplier_at_cell(cx, cy)
+	)
 	if slope_mult >= INF:
 		_r_solid = true
 		return 1.0
 
-	var mv_mult: float = (line_mult if on_bridge else (min(surface_mult, line_mult) if hit else surface_mult))
+	var mv_mult: float = (
+		line_mult if on_bridge else (min(surface_mult, line_mult) if hit else surface_mult)
+	)
 	var road_pref := mix(1.0, pref, clamp(road_bias_weight, 0.0, 1.0))
 	var w := mv_mult * slope_mult * road_pref * road_pref
 	if w >= 1e6:
@@ -466,16 +547,19 @@ func _weight_for_cell(cx: int, cy: int, profile: int, _r_solid: bool) -> float:
 		return 1.0
 	return clamp(w, 0.001, 1e4)
 
+
 ## Build or reuse the slope “multiplier” raster (profile-agnostic)
 func _prepare_slope_cache() -> void:
 	var key := _raster_key("slope")
-	if _slope_cache.has(key): return
+	if _slope_cache.has(key):
+		return
 	var arr := PackedFloat32Array()
 	arr.resize(_cols * _rows)
 	for cy in _rows:
 		for cx in _cols:
 			arr[cy * _cols + cx] = _slope_multiplier_at_cell(cx, cy)
 	_slope_cache[key] = arr
+
 
 ## distance-to-nearest-line cache (profile-agnostic)
 func _prepare_line_dist_cache() -> void:
@@ -493,10 +577,12 @@ func _prepare_line_dist_cache() -> void:
 			var p := _cell_center_m(Vector2i(cx, cy))
 			var best := INF
 			for it in _line_features:
-				if not it.aabb.has_point(p): continue
+				if not it.aabb.has_point(p):
+					continue
 				best = min(best, _dist_point_polyline(p, it.pts))
 			arr[cy * _cols + cx] = best
 	_line_dist_cache[key] = arr
+
 
 func _surface_multiplier_at(p_m: Vector2, profile: int) -> float:
 	var best_mult := 1.0
@@ -513,8 +599,10 @@ func _surface_multiplier_at(p_m: Vector2, profile: int) -> float:
 				best_mult = max(brush.movement_multiplier(profile), 0.0)
 	return best_mult
 
+
 func _line_px_to_meters(width_px: float) -> float:
 	return max(0.0, width_px)
+
 
 func _line_multiplier_at(p_m: Vector2, profile: int) -> float:
 	var out := 1.0
@@ -531,6 +619,7 @@ func _line_multiplier_at(p_m: Vector2, profile: int) -> float:
 			out = min(out, m)
 	return out
 
+
 func _road_bias_at(p_m: Vector2) -> float:
 	var pref := 1.0
 	for it in _line_features:
@@ -541,6 +630,7 @@ func _road_bias_at(p_m: Vector2) -> float:
 				if d <= line_influence_radius_m:
 					pref = min(pref, max(0.05, it.brush.road_bias))
 	return pref
+
 
 func _slope_multiplier_at_cell(cx: int, cy: int) -> float:
 	if data == null or data.elevation == null or data.elevation.is_empty():
@@ -556,11 +646,12 @@ func _slope_multiplier_at_cell(cx: int, cy: int) -> float:
 
 	var dx: float = (e_r - e_l) / max(cell_size_m, 0.001)
 	var dy: float = (e_d - e_u) / max(cell_size_m, 0.001)
-	var grade := sqrt(dx*dx + dy*dy)
+	var grade := sqrt(dx * dx + dy * dy)
 
 	if grade >= max_traversable_grade:
 		return INF
 	return 1.0 + slope_multiplier_per_grade * grade
+
 
 func _collect_features() -> void:
 	_area_features.clear()
@@ -577,15 +668,19 @@ func _collect_features() -> void:
 		var pts: PackedVector2Array = s.get("points", PackedVector2Array())
 		if pts.size() < 3:
 			continue
-		if bool(s.get("closed", true)) and pts.size() >= 2 and pts[0].distance_squared_to(pts[pts.size()-1]) < 1e-9:
+		if (
+			bool(s.get("closed", true))
+			and pts.size() >= 2
+			and pts[0].distance_squared_to(pts[pts.size() - 1]) < 1e-9
+		):
 			var tmp := PackedVector2Array(pts)
-			tmp.remove_at(tmp.size()-1)
+			tmp.remove_at(tmp.size() - 1)
 			pts = tmp
 			if pts.size() < 3:
 				continue
 		var poly := pts
 		var aabb := _poly_bounds(poly)
-		_area_features.append({ "poly": poly, "brush": brush, "aabb": aabb })
+		_area_features.append({"poly": poly, "brush": brush, "aabb": aabb})
 
 	for l in data.lines:
 		if typeof(l) != TYPE_DICTIONARY:
@@ -597,47 +692,62 @@ func _collect_features() -> void:
 		if pts.size() < 2:
 			continue
 		var aabb := _polyline_bounds(pts)
-		aabb = aabb.grow( max(line_influence_radius_m, _line_px_to_meters(l.get("width_px", 0.0)) * 0.5) )
-		_line_features.append({
-			"pts": pts,
-			"brush": brush,
-			"aabb": aabb,
-			"width_px": float(l.get("width_px", 0.0)),
-			"bridge_cap": float(brush.bridge_capacity_tons)
-		})
+		aabb = aabb.grow(
+			max(line_influence_radius_m, _line_px_to_meters(l.get("width_px", 0.0)) * 0.5)
+		)
+		_line_features.append(
+			{
+				"pts": pts,
+				"brush": brush,
+				"aabb": aabb,
+				"width_px": float(l.get("width_px", 0.0)),
+				"bridge_cap": float(brush.bridge_capacity_tons)
+			}
+		)
+
 
 func _to_cell(p_m: Vector2) -> Vector2i:
 	var cx: int = clamp(int(floor(p_m.x / cell_size_m)), 0, _cols - 1)
 	var cy: int = clamp(int(floor(p_m.y / cell_size_m)), 0, _rows - 1)
 	return Vector2i(cx, cy)
 
+
 func _cell_center_m(c: Vector2i) -> Vector2:
 	return Vector2((c.x + 0.5) * cell_size_m, (c.y + 0.5) * cell_size_m)
 
+
 func _in_bounds(c: Vector2i) -> bool:
 	return c.x >= 0 and c.y >= 0 and c.x < _cols and c.y < _rows
+
 
 func _elev_m_at(p_m: Vector2) -> float:
 	var px := data.world_to_elev_px(p_m)
 	return data.get_elev_px(px) + float(data.base_elevation_m)
 
+
 ## Return grid cell for world meters.
 func debug_cell_from_world(p_m: Vector2) -> Vector2i:
 	return _to_cell(p_m)
+
 
 ## Return cell center in meters.
 func debug_world_from_cell(c: Vector2i) -> Vector2:
 	return _cell_center_m(c)
 
+
 ## Weight at cell (or INF if OOB/solid).
 func debug_weight_at_cell(c: Vector2i) -> float:
-	if _astar == null or not _astar.is_in_boundsv(c): return INF
-	if _astar.is_point_solid(c): return INF
+	if _astar == null or not _astar.is_in_boundsv(c):
+		return INF
+	if _astar.is_point_solid(c):
+		return INF
 	return _astar.get_point_weight_scale(c)
+
 
 ## True if solid.
 func debug_is_solid_cell(c: Vector2i) -> bool:
 	return _astar != null and _astar.is_in_boundsv(c) and _astar.is_point_solid(c)
+
 
 ## Slope multiplier at cell (uses cache if present).
 func debug_slope_mult_cell(c: Vector2i) -> float:
@@ -645,6 +755,7 @@ func debug_slope_mult_cell(c: Vector2i) -> float:
 	if _slope_cache.has(key):
 		return _slope_cache[key][c.y * _cols + c.x]
 	return _slope_multiplier_at_cell(c.x, c.y)
+
 
 ## Distance to nearest line at cell (uses cache if present; INF if none).
 func debug_line_dist_cell(c: Vector2i) -> float:
@@ -654,9 +765,11 @@ func debug_line_dist_cell(c: Vector2i) -> float:
 	var p := _cell_center_m(c)
 	var best := INF
 	for it in _line_features:
-		if not it.aabb.has_point(p): continue
+		if not it.aabb.has_point(p):
+			continue
 		best = min(best, _dist_point_polyline(p, it.pts))
 	return best
+
 
 ## Render a grid overlay onto a CanvasItem (e.g., a Control). Coordinates are meters.
 func debug_draw_overlay(ci: CanvasItem) -> void:
@@ -673,8 +786,14 @@ func debug_draw_overlay(ci: CanvasItem) -> void:
 
 	var x0: float = max(region.position.x, int(floor(draw_rect.position.x / cs)))
 	var y0: float = max(region.position.y, int(floor(draw_rect.position.y / cs)))
-	var x1: float = min(region.position.x + region.size.x - 1, int(floor((draw_rect.position.x + draw_rect.size.x - 0.0001) / cs)))
-	var y1: float = min(region.position.y + region.size.y - 1, int(floor((draw_rect.position.y + draw_rect.size.y - 0.0001) / cs)))
+	var x1: float = min(
+		region.position.x + region.size.x - 1,
+		int(floor((draw_rect.position.x + draw_rect.size.x - 0.0001) / cs))
+	)
+	var y1: float = min(
+		region.position.y + region.size.y - 1,
+		int(floor((draw_rect.position.y + draw_rect.size.y - 0.0001) / cs))
+	)
 	if x1 < x0 or y1 < y0:
 		return
 
@@ -698,7 +817,7 @@ func debug_draw_overlay(ci: CanvasItem) -> void:
 					else:
 						var w := _astar.get_point_weight_scale(cell)
 						var t: float = clamp(w / max(0.001, debug_weight_vis_max), 0.0, 1.0)
-						col = Color(t, t, 0.0, debug_alpha).lerp(Color(1,0,0,debug_alpha), t)
+						col = Color(t, t, 0.0, debug_alpha).lerp(Color(1, 0, 0, debug_alpha), t)
 
 				DebugLayer.SLOPE:
 					var s := debug_slope_mult_cell(cell)
@@ -708,15 +827,18 @@ func debug_draw_overlay(ci: CanvasItem) -> void:
 				DebugLayer.LINE_DIST:
 					var d := debug_line_dist_cell(cell)
 					if d < INF:
-						var t3: float = clamp(1.0 - (d / max(1.0, line_influence_radius_m)), 0.0, 1.0)
+						var t3: float = clamp(
+							1.0 - (d / max(1.0, line_influence_radius_m)), 0.0, 1.0
+						)
 						col = Color(1.0, 1.0 - t3, 0.0, debug_alpha)
 
 			if col.a > 0.0:
 				ci.draw_rect(cell_rect, col, true)
 			if debug_cell_borders:
-				ci.draw_rect(cell_rect, Color(0,0,0,0.1), false)
+				ci.draw_rect(cell_rect, Color(0, 0, 0, 0.1), false)
 
-func _call_main(method: String, a0: Variant=null, a1: Variant=null) -> void:
+
+func _call_main(method: String, a0: Variant = null, a1: Variant = null) -> void:
 	if a0 == null and a1 == null:
 		call_deferred(method)
 	elif a0 != null and a1 == null:
@@ -724,26 +846,33 @@ func _call_main(method: String, a0: Variant=null, a1: Variant=null) -> void:
 	elif a0 != null and a1 != null:
 		call_deferred(method, a0, a1)
 
+
 func _emit_build_started(profile: int) -> void:
 	emit_signal("build_started", profile)
+
 
 func _emit_build_progress(p: float) -> void:
 	emit_signal("build_progress", p)
 
+
 func _emit_grid_rebuilt() -> void:
 	emit_signal("grid_rebuilt")
+
 
 func _emit_build_ready(profile: int) -> void:
 	emit_signal("build_ready", profile)
 
+
 func _emit_build_failed(reason: String) -> void:
 	emit_signal("build_failed", reason)
 
+
 static func _closed_no_dup(pts: PackedVector2Array) -> PackedVector2Array:
 	var out := PackedVector2Array(pts)
-	if out.size() >= 2 and out[0].distance_squared_to(out[out.size()-1]) < 1e-9:
-		out.remove_at(out.size()-1)
+	if out.size() >= 2 and out[0].distance_squared_to(out[out.size() - 1]) < 1e-9:
+		out.remove_at(out.size() - 1)
 	return out
+
 
 static func _poly_bounds(poly: PackedVector2Array) -> Rect2:
 	var r := Rect2(poly[0], Vector2.ZERO)
@@ -751,17 +880,22 @@ static func _poly_bounds(poly: PackedVector2Array) -> Rect2:
 		r = r.expand(poly[i])
 	return r
 
+
 static func _polyline_bounds(pts: PackedVector2Array) -> Rect2:
 	var r := Rect2(pts[0], Vector2.ZERO)
 	for i in range(1, pts.size()):
 		r = r.expand(pts[i])
 	return r
 
+
 static func _dist_point_polyline(p: Vector2, pts: PackedVector2Array) -> float:
 	var best := INF
 	for i in range(1, pts.size()):
-		best = min(best, Geometry2D.get_closest_point_to_segment(p, pts[i-1], pts[i]).distance_to(p))
+		best = min(
+			best, Geometry2D.get_closest_point_to_segment(p, pts[i - 1], pts[i]).distance_to(p)
+		)
 	return best
+
 
 static func mix(a: float, b: float, t: float) -> float:
 	return a * (1.0 - t) + b * t

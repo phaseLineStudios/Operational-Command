@@ -1,32 +1,35 @@
-extends Control
 class_name AmmoRearmPanel
+extends Control
 
 ## Emitted when the user commits changes.
 ## units_map example:
 ##   { "alpha": {"small_arms": +12, "stock:small_arms": +50} }
 signal rearm_committed(units_map: Dictionary, depot_after: Dictionary)
 
-@onready var _lst_units: ItemList       = %UnitList
-@onready var _box_ammo: VBoxContainer   = %AmmoContainer
-@onready var _lbl_depot: Label          = %Depot
-@onready var _btn_full: Button          = %BtnFull
-@onready var _btn_half: Button          = %BtnHalf
-@onready var _btn_commit: Button        = %BtnCommit
-
 var _units: Array[UnitData] = []
-var _depot: Dictionary = {}                        # { ammo_type: amount }
+var _depot: Dictionary = {}  # { ammo_type: amount }
+
+# Per-unit widgets
+var _sliders_ammo: Dictionary = {}  # { ammo_type: SliderEntry }
+var _sliders_stock: Dictionary = {}  # { ammo_type: SliderEntry }
+var _pending: Dictionary = {}  # { uid: { ammo_key: +delta } }
+
+@onready var _lst_units: ItemList = %UnitList
+@onready var _box_ammo: VBoxContainer = %AmmoContainer
+@onready var _lbl_depot: Label = %Depot
+@onready var _btn_full: Button = %BtnFull
+@onready var _btn_half: Button = %BtnHalf
+@onready var _btn_commit: Button = %BtnCommit
+
 
 # Typed holder for a slider row
 class SliderEntry:
 	var slider: HSlider
 	var base: int
 
-# Per-unit widgets
-var _sliders_ammo: Dictionary = {}                 # { ammo_type: SliderEntry }
-var _sliders_stock: Dictionary = {}                # { ammo_type: SliderEntry }
-var _pending: Dictionary = {}                      # { uid: { ammo_key: +delta } }
 
 # ---------- API ----------
+
 
 func load_units(units: Array, depot_stock: Dictionary) -> void:
 	var typed: Array[UnitData] = []
@@ -38,7 +41,9 @@ func load_units(units: Array, depot_stock: Dictionary) -> void:
 	_refresh_units()
 	_update_depot_label()
 
+
 # ---------- lifecycle ----------
+
 
 func _ready() -> void:
 	_lst_units.item_selected.connect(_on_unit_selected)
@@ -46,7 +51,9 @@ func _ready() -> void:
 	_btn_half.pressed.connect(func(): _apply_fill_ratio(0.5))
 	_btn_commit.pressed.connect(_on_commit)
 
+
 # ---------- ui build ----------
+
 
 func _refresh_units() -> void:
 	_lst_units.clear()
@@ -58,11 +65,13 @@ func _refresh_units() -> void:
 	_sliders_ammo.clear()
 	_sliders_stock.clear()
 
+
 func _on_unit_selected(idx: int) -> void:
 	if idx < 0 or idx >= _units.size():
 		return
 	var u: UnitData = _units[idx]
 	_build_controls_for(u)
+
 
 func _build_controls_for(u: UnitData) -> void:
 	_clear_children(_box_ammo)
@@ -102,9 +111,10 @@ func _build_controls_for(u: UnitData) -> void:
 			entry.base = cur
 			_sliders_ammo[t] = entry
 
-			slider.value_changed.connect(func(v: float) -> void:
-				var delta: int = int(v) - cur
-				val.text = "→ %d (%+d)" % [int(v), delta]
+			slider.value_changed.connect(
+				func(v: float) -> void:
+					var delta: int = int(v) - cur
+					val.text = "→ %d (%+d)" % [int(v), delta]
 			)
 
 	# --- Section: Logistics payload (throughput stock) ---
@@ -113,7 +123,7 @@ func _build_controls_for(u: UnitData) -> void:
 		for t in u.throughput.keys():
 			var cur_stock: int = int(u.throughput[t])
 			var depot_avail2: int = int(_depot.get(t, 0))
-			var max_target2: int = cur_stock + depot_avail2   # no explicit cap in spec
+			var max_target2: int = cur_stock + depot_avail2  # no explicit cap in spec
 
 			var row2 := HBoxContainer.new()
 			_box_ammo.add_child(row2)
@@ -139,12 +149,15 @@ func _build_controls_for(u: UnitData) -> void:
 			entry2.base = cur_stock
 			_sliders_stock[t] = entry2
 
-			slider2.value_changed.connect(func(v: float) -> void:
-				var delta2: int = int(v) - cur_stock
-				val2.text = "→ %d (%+d)" % [int(v), delta2]
+			slider2.value_changed.connect(
+				func(v: float) -> void:
+					var delta2: int = int(v) - cur_stock
+					val2.text = "→ %d (%+d)" % [int(v), delta2]
 			)
 
+
 # ---------- actions ----------
+
 
 func _apply_fill_ratio(ratio: float) -> void:
 	var sel := _lst_units.get_selected_items()
@@ -165,6 +178,7 @@ func _apply_fill_ratio(ratio: float) -> void:
 		var entry: SliderEntry = _sliders_ammo.get(t, null) as SliderEntry
 		if entry != null and entry.slider != null:
 			entry.slider.value = cur + give  # updates the label via value_changed
+
 
 func _on_commit() -> void:
 	var sel := _lst_units.get_selected_items()
@@ -226,13 +240,16 @@ func _on_commit() -> void:
 	emit_signal("rearm_committed")
 	_pending.clear()
 
+
 # ---------- helpers ----------
+
 
 func _update_depot_label() -> void:
 	var parts: Array[String] = []
 	for t in _depot.keys():
 		parts.append("%s %d" % [str(t), int(_depot[t])])
 	_lbl_depot.text = "Depot: " + ", ".join(parts)
+
 
 func _ammo_tooltip(u: UnitData) -> String:
 	var lines: Array[String] = []
@@ -246,11 +263,13 @@ func _ammo_tooltip(u: UnitData) -> String:
 			lines.append("%s: %d" % [str(t), int(u.throughput[t])])
 	return "\n".join(lines)
 
+
 func _add_section_label(title: String) -> void:
 	var lab := Label.new()
 	lab.text = title
-	lab.add_theme_color_override("font_color", Color(1,1,1,0.9))
+	lab.add_theme_color_override("font_color", Color(1, 1, 1, 0.9))
 	_box_ammo.add_child(lab)
+
 
 func _clear_children(n: Node) -> void:
 	for c in n.get_children():

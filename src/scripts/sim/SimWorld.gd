@@ -4,7 +4,7 @@ extends Node
 ## Holds all unit entities and resolves ticks deterministically. Integrates
 ## visibility LOS.gd and combat Combat.gd and
 ## exposes read-only views for UI.
-## 
+##
 ## Ammo integration:
 ## - Owns a mission-scoped `AmmoSystem` child.
 ## - Feeds delta-time via `_physics_process`.
@@ -42,10 +42,12 @@ func _ready() -> void:
 
 	Game.start_scenario([])
 
+
 ## Drive AmmoSystem every frame so in-field resupply progresses over time.
 func _physics_process(delta: float) -> void:
 	_ammo.tick(delta)
 	_fuel.tick(delta)
+
 
 ## Movement hook: call from movement/controller code whenever a unit moves.
 ## `pos` is world-space (meters). For 2D maps, use Vector3(x, 0, y).

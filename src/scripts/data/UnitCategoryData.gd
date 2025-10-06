@@ -1,5 +1,5 @@
-extends Resource
 class_name UnitCategoryData
+extends Resource
 
 ## Unique key identifying this category
 @export var id: String
@@ -8,13 +8,23 @@ class_name UnitCategoryData
 ## Unit Category Editor Icon
 @export var editor_icon: Texture2D
 
+
 ## Serialize data to JSON
 func serialize() -> Dictionary:
 	return {
 		"id": id,
 		"title": title,
-		"editor_icon_path": (editor_icon.resource_path as Variant if editor_icon and editor_icon.resource_path != "" else null as Variant),
+		"editor_icon_path":
+		(
+			(
+				editor_icon.resource_path as Variant
+				if editor_icon and editor_icon.resource_path != ""
+				else null
+			)
+			as Variant
+		),
 	}
+
 
 ## Deserialize data from JSON
 static func deserialize(data: Variant) -> UnitCategoryData:

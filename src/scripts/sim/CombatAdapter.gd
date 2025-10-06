@@ -1,5 +1,5 @@
-extends Node
 class_name CombatAdapter
+extends Node
 ## Small adapter that gates firing on ammo and consumes on success.
 ## Adds helpers to compute LOW/CRITICAL penalties (placeholders) without hard-coding
 ## this into AmmoSystem or combat resolution.
@@ -9,13 +9,16 @@ signal fire_blocked_empty(unit_id: String, ammo_type: String)
 
 ## NodePath to an AmmoSystem node in the scene.
 @export var ammo_system_path: NodePath
+
 var _ammo: AmmoSystem  ## Cached AmmoSystem reference
+
 
 ## Resolve the AmmoSystem reference when the node enters the tree.
 func _ready() -> void:
 	if ammo_system_path != NodePath(""):
 		_ammo = get_node(ammo_system_path) as AmmoSystem
 	add_to_group("CombatAdapter")
+
 
 ## Request to fire: returns true if ammo was consumed; false if blocked.
 ## Fails open (true) when there is no ammo system or unit is unknown.
@@ -32,6 +35,7 @@ func request_fire(unit_id: String, ammo_type: String, rounds: int = 1) -> bool:
 		return false
 	return _ammo.consume(unit_id, ammo_type, max(1, rounds))
 
+
 ## Compute penalty multipliers given the unit and ammo_type *without* consuming.
 ## States:
 ## - "normal": no penalty
@@ -42,11 +46,11 @@ func request_fire(unit_id: String, ammo_type: String, rounds: int = 1) -> bool:
 ## Returns a Dictionary:
 ## {
 ##   state: "normal"|"low"|"critical"|"empty",
-##   attack_power_mult: float,     # 1.0 normal, 0.8 low, 0.5 critical
-##   attack_cycle_mult:  float,    # 1.0 normal, 1.25 low, 1.5 critical (use to scale cycle/cooldown)
-##   suppression_mult:   float,    # 1.0 normal, 0.75 low, 0.0 critical (disable area fire)
-##   morale_delta:       int,      # 0 normal, -10 low, -20 critical (apply in morale system if desired)
-##   ai_recommendation:  String    # "normal"|"conserve"|"defensive"|"avoid"
+##   attack_power_mult: float,  # 1.0 normal, 0.8 low, 0.5 critical
+##   attack_cycle_mult: float, # 1.0 normal, 1.25 low, 1.5 critical (use to scale cycle/cooldown)
+##   suppression_mult:  float, # 1.0 normal, 0.75 low, 0.0 critical (disable area fire)
+##   morale_delta:      int,   # 0 normal, -10 low, -20 critical (apply in morale system if desired)
+##   ai_recommendation: String # "normal"|"conserve"|"defensive"|"avoid"
 ## }
 func get_ammo_penalty(unit_id: String, ammo_type: String) -> Dictionary:
 	var res := {
@@ -96,6 +100,7 @@ func get_ammo_penalty(unit_id: String, ammo_type: String) -> Dictionary:
 		res.ai_recommendation = "conserve"
 
 	return res
+
 
 ## Request to fire *and* return penalty info for the caller to apply to accuracy/ROF/etc.
 ## Example use in combat:

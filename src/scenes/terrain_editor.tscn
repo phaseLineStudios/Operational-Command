@@ -9,17 +9,9 @@
 [sub_resource type="Resource" id="Resource_cc7e2"]
 script = ExtResource("2_q832w")
 name = "New Terrain"
-width_m = 2000
-height_m = 2000
-elevation_resolution_m = 20
 grid_start_x = 150
 grid_start_y = 120
 base_elevation_m = 326
-contour_interval_m = 10
-surfaces = []
-lines = []
-points = []
-labels = []
 metadata/_custom_type_script = "uid://do8882r1q2sil"
 
 [node name="TerrainEditor" type="Control"]
@@ -34,9 +26,12 @@ data = SubResource("Resource_cc7e2")
 tool_icon_size = Vector2(40, 40)
 
 [node name="Root" type="VBoxContainer" parent="."]
-layout_mode = 0
-offset_right = 1152.0
-offset_bottom = 648.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="TopBar" type="PanelContainer" parent="Root"]
 layout_mode = 2
@@ -106,11 +101,12 @@ columns = 6
 metadata/_tab_index = 0
 
 [node name="TabContainer2" type="TabContainer" parent="Root/HBox/LeftTray/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 current_tab = 0
 
-[node name="Tool Options" type="VBoxContainer" parent="Root/HBox/LeftTray/VBox/TabContainer2"]
+[node name="ToolOptions" type="VBoxContainer" parent="Root/HBox/LeftTray/VBox/TabContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 metadata/_tab_index = 0
@@ -164,11 +160,12 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="TabContainer3" type="TabContainer" parent="Root/HBox/RightTray/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 current_tab = 0
 
-[node name="Tool Info" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
+[node name="ToolInfo" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
 metadata/_tab_index = 0

@@ -1,22 +1,25 @@
-extends RefCounted
 class_name ScenarioTasksService
+extends RefCounted
 
 var defs: Array[UnitBaseTask] = []
 var selected_def: UnitBaseTask
+
 
 func setup(ctx: ScenarioEditorContext) -> void:
 	_init_defs()
 	_build_list(ctx)
 	ctx.task_list.item_selected.connect(func(idx): _on_selected(ctx, idx))
 
+
 func _init_defs() -> void:
 	defs.clear()
-	defs.append(UnitTask_Move.new())
-	defs.append(UnitTask_Defend.new())
-	defs.append(UnitTask_Wait.new())
-	defs.append(UnitTask_Patrol.new())
-	defs.append(UnitTask_SetBehaviour.new())
-	defs.append(UnitTask_SetCombatMode.new())
+	defs.append(UnitTaskMove.new())
+	defs.append(UnitTaskDefend.new())
+	defs.append(UnitTaskWait.new())
+	defs.append(UnitTaskPatrol.new())
+	defs.append(UnitTaskSetBehaviour.new())
+	defs.append(UnitTaskSetCombatMode.new())
+
 
 func _build_list(ctx: ScenarioEditorContext) -> void:
 	var list := ctx.task_list
@@ -24,11 +27,13 @@ func _build_list(ctx: ScenarioEditorContext) -> void:
 	for i in defs.size():
 		var t: UnitBaseTask = defs[i]
 		if t.icon:
-			var img := t.icon.get_image(); img.resize(24,24,Image.INTERPOLATE_LANCZOS)
+			var img := t.icon.get_image()
+			img.resize(24, 24, Image.INTERPOLATE_LANCZOS)
 			list.add_item(t.display_name, ImageTexture.create_from_image(img))
 		else:
 			list.add_item(t.display_name)
 		list.set_item_metadata(i, t)
+
 
 func _on_selected(ctx: ScenarioEditorContext, index: int) -> void:
 	var meta: Variant = ctx.task_list.get_item_metadata(index)
@@ -36,10 +41,19 @@ func _on_selected(ctx: ScenarioEditorContext, index: int) -> void:
 	if selected_def:
 		ctx.selection_changed.emit({"type": &"task_palette", "task": selected_def})
 
+
 # --- API used by editor/tool ---
-func place_task_for_unit(ctx: ScenarioEditorContext, unit_index: int, task: UnitBaseTask, pos_m: Vector2, after_index := -1) -> int:
-	if ctx.data == null or task == null: return -1
-	if ctx.data.tasks == null: ctx.data.tasks = []
+func place_task_for_unit(
+	ctx: ScenarioEditorContext,
+	unit_index: int,
+	task: UnitBaseTask,
+	pos_m: Vector2,
+	after_index := -1
+) -> int:
+	if ctx.data == null or task == null:
+		return -1
+	if ctx.data.tasks == null:
+		ctx.data.tasks = []
 
 	var before := _snap(ctx)
 	var after := _snap(ctx)
@@ -75,9 +89,11 @@ func place_task_for_unit(ctx: ScenarioEditorContext, unit_index: int, task: Unit
 	ctx.request_overlay_redraw()
 	return new_idx
 
+
 func collect_unit_chain(data: ScenarioData, unit_index: int) -> Array[int]:
 	var out: Array[int] = []
-	if data == null or data.tasks == null: return out
+	if data == null or data.tasks == null:
+		return out
 	var visited := {}
 	for i in data.tasks.size():
 		var t: ScenarioTask = data.tasks[i]
@@ -87,16 +103,19 @@ func collect_unit_chain(data: ScenarioData, unit_index: int) -> Array[int]:
 				visited[cur] = true
 				out.append(cur)
 				var nxt := data.tasks[cur].next_index
-				if nxt == cur: break
+				if nxt == cur:
+					break
 				cur = nxt
 	for j in data.tasks.size():
 		if data.tasks[j] and data.tasks[j].unit_index == unit_index and not visited.has(j):
 			out.append(j)
 	return out
 
+
 func make_task_title(inst: ScenarioTask, idx_in_chain: int) -> String:
-	var nm := (inst.task.display_name if (inst.task and inst.task.display_name != "") else "Task")
+	var nm := inst.task.display_name if (inst.task and inst.task.display_name != "") else "Task"
 	return "%d: %s" % [idx_in_chain + 1, nm]
+
 
 func _gen_task_id(ctx: ScenarioEditorContext, type_id: StringName) -> String:
 	var base := "task_%s" % String(type_id)
@@ -105,10 +124,13 @@ func _gen_task_id(ctx: ScenarioEditorContext, type_id: StringName) -> String:
 		for t in ctx.data.tasks:
 			if t and t.id is String and (t.id as String).begins_with(base + "_"):
 				var s := (t.id as String).substr(base.length() + 1)
-				if s.is_valid_int(): used[int(s)] = true
+				if s.is_valid_int():
+					used[int(s)] = true
 	var n := 1
-	while used.has(n): n += 1
+	while used.has(n):
+		n += 1
 	return "%s_%d" % [base, n]
+
 
 func _find_tail(tasks: Array, unit_index: int) -> int:
 	var tail := -1
@@ -118,7 +140,9 @@ func _find_tail(tasks: Array, unit_index: int) -> int:
 			tail = i
 	return tail
 
+
 func _snap(ctx: ScenarioEditorContext) -> Dictionary:
 	return {
-		"tasks": ScenarioHistory._deep_copy_array_res(ctx.data.tasks if ctx.data and ctx.data.tasks else [])
+		"tasks":
+		ScenarioHistory._deep_copy_array_res(ctx.data.tasks if ctx.data and ctx.data.tasks else [])
 	}

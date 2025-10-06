@@ -1,5 +1,5 @@
-extends Resource
 class_name UnitBaseTask
+extends Resource
 ## Base task definition.
 ##
 ## A UnitTask describes a configurable behavior (e.g. Move, Defend).
@@ -14,6 +14,7 @@ class_name UnitBaseTask
 ## Task Icon
 @export var icon: Texture2D
 
+
 ## Return list of exported properties for dynamic config UIs.
 func get_configurable_props() -> Array[Dictionary]:
 	var list: Array[Dictionary] = []
@@ -21,10 +22,23 @@ func get_configurable_props() -> Array[Dictionary]:
 		if (p.usage & PROPERTY_USAGE_EDITOR) == 0:
 			continue
 		var name := String(p.name)
-		if name in ["resource_local_to_scene","resource_path","type_id","display_name","color","icon","script","resource_name"]:
+		if (
+			name
+			in [
+				"resource_local_to_scene",
+				"resource_path",
+				"type_id",
+				"display_name",
+				"color",
+				"icon",
+				"script",
+				"resource_name"
+			]
+		):
 			continue
 		list.append(p)
 	return list
+
 
 ## Default parameter dictionary from exported properties.
 func make_default_params() -> Dictionary:
@@ -34,16 +48,29 @@ func make_default_params() -> Dictionary:
 		d[n] = get(n)
 	return d
 
+
 ## Draw the task glyph
-func draw_glyph(canvas: Control, center: Vector2, hovered: bool, hover_scale: float, px: int, inner_px: int, _inst, _to_map: Callable, scale_icon: Callable) -> void:
+func draw_glyph(
+	canvas: Control,
+	center: Vector2,
+	hovered: bool,
+	hover_scale: float,
+	px: int,
+	inner_px: int,
+	_inst,
+	_to_map: Callable,
+	scale_icon: Callable
+) -> void:
 	var r := px * 0.5
 	var s := r * (hover_scale if hovered else 1.0)
-	var pts := PackedVector2Array([
-		center + Vector2(0, -s),
-		center + Vector2(s, 0),
-		center + Vector2(0,  s),
-		center + Vector2(-s, 0)
-	])
+	var pts := PackedVector2Array(
+		[
+			center + Vector2(0, -s),
+			center + Vector2(s, 0),
+			center + Vector2(0, s),
+			center + Vector2(-s, 0)
+		]
+	)
 	canvas.draw_polygon(pts, [color if hovered else Color(color, 0.5)])
 
 	if icon:
@@ -53,7 +80,7 @@ func draw_glyph(canvas: Control, center: Vector2, hovered: bool, hover_scale: fl
 			var half := itex.get_size() * 0.5
 			if hovered:
 				canvas.draw_set_transform(center, 0.0, Vector2.ONE * hover_scale)
-				canvas.draw_texture(itex, -half, Color.WHITE if hovered else Color(1,1,1,0.5))
+				canvas.draw_texture(itex, -half, Color.WHITE if hovered else Color(1, 1, 1, 0.5))
 				canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 			else:
 				canvas.draw_texture(itex, center - half)

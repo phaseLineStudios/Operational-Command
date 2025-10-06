@@ -1,7 +1,9 @@
-extends Control
 class_name Settings
+extends Control
 ## Settings controller
 ## Tabs: Video, Audio, Controls, Gameplay. Loads/applies/saves config.
+
+signal back_requested
 
 ## Window modes.
 enum WindowMode { WINDOWED, FULLSCREEN }
@@ -15,10 +17,13 @@ const CONFIG_PATH := "user://settings.cfg"
 @export var actions_to_rebind: Array[String] = ["ptt"]
 ## Resolution list.
 @export var resolutions: Array[Vector2i] = [
-	Vector2i(1920,1080), Vector2i(1600,900), Vector2i(1366,768), Vector2i(1280,720)
+	Vector2i(1920, 1080), Vector2i(1600, 900), Vector2i(1366, 768), Vector2i(1280, 720)
 ]
 ## Scene to navigate to on back (leave empty for no action)
 @export var back_scene: PackedScene
+
+var _bus_rows: Dictionary = {}  # name -> {slider: HSlider, label: Label, mute: CheckBox}
+var _cfg := ConfigFile.new()
 
 @onready var btn_back: Button = %Back
 @onready var _btn_apply: Button = %Apply
@@ -40,10 +45,6 @@ const CONFIG_PATH := "user://settings.cfg"
 @onready var _reset_bindings: Button = %ResetBindings
 @onready var _rebind_template: Button = $"RebindTemplate"
 
-signal back_requested()
-
-var _bus_rows: Dictionary = {} # name -> {slider: HSlider, label: Label, mute: CheckBox}
-var _cfg := ConfigFile.new()
 
 ## Build UI and load config.
 func _ready() -> void:
@@ -55,6 +56,7 @@ func _ready() -> void:
 	_apply_ui_from_config()
 
 	_connect_signals()
+
 
 ## Populate video controls.
 func _build_video_ui() -> void:
@@ -68,6 +70,7 @@ func _build_video_ui() -> void:
 	_res.select(0)
 
 	_scale_val.text = "%d%%" % int(_scale.value)
+
 
 ## Create rows for each audio bus.
 func _build_audio_ui() -> void:
@@ -94,11 +97,13 @@ func _build_audio_ui() -> void:
 		_buses_list.add_child(row)
 		_bus_rows[audio_name] = {"slider": sli, "label": val, "mute": mute}
 		# Live preview
-		sli.value_changed.connect(func(v: float):
-			val.text = "%d%%" % int(round(v*100.0))
-			_set_bus_volume(audio_name, v))
-		mute.toggled.connect(func(on: bool):
-			_set_bus_mute(audio_name, on))
+		sli.value_changed.connect(
+			func(v: float):
+				val.text = "%d%%" % int(round(v * 100.0))
+				_set_bus_volume(audio_name, v)
+		)
+		mute.toggled.connect(func(on: bool): _set_bus_mute(audio_name, on))
+
 
 ## Create rebind buttons for actions.
 func _build_controls_ui() -> void:
@@ -116,22 +121,27 @@ func _build_controls_ui() -> void:
 		row.add_child(btn)
 		_controls_list.add_child(row)
 
+
 ## Wire up buttons and live labels.
 func _connect_signals() -> void:
-	btn_back.pressed.connect(func(): 
-		if back_scene != null: Game.goto_scene(back_scene.resource_path)
-		emit_signal("back_requested")
+	btn_back.pressed.connect(
+		func():
+			if back_scene != null:
+				Game.goto_scene(back_scene.resource_path)
+			emit_signal("back_requested")
 	)
 	_btn_apply.pressed.connect(_apply_and_save)
 	_btn_defaults.pressed.connect(_reset_defaults)
 	_reset_bindings.pressed.connect(_reset_all_bindings)
 	_scale.value_changed.connect(func(v: float): _scale_val.text = "%d%%" % int(v))
 
+
 ## Load config file (if present).
 func _load_config() -> void:
 	var err := _cfg.load(CONFIG_PATH)
 	if err != OK:
 		return
+
 
 ## Push saved values into UI.
 func _apply_ui_from_config() -> void:
@@ -158,12 +168,14 @@ func _apply_ui_from_config() -> void:
 		_set_bus_volume(audio_name, sli.value)
 		_set_bus_mute(audio_name, m)
 
+
 ## Apply settings and persist.
 func _apply_and_save() -> void:
 	_apply_video()
 	_apply_audio()
 	_apply_gameplay()
 	_save_config()
+
 
 ## Reset to defaults.
 func _reset_defaults() -> void:
@@ -182,6 +194,7 @@ func _reset_defaults() -> void:
 		_set_bus_mute(bus_name, false)
 	_apply_and_save()
 
+
 ## Remove custom bindings and restore defaults (uses InputSchema if present).
 func _reset_all_bindings() -> void:
 	if Engine.has_singleton("InputSchema"):
@@ -193,6 +206,7 @@ func _reset_all_bindings() -> void:
 		for child in (node as HBoxContainer).get_children():
 			if child is Button and child.has_method("refresh_label"):
 				child.call("refresh_label")
+
 
 ## Apply video settings to the window/engine.
 func _apply_video() -> void:
@@ -220,6 +234,7 @@ func _apply_video() -> void:
 	# Store render scale only; actual scaling strategy can be implemented later.
 	# (Keeps groundwork without forcing a scaling mode right now.)
 
+
 ## Apply audio to buses.
 func _apply_audio() -> void:
 	for bus_name in _bus_rows.keys():
@@ -227,9 +242,11 @@ func _apply_audio() -> void:
 		_set_bus_volume(bus_name, (row["slider"] as HSlider).value)
 		_set_bus_mute(bus_name, (row["mute"] as CheckBox).button_pressed)
 
+
 ## Apply gameplay flags.
 func _apply_gameplay() -> void:
 	pass
+
 
 ## Save config file.
 func _save_config() -> void:
@@ -246,23 +263,29 @@ func _save_config() -> void:
 
 	_cfg.save(CONFIG_PATH)
 
+
 ## Set bus volume (linear 0..1).
 func _set_bus_volume(bus_name: String, v: float) -> void:
 	var idx := AudioServer.get_bus_index(bus_name)
-	if idx == -1: return
+	if idx == -1:
+		return
 	AudioServer.set_bus_volume_db(idx, linear_to_db(clampf(v, 0.0, 1.0)))
+
 
 ## Mute/unmute bus.
 func _set_bus_mute(bus_name: String, on: bool) -> void:
 	var idx := AudioServer.get_bus_index(bus_name)
-	if idx == -1: return
+	if idx == -1:
+		return
 	AudioServer.set_bus_mute(idx, on)
+
 
 ## Linear→dB helper.
 func linear_to_db(v: float) -> float:
 	return -80.0 if v <= 0.0001 else 20.0 * (log(v) / log(10.0))
 
+
 ## API to set settigns visibility
 func set_visibility(state: bool):
 	visible = state
-	modulate = Color.WHITE # Some engine bug modulates to color(0,0,0,0) on hide
+	modulate = Color.WHITE  # Some engine bug modulates to color(0,0,0,0) on hide

@@ -8,20 +8,26 @@ extends Button
 
 var _capturing := false
 
+
 ## Set action programmatically.
 func set_action(new_name: String) -> void:
 	action_name = new_name
 	refresh_label()
 
+
 ## Update text from current binding.
 func refresh_label() -> void:
-	if action_name == "": text = "(unset)"; return
+	if action_name == "":
+		text = "(unset)"
+		return
 	var events := InputMap.action_get_events(action_name)
 	text = events[0].as_text() if events.size() > 0 else "(unbound)"
+
 
 func _ready() -> void:
 	pressed.connect(_begin_capture)
 	refresh_label()
+
 
 ## Enter capture mode.
 func _begin_capture() -> void:
@@ -30,9 +36,11 @@ func _begin_capture() -> void:
 	focus_mode = FOCUS_ALL
 	grab_focus()
 
+
 ## Capture input and assign.
 func _unhandled_input(event: InputEvent) -> void:
-	if not _capturing: return
+	if not _capturing:
+		return
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		# Clear binding
 		InputMap.action_erase_events(action_name)

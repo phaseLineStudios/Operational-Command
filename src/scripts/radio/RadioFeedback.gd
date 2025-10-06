@@ -1,6 +1,7 @@
-extends Node
 class_name RadioFeedback
-## Catches when an invalid command is emitted from parsed order and plays an audio to inform the player
+extends Node
+## Catches when an invalid command is emitted from parsed order and plays
+## an audio to inform the player
 
 ## Ammo: RadioFeedback
 ## Subscribes to AmmoSystem and order-parse events and surfaces them to the player.
@@ -20,8 +21,8 @@ class_name RadioFeedback
 ## - Connect to `OrdersParser.parse_error`
 ## - Try to locate `AmmoSystem` and `FuelSystem` instances in the scene by group lookup.
 func _ready() -> void:
-	OrdersParser.parse_error.connect(_on_parseError)
-	
+	OrdersParser.parse_error.connect(_on_parse_error)
+
 	var ammo := get_tree().get_first_node_in_group("AmmoSystem") as AmmoSystem
 	if ammo:
 		bind_ammo(ammo)
@@ -63,17 +64,21 @@ func bind_fuel(fuel: FuelSystem) -> void:
 func _on_ammo_low(uid: String) -> void:
 	LogService.info("%s: Bingo ammo" % uid, "Radio")
 
+
 ## “Ammo critical” — remaining ammo <= critical threshold but > 0.
 func _on_ammo_critical(uid: String) -> void:
 	LogService.info("%s: Ammo critical" % uid, "Radio")
+
 
 ## “Winchester” — out of ammo.
 func _on_ammo_empty(uid: String) -> void:
 	LogService.info("%s: Winchester" % uid, "Radio")
 
+
 ## Logistics unit began resupplying a recipient.
 func _on_resupply_started(src: String, dst: String) -> void:
 	LogService.info("%s -> %s: Resupplying" % [src, dst], "Radio")
+
 
 ## Resupply finished because the recipient is full or the source ran out of stock.
 func _on_resupply_completed(src: String, dst: String) -> void:

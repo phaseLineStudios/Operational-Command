@@ -261,6 +261,7 @@ layout_mode = 2
 text = "Recipient"
 
 [node name="Recipient" type="OptionButton" parent="Root/Content/RightCol/CommendationPanel/VBoxContainer/RecipientRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -274,6 +275,7 @@ layout_mode = 2
 text = "Award"
 
 [node name="Commendation" type="OptionButton" parent="Root/Content/RightCol/CommendationPanel/VBoxContainer/AwardRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 

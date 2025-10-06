@@ -1,8 +1,16 @@
-extends Node2D
 class_name MovementAgent
-
+extends Node2D
 ## Moves this node over PathGrid in world meters.
 ## Uses base speed modified by PathGrid cell weight and terrain lines/areas.
+
+## Emitted when the agent starts following a path.
+signal movement_started
+## Emitted when the agent arrives at its final waypoint.
+signal movement_arrived
+## Emitted if the agent cannot find a path or hits a blocked cell.
+signal movement_blocked(reason: String)
+## Emitted whenever a new path is set.
+signal path_updated(path: PackedVector2Array)
 
 ## Pathfinding grid (provide in inspector or at runtime).
 @export var grid: PathGrid
@@ -35,15 +43,6 @@ class_name MovementAgent
 
 var renderer: TerrainRender = null
 
-## Emitted when the agent starts following a path.
-signal movement_started()
-## Emitted when the agent arrives at its final waypoint.
-signal movement_arrived()
-## Emitted if the agent cannot find a path or hits a blocked cell.
-signal movement_blocked(reason: String)
-## Emitted whenever a new path is set.
-signal path_updated(path: PackedVector2Array)
-
 var _path: PackedVector2Array = []
 var _path_idx := 0
 var _moving := false
@@ -58,6 +57,7 @@ func _ready() -> void:
 		grid.build_ready.connect(_on_grid_ready)
 		grid.grid_rebuilt.connect(func(): _on_grid_ready(grid._build_profile))
 	_fuel = get_tree().get_first_node_in_group("FuelSystem") as FuelSystem
+
 
 func _physics_process(delta: float) -> void:
 	if not _moving or _path.size() == 0:
@@ -84,10 +84,10 @@ func _physics_process(delta: float) -> void:
 		return
 
 	var step: float = min(dist, speed * delta)
-	var dir: Vector2 = (to_wp / max(dist, 0.001))
+	var dir: Vector2 = to_wp / max(dist, 0.001)
 	sim_pos_m += dir * step
 	rotation = dir.angle()
-	
+
 	if debug_draw:
 		_debug_push_trail()
 		queue_redraw()
@@ -119,6 +119,7 @@ func _effective_speed_at(p_m: Vector2) -> float:
 		v *= _fuel.speed_mult(unit_id)
 	return v
 
+
 ## Command pathfind and start moving to a world-meter destination.
 func move_to_m(dest_m: Vector2) -> void:
 	if not grid:
@@ -131,11 +132,13 @@ func move_to_m(dest_m: Vector2) -> void:
 		return
 	_set_path(path)
 
+
 ## Command stop immediately.
 func stop() -> void:
 	_moving = false
 	_path = []
 	_path_idx = 0
+
 
 ## ETA (seconds) along current remaining path with current base speed.
 func eta_seconds() -> float:
@@ -146,6 +149,7 @@ func eta_seconds() -> float:
 		rem.append(_path[i])
 	return grid.estimate_travel_time_s(rem, base_speed_mps, profile)
 
+
 func _set_path(p: PackedVector2Array) -> void:
 	_path = p
 	_path_idx = 0
@@ -153,17 +157,21 @@ func _set_path(p: PackedVector2Array) -> void:
 	emit_signal("path_updated", _path)
 	emit_signal("movement_started")
 
+
 func _on_grid_ready(ready_profile: int) -> void:
 	if ready_profile == profile and _moving == false and _path.size() > 0:
 		pass
 
+
 ## Push current position into the breadcrumb list.
 func _debug_push_trail() -> void:
-	if debug_trail_len <= 0: return
+	if debug_trail_len <= 0:
+		return
 	var here_m := sim_pos_m
 	_trail.append(here_m)
 	if _trail.size() > debug_trail_len:
 		_trail.remove_at(0)
+
 
 ## Get the agent's current cell (if grid exists).
 func _debug_current_cell() -> Vector2i:
@@ -171,12 +179,14 @@ func _debug_current_cell() -> Vector2i:
 		return Vector2i(-1, -1)
 	return grid.world_to_cell(sim_pos_m)
 
+
 ## Get a Rect2 (in *world meters*) for a cell id.
 func _debug_cell_rect_world(c: Vector2i) -> Rect2:
 	if grid == null or c.x < 0:
 		return Rect2()
 	var cs := grid.cell_size_m
 	return Rect2(Vector2(c.x * cs, c.y * cs), Vector2(cs, cs))
+
 
 ## Read current cell weight safely.
 func _debug_weight_here() -> float:
@@ -189,6 +199,7 @@ func _debug_weight_here() -> float:
 		return INF
 	return max(grid._astar.get_point_weight_scale(c), 0.001)
 
+
 ## Compute instantaneous speed (m/s) based on last trail step.
 func _debug_instant_speed(delta: float) -> float:
 	if delta <= 0.0 or _trail.size() < 2:
@@ -197,46 +208,71 @@ func _debug_instant_speed(delta: float) -> float:
 	var b := _trail[_trail.size() - 1]
 	return a.distance_to(b) / delta
 
+
 func _draw() -> void:
 	if not debug_draw:
 		return
 
 	if debug_show_path and _path.size() >= 2:
 		for i in range(1, _path.size()):
-			var a := _to_local_from_terrain(_path[i-1])
+			var a := _to_local_from_terrain(_path[i - 1])
 			var b := _to_local_from_terrain(_path[i])
 			draw_line(a, b, Color(0.08, 0.08, 0.08, 1), 1.5)
 			draw_circle(b, debug_marker_r_m, Color(0.0, 0.7, 0.0, 0.9))
 		if _path_idx < _path.size():
-			draw_circle(_to_local_from_terrain(_path[_path_idx]), debug_marker_r_m, Color(1.0, 0.45, 0.1, 0.9))
+			draw_circle(
+				_to_local_from_terrain(_path[_path_idx]),
+				debug_marker_r_m,
+				Color(1.0, 0.45, 0.1, 0.9)
+			)
 
 	if debug_show_cells and grid:
 		var cur := grid.world_to_cell(sim_pos_m)
 		if grid._in_bounds(cur):
-			_draw_cell_rect_m(Rect2(Vector2(cur.x, cur.y) * grid.cell_size_m, Vector2.ONE * grid.cell_size_m),
-				Color(0.15, 0.55, 1.0, 0.35), 2.0, false)
+			_draw_cell_rect_m(
+				Rect2(Vector2(cur.x, cur.y) * grid.cell_size_m, Vector2.ONE * grid.cell_size_m),
+				Color(0.15, 0.55, 1.0, 0.35),
+				2.0,
+				false
+			)
 		if _path_idx < _path.size():
 			var nxt := grid.world_to_cell(_path[_path_idx])
 			if grid._in_bounds(nxt):
-				_draw_cell_rect_m(Rect2(Vector2(nxt.x, nxt.y) * grid.cell_size_m, Vector2.ONE * grid.cell_size_m),
-					Color(1.0, 0.4, 0.1, 0.35), 2.0, false)
+				_draw_cell_rect_m(
+					Rect2(Vector2(nxt.x, nxt.y) * grid.cell_size_m, Vector2.ONE * grid.cell_size_m),
+					Color(1.0, 0.4, 0.1, 0.35),
+					2.0,
+					false
+				)
 
 	if debug_show_vectors:
 		var base_m := sim_pos_m
 		var heading := Vector2.RIGHT.rotated(rotation) * (debug_marker_r_m * 3.0)
-		draw_line(_to_local_from_terrain(base_m),
-				  _to_local_from_terrain(base_m + heading),
-				  Color(0.2, 0.6, 1.0, 0.8), 2.0)
+		draw_line(
+			_to_local_from_terrain(base_m),
+			_to_local_from_terrain(base_m + heading),
+			Color(0.2, 0.6, 1.0, 0.8),
+			2.0
+		)
 		if _trail.size() >= 2:
-			var v: Vector2 = (_trail[_trail.size()-1] - _trail[_trail.size()-2]).limit_length(debug_marker_r_m * 4.0)
-			draw_line(_to_local_from_terrain(base_m),
-					  _to_local_from_terrain(base_m + v),
-					  Color(0.2, 1.0, 0.2, 0.8), 2.0)
+			var v: Vector2 = (_trail[_trail.size() - 1] - _trail[_trail.size() - 2]).limit_length(
+				debug_marker_r_m * 4.0
+			)
+			draw_line(
+				_to_local_from_terrain(base_m),
+				_to_local_from_terrain(base_m + v),
+				Color(0.2, 1.0, 0.2, 0.8),
+				2.0
+			)
 
 	if _trail.size() >= 2:
 		for i in range(1, _trail.size()):
-			draw_line(_to_local_from_terrain(_trail[i-1]), _to_local_from_terrain(_trail[i]),
-				Color(0.0, 0.0, 0.0, 0.25), 1.0)
+			draw_line(
+				_to_local_from_terrain(_trail[i - 1]),
+				_to_local_from_terrain(_trail[i]),
+				Color(0.0, 0.0, 0.0, 0.25),
+				1.0
+			)
 
 	if debug_show_hud:
 		var hud_anchor_m := sim_pos_m
@@ -247,18 +283,27 @@ func _draw() -> void:
 		var w := _debug_weight_here()
 		var eta := eta_seconds()
 		var inst_v := _debug_instant_speed(get_process_delta_time())
-		var txt := "w=%.2f  v=%.1f/%.1f m/s  ETA=%.1fs  idx:%d/%d" % [
-			(w if w < INF else -1.0),
-			inst_v,
-			base_speed_mps / (w if w < INF else 1.0),
-			eta,
-			_path_idx, _path.size()
-		]
+		var txt := (
+			"w=%.2f  v=%.1f/%.1f m/s  ETA=%.1fs  idx:%d/%d"
+			% [
+				w if w < INF else -1.0,
+				inst_v,
+				base_speed_mps / (w if w < INF else 1.0),
+				eta,
+				_path_idx,
+				_path.size()
+			]
+		)
 
 		draw_set_transform(hud_local, -rotation, Vector2.ONE)
-		draw_string(font, Vector2(1,1), txt, HORIZONTAL_ALIGNMENT_LEFT, -1.0, fsize, Color(0,0,0,0.8))
-		draw_string(font, Vector2.ZERO, txt, HORIZONTAL_ALIGNMENT_LEFT, -1.0, fsize, Color(1,1,1,0.95))
+		draw_string(
+			font, Vector2(1, 1), txt, HORIZONTAL_ALIGNMENT_LEFT, -1.0, fsize, Color(0, 0, 0, 0.8)
+		)
+		draw_string(
+			font, Vector2.ZERO, txt, HORIZONTAL_ALIGNMENT_LEFT, -1.0, fsize, Color(1, 1, 1, 0.95)
+		)
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
 
 func _draw_cell_rect_m(rm: Rect2, col: Color, width: float, filled := false) -> void:
 	var p0 := _to_local_from_terrain(rm.position)
@@ -266,10 +311,13 @@ func _draw_cell_rect_m(rm: Rect2, col: Color, width: float, filled := false) -> 
 	var p2 := _to_local_from_terrain(rm.position + rm.size)
 	var p3 := _to_local_from_terrain(rm.position + Vector2(0, rm.size.y))
 	if filled:
-		draw_colored_polygon(PackedVector2Array([p0,p1,p2,p3]), col)
+		draw_colored_polygon(PackedVector2Array([p0, p1, p2, p3]), col)
 	else:
-		draw_line(p0, p1, col, width); draw_line(p1, p2, col, width)
-		draw_line(p2, p3, col, width); draw_line(p3, p0, col, width)
+		draw_line(p0, p1, col, width)
+		draw_line(p1, p2, col, width)
+		draw_line(p2, p3, col, width)
+		draw_line(p3, p0, col, width)
+
 
 ## Convert terrain meters -> this node's local draw space
 func _to_local_from_terrain(p_m: Vector2) -> Vector2:
