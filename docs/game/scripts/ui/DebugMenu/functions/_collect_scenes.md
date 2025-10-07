@@ -1,7 +1,7 @@
 # DebugMenu::_collect_scenes Function Reference
 
 *Defined at:* `scripts/ui/DebugMenu.gd` (lines 72–77)</br>
-*Belongs to:* [DebugMenu](../DebugMenu.md)
+*Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**
 

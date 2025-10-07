@@ -1,7 +1,7 @@
 # ContourLayer::apply_style Function Reference
 
 *Defined at:* `scripts/terrain/ContourLayer.gd` (lines 79–114)</br>
-*Belongs to:* [ContourLayer](../ContourLayer.md)
+*Belongs to:* [ContourLayer](../../ContourLayer.md)
 
 **Signature**
 

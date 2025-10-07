@@ -1,7 +1,7 @@
 # UnitSelect::_on_request_inspect_from_tree Function Reference
 
 *Defined at:* `scripts/ui/UnitSelect.gd` (lines 363–367)</br>
-*Belongs to:* [UnitSelect](../UnitSelect.md)
+*Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**
 

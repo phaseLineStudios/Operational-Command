@@ -1,7 +1,7 @@
 # SlotsList::clear_assignment Function Reference
 
 *Defined at:* `scripts/ui/helpers/SlotsList.gd` (lines 53–58)</br>
-*Belongs to:* [SlotsList](../SlotsList.md)
+*Belongs to:* [SlotsList](../../SlotsList.md)
 
 **Signature**
 

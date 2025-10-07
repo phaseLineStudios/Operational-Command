@@ -1,7 +1,7 @@
 # UnitCard::_on_mouse_exited Function Reference
 
 *Defined at:* `scripts/ui/helpers/UnitCard.gd` (lines 112–116)</br>
-*Belongs to:* [UnitCard](../UnitCard.md)
+*Belongs to:* [UnitCard](../../UnitCard.md)
 
 **Signature**
 

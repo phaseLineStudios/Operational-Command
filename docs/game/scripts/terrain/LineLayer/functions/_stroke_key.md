@@ -1,7 +1,7 @@
 # LineLayer::_stroke_key Function Reference
 
 *Defined at:* `scripts/terrain/LineLayer.gd` (lines 336–339)</br>
-*Belongs to:* [LineLayer](../LineLayer.md)
+*Belongs to:* [LineLayer](../../LineLayer.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ScenarioObjectiveData::serialize Function Reference
 
 *Defined at:* `scripts/data/ScenarioObjectiveData.gd` (lines 15–18)</br>
-*Belongs to:* [ScenarioObjectiveData](../ScenarioObjectiveData.md)
+*Belongs to:* [ScenarioObjectiveData](../../ScenarioObjectiveData.md)
 
 **Signature**
 

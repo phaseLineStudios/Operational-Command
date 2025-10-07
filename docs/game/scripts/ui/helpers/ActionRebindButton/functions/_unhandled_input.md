@@ -1,7 +1,7 @@
 # ActionRebindButton::_unhandled_input Function Reference
 
 *Defined at:* `scripts/ui/helpers/ActionRebindButton.gd` (lines 41–58)</br>
-*Belongs to:* [ActionRebindButton](../ActionRebindButton.md)
+*Belongs to:* [ActionRebindButton](../../ActionRebindButton.md)
 
 **Signature**
 

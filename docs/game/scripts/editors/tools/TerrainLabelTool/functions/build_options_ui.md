@@ -1,7 +1,7 @@
 # TerrainLabelTool::build_options_ui Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainLabelTool.gd` (lines 51–91)</br>
-*Belongs to:* [TerrainLabelTool](../TerrainLabelTool.md)
+*Belongs to:* [TerrainLabelTool](../../TerrainLabelTool.md)
 
 **Signature**
 

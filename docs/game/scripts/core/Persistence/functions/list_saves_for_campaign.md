@@ -1,7 +1,7 @@
 # Persistence::list_saves_for_campaign Function Reference
 
 *Defined at:* `scripts/core/Persistence.gd` (lines 18–22)</br>
-*Belongs to:* [Persistence](../Persistence.md)
+*Belongs to:* [Persistence](../../Persistence.md)
 
 **Signature**
 

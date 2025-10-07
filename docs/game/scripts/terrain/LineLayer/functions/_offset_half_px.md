@@ -1,7 +1,7 @@
 # LineLayer::_offset_half_px Function Reference
 
 *Defined at:* `scripts/terrain/LineLayer.gd` (lines 259–265)</br>
-*Belongs to:* [LineLayer](../LineLayer.md)
+*Belongs to:* [LineLayer](../../LineLayer.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ScenarioSceneTreeService::rebuild Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioSceneTreeService.gd` (lines 11–77)</br>
-*Belongs to:* [ScenarioSceneTreeService](../ScenarioSceneTreeService.md)
+*Belongs to:* [ScenarioSceneTreeService](../../ScenarioSceneTreeService.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # PathGrid::_slope_multiplier_at_cell Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 635–655)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

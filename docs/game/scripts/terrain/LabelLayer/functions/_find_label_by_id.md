@@ -1,7 +1,7 @@
 # LabelLayer::_find_label_by_id Function Reference
 
 *Defined at:* `scripts/terrain/LabelLayer.gd` (lines 255–261)</br>
-*Belongs to:* [LabelLayer](../LabelLayer.md)
+*Belongs to:* [LabelLayer](../../LabelLayer.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # UnitCard::_ready Function Reference
 
 *Defined at:* `scripts/ui/helpers/UnitCard.gd` (lines 31–39)</br>
-*Belongs to:* [UnitCard](../UnitCard.md)
+*Belongs to:* [UnitCard](../../UnitCard.md)
 
 **Signature**
 

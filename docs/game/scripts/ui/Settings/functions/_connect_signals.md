@@ -1,7 +1,7 @@
 # Settings::_connect_signals Function Reference
 
 *Defined at:* `scripts/ui/Settings.gd` (lines 126–138)</br>
-*Belongs to:* [Settings](../Settings.md)
+*Belongs to:* [Settings](../../Settings.md)
 
 **Signature**
 

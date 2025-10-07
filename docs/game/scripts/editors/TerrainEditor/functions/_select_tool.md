@@ -1,7 +1,7 @@
 # TerrainEditor::_select_tool Function Reference
 
 *Defined at:* `scripts/editors/TerrainEditor.gd` (lines 233–249)</br>
-*Belongs to:* [TerrainEditor](../TerrainEditor.md)
+*Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**
 

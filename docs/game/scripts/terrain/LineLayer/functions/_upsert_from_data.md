@@ -1,7 +1,7 @@
 # LineLayer::_upsert_from_data Function Reference
 
 *Defined at:* `scripts/terrain/LineLayer.gd` (lines 110–177)</br>
-*Belongs to:* [LineLayer](../LineLayer.md)
+*Belongs to:* [LineLayer](../../LineLayer.md)
 
 **Signature**
 

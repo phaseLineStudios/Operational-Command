@@ -1,7 +1,7 @@
 # MainMenu::_build_submenu_buttons Function Reference
 
 *Defined at:* `scripts/ui/MainMenu.gd` (lines 125–161)</br>
-*Belongs to:* [MainMenu](../MainMenu.md)
+*Belongs to:* [MainMenu](../../MainMenu.md)
 
 **Signature**
 

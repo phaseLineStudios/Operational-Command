@@ -1,7 +1,7 @@
 # NewScenarioDialog::_on_primary_pressed Function Reference
 
 *Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 37–60)</br>
-*Belongs to:* [NewScenarioDialog](../NewScenarioDialog.md)
+*Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**
 

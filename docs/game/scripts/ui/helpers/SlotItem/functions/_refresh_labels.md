@@ -1,7 +1,7 @@
 # SlotItem::_refresh_labels Function Reference
 
 *Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 97–109)</br>
-*Belongs to:* [SlotItem](../SlotItem.md)
+*Belongs to:* [SlotItem](../../SlotItem.md)
 
 **Signature**
 

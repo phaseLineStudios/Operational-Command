@@ -1,7 +1,7 @@
 # PathGrid::_cell_center_m Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 715–718)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

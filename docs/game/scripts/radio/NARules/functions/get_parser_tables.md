@@ -1,7 +1,7 @@
 # NARules::get_parser_tables Function Reference
 
 *Defined at:* `scripts/radio/NARules.gd` (lines 9–170)</br>
-*Belongs to:* [NARules](../NARules.md)
+*Belongs to:* [NARules](../../NARules.md)
 
 **Signature**
 

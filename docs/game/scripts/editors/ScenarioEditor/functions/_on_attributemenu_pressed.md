@@ -1,7 +1,7 @@
 # ScenarioEditor::_on_attributemenu_pressed Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 640–656)</br>
-*Belongs to:* [ScenarioEditor](../ScenarioEditor.md)
+*Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # TerrainData::remove_label Function Reference
 
 *Defined at:* `scripts/data/TerrainData.gd` (lines 323–330)</br>
-*Belongs to:* [TerrainData](../TerrainData.md)
+*Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**
 

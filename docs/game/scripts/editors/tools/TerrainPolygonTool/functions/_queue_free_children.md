@@ -1,7 +1,7 @@
 # TerrainPolygonTool::_queue_free_children Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 382–386)</br>
-*Belongs to:* [TerrainPolygonTool](../TerrainPolygonTool.md)
+*Belongs to:* [TerrainPolygonTool](../../TerrainPolygonTool.md)
 
 **Signature**
 

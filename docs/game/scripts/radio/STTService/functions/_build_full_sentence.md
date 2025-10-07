@@ -1,7 +1,7 @@
 # STTService::_build_full_sentence Function Reference
 
 *Defined at:* `scripts/radio/STTService.gd` (lines 171–174)</br>
-*Belongs to:* [STTService](../STTService.md)
+*Belongs to:* [STTService](../../STTService.md)
 
 **Signature**
 

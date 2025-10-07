@@ -1,7 +1,7 @@
 # STTService::_process Function Reference
 
 *Defined at:* `scripts/radio/STTService.gd` (lines 76–102)</br>
-*Belongs to:* [STTService](../STTService.md)
+*Belongs to:* [STTService](../../STTService.md)
 
 **Signature**
 

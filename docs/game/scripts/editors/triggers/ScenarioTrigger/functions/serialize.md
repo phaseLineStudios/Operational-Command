@@ -1,7 +1,7 @@
 # ScenarioTrigger::serialize Function Reference
 
 *Defined at:* `scripts/editors/triggers/ScenarioTrigger.gd` (lines 52–68)</br>
-*Belongs to:* [ScenarioTrigger](../ScenarioTrigger.md)
+*Belongs to:* [ScenarioTrigger](../../ScenarioTrigger.md)
 
 **Signature**
 

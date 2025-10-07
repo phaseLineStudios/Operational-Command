@@ -1,7 +1,7 @@
 # PathGrid::debug_slope_mult_cell Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 753–759)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

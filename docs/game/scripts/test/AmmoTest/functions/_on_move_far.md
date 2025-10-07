@@ -1,7 +1,7 @@
 # AmmoTest::_on_move_far Function Reference
 
 *Defined at:* `scripts/test/AmmoTest.gd` (lines 182–188)</br>
-*Belongs to:* [AmmoTest](../AmmoTest.md)
+*Belongs to:* [AmmoTest](../../AmmoTest.md)
 
 **Signature**
 

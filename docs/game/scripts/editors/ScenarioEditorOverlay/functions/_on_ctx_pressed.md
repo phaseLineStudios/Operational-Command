@@ -1,7 +1,7 @@
 # ScenarioEditorOverlay::_on_ctx_pressed Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 174–192)</br>
-*Belongs to:* [ScenarioEditorOverlay](../ScenarioEditorOverlay.md)
+*Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
 

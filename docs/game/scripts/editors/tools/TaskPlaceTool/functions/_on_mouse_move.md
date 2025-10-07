@@ -1,7 +1,7 @@
 # TaskPlaceTool::_on_mouse_move Function Reference
 
 *Defined at:* `scripts/editors/tools/ScenarioTaskTool.gd` (lines 30–42)</br>
-*Belongs to:* [TaskPlaceTool](../TaskPlaceTool.md)
+*Belongs to:* [TaskPlaceTool](../../TaskPlaceTool.md)
 
 **Signature**
 

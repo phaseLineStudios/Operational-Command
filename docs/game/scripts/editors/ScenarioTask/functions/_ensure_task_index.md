@@ -1,7 +1,7 @@
 # ScenarioTask::_ensure_task_index Function Reference
 
 *Defined at:* `scripts/editors/ScenarioTask.gd` (lines 59–93)</br>
-*Belongs to:* [ScenarioTask](../ScenarioTask.md)
+*Belongs to:* [ScenarioTask](../../ScenarioTask.md)
 
 **Signature**
 

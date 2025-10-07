@@ -1,7 +1,7 @@
 # ScenarioDragLinkService::update_drag Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioDragLinkService.gd` (lines 22–31)</br>
-*Belongs to:* [ScenarioDragLinkService](../ScenarioDragLinkService.md)
+*Belongs to:* [ScenarioDragLinkService](../../ScenarioDragLinkService.md)
 
 **Signature**
 

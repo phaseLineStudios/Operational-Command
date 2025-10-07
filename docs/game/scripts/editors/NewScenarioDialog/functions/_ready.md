@@ -1,7 +1,7 @@
 # NewScenarioDialog::_ready Function Reference
 
 *Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 28–36)</br>
-*Belongs to:* [NewScenarioDialog](../NewScenarioDialog.md)
+*Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**
 

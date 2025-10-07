@@ -1,7 +1,7 @@
 # TerrainEditor::_save_as Function Reference
 
 *Defined at:* `scripts/editors/TerrainEditor.gd` (lines 386–412)</br>
-*Belongs to:* [TerrainEditor](../TerrainEditor.md)
+*Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**
 

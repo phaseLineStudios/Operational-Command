@@ -1,7 +1,7 @@
 # ScenarioTriggersService::_next_id Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioTriggersService.gd` (lines 37–50)</br>
-*Belongs to:* [ScenarioTriggersService](../ScenarioTriggersService.md)
+*Belongs to:* [ScenarioTriggersService](../../ScenarioTriggersService.md)
 
 **Signature**
 

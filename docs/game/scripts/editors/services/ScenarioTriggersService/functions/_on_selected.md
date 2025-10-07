@@ -1,7 +1,7 @@
 # ScenarioTriggersService::_on_selected Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioTriggersService.gd` (lines 19–24)</br>
-*Belongs to:* [ScenarioTriggersService](../ScenarioTriggersService.md)
+*Belongs to:* [ScenarioTriggersService](../../ScenarioTriggersService.md)
 
 **Signature**
 

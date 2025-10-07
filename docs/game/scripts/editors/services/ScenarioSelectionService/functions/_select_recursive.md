@@ -1,7 +1,7 @@
 # ScenarioSelectionService::_select_recursive Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioSelectionService.gd` (lines 47–63)</br>
-*Belongs to:* [ScenarioSelectionService](../ScenarioSelectionService.md)
+*Belongs to:* [ScenarioSelectionService](../../ScenarioSelectionService.md)
 
 **Signature**
 

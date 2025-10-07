@@ -1,7 +1,7 @@
 # ScenarioWeatherDialog::show_dialog Function Reference
 
 *Defined at:* `scripts/editors/WeatherDialog.gd` (lines 37–45)</br>
-*Belongs to:* [ScenarioWeatherDialog](../ScenarioWeatherDialog.md)
+*Belongs to:* [ScenarioWeatherDialog](../../ScenarioWeatherDialog.md)
 
 **Signature**
 

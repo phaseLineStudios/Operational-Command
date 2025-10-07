@@ -1,7 +1,7 @@
 # Settings::_apply_and_save Function Reference
 
 *Defined at:* `scripts/ui/Settings.gd` (lines 173–179)</br>
-*Belongs to:* [Settings](../Settings.md)
+*Belongs to:* [Settings](../../Settings.md)
 
 **Signature**
 

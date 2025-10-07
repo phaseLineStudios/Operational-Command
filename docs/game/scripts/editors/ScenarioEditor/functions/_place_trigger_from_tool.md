@@ -1,7 +1,7 @@
 # ScenarioEditor::_place_trigger_from_tool Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 317–331)</br>
-*Belongs to:* [ScenarioEditor](../ScenarioEditor.md)
+*Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # PickupItem::is_inspecting Function Reference
 
 *Defined at:* `scripts/core/PickupItem.gd` (lines 93–96)</br>
-*Belongs to:* [PickupItem](../PickupItem.md)
+*Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**
 

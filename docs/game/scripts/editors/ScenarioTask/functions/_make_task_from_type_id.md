@@ -1,7 +1,7 @@
 # ScenarioTask::_make_task_from_type_id Function Reference
 
 *Defined at:* `scripts/editors/ScenarioTask.gd` (lines 95–101)</br>
-*Belongs to:* [ScenarioTask](../ScenarioTask.md)
+*Belongs to:* [ScenarioTask](../../ScenarioTask.md)
 
 **Signature**
 

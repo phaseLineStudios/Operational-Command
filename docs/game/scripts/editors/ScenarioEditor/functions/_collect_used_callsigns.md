@@ -1,7 +1,7 @@
 # ScenarioEditor::_collect_used_callsigns Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 834–852)</br>
-*Belongs to:* [ScenarioEditor](../ScenarioEditor.md)
+*Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
 

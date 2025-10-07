@@ -1,7 +1,7 @@
 # UnitSelect::_recompute_logistics Function Reference
 
 *Defined at:* `scripts/ui/UnitSelect.gd` (lines 314–335)</br>
-*Belongs to:* [UnitSelect](../UnitSelect.md)
+*Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**
 

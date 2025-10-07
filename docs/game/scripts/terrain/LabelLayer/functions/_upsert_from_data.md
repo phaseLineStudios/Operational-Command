@@ -1,7 +1,7 @@
 # LabelLayer::_upsert_from_data Function Reference
 
 *Defined at:* `scripts/terrain/LabelLayer.gd` (lines 122–159)</br>
-*Belongs to:* [LabelLayer](../LabelLayer.md)
+*Belongs to:* [LabelLayer](../../LabelLayer.md)
 
 **Signature**
 

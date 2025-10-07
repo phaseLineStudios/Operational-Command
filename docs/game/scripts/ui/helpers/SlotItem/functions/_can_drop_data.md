@@ -1,7 +1,7 @@
 # SlotItem::_can_drop_data Function Reference
 
 *Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 149–167)</br>
-*Belongs to:* [SlotItem](../SlotItem.md)
+*Belongs to:* [SlotItem](../../SlotItem.md)
 
 **Signature**
 

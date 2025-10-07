@@ -1,7 +1,7 @@
 # MainMenu::_clear_children Function Reference
 
 *Defined at:* `scripts/ui/MainMenu.gd` (lines 193–195)</br>
-*Belongs to:* [MainMenu](../MainMenu.md)
+*Belongs to:* [MainMenu](../../MainMenu.md)
 
 **Signature**
 

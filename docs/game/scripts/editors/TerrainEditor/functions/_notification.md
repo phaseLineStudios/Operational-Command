@@ -1,7 +1,7 @@
 # TerrainEditor::_notification Function Reference
 
 *Defined at:* `scripts/editors/TerrainEditor.gd` (lines 85–91)</br>
-*Belongs to:* [TerrainEditor](../TerrainEditor.md)
+*Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**
 

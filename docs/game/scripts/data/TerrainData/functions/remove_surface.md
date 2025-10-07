@@ -1,7 +1,7 @@
 # TerrainData::remove_surface Function Reference
 
 *Defined at:* `scripts/data/TerrainData.gd` (lines 215–222)</br>
-*Belongs to:* [TerrainData](../TerrainData.md)
+*Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**
 

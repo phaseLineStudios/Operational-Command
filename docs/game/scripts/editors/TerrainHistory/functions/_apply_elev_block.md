@@ -1,7 +1,7 @@
 # TerrainHistory::_apply_elev_block Function Reference
 
 *Defined at:* `scripts/editors/TerrainHistory.gd` (lines 171–176)</br>
-*Belongs to:* [TerrainHistory](../TerrainHistory.md)
+*Belongs to:* [TerrainHistory](../../TerrainHistory.md)
 
 **Signature**
 

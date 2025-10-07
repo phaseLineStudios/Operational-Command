@@ -1,7 +1,7 @@
 # TerrainEffects::_brush_fields Function Reference
 
 *Defined at:* `scripts/sim/TerrainEffects.gd` (lines 155–168)</br>
-*Belongs to:* [TerrainEffects](../TerrainEffects.md)
+*Belongs to:* [TerrainEffects](../../TerrainEffects.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # UnitPlaceTool::_on_mouse_button Function Reference
 
 *Defined at:* `scripts/editors/tools/ScenarioUnitTool.gd` (lines 64–76)</br>
-*Belongs to:* [UnitPlaceTool](../UnitPlaceTool.md)
+*Belongs to:* [UnitPlaceTool](../../UnitPlaceTool.md)
 
 **Signature**
 

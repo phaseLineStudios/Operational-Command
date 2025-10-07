@@ -1,7 +1,7 @@
 # TerrainEditor::_request_exit Function Reference
 
 *Defined at:* `scripts/editors/TerrainEditor.gd` (lines 145–152)</br>
-*Belongs to:* [TerrainEditor](../TerrainEditor.md)
+*Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**
 

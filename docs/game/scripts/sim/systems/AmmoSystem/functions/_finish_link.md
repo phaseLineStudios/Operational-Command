@@ -1,7 +1,7 @@
 # AmmoSystem::_finish_link Function Reference
 
 *Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 206–213)</br>
-*Belongs to:* [AmmoSystem](../AmmoSystem.md)
+*Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ScenarioWeatherDialog::_ready Function Reference
 
 *Defined at:* `scripts/editors/WeatherDialog.gd` (lines 14–19)</br>
-*Belongs to:* [ScenarioWeatherDialog](../ScenarioWeatherDialog.md)
+*Belongs to:* [ScenarioWeatherDialog](../../ScenarioWeatherDialog.md)
 
 **Signature**
 

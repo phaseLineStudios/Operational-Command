@@ -1,7 +1,7 @@
 # Debrief::set_commendation_options Function Reference
 
 *Defined at:* `scripts/ui/Debrief.gd` (lines 257–262)</br>
-*Belongs to:* [Debrief](../Debrief.md)
+*Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**
 

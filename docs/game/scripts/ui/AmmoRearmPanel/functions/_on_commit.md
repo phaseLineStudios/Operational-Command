@@ -1,7 +1,7 @@
 # AmmoRearmPanel::_on_commit Function Reference
 
 *Defined at:* `scripts/ui/AmmoRearmPanel.gd` (lines 183–243)</br>
-*Belongs to:* [AmmoRearmPanel](../AmmoRearmPanel.md)
+*Belongs to:* [AmmoRearmPanel](../../AmmoRearmPanel.md)
 
 **Signature**
 

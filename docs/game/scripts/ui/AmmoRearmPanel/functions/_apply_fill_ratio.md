@@ -1,7 +1,7 @@
 # AmmoRearmPanel::_apply_fill_ratio Function Reference
 
 *Defined at:* `scripts/ui/AmmoRearmPanel.gd` (lines 162–182)</br>
-*Belongs to:* [AmmoRearmPanel](../AmmoRearmPanel.md)
+*Belongs to:* [AmmoRearmPanel](../../AmmoRearmPanel.md)
 
 **Signature**
 

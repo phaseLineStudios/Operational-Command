@@ -1,7 +1,7 @@
 # MissionSelect::_clear_children Function Reference
 
 *Defined at:* `scripts/ui/MissionSelect.gd` (lines 305–308)</br>
-*Belongs to:* [MissionSelect](../MissionSelect.md)
+*Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**
 

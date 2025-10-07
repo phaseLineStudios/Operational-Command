@@ -1,7 +1,7 @@
 # Game::end_scenario_and_go_to_debrief Function Reference
 
 *Defined at:* `scripts/core/Game.gd` (lines 105–107)</br>
-*Belongs to:* [Game](../Game.md)
+*Belongs to:* [Game](../../Game.md)
 
 **Signature**
 

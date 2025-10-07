@@ -1,7 +1,7 @@
 # DebugMetricsDisplay::_total_graph_draw Function Reference
 
 *Defined at:* `scripts/ui/DebugMetricsDisplay.gd` (lines 336–358)</br>
-*Belongs to:* [DebugMetricsDisplay](../DebugMetricsDisplay.md)
+*Belongs to:* [DebugMetricsDisplay](../../DebugMetricsDisplay.md)
 
 **Signature**
 

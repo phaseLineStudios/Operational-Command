@@ -1,7 +1,7 @@
 # TerrainData::set_point_transform Function Reference
 
 *Defined at:* `scripts/data/TerrainData.gd` (lines 276–285)</br>
-*Belongs to:* [TerrainData](../TerrainData.md)
+*Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**
 

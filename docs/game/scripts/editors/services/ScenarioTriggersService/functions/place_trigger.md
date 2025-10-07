@@ -1,7 +1,7 @@
 # ScenarioTriggersService::place_trigger Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioTriggersService.gd` (lines 25–36)</br>
-*Belongs to:* [ScenarioTriggersService](../ScenarioTriggersService.md)
+*Belongs to:* [ScenarioTriggersService](../../ScenarioTriggersService.md)
 
 **Signature**
 

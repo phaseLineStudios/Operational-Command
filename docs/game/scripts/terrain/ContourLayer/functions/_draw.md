@@ -1,7 +1,7 @@
 # ContourLayer::_draw Function Reference
 
 *Defined at:* `scripts/terrain/ContourLayer.gd` (lines 154–202)</br>
-*Belongs to:* [ContourLayer](../ContourLayer.md)
+*Belongs to:* [ContourLayer](../../ContourLayer.md)
 
 **Signature**
 

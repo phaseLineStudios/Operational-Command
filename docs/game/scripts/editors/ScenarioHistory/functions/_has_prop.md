@@ -1,7 +1,7 @@
 # ScenarioHistory::_has_prop Function Reference
 
 *Defined at:* `scripts/editors/ScenarioHistory.gd` (lines 291–299)</br>
-*Belongs to:* [ScenarioHistory](../ScenarioHistory.md)
+*Belongs to:* [ScenarioHistory](../../ScenarioHistory.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ScenarioHistory::undo Function Reference
 
 *Defined at:* `scripts/editors/ScenarioHistory.gd` (lines 17–25)</br>
-*Belongs to:* [ScenarioHistory](../ScenarioHistory.md)
+*Belongs to:* [ScenarioHistory](../../ScenarioHistory.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # TerrainPolygonTool::_pick_point Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 357–373)</br>
-*Belongs to:* [TerrainPolygonTool](../TerrainPolygonTool.md)
+*Belongs to:* [TerrainPolygonTool](../../TerrainPolygonTool.md)
 
 **Signature**
 

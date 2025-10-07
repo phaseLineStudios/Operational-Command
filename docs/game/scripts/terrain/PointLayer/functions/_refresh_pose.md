@@ -1,7 +1,7 @@
 # PointLayer::_refresh_pose Function Reference
 
 *Defined at:* `scripts/terrain/PointLayer.gd` (lines 164–191)</br>
-*Belongs to:* [PointLayer](../PointLayer.md)
+*Belongs to:* [PointLayer](../../PointLayer.md)
 
 **Signature**
 

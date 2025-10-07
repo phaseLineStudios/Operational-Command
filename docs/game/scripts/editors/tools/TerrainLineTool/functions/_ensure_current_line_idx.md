@@ -1,7 +1,7 @@
 # TerrainLineTool::_ensure_current_line_idx Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 404–418)</br>
-*Belongs to:* [TerrainLineTool](../TerrainLineTool.md)
+*Belongs to:* [TerrainLineTool](../../TerrainLineTool.md)
 
 **Signature**
 

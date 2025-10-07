@@ -1,7 +1,7 @@
 # TerrainHistory::_erase_item_by_id Function Reference
 
 *Defined at:* `scripts/editors/TerrainHistory.gd` (lines 145–153)</br>
-*Belongs to:* [TerrainHistory](../TerrainHistory.md)
+*Belongs to:* [TerrainHistory](../../TerrainHistory.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # PathGridDebugLayer::_process Function Reference
 
 *Defined at:* `scripts/terrain/PathGridDebugLayer.gd` (lines 14–16)</br>
-*Belongs to:* [PathGridDebugLayer](../PathGridDebugLayer.md)
+*Belongs to:* [PathGridDebugLayer](../../PathGridDebugLayer.md)
 
 **Signature**
 

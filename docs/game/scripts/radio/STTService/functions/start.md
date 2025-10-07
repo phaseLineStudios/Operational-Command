@@ -1,7 +1,7 @@
 # STTService::start Function Reference
 
 *Defined at:* `scripts/radio/STTService.gd` (lines 50–57)</br>
-*Belongs to:* [STTService](../STTService.md)
+*Belongs to:* [STTService](../../STTService.md)
 
 **Signature**
 

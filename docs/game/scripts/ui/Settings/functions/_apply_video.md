@@ -1,7 +1,7 @@
 # Settings::_apply_video Function Reference
 
 *Defined at:* `scripts/ui/Settings.gd` (lines 212–237)</br>
-*Belongs to:* [Settings](../Settings.md)
+*Belongs to:* [Settings](../../Settings.md)
 
 **Signature**
 

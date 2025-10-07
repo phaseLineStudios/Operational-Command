@@ -1,7 +1,7 @@
 # PointLayer::_on_points_changed Function Reference
 
 *Defined at:* `scripts/terrain/PointLayer.gd` (lines 47–70)</br>
-*Belongs to:* [PointLayer](../PointLayer.md)
+*Belongs to:* [PointLayer](../../PointLayer.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # TableCamera::_clamp_vec3_to_bounds Function Reference
 
 *Defined at:* `scripts/core/Camera.gd` (lines 74–81)</br>
-*Belongs to:* [TableCamera](../TableCamera.md)
+*Belongs to:* [TableCamera](../../TableCamera.md)
 
 **Signature**
 

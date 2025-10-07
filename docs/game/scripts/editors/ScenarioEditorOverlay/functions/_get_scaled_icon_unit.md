@@ -1,7 +1,7 @@
 # ScenarioEditorOverlay::_get_scaled_icon_unit Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 568–587)</br>
-*Belongs to:* [ScenarioEditorOverlay](../ScenarioEditorOverlay.md)
+*Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
 

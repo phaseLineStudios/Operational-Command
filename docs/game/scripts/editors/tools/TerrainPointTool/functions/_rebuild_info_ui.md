@@ -1,7 +1,7 @@
 # TerrainPointTool::_rebuild_info_ui Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 97–107)</br>
-*Belongs to:* [TerrainPointTool](../TerrainPointTool.md)
+*Belongs to:* [TerrainPointTool](../../TerrainPointTool.md)
 
 **Signature**
 

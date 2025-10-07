@@ -1,7 +1,7 @@
 # ScenarioDragLinkService::end_drag Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioDragLinkService.gd` (lines 32–42)</br>
-*Belongs to:* [ScenarioDragLinkService](../ScenarioDragLinkService.md)
+*Belongs to:* [ScenarioDragLinkService](../../ScenarioDragLinkService.md)
 
 **Signature**
 

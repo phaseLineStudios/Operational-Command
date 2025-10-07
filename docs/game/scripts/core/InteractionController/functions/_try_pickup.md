@@ -1,7 +1,7 @@
 # InteractionController::_try_pickup Function Reference
 
 *Defined at:* `scripts/core/PlayerInteraction.gd` (lines 86–122)</br>
-*Belongs to:* [InteractionController](../InteractionController.md)
+*Belongs to:* [InteractionController](../../InteractionController.md)
 
 **Signature**
 

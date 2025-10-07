@@ -1,7 +1,7 @@
 # TaskPlaceTool::draw_overlay Function Reference
 
 *Defined at:* `scripts/editors/tools/ScenarioTaskTool.gd` (lines 66–72)</br>
-*Belongs to:* [TaskPlaceTool](../TaskPlaceTool.md)
+*Belongs to:* [TaskPlaceTool](../../TaskPlaceTool.md)
 
 **Signature**
 

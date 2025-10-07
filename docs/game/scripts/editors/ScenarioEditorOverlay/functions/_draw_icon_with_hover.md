@@ -1,7 +1,7 @@
 # ScenarioEditorOverlay::_draw_icon_with_hover Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 444–454)</br>
-*Belongs to:* [ScenarioEditorOverlay](../ScenarioEditorOverlay.md)
+*Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
 

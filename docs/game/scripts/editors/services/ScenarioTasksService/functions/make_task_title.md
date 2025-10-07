@@ -1,7 +1,7 @@
 # ScenarioTasksService::make_task_title Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioTasksService.gd` (lines 115–119)</br>
-*Belongs to:* [ScenarioTasksService](../ScenarioTasksService.md)
+*Belongs to:* [ScenarioTasksService](../../ScenarioTasksService.md)
 
 **Signature**
 

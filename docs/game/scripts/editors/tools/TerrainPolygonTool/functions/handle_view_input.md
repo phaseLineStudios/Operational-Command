@@ -1,7 +1,7 @@
 # TerrainPolygonTool::handle_view_input Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 112–229)</br>
-*Belongs to:* [TerrainPolygonTool](../TerrainPolygonTool.md)
+*Belongs to:* [TerrainPolygonTool](../../TerrainPolygonTool.md)
 
 **Signature**
 

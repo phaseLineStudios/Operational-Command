@@ -1,7 +1,7 @@
 # CombatTest::_input Function Reference
 
 *Defined at:* `scripts/test/CombatTest.gd` (lines 71–88)</br>
-*Belongs to:* [CombatTest](../CombatTest.md)
+*Belongs to:* [CombatTest](../../CombatTest.md)
 
 **Signature**
 

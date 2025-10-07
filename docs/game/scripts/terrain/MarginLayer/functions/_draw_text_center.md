@@ -1,7 +1,7 @@
 # MarginLayer::_draw_text_center Function Reference
 
 *Defined at:* `scripts/terrain/MapMargin.gd` (lines 196–209)</br>
-*Belongs to:* [MarginLayer](../MarginLayer.md)
+*Belongs to:* [MarginLayer](../../MarginLayer.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # TerrainData::add_surface Function Reference
 
 *Defined at:* `scripts/data/TerrainData.gd` (lines 189–195)</br>
-*Belongs to:* [TerrainData](../TerrainData.md)
+*Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**
 

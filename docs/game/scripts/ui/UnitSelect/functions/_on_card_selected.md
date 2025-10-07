@@ -1,7 +1,7 @@
 # UnitSelect::_on_card_selected Function Reference
 
 *Defined at:* `scripts/ui/UnitSelect.gd` (lines 345–349)</br>
-*Belongs to:* [UnitSelect](../UnitSelect.md)
+*Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**
 

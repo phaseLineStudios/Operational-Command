@@ -1,7 +1,7 @@
 # UnitPlaceTool::_place Function Reference
 
 *Defined at:* `scripts/editors/tools/ScenarioUnitTool.gd` (lines 95–109)</br>
-*Belongs to:* [UnitPlaceTool](../UnitPlaceTool.md)
+*Belongs to:* [UnitPlaceTool](../../UnitPlaceTool.md)
 
 **Signature**
 

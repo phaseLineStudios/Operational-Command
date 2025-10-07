@@ -1,7 +1,7 @@
 # TerrainPolygonTool::build_hint_ui Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 77–86)</br>
-*Belongs to:* [TerrainPolygonTool](../TerrainPolygonTool.md)
+*Belongs to:* [TerrainPolygonTool](../../TerrainPolygonTool.md)
 
 **Signature**
 

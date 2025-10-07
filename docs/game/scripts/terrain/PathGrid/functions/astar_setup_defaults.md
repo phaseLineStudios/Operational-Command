@@ -1,7 +1,7 @@
 # PathGrid::astar_setup_defaults Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 91–101)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

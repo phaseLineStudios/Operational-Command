@@ -1,7 +1,7 @@
 # TerrainData::serialize Function Reference
 
 *Defined at:* `scripts/data/TerrainData.gd` (lines 489–563)</br>
-*Belongs to:* [TerrainData](../TerrainData.md)
+*Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**
 

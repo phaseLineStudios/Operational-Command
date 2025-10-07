@@ -1,7 +1,7 @@
 # PathGrid::_astar_key Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 450–471)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

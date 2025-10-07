@@ -1,7 +1,7 @@
 # PathGrid::rebuild_async_cancel Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 360–364)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

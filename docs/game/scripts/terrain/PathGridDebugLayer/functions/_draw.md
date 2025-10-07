@@ -1,7 +1,7 @@
 # PathGridDebugLayer::_draw Function Reference
 
 *Defined at:* `scripts/terrain/PathGridDebugLayer.gd` (lines 9–13)</br>
-*Belongs to:* [PathGridDebugLayer](../PathGridDebugLayer.md)
+*Belongs to:* [PathGridDebugLayer](../../PathGridDebugLayer.md)
 
 **Signature**
 

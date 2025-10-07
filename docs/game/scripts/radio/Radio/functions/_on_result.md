@@ -1,7 +1,7 @@
 # Radio::_on_result Function Reference
 
 *Defined at:* `scripts/radio/Radio.gd` (lines 40–45)</br>
-*Belongs to:* [Radio](../Radio.md)
+*Belongs to:* [Radio](../../Radio.md)
 
 **Signature**
 

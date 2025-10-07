@@ -1,7 +1,7 @@
 # ContourLayer::_stitch_segments_to_polylines Function Reference
 
 *Defined at:* `scripts/terrain/ContourLayer.gd` (lines 334–392)</br>
-*Belongs to:* [ContourLayer](../ContourLayer.md)
+*Belongs to:* [ContourLayer](../../ContourLayer.md)
 
 **Signature**
 

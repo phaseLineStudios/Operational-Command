@@ -1,7 +1,7 @@
 # MissionSelect::_refresh_pin_labels Function Reference
 
 *Defined at:* `scripts/ui/MissionSelect.gd` (lines 174–185)</br>
-*Belongs to:* [MissionSelect](../MissionSelect.md)
+*Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**
 

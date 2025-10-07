@@ -1,7 +1,7 @@
 # PathGrid::_exit_tree Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 82–90)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

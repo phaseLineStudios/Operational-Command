@@ -1,7 +1,7 @@
 # Game::set_scenario_loadout Function Reference
 
 *Defined at:* `scripts/core/Game.gd` (lines 65–69)</br>
-*Belongs to:* [Game](../Game.md)
+*Belongs to:* [Game](../../Game.md)
 
 **Signature**
 
@@ -23,4 +23,4 @@ func set_scenario_loadout(loadout: Dictionary) -> void:
 
 ## References
 
-- [`signal mission_loadout_selected`](..\..\Game.md#mission_loadout_selected)
+- [`signal mission_loadout_selected`](../../Game.md#mission_loadout_selected)

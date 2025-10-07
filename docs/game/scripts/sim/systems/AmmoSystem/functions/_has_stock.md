@@ -1,7 +1,7 @@
 # AmmoSystem::_has_stock Function Reference
 
 *Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 175–181)</br>
-*Belongs to:* [AmmoSystem](../AmmoSystem.md)
+*Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # PauseMenu::_unhandled_key_input Function Reference
 
 *Defined at:* `scripts/ui/PauseMenu.gd` (lines 93–95)</br>
-*Belongs to:* [PauseMenu](../PauseMenu.md)
+*Belongs to:* [PauseMenu](../../PauseMenu.md)
 
 **Signature**
 

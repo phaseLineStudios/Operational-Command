@@ -1,7 +1,7 @@
 # ContourLayer::_draw_labels_for_placements Function Reference
 
 *Defined at:* `scripts/terrain/ContourLayer.gd` (lines 633–659)</br>
-*Belongs to:* [ContourLayer](../ContourLayer.md)
+*Belongs to:* [ContourLayer](../../ContourLayer.md)
 
 **Signature**
 

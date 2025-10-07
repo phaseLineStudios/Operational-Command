@@ -1,7 +1,7 @@
 # ScenarioPersistenceService::load_from_path Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioPersistenceService.gd` (lines 31–42)</br>
-*Belongs to:* [ScenarioPersistenceService](../ScenarioPersistenceService.md)
+*Belongs to:* [ScenarioPersistenceService](../../ScenarioPersistenceService.md)
 
 **Signature**
 

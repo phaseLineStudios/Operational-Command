@@ -1,7 +1,7 @@
 # BriefData::serialize Function Reference
 
 *Defined at:* `scripts/data/BriefData.gd` (lines 43–77)</br>
-*Belongs to:* [BriefData](../BriefData.md)
+*Belongs to:* [BriefData](../../BriefData.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ScenarioEditorOverlay::_trim_segment Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 656–664)</br>
-*Belongs to:* [ScenarioEditorOverlay](../ScenarioEditorOverlay.md)
+*Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
 

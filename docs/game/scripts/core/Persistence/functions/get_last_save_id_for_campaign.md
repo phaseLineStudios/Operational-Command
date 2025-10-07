@@ -1,7 +1,7 @@
 # Persistence::get_last_save_id_for_campaign Function Reference
 
 *Defined at:* `scripts/core/Persistence.gd` (lines 12–16)</br>
-*Belongs to:* [Persistence](../Persistence.md)
+*Belongs to:* [Persistence](../../Persistence.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # TerrainElevationTool::build_hint_ui Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainElevationTool.gd` (lines 96–99)</br>
-*Belongs to:* [TerrainElevationTool](../TerrainElevationTool.md)
+*Belongs to:* [TerrainElevationTool](../../TerrainElevationTool.md)
 
 **Signature**
 

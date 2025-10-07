@@ -1,7 +1,7 @@
 # ScenarioTasksService::_snap Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioTasksService.gd` (lines 144–148)</br>
-*Belongs to:* [ScenarioTasksService](../ScenarioTasksService.md)
+*Belongs to:* [ScenarioTasksService](../../ScenarioTasksService.md)
 
 **Signature**
 

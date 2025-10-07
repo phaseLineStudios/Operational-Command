@@ -1,7 +1,7 @@
 # TerrainToolBase::handle_view_input Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainToolBase.gd` (lines 34–37)</br>
-*Belongs to:* [TerrainToolBase](../TerrainToolBase.md)
+*Belongs to:* [TerrainToolBase](../../TerrainToolBase.md)
 
 **Signature**
 

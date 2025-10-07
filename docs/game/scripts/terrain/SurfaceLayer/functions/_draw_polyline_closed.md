@@ -1,7 +1,7 @@
 # SurfaceLayer::_draw_polyline_closed Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 479–486)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

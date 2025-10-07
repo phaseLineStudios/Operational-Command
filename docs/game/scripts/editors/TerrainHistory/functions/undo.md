@@ -1,7 +1,7 @@
 # TerrainHistory::undo Function Reference
 
 *Defined at:* `scripts/editors/TerrainHistory.gd` (lines 19–27)</br>
-*Belongs to:* [TerrainHistory](../TerrainHistory.md)
+*Belongs to:* [TerrainHistory](../../TerrainHistory.md)
 
 **Signature**
 

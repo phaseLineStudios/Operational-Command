@@ -1,7 +1,7 @@
 # UnitCategoryData::serialize Function Reference
 
 *Defined at:* `scripts/data/UnitCategoryData.gd` (lines 13–28)</br>
-*Belongs to:* [UnitCategoryData](../UnitCategoryData.md)
+*Belongs to:* [UnitCategoryData](../../UnitCategoryData.md)
 
 **Signature**
 

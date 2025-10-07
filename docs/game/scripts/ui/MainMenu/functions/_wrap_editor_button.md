@@ -1,7 +1,7 @@
 # MainMenu::_wrap_editor_button Function Reference
 
 *Defined at:* `scripts/ui/MainMenu.gd` (lines 97–123)</br>
-*Belongs to:* [MainMenu](../MainMenu.md)
+*Belongs to:* [MainMenu](../../MainMenu.md)
 
 **Signature**
 

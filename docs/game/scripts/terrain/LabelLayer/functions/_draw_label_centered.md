@@ -1,7 +1,7 @@
 # LabelLayer::_draw_label_centered Function Reference
 
 *Defined at:* `scripts/terrain/LabelLayer.gd` (lines 200–246)</br>
-*Belongs to:* [LabelLayer](../LabelLayer.md)
+*Belongs to:* [LabelLayer](../../LabelLayer.md)
 
 **Signature**
 

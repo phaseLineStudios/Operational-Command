@@ -1,7 +1,7 @@
 # TerrainData::set_line_points Function Reference
 
 *Defined at:* `scripts/data/TerrainData.gd` (lines 232–239)</br>
-*Belongs to:* [TerrainData](../TerrainData.md)
+*Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**
 

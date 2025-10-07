@@ -1,7 +1,7 @@
 # TerrainData::_set_elev Function Reference
 
 *Defined at:* `scripts/data/TerrainData.gd` (lines 149–158)</br>
-*Belongs to:* [TerrainData](../TerrainData.md)
+*Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # NewTerrainDialog::_reset_values Function Reference
 
 *Defined at:* `scripts/editors/TerrainSettingsDialog.gd` (lines 121–129)</br>
-*Belongs to:* [NewTerrainDialog](../NewTerrainDialog.md)
+*Belongs to:* [NewTerrainDialog](../../NewTerrainDialog.md)
 
 **Signature**
 

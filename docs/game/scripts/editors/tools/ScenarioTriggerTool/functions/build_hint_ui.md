@@ -1,7 +1,7 @@
 # ScenarioTriggerTool::build_hint_ui Function Reference
 
 *Defined at:* `scripts/editors/tools/ScenarioTriggerTool.gd` (lines 21–27)</br>
-*Belongs to:* [ScenarioTriggerTool](../ScenarioTriggerTool.md)
+*Belongs to:* [ScenarioTriggerTool](../../ScenarioTriggerTool.md)
 
 **Signature**
 

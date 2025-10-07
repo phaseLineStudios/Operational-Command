@@ -1,7 +1,7 @@
 # UnitPlaceTool::_snap Function Reference
 
 *Defined at:* `scripts/editors/tools/ScenarioUnitTool.gd` (lines 110–114)</br>
-*Belongs to:* [UnitPlaceTool](../UnitPlaceTool.md)
+*Belongs to:* [UnitPlaceTool](../../UnitPlaceTool.md)
 
 **Signature**
 

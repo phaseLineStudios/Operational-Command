@@ -1,7 +1,7 @@
 # LineLayer::_rebuild_stroke_batches Function Reference
 
 *Defined at:* `scripts/terrain/LineLayer.gd` (lines 205–257)</br>
-*Belongs to:* [LineLayer](../LineLayer.md)
+*Belongs to:* [LineLayer](../../LineLayer.md)
 
 **Signature**
 

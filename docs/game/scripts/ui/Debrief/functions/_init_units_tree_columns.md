@@ -1,7 +1,7 @@
 # Debrief::_init_units_tree_columns Function Reference
 
 *Defined at:* `scripts/ui/Debrief.gd` (lines 361–387)</br>
-*Belongs to:* [Debrief](../Debrief.md)
+*Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ScenarioEditor::_ready Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 120–174)</br>
-*Belongs to:* [ScenarioEditor](../ScenarioEditor.md)
+*Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
 

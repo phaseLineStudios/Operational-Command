@@ -1,7 +1,7 @@
 # TerrainLineTool::_queue_preview_redraw Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 61–65)</br>
-*Belongs to:* [TerrainLineTool](../TerrainLineTool.md)
+*Belongs to:* [TerrainLineTool](../../TerrainLineTool.md)
 
 **Signature**
 

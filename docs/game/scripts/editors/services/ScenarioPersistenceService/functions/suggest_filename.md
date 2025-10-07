@@ -1,7 +1,7 @@
 # ScenarioPersistenceService::suggest_filename Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioPersistenceService.gd` (lines 7–12)</br>
-*Belongs to:* [ScenarioPersistenceService](../ScenarioPersistenceService.md)
+*Belongs to:* [ScenarioPersistenceService](../../ScenarioPersistenceService.md)
 
 **Signature**
 

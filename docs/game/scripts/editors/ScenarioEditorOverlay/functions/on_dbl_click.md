@@ -1,7 +1,7 @@
 # ScenarioEditorOverlay::on_dbl_click Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 149–165)</br>
-*Belongs to:* [ScenarioEditorOverlay](../ScenarioEditorOverlay.md)
+*Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # UnitSelect::_refresh_pool_filter Function Reference
 
 *Defined at:* `scripts/ui/UnitSelect.gd` (lines 184–201)</br>
-*Belongs to:* [UnitSelect](../UnitSelect.md)
+*Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**
 

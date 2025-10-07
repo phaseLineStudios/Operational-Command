@@ -1,7 +1,7 @@
 # MarginLayer::set_data Function Reference
 
 *Defined at:* `scripts/terrain/MapMargin.gd` (lines 51–55)</br>
-*Belongs to:* [MarginLayer](../MarginLayer.md)
+*Belongs to:* [MarginLayer](../../MarginLayer.md)
 
 **Signature**
 

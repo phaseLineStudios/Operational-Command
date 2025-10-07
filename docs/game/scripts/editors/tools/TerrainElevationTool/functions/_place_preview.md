@@ -1,7 +1,7 @@
 # TerrainElevationTool::_place_preview Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainElevationTool.gd` (lines 38–49)</br>
-*Belongs to:* [TerrainElevationTool](../TerrainElevationTool.md)
+*Belongs to:* [TerrainElevationTool](../../TerrainElevationTool.md)
 
 **Signature**
 

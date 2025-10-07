@@ -1,7 +1,7 @@
 # CombatTest::_load_scenario_json Function Reference
 
 *Defined at:* `scripts/test/CombatTest.gd` (lines 97–105)</br>
-*Belongs to:* [CombatTest](../CombatTest.md)
+*Belongs to:* [CombatTest](../../CombatTest.md)
 
 **Signature**
 

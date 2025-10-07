@@ -1,7 +1,7 @@
 # NewTerrainDialog::show_dialog Function Reference
 
 *Defined at:* `scripts/editors/TerrainSettingsDialog.gd` (lines 131–136)</br>
-*Belongs to:* [NewTerrainDialog](../NewTerrainDialog.md)
+*Belongs to:* [NewTerrainDialog](../../NewTerrainDialog.md)
 
 **Signature**
 

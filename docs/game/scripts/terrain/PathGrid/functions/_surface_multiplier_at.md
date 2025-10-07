@@ -1,7 +1,7 @@
 # PathGrid::_surface_multiplier_at Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 587–602)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

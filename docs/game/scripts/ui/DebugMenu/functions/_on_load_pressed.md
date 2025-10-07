@@ -1,7 +1,7 @@
 # DebugMenu::_on_load_pressed Function Reference
 
 *Defined at:* `scripts/ui/DebugMenu.gd` (lines 43–54)</br>
-*Belongs to:* [DebugMenu](../DebugMenu.md)
+*Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**
 

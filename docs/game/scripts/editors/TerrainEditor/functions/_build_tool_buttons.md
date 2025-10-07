@@ -1,7 +1,7 @@
 # TerrainEditor::_build_tool_buttons Function Reference
 
 *Defined at:* `scripts/editors/TerrainEditor.gd` (lines 174–231)</br>
-*Belongs to:* [TerrainEditor](../TerrainEditor.md)
+*Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**
 

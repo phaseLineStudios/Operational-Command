@@ -1,7 +1,7 @@
 # LogService::_enter_tree Function Reference
 
 *Defined at:* `scripts/core/LogService.gd` (lines 14–19)</br>
-*Belongs to:* [LogService](../LogService.md)
+*Belongs to:* [LogService](../../LogService.md)
 
 **Signature**
 

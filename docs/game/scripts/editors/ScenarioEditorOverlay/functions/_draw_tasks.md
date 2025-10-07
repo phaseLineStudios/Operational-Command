@@ -1,7 +1,7 @@
 # ScenarioEditorOverlay::_draw_tasks Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 244–255)</br>
-*Belongs to:* [ScenarioEditorOverlay](../ScenarioEditorOverlay.md)
+*Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
 

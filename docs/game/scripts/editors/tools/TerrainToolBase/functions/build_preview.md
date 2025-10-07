@@ -1,7 +1,7 @@
 # TerrainToolBase::build_preview Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainToolBase.gd` (lines 54–57)</br>
-*Belongs to:* [TerrainToolBase](../TerrainToolBase.md)
+*Belongs to:* [TerrainToolBase](../../TerrainToolBase.md)
 
 **Signature**
 

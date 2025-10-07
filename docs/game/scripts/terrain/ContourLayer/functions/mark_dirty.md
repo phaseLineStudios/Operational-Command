@@ -1,7 +1,7 @@
 # ContourLayer::mark_dirty Function Reference
 
 *Defined at:* `scripts/terrain/ContourLayer.gd` (lines 116–120)</br>
-*Belongs to:* [ContourLayer](../ContourLayer.md)
+*Belongs to:* [ContourLayer](../../ContourLayer.md)
 
 **Signature**
 

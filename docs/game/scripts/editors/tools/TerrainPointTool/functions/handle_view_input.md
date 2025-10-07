@@ -1,7 +1,7 @@
 # TerrainPointTool::handle_view_input Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 140–203)</br>
-*Belongs to:* [TerrainPointTool](../TerrainPointTool.md)
+*Belongs to:* [TerrainPointTool](../../TerrainPointTool.md)
 
 **Signature**
 

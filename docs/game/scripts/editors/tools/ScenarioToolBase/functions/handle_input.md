@@ -1,7 +1,7 @@
 # ScenarioToolBase::handle_input Function Reference
 
 *Defined at:* `scripts/editors/tools/ScenarioToolBase.gd` (lines 35–45)</br>
-*Belongs to:* [ScenarioToolBase](../ScenarioToolBase.md)
+*Belongs to:* [ScenarioToolBase](../../ScenarioToolBase.md)
 
 **Signature**
 

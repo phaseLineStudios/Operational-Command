@@ -1,7 +1,7 @@
 # UnitTaskDefend::_init Function Reference
 
 *Defined at:* `scripts/editors/tasks/TaskDefend.gd` (lines 12–18)</br>
-*Belongs to:* [UnitTaskDefend](../UnitTaskDefend.md)
+*Belongs to:* [UnitTaskDefend](../../UnitTaskDefend.md)
 
 **Signature**
 

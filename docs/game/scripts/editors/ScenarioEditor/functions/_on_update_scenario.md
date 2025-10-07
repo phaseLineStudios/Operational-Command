@@ -1,7 +1,7 @@
 # ScenarioEditor::_on_update_scenario Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 723–726)</br>
-*Belongs to:* [ScenarioEditor](../ScenarioEditor.md)
+*Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # MovementAgent::move_to_m Function Reference
 
 *Defined at:* `scripts/ai/MovementAgent.gd` (lines 107–118)</br>
-*Belongs to:* [MovementAgent](../MovementAgent.md)
+*Belongs to:* [MovementAgent](../../MovementAgent.md)
 
 **Signature**
 

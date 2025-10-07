@@ -1,7 +1,7 @@
 # Game::select_save Function Reference
 
 *Defined at:* `scripts/core/Game.gd` (lines 53–57)</br>
-*Belongs to:* [Game](../Game.md)
+*Belongs to:* [Game](../../Game.md)
 
 **Signature**
 
@@ -23,4 +23,4 @@ func select_save(save_id: StringName) -> void:
 
 ## References
 
-- [`signal save_selected`](..\..\Game.md#save_selected)
+- [`signal save_selected`](../../Game.md#save_selected)

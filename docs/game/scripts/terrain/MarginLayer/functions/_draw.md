@@ -1,7 +1,7 @@
 # MarginLayer::_draw Function Reference
 
 *Defined at:* `scripts/terrain/MapMargin.gd` (lines 112–194)</br>
-*Belongs to:* [MarginLayer](../MarginLayer.md)
+*Belongs to:* [MarginLayer](../../MarginLayer.md)
 
 **Signature**
 

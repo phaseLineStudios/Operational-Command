@@ -1,7 +1,7 @@
 # MovementAgent::_ready Function Reference
 
 *Defined at:* `scripts/ai/MovementAgent.gd` (lines 52–57)</br>
-*Belongs to:* [MovementAgent](../MovementAgent.md)
+*Belongs to:* [MovementAgent](../../MovementAgent.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ScenarioEditor::_set_tool Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 333–347)</br>
-*Belongs to:* [ScenarioEditor](../ScenarioEditor.md)
+*Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
 

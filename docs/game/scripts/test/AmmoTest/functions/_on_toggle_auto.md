@@ -1,7 +1,7 @@
 # AmmoTest::_on_toggle_auto Function Reference
 
 *Defined at:* `scripts/test/AmmoTest.gd` (lines 166–174)</br>
-*Belongs to:* [AmmoTest](../AmmoTest.md)
+*Belongs to:* [AmmoTest](../../AmmoTest.md)
 
 **Signature**
 

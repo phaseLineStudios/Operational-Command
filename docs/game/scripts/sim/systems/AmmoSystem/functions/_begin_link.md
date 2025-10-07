@@ -1,7 +1,7 @@
 # AmmoSystem::_begin_link Function Reference
 
 *Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 199–204)</br>
-*Belongs to:* [AmmoSystem](../AmmoSystem.md)
+*Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**
 

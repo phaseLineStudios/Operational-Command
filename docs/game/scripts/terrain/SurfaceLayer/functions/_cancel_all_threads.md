@@ -1,7 +1,7 @@
 # SurfaceLayer::_cancel_all_threads Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 389–395)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

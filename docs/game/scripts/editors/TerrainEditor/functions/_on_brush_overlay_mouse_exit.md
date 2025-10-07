@@ -1,7 +1,7 @@
 # TerrainEditor::_on_brush_overlay_mouse_exit Function Reference
 
 *Defined at:* `scripts/editors/TerrainEditor.gd` (lines 363–366)</br>
-*Belongs to:* [TerrainEditor](../TerrainEditor.md)
+*Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**
 

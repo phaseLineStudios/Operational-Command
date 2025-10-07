@@ -1,7 +1,7 @@
 # TerrainEditor::_rebuild_info_panel Function Reference
 
 *Defined at:* `scripts/editors/TerrainEditor.gd` (lines 283–288)</br>
-*Belongs to:* [TerrainEditor](../TerrainEditor.md)
+*Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**
 

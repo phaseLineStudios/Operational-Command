@@ -1,7 +1,7 @@
 # TaskConfigDialog::show_for Function Reference
 
 *Defined at:* `scripts/editors/TaskConfigDialog.gd` (lines 24–31)</br>
-*Belongs to:* [TaskConfigDialog](../TaskConfigDialog.md)
+*Belongs to:* [TaskConfigDialog](../../TaskConfigDialog.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # LabelLayer::apply_style Function Reference
 
 *Defined at:* `scripts/terrain/LabelLayer.gd` (lines 47–63)</br>
-*Belongs to:* [LabelLayer](../LabelLayer.md)
+*Belongs to:* [LabelLayer](../../LabelLayer.md)
 
 **Signature**
 

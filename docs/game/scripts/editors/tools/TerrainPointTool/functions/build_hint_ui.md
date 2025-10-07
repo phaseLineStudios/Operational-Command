@@ -1,7 +1,7 @@
 # TerrainPointTool::build_hint_ui Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 93–96)</br>
-*Belongs to:* [TerrainPointTool](../TerrainPointTool.md)
+*Belongs to:* [TerrainPointTool](../../TerrainPointTool.md)
 
 **Signature**
 

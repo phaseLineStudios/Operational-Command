@@ -1,7 +1,7 @@
 # DebugMenu::_populate_scene_list Function Reference
 
 *Defined at:* `scripts/ui/DebugMenu.gd` (lines 56–70)</br>
-*Belongs to:* [DebugMenu](../DebugMenu.md)
+*Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**
 

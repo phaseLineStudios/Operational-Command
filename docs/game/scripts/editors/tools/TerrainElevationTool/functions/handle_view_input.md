@@ -1,7 +1,7 @@
 # TerrainElevationTool::handle_view_input Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainElevationTool.gd` (lines 107–149)</br>
-*Belongs to:* [TerrainElevationTool](../TerrainElevationTool.md)
+*Belongs to:* [TerrainElevationTool](../../TerrainElevationTool.md)
 
 **Signature**
 

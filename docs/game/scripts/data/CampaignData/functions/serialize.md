@@ -1,7 +1,7 @@
 # CampaignData::serialize Function Reference
 
 *Defined at:* `scripts/data/CampaignData.gd` (lines 25–53)</br>
-*Belongs to:* [CampaignData](../CampaignData.md)
+*Belongs to:* [CampaignData](../../CampaignData.md)
 
 **Signature**
 

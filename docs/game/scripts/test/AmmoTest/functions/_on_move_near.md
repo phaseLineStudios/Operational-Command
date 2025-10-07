@@ -1,7 +1,7 @@
 # AmmoTest::_on_move_near Function Reference
 
 *Defined at:* `scripts/test/AmmoTest.gd` (lines 175–181)</br>
-*Belongs to:* [AmmoTest](../AmmoTest.md)
+*Belongs to:* [AmmoTest](../../AmmoTest.md)
 
 **Signature**
 

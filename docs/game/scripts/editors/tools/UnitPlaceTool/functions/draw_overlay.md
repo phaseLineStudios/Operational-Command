@@ -1,7 +1,7 @@
 # UnitPlaceTool::draw_overlay Function Reference
 
 *Defined at:* `scripts/editors/tools/ScenarioUnitTool.gd` (lines 86–94)</br>
-*Belongs to:* [UnitPlaceTool](../UnitPlaceTool.md)
+*Belongs to:* [UnitPlaceTool](../../UnitPlaceTool.md)
 
 **Signature**
 

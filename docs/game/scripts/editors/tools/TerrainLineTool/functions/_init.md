@@ -1,7 +1,7 @@
 # TerrainLineTool::_init Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 20–24)</br>
-*Belongs to:* [TerrainLineTool](../TerrainLineTool.md)
+*Belongs to:* [TerrainLineTool](../../TerrainLineTool.md)
 
 **Signature**
 

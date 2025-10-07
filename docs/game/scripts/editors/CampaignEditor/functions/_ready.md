@@ -1,7 +1,7 @@
 # CampaignEditor::_ready Function Reference
 
 *Defined at:* `scripts/editors/CampaignEditor.gd` (lines 11–14)</br>
-*Belongs to:* [CampaignEditor](../CampaignEditor.md)
+*Belongs to:* [CampaignEditor](../../CampaignEditor.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # PickupItem::on_pickup Function Reference
 
 *Defined at:* `scripts/core/PickupItem.gd` (lines 42–49)</br>
-*Belongs to:* [PickupItem](../PickupItem.md)
+*Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**
 

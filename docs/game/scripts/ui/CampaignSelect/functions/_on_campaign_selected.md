@@ -1,7 +1,7 @@
 # CampaignSelect::_on_campaign_selected Function Reference
 
 *Defined at:* `scripts/ui/CampaignSelect.gd` (lines 61–66)</br>
-*Belongs to:* [CampaignSelect](../CampaignSelect.md)
+*Belongs to:* [CampaignSelect](../../CampaignSelect.md)
 
 **Signature**
 

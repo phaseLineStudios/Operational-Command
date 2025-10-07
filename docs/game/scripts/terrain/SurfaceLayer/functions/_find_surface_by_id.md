@@ -1,7 +1,7 @@
 # SurfaceLayer::_find_surface_by_id Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 558–566)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

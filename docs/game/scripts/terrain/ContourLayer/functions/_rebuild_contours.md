@@ -1,7 +1,7 @@
 # ContourLayer::_rebuild_contours Function Reference
 
 *Defined at:* `scripts/terrain/ContourLayer.gd` (lines 204–258)</br>
-*Belongs to:* [ContourLayer](../ContourLayer.md)
+*Belongs to:* [ContourLayer](../../ContourLayer.md)
 
 **Signature**
 

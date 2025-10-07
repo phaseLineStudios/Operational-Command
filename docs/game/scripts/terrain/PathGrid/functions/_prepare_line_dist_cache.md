@@ -1,7 +1,7 @@
 # PathGrid::_prepare_line_dist_cache Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 565–586)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

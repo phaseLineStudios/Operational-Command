@@ -1,7 +1,7 @@
 # TerrainCamera::_zoom_at_mouse Function Reference
 
 *Defined at:* `scripts/editors/TerrainCamera.gd` (lines 54–69)</br>
-*Belongs to:* [TerrainCamera](../TerrainCamera.md)
+*Belongs to:* [TerrainCamera](../../TerrainCamera.md)
 
 **Signature**
 

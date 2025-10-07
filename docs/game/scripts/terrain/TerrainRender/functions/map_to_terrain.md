@@ -1,7 +1,7 @@
 # TerrainRender::map_to_terrain Function Reference
 
 *Defined at:* `scripts/terrain/TerrainRender.gd` (lines 269–274)</br>
-*Belongs to:* [TerrainRender](../TerrainRender.md)
+*Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**
 

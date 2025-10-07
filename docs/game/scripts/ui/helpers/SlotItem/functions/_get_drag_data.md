@@ -1,7 +1,7 @@
 # SlotItem::_get_drag_data Function Reference
 
 *Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 178–186)</br>
-*Belongs to:* [SlotItem](../SlotItem.md)
+*Belongs to:* [SlotItem](../../SlotItem.md)
 
 **Signature**
 

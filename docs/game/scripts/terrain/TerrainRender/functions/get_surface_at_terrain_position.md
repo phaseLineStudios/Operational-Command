@@ -1,7 +1,7 @@
 # TerrainRender::get_surface_at_terrain_position Function Reference
 
 *Defined at:* `scripts/terrain/TerrainRender.gd` (lines 384–427)</br>
-*Belongs to:* [TerrainRender](../TerrainRender.md)
+*Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**
 

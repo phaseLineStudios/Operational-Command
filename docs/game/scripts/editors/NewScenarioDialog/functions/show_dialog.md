@@ -1,7 +1,7 @@
 # NewScenarioDialog::show_dialog Function Reference
 
 *Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 149–163)</br>
-*Belongs to:* [NewScenarioDialog](../NewScenarioDialog.md)
+*Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**
 

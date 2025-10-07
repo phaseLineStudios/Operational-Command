@@ -1,7 +1,7 @@
 # SlotItem::_gui_input Function Reference
 
 *Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 142–147)</br>
-*Belongs to:* [SlotItem](../SlotItem.md)
+*Belongs to:* [SlotItem](../../SlotItem.md)
 
 **Signature**
 

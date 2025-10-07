@@ -1,7 +1,7 @@
 # ContentDB::get_scenario Function Reference
 
 *Defined at:* `scripts/core/ContentDB.gd` (lines 157–164)</br>
-*Belongs to:* [ContentDB](../ContentDB.md)
+*Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**
 

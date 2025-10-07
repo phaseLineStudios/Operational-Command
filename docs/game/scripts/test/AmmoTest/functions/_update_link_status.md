@@ -1,7 +1,7 @@
 # AmmoTest::_update_link_status Function Reference
 
 *Defined at:* `scripts/test/AmmoTest.gd` (lines 209–217)</br>
-*Belongs to:* [AmmoTest](../AmmoTest.md)
+*Belongs to:* [AmmoTest](../../AmmoTest.md)
 
 **Signature**
 

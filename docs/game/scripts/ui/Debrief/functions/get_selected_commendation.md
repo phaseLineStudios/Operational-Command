@@ -1,7 +1,7 @@
 # Debrief::get_selected_commendation Function Reference
 
 *Defined at:* `scripts/ui/Debrief.gd` (lines 293–297)</br>
-*Belongs to:* [Debrief](../Debrief.md)
+*Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**
 

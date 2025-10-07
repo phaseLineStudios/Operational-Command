@@ -1,7 +1,7 @@
 # Settings::_reset_defaults Function Reference
 
 *Defined at:* `scripts/ui/Settings.gd` (lines 181–197)</br>
-*Belongs to:* [Settings](../Settings.md)
+*Belongs to:* [Settings](../../Settings.md)
 
 **Signature**
 

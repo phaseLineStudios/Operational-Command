@@ -1,7 +1,7 @@
 # GridLayer::_draw_h_line Function Reference
 
 *Defined at:* `scripts/terrain/GridLayer.gd` (lines 115–121)</br>
-*Belongs to:* [GridLayer](../GridLayer.md)
+*Belongs to:* [GridLayer](../../GridLayer.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # DebugMenu::_refresh_log Function Reference
 
 *Defined at:* `scripts/ui/DebugMenu.gd` (lines 106–123)</br>
-*Belongs to:* [DebugMenu](../DebugMenu.md)
+*Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**
 

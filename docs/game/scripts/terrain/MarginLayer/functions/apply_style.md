@@ -1,7 +1,7 @@
 # MarginLayer::apply_style Function Reference
 
 *Defined at:* `scripts/terrain/MapMargin.gd` (lines 57–99)</br>
-*Belongs to:* [MarginLayer](../MarginLayer.md)
+*Belongs to:* [MarginLayer](../../MarginLayer.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # TriggerConfigDialog::show_for Function Reference
 
 *Defined at:* `scripts/editors/TriggerConfigDialog.gd` (lines 30–57)</br>
-*Belongs to:* [TriggerConfigDialog](../TriggerConfigDialog.md)
+*Belongs to:* [TriggerConfigDialog](../../TriggerConfigDialog.md)
 
 **Signature**
 

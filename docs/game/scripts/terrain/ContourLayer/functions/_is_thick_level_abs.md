@@ -1,7 +1,7 @@
 # ContourLayer::_is_thick_level_abs Function Reference
 
 *Defined at:* `scripts/terrain/ContourLayer.gd` (lines 510–518)</br>
-*Belongs to:* [ContourLayer](../ContourLayer.md)
+*Belongs to:* [ContourLayer](../../ContourLayer.md)
 
 **Signature**
 

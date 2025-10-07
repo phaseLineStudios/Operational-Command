@@ -1,7 +1,7 @@
 # TerrainBrush::los_attenuation_for_length Function Reference
 
 *Defined at:* `scripts/terrain/TerrainBrush.gd` (lines 103–106)</br>
-*Belongs to:* [TerrainBrush](../TerrainBrush.md)
+*Belongs to:* [TerrainBrush](../../TerrainBrush.md)
 
 **Signature**
 

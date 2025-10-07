@@ -1,7 +1,7 @@
 # CampaignSelect::_populate_campaigns Function Reference
 
 *Defined at:* `scripts/ui/CampaignSelect.gd` (lines 45–59)</br>
-*Belongs to:* [CampaignSelect](../CampaignSelect.md)
+*Belongs to:* [CampaignSelect](../../CampaignSelect.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # STTService::_join_non_empty Function Reference
 
 *Defined at:* `scripts/radio/STTService.gd` (lines 176–181)</br>
-*Belongs to:* [STTService](../STTService.md)
+*Belongs to:* [STTService](../../STTService.md)
 
 **Signature**
 

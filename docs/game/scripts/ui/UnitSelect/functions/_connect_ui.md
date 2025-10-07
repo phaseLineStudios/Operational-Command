@@ -1,7 +1,7 @@
 # UnitSelect::_connect_ui Function Reference
 
 *Defined at:* `scripts/ui/UnitSelect.gd` (lines 75–91)</br>
-*Belongs to:* [UnitSelect](../UnitSelect.md)
+*Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**
 

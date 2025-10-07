@@ -1,7 +1,7 @@
 # ScenarioHistory::push_multi_replace Function Reference
 
 *Defined at:* `scripts/editors/ScenarioHistory.gd` (lines 122–139)</br>
-*Belongs to:* [ScenarioHistory](../ScenarioHistory.md)
+*Belongs to:* [ScenarioHistory](../../ScenarioHistory.md)
 
 **Signature**
 

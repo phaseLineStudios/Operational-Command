@@ -1,7 +1,7 @@
 # MapController::_ready Function Reference
 
 *Defined at:* `scripts/core/MapController.gd` (lines 28–59)</br>
-*Belongs to:* [MapController](../MapController.md)
+*Belongs to:* [MapController](../../MapController.md)
 
 **Signature**
 

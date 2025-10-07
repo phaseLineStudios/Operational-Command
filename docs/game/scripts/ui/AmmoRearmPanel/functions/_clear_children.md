@@ -1,7 +1,7 @@
 # AmmoRearmPanel::_clear_children Function Reference
 
 *Defined at:* `scripts/ui/AmmoRearmPanel.gd` (lines 274–276)</br>
-*Belongs to:* [AmmoRearmPanel](../AmmoRearmPanel.md)
+*Belongs to:* [AmmoRearmPanel](../../AmmoRearmPanel.md)
 
 **Signature**
 

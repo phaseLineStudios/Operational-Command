@@ -1,7 +1,7 @@
 # AmmoSystem::tick Function Reference
 
 *Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 125–137)</br>
-*Belongs to:* [AmmoSystem](../AmmoSystem.md)
+*Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**
 

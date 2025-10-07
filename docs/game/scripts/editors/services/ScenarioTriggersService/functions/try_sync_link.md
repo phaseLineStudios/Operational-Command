@@ -1,7 +1,7 @@
 # ScenarioTriggersService::try_sync_link Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioTriggersService.gd` (lines 51–81)</br>
-*Belongs to:* [ScenarioTriggersService](../ScenarioTriggersService.md)
+*Belongs to:* [ScenarioTriggersService](../../ScenarioTriggersService.md)
 
 **Signature**
 

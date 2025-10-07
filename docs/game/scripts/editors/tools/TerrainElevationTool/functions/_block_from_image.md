@@ -1,7 +1,7 @@
 # TerrainElevationTool::_block_from_image Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainElevationTool.gd` (lines 250–262)</br>
-*Belongs to:* [TerrainElevationTool](../TerrainElevationTool.md)
+*Belongs to:* [TerrainElevationTool](../../TerrainElevationTool.md)
 
 **Signature**
 

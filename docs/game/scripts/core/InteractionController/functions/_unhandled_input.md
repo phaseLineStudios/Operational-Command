@@ -1,7 +1,7 @@
 # InteractionController::_unhandled_input Function Reference
 
 *Defined at:* `scripts/core/PlayerInteraction.gd` (lines 24–62)</br>
-*Belongs to:* [InteractionController](../InteractionController.md)
+*Belongs to:* [InteractionController](../../InteractionController.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ScenarioUnit::destination_m Function Reference
 
 *Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 179–182)</br>
-*Belongs to:* [ScenarioUnit](../ScenarioUnit.md)
+*Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**
 

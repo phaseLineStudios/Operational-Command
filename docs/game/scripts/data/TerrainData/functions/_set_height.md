@@ -1,7 +1,7 @@
 # TerrainData::_set_height Function Reference
 
 *Defined at:* `scripts/data/TerrainData.gd` (lines 126–132)</br>
-*Belongs to:* [TerrainData](../TerrainData.md)
+*Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # SurfaceLayer::_ensure_group Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 311–325)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

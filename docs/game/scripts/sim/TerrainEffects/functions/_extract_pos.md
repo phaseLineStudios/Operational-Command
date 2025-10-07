@@ -1,7 +1,7 @@
 # TerrainEffects::_extract_pos Function Reference
 
 *Defined at:* `scripts/sim/TerrainEffects.gd` (lines 182–193)</br>
-*Belongs to:* [TerrainEffects](../TerrainEffects.md)
+*Belongs to:* [TerrainEffects](../../TerrainEffects.md)
 
 **Signature**
 

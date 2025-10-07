@@ -1,7 +1,7 @@
 # MovementAgent::eta_seconds Function Reference
 
 *Defined at:* `scripts/ai/MovementAgent.gd` (lines 127–135)</br>
-*Belongs to:* [MovementAgent](../MovementAgent.md)
+*Belongs to:* [MovementAgent](../../MovementAgent.md)
 
 **Signature**
 

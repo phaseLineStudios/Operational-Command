@@ -1,7 +1,7 @@
 # Game::fail_objective Function Reference
 
 *Defined at:* `scripts/core/Game.gd` (lines 90–93)</br>
-*Belongs to:* [Game](../Game.md)
+*Belongs to:* [Game](../../Game.md)
 
 **Signature**
 

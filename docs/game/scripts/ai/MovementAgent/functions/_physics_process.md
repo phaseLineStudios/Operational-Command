@@ -1,7 +1,7 @@
 # MovementAgent::_physics_process Function Reference
 
 *Defined at:* `scripts/ai/MovementAgent.gd` (lines 58–91)</br>
-*Belongs to:* [MovementAgent](../MovementAgent.md)
+*Belongs to:* [MovementAgent](../../MovementAgent.md)
 
 **Signature**
 

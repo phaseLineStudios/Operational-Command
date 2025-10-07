@@ -1,7 +1,7 @@
 # CombatTest::_move_su_to Function Reference
 
 *Defined at:* `scripts/test/CombatTest.gd` (lines 89–96)</br>
-*Belongs to:* [CombatTest](../CombatTest.md)
+*Belongs to:* [CombatTest](../../CombatTest.md)
 
 **Signature**
 

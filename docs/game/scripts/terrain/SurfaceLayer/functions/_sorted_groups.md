@@ -1,7 +1,7 @@
 # SurfaceLayer::_sorted_groups Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 327–334)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

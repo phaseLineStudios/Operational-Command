@@ -1,7 +1,7 @@
 # TerrainHistory::_emit_changed Function Reference
 
 *Defined at:* `scripts/editors/TerrainHistory.gd` (lines 206–212)</br>
-*Belongs to:* [TerrainHistory](../TerrainHistory.md)
+*Belongs to:* [TerrainHistory](../../TerrainHistory.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # TerrainCamera::_ready Function Reference
 
 *Defined at:* `scripts/editors/TerrainCamera.gd` (lines 17–23)</br>
-*Belongs to:* [TerrainCamera](../TerrainCamera.md)
+*Belongs to:* [TerrainCamera](../../TerrainCamera.md)
 
 **Signature**
 

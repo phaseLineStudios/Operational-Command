@@ -1,7 +1,7 @@
 # TerrainData::get_size Function Reference
 
 *Defined at:* `scripts/data/TerrainData.gd` (lines 368–371)</br>
-*Belongs to:* [TerrainData](../TerrainData.md)
+*Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ScenarioHistory::_find_index_by_id_res Function Reference
 
 *Defined at:* `scripts/editors/ScenarioHistory.gd` (lines 230–237)</br>
-*Belongs to:* [ScenarioHistory](../ScenarioHistory.md)
+*Belongs to:* [ScenarioHistory](../../ScenarioHistory.md)
 
 **Signature**
 

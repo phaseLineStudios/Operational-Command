@@ -1,7 +1,7 @@
 # TerrainElevationTool::build_info_ui Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainElevationTool.gd` (lines 90–95)</br>
-*Belongs to:* [TerrainElevationTool](../TerrainElevationTool.md)
+*Belongs to:* [TerrainElevationTool](../../TerrainElevationTool.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # PathGrid::_line_px_to_meters Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 603–606)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

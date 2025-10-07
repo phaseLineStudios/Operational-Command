@@ -1,7 +1,7 @@
 # SlotItem::_notification Function Reference
 
 *Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 188–191)</br>
-*Belongs to:* [SlotItem](../SlotItem.md)
+*Belongs to:* [SlotItem](../../SlotItem.md)
 
 **Signature**
 

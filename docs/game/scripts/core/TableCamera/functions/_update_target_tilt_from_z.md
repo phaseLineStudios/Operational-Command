@@ -1,7 +1,7 @@
 # TableCamera::_update_target_tilt_from_z Function Reference
 
 *Defined at:* `scripts/core/Camera.gd` (lines 83–94)</br>
-*Belongs to:* [TableCamera](../TableCamera.md)
+*Belongs to:* [TableCamera](../../TableCamera.md)
 
 **Signature**
 

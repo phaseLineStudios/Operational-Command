@@ -1,7 +1,7 @@
 # CombatAdapter::_ready Function Reference
 
 *Defined at:* `scripts/sim/CombatAdapter.gd` (lines 17–22)</br>
-*Belongs to:* [CombatAdapter](../CombatAdapter.md)
+*Belongs to:* [CombatAdapter](../../CombatAdapter.md)
 
 **Signature**
 

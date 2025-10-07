@@ -1,7 +1,7 @@
 # TerrainEffects::_try_field Function Reference
 
 *Defined at:* `scripts/sim/TerrainEffects.gd` (lines 169–174)</br>
-*Belongs to:* [TerrainEffects](../TerrainEffects.md)
+*Belongs to:* [TerrainEffects](../../TerrainEffects.md)
 
 **Signature**
 

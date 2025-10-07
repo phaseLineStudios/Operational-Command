@@ -1,7 +1,7 @@
 # ContentDB::ids_from_resources Function Reference
 
 *Defined at:* `scripts/core/ContentDB.gd` (lines 453–462)</br>
-*Belongs to:* [ContentDB](../ContentDB.md)
+*Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**
 

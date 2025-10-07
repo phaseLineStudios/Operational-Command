@@ -1,7 +1,7 @@
 # SurfaceLayer::_sanitize_polygon Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 525–544)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

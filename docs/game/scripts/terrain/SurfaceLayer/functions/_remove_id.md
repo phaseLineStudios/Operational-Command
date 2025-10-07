@@ -1,7 +1,7 @@
 # SurfaceLayer::_remove_id Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 248–260)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

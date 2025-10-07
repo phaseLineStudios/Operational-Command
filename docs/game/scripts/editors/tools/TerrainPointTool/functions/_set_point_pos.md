@@ -1,7 +1,7 @@
 # TerrainPointTool::_set_point_pos Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 227–235)</br>
-*Belongs to:* [TerrainPointTool](../TerrainPointTool.md)
+*Belongs to:* [TerrainPointTool](../../TerrainPointTool.md)
 
 **Signature**
 

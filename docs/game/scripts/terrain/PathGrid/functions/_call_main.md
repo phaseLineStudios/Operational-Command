@@ -1,7 +1,7 @@
 # PathGrid::_call_main Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 841–849)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

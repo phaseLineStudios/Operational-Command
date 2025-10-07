@@ -1,7 +1,7 @@
 # NewTerrainDialog::_ready Function Reference
 
 *Defined at:* `scripts/editors/TerrainSettingsDialog.gd` (lines 23–28)</br>
-*Belongs to:* [NewTerrainDialog](../NewTerrainDialog.md)
+*Belongs to:* [NewTerrainDialog](../../NewTerrainDialog.md)
 
 **Signature**
 

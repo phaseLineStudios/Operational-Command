@@ -1,7 +1,7 @@
 # TerrainBrush::get_draw_recipe Function Reference
 
 *Defined at:* `scripts/terrain/TerrainBrush.gd` (lines 113–134)</br>
-*Belongs to:* [TerrainBrush](../TerrainBrush.md)
+*Belongs to:* [TerrainBrush](../../TerrainBrush.md)
 
 **Signature**
 

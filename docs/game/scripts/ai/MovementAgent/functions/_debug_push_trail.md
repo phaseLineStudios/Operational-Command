@@ -1,7 +1,7 @@
 # MovementAgent::_debug_push_trail Function Reference
 
 *Defined at:* `scripts/ai/MovementAgent.gd` (lines 150–158)</br>
-*Belongs to:* [MovementAgent](../MovementAgent.md)
+*Belongs to:* [MovementAgent](../../MovementAgent.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # AmmoRearmPanel::_add_section_label Function Reference
 
 *Defined at:* `scripts/ui/AmmoRearmPanel.gd` (lines 267–273)</br>
-*Belongs to:* [AmmoRearmPanel](../AmmoRearmPanel.md)
+*Belongs to:* [AmmoRearmPanel](../../AmmoRearmPanel.md)
 
 **Signature**
 

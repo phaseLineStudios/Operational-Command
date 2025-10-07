@@ -1,7 +1,7 @@
 # TerrainElevationTool::_brush_rect_px Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainElevationTool.gd` (lines 236–248)</br>
-*Belongs to:* [TerrainElevationTool](../TerrainElevationTool.md)
+*Belongs to:* [TerrainElevationTool](../../TerrainElevationTool.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # SlotConfigDialog::_on_remove_role Function Reference
 
 *Defined at:* `scripts/editors/SlotConfigDialog.gd` (lines 76–81)</br>
-*Belongs to:* [SlotConfigDialog](../SlotConfigDialog.md)
+*Belongs to:* [SlotConfigDialog](../../SlotConfigDialog.md)
 
 **Signature**
 

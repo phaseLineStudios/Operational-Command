@@ -1,7 +1,7 @@
 # ScenarioPersistenceService::save_to_path Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioPersistenceService.gd` (lines 17–30)</br>
-*Belongs to:* [ScenarioPersistenceService](../ScenarioPersistenceService.md)
+*Belongs to:* [ScenarioPersistenceService](../../ScenarioPersistenceService.md)
 
 **Signature**
 

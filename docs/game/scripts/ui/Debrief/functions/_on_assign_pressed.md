@@ -1,7 +1,7 @@
 # Debrief::_on_assign_pressed Function Reference
 
 *Defined at:* `scripts/ui/Debrief.gd` (lines 308–314)</br>
-*Belongs to:* [Debrief](../Debrief.md)
+*Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**
 

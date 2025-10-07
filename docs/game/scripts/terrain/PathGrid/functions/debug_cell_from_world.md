@@ -1,7 +1,7 @@
 # PathGrid::debug_cell_from_world Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 729–732)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

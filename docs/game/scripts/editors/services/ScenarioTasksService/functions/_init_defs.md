@@ -1,7 +1,7 @@
 # ScenarioTasksService::_init_defs Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioTasksService.gd` (lines 14–23)</br>
-*Belongs to:* [ScenarioTasksService](../ScenarioTasksService.md)
+*Belongs to:* [ScenarioTasksService](../../ScenarioTasksService.md)
 
 **Signature**
 

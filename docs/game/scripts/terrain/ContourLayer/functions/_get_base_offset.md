@@ -1,7 +1,7 @@
 # ContourLayer::_get_base_offset Function Reference
 
 *Defined at:* `scripts/terrain/ContourLayer.gd` (lines 505–508)</br>
-*Belongs to:* [ContourLayer](../ContourLayer.md)
+*Belongs to:* [ContourLayer](../../ContourLayer.md)
 
 **Signature**
 

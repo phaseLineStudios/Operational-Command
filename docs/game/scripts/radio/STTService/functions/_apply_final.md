@@ -1,7 +1,7 @@
 # STTService::_apply_final Function Reference
 
 *Defined at:* `scripts/radio/STTService.gd` (lines 143–149)</br>
-*Belongs to:* [STTService](../STTService.md)
+*Belongs to:* [STTService](../../STTService.md)
 
 **Signature**
 

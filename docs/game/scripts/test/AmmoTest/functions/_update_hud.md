@@ -1,7 +1,7 @@
 # AmmoTest::_update_hud Function Reference
 
 *Defined at:* `scripts/test/AmmoTest.gd` (lines 201–208)</br>
-*Belongs to:* [AmmoTest](../AmmoTest.md)
+*Belongs to:* [AmmoTest](../../AmmoTest.md)
 
 **Signature**
 

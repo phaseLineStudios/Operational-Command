@@ -1,7 +1,7 @@
 # UnitCard::set_selected Function Reference
 
 *Defined at:* `scripts/ui/helpers/UnitCard.gd` (lines 74–78)</br>
-*Belongs to:* [UnitCard](../UnitCard.md)
+*Belongs to:* [UnitCard](../../UnitCard.md)
 
 **Signature**
 

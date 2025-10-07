@@ -1,7 +1,7 @@
 # ContourLayer::_chaikin_once Function Reference
 
 *Defined at:* `scripts/terrain/ContourLayer.gd` (lines 469–503)</br>
-*Belongs to:* [ContourLayer](../ContourLayer.md)
+*Belongs to:* [ContourLayer](../../ContourLayer.md)
 
 **Signature**
 

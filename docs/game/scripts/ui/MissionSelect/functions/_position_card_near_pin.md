@@ -1,7 +1,7 @@
 # MissionSelect::_position_card_near_pin Function Reference
 
 *Defined at:* `scripts/ui/MissionSelect.gd` (lines 264–293)</br>
-*Belongs to:* [MissionSelect](../MissionSelect.md)
+*Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**
 

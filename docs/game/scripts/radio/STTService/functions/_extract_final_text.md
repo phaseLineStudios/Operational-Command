@@ -1,7 +1,7 @@
 # STTService::_extract_final_text Function Reference
 
 *Defined at:* `scripts/radio/STTService.gd` (lines 161–169)</br>
-*Belongs to:* [STTService](../STTService.md)
+*Belongs to:* [STTService](../../STTService.md)
 
 **Signature**
 

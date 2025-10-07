@@ -1,7 +1,7 @@
 # SlotsList::build_from_slots Function Reference
 
 *Defined at:* `scripts/ui/helpers/SlotsList.gd` (lines 23–44)</br>
-*Belongs to:* [SlotsList](../SlotsList.md)
+*Belongs to:* [SlotsList](../../SlotsList.md)
 
 **Signature**
 

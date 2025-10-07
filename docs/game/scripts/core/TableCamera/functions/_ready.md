@@ -1,7 +1,7 @@
 # TableCamera::_ready Function Reference
 
 *Defined at:* `scripts/core/Camera.gd` (lines 24–38)</br>
-*Belongs to:* [TableCamera](../TableCamera.md)
+*Belongs to:* [TableCamera](../../TableCamera.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # OrdersParser::_finalize Function Reference
 
 *Defined at:* `scripts/radio/OrdersParser.gd` (lines 168–183)</br>
-*Belongs to:* [OrdersParser](../OrdersParser.md)
+*Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**
 

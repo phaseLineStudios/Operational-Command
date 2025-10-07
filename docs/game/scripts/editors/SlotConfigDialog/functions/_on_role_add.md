@@ -1,7 +1,7 @@
 # SlotConfigDialog::_on_role_add Function Reference
 
 *Defined at:* `scripts/editors/SlotConfigDialog.gd` (lines 66–74)</br>
-*Belongs to:* [SlotConfigDialog](../SlotConfigDialog.md)
+*Belongs to:* [SlotConfigDialog](../../SlotConfigDialog.md)
 
 **Signature**
 

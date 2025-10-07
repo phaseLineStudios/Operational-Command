@@ -1,7 +1,7 @@
 # ContentDB::_postprocess Function Reference
 
 *Defined at:* `scripts/core/ContentDB.gd` (lines 22–47)</br>
-*Belongs to:* [ContentDB](../ContentDB.md)
+*Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**
 

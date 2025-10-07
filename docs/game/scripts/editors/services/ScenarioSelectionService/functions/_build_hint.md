@@ -1,7 +1,7 @@
 # ScenarioSelectionService::_build_hint Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioSelectionService.gd` (lines 24–36)</br>
-*Belongs to:* [ScenarioSelectionService](../ScenarioSelectionService.md)
+*Belongs to:* [ScenarioSelectionService](../../ScenarioSelectionService.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # MarginLayer::mark_dirty Function Reference
 
 *Defined at:* `scripts/terrain/MapMargin.gd` (lines 101–105)</br>
-*Belongs to:* [MarginLayer](../MarginLayer.md)
+*Belongs to:* [MarginLayer](../../MarginLayer.md)
 
 **Signature**
 

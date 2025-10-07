@@ -1,7 +1,7 @@
 # OrdersParser::_is_ascii_alpha_cp Function Reference
 
 *Defined at:* `scripts/radio/OrdersParser.gd` (lines 299–302)</br>
-*Belongs to:* [OrdersParser](../OrdersParser.md)
+*Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**
 

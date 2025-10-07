@@ -1,7 +1,7 @@
 # DebugMetricsDisplay::_process Function Reference
 
 *Defined at:* `scripts/ui/DebugMetricsDisplay.gd` (lines 405–543)</br>
-*Belongs to:* [DebugMetricsDisplay](../DebugMetricsDisplay.md)
+*Belongs to:* [DebugMetricsDisplay](../../DebugMetricsDisplay.md)
 
 **Signature**
 

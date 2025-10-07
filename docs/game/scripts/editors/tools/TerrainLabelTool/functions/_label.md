@@ -1,7 +1,7 @@
 # TerrainLabelTool::_label Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainLabelTool.gd` (lines 227–232)</br>
-*Belongs to:* [TerrainLabelTool](../TerrainLabelTool.md)
+*Belongs to:* [TerrainLabelTool](../../TerrainLabelTool.md)
 
 **Signature**
 

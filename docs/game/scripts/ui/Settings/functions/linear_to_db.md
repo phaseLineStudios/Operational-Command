@@ -1,7 +1,7 @@
 # Settings::linear_to_db Function Reference
 
 *Defined at:* `scripts/ui/Settings.gd` (lines 284–287)</br>
-*Belongs to:* [Settings](../Settings.md)
+*Belongs to:* [Settings](../../Settings.md)
 
 **Signature**
 

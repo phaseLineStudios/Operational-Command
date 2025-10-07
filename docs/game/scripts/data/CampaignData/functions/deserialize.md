@@ -1,7 +1,7 @@
 # CampaignData::deserialize Function Reference
 
 *Defined at:* `scripts/data/CampaignData.gd` (lines 55–88)</br>
-*Belongs to:* [CampaignData](../CampaignData.md)
+*Belongs to:* [CampaignData](../../CampaignData.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ContentDB::get_briefings Function Reference
 
 *Defined at:* `scripts/core/ContentDB.gd` (lines 253–261)</br>
-*Belongs to:* [ContentDB](../ContentDB.md)
+*Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**
 

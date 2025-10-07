@@ -1,7 +1,7 @@
 # TableCamera::_damp_vec3 Function Reference
 
 *Defined at:* `scripts/core/Camera.gd` (lines 96–102)</br>
-*Belongs to:* [TableCamera](../TableCamera.md)
+*Belongs to:* [TableCamera](../../TableCamera.md)
 
 **Signature**
 

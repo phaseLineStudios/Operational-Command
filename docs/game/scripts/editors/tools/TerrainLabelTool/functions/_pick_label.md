@@ -1,7 +1,7 @@
 # TerrainLabelTool::_pick_label Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainLabelTool.gd` (lines 205–226)</br>
-*Belongs to:* [TerrainLabelTool](../TerrainLabelTool.md)
+*Belongs to:* [TerrainLabelTool](../../TerrainLabelTool.md)
 
 **Signature**
 

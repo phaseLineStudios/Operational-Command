@@ -1,7 +1,7 @@
 # TriggerConfigDialog::_on_save Function Reference
 
 *Defined at:* `scripts/editors/TriggerConfigDialog.gd` (lines 58–90)</br>
-*Belongs to:* [TriggerConfigDialog](../TriggerConfigDialog.md)
+*Belongs to:* [TriggerConfigDialog](../../TriggerConfigDialog.md)
 
 **Signature**
 

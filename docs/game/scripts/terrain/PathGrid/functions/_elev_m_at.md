@@ -1,7 +1,7 @@
 # PathGrid::_elev_m_at Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 723–727)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # TerrainEditor::_on_brush_overlay_gui_input Function Reference
 
 *Defined at:* `scripts/editors/TerrainEditor.gd` (lines 340–356)</br>
-*Belongs to:* [TerrainEditor](../TerrainEditor.md)
+*Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**
 

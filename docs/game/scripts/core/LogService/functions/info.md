@@ -1,7 +1,7 @@
 # LogService::info Function Reference
 
 *Defined at:* `scripts/core/LogService.gd` (lines 33–39)</br>
-*Belongs to:* [LogService](../LogService.md)
+*Belongs to:* [LogService](../../LogService.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # UnitPlaceTool::_on_key Function Reference
 
 *Defined at:* `scripts/editors/tools/ScenarioUnitTool.gd` (lines 77–85)</br>
-*Belongs to:* [UnitPlaceTool](../UnitPlaceTool.md)
+*Belongs to:* [UnitPlaceTool](../../UnitPlaceTool.md)
 
 **Signature**
 

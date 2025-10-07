@@ -1,7 +1,7 @@
 # Briefing::_ready Function Reference
 
 *Defined at:* `scripts/ui/Briefing.gd` (lines 28–35)</br>
-*Belongs to:* [Briefing](../Briefing.md)
+*Belongs to:* [Briefing](../../Briefing.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # PathGrid::_ready Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 77–81)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

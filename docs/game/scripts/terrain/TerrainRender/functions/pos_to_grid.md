@@ -1,7 +1,7 @@
 # TerrainRender::pos_to_grid Function Reference
 
 *Defined at:* `scripts/terrain/TerrainRender.gd` (lines 297–332)</br>
-*Belongs to:* [TerrainRender](../TerrainRender.md)
+*Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**
 

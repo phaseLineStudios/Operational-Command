@@ -1,7 +1,7 @@
 # PathGrid::_raster_key Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 473–487)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # PickupItem::_ready Function Reference
 
 *Defined at:* `scripts/core/PickupItem.gd` (lines 35–40)</br>
-*Belongs to:* [PickupItem](../PickupItem.md)
+*Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**
 

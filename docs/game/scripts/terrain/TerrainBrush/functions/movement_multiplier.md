@@ -1,7 +1,7 @@
 # TerrainBrush::movement_multiplier Function Reference
 
 *Defined at:* `scripts/terrain/TerrainBrush.gd` (lines 88–101)</br>
-*Belongs to:* [TerrainBrush](../TerrainBrush.md)
+*Belongs to:* [TerrainBrush](../../TerrainBrush.md)
 
 **Signature**
 

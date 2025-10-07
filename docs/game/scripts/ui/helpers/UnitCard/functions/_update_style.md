@@ -1,7 +1,7 @@
 # UnitCard::_update_style Function Reference
 
 *Defined at:* `scripts/ui/helpers/UnitCard.gd` (lines 80–90)</br>
-*Belongs to:* [UnitCard](../UnitCard.md)
+*Belongs to:* [UnitCard](../../UnitCard.md)
 
 **Signature**
 

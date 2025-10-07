@@ -1,7 +1,7 @@
 # SlotConfigDialog::_on_save Function Reference
 
 *Defined at:* `scripts/editors/SlotConfigDialog.gd` (lines 40–64)</br>
-*Belongs to:* [SlotConfigDialog](../SlotConfigDialog.md)
+*Belongs to:* [SlotConfigDialog](../../SlotConfigDialog.md)
 
 **Signature**
 

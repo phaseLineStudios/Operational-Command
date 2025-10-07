@@ -1,7 +1,7 @@
 # STTService::_ready Function Reference
 
 *Defined at:* `scripts/radio/STTService.gd` (lines 29–48)</br>
-*Belongs to:* [STTService](../STTService.md)
+*Belongs to:* [STTService](../../STTService.md)
 
 **Signature**
 

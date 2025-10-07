@@ -1,7 +1,7 @@
 # NARules::get_vosk_grammar_words Function Reference
 
 *Defined at:* `scripts/radio/NARules.gd` (lines 172–202)</br>
-*Belongs to:* [NARules](../NARules.md)
+*Belongs to:* [NARules](../../NARules.md)
 
 **Signature**
 

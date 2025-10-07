@@ -1,7 +1,7 @@
 # AmmoTest::_physics_process Function Reference
 
 *Defined at:* `scripts/test/AmmoTest.gd` (lines 100–106)</br>
-*Belongs to:* [AmmoTest](../AmmoTest.md)
+*Belongs to:* [AmmoTest](../../AmmoTest.md)
 
 **Signature**
 

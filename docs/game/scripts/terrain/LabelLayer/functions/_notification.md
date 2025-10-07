@@ -1,7 +1,7 @@
 # LabelLayer::_notification Function Reference
 
 *Defined at:* `scripts/terrain/LabelLayer.gd` (lines 98–102)</br>
-*Belongs to:* [LabelLayer](../LabelLayer.md)
+*Belongs to:* [LabelLayer](../../LabelLayer.md)
 
 **Signature**
 

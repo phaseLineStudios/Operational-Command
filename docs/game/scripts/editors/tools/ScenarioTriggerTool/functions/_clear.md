@@ -1,7 +1,7 @@
 # ScenarioTriggerTool::_clear Function Reference
 
 *Defined at:* `scripts/editors/tools/ScenarioTriggerTool.gd` (lines 107–109)</br>
-*Belongs to:* [ScenarioTriggerTool](../ScenarioTriggerTool.md)
+*Belongs to:* [ScenarioTriggerTool](../../ScenarioTriggerTool.md)
 
 **Signature**
 

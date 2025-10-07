@@ -1,7 +1,7 @@
 # ScenarioEditor::_delete_task Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 550–606)</br>
-*Belongs to:* [ScenarioEditor](../ScenarioEditor.md)
+*Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
 

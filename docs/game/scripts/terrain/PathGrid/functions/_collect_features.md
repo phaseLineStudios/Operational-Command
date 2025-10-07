@@ -1,7 +1,7 @@
 # PathGrid::_collect_features Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 656–708)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

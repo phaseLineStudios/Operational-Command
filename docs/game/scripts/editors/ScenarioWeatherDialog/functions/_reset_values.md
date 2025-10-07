@@ -1,7 +1,7 @@
 # ScenarioWeatherDialog::_reset_values Function Reference
 
 *Defined at:* `scripts/editors/WeatherDialog.gd` (lines 29–35)</br>
-*Belongs to:* [ScenarioWeatherDialog](../ScenarioWeatherDialog.md)
+*Belongs to:* [ScenarioWeatherDialog](../../ScenarioWeatherDialog.md)
 
 **Signature**
 

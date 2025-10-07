@@ -1,7 +1,7 @@
 # SlotsList::set_assignment Function Reference
 
 *Defined at:* `scripts/ui/helpers/SlotsList.gd` (lines 46–51)</br>
-*Belongs to:* [SlotsList](../SlotsList.md)
+*Belongs to:* [SlotsList](../../SlotsList.md)
 
 **Signature**
 
