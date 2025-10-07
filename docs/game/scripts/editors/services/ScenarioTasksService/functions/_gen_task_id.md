@@ -1,7 +1,7 @@
 # ScenarioTasksService::_gen_task_id Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioTasksService.gd` (lines 120–134)</br>
-*Belongs to:* [ScenarioTasksService](../ScenarioTasksService.md)
+*Belongs to:* [ScenarioTasksService](../../ScenarioTasksService.md)
 
 **Signature**
 

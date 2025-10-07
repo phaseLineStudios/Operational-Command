@@ -1,7 +1,7 @@
 # SurfaceLayer::_join_and_clear_thread Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 379–387)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

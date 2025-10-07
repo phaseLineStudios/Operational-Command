@@ -1,7 +1,7 @@
 # UnitCard::_make_drag_preview Function Reference
 
 *Defined at:* `scripts/ui/helpers/UnitCard.gd` (lines 125–173)</br>
-*Belongs to:* [UnitCard](../UnitCard.md)
+*Belongs to:* [UnitCard](../../UnitCard.md)
 
 **Signature**
 

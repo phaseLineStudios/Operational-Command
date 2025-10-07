@@ -1,7 +1,7 @@
 # ScenarioEditorOverlay::_get_scaled_icon_trigger Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 607–614)</br>
-*Belongs to:* [ScenarioEditorOverlay](../ScenarioEditorOverlay.md)
+*Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
 

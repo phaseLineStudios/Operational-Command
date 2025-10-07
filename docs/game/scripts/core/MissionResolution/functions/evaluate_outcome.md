@@ -1,7 +1,7 @@
 # MissionResolution::evaluate_outcome Function Reference
 
 *Defined at:* `scripts/core/MissionResolution.gd` (lines 92–112)</br>
-*Belongs to:* [MissionResolution](../MissionResolution.md)
+*Belongs to:* [MissionResolution](../../MissionResolution.md)
 
 **Signature**
 

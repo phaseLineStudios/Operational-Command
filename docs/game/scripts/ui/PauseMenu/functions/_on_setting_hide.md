@@ -1,7 +1,7 @@
 # PauseMenu::_on_setting_hide Function Reference
 
 *Defined at:* `scripts/ui/PauseMenu.gd` (lines 76–80)</br>
-*Belongs to:* [PauseMenu](../PauseMenu.md)
+*Belongs to:* [PauseMenu](../../PauseMenu.md)
 
 **Signature**
 

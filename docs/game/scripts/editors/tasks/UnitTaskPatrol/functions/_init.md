@@ -1,7 +1,7 @@
 # UnitTaskPatrol::_init Function Reference
 
 *Defined at:* `scripts/editors/tasks/TaskPatrol.gd` (lines 9–15)</br>
-*Belongs to:* [UnitTaskPatrol](../UnitTaskPatrol.md)
+*Belongs to:* [UnitTaskPatrol](../../UnitTaskPatrol.md)
 
 **Signature**
 

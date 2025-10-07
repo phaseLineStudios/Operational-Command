@@ -1,7 +1,7 @@
 # Debrief::_ready Function Reference
 
 *Defined at:* `scripts/ui/Debrief.gd` (lines 87–98)</br>
-*Belongs to:* [Debrief](../Debrief.md)
+*Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**
 

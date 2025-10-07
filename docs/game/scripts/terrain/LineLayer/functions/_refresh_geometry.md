@@ -1,7 +1,7 @@
 # LineLayer::_refresh_geometry Function Reference
 
 *Defined at:* `scripts/terrain/LineLayer.gd` (lines 178–198)</br>
-*Belongs to:* [LineLayer](../LineLayer.md)
+*Belongs to:* [LineLayer](../../LineLayer.md)
 
 **Signature**
 

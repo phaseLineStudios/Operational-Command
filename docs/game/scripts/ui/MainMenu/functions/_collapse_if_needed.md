@@ -1,7 +1,7 @@
 # MainMenu::_collapse_if_needed Function Reference
 
 *Defined at:* `scripts/ui/MainMenu.gd` (lines 183–187)</br>
-*Belongs to:* [MainMenu](../MainMenu.md)
+*Belongs to:* [MainMenu](../../MainMenu.md)
 
 **Signature**
 

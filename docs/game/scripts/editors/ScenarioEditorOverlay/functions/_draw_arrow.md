@@ -1,7 +1,7 @@
 # ScenarioEditorOverlay::_draw_arrow Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 490–498)</br>
-*Belongs to:* [ScenarioEditorOverlay](../ScenarioEditorOverlay.md)
+*Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
 

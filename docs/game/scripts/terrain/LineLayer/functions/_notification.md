@@ -1,7 +1,7 @@
 # LineLayer::_notification Function Reference
 
 *Defined at:* `scripts/terrain/LineLayer.gd` (lines 72–76)</br>
-*Belongs to:* [LineLayer](../LineLayer.md)
+*Belongs to:* [LineLayer](../../LineLayer.md)
 
 **Signature**
 

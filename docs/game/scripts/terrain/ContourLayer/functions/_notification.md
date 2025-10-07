@@ -1,7 +1,7 @@
 # ContourLayer::_notification Function Reference
 
 *Defined at:* `scripts/terrain/ContourLayer.gd` (lines 122–126)</br>
-*Belongs to:* [ContourLayer](../ContourLayer.md)
+*Belongs to:* [ContourLayer](../../ContourLayer.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # GridLayer::_draw Function Reference
 
 *Defined at:* `scripts/terrain/GridLayer.gd` (lines 47–55)</br>
-*Belongs to:* [GridLayer](../GridLayer.md)
+*Belongs to:* [GridLayer](../../GridLayer.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # TaskPlaceTool::build_hint_ui Function Reference
 
 *Defined at:* `scripts/editors/tools/ScenarioTaskTool.gd` (lines 11–19)</br>
-*Belongs to:* [TaskPlaceTool](../TaskPlaceTool.md)
+*Belongs to:* [TaskPlaceTool](../../TaskPlaceTool.md)
 
 **Signature**
 

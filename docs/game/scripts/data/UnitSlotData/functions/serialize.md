@@ -1,7 +1,7 @@
 # UnitSlotData::serialize Function Reference
 
 *Defined at:* `scripts/data/UnitSlotData.gd` (lines 15–23)</br>
-*Belongs to:* [UnitSlotData](../UnitSlotData.md)
+*Belongs to:* [UnitSlotData](../../UnitSlotData.md)
 
 **Signature**
 

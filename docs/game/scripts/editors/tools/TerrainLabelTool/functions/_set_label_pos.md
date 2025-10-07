@@ -1,7 +1,7 @@
 # TerrainLabelTool::_set_label_pos Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainLabelTool.gd` (lines 186–192)</br>
-*Belongs to:* [TerrainLabelTool](../TerrainLabelTool.md)
+*Belongs to:* [TerrainLabelTool](../../TerrainLabelTool.md)
 
 **Signature**
 

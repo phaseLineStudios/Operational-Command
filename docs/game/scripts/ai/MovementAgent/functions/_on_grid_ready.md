@@ -1,7 +1,7 @@
 # MovementAgent::_on_grid_ready Function Reference
 
 *Defined at:* `scripts/ai/MovementAgent.gd` (lines 144–148)</br>
-*Belongs to:* [MovementAgent](../MovementAgent.md)
+*Belongs to:* [MovementAgent](../../MovementAgent.md)
 
 **Signature**
 

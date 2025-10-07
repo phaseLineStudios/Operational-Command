@@ -1,7 +1,7 @@
 # Debrief::set_mission_name Function Reference
 
 *Defined at:* `scripts/ui/Debrief.gd` (lines 109–113)</br>
-*Belongs to:* [Debrief](../Debrief.md)
+*Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**
 

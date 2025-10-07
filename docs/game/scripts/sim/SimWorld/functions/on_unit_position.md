@@ -1,7 +1,7 @@
 # SimWorld::on_unit_position Function Reference
 
 *Defined at:* `scripts/sim/SimWorld.gd` (lines 46–47)</br>
-*Belongs to:* [SimWorld](../SimWorld.md)
+*Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
 

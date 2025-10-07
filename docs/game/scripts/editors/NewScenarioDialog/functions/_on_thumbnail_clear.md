@@ -1,7 +1,7 @@
 # NewScenarioDialog::_on_thumbnail_clear Function Reference
 
 *Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 105–110)</br>
-*Belongs to:* [NewScenarioDialog](../NewScenarioDialog.md)
+*Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**
 

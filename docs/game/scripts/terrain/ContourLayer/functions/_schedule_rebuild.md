@@ -1,7 +1,7 @@
 # ContourLayer::_schedule_rebuild Function Reference
 
 *Defined at:* `scripts/terrain/ContourLayer.gd` (lines 139–153)</br>
-*Belongs to:* [ContourLayer](../ContourLayer.md)
+*Belongs to:* [ContourLayer](../../ContourLayer.md)
 
 **Signature**
 

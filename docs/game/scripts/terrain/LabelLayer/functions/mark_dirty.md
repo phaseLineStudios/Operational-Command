@@ -1,7 +1,7 @@
 # LabelLayer::mark_dirty Function Reference
 
 *Defined at:* `scripts/terrain/LabelLayer.gd` (lines 65–71)</br>
-*Belongs to:* [LabelLayer](../LabelLayer.md)
+*Belongs to:* [LabelLayer](../../LabelLayer.md)
 
 **Signature**
 

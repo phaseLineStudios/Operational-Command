@@ -1,7 +1,7 @@
 # ContentDB::v2_from Function Reference
 
 *Defined at:* `scripts/core/ContentDB.gd` (lines 388–395)</br>
-*Belongs to:* [ContentDB](../ContentDB.md)
+*Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**
 

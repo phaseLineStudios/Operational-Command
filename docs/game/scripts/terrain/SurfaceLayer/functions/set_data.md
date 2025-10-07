@@ -1,7 +1,7 @@
 # SurfaceLayer::set_data Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 35–59)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

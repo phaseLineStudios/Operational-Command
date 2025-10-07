@@ -1,7 +1,7 @@
 # LabelLayer::_on_labels_changed Function Reference
 
 *Defined at:* `scripts/terrain/LabelLayer.gd` (lines 73–96)</br>
-*Belongs to:* [LabelLayer](../LabelLayer.md)
+*Belongs to:* [LabelLayer](../../LabelLayer.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ScenarioHistory::_deep_copy_array_res Function Reference
 
 *Defined at:* `scripts/editors/ScenarioHistory.gd` (lines 283–289)</br>
-*Belongs to:* [ScenarioHistory](../ScenarioHistory.md)
+*Belongs to:* [ScenarioHistory](../../ScenarioHistory.md)
 
 **Signature**
 

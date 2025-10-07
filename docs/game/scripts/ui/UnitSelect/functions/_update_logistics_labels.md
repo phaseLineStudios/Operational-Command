@@ -1,7 +1,7 @@
 # UnitSelect::_update_logistics_labels Function Reference
 
 *Defined at:* `scripts/ui/UnitSelect.gd` (lines 337–343)</br>
-*Belongs to:* [UnitSelect](../UnitSelect.md)
+*Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**
 

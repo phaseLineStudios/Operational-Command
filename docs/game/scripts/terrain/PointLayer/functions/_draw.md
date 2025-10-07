@@ -1,7 +1,7 @@
 # PointLayer::_draw Function Reference
 
 *Defined at:* `scripts/terrain/PointLayer.gd` (lines 77–104)</br>
-*Belongs to:* [PointLayer](../PointLayer.md)
+*Belongs to:* [PointLayer](../../PointLayer.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # LabelLayer::set_data Function Reference
 
 *Defined at:* `scripts/terrain/LabelLayer.gd` (lines 26–45)</br>
-*Belongs to:* [LabelLayer](../LabelLayer.md)
+*Belongs to:* [LabelLayer](../../LabelLayer.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # AmmoTest::_on_reset Function Reference
 
 *Defined at:* `scripts/test/AmmoTest.gd` (lines 189–197)</br>
-*Belongs to:* [AmmoTest](../AmmoTest.md)
+*Belongs to:* [AmmoTest](../../AmmoTest.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # TerrainCamera::_process Function Reference
 
 *Defined at:* `scripts/editors/TerrainCamera.gd` (lines 44–53)</br>
-*Belongs to:* [TerrainCamera](../TerrainCamera.md)
+*Belongs to:* [TerrainCamera](../../TerrainCamera.md)
 
 **Signature**
 

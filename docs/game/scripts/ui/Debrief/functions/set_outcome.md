@@ -1,7 +1,7 @@
 # Debrief::set_outcome Function Reference
 
 *Defined at:* `scripts/ui/Debrief.gd` (lines 115–119)</br>
-*Belongs to:* [Debrief](../Debrief.md)
+*Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**
 

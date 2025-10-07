@@ -1,7 +1,7 @@
 # ContourLayer::_on_data_changed Function Reference
 
 *Defined at:* `scripts/terrain/ContourLayer.gd` (lines 128–131)</br>
-*Belongs to:* [ContourLayer](../ContourLayer.md)
+*Belongs to:* [ContourLayer](../../ContourLayer.md)
 
 **Signature**
 

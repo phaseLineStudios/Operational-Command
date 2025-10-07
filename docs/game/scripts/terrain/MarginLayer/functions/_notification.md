@@ -1,7 +1,7 @@
 # MarginLayer::_notification Function Reference
 
 *Defined at:* `scripts/terrain/MapMargin.gd` (lines 107–111)</br>
-*Belongs to:* [MarginLayer](../MarginLayer.md)
+*Belongs to:* [MarginLayer](../../MarginLayer.md)
 
 **Signature**
 

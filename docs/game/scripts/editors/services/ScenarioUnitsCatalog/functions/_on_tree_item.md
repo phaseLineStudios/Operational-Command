@@ -1,7 +1,7 @@
 # ScenarioUnitsCatalog::_on_tree_item Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 60–69)</br>
-*Belongs to:* [ScenarioUnitsCatalog](../ScenarioUnitsCatalog.md)
+*Belongs to:* [ScenarioUnitsCatalog](../../ScenarioUnitsCatalog.md)
 
 **Signature**
 

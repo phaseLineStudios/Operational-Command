@@ -1,7 +1,7 @@
 # CombatController::combat_loop Function Reference
 
 *Defined at:* `scripts/sim/Combat.gd` (lines 102–123)</br>
-*Belongs to:* [CombatController](../CombatController.md)
+*Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**
 

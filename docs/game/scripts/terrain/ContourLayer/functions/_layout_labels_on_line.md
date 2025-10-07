@@ -1,7 +1,7 @@
 # ContourLayer::_layout_labels_on_line Function Reference
 
 *Defined at:* `scripts/terrain/ContourLayer.gd` (lines 520–560)</br>
-*Belongs to:* [ContourLayer](../ContourLayer.md)
+*Belongs to:* [ContourLayer](../../ContourLayer.md)
 
 **Signature**
 

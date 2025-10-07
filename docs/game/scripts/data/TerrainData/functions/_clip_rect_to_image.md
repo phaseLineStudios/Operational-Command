@@ -1,7 +1,7 @@
 # TerrainData::_clip_rect_to_image Function Reference
 
 *Defined at:* `scripts/data/TerrainData.gd` (lines 406–417)</br>
-*Belongs to:* [TerrainData](../TerrainData.md)
+*Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**
 

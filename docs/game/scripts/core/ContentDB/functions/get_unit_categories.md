@@ -1,7 +1,7 @@
 # ContentDB::get_unit_categories Function Reference
 
 *Defined at:* `scripts/core/ContentDB.gd` (lines 326–334)</br>
-*Belongs to:* [ContentDB](../ContentDB.md)
+*Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**
 

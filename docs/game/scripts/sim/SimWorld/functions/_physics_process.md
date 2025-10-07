@@ -1,7 +1,7 @@
 # SimWorld::_physics_process Function Reference
 
 *Defined at:* `scripts/sim/SimWorld.gd` (lines 40–43)</br>
-*Belongs to:* [SimWorld](../SimWorld.md)
+*Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
 

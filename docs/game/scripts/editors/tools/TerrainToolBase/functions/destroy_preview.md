@@ -1,7 +1,7 @@
 # TerrainToolBase::destroy_preview Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainToolBase.gd` (lines 106–109)</br>
-*Belongs to:* [TerrainToolBase](../TerrainToolBase.md)
+*Belongs to:* [TerrainToolBase](../../TerrainToolBase.md)
 
 **Signature**
 

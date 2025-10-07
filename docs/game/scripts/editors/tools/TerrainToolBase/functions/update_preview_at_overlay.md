@@ -1,7 +1,7 @@
 # TerrainToolBase::update_preview_at_overlay Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainToolBase.gd` (lines 84–97)</br>
-*Belongs to:* [TerrainToolBase](../TerrainToolBase.md)
+*Belongs to:* [TerrainToolBase](../../TerrainToolBase.md)
 
 **Signature**
 

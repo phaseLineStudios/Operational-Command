@@ -1,7 +1,7 @@
 # NewScenarioDialog::_load_from_data Function Reference
 
 *Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 126–137)</br>
-*Belongs to:* [NewScenarioDialog](../NewScenarioDialog.md)
+*Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**
 

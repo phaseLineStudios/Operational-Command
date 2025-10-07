@@ -1,7 +1,7 @@
 # ContourLayer::_march_level_segments Function Reference
 
 *Defined at:* `scripts/terrain/ContourLayer.gd` (lines 260–332)</br>
-*Belongs to:* [ContourLayer](../ContourLayer.md)
+*Belongs to:* [ContourLayer](../../ContourLayer.md)
 
 **Signature**
 

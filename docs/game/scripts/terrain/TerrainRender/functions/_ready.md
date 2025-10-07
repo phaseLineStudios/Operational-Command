@@ -1,7 +1,7 @@
 # TerrainRender::_ready Function Reference
 
 *Defined at:* `scripts/terrain/TerrainRender.gd` (lines 110–123)</br>
-*Belongs to:* [TerrainRender](../TerrainRender.md)
+*Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**
 

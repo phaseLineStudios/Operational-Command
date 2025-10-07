@@ -1,7 +1,7 @@
 # ScenarioEditor::_on_save_file_selected Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 697–706)</br>
-*Belongs to:* [ScenarioEditor](../ScenarioEditor.md)
+*Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
 

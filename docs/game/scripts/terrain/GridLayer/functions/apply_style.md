@@ -1,7 +1,7 @@
 # GridLayer::apply_style Function Reference
 
 *Defined at:* `scripts/terrain/GridLayer.gd` (lines 22–35)</br>
-*Belongs to:* [GridLayer](../GridLayer.md)
+*Belongs to:* [GridLayer](../../GridLayer.md)
 
 **Signature**
 

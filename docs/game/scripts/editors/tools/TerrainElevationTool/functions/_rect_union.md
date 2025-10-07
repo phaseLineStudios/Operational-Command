@@ -1,7 +1,7 @@
 # TerrainElevationTool::_rect_union Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainElevationTool.gd` (lines 227–234)</br>
-*Belongs to:* [TerrainElevationTool](../TerrainElevationTool.md)
+*Belongs to:* [TerrainElevationTool](../../TerrainElevationTool.md)
 
 **Signature**
 

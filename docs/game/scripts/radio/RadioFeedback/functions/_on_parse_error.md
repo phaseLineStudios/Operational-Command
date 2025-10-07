@@ -1,7 +1,7 @@
 # RadioFeedback::_on_parse_error Function Reference
 
 *Defined at:* `scripts/radio/RadioFeedback.gd` (lines 62–65)</br>
-*Belongs to:* [RadioFeedback](../RadioFeedback.md)
+*Belongs to:* [RadioFeedback](../../RadioFeedback.md)
 
 **Signature**
 

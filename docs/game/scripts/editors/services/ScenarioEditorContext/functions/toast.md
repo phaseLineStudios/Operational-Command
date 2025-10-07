@@ -1,7 +1,7 @@
 # ScenarioEditorContext::toast Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioEditorContext.gd` (lines 43–44)</br>
-*Belongs to:* [ScenarioEditorContext](../ScenarioEditorContext.md)
+*Belongs to:* [ScenarioEditorContext](../../ScenarioEditorContext.md)
 
 **Signature**
 

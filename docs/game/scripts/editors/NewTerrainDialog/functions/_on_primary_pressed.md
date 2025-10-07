@@ -1,7 +1,7 @@
 # NewTerrainDialog::_on_primary_pressed Function Reference
 
 *Defined at:* `scripts/editors/TerrainSettingsDialog.gd` (lines 60–89)</br>
-*Belongs to:* [NewTerrainDialog](../NewTerrainDialog.md)
+*Belongs to:* [NewTerrainDialog](../../NewTerrainDialog.md)
 
 **Signature**
 

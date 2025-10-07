@@ -1,7 +1,7 @@
 # TerrainData::_set_labels Function Reference
 
 *Defined at:* `scripts/data/TerrainData.gd` (lines 182–187)</br>
-*Belongs to:* [TerrainData](../TerrainData.md)
+*Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**
 

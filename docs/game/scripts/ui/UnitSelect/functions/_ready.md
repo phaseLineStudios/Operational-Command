@@ -1,7 +1,7 @@
 # UnitSelect::_ready Function Reference
 
 *Defined at:* `scripts/ui/UnitSelect.gd` (lines 65–73)</br>
-*Belongs to:* [UnitSelect](../UnitSelect.md)
+*Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**
 

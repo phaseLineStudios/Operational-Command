@@ -1,7 +1,7 @@
 # AmmoRearmPanel::_build_controls_for Function Reference
 
 *Defined at:* `scripts/ui/AmmoRearmPanel.gd` (lines 76–158)</br>
-*Belongs to:* [AmmoRearmPanel](../AmmoRearmPanel.md)
+*Belongs to:* [AmmoRearmPanel](../../AmmoRearmPanel.md)
 
 **Signature**
 

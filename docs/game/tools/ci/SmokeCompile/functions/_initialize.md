@@ -1,7 +1,7 @@
 # SmokeCompile::_initialize Function Reference
 
 *Defined at:* `tools/ci/smoke_compile.gd` (lines 15–45)</br>
-*Belongs to:* [SmokeCompile](../SmokeCompile.md)
+*Belongs to:* [SmokeCompile](../../SmokeCompile.md)
 
 **Signature**
 

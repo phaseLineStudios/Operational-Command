@@ -1,7 +1,7 @@
 # SurfaceLayer::_rec_key Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 590–610)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

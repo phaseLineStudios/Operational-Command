@@ -1,7 +1,7 @@
 # TaskPlaceTool::_snap Function Reference
 
 *Defined at:* `scripts/editors/tools/ScenarioTaskTool.gd` (lines 105–109)</br>
-*Belongs to:* [TaskPlaceTool](../TaskPlaceTool.md)
+*Belongs to:* [TaskPlaceTool](../../TaskPlaceTool.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # LineLayer::_draw Function Reference
 
 *Defined at:* `scripts/terrain/LineLayer.gd` (lines 77–108)</br>
-*Belongs to:* [LineLayer](../LineLayer.md)
+*Belongs to:* [LineLayer](../../LineLayer.md)
 
 **Signature**
 

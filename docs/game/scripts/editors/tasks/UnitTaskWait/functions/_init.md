@@ -1,7 +1,7 @@
 # UnitTaskWait::_init Function Reference
 
 *Defined at:* `scripts/editors/tasks/TaskWait.gd` (lines 8–14)</br>
-*Belongs to:* [UnitTaskWait](../UnitTaskWait.md)
+*Belongs to:* [UnitTaskWait](../../UnitTaskWait.md)
 
 **Signature**
 

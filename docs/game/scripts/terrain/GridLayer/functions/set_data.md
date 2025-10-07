@@ -1,7 +1,7 @@
 # GridLayer::set_data Function Reference
 
 *Defined at:* `scripts/terrain/GridLayer.gd` (lines 15–20)</br>
-*Belongs to:* [GridLayer](../GridLayer.md)
+*Belongs to:* [GridLayer](../../GridLayer.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ContentDB::list_scenarios Function Reference
 
 *Defined at:* `scripts/core/ContentDB.gd` (lines 176–188)</br>
-*Belongs to:* [ContentDB](../ContentDB.md)
+*Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**
 

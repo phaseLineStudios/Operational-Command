@@ -1,7 +1,7 @@
 # PathGrid::_bind_terrain_signals Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 102–110)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

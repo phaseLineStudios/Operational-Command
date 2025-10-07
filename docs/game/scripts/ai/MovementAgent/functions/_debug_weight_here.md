@@ -1,7 +1,7 @@
 # MovementAgent::_debug_weight_here Function Reference
 
 *Defined at:* `scripts/ai/MovementAgent.gd` (lines 175–185)</br>
-*Belongs to:* [MovementAgent](../MovementAgent.md)
+*Belongs to:* [MovementAgent](../../MovementAgent.md)
 
 **Signature**
 

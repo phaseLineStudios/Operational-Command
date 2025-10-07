@@ -1,7 +1,7 @@
 # ScenarioTasksService::collect_unit_chain Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioTasksService.gd` (lines 93–114)</br>
-*Belongs to:* [ScenarioTasksService](../ScenarioTasksService.md)
+*Belongs to:* [ScenarioTasksService](../../ScenarioTasksService.md)
 
 **Signature**
 

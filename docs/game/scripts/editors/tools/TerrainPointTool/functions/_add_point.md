@@ -1,7 +1,7 @@
 # TerrainPointTool::_add_point Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 211–226)</br>
-*Belongs to:* [TerrainPointTool](../TerrainPointTool.md)
+*Belongs to:* [TerrainPointTool](../../TerrainPointTool.md)
 
 **Signature**
 

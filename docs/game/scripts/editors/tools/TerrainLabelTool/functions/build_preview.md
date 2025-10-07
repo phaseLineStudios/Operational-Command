@@ -1,7 +1,7 @@
 # TerrainLabelTool::build_preview Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainLabelTool.gd` (lines 20–28)</br>
-*Belongs to:* [TerrainLabelTool](../TerrainLabelTool.md)
+*Belongs to:* [TerrainLabelTool](../../TerrainLabelTool.md)
 
 **Signature**
 

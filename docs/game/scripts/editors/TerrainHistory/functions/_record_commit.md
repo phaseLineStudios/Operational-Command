@@ -1,7 +1,7 @@
 # TerrainHistory::_record_commit Function Reference
 
 *Defined at:* `scripts/editors/TerrainHistory.gd` (lines 39–44)</br>
-*Belongs to:* [TerrainHistory](../TerrainHistory.md)
+*Belongs to:* [TerrainHistory](../../TerrainHistory.md)
 
 **Signature**
 

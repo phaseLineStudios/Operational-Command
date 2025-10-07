@@ -1,7 +1,7 @@
 # ScenarioDragLinkService::_get_pos Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioDragLinkService.gd` (lines 62–92)</br>
-*Belongs to:* [ScenarioDragLinkService](../ScenarioDragLinkService.md)
+*Belongs to:* [ScenarioDragLinkService](../../ScenarioDragLinkService.md)
 
 **Signature**
 

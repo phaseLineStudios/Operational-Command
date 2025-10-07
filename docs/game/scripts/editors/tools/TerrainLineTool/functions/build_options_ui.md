@@ -1,7 +1,7 @@
 # TerrainLineTool::build_options_ui Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 66–135)</br>
-*Belongs to:* [TerrainLineTool](../TerrainLineTool.md)
+*Belongs to:* [TerrainLineTool](../../TerrainLineTool.md)
 
 **Signature**
 

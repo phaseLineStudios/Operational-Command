@@ -1,7 +1,7 @@
 # ScenarioTasksService::_build_list Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioTasksService.gd` (lines 24–37)</br>
-*Belongs to:* [ScenarioTasksService](../ScenarioTasksService.md)
+*Belongs to:* [ScenarioTasksService](../../ScenarioTasksService.md)
 
 **Signature**
 

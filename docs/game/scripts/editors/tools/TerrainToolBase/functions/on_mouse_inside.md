@@ -1,7 +1,7 @@
 # TerrainToolBase::on_mouse_inside Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainToolBase.gd` (lines 65–70)</br>
-*Belongs to:* [TerrainToolBase](../TerrainToolBase.md)
+*Belongs to:* [TerrainToolBase](../../TerrainToolBase.md)
 
 **Signature**
 

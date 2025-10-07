@@ -1,7 +1,7 @@
 # Radio::_ready Function Reference
 
 *Defined at:* `scripts/radio/Radio.gd` (lines 18–23)</br>
-*Belongs to:* [Radio](../Radio.md)
+*Belongs to:* [Radio](../../Radio.md)
 
 **Signature**
 

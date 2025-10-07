@@ -1,7 +1,7 @@
 # AmmoRearmPanel::_ready Function Reference
 
 *Defined at:* `scripts/ui/AmmoRearmPanel.gd` (lines 48–54)</br>
-*Belongs to:* [AmmoRearmPanel](../AmmoRearmPanel.md)
+*Belongs to:* [AmmoRearmPanel](../../AmmoRearmPanel.md)
 
 **Signature**
 

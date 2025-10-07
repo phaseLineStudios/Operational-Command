@@ -1,7 +1,7 @@
 # SlotItem::configure Function Reference
 
 *Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 69–79)</br>
-*Belongs to:* [SlotItem](../SlotItem.md)
+*Belongs to:* [SlotItem](../../SlotItem.md)
 
 **Signature**
 

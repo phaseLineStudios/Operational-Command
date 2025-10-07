@@ -1,7 +1,7 @@
 # DebugMetricsDisplay::update_settings_label Function Reference
 
 *Defined at:* `scripts/ui/DebugMetricsDisplay.gd` (lines 126–232)</br>
-*Belongs to:* [DebugMetricsDisplay](../DebugMetricsDisplay.md)
+*Belongs to:* [DebugMetricsDisplay](../../DebugMetricsDisplay.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ScenarioTasksService::_on_selected Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioTasksService.gd` (lines 38–44)</br>
-*Belongs to:* [ScenarioTasksService](../ScenarioTasksService.md)
+*Belongs to:* [ScenarioTasksService](../../ScenarioTasksService.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # GridLayer::_notification Function Reference
 
 *Defined at:* `scripts/terrain/GridLayer.gd` (lines 41–46)</br>
-*Belongs to:* [GridLayer](../GridLayer.md)
+*Belongs to:* [GridLayer](../../GridLayer.md)
 
 **Signature**
 

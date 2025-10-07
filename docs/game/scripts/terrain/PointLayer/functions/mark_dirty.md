@@ -1,7 +1,7 @@
 # PointLayer::mark_dirty Function Reference
 
 *Defined at:* `scripts/terrain/PointLayer.gd` (lines 39–45)</br>
-*Belongs to:* [PointLayer](../PointLayer.md)
+*Belongs to:* [PointLayer](../../PointLayer.md)
 
 **Signature**
 

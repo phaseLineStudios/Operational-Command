@@ -1,7 +1,7 @@
 # MissionResolution::tick Function Reference
 
 *Defined at:* `scripts/core/MissionResolution.gd` (lines 51–56)</br>
-*Belongs to:* [MissionResolution](../MissionResolution.md)
+*Belongs to:* [MissionResolution](../../MissionResolution.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # UnitSelect::_try_assign Function Reference
 
 *Defined at:* `scripts/ui/UnitSelect.gd` (lines 221–268)</br>
-*Belongs to:* [UnitSelect](../UnitSelect.md)
+*Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**
 

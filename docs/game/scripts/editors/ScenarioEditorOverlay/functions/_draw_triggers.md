@@ -1,7 +1,7 @@
 # ScenarioEditorOverlay::_draw_triggers Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 297–310)</br>
-*Belongs to:* [ScenarioEditorOverlay](../ScenarioEditorOverlay.md)
+*Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
 

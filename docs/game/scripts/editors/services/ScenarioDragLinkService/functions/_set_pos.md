@@ -1,7 +1,7 @@
 # ScenarioDragLinkService::_set_pos Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioDragLinkService.gd` (lines 93–122)</br>
-*Belongs to:* [ScenarioDragLinkService](../ScenarioDragLinkService.md)
+*Belongs to:* [ScenarioDragLinkService](../../ScenarioDragLinkService.md)
 
 **Signature**
 

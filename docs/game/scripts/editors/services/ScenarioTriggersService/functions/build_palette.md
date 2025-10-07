@@ -1,7 +1,7 @@
 # ScenarioTriggersService::build_palette Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioTriggersService.gd` (lines 5–18)</br>
-*Belongs to:* [ScenarioTriggersService](../ScenarioTriggersService.md)
+*Belongs to:* [ScenarioTriggersService](../../ScenarioTriggersService.md)
 
 **Signature**
 

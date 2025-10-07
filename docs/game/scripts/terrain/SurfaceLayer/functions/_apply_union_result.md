@@ -1,7 +1,7 @@
 # SurfaceLayer::_apply_union_result Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 364–377)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

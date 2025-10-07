@@ -1,7 +1,7 @@
 # ScenarioTriggerTool::draw_overlay Function Reference
 
 *Defined at:* `scripts/editors/tools/ScenarioTriggerTool.gd` (lines 72–100)</br>
-*Belongs to:* [ScenarioTriggerTool](../ScenarioTriggerTool.md)
+*Belongs to:* [ScenarioTriggerTool](../../ScenarioTriggerTool.md)
 
 **Signature**
 

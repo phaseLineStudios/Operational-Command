@@ -1,7 +1,7 @@
 # Settings::_save_config Function Reference
 
 *Defined at:* `scripts/ui/Settings.gd` (lines 252–266)</br>
-*Belongs to:* [Settings](../Settings.md)
+*Belongs to:* [Settings](../../Settings.md)
 
 **Signature**
 

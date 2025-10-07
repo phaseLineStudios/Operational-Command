@@ -1,7 +1,7 @@
 # MissionSelect::_make_pin Function Reference
 
 *Defined at:* `scripts/ui/MissionSelect.gd` (lines 98–120)</br>
-*Belongs to:* [MissionSelect](../MissionSelect.md)
+*Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**
 

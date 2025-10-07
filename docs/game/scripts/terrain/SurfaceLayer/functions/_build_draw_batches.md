@@ -1,7 +1,7 @@
 # SurfaceLayer::_build_draw_batches Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 568–588)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

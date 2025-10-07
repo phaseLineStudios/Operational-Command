@@ -1,7 +1,7 @@
 # ScenarioTriggerTool::_on_mouse_move Function Reference
 
 *Defined at:* `scripts/editors/tools/ScenarioTriggerTool.gd` (lines 28–37)</br>
-*Belongs to:* [ScenarioTriggerTool](../ScenarioTriggerTool.md)
+*Belongs to:* [ScenarioTriggerTool](../../ScenarioTriggerTool.md)
 
 **Signature**
 

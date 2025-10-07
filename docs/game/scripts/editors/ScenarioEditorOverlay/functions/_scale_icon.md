@@ -1,7 +1,7 @@
 # ScenarioEditorOverlay::_scale_icon Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 616–619)</br>
-*Belongs to:* [ScenarioEditorOverlay](../ScenarioEditorOverlay.md)
+*Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
 

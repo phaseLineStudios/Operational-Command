@@ -1,7 +1,7 @@
 # ActionRebindButton::_ready Function Reference
 
 *Defined at:* `scripts/ui/helpers/ActionRebindButton.gd` (lines 27–31)</br>
-*Belongs to:* [ActionRebindButton](../ActionRebindButton.md)
+*Belongs to:* [ActionRebindButton](../../ActionRebindButton.md)
 
 **Signature**
 

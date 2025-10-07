@@ -1,7 +1,7 @@
 # ScenarioUnit::_kph_to_mps Function Reference
 
 *Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 222–225)</br>
-*Belongs to:* [ScenarioUnit](../ScenarioUnit.md)
+*Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**
 

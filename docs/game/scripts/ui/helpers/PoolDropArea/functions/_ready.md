@@ -1,7 +1,7 @@
 # PoolDropArea::_ready Function Reference
 
 *Defined at:* `scripts/ui/helpers/PoolDropArea.gd` (lines 8–11)</br>
-*Belongs to:* [PoolDropArea](../PoolDropArea.md)
+*Belongs to:* [PoolDropArea](../../PoolDropArea.md)
 
 **Signature**
 

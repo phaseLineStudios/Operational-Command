@@ -1,7 +1,7 @@
 # PauseMenu::_ready Function Reference
 
 *Defined at:* `scripts/ui/PauseMenu.gd` (lines 19–30)</br>
-*Belongs to:* [PauseMenu](../PauseMenu.md)
+*Belongs to:* [PauseMenu](../../PauseMenu.md)
 
 **Signature**
 

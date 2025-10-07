@@ -1,7 +1,7 @@
 # LogService::warning Function Reference
 
 *Defined at:* `scripts/core/LogService.gd` (lines 41–47)</br>
-*Belongs to:* [LogService](../LogService.md)
+*Belongs to:* [LogService](../../LogService.md)
 
 **Signature**
 

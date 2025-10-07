@@ -1,7 +1,7 @@
 # UnitBaseTask::make_default_params Function Reference
 
 *Defined at:* `scripts/editors/tasks/UnitBaseTask.gd` (lines 44–51)</br>
-*Belongs to:* [UnitBaseTask](../UnitBaseTask.md)
+*Belongs to:* [UnitBaseTask](../../UnitBaseTask.md)
 
 **Signature**
 

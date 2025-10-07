@@ -1,7 +1,7 @@
 # TerrainPointTool::_load_brushes Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 22–32)</br>
-*Belongs to:* [TerrainPointTool](../TerrainPointTool.md)
+*Belongs to:* [TerrainPointTool](../../TerrainPointTool.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ContentDB::get_campaign Function Reference
 
 *Defined at:* `scripts/core/ContentDB.gd` (lines 111–118)</br>
-*Belongs to:* [ContentDB](../ContentDB.md)
+*Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # TerrainEditor::_edit_terrain Function Reference
 
 *Defined at:* `scripts/editors/TerrainEditor.gd` (lines 135–143)</br>
-*Belongs to:* [TerrainEditor](../TerrainEditor.md)
+*Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**
 

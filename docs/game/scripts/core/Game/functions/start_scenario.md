@@ -1,7 +1,7 @@
 # Game::start_scenario Function Reference
 
 *Defined at:* `scripts/core/Game.gd` (lines 71–77)</br>
-*Belongs to:* [Game](../Game.md)
+*Belongs to:* [Game](../../Game.md)
 
 **Signature**
 

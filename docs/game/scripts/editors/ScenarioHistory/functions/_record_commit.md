@@ -1,7 +1,7 @@
 # ScenarioHistory::_record_commit Function Reference
 
 *Defined at:* `scripts/editors/ScenarioHistory.gd` (lines 36–41)</br>
-*Belongs to:* [ScenarioHistory](../ScenarioHistory.md)
+*Belongs to:* [ScenarioHistory](../../ScenarioHistory.md)
 
 **Signature**
 

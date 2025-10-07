@@ -1,7 +1,7 @@
 # ScenarioEditorOverlay::set_selected Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 95–99)</br>
-*Belongs to:* [ScenarioEditorOverlay](../ScenarioEditorOverlay.md)
+*Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
 

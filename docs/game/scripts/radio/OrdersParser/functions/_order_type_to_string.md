@@ -1,7 +1,7 @@
 # OrdersParser::_order_type_to_string Function Reference
 
 *Defined at:* `scripts/radio/OrdersParser.gd` (lines 332–351)</br>
-*Belongs to:* [OrdersParser](../OrdersParser.md)
+*Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**
 

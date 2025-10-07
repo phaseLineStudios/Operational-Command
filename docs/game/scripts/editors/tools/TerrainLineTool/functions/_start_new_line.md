@@ -1,7 +1,7 @@
 # TerrainLineTool::_start_new_line Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 303–322)</br>
-*Belongs to:* [TerrainLineTool](../TerrainLineTool.md)
+*Belongs to:* [TerrainLineTool](../../TerrainLineTool.md)
 
 **Signature**
 

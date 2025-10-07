@@ -1,7 +1,7 @@
 # DebugMetricsDisplay::_init Function Reference
 
 *Defined at:* `scripts/ui/DebugMetricsDisplay.gd` (lines 84–87)</br>
-*Belongs to:* [DebugMetricsDisplay](../DebugMetricsDisplay.md)
+*Belongs to:* [DebugMetricsDisplay](../../DebugMetricsDisplay.md)
 
 **Signature**
 

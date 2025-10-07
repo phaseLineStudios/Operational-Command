@@ -1,7 +1,7 @@
 # ContentDB::res_path_or_null Function Reference
 
 *Defined at:* `scripts/core/ContentDB.gd` (lines 416–424)</br>
-*Belongs to:* [ContentDB](../ContentDB.md)
+*Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # AmmoRearmPanel::load_units Function Reference
 
 *Defined at:* `scripts/ui/AmmoRearmPanel.gd` (lines 34–44)</br>
-*Belongs to:* [AmmoRearmPanel](../AmmoRearmPanel.md)
+*Belongs to:* [AmmoRearmPanel](../../AmmoRearmPanel.md)
 
 **Signature**
 

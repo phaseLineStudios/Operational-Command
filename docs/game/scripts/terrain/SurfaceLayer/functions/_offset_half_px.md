@@ -1,7 +1,7 @@
 # SurfaceLayer::_offset_half_px Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 458–464)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

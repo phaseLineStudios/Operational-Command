@@ -1,7 +1,7 @@
 # ScenarioPersistenceService::ensure_json_ext Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioPersistenceService.gd` (lines 13–16)</br>
-*Belongs to:* [ScenarioPersistenceService](../ScenarioPersistenceService.md)
+*Belongs to:* [ScenarioPersistenceService](../../ScenarioPersistenceService.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # TerrainLabelTool::_remove_label Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainLabelTool.gd` (lines 193–204)</br>
-*Belongs to:* [TerrainLabelTool](../TerrainLabelTool.md)
+*Belongs to:* [TerrainLabelTool](../../TerrainLabelTool.md)
 
 **Signature**
 

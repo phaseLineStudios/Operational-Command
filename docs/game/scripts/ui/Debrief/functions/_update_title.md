@@ -1,7 +1,7 @@
 # Debrief::_update_title Function Reference
 
 *Defined at:* `scripts/ui/Debrief.gd` (lines 341–346)</br>
-*Belongs to:* [Debrief](../Debrief.md)
+*Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**
 

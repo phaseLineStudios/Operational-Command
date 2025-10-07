@@ -1,7 +1,7 @@
 # ScenarioTasksService::setup Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioTasksService.gd` (lines 8–13)</br>
-*Belongs to:* [ScenarioTasksService](../ScenarioTasksService.md)
+*Belongs to:* [ScenarioTasksService](../../ScenarioTasksService.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # TerrainEffects::weather_severity_from_scenario Function Reference
 
 *Defined at:* `scripts/sim/TerrainEffects.gd` (lines 112–119)</br>
-*Belongs to:* [TerrainEffects](../TerrainEffects.md)
+*Belongs to:* [TerrainEffects](../../TerrainEffects.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ScenarioEditorOverlay::_slot_pos_m Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 557–566)</br>
-*Belongs to:* [ScenarioEditorOverlay](../ScenarioEditorOverlay.md)
+*Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
 

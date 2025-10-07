@@ -1,7 +1,7 @@
 # PointLayer::_is_terrain_pos_visible Function Reference
 
 *Defined at:* `scripts/terrain/PointLayer.gd` (lines 214–219)</br>
-*Belongs to:* [PointLayer](../PointLayer.md)
+*Belongs to:* [PointLayer](../../PointLayer.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ScenarioSelectionService::set_selection Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioSelectionService.gd` (lines 5–14)</br>
-*Belongs to:* [ScenarioSelectionService](../ScenarioSelectionService.md)
+*Belongs to:* [ScenarioSelectionService](../../ScenarioSelectionService.md)
 
 **Signature**
 

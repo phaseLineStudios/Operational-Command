@@ -1,7 +1,7 @@
 # TerrainToolBase::_init Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainToolBase.gd` (lines 28–32)</br>
-*Belongs to:* [TerrainToolBase](../TerrainToolBase.md)
+*Belongs to:* [TerrainToolBase](../../TerrainToolBase.md)
 
 **Signature**
 

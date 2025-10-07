@@ -1,7 +1,7 @@
 # Settings::_build_video_ui Function Reference
 
 *Defined at:* `scripts/ui/Settings.gd` (lines 62–74)</br>
-*Belongs to:* [Settings](../Settings.md)
+*Belongs to:* [Settings](../../Settings.md)
 
 **Signature**
 

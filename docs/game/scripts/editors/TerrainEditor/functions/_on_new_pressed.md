@@ -1,7 +1,7 @@
 # TerrainEditor::_on_new_pressed Function Reference
 
 *Defined at:* `scripts/editors/TerrainEditor.gd` (lines 119–122)</br>
-*Belongs to:* [TerrainEditor](../TerrainEditor.md)
+*Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**
 

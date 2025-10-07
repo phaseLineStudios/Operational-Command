@@ -1,7 +1,7 @@
 # ScenarioData::_difficulty_from Function Reference
 
 *Defined at:* `scripts/data/ScenarioData.gd` (lines 253–264)</br>
-*Belongs to:* [ScenarioData](../ScenarioData.md)
+*Belongs to:* [ScenarioData](../../ScenarioData.md)
 
 **Signature**
 

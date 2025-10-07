@@ -1,7 +1,7 @@
 # TerrainRender::to_local Function Reference
 
 *Defined at:* `scripts/terrain/TerrainRender.gd` (lines 282–285)</br>
-*Belongs to:* [TerrainRender](../TerrainRender.md)
+*Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**
 

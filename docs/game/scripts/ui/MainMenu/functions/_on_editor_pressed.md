@@ -1,7 +1,7 @@
 # MainMenu::_on_editor_pressed Function Reference
 
 *Defined at:* `scripts/ui/MainMenu.gd` (lines 163–169)</br>
-*Belongs to:* [MainMenu](../MainMenu.md)
+*Belongs to:* [MainMenu](../../MainMenu.md)
 
 **Signature**
 

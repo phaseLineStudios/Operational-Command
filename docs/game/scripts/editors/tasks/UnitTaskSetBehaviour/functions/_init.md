@@ -1,7 +1,7 @@
 # UnitTaskSetBehaviour::_init Function Reference
 
 *Defined at:* `scripts/editors/tasks/TaskSetBehaviour.gd` (lines 8–12)</br>
-*Belongs to:* [UnitTaskSetBehaviour](../UnitTaskSetBehaviour.md)
+*Belongs to:* [UnitTaskSetBehaviour](../../UnitTaskSetBehaviour.md)
 
 **Signature**
 

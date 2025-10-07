@@ -1,7 +1,7 @@
 # ScenarioEditorOverlay::begin_link_preview Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 369–374)</br>
-*Belongs to:* [ScenarioEditorOverlay](../ScenarioEditorOverlay.md)
+*Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
 

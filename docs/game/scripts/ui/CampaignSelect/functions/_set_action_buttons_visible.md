@@ -1,7 +1,7 @@
 # CampaignSelect::_set_action_buttons_visible Function Reference
 
 *Defined at:* `scripts/ui/CampaignSelect.gd` (lines 77–82)</br>
-*Belongs to:* [CampaignSelect](../CampaignSelect.md)
+*Belongs to:* [CampaignSelect](../../CampaignSelect.md)
 
 **Signature**
 

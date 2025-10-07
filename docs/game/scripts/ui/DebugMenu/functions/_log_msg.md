@@ -1,7 +1,7 @@
 # DebugMenu::_log_msg Function Reference
 
 *Defined at:* `scripts/ui/DebugMenu.gd` (lines 100–104)</br>
-*Belongs to:* [DebugMenu](../DebugMenu.md)
+*Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**
 

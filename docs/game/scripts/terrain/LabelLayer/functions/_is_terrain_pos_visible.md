@@ -1,7 +1,7 @@
 # LabelLayer::_is_terrain_pos_visible Function Reference
 
 *Defined at:* `scripts/terrain/LabelLayer.gd` (lines 248–253)</br>
-*Belongs to:* [LabelLayer](../LabelLayer.md)
+*Belongs to:* [LabelLayer](../../LabelLayer.md)
 
 **Signature**
 

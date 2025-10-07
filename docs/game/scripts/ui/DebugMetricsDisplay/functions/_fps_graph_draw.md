@@ -1,7 +1,7 @@
 # DebugMetricsDisplay::_fps_graph_draw Function Reference
 
 *Defined at:* `scripts/ui/DebugMetricsDisplay.gd` (lines 313–335)</br>
-*Belongs to:* [DebugMetricsDisplay](../DebugMetricsDisplay.md)
+*Belongs to:* [DebugMetricsDisplay](../../DebugMetricsDisplay.md)
 
 **Signature**
 

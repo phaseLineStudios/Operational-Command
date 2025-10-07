@@ -1,7 +1,7 @@
 # AmmoSystem::_pick_link_for Function Reference
 
 *Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 183–197)</br>
-*Belongs to:* [AmmoSystem](../AmmoSystem.md)
+*Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**
 

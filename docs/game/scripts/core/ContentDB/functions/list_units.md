@@ -1,7 +1,7 @@
 # ContentDB::list_units Function Reference
 
 *Defined at:* `scripts/core/ContentDB.gd` (lines 302–314)</br>
-*Belongs to:* [ContentDB](../ContentDB.md)
+*Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**
 

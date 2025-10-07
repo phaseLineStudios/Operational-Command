@@ -1,7 +1,7 @@
 # UnitTaskSetCombatMode::_init Function Reference
 
 *Defined at:* `scripts/editors/tasks/TaskSetCombatMode.gd` (lines 9–13)</br>
-*Belongs to:* [UnitTaskSetCombatMode](../UnitTaskSetCombatMode.md)
+*Belongs to:* [UnitTaskSetCombatMode](../../UnitTaskSetCombatMode.md)
 
 **Signature**
 

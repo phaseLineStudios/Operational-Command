@@ -1,7 +1,7 @@
 # ScenarioSceneTreeService::setup Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioSceneTreeService.gd` (lines 7–10)</br>
-*Belongs to:* [ScenarioSceneTreeService](../ScenarioSceneTreeService.md)
+*Belongs to:* [ScenarioSceneTreeService](../../ScenarioSceneTreeService.md)
 
 **Signature**
 

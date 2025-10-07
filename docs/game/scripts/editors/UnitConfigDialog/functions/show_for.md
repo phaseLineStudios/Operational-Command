@@ -1,7 +1,7 @@
 # UnitConfigDialog::show_for Function Reference
 
 *Defined at:* `scripts/editors/UnitConfigDialog.gd` (lines 43–68)</br>
-*Belongs to:* [UnitConfigDialog](../UnitConfigDialog.md)
+*Belongs to:* [UnitConfigDialog](../../UnitConfigDialog.md)
 
 **Signature**
 

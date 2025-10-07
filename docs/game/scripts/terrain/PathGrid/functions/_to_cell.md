@@ -1,7 +1,7 @@
 # PathGrid::_to_cell Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 709–714)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

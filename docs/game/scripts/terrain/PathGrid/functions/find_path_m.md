@@ -1,7 +1,7 @@
 # PathGrid::find_path_m Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 413–426)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

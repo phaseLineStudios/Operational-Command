@@ -1,7 +1,7 @@
 # UnitBaseTask::get_configurable_props Function Reference
 
 *Defined at:* `scripts/editors/tasks/UnitBaseTask.gd` (lines 19–42)</br>
-*Belongs to:* [UnitBaseTask](../UnitBaseTask.md)
+*Belongs to:* [UnitBaseTask](../../UnitBaseTask.md)
 
 **Signature**
 

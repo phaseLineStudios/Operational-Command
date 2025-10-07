@@ -1,7 +1,7 @@
 # UnitConfigDialog::_on_save Function Reference
 
 *Defined at:* `scripts/editors/UnitConfigDialog.gd` (lines 69–92)</br>
-*Belongs to:* [UnitConfigDialog](../UnitConfigDialog.md)
+*Belongs to:* [UnitConfigDialog](../../UnitConfigDialog.md)
 
 **Signature**
 

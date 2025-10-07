@@ -1,7 +1,7 @@
 # AmmoRearmPanel::_ammo_tooltip Function Reference
 
 *Defined at:* `scripts/ui/AmmoRearmPanel.gd` (lines 254–266)</br>
-*Belongs to:* [AmmoRearmPanel](../AmmoRearmPanel.md)
+*Belongs to:* [AmmoRearmPanel](../../AmmoRearmPanel.md)
 
 **Signature**
 

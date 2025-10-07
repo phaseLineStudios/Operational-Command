@@ -1,7 +1,7 @@
 # DebugMetricsDisplay::_on_visibility_changed Function Reference
 
 *Defined at:* `scripts/ui/DebugMetricsDisplay.gd` (lines 544–560)</br>
-*Belongs to:* [DebugMetricsDisplay](../DebugMetricsDisplay.md)
+*Belongs to:* [DebugMetricsDisplay](../../DebugMetricsDisplay.md)
 
 **Signature**
 

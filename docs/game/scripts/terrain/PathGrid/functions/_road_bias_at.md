@@ -1,7 +1,7 @@
 # PathGrid::_road_bias_at Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 623–634)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

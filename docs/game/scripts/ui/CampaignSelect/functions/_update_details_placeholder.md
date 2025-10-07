@@ -1,7 +1,7 @@
 # CampaignSelect::_update_details_placeholder Function Reference
 
 *Defined at:* `scripts/ui/CampaignSelect.gd` (lines 68–75)</br>
-*Belongs to:* [CampaignSelect](../CampaignSelect.md)
+*Belongs to:* [CampaignSelect](../../CampaignSelect.md)
 
 **Signature**
 

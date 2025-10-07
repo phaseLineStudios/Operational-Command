@@ -1,7 +1,7 @@
 # CombatTest::_ready Function Reference
 
 *Defined at:* `scripts/test/CombatTest.gd` (lines 23–60)</br>
-*Belongs to:* [CombatTest](../CombatTest.md)
+*Belongs to:* [CombatTest](../../CombatTest.md)
 
 **Signature**
 

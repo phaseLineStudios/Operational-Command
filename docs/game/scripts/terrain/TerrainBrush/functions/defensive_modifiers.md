@@ -1,7 +1,7 @@
 # TerrainBrush::defensive_modifiers Function Reference
 
 *Defined at:* `scripts/terrain/TerrainBrush.gd` (lines 108–111)</br>
-*Belongs to:* [TerrainBrush](../TerrainBrush.md)
+*Belongs to:* [TerrainBrush](../../TerrainBrush.md)
 
 **Signature**
 

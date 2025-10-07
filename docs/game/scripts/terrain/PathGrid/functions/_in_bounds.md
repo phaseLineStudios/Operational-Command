@@ -1,7 +1,7 @@
 # PathGrid::_in_bounds Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 719–722)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # TerrainData::_ensure_ids Function Reference
 
 *Defined at:* `scripts/data/TerrainData.gd` (lines 442–453)</br>
-*Belongs to:* [TerrainData](../TerrainData.md)
+*Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**
 

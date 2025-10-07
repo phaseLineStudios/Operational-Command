@@ -1,7 +1,7 @@
 # MovementAgent::_to_local_from_terrain Function Reference
 
 *Defined at:* `scripts/ai/MovementAgent.gd` (lines 306–310)</br>
-*Belongs to:* [MovementAgent](../MovementAgent.md)
+*Belongs to:* [MovementAgent](../../MovementAgent.md)
 
 **Signature**
 

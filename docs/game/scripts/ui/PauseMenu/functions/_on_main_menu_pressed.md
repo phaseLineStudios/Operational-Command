@@ -1,7 +1,7 @@
 # PauseMenu::_on_main_menu_pressed Function Reference
 
 *Defined at:* `scripts/ui/PauseMenu.gd` (lines 88–92)</br>
-*Belongs to:* [PauseMenu](../PauseMenu.md)
+*Belongs to:* [PauseMenu](../../PauseMenu.md)
 
 **Signature**
 

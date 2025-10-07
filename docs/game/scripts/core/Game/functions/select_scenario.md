@@ -1,7 +1,7 @@
 # Game::select_scenario Function Reference
 
 *Defined at:* `scripts/core/Game.gd` (lines 59–63)</br>
-*Belongs to:* [Game](../Game.md)
+*Belongs to:* [Game](../../Game.md)
 
 **Signature**
 
@@ -23,4 +23,4 @@ func select_scenario(scenario: ScenarioData) -> void:
 
 ## References
 
-- [`signal mission_selected`](..\..\Game.md#mission_selected)
+- [`signal mission_selected`](../../Game.md#mission_selected)

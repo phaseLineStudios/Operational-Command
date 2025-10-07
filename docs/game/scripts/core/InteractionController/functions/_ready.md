@@ -1,7 +1,7 @@
 # InteractionController::_ready Function Reference
 
 *Defined at:* `scripts/core/PlayerInteraction.gd` (lines 18–23)</br>
-*Belongs to:* [InteractionController](../InteractionController.md)
+*Belongs to:* [InteractionController](../../InteractionController.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # TerrainEditor::_build_exit_dialog Function Reference
 
 *Defined at:* `scripts/editors/TerrainEditor.gd` (lines 297–314)</br>
-*Belongs to:* [TerrainEditor](../TerrainEditor.md)
+*Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**
 

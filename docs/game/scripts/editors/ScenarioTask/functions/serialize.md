@@ -1,7 +1,7 @@
 # ScenarioTask::serialize Function Reference
 
 *Defined at:* `scripts/editors/ScenarioTask.gd` (lines 28–39)</br>
-*Belongs to:* [ScenarioTask](../ScenarioTask.md)
+*Belongs to:* [ScenarioTask](../../ScenarioTask.md)
 
 **Signature**
 

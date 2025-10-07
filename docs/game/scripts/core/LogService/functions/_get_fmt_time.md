@@ -1,7 +1,7 @@
 # LogService::_get_fmt_time Function Reference
 
 *Defined at:* `scripts/core/LogService.gd` (lines 65–69)</br>
-*Belongs to:* [LogService](../LogService.md)
+*Belongs to:* [LogService](../../LogService.md)
 
 **Signature**
 

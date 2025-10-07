@@ -1,7 +1,7 @@
 # MovementAgent::_set_path Function Reference
 
 *Defined at:* `scripts/ai/MovementAgent.gd` (lines 136–143)</br>
-*Belongs to:* [MovementAgent](../MovementAgent.md)
+*Belongs to:* [MovementAgent](../../MovementAgent.md)
 
 **Signature**
 

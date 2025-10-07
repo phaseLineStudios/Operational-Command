@@ -1,7 +1,7 @@
 # AmmoTest::_ready Function Reference
 
 *Defined at:* `scripts/test/AmmoTest.gd` (lines 45–99)</br>
-*Belongs to:* [AmmoTest](../AmmoTest.md)
+*Belongs to:* [AmmoTest](../../AmmoTest.md)
 
 **Signature**
 

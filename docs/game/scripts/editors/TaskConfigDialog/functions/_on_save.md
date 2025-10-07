@@ -1,7 +1,7 @@
 # TaskConfigDialog::_on_save Function Reference
 
 *Defined at:* `scripts/editors/TaskConfigDialog.gd` (lines 122–154)</br>
-*Belongs to:* [TaskConfigDialog](../TaskConfigDialog.md)
+*Belongs to:* [TaskConfigDialog](../../TaskConfigDialog.md)
 
 **Signature**
 

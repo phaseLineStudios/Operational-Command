@@ -1,7 +1,7 @@
 # TerrainCamera::_input Function Reference
 
 *Defined at:* `scripts/editors/TerrainCamera.gd` (lines 24–43)</br>
-*Belongs to:* [TerrainCamera](../TerrainCamera.md)
+*Belongs to:* [TerrainCamera](../../TerrainCamera.md)
 
 **Signature**
 

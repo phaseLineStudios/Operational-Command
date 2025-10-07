@@ -1,7 +1,7 @@
 # SurfaceLayer::_poly_bbox Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 466–477)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

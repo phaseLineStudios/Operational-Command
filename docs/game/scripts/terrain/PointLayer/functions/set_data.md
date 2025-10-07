@@ -1,7 +1,7 @@
 # PointLayer::set_data Function Reference
 
 *Defined at:* `scripts/terrain/PointLayer.gd` (lines 18–37)</br>
-*Belongs to:* [PointLayer](../PointLayer.md)
+*Belongs to:* [PointLayer](../../PointLayer.md)
 
 **Signature**
 

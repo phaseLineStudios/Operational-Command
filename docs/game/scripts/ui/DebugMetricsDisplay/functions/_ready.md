@@ -1,7 +1,7 @@
 # DebugMetricsDisplay::_ready Function Reference
 
 *Defined at:* `scripts/ui/DebugMetricsDisplay.gd` (lines 88–120)</br>
-*Belongs to:* [DebugMetricsDisplay](../DebugMetricsDisplay.md)
+*Belongs to:* [DebugMetricsDisplay](../../DebugMetricsDisplay.md)
 
 **Signature**
 

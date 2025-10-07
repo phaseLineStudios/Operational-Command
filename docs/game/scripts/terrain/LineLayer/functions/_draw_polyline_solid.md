@@ -1,7 +1,7 @@
 # LineLayer::_draw_polyline_solid Function Reference
 
 *Defined at:* `scripts/terrain/LineLayer.gd` (lines 267–272)</br>
-*Belongs to:* [LineLayer](../LineLayer.md)
+*Belongs to:* [LineLayer](../../LineLayer.md)
 
 **Signature**
 

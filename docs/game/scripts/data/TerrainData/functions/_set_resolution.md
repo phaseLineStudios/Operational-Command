@@ -1,7 +1,7 @@
 # TerrainData::_set_resolution Function Reference
 
 *Defined at:* `scripts/data/TerrainData.gd` (lines 133–138)</br>
-*Belongs to:* [TerrainData](../TerrainData.md)
+*Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**
 

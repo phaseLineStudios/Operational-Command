@@ -1,7 +1,7 @@
 # MovementAgent::_draw_cell_rect_m Function Reference
 
 *Defined at:* `scripts/ai/MovementAgent.gd` (lines 291–304)</br>
-*Belongs to:* [MovementAgent](../MovementAgent.md)
+*Belongs to:* [MovementAgent](../../MovementAgent.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ScenarioHistory::redo Function Reference
 
 *Defined at:* `scripts/editors/ScenarioHistory.gd` (lines 27–35)</br>
-*Belongs to:* [ScenarioHistory](../ScenarioHistory.md)
+*Belongs to:* [ScenarioHistory](../../ScenarioHistory.md)
 
 **Signature**
 

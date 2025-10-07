@@ -1,7 +1,7 @@
 # MissionSelect::_attach_pin_label Function Reference
 
 *Defined at:* `scripts/ui/MissionSelect.gd` (lines 132–172)</br>
-*Belongs to:* [MissionSelect](../MissionSelect.md)
+*Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**
 

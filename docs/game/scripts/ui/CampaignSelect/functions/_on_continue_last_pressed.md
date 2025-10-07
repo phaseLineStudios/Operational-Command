@@ -1,7 +1,7 @@
 # CampaignSelect::_on_continue_last_pressed Function Reference
 
 *Defined at:* `scripts/ui/CampaignSelect.gd` (lines 95–108)</br>
-*Belongs to:* [CampaignSelect](../CampaignSelect.md)
+*Belongs to:* [CampaignSelect](../../CampaignSelect.md)
 
 **Signature**
 

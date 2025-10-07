@@ -1,7 +1,7 @@
 # STTService::stop Function Reference
 
 *Defined at:* `scripts/radio/STTService.gd` (lines 59–74)</br>
-*Belongs to:* [STTService](../STTService.md)
+*Belongs to:* [STTService](../../STTService.md)
 
 **Signature**
 

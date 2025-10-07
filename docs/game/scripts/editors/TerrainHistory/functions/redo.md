@@ -1,7 +1,7 @@
 # TerrainHistory::redo Function Reference
 
 *Defined at:* `scripts/editors/TerrainHistory.gd` (lines 29–37)</br>
-*Belongs to:* [TerrainHistory](../TerrainHistory.md)
+*Belongs to:* [TerrainHistory](../../TerrainHistory.md)
 
 **Signature**
 

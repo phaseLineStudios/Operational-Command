@@ -1,7 +1,7 @@
 # TriggerConfigDialog::_ready Function Reference
 
 *Defined at:* `scripts/editors/TriggerConfigDialog.gd` (lines 24–29)</br>
-*Belongs to:* [TriggerConfigDialog](../TriggerConfigDialog.md)
+*Belongs to:* [TriggerConfigDialog](../../TriggerConfigDialog.md)
 
 **Signature**
 

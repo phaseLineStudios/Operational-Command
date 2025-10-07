@@ -1,7 +1,7 @@
 # TableCamera::_physics_process Function Reference
 
 *Defined at:* `scripts/core/Camera.gd` (lines 39–64)</br>
-*Belongs to:* [TableCamera](../TableCamera.md)
+*Belongs to:* [TableCamera](../../TableCamera.md)
 
 **Signature**
 

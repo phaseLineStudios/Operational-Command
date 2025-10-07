@@ -1,7 +1,7 @@
 # MissionSelect::_on_pin_pressed Function Reference
 
 *Defined at:* `scripts/ui/MissionSelect.gd` (lines 212–231)</br>
-*Belongs to:* [MissionSelect](../MissionSelect.md)
+*Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**
 

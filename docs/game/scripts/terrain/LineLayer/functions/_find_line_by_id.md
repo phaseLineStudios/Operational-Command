@@ -1,7 +1,7 @@
 # LineLayer::_find_line_by_id Function Reference
 
 *Defined at:* `scripts/terrain/LineLayer.gd` (lines 341–347)</br>
-*Belongs to:* [LineLayer](../LineLayer.md)
+*Belongs to:* [LineLayer](../../LineLayer.md)
 
 **Signature**
 

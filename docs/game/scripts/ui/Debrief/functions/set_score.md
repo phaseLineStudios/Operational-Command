@@ -1,7 +1,7 @@
 # Debrief::set_score Function Reference
 
 *Defined at:* `scripts/ui/Debrief.gd` (lines 160–173)</br>
-*Belongs to:* [Debrief](../Debrief.md)
+*Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**
 

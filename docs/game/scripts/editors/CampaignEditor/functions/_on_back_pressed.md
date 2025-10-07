@@ -1,7 +1,7 @@
 # CampaignEditor::_on_back_pressed Function Reference
 
 *Defined at:* `scripts/editors/CampaignEditor.gd` (lines 15–16)</br>
-*Belongs to:* [CampaignEditor](../CampaignEditor.md)
+*Belongs to:* [CampaignEditor](../../CampaignEditor.md)
 
 **Signature**
 

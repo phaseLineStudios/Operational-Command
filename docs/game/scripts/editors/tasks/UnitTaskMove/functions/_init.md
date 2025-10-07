@@ -1,7 +1,7 @@
 # UnitTaskMove::_init Function Reference
 
 *Defined at:* `scripts/editors/tasks/TaskMove.gd` (lines 9–13)</br>
-*Belongs to:* [UnitTaskMove](../UnitTaskMove.md)
+*Belongs to:* [UnitTaskMove](../../UnitTaskMove.md)
 
 **Signature**
 

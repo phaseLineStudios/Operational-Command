@@ -1,7 +1,7 @@
 # GridLayer::_draw_v_line Function Reference
 
 *Defined at:* `scripts/terrain/GridLayer.gd` (lines 106–114)</br>
-*Belongs to:* [GridLayer](../GridLayer.md)
+*Belongs to:* [GridLayer](../../GridLayer.md)
 
 **Signature**
 

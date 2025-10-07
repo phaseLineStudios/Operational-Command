@@ -1,7 +1,7 @@
 # Debrief::populate_from_dict Function Reference
 
 *Defined at:* `scripts/ui/Debrief.gd` (lines 274–291)</br>
-*Belongs to:* [Debrief](../Debrief.md)
+*Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**
 

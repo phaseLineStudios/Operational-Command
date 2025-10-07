@@ -1,7 +1,7 @@
 # ScenarioEditorOverlay::_is_highlighted Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 436–442)</br>
-*Belongs to:* [ScenarioEditorOverlay](../ScenarioEditorOverlay.md)
+*Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
 

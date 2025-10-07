@@ -1,7 +1,7 @@
 # AmmoTest::_enable_log Function Reference
 
 *Defined at:* `scripts/test/AmmoTest.gd` (lines 110–116)</br>
-*Belongs to:* [AmmoTest](../AmmoTest.md)
+*Belongs to:* [AmmoTest](../../AmmoTest.md)
 
 **Signature**
 

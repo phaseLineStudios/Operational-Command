@@ -1,7 +1,7 @@
 # TerrainElevationTool::_label Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainElevationTool.gd` (lines 101–106)</br>
-*Belongs to:* [TerrainElevationTool](../TerrainElevationTool.md)
+*Belongs to:* [TerrainElevationTool](../../TerrainElevationTool.md)
 
 **Signature**
 

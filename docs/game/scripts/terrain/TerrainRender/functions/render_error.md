@@ -1,7 +1,7 @@
 # TerrainRender::render_error Function Reference
 
 *Defined at:* `scripts/terrain/TerrainRender.gd` (lines 187–193)</br>
-*Belongs to:* [TerrainRender](../TerrainRender.md)
+*Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**
 

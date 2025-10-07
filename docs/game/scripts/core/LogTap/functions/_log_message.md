@@ -1,7 +1,7 @@
 # LogTap::_log_message Function Reference
 
 *Defined at:* `scripts/core/Logger.gd` (lines 9–12)</br>
-*Belongs to:* [LogTap](../LogTap.md)
+*Belongs to:* [LogTap](../../LogTap.md)
 
 **Signature**
 

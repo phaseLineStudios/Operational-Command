@@ -1,7 +1,7 @@
 # SurfaceLayer::_draw Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 89–151)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

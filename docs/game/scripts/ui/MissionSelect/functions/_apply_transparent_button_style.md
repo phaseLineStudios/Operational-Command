@@ -1,7 +1,7 @@
 # MissionSelect::_apply_transparent_button_style Function Reference
 
 *Defined at:* `scripts/ui/MissionSelect.gd` (lines 122–130)</br>
-*Belongs to:* [MissionSelect](../MissionSelect.md)
+*Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # PickupItem::end_inspect Function Reference
 
 *Defined at:* `scripts/core/PickupItem.gd` (lines 78–85)</br>
-*Belongs to:* [PickupItem](../PickupItem.md)
+*Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**
 

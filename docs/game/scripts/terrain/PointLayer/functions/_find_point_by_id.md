@@ -1,7 +1,7 @@
 # PointLayer::_find_point_by_id Function Reference
 
 *Defined at:* `scripts/terrain/PointLayer.gd` (lines 221–227)</br>
-*Belongs to:* [PointLayer](../PointLayer.md)
+*Belongs to:* [PointLayer](../../PointLayer.md)
 
 **Signature**
 

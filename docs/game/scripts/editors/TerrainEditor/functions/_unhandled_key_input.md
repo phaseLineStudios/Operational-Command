@@ -1,7 +1,7 @@
 # TerrainEditor::_unhandled_key_input Function Reference
 
 *Defined at:* `scripts/editors/TerrainEditor.gd` (lines 316–338)</br>
-*Belongs to:* [TerrainEditor](../TerrainEditor.md)
+*Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # CampaignSelect::_on_select_save_pressed Function Reference
 
 *Defined at:* `scripts/ui/CampaignSelect.gd` (lines 110–116)</br>
-*Belongs to:* [CampaignSelect](../CampaignSelect.md)
+*Belongs to:* [CampaignSelect](../../CampaignSelect.md)
 
 **Signature**
 

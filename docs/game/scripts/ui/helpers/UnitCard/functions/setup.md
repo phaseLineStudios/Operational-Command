@@ -1,7 +1,7 @@
 # UnitCard::setup Function Reference
 
 *Defined at:* `scripts/ui/helpers/UnitCard.gd` (lines 41–72)</br>
-*Belongs to:* [UnitCard](../UnitCard.md)
+*Belongs to:* [UnitCard](../../UnitCard.md)
 
 **Signature**
 

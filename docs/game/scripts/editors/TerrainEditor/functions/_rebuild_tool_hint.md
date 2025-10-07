@@ -1,7 +1,7 @@
 # TerrainEditor::_rebuild_tool_hint Function Reference
 
 *Defined at:* `scripts/editors/TerrainEditor.gd` (lines 290–295)</br>
-*Belongs to:* [TerrainEditor](../TerrainEditor.md)
+*Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # UnitSelect::_show_unit_stats Function Reference
 
 *Defined at:* `scripts/ui/UnitSelect.gd` (lines 369–379)</br>
-*Belongs to:* [UnitSelect](../UnitSelect.md)
+*Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**
 

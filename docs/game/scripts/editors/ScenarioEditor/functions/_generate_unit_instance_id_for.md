@@ -1,7 +1,7 @@
 # ScenarioEditor::_generate_unit_instance_id_for Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 854–873)</br>
-*Belongs to:* [ScenarioEditor](../ScenarioEditor.md)
+*Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
 

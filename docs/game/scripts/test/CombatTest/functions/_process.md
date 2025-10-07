@@ -1,7 +1,7 @@
 # CombatTest::_process Function Reference
 
 *Defined at:* `scripts/test/CombatTest.gd` (lines 61–70)</br>
-*Belongs to:* [CombatTest](../CombatTest.md)
+*Belongs to:* [CombatTest](../../CombatTest.md)
 
 **Signature**
 

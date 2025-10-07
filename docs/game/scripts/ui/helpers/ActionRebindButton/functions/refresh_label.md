@@ -1,7 +1,7 @@
 # ActionRebindButton::refresh_label Function Reference
 
 *Defined at:* `scripts/ui/helpers/ActionRebindButton.gd` (lines 19–26)</br>
-*Belongs to:* [ActionRebindButton](../ActionRebindButton.md)
+*Belongs to:* [ActionRebindButton](../../ActionRebindButton.md)
 
 **Signature**
 

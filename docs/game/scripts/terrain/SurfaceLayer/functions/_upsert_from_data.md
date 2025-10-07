@@ -1,7 +1,7 @@
 # SurfaceLayer::_upsert_from_data Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 213–246)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

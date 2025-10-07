@@ -1,7 +1,7 @@
 # SurfaceLayer::_union_polys Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 495–523)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

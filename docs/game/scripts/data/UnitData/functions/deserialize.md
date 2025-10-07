@@ -1,7 +1,7 @@
 # UnitData::deserialize Function Reference
 
 *Defined at:* `scripts/data/UnitData.gd` (lines 136–218)</br>
-*Belongs to:* [UnitData](../UnitData.md)
+*Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ScenarioEditorOverlay::_draw_title Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 456–475)</br>
-*Belongs to:* [ScenarioEditorOverlay](../ScenarioEditorOverlay.md)
+*Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
 

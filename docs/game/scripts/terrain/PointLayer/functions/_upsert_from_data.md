@@ -1,7 +1,7 @@
 # PointLayer::_upsert_from_data Function Reference
 
 *Defined at:* `scripts/terrain/PointLayer.gd` (lines 106–162)</br>
-*Belongs to:* [PointLayer](../PointLayer.md)
+*Belongs to:* [PointLayer](../../PointLayer.md)
 
 **Signature**
 

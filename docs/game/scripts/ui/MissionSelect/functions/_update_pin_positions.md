@@ -1,7 +1,7 @@
 # MissionSelect::_update_pin_positions Function Reference
 
 *Defined at:* `scripts/ui/MissionSelect.gd` (lines 187–210)</br>
-*Belongs to:* [MissionSelect](../MissionSelect.md)
+*Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**
 

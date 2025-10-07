@@ -1,7 +1,7 @@
 # UnitSelect::_unassign_slot Function Reference
 
 *Defined at:* `scripts/ui/UnitSelect.gd` (lines 275–305)</br>
-*Belongs to:* [UnitSelect](../UnitSelect.md)
+*Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**
 

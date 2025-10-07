@@ -1,7 +1,7 @@
 # GridLayer::_bake_grid_texture Function Reference
 
 *Defined at:* `scripts/terrain/GridLayer.gd` (lines 56–105)</br>
-*Belongs to:* [GridLayer](../GridLayer.md)
+*Belongs to:* [GridLayer](../../GridLayer.md)
 
 **Signature**
 

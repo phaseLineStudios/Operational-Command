@@ -1,7 +1,7 @@
 # LabelLayer::_refresh_pose_only Function Reference
 
 *Defined at:* `scripts/terrain/LabelLayer.gd` (lines 161–183)</br>
-*Belongs to:* [LabelLayer](../LabelLayer.md)
+*Belongs to:* [LabelLayer](../../LabelLayer.md)
 
 **Signature**
 

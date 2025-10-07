@@ -1,7 +1,7 @@
 # MapController::_update_mesh_fit Function Reference
 
 *Defined at:* `scripts/core/MapController.gd` (lines 94–120)</br>
-*Belongs to:* [MapController](../MapController.md)
+*Belongs to:* [MapController](../../MapController.md)
 
 **Signature**
 

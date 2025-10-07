@@ -1,7 +1,7 @@
 # TerrainHistory::_deep_copy Function Reference
 
 *Defined at:* `scripts/editors/TerrainHistory.gd` (lines 187–204)</br>
-*Belongs to:* [TerrainHistory](../TerrainHistory.md)
+*Belongs to:* [TerrainHistory](../../TerrainHistory.md)
 
 **Signature**
 

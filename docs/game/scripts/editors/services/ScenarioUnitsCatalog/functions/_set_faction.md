@@ -1,7 +1,7 @@
 # ScenarioUnitsCatalog::_set_faction Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 45–51)</br>
-*Belongs to:* [ScenarioUnitsCatalog](../ScenarioUnitsCatalog.md)
+*Belongs to:* [ScenarioUnitsCatalog](../../ScenarioUnitsCatalog.md)
 
 **Signature**
 

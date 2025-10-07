@@ -1,7 +1,7 @@
 # CombatAdapter::get_ammo_penalty Function Reference
 
 *Defined at:* `scripts/sim/CombatAdapter.gd` (lines 55–104)</br>
-*Belongs to:* [CombatAdapter](../CombatAdapter.md)
+*Belongs to:* [CombatAdapter](../../CombatAdapter.md)
 
 **Signature**
 

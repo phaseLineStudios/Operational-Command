@@ -1,7 +1,7 @@
 # Game::select_campaign Function Reference
 
 *Defined at:* `scripts/core/Game.gd` (lines 47–51)</br>
-*Belongs to:* [Game](../Game.md)
+*Belongs to:* [Game](../../Game.md)
 
 **Signature**
 
@@ -23,4 +23,4 @@ func select_campaign(campaign: CampaignData) -> void:
 
 ## References
 
-- [`signal campaign_selected`](..\..\Game.md#campaign_selected)
+- [`signal campaign_selected`](../../Game.md#campaign_selected)

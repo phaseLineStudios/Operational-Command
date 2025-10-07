@@ -1,7 +1,7 @@
 # Debrief::set_casualties Function Reference
 
 *Defined at:* `scripts/ui/Debrief.gd` (lines 181–195)</br>
-*Belongs to:* [Debrief](../Debrief.md)
+*Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**
 

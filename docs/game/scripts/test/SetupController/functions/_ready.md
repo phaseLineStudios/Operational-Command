@@ -1,7 +1,7 @@
 # SetupController::_ready Function Reference
 
 *Defined at:* `scripts/test/PathTest.gd` (lines 15–46)</br>
-*Belongs to:* [SetupController](../SetupController.md)
+*Belongs to:* [SetupController](../../SetupController.md)
 
 **Signature**
 

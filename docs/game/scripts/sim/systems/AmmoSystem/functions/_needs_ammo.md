@@ -1,7 +1,7 @@
 # AmmoSystem::_needs_ammo Function Reference
 
 *Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 167–173)</br>
-*Belongs to:* [AmmoSystem](../AmmoSystem.md)
+*Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**
 

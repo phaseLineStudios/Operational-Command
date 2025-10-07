@@ -1,7 +1,7 @@
 # AmmoRearmPanel::_on_unit_selected Function Reference
 
 *Defined at:* `scripts/ui/AmmoRearmPanel.gd` (lines 69–75)</br>
-*Belongs to:* [AmmoRearmPanel](../AmmoRearmPanel.md)
+*Belongs to:* [AmmoRearmPanel](../../AmmoRearmPanel.md)
 
 **Signature**
 

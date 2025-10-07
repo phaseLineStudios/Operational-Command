@@ -1,7 +1,7 @@
 # Settings::_set_bus_mute Function Reference
 
 *Defined at:* `scripts/ui/Settings.gd` (lines 276–282)</br>
-*Belongs to:* [Settings](../Settings.md)
+*Belongs to:* [Settings](../../Settings.md)
 
 **Signature**
 

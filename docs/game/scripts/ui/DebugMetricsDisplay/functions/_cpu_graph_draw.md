@@ -1,7 +1,7 @@
 # DebugMetricsDisplay::_cpu_graph_draw Function Reference
 
 *Defined at:* `scripts/ui/DebugMetricsDisplay.gd` (lines 359–381)</br>
-*Belongs to:* [DebugMetricsDisplay](../DebugMetricsDisplay.md)
+*Belongs to:* [DebugMetricsDisplay](../../DebugMetricsDisplay.md)
 
 **Signature**
 

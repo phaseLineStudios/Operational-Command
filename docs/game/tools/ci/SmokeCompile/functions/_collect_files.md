@@ -1,7 +1,7 @@
 # SmokeCompile::_collect_files Function Reference
 
 *Defined at:* `tools/ci/smoke_compile.gd` (lines 47–53)</br>
-*Belongs to:* [SmokeCompile](../SmokeCompile.md)
+*Belongs to:* [SmokeCompile](../../SmokeCompile.md)
 
 **Signature**
 

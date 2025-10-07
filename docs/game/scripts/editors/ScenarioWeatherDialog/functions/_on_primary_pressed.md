@@ -1,7 +1,7 @@
 # ScenarioWeatherDialog::_on_primary_pressed Function Reference
 
 *Defined at:* `scripts/editors/WeatherDialog.gd` (lines 20–27)</br>
-*Belongs to:* [ScenarioWeatherDialog](../ScenarioWeatherDialog.md)
+*Belongs to:* [ScenarioWeatherDialog](../../ScenarioWeatherDialog.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ScenarioTasksService::_find_tail Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioTasksService.gd` (lines 135–143)</br>
-*Belongs to:* [ScenarioTasksService](../ScenarioTasksService.md)
+*Belongs to:* [ScenarioTasksService](../../ScenarioTasksService.md)
 
 **Signature**
 

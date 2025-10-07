@@ -1,7 +1,7 @@
 # ScenarioToolBase::deactivate Function Reference
 
 *Defined at:* `scripts/editors/tools/ScenarioToolBase.gd` (lines 29–33)</br>
-*Belongs to:* [ScenarioToolBase](../ScenarioToolBase.md)
+*Belongs to:* [ScenarioToolBase](../../ScenarioToolBase.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # RadioFeedback::_on_ammo_low Function Reference
 
 *Defined at:* `scripts/radio/RadioFeedback.gd` (lines 37–40)</br>
-*Belongs to:* [RadioFeedback](../RadioFeedback.md)
+*Belongs to:* [RadioFeedback](../../RadioFeedback.md)
 
 **Signature**
 

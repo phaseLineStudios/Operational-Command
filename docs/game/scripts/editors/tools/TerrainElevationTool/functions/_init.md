@@ -1,7 +1,7 @@
 # TerrainElevationTool::_init Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainElevationTool.gd` (lines 20–24)</br>
-*Belongs to:* [TerrainElevationTool](../TerrainElevationTool.md)
+*Belongs to:* [TerrainElevationTool](../../TerrainElevationTool.md)
 
 **Signature**
 

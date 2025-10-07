@@ -1,7 +1,7 @@
 # MapController::_plane_hit_to_map_px Function Reference
 
 *Defined at:* `scripts/core/MapController.gd` (lines 163–176)</br>
-*Belongs to:* [MapController](../MapController.md)
+*Belongs to:* [MapController](../../MapController.md)
 
 **Signature**
 

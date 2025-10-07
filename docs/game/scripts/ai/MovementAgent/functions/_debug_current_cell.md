@@ -1,7 +1,7 @@
 # MovementAgent::_debug_current_cell Function Reference
 
 *Defined at:* `scripts/ai/MovementAgent.gd` (lines 160–165)</br>
-*Belongs to:* [MovementAgent](../MovementAgent.md)
+*Belongs to:* [MovementAgent](../../MovementAgent.md)
 
 **Signature**
 

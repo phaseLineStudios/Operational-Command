@@ -1,7 +1,7 @@
 # TerrainHistory::_apply_array Function Reference
 
 *Defined at:* `scripts/editors/TerrainHistory.gd` (lines 129–133)</br>
-*Belongs to:* [TerrainHistory](../TerrainHistory.md)
+*Belongs to:* [TerrainHistory](../../TerrainHistory.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # TerrainLabelTool::handle_view_input Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainLabelTool.gd` (lines 108–167)</br>
-*Belongs to:* [TerrainLabelTool](../TerrainLabelTool.md)
+*Belongs to:* [TerrainLabelTool](../../TerrainLabelTool.md)
 
 **Signature**
 

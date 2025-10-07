@@ -1,7 +1,7 @@
 # SlotConfigDialog::show_for Function Reference
 
 *Defined at:* `scripts/editors/SlotConfigDialog.gd` (lines 26–38)</br>
-*Belongs to:* [SlotConfigDialog](../SlotConfigDialog.md)
+*Belongs to:* [SlotConfigDialog](../../SlotConfigDialog.md)
 
 **Signature**
 

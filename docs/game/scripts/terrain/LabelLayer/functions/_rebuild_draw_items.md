@@ -1,7 +1,7 @@
 # LabelLayer::_rebuild_draw_items Function Reference
 
 *Defined at:* `scripts/terrain/LabelLayer.gd` (lines 185–198)</br>
-*Belongs to:* [LabelLayer](../LabelLayer.md)
+*Belongs to:* [LabelLayer](../../LabelLayer.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # UnitSelect::_refresh_topbar Function Reference
 
 *Defined at:* `scripts/ui/UnitSelect.gd` (lines 307–312)</br>
-*Belongs to:* [UnitSelect](../UnitSelect.md)
+*Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**
 

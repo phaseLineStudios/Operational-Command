@@ -1,7 +1,7 @@
 # NewTerrainDialog::_fill_fields_from_data Function Reference
 
 *Defined at:* `scripts/editors/TerrainSettingsDialog.gd` (lines 106–114)</br>
-*Belongs to:* [NewTerrainDialog](../NewTerrainDialog.md)
+*Belongs to:* [NewTerrainDialog](../../NewTerrainDialog.md)
 
 **Signature**
 

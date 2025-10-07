@@ -1,7 +1,7 @@
 # CombatAdapter::request_fire_with_penalty Function Reference
 
 *Defined at:* `scripts/sim/CombatAdapter.gd` (lines 113–124)</br>
-*Belongs to:* [CombatAdapter](../CombatAdapter.md)
+*Belongs to:* [CombatAdapter](../../CombatAdapter.md)
 
 **Signature**
 

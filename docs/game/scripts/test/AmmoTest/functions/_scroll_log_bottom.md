@@ -1,7 +1,7 @@
 # AmmoTest::_scroll_log_bottom Function Reference
 
 *Defined at:* `scripts/test/AmmoTest.gd` (lines 224–228)</br>
-*Belongs to:* [AmmoTest](../AmmoTest.md)
+*Belongs to:* [AmmoTest](../../AmmoTest.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # MainMenu::_go Function Reference
 
 *Defined at:* `scripts/ui/MainMenu.gd` (lines 75–82)</br>
-*Belongs to:* [MainMenu](../MainMenu.md)
+*Belongs to:* [MainMenu](../../MainMenu.md)
 
 **Signature**
 

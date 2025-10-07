@@ -1,7 +1,7 @@
 # DebugMetricsDisplay::_gpu_graph_draw Function Reference
 
 *Defined at:* `scripts/ui/DebugMetricsDisplay.gd` (lines 382–404)</br>
-*Belongs to:* [DebugMetricsDisplay](../DebugMetricsDisplay.md)
+*Belongs to:* [DebugMetricsDisplay](../../DebugMetricsDisplay.md)
 
 **Signature**
 

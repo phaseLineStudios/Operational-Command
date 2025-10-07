@@ -1,7 +1,7 @@
 # PoolDropArea::_can_drop_data Function Reference
 
 *Defined at:* `scripts/ui/helpers/PoolDropArea.gd` (lines 12–17)</br>
-*Belongs to:* [PoolDropArea](../PoolDropArea.md)
+*Belongs to:* [PoolDropArea](../../PoolDropArea.md)
 
 **Signature**
 

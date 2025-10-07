@@ -1,7 +1,7 @@
 # MovementAgent::_effective_speed_at Function Reference
 
 *Defined at:* `scripts/ai/MovementAgent.gd` (lines 92–105)</br>
-*Belongs to:* [MovementAgent](../MovementAgent.md)
+*Belongs to:* [MovementAgent](../../MovementAgent.md)
 
 **Signature**
 

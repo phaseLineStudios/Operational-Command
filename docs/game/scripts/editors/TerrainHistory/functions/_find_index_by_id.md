@@ -1,7 +1,7 @@
 # TerrainHistory::_find_index_by_id Function Reference
 
 *Defined at:* `scripts/editors/TerrainHistory.gd` (lines 178–185)</br>
-*Belongs to:* [TerrainHistory](../TerrainHistory.md)
+*Belongs to:* [TerrainHistory](../../TerrainHistory.md)
 
 **Signature**
 

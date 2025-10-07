@@ -1,7 +1,7 @@
 # TerrainRender::_set_data Function Reference
 
 *Defined at:* `scripts/terrain/TerrainRender.gd` (lines 135–150)</br>
-*Belongs to:* [TerrainRender](../TerrainRender.md)
+*Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**
 

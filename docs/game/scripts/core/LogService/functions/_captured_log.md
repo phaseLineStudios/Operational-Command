@@ -1,7 +1,7 @@
 # LogService::_captured_log Function Reference
 
 *Defined at:* `scripts/core/LogService.gd` (lines 26–31)</br>
-*Belongs to:* [LogService](../LogService.md)
+*Belongs to:* [LogService](../../LogService.md)
 
 **Signature**
 

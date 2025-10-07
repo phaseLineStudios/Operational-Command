@@ -1,7 +1,7 @@
 # CampaignSelect::_connect_signals Function Reference
 
 *Defined at:* `scripts/ui/CampaignSelect.gd` (lines 36–43)</br>
-*Belongs to:* [CampaignSelect](../CampaignSelect.md)
+*Belongs to:* [CampaignSelect](../../CampaignSelect.md)
 
 **Signature**
 

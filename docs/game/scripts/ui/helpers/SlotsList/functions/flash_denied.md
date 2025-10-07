@@ -1,7 +1,7 @@
 # SlotsList::flash_denied Function Reference
 
 *Defined at:* `scripts/ui/helpers/SlotsList.gd` (lines 60–67)</br>
-*Belongs to:* [SlotsList](../SlotsList.md)
+*Belongs to:* [SlotsList](../../SlotsList.md)
 
 **Signature**
 

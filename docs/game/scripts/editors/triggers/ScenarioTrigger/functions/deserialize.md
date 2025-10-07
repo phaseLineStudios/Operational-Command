@@ -1,7 +1,7 @@
 # ScenarioTrigger::deserialize Function Reference
 
 *Defined at:* `scripts/editors/triggers/ScenarioTrigger.gd` (lines 69–96)</br>
-*Belongs to:* [ScenarioTrigger](../ScenarioTrigger.md)
+*Belongs to:* [ScenarioTrigger](../../ScenarioTrigger.md)
 
 **Signature**
 

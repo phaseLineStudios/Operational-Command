@@ -1,7 +1,7 @@
 # TableCamera::_damp_scalar Function Reference
 
 *Defined at:* `scripts/core/Camera.gd` (lines 104–108)</br>
-*Belongs to:* [TableCamera](../TableCamera.md)
+*Belongs to:* [TableCamera](../../TableCamera.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # TerrainToolBase::ensure_preview Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainToolBase.gd` (lines 59–63)</br>
-*Belongs to:* [TerrainToolBase](../TerrainToolBase.md)
+*Belongs to:* [TerrainToolBase](../../TerrainToolBase.md)
 
 **Signature**
 

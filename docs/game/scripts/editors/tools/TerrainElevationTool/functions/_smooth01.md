@@ -1,7 +1,7 @@
 # TerrainElevationTool::_smooth01 Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainElevationTool.gd` (lines 221–225)</br>
-*Belongs to:* [TerrainElevationTool](../TerrainElevationTool.md)
+*Belongs to:* [TerrainElevationTool](../../TerrainElevationTool.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ScenarioSelectionService::_select_in_tree Function Reference
 
 *Defined at:* `scripts/editors/services/ScenarioSelectionService.gd` (lines 37–46)</br>
-*Belongs to:* [ScenarioSelectionService](../ScenarioSelectionService.md)
+*Belongs to:* [ScenarioSelectionService](../../ScenarioSelectionService.md)
 
 **Signature**
 

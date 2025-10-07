@@ -1,7 +1,7 @@
 # TerrainPointTool::_init Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 17–21)</br>
-*Belongs to:* [TerrainPointTool](../TerrainPointTool.md)
+*Belongs to:* [TerrainPointTool](../../TerrainPointTool.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # PathGrid::_thread_finish Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 366–411)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

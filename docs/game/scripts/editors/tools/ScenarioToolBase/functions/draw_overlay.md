@@ -1,7 +1,7 @@
 # ScenarioToolBase::draw_overlay Function Reference
 
 *Defined at:* `scripts/editors/tools/ScenarioToolBase.gd` (lines 47–50)</br>
-*Belongs to:* [ScenarioToolBase](../ScenarioToolBase.md)
+*Belongs to:* [ScenarioToolBase](../../ScenarioToolBase.md)
 
 **Signature**
 

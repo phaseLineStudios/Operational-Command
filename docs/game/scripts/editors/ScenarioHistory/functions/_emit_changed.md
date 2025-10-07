@@ -1,7 +1,7 @@
 # ScenarioHistory::_emit_changed Function Reference
 
 *Defined at:* `scripts/editors/ScenarioHistory.gd` (lines 300–306)</br>
-*Belongs to:* [ScenarioHistory](../ScenarioHistory.md)
+*Belongs to:* [ScenarioHistory](../../ScenarioHistory.md)
 
 **Signature**
 

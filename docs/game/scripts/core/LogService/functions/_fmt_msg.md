@@ -1,7 +1,7 @@
 # LogService::_fmt_msg Function Reference
 
 *Defined at:* `scripts/core/LogService.gd` (lines 71–77)</br>
-*Belongs to:* [LogService](../LogService.md)
+*Belongs to:* [LogService](../../LogService.md)
 
 **Signature**
 

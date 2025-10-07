@@ -1,7 +1,7 @@
 # ContentDB::_load_json Function Reference
 
 *Defined at:* `scripts/core/ContentDB.gd` (lines 49–66)</br>
-*Belongs to:* [ContentDB](../ContentDB.md)
+*Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**
 

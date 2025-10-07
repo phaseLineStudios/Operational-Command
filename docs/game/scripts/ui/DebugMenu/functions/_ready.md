@@ -1,7 +1,7 @@
 # DebugMenu::_ready Function Reference
 
 *Defined at:* `scripts/ui/DebugMenu.gd` (lines 20–36)</br>
-*Belongs to:* [DebugMenu](../DebugMenu.md)
+*Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**
 

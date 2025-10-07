@@ -1,7 +1,7 @@
 # PointLayer::_notification Function Reference
 
 *Defined at:* `scripts/terrain/PointLayer.gd` (lines 72–76)</br>
-*Belongs to:* [PointLayer](../PointLayer.md)
+*Belongs to:* [PointLayer](../../PointLayer.md)
 
 **Signature**
 

@@ -1,7 +1,7 @@
 # ContourLayer::_is_multiple Function Reference
 
 *Defined at:* `scripts/terrain/ContourLayer.gd` (lines 394–400)</br>
-*Belongs to:* [ContourLayer](../ContourLayer.md)
+*Belongs to:* [ContourLayer](../../ContourLayer.md)
 
 **Signature**
 

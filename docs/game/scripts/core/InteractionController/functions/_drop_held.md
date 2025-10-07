@@ -1,7 +1,7 @@
 # InteractionController::_drop_held Function Reference
 
 *Defined at:* `scripts/core/PlayerInteraction.gd` (lines 123–130)</br>
-*Belongs to:* [InteractionController](../InteractionController.md)
+*Belongs to:* [InteractionController](../../InteractionController.md)
 
 **Signature**
 

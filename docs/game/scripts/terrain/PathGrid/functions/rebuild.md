@@ -1,7 +1,7 @@
 # PathGrid::rebuild Function Reference
 
 *Defined at:* `scripts/terrain/PathGrid.gd` (lines 112–211)</br>
-*Belongs to:* [PathGrid](../PathGrid.md)
+*Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
 

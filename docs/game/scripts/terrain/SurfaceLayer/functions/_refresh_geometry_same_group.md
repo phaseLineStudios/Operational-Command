@@ -1,7 +1,7 @@
 # SurfaceLayer::_refresh_geometry_same_group Function Reference
 
 *Defined at:* `scripts/terrain/SurfaceLayer.gd` (lines 262–290)</br>
-*Belongs to:* [SurfaceLayer](../SurfaceLayer.md)
+*Belongs to:* [SurfaceLayer](../../SurfaceLayer.md)
 
 **Signature**
 

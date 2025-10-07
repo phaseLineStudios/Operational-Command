@@ -1,7 +1,7 @@
 # UnitSelect::_on_deploy_pressed Function Reference
 
 *Defined at:* `scripts/ui/UnitSelect.gd` (lines 393–401)</br>
-*Belongs to:* [UnitSelect](../UnitSelect.md)
+*Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**
 

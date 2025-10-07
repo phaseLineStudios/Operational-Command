@@ -1,7 +1,7 @@
 # ScenarioHistory::_apply_array Function Reference
 
 *Defined at:* `scripts/editors/ScenarioHistory.gd` (lines 165–180)</br>
-*Belongs to:* [ScenarioHistory](../ScenarioHistory.md)
+*Belongs to:* [ScenarioHistory](../../ScenarioHistory.md)
 
 **Signature**
 

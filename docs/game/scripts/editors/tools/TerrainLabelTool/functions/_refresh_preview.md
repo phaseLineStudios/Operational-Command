@@ -1,7 +1,7 @@
 # TerrainLabelTool::_refresh_preview Function Reference
 
 *Defined at:* `scripts/editors/tools/TerrainLabelTool.gd` (lines 37–50)</br>
-*Belongs to:* [TerrainLabelTool](../TerrainLabelTool.md)
+*Belongs to:* [TerrainLabelTool](../../TerrainLabelTool.md)
 
 **Signature**
 

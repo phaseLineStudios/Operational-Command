@@ -1,7 +1,7 @@
 # ScenarioEditor::_setup_scene_tree_signals Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 195–206)</br>
-*Belongs to:* [ScenarioEditor](../ScenarioEditor.md)
+*Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
 

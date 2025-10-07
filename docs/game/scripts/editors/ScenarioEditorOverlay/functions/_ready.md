@@ -1,7 +1,7 @@
 # ScenarioEditorOverlay::_ready Function Reference
 
 *Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 61–69)</br>
-*Belongs to:* [ScenarioEditorOverlay](../ScenarioEditorOverlay.md)
+*Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
 
