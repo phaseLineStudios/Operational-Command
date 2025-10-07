@@ -39,11 +39,14 @@ var _immobilized: Dictionary[String, bool] = {}  ## unit_id -> immobilized due t
 var _active_links: Dictionary[String, String] = {}  ## dst_id -> src_id
 var _xfer_accum: Dictionary[String, float] = {}  ## dst_id -> fractional fuel budget
 
+
 func _ready() -> void:
 	## Allow discovery via group.
 	add_to_group("FuelSystem")
 
+
 ## Public API
+
 
 func register_scenario_unit(su: ScenarioUnit, state: UnitFuelState = null) -> void:
 	## Register a ScenarioUnit together with its UnitFuelState. Subscribes to movement signals.
@@ -66,6 +69,7 @@ func register_scenario_unit(su: ScenarioUnit, state: UnitFuelState = null) -> vo
 	su.move_paused.connect(_on_move_paused.bind(su.id))
 	su.move_resumed.connect(_on_move_resumed.bind(su.id))
 
+
 func unregister_unit(unit_id: String) -> void:
 	## Unregister a unit and drop any active refuel links.
 	_su.erase(unit_id)
@@ -79,9 +83,11 @@ func unregister_unit(unit_id: String) -> void:
 		if _active_links[dst] == unit_id or dst == unit_id:
 			_active_links.erase(dst)
 
+
 func get_fuel_state(unit_id: String) -> UnitFuelState:
 	## Return the UnitFuelState for a unit, or null if not present.
 	return _fuel.get(unit_id) as UnitFuelState
+
 
 func is_low(unit_id: String) -> bool:
 	## True if current fraction <= low threshold and > critical threshold.
@@ -91,6 +97,7 @@ func is_low(unit_id: String) -> bool:
 	var r: float = s.ratio()
 	return s.state_fuel > 0.0 and r <= s.fuel_low_threshold and r > s.fuel_critical_threshold
 
+
 func is_critical(unit_id: String) -> bool:
 	## True if current fraction <= critical threshold and > 0.
 	var s: UnitFuelState = _fuel.get(unit_id) as UnitFuelState
@@ -98,12 +105,14 @@ func is_critical(unit_id: String) -> bool:
 		return false
 	return s.state_fuel > 0.0 and s.ratio() <= s.fuel_critical_threshold
 
+
 func is_empty(unit_id: String) -> bool:
 	## True if current fuel is zero.
 	var s: UnitFuelState = _fuel.get(unit_id) as UnitFuelState
 	if s == null:
 		return false
 	return s.state_fuel <= 0.0
+
 
 func speed_mult(unit_id: String) -> float:
 	## Movement uses this multiplier: 1.0 normal, critical_speed_mult at CRITICAL, 0.0 at EMPTY.
@@ -113,15 +122,19 @@ func speed_mult(unit_id: String) -> float:
 		return critical_speed_mult
 	return 1.0
 
+
 func tick(delta: float) -> void:
 	## Main simulation entry. Call from SimWorld each frame.
 	_consume_tick(delta)
 	_refuel_tick(delta)
 
+
 ## Movement signal handlers
+
 
 func _on_move_progress(pos_m: Vector2, _eta: float, uid: String) -> void:
 	_pos[uid] = pos_m
+
 
 func _on_move_started(_dest: Vector2, uid: String) -> void:
 	var su: ScenarioUnit = _su.get(uid) as ScenarioUnit
@@ -129,27 +142,33 @@ func _on_move_started(_dest: Vector2, uid: String) -> void:
 		_pos[uid] = su.position_m
 		_prev[uid] = su.position_m
 
+
 func _on_move_arrived(_dest: Vector2, uid: String) -> void:
 	var su: ScenarioUnit = _su.get(uid) as ScenarioUnit
 	if su != null:
 		_pos[uid] = su.position_m
+
 
 func _on_move_blocked(_reason: String, uid: String) -> void:
 	var su: ScenarioUnit = _su.get(uid) as ScenarioUnit
 	if su != null:
 		_pos[uid] = su.position_m
 
+
 func _on_move_paused(uid: String) -> void:
 	var su: ScenarioUnit = _su.get(uid) as ScenarioUnit
 	if su != null:
 		_pos[uid] = su.position_m
+
 
 func _on_move_resumed(uid: String) -> void:
 	var su: ScenarioUnit = _su.get(uid) as ScenarioUnit
 	if su != null:
 		_pos[uid] = su.position_m
 
+
 ## Fuel drain
+
 
 func _consume_tick(delta: float) -> void:
 	## Apply idle burn and distance-based burn. Update thresholds and immobilization.
@@ -178,6 +197,7 @@ func _consume_tick(delta: float) -> void:
 
 		_prev[uid] = now_pos
 		_check_thresholds(uid, before, st.state_fuel, su)
+
 
 func _check_thresholds(uid: String, before: float, after: float, su: ScenarioUnit) -> void:
 	## Emit threshold events and pause or resume the ScenarioUnit when crossing 0.
@@ -209,7 +229,9 @@ func _check_thresholds(uid: String, before: float, after: float, su: ScenarioUni
 			su.resume_move()
 			emit_signal("unit_mobilized_after_refuel", uid)
 
+
 ## Terrain and slope
+
 
 func _terrain_slope_multiplier(a: Vector2, b: Vector2) -> float:
 	## Combine surface and slope multipliers. Returns 1.0 if no terrain data is provided.
@@ -232,6 +254,7 @@ func _terrain_slope_multiplier(a: Vector2, b: Vector2) -> float:
 		slope_mult = 1.0 + max(0.0, k) * clamp(dz_norm, 0.0, 1.0)
 
 	return max(0.1, surface_mult * slope_mult)
+
 
 func _surface_mult_at(p_m: Vector2) -> float:
 	## Returns a surface movement multiplier at the given world position in meters.
@@ -267,6 +290,7 @@ func _surface_mult_at(p_m: Vector2) -> float:
 					best = min(best, brush.movement_multiplier(TerrainBrush.MoveProfile.TRACKED))
 	return max(0.25, best)
 
+
 func _elevation_delta_norm(a: Vector2, b: Vector2) -> float:
 	## Approximate normalized elevation delta between two points using the elevation Image.
 	var img: Image = terrain_data.elevation
@@ -288,7 +312,9 @@ func _elevation_delta_norm(a: Vector2, b: Vector2) -> float:
 	var cb: float = img.get_pixel(bx, by).r
 	return abs(cb - ca)
 
+
 ## Refuel logic
+
 
 func _is_tanker(u: UnitData) -> bool:
 	## A unit acts as a tanker if it has a positive throughput["fuel"] or a logistics tag.
@@ -303,12 +329,14 @@ func _is_tanker(u: UnitData) -> bool:
 		return true
 	return false
 
+
 func _needs_fuel(su: ScenarioUnit) -> bool:
 	## True if the unit is not full.
 	var st: UnitFuelState = _fuel.get(su.id) as UnitFuelState
 	if st == null:
 		return false
 	return st.state_fuel < st.fuel_capacity
+
 
 func _has_stock(su: ScenarioUnit) -> bool:
 	## True if the source unit still has fuel stock to transfer.
@@ -317,10 +345,12 @@ func _has_stock(su: ScenarioUnit) -> bool:
 		return false
 	return int(u.throughput.get("fuel", 0)) > 0
 
+
 func _within_radius(src: ScenarioUnit, dst: ScenarioUnit) -> bool:
 	## True if destination is within the source's supply transfer radius in meters.
 	var r: float = max(0.0, src.unit.supply_transfer_radius_m)
 	return src.position_m.distance_to(dst.position_m) <= r
+
 
 func _pick_link_for(dst: ScenarioUnit) -> String:
 	## Choose the nearest eligible tanker for a destination unit. Returns the src unit_id or "".
@@ -343,11 +373,13 @@ func _pick_link_for(dst: ScenarioUnit) -> String:
 			best_src = src.id
 	return best_src
 
+
 func _begin_link(src_id: String, dst_id: String) -> void:
 	## Start a refuel link.
 	_active_links[dst_id] = src_id
 	_xfer_accum[dst_id] = 0.0
 	emit_signal("refuel_started", src_id, dst_id)
+
 
 func _finish_link(dst_id: String) -> void:
 	## Finish and signal the end of a refuel link.
@@ -356,6 +388,7 @@ func _finish_link(dst_id: String) -> void:
 		emit_signal("refuel_completed", src_id, dst_id)
 	_active_links.erase(dst_id)
 	_xfer_accum.erase(dst_id)
+
 
 func _refuel_tick(delta: float) -> void:
 	## Create links where needed, then transfer fuel over time while in range.
@@ -406,6 +439,7 @@ func _refuel_tick(delta: float) -> void:
 		if not _needs_fuel(dst2) or not _has_stock(src):
 			_finish_link(dst_id2)
 
+
 ## Directly add fuel to a unit (UI/depot use). Returns amount actually added.
 func add_fuel(uid: String, amount: float) -> float:
 	var st: UnitFuelState = _fuel.get(uid) as UnitFuelState
@@ -421,6 +455,7 @@ func add_fuel(uid: String, amount: float) -> float:
 	st.state_fuel = cur + add
 	_check_thresholds(uid, before, st.state_fuel, su)
 	return add
+
 
 ## Compact UI snapshot for overlays / panels.
 func fuel_debug(uid: String) -> Dictionary:

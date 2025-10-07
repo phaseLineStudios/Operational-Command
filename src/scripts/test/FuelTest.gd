@@ -164,7 +164,7 @@ func _ensure_panel_below_hud_block() -> void:
 	)
 
 	if panel == null:
-		var PanelScene : PackedScene = preload("res://scenes/ui/fuel_refuel_panel.tscn")
+		var PanelScene: PackedScene = preload("res://scenes/ui/fuel_refuel_panel.tscn")
 		panel = PanelScene.instantiate() as FuelRefuelPanel
 		panel.name = "FuelRefuelPanel"
 		hud.add_child(panel)
