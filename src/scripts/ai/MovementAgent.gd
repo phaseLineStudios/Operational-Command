@@ -24,6 +24,8 @@ signal path_updated(path: PackedVector2Array)
 @export var wait_for_grid_ready := true
 ## Virtual position in terrain meters
 @export var sim_pos_m: Vector2 = Vector2.ZERO
+## link to FuelSystem for slowdown/stop.
+@export var unit_id: String = ""
 
 @export_group("Debug")
 ## Master switch for all debug drawing.
@@ -48,11 +50,14 @@ var _path_idx := 0
 var _moving := false
 var _trail: PackedVector2Array = []
 
+var _fuel: FuelSystem = null
+
 
 func _ready() -> void:
 	if grid and wait_for_grid_ready:
 		grid.build_ready.connect(_on_grid_ready)
 		grid.grid_rebuilt.connect(func(): _on_grid_ready(grid._build_profile))
+	_fuel = get_tree().get_first_node_in_group("FuelSystem") as FuelSystem
 
 
 func _physics_process(delta: float) -> void:
@@ -87,109 +92,6 @@ func _physics_process(delta: float) -> void:
 	if debug_draw:
 		_debug_push_trail()
 		queue_redraw()
-
-
-func _effective_speed_at(p_m: Vector2) -> float:
-	if not grid:
-		return base_speed_mps
-	var cell := grid.world_to_cell(p_m)
-	if not grid._in_bounds(cell):
-		return base_speed_mps
-	if grid._astar and grid._astar.is_in_boundsv(cell) and grid._astar.is_point_solid(cell):
-		return 0.0
-	var w := 1.0
-	if grid._astar and grid._astar.is_in_boundsv(cell):
-		w = max(grid._astar.get_point_weight_scale(cell), 0.001)
-	return base_speed_mps / w
-
-
-## Command pathfind and start moving to a world-meter destination.
-func move_to_m(dest_m: Vector2) -> void:
-	if not grid:
-		emit_signal("movement_blocked", "no-grid")
-		return
-	var path := grid.find_path_m(sim_pos_m, dest_m)
-	if path.is_empty():
-		_moving = false
-		emit_signal("movement_blocked", "no-path")
-		return
-	_set_path(path)
-
-
-## Command stop immediately.
-func stop() -> void:
-	_moving = false
-	_path = []
-	_path_idx = 0
-
-
-## ETA (seconds) along current remaining path with current base speed.
-func eta_seconds() -> float:
-	if not grid or _path.size() <= 1 or not _moving:
-		return 0.0
-	var rem := PackedVector2Array()
-	for i in range(_path_idx, _path.size()):
-		rem.append(_path[i])
-	return grid.estimate_travel_time_s(rem, base_speed_mps, profile)
-
-
-func _set_path(p: PackedVector2Array) -> void:
-	_path = p
-	_path_idx = 0
-	_moving = true
-	emit_signal("path_updated", _path)
-	emit_signal("movement_started")
-
-
-func _on_grid_ready(ready_profile: int) -> void:
-	if ready_profile == profile and _moving == false and _path.size() > 0:
-		pass
-
-
-## Push current position into the breadcrumb list.
-func _debug_push_trail() -> void:
-	if debug_trail_len <= 0:
-		return
-	var here_m := sim_pos_m
-	_trail.append(here_m)
-	if _trail.size() > debug_trail_len:
-		_trail.remove_at(0)
-
-
-## Get the agent's current cell (if grid exists).
-func _debug_current_cell() -> Vector2i:
-	if grid == null:
-		return Vector2i(-1, -1)
-	return grid.world_to_cell(sim_pos_m)
-
-
-## Get a Rect2 (in *world meters*) for a cell id.
-func _debug_cell_rect_world(c: Vector2i) -> Rect2:
-	if grid == null or c.x < 0:
-		return Rect2()
-	var cs := grid.cell_size_m
-	return Rect2(Vector2(c.x * cs, c.y * cs), Vector2(cs, cs))
-
-
-## Read current cell weight safely.
-func _debug_weight_here() -> float:
-	if grid == null or grid._astar == null:
-		return 1.0
-	var c := _debug_current_cell()
-	if not grid._in_bounds(c) or not grid._astar.is_in_boundsv(c):
-		return 1.0
-	if grid._astar.is_point_solid(c):
-		return INF
-	return max(grid._astar.get_point_weight_scale(c), 0.001)
-
-
-## Compute instantaneous speed (m/s) based on last trail step.
-func _debug_instant_speed(delta: float) -> float:
-	if delta <= 0.0 or _trail.size() < 2:
-		return 0.0
-	var a := _trail[_trail.size() - 2]
-	var b := _trail[_trail.size() - 1]
-	return a.distance_to(b) / delta
 
 
 func _draw() -> void:
@@ -286,6 +188,123 @@ func _draw() -> void:
 			font, Vector2.ZERO, txt, HORIZONTAL_ALIGNMENT_LEFT, -1.0, fsize, Color(1, 1, 1, 0.95)
 		)
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+## Function does also include the fuel system penalties for the AI
+func _effective_speed_at(p_m: Vector2) -> float:
+	if not grid:
+		var v := base_speed_mps
+		if _fuel and unit_id != "":
+			v *= _fuel.speed_mult(unit_id)
+		return v
+
+	var cell := grid.world_to_cell(p_m)
+	if not grid._in_bounds(cell):
+		var v := base_speed_mps
+		if _fuel and unit_id != "":
+			v *= _fuel.speed_mult(unit_id)
+		return v
+
+	if grid._astar and grid._astar.is_in_boundsv(cell) and grid._astar.is_point_solid(cell):
+		return 0.0
+
+	var w := 1.0
+	if grid._astar and grid._astar.is_in_boundsv(cell):
+		w = max(grid._astar.get_point_weight_scale(cell), 0.001)
+
+	var v := base_speed_mps / w
+	if _fuel and unit_id != "":
+		v *= _fuel.speed_mult(unit_id)
+	return v
+
+
+## Command pathfind and start moving to a world-meter destination.
+func move_to_m(dest_m: Vector2) -> void:
+	if not grid:
+		emit_signal("movement_blocked", "no-grid")
+		return
+	var path := grid.find_path_m(sim_pos_m, dest_m)
+	if path.is_empty():
+		_moving = false
+		emit_signal("movement_blocked", "no-path")
+		return
+	_set_path(path)
+
+
+## Command stop immediately.
+func stop() -> void:
+	_moving = false
+	_path = []
+	_path_idx = 0
+
+
+## ETA (seconds) along current remaining path with current base speed.
+func eta_seconds() -> float:
+	if not grid or _path.size() <= 1 or not _moving:
+		return 0.0
+	var rem := PackedVector2Array()
+	for i in range(_path_idx, _path.size()):
+		rem.append(_path[i])
+	return grid.estimate_travel_time_s(rem, base_speed_mps, profile)
+
+
+func _set_path(p: PackedVector2Array) -> void:
+	_path = p
+	_path_idx = 0
+	_moving = true
+	emit_signal("path_updated", _path)
+	emit_signal("movement_started")
+
+
+func _on_grid_ready(ready_profile: int) -> void:
+	if ready_profile == profile and _moving == false and _path.size() > 0:
+		pass
+
+
+## Push current position into the breadcrumb list.
+func _debug_push_trail() -> void:
+	if debug_trail_len <= 0:
+		return
+	var here_m := sim_pos_m
+	_trail.append(here_m)
+	if _trail.size() > debug_trail_len:
+		_trail.remove_at(0)
+
+
+## Get the agent's current cell (if grid exists).
+func _debug_current_cell() -> Vector2i:
+	if grid == null:
+		return Vector2i(-1, -1)
+	return grid.world_to_cell(sim_pos_m)
+
+
+## Get a Rect2 (in *world meters*) for a cell id.
+func _debug_cell_rect_world(c: Vector2i) -> Rect2:
+	if grid == null or c.x < 0:
+		return Rect2()
+	var cs := grid.cell_size_m
+	return Rect2(Vector2(c.x * cs, c.y * cs), Vector2(cs, cs))
+
+
+## Read current cell weight safely.
+func _debug_weight_here() -> float:
+	if grid == null or grid._astar == null:
+		return 1.0
+	var c := _debug_current_cell()
+	if not grid._in_bounds(c) or not grid._astar.is_in_boundsv(c):
+		return 1.0
+	if grid._astar.is_point_solid(c):
+		return INF
+	return max(grid._astar.get_point_weight_scale(c), 0.001)
+
+
+## Compute instantaneous speed (m/s) based on last trail step.
+func _debug_instant_speed(delta: float) -> float:
+	if delta <= 0.0 or _trail.size() < 2:
+		return 0.0
+	var a := _trail[_trail.size() - 2]
+	var b := _trail[_trail.size() - 1]
+	return a.distance_to(b) / delta
 
 
 func _draw_cell_rect_m(rm: Rect2, col: Color, width: float, filled := false) -> void:

@@ -1,0 +1,94 @@
+[gd_scene load_steps=2 format=3 uid="uid://3p1s8sx0w8w6"]
+
+[ext_resource type="Script" uid="uid://bgb2jymuei5cn" path="res://scripts/test/FuelTest.gd" id="1"]
+
+[node name="FuelTest" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HUD" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Panel" type="PanelContainer" parent="CanvasLayer/HUD"]
+layout_mode = 1
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 836.0
+offset_bottom = 236.0
+grow_horizontal = 0
+
+[node name="Pad" type="MarginContainer" parent="CanvasLayer/HUD/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/HUD/Panel/Pad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Row1" type="HBoxContainer" parent="CanvasLayer/HUD/Panel/Pad/VBox"]
+layout_mode = 2
+
+[node name="BtnMove" type="Button" parent="CanvasLayer/HUD/Panel/Pad/VBox/Row1"]
+layout_mode = 2
+text = "Toggle Move"
+
+[node name="BtnDrain" type="Button" parent="CanvasLayer/HUD/Panel/Pad/VBox/Row1"]
+layout_mode = 2
+text = "Drain to 5%"
+
+[node name="BtnTeleport" type="Button" parent="CanvasLayer/HUD/Panel/Pad/VBox/Row1"]
+layout_mode = 2
+text = "Tanker → Receiver"
+
+[node name="Row2" type="HBoxContainer" parent="CanvasLayer/HUD/Panel/Pad/VBox"]
+layout_mode = 2
+
+[node name="BtnTopUp" type="Button" parent="CanvasLayer/HUD/Panel/Pad/VBox/Row2"]
+layout_mode = 2
+text = "Add 100 to Tanker"
+
+[node name="Row3" type="HBoxContainer" parent="CanvasLayer/HUD/Panel/Pad/VBox"]
+layout_mode = 2
+
+[node name="LblRx" type="Label" parent="CanvasLayer/HUD/Panel/Pad/VBox/Row3"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Receiver: …"
+autowrap_mode = 2
+
+[node name="LblTk" type="Label" parent="CanvasLayer/HUD/Panel/Pad/VBox/Row3"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Tanker: …"
+horizontal_alignment = 2
+autowrap_mode = 2
+
+[node name="Row4" type="HBoxContainer" parent="CanvasLayer/HUD/Panel/Pad/VBox"]
+layout_mode = 2
+
+[node name="LblSpd" type="Label" parent="CanvasLayer/HUD/Panel/Pad/VBox/Row4"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Speed: …"
+
+[node name="LblHint" type="Label" parent="CanvasLayer/HUD/Panel/Pad/VBox/Row4"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Tip: set TK radius/rate/stock in code"
+horizontal_alignment = 2
