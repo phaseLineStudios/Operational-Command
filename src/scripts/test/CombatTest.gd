@@ -17,6 +17,7 @@ var _su_b: ScenarioUnit
 ## Using FuelSystem
 @onready var fuel: FuelSystem = FuelSystem.new()
 
+
 func _ready() -> void:
 	# add the fuel system
 	add_child(fuel)
@@ -40,8 +41,10 @@ func _ready() -> void:
 		return
 
 	# register the fuel for the units
-	fuel.register_scenario_unit(_su_a); _su_a.bind_fuel_system(fuel)
-	fuel.register_scenario_unit(_su_b); _su_b.bind_fuel_system(fuel)
+	fuel.register_scenario_unit(_su_a)
+	_su_a.bind_fuel_system(fuel)
+	fuel.register_scenario_unit(_su_b)
+	_su_b.bind_fuel_system(fuel)
 
 	renderer.path_grid.rebuild(TerrainBrush.MoveProfile.FOOT)
 	renderer.path_grid.build_ready.connect(func(_p): print("PathGrid ready."))
@@ -70,6 +73,7 @@ func _process(dt: float) -> void:
 	if input_overlay:
 		input_overlay.queue_redraw()
 	fuel.tick(dt)
+
 
 func _input(e: InputEvent) -> void:
 	if not (e is InputEventMouseButton and e.pressed):

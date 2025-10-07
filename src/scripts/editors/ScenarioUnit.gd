@@ -53,9 +53,11 @@ var _move_paused := false
 ## FuelSystem provider used to scale speed at LOW/CRITICAL and 0 at EMPTY.
 var _fuel: FuelSystem = null
 
+
 ## Bind a FuelSystem instance at runtime.
 func bind_fuel_system(fs: FuelSystem) -> void:
 	_fuel = fs
+
 
 ## Plan a path from current position to dest_m using PathGrid.
 func plan_move(grid: PathGrid, dest_m: Vector2) -> bool:

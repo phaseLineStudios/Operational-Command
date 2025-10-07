@@ -1,5 +1,5 @@
-extends Resource
 class_name UnitFuelState
+extends Resource
 ## Per-unit fuel state and rates used by FuelSystem.
 
 @export var fuel_capacity: float = 100.0
@@ -12,6 +12,7 @@ class_name UnitFuelState
 @export var fuel_idle_rate_per_s: float = 0.001
 ## Movement burn in fuel units per meter traveled.
 @export var fuel_move_rate_per_m: float = 0.02
+
 
 ## Calculates and returns the current fuel ratio for the unit.
 ## The value is clamped between 0.0 and 1.0 to represent the percentage of fuel remaining.

@@ -23,6 +23,7 @@ var _units: Array[ScenarioUnit] = []
 var _dbg: Dictionary = {}
 var _fuel: FuelSystem = null  ## resolved automatically or via set_fuel_system()
 
+
 ## Set up overlay with renderer and the two scenario units [attacker, defender].
 func setup_overlay(renderer: TerrainRender, units: Array) -> void:
 	_renderer = renderer
@@ -38,6 +39,7 @@ func setup_overlay(renderer: TerrainRender, units: Array) -> void:
 		_fuel = get_tree().get_first_node_in_group("FuelSystem") as FuelSystem
 
 	queue_redraw()
+
 
 ## Optionally bind FuelSystem explicitly if you do not use the group.
 func set_fuel_system(fs: FuelSystem) -> void:
@@ -258,10 +260,12 @@ func _draw_text_panel(d: Dictionary) -> void:
 		)
 		y += font_size + 2.0
 
+
 func _format_fuel_line(atk: ScenarioUnit, def: ScenarioUnit) -> String:
 	var atk_s := _fuel_snapshot(atk)
 	var def_s := _fuel_snapshot(def)
 	return "FUEL atk %s | def %s" % [atk_s, def_s]
+
 
 ## Build "68% LOW x0.85 (-15%)" style snippets per unit.
 func _fuel_snapshot(su: ScenarioUnit) -> String:
@@ -283,6 +287,7 @@ func _fuel_snapshot(su: ScenarioUnit) -> String:
 		tag = "LOW"
 
 	return "%d%% %s x%.2f (-%d%%)" % [pct, tag, mult, pen]
+
 
 func _screen_from_m(pos_m: Vector2) -> Vector2:
 	var map_local := _renderer.terrain_to_map(pos_m)

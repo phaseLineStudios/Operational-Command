@@ -18,6 +18,7 @@ extends Node
 ## Initialize a new FuelSystem
 @onready var _fuel: FuelSystem = FuelSystem.new()
 
+
 ## Create and configure AmmoSystem; optionally hook up RadioFeedback.
 func _ready() -> void:
 	add_child(_ammo)

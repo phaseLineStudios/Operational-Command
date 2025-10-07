@@ -1,13 +1,14 @@
-extends Node
 class_name FuelSystem
+extends Node
 ## Mission-scoped fuel consumption and refueling based on ScenarioUnit movement.
 ##
 ## Responsibilities
 ## - Track per-unit fuel state and ScenarioUnit positions.
-## - Drain fuel per second (idle) and per meter (movement), with optional terrain and slope multipliers.
+## - Drain fuel per second (idle) and per meter (movement),
+##   with optional terrain and slope multipliers.
 ## - Emit threshold events and immobilize at empty by pausing ScenarioUnit.
 ## - Proximity refuel from tanker units with throughput["fuel"] stock.
-## - Provide a speed multiplier so movement can slow at CRITICAL and stop at EMPTY.
+## - Provide a speed multiplier so movement can slow at CRITICAL and stop at EMPTY.Y.
 
 ## Threshold and refuel lifecycle signals
 signal fuel_low(unit_id: String)
@@ -24,20 +25,19 @@ signal unit_mobilized_after_refuel(unit_id: String)
 @export var fuel_profile: FuelProfile
 ## Optional terrain data for surface and slope multipliers.
 @export var terrain_data: TerrainData
-
 ## Movement penalty at CRITICAL fuel. 1.0 means no penalty.
 @export_range(0.1, 1.0, 0.05) var critical_speed_mult: float = 0.6
 
 ## Registered units and state (typed dictionaries to avoid Variant)
-var _su: Dictionary[String, ScenarioUnit] = {}        ## unit_id -> ScenarioUnit
-var _fuel: Dictionary[String, UnitFuelState] = {}     ## unit_id -> UnitFuelState
-var _pos: Dictionary[String, Vector2] = {}            ## unit_id -> latest position_m
-var _prev: Dictionary[String, Vector2] = {}           ## unit_id -> previous tick position_m
-var _immobilized: Dictionary[String, bool] = {}       ## unit_id -> immobilized due to empty fuel
+var _su: Dictionary[String, ScenarioUnit] = {}  ## unit_id -> ScenarioUnit
+var _fuel: Dictionary[String, UnitFuelState] = {}  ## unit_id -> UnitFuelState
+var _pos: Dictionary[String, Vector2] = {}  ## unit_id -> latest position_m
+var _prev: Dictionary[String, Vector2] = {}  ## unit_id -> previous tick position_m
+var _immobilized: Dictionary[String, bool] = {}  ## unit_id -> immobilized due to empty fuel
 
 ## Active refuel links and fractional carry-over
-var _active_links: Dictionary[String, String] = {}    ## dst_id -> src_id
-var _xfer_accum: Dictionary[String, float] = {}       ## dst_id -> fractional fuel budget
+var _active_links: Dictionary[String, String] = {}  ## dst_id -> src_id
+var _xfer_accum: Dictionary[String, float] = {}  ## dst_id -> fractional fuel budget
 
 func _ready() -> void:
 	## Allow discovery via group.
@@ -194,7 +194,11 @@ func _check_thresholds(uid: String, before: float, after: float, su: ScenarioUni
 			_immobilized[uid] = true
 			su.pause_move()
 			emit_signal("unit_immobilized_fuel_out", uid)
-	elif after_r <= st.fuel_critical_threshold and before_r > st.fuel_critical_threshold and after > 0.0:
+	elif (
+		after_r <= st.fuel_critical_threshold
+		and before_r > st.fuel_critical_threshold
+		and after > 0.0
+	):
 		emit_signal("fuel_critical", uid)
 	elif after_r <= st.fuel_low_threshold and before_r > st.fuel_low_threshold and after > 0.0:
 		emit_signal("fuel_low", uid)
@@ -292,7 +296,10 @@ func _is_tanker(u: UnitData) -> bool:
 		return false
 	if u.throughput is Dictionary and int(u.throughput.get("fuel", 0)) > 0:
 		return true
-	if u.equipment_tags is Array and (u.equipment_tags.has("FUEL_TANKER") or u.equipment_tags.has("LOGISTICS")):
+	if (
+		u.equipment_tags is Array
+		and (u.equipment_tags.has("FUEL_TANKER") or u.equipment_tags.has("LOGISTICS"))
+	):
 		return true
 	return false
 
@@ -430,8 +437,5 @@ func fuel_debug(uid: String) -> Dictionary:
 		tag = "LOW"
 	var mult: float = speed_mult(uid)
 	return {
-		"percent": pct,
-		"state": tag,
-		"mult": mult,
-		"penalty_pct": int(round((1.0 - mult) * 100.0))
+		"percent": pct, "state": tag, "mult": mult, "penalty_pct": int(round((1.0 - mult) * 100.0))
 	}

@@ -1,5 +1,5 @@
-extends Resource
 class_name FuelProfile
+extends Resource
 ## Defaults per unit class and simple slope multiplier.
 
 @export var default_capacity: float = 100.0
@@ -11,6 +11,7 @@ class_name FuelProfile
 
 ## Slope factor applied as (1.0 + slope_k * normalized_slope).
 @export var slope_k: float = 0.25
+
 
 ## Ensures that a given UnitFuelState has valid default values for all its fuel properties.
 ## If any parameter (e.g., capacity, thresholds, or consumption rates) is unset or zero,

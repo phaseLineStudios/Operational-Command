@@ -60,6 +60,7 @@ func bind_fuel(fuel: FuelSystem) -> void:
 
 # AMMO SYSTEM RADIO FEEDBACK
 
+
 ## “Bingo ammo” — remaining ammo <= low threshold but > 0.
 func _on_ammo_low(uid: String) -> void:
 	LogService.info("%s: Bingo ammo" % uid, "Radio")
@@ -84,38 +85,47 @@ func _on_resupply_started(src: String, dst: String) -> void:
 func _on_resupply_completed(src: String, dst: String) -> void:
 	LogService.info("%s -> %s: Resupply complete" % [src, dst], "Radio")
 
+
 # FUEL SYSTEM RADIO FEEDBACK
+
 
 ## “Low fuel” — remaining fuel <= low threshold but > critical.
 func _on_fuel_low(uid: String) -> void:
 	LogService.info("%s: Low fuel" % uid, "Radio")
 
+
 ## “Fuel state red” — remaining fuel <= critical threshold but > 0.
 func _on_fuel_critical(uid: String) -> void:
 	LogService.info("%s: Fuel state red" % uid, "Radio")
+
 
 ## “Winchester fuel” — completely out of fuel.
 func _on_fuel_empty(uid: String) -> void:
 	LogService.info("%s: Winchester fuel" % uid, "Radio")
 
+
 ## Refuel operation started between two units.
 func _on_fuel_refuel_started(src: String, dst: String) -> void:
 	LogService.info("%s -> %s: Refueling" % [src, dst], "Radio")
+
 
 ## Refuel operation completed successfully.
 func _on_fuel_refuel_completed(src: String, dst: String) -> void:
 	LogService.info("%s -> %s: Refuel complete" % [src, dst], "Radio")
 
+
 ## A unit became immobilized due to fuel depletion.
 func _on_unit_immobilized_fuel_out(uid: String) -> void:
 	LogService.info("%s: Immobilized, out of fuel" % uid, "Radio")
+
 
 ## A unit regained mobility after being refueled.
 func _on_unit_mobilized_after_refuel(uid: String) -> void:
 	LogService.info("%s: Mobility restored after refuel" % uid, "Radio")
 
+
 ## Order parser signaled an error (e.g., invalid command). Plays a short error sound.
-func _on_parseError(error: String) -> void:
+func _on_parse_error(error: String) -> void:
 	LogService.error("error: %s, playing audio..." % error, "RadioFeedback")
 	if error_player:
 		error_player.play()
