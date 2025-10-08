@@ -7,8 +7,10 @@ extends Node
 
 var _grid: PathGrid
 
+
 func _ready():
 	_grid = terrain_renderer.path_grid
+
 
 ## Plan movement for [param su] to [param dest_m]. Returns true on success.
 func plan_move(su: ScenarioUnit, dest_m: Vector2) -> bool:

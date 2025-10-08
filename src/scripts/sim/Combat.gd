@@ -62,7 +62,7 @@ func _ready() -> void:
 	# Build ScenarioUnit wrappers for the imported UnitData (test harness)
 	attacker_su = _make_su(imported_attacker, "ALPHA", Vector2(0, 0))
 	defender_su = _make_su(imported_defender, "BRAVO", Vector2(300, 0))
-	
+
 	if debug_enabled:
 		notify_health.connect(print_unit_status)
 
@@ -229,11 +229,17 @@ func check_abort_condition(attacker: ScenarioUnit, defender: ScenarioUnit) -> vo
 ##check unit mid combat status for testing of combat status
 func print_unit_status(attacker: UnitData, defender: UnitData) -> void:
 	LogService.trace(
-		"Attacker(%s) • morale %s • strength %s" % [attacker.id, attacker.morale, attacker.strength],
+		(
+			"Attacker(%s) • morale %s • strength %s"
+			% [attacker.id, attacker.morale, attacker.strength]
+		),
 		"Combat.gd:85"
 	)
 	LogService.trace(
-		"Defender(%s) • morale %s • strength %s" % [defender.id, defender.morale, defender.strength],
+		(
+			"Defender(%s) • morale %s • strength %s"
+			% [defender.id, defender.morale, defender.strength]
+		),
 		"Combat.gd:86"
 	)
 	return
@@ -376,27 +382,30 @@ func _emit_debug_snapshot(
 
 	if debug_log_console:
 		var c: Variant = dbg.components
-		LogService.info(
-			(
-				"""[COMBAT] r=%.0fm LOS=%s acc=%.2f dmg=%.2f | h=%.1f cover=%.2f \
+		(
+			LogService
+			. info(
+				(
+					"""[COMBAT] r=%.0fm LOS=%s acc=%.2f dmg=%.2f | h=%.1f cover=%.2f \
 				conceal=%.2f atten=%.2f wx=%.2f | %s S%.0f/M%.2f -> %s S%.0f/M%.2f"""
-				% [
-					float(dbg.range_m),
-					str(dbg.blocked),
-					float(dbg.accuracy_mul),
-					float(dbg.damage_mul),
-					float(c.get("dh_m", 0.0)),
-					float(c.get("cover", 0.0)),
-					float(c.get("conceal", 0.0)),
-					float(c.get("atten_integral", 0.0)),
-					float(c.get("weather_severity", 0.0)),
-					str(dbg.attacker.cs),
-					float(dbg.attacker.strength),
-					float(dbg.attacker.morale),
-					str(dbg.defender.cs),
-					float(dbg.defender.strength),
-					float(dbg.defender.morale)
-				]
+					% [
+						float(dbg.range_m),
+						str(dbg.blocked),
+						float(dbg.accuracy_mul),
+						float(dbg.damage_mul),
+						float(c.get("dh_m", 0.0)),
+						float(c.get("cover", 0.0)),
+						float(c.get("conceal", 0.0)),
+						float(c.get("atten_integral", 0.0)),
+						float(c.get("weather_severity", 0.0)),
+						str(dbg.attacker.cs),
+						float(dbg.attacker.strength),
+						float(dbg.attacker.morale),
+						str(dbg.defender.cs),
+						float(dbg.defender.strength),
+						float(dbg.defender.morale)
+					]
+				)
 			)
 		)
 

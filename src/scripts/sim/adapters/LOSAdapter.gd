@@ -5,11 +5,13 @@ extends Node
 
 @export var los_node_path: NodePath
 @export var terrain_renderer_path: NodePath
-@export var effects_config: TerrainEffectsConfig = preload("res://assets/configs/terrain_effects.tres")
+@export
+var effects_config: TerrainEffectsConfig = preload("res://assets/configs/terrain_effects.tres")
 
 var _los: Node
 var _renderer: TerrainRender
 var _terrain: TerrainData
+
 
 func _ready() -> void:
 	if los_node_path != NodePath(""):
@@ -23,7 +25,9 @@ func _ready() -> void:
 func has_los(a: ScenarioUnit, b: ScenarioUnit) -> bool:
 	if a == null or b == null or _los == null or _renderer == null:
 		return false
-	var res: Dictionary = _los.trace_los(a.position_m, b.position_m, _renderer, _renderer.data, effects_config)
+	var res: Dictionary = _los.trace_los(
+		a.position_m, b.position_m, _renderer, _renderer.data, effects_config
+	)
 	return not bool(res.get("blocked", false))
 
 
@@ -31,7 +35,9 @@ func has_los(a: ScenarioUnit, b: ScenarioUnit) -> bool:
 func spotting_mul(pos_d: Vector2, range_m: float, weather_severity: float = 0.0) -> float:
 	if _los == null or _renderer == null or _renderer.data == null:
 		return 1.0
-	return _los.compute_spotting_mul(_renderer, _renderer.data, pos_d, range_m, weather_severity, effects_config)
+	return _los.compute_spotting_mul(
+		_renderer, _renderer.data, pos_d, range_m, weather_severity, effects_config
+	)
 
 
 ## Find all contact pairs between [param friends] and [param enemies].

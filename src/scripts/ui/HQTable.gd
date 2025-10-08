@@ -7,18 +7,13 @@ extends Node3D
 @onready var terrain_renderer: TerrainRender = %TerrainRender
 @onready var debug_overlay: Control = %DebugOverlay
 
+
 func _ready() -> void:
 	var _playable_units := generate_playable_units(Game.current_scenario.unit_slots)
 	Game.current_scenario.playable_units = _playable_units
 	sim.init_world(Game.current_scenario)
 	sim.bind_radio(%RadioController, %OrdersParser)
-	
-	if debug:
-		debug_overlay.setup_overlay(
-			terrain_renderer, 
-			Game.current_scenario.units,
-			_playable_units
-		)
+
 
 ## Build playable units array.
 func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]:
@@ -28,13 +23,13 @@ func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]:
 	var _callsigns := []
 	for slot in slots:
 		var key := slot.key
-		
+
 		var unit_data: UnitData
 		for assignment in assignments:
 			if key == assignment.get("slot_id", ""):
 				var unit_id: String = assignment.get("unit_id", "")
 				unit_data = ContentDB.get_unit(unit_id)
-				
+
 				var su := ScenarioUnit.new()
 				su.unit = unit_data
 				su.affiliation = ScenarioUnit.Affiliation.FRIEND
@@ -42,7 +37,6 @@ func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]:
 				su.position_m = slot.start_position
 				units.append(su)
 				_callsigns.append(slot.callsign)
-	
-	LogService.trace("Generated playable units: %s" % str(_callsigns),
-			"HQTable.gd:42")
+
+	LogService.trace("Generated playable units: %s" % str(_callsigns), "HQTable.gd:42")
 	return units

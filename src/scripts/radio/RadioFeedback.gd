@@ -17,6 +17,7 @@ extends Node
 @onready var error_player: AudioStreamPlayer2D = %ErrorSound
 @onready var radio_controller: Radio = $".."
 
+
 ## Ready-time setup:
 ## - Connect to `OrdersParser.parse_error`
 ## - Try to locate `AmmoSystem` and `FuelSystem` instances in the scene by group lookup.

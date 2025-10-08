@@ -7,8 +7,8 @@
 [ext_resource type="Script" uid="uid://0r8k717de5os" path="res://scripts/core/PlayerInteraction.gd" id="4_py2wd"]
 [ext_resource type="Script" uid="uid://6xtsg3rqhc8t" path="res://scripts/core/MapController.gd" id="5_lmes1"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="6_cx6my"]
-[ext_resource type="Script" uid="uid://dsffofmchmfg4" path="res://scripts/test/DebugOverlay.gd" id="7_415kk"]
 [ext_resource type="Script" uid="uid://b1vs2cahgd48f" path="res://scripts/sim/SimWorld.gd" id="7_ge8rp"]
+[ext_resource type="Script" uid="uid://b5eh10v1g6c4v" path="res://scripts/sim/SimDebugOverlay.gd" id="7_tixey"]
 [ext_resource type="PackedScene" uid="uid://7ta8ojkjg5rg" path="res://scenes/ui/pause_menu.tscn" id="7_uk27s"]
 [ext_resource type="Script" uid="uid://bxw82utaedlvn" path="res://scripts/radio/OrdersParser.gd" id="9_415kk"]
 [ext_resource type="Script" uid="uid://be785qai04d2g" path="res://scripts/sim/adapters/MovementAdapter.gd" id="9_fera7"]
@@ -396,11 +396,7 @@ unique_name_in_owner = true
 [node name="DebugOverlay" type="Control" parent="Controllers/MapController/TerrainViewport/TerrainRender"]
 unique_name_in_owner = true
 layout_mode = 2
-script = ExtResource("7_415kk")
-show_los = false
-show_fuel_text = false
-font_size = 24
-icon_size_px = 64
+script = ExtResource("7_tixey")
 
 [node name="GridUI" type="PanelContainer" parent="Controllers/MapController"]
 editor_description = "Temporary UI"

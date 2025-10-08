@@ -3,8 +3,15 @@ extends Node
 ## Lightweight simulation event.
 
 ## Types of events emitted by the sim.
-enum EventType { UNIT_UPDATED, CONTACT_REPORTED, ENGAGEMENT_RESOLVED, RADIO_MESSAGE, ORDER_APPLIED, ORDER_REJECTED, MISSION_STATE_CHANGED }
-
+enum EventType {
+	UNIT_UPDATED,
+	CONTACT_REPORTED,
+	ENGAGEMENT_RESOLVED,
+	RADIO_MESSAGE,
+	ORDER_APPLIED,
+	ORDER_REJECTED,
+	MISSION_STATE_CHANGED
+}
 
 ## Event type
 @export var type: EventType

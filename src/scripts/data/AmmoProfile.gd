@@ -42,6 +42,8 @@ static func deserialize(data: Variant) -> AmmoProfile:
 	var o := AmmoProfile.new()
 	o.default_caps = data.get("default_caps", o.default_caps)
 	o.default_low_threshold = float(data.get("default_low_threshold", o.default_low_threshold))
-	o.default_critical_threshold = float(data.get("default_critical_threshold", o.default_critical_threshold))
+	o.default_critical_threshold = float(
+		data.get("default_critical_threshold", o.default_critical_threshold)
+	)
 
 	return o

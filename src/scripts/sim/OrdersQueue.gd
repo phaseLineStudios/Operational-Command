@@ -17,7 +17,7 @@ func enqueue(order: Dictionary, units_by_callsign: Dictionary = {}) -> bool:
 	if not v.valid:
 		emit_signal("order_rejected", order, v.reason)
 		return false
-		
+
 	_q.append(v.order)
 	emit_signal("order_enqueued", v.order)
 	return true
@@ -56,7 +56,7 @@ func clear() -> void:
 func validate(order: Dictionary, units_by_callsign: Dictionary = {}) -> Dictionary:
 	if typeof(order) != TYPE_DICTIONARY:
 		return {"valid": false, "reason": "not_dictionary"}
-		
+
 	var o := order.duplicate(true)
 	o["type"] = o.get("type", "UNKNOWN")
 	if not o.has("callsign") and not o.has("unit_id"):

@@ -49,11 +49,12 @@ func _ready() -> void:
 		_rng.randomize()
 	else:
 		_rng.seed = rng_seed
-	
+
 	_router.order_applied.connect(_on_order_applied)
 	_router.order_failed.connect(_on_order_failed)
 
 	set_process(true)
+
 
 ## Initialize world from [param scenario]. Also wires unit indices.
 func init_world(scenario: ScenarioData) -> void:
@@ -80,6 +81,7 @@ func _process(dt: float) -> void:
 	while _dt_accum >= _tick_dt:
 		_step_tick(_tick_dt)
 		_dt_accum -= _tick_dt
+
 
 ## Single deterministic sim tick.
 func _step_tick(dt: float) -> void:
@@ -138,9 +140,9 @@ func _resolve_combat() -> void:
 		combat_controller.calculate_damage(a, d)
 		emit_signal("engagement_resolved", {"attacker": a.id, "defender": d.id})
 		LogService.info(
-			"engagement_resolved: %s" % {"attacker": a.id, "defender": d.id},
-			"SimWorld.gd:161"
+			"engagement_resolved: %s" % {"attacker": a.id, "defender": d.id}, "SimWorld.gd:161"
 		)
+
 
 ## Stub morale update hook (placeholder for now).
 func _update_morale() -> void:
@@ -154,10 +156,7 @@ func _emit_events() -> void:
 
 ## Record a compact snapshot for replays.
 func _record_replay() -> void:
-	var snap := {
-		"tick": _tick_idx,
-		"units": {}
-	}
+	var snap := {"tick": _tick_idx, "units": {}}
 	for su in _friendlies + _enemies:
 		snap.units[su.id] = {
 			"pos": su.position_m,
@@ -178,7 +177,12 @@ func bind_radio(radio: Radio, parser: Node) -> void:
 		radio.radio_result.connect(parser.parse)
 	if parser and not parser.parsed.is_connected(func(orders): queue_orders(orders)):
 		parser.parsed.connect(func(orders): queue_orders(orders))
-	if parser and not parser.parse_error.is_connected(func(msg): emit_signal("radio_message", "error", msg)):
+	if (
+		parser
+		and not parser.parse_error.is_connected(
+			func(msg): emit_signal("radio_message", "error", msg)
+		)
+	):
 		parser.parse_error.connect(func(msg): emit_signal("radio_message", "error", msg))
 
 
@@ -192,6 +196,7 @@ func pause() -> void:
 func resume() -> void:
 	if _state == State.PAUSED:
 		_transition(_state, State.RUNNING)
+
 
 ## Step one tick while paused.
 func step() -> void:
@@ -259,24 +264,23 @@ func _snapshot_unit(su: ScenarioUnit) -> Dictionary:
 func _transition(prev: State, next: State) -> void:
 	_state = next
 	emit_signal("mission_state_changed", prev, next)
-	LogService.info(
-		"mission_state_changed: %s" % {"prev": prev, "next": next},
-		"SimWorld.gd:285"
-	)
+	LogService.info("mission_state_changed: %s" % {"prev": prev, "next": next}, "SimWorld.gd:285")
+
+
+## Returns Array[Vector2] planned path in meters (for debug).
+func get_unit_debug_path(uid: String) -> PackedVector2Array:
+	var su: ScenarioUnit = _units_by_id.get(uid)
+	if su == null:
+		return []
+	return su.move_path
 
 
 func _on_order_applied(order: Dictionary) -> void:
 	emit_signal("radio_message", "info", "Order applied: %s" % order.get("type", "?"))
 	var hr_order: String = OrdersParser.OrderType.keys()[int(order.get("type", -1))]
-	LogService.info(
-		"radio_message: %s" % {"Order applied": hr_order},
-		"SimWorld.gd:293"
-	)
+	LogService.info("radio_message: %s" % {"Order applied": hr_order}, "SimWorld.gd:293")
 
 
 func _on_order_failed(_order: Dictionary, reason: String) -> void:
 	emit_signal("radio_message", "error", "Order failed (%s)." % reason)
-	LogService.warning(
-		"radio_message: %s" % {"Order failed": reason},
-		"SimWorld.gd:299"
-	)
+	LogService.warning("radio_message: %s" % {"Order failed": reason}, "SimWorld.gd:299")

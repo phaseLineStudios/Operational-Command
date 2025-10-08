@@ -25,7 +25,9 @@ var _fuel: FuelSystem = null  ## resolved automatically or via set_fuel_system()
 
 
 ## Set up overlay with renderer and the two scenario units [attacker, defender].
-func setup_overlay(renderer: TerrainRender, units: Array[ScenarioUnit], player_units: Array[ScenarioUnit] = []) -> void:
+func setup_overlay(
+	renderer: TerrainRender, units: Array[ScenarioUnit], player_units: Array[ScenarioUnit] = []
+) -> void:
 	_renderer = renderer
 	units.append_array(player_units)
 	_units = units

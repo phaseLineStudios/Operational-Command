@@ -9,10 +9,10 @@ signal order_applied(order: Dictionary)
 signal order_failed(order: Dictionary, reason: String)
 
 ## Movement/LOS/Combat bridges
-@export var movement_adapter: MovementAdapter ## Movement adapter node path
-@export var los_adapter: LOSAdapter ## LOS adapter node path
-@export var combat_controller: CombatController ## Combat controller path
-@export var terrain_renderer: TerrainRender ## Used for grid/metric conversions
+@export var movement_adapter: MovementAdapter  ## Movement adapter node path
+@export var los_adapter: LOSAdapter  ## LOS adapter node path
+@export var combat_controller: CombatController  ## Combat controller path
+@export var terrain_renderer: TerrainRender  ## Used for grid/metric conversions
 
 var _units_by_id: Dictionary
 var _units_by_callsign: Dictionary
@@ -30,10 +30,12 @@ const _TYPE_NAMES := {
 	8: "UNKNOWN"
 }
 
+
 ## Provide unit indices used to resolve targets.
 func bind_units(id_index: Dictionary, callsign_index: Dictionary) -> void:
 	_units_by_id = id_index
 	_units_by_callsign = callsign_index
+
 
 ## Apply a single validated [param order]. Returns true if applied.
 func apply(order: Dictionary) -> bool:
@@ -63,6 +65,7 @@ func apply(order: Dictionary) -> bool:
 			emit_signal("order_failed", order, "unsupported_type")
 			return false
 
+
 ## MOVE: compute destination from grid id, target_callsign, or direction+quantity.
 func _apply_move(unit: ScenarioUnit, order: Dictionary) -> bool:
 	var dest: Variant = _compute_destination(unit, order)
@@ -75,6 +78,7 @@ func _apply_move(unit: ScenarioUnit, order: Dictionary) -> bool:
 	emit_signal("order_failed", order, "move_plan_failed")
 	return false
 
+
 ## HOLD/CANCEL: stop movement and clear combat intent if exposed by combat controller.
 func _apply_hold(unit: ScenarioUnit, order: Dictionary) -> bool:
 	if movement_adapter:
@@ -83,6 +87,7 @@ func _apply_hold(unit: ScenarioUnit, order: Dictionary) -> bool:
 		combat_controller.clear_intent(unit)
 	emit_signal("order_applied", order)
 	return true
+
 
 ## ATTACK: prefer target_callsign; otherwise move by direction/quantity.
 func _apply_attack(unit: ScenarioUnit, order: Dictionary) -> bool:
@@ -95,6 +100,7 @@ func _apply_attack(unit: ScenarioUnit, order: Dictionary) -> bool:
 	emit_signal("order_applied", order)
 	return true
 
+
 ## DEFEND: move to a point if provided, else hold in place; flag posture if available.
 func _apply_defend(unit: ScenarioUnit, order: Dictionary) -> bool:
 	if combat_controller and combat_controller.has_method("set_posture"):
@@ -104,6 +110,7 @@ func _apply_defend(unit: ScenarioUnit, order: Dictionary) -> bool:
 		emit_signal("order_applied", order)
 		return true
 	return _apply_hold(unit, order)
+
 
 ## RECON: move with recon posture if supported.
 func _apply_recon(unit: ScenarioUnit, order: Dictionary) -> bool:
@@ -115,6 +122,7 @@ func _apply_recon(unit: ScenarioUnit, order: Dictionary) -> bool:
 		return true
 	emit_signal("order_failed", order, "recon_no_destination")
 	return false
+
 
 ## FIRE: request an immediate/direct fire task if combat controller supports it.
 func _apply_fire(unit: ScenarioUnit, order: Dictionary) -> bool:
@@ -141,13 +149,17 @@ func _apply_fire(unit: ScenarioUnit, order: Dictionary) -> bool:
 	emit_signal("order_failed", order, "fire_unhandled")
 	return false
 
+
 ## REPORT: informational; let SimWorld/RadioFeedback surface the message.
 func _apply_report(_unit: ScenarioUnit, order: Dictionary) -> bool:
 	emit_signal("order_applied", order)
 	return true
 
+
 ## Compute destination from order fields. If [param prefer_target] is true, favor target_callsign.
-func _compute_destination(unit: ScenarioUnit, order: Dictionary, prefer_target: bool = false) -> Variant:
+func _compute_destination(
+	unit: ScenarioUnit, order: Dictionary, prefer_target: bool = false
+) -> Variant:
 	if prefer_target and order.has("target_callsign"):
 		var tgt := _resolve_target(order)
 		if tgt != null:
@@ -168,6 +180,7 @@ func _compute_destination(unit: ScenarioUnit, order: Dictionary, prefer_target: 
 			return unit.position_m + dir_v.normalized() * dist_m
 	return null
 
+
 ## Resolve unit target from callsign.
 func _resolve_target(order: Dictionary) -> ScenarioUnit:
 	var cs := str(order.get("target_callsign", ""))
@@ -175,6 +188,7 @@ func _resolve_target(order: Dictionary) -> ScenarioUnit:
 		return null
 	var other_uid: String = _units_by_callsign.get(cs, "")
 	return _units_by_id.get(other_uid)
+
 
 ## Normalize order type to string token.
 func _normalize_type(t: Variant) -> String:
@@ -185,6 +199,7 @@ func _normalize_type(t: Variant) -> String:
 			return str(t).to_upper()
 		_:
 			return "UNKNOWN"
+
 
 ## Convert direction label to a 2D vector (meters coordinate space).
 func _dir_to_vec(dir: String) -> Vector2:
@@ -208,6 +223,7 @@ func _dir_to_vec(dir: String) -> Vector2:
 			return Vector2(-1, -1)
 		_:
 			return Vector2.ZERO
+
 
 ## Convert quantity + zone to meters.
 func _quantity_to_meters(qty: int, zone: String) -> float:
