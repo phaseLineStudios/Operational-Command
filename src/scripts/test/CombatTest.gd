@@ -22,6 +22,7 @@ var _su_b: ScenarioUnit
 @onready var input_overlay: Control = %DebugOverlay
 @onready var combat: CombatController = %Combat
 
+
 func _ready() -> void:
 	# add the fuel system
 	add_child(fuel)
