@@ -70,6 +70,7 @@ func init_world(scenario: ScenarioData) -> void:
 			_friendlies.append(su)
 		else:
 			_enemies.append(su)
+	print(_units_by_callsign)
 	_router.bind_units(_units_by_id, _units_by_callsign)
 	_transition(State.INIT, State.RUNNING)
 

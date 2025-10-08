@@ -384,6 +384,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7911129, 0)
 mesh = SubResource("PlaneMesh_ge8rp")
 
 [node name="MapController" type="Node" parent="Controllers"]
+unique_name_in_owner = true
 script = ExtResource("5_lmes1")
 
 [node name="TerrainViewport" type="SubViewport" parent="Controllers/MapController"]
@@ -402,8 +403,8 @@ terrain_renderer = NodePath("..")
 _sim = NodePath("../../../../WorldController")
 _orders = NodePath("../../../../RadioController/OrdersRouter")
 _fuel = NodePath("../../../../WorldController/FuelSystem")
-icon_size_px = 64
-font_size = 32
+icon_size_px = 92
+font_size = 42
 label_offset_px = Vector2(0, -34)
 
 [node name="GridUI" type="PanelContainer" parent="Controllers/MapController"]
@@ -458,9 +459,10 @@ movement_adapter = NodePath("MovementAdapter")
 combat_controller = NodePath("../CombatController")
 _router = NodePath("../RadioController/OrdersRouter")
 
-[node name="MovementAdapter" type="Node" parent="Controllers/WorldController" node_paths=PackedStringArray("terrain_renderer")]
+[node name="MovementAdapter" type="Node" parent="Controllers/WorldController" node_paths=PackedStringArray("renderer")]
+unique_name_in_owner = true
 script = ExtResource("9_fera7")
-terrain_renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
+renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
 
 [node name="FuelSystem" type="Node" parent="Controllers/WorldController"]
 script = ExtResource("14_hvywg")

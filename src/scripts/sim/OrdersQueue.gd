@@ -66,6 +66,7 @@ func validate(order: Dictionary, units_by_callsign: Dictionary = {}) -> Dictiona
 		var cs: String = str(o.get("callsign"))
 		if cs in units_by_callsign:
 			o["unit_id"] = units_by_callsign[cs]
+		print(o["unit_id"])
 
 	match str(o["type"]).to_upper():
 		"MOVE":

@@ -4,13 +4,14 @@ extends Node3D
 @export var debug: bool = false
 
 @onready var sim: SimWorld = %WorldController
-@onready var terrain_renderer: TerrainRender = %TerrainRender
+@onready var map: MapController = %MapController
 @onready var debug_overlay: Control = %DebugOverlay
 
 
 func _ready() -> void:
 	var _playable_units := generate_playable_units(Game.current_scenario.unit_slots)
 	Game.current_scenario.playable_units = _playable_units
+	map.init_terrain(Game.current_scenario)
 	sim.init_world(Game.current_scenario)
 	sim.bind_radio(%RadioController, %OrdersParser)
 
@@ -26,11 +27,13 @@ func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]:
 
 		var unit_data: UnitData
 		for assignment in assignments:
-			if key == assignment.get("slot_id", ""):
+			var slot_id: String = assignment.get("slot_id", "")
+			if key == slot_id:
 				var unit_id: String = assignment.get("unit_id", "")
 				unit_data = ContentDB.get_unit(unit_id)
 
 				var su := ScenarioUnit.new()
+				su.id = unit_data.id + slot_id
 				su.unit = unit_data
 				su.affiliation = ScenarioUnit.Affiliation.FRIEND
 				su.callsign = slot.callsign

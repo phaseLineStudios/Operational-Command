@@ -72,7 +72,7 @@ func _apply_move(unit: ScenarioUnit, order: Dictionary) -> bool:
 	if dest == null:
 		emit_signal("order_failed", order, "move_missing_destination")
 		return false
-	if movement_adapter and movement_adapter.plan_move(unit, dest):
+	if movement_adapter and movement_adapter.plan_and_start(unit, dest):
 		emit_signal("order_applied", order)
 		return true
 	emit_signal("order_failed", order, "move_plan_failed")
@@ -94,7 +94,7 @@ func _apply_attack(unit: ScenarioUnit, order: Dictionary) -> bool:
 	if combat_controller and combat_controller.has_method("set_engagement_intent"):
 		combat_controller.set_engagement_intent(unit, "attack")
 	var dest: Variant = _compute_destination(unit, order, true)
-	if dest != null and movement_adapter and movement_adapter.plan_move(unit, dest):
+	if dest != null and movement_adapter and movement_adapter.plan_and_start(unit, dest):
 		emit_signal("order_applied", order)
 		return true
 	emit_signal("order_applied", order)
@@ -106,7 +106,7 @@ func _apply_defend(unit: ScenarioUnit, order: Dictionary) -> bool:
 	if combat_controller and combat_controller.has_method("set_posture"):
 		combat_controller.set_posture(unit, "defend")
 	var dest: Variant = _compute_destination(unit, order)
-	if dest != null and movement_adapter and movement_adapter.plan_move(unit, dest):
+	if dest != null and movement_adapter and movement_adapter.plan_and_start(unit, dest):
 		emit_signal("order_applied", order)
 		return true
 	return _apply_hold(unit, order)
@@ -117,7 +117,7 @@ func _apply_recon(unit: ScenarioUnit, order: Dictionary) -> bool:
 	if combat_controller and combat_controller.has_method("set_posture"):
 		combat_controller.set_posture(unit, "recon")
 	var dest: Variant = _compute_destination(unit, order)
-	if dest != null and movement_adapter and movement_adapter.plan_move(unit, dest):
+	if dest != null and movement_adapter and movement_adapter.plan_and_start(unit, dest):
 		emit_signal("order_applied", order)
 		return true
 	emit_signal("order_failed", order, "recon_no_destination")
@@ -143,7 +143,7 @@ func _apply_fire(unit: ScenarioUnit, order: Dictionary) -> bool:
 			combat_controller.set_target(unit, target)
 			emit_signal("order_applied", order)
 			return true
-	if movement_adapter and movement_adapter.plan_move(unit, target.position_m):
+	if movement_adapter and movement_adapter.plan_and_start(unit, target.position_m):
 		emit_signal("order_applied", order)
 		return true
 	emit_signal("order_failed", order, "fire_unhandled")
