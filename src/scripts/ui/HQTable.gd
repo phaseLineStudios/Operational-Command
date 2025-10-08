@@ -38,6 +38,7 @@ func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]:
 				su.affiliation = ScenarioUnit.Affiliation.FRIEND
 				su.callsign = slot.callsign
 				su.position_m = slot.start_position
+				su.playable = true
 				units.append(su)
 				_callsigns.append(slot.callsign)
 

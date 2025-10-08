@@ -124,14 +124,23 @@ func combat_loop(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
 
 ## Combat damage calculation with terrain/environment multipliers + ammo
 ## gating/penalties + ROF cooldown
-func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
+func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 	if attacker == null or defender == null or attacker.unit == null or defender.unit == null:
-		return
+		return 0.0
+	
+	match attacker.combat_mode:
+		ScenarioUnit.CombatMode.FORCED_HOLD_FIRE:
+			return 0.0
+		ScenarioUnit.CombatMode.DO_NOT_FIRE_UNLESS_FIRED_UPON:
+			if not defender.has_meta("recently_attacked_"+attacker.id):
+				return 0.0
+		_:
+			pass
 
 	# --- range & terrain/spotting gates ---
-	var dist := attacker.position_m.distance_to(defender.position_m)
-	if dist > attacker.unit.range_m:
-		return
+	var dist_m  := attacker.position_m.distance_to(defender.position_m)
+	if not _within_engagement_envelope(attacker, dist_m):
+		return 0.0
 
 	var env := {
 		"renderer": terrain_renderer,
@@ -143,29 +152,29 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
 	}
 
 	var f := TerrainEffects.compute_terrain_factors(attacker, defender, env)
-	if dist > attacker.unit.spot_m * float(f.get("spotting_mul", 1.0)):
-		return
+	if dist_m > attacker.unit.spot_m * float(f.get("spotting_mul", 1.0)):
+		return 0.0
 
 	var min_acc: float = terrain_config.min_accuracy
 	var acc_mul: float = float(f.get("accuracy_mul", 1.0))
 	if bool(f.get("blocked", false)) or acc_mul < min_acc:
 		if attacker.unit.morale > 0.1:
 			attacker.unit.morale = max(0.0, attacker.unit.morale - 0.01)
-		return
+		return 0.0
 
 	# --- ROF cooldown (per attacking unit) ---
 	var uid := attacker.unit.id
 	var now := Time.get_ticks_msec() / 1000.0
 	var next_ok := float(_rof_cooldown.get(uid, 0.0))
 	if now < next_ok:
-		return
+		return 0.0
 
 	# --- ammo gate + penalties ---
 	# returns {allow, attack_power_mult, attack_cycle_mult, suppression_mult, ...}
 	var fire := _gate_and_consume(attacker.unit, "small_arms", 5)
 	if not bool(fire.get("allow", true)):
 		LogService.info("%s cannot fire: out of ammo" % attacker.unit.id, "Combat")
-		return
+		return 0.0
 
 	# --- base strengths ---
 	var atk_str: float = max(0.0, attacker.unit.state_strength)
@@ -197,10 +206,12 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
 		var applied := _apply_casualties(defender.unit, max(raw_loss, 1))
 		if defender.unit.morale > 0.0 and applied > 0:
 			defender.unit.morale = max(0.0, defender.unit.morale - 0.05)
+		return raw_loss
 	else:
 		var applied2 := _apply_casualties(defender.unit, 1)
 		if attacker.unit.morale > 0.0 and applied2 == 0:
 			attacker.unit.morale = max(0.0, attacker.unit.morale - 0.02)
+		return 1.0
 
 
 ## Check the various conditions for if the combat is finished
@@ -303,6 +314,13 @@ func _apply_casualties(u: UnitData, raw_losses: int) -> int:
 	u.state_equipment = max(0.0, u.state_equipment - float(loss) * eqp_per_cas)
 	return loss
 
+## True if attacker is permitted to fire at defender at distance 'dist_m'.
+func _within_engagement_envelope(attacker: ScenarioUnit, dist_m: float) -> bool:
+	var spot_m := attacker.unit.spot_m
+	var engage_m := attacker.unit.range_m
+	if spot_m <= 0.0 or engage_m <= 0.0:
+		return false
+	return (dist_m <= spot_m + 0.5) and (dist_m <= engage_m + 0.5)
 
 ## Debug - build and emit a snapshot (for overlays/logging)
 func _emit_debug_snapshot(

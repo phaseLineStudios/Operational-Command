@@ -72,6 +72,9 @@ func _apply_move(unit: ScenarioUnit, order: Dictionary) -> bool:
 	if dest == null:
 		emit_signal("order_failed", order, "move_missing_destination")
 		return false
+	if dest == Vector2.ZERO:
+		emit_signal("order_failed", order, "move_destination_zero")
+		return false
 	if movement_adapter and movement_adapter.plan_and_start(unit, dest):
 		emit_signal("order_applied", order)
 		return true
@@ -165,7 +168,7 @@ func _compute_destination(
 		if tgt != null:
 			return tgt.position_m
 	if str(order.get("zone", "")).to_lower() == "grid" and order.has("quantity"):
-		if terrain_renderer and terrain_renderer.has_method("grid_to_pos"):
+		if terrain_renderer:
 			return terrain_renderer.grid_to_pos(str(order.get("quantity", 000000)))
 	if order.has("target_callsign"):
 		var tgt2 := _resolve_target(order)

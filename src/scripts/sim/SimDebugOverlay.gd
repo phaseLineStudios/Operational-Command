@@ -10,6 +10,7 @@ extends Control
 ## @experimental
 
 ## --- References -----------------------------------------------------------
+@export var debug_enabled: bool = false
 @export var terrain_renderer: TerrainRender
 @export var _sim: SimWorld
 @export var _orders: OrdersRouter
@@ -32,7 +33,7 @@ extends Control
 @export var friend_color: Color = Color(0.09, 0.43, 0.78, 1.0)
 @export var enemy_color: Color  = Color(0.78, 0.16, 0.12, 1.0)
 @export var text_color: Color   = Color(0.08, 0.08, 0.08, 1.0)
-@export var hot_color: Color    = Color(0.95, 0.6, 0.08, 1.0)
+@export var hot_color: Color    = Color(0.78, 0.16, 0.12, 1.0)
 @export var bar_bg: Color       = Color(0,0,0,0.25)
 @export var bar_strength: Color = Color(0.12, 0.65, 0.28)
 @export var bar_morale: Color   = Color(0.16, 0.42, 0.78)
@@ -60,8 +61,8 @@ func _ready() -> void:
 	if _sim:
 		if not _sim.is_connected("unit_updated", Callable(self, "_on_unit_updated")):
 			_sim.unit_updated.connect(_on_unit_updated)
-		if not _sim.is_connected("contact_reported", Callable(self, "_on_contact")):
-			_sim.contact_reported.connect(_on_contact)
+		if not _sim.is_connected("engagement_reported", Callable(self, "_on_contact")):
+			_sim.engagement_reported.connect(_on_contact)
 		if not _sim.is_connected("mission_state_changed", Callable(self, "_on_state")):
 			_sim.mission_state_changed.connect(_on_state)
 	if _orders:
@@ -73,7 +74,7 @@ func _ready() -> void:
 	if _terrain_base:
 		_terrain_base.connect("resized", Callable(self, "_on_resized"))
 
-	set_process(true)
+	set_process(debug_enabled)
 
 ## Housekeeping per-frame: fade recent combat markers and request redraws.
 func _process(_dt: float) -> void:
@@ -155,6 +156,9 @@ func _on_unit_updated(_id: String, _snap: Dictionary) -> void:
 
 ## Main draw pass for icons, paths, and labels.
 func _draw() -> void:
+	if not debug_enabled: 
+		return
+	
 	if terrain_renderer == null or terrain_renderer.data == null:
 		return
 
@@ -204,7 +208,7 @@ func _draw() -> void:
 			var order_txt: String = order if show_orders else ""
 			var beh := _enum_name(ScenarioUnit.Behaviour, unit.behaviour)
 			var cmb := _enum_name(ScenarioUnit.CombatMode, unit.combat_mode)
-			var s_ratio := _norm_ratio(unit.unit.state_strength)
+			var s_ratio := _norm_ratio(unit.unit.state_strength, unit.unit.strength)
 			var m_ratio := _norm_ratio(unit.unit.morale)
 			var fuel_ratio := _fuel.get_fuel_state(unit.id).ratio() if show_fuel and _fuel and _fuel.get_fuel_state(unit.id) else -1.0
 
@@ -245,8 +249,8 @@ func _draw_bar(tl: Vector2, w: float, h: float, ratio: float, col: Color) -> voi
 
 ## Helper: normalize unknown ranges (treat >1 as percent 0..100).
 ## Normalize unknown ranges (treat >1 as percent 0..100).
-func _norm_ratio(v: float) -> float:
-	return clampf(v if v <= 1.0 else (v / 100.0), 0.0, 1.0)
+func _norm_ratio(v: float, t: float = 100.0) -> float:
+	return clampf(v if v <= 1.0 else (v / t), 0.0, 1.0)
 
 ## Convert enum value to name (without prefix numbers).
 ## Convert enum value to a short human label.

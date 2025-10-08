@@ -399,6 +399,7 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("7_tixey")
+debug_enabled = true
 terrain_renderer = NodePath("..")
 _sim = NodePath("../../../../WorldController")
 _orders = NodePath("../../../../RadioController/OrdersRouter")
@@ -459,9 +460,10 @@ movement_adapter = NodePath("MovementAdapter")
 combat_controller = NodePath("../CombatController")
 _router = NodePath("../RadioController/OrdersRouter")
 
-[node name="MovementAdapter" type="Node" parent="Controllers/WorldController"]
+[node name="MovementAdapter" type="Node" parent="Controllers/WorldController" node_paths=PackedStringArray("renderer")]
 unique_name_in_owner = true
 script = ExtResource("9_fera7")
+renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
 
 [node name="FuelSystem" type="Node" parent="Controllers/WorldController"]
 script = ExtResource("14_hvywg")

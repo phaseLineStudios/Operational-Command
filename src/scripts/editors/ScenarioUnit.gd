@@ -41,6 +41,8 @@ const ARRIVE_EPSILON := 1.0
 @export var combat_mode: CombatMode = CombatMode.OPEN_FIRE
 ## Unit Behaviour
 @export var behaviour: Behaviour = Behaviour.SAFE
+## Is unit playable.
+@export var playable: bool = false
 
 var _move_state: MoveState = MoveState.IDLE
 var _move_dest_m: Vector2 = Vector2.ZERO
@@ -258,7 +260,8 @@ func serialize() -> Dictionary:
 		"position": ContentDB.v2(position_m),
 		"affiliation": int(affiliation),
 		"combat_mode": int(combat_mode),
-		"behaviour": int(behaviour)
+		"behaviour": int(behaviour),
+		"playable": playable
 	}
 
 
@@ -272,4 +275,5 @@ static func deserialize(d: Dictionary) -> ScenarioUnit:
 	u.affiliation = int(d.get("affiliation")) as Affiliation
 	u.combat_mode = int(d.get("combat_mode")) as CombatMode
 	u.behaviour = int(d.get("behaviour")) as Behaviour
+	u.playable = d.get("playable", u.playable)
 	return u

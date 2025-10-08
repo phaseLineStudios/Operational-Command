@@ -8,9 +8,10 @@ extends Node
 ## Event bus for UI/logging
 signal unit_updated(unit_id: String, snapshot: Dictionary)
 signal contact_reported(attacker_id: String, defender_id: String)
-signal engagement_resolved(data: Dictionary)
 signal radio_message(level: String, text: String)
 signal mission_state_changed(prev: State, next: State)
+## Emitted when damage > 0 is applied attacker→defender this tick.
+signal engagement_reported(attacker_id: String, defender_id: String, damage: float)
 
 ## Simulation state machine
 enum State { INIT, RUNNING, PAUSED, COMPLETED }
@@ -36,6 +37,7 @@ var _orders: OrdersQueue = OrdersQueue.new()
 var _scenario: ScenarioData
 var _units_by_id: Dictionary = {}
 var _units_by_callsign: Dictionary = {}
+var _playable_by_callsign: Dictionary = {}
 var _friendlies: Array[ScenarioUnit] = []
 var _enemies: Array[ScenarioUnit] = []
 
@@ -63,14 +65,23 @@ func init_world(scenario: ScenarioData) -> void:
 	_units_by_callsign.clear()
 	_friendlies.clear()
 	_enemies.clear()
-	for su: ScenarioUnit in scenario.playable_units:
+	
+	var all: Array = []
+	all.append_array(scenario.units)
+	all.append_array(scenario.playable_units)
+	
+	for su: ScenarioUnit in all:
+		if su == null:
+			continue
 		_units_by_id[su.id] = su
-		_units_by_callsign[su.callsign] = su.id
+		if su.callsign != "":
+			_units_by_callsign[su.callsign] = su.id
 		if su.affiliation == ScenarioUnit.Affiliation.FRIEND:
 			_friendlies.append(su)
 		else:
 			_enemies.append(su)
-	print(_units_by_callsign)
+		if su.playable:
+			_playable_by_callsign[su.callsign] = su.id
 	_router.bind_units(_units_by_id, _units_by_callsign)
 	_transition(State.INIT, State.RUNNING)
 
@@ -138,11 +149,9 @@ func _resolve_combat() -> void:
 		if a == null or d == null:
 			continue
 
-		combat_controller.calculate_damage(a, d)
-		emit_signal("engagement_resolved", {"attacker": a.id, "defender": d.id})
-		LogService.info(
-			"engagement_resolved: %s" % {"attacker": a.id, "defender": d.id}, "SimWorld.gd:161"
-		)
+		var dmg := combat_controller.calculate_damage(a, d)
+		if dmg > 0.0:
+			emit_signal("engagement_reported", a.id, d.id)
 
 
 ## Stub morale update hook (placeholder for now).
@@ -169,7 +178,7 @@ func _record_replay() -> void:
 
 ## Enqueue structured orders parsed elsewhere.
 func queue_orders(orders: Array) -> int:
-	return _orders.enqueue_many(orders, _units_by_callsign)
+	return _orders.enqueue_many(orders, _playable_by_callsign)
 
 
 ## Convenience: bind a Radio + OrdersParser pair so spoken results route into the queue.
