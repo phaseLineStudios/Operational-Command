@@ -201,17 +201,17 @@ func path_index() -> int:
 ## _speed_here_mps also includes speed penalties for low fuel
 func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 	if grid == null or grid._astar == null:
-		var v := _kph_to_mps(unit.speed_kph)
+		var speed := _kph_to_mps(unit.speed_kph)
 		if _fuel != null:
-			v *= _fuel.speed_mult(id)
-		return v
+			speed *= _fuel.speed_mult(id)
+		return speed
 
 	var c := grid.world_to_cell(p_m)
 	if not grid._in_bounds(c):
-		var v := _kph_to_mps(unit.speed_kph)
+		var speed := _kph_to_mps(unit.speed_kph)
 		if _fuel != null:
-			v *= _fuel.speed_mult(id)
-		return v
+			speed *= _fuel.speed_mult(id)
+		return speed
 
 	if grid._astar.is_in_boundsv(c) and grid._astar.is_point_solid(c):
 		return 0.0
