@@ -197,7 +197,11 @@ func _draw() -> void:
 		# Labels / bars
 		if show_labels or show_bars:
 			var y := 0.0
-			var order_txt: String = _last_order.get(unit.id, "") if show_orders else ""
+			var last_order_type: int = int(_last_order.get(unit.id, 0))
+			var order: String
+			if last_order_type > 0:
+				order = OrdersParser.OrderType.keys()[last_order_type]
+			var order_txt: String = order if show_orders else ""
 			var beh := _enum_name(ScenarioUnit.Behaviour, unit.behaviour)
 			var cmb := _enum_name(ScenarioUnit.CombatMode, unit.combat_mode)
 			var s_ratio := _norm_ratio(unit.unit.state_strength)

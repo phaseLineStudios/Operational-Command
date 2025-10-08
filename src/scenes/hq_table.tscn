@@ -459,10 +459,9 @@ movement_adapter = NodePath("MovementAdapter")
 combat_controller = NodePath("../CombatController")
 _router = NodePath("../RadioController/OrdersRouter")
 
-[node name="MovementAdapter" type="Node" parent="Controllers/WorldController" node_paths=PackedStringArray("renderer")]
+[node name="MovementAdapter" type="Node" parent="Controllers/WorldController"]
 unique_name_in_owner = true
 script = ExtResource("9_fera7")
-renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
 
 [node name="FuelSystem" type="Node" parent="Controllers/WorldController"]
 script = ExtResource("14_hvywg")

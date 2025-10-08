@@ -65,6 +65,12 @@ func tick_units(units: Array[ScenarioUnit], dt: float) -> void:
 			for u in groups[p]:
 				u.tick(dt, _grid)
 
+## Cancel/hold current movement for [param su].
+func cancel_move(su: ScenarioUnit) -> void:
+	if su == null:
+		return
+	su.pause_move()
+
 ## Plan + immediately start unit movement to `dest_m`.
 func plan_and_start(su: ScenarioUnit, dest_m: Vector2) -> bool:
 	if su == null or _grid == null:
