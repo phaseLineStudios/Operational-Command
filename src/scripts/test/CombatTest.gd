@@ -17,6 +17,10 @@ var _su_b: ScenarioUnit
 ## Using FuelSystem
 @onready var fuel: FuelSystem = FuelSystem.new()
 
+@onready var renderer: TerrainRender = %TerrainRender
+@onready var camera: Camera2D = %TerrainCamera
+@onready var input_overlay: Control = %DebugOverlay
+@onready var combat: CombatController = %Combat
 
 func _ready() -> void:
 	# add the fuel system
