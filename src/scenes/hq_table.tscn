@@ -1,4 +1,4 @@
-[gd_scene load_steps=54 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=55 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -18,6 +18,7 @@
 [ext_resource type="Script" uid="uid://c3rgrbya520ur" path="res://scripts/sim/systems/AmmoSystem.gd" id="12_lrkar"]
 [ext_resource type="Script" uid="uid://c5dqpttm5xyed" path="res://scripts/sim/LOS.gd" id="13_qgda6"]
 [ext_resource type="Script" uid="uid://cw4tt3twmh4gk" path="res://scripts/sim/adapters/LOSAdapter.gd" id="14_415kk"]
+[ext_resource type="Script" uid="uid://brp222cgifhj0" path="res://scripts/sim/systems/FuelSystem.gd" id="14_hvywg"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
 size = Vector2(10, 30)
@@ -393,10 +394,17 @@ render_target_update_mode = 4
 [node name="TerrainRender" parent="Controllers/MapController/TerrainViewport" instance=ExtResource("6_cx6my")]
 unique_name_in_owner = true
 
-[node name="DebugOverlay" type="Control" parent="Controllers/MapController/TerrainViewport/TerrainRender"]
+[node name="DebugOverlay" type="Control" parent="Controllers/MapController/TerrainViewport/TerrainRender" node_paths=PackedStringArray("terrain_renderer", "_sim", "_orders", "_fuel")]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("7_tixey")
+terrain_renderer = NodePath("..")
+_sim = NodePath("../../../../WorldController")
+_orders = NodePath("../../../../RadioController/OrdersRouter")
+_fuel = NodePath("../../../../WorldController/FuelSystem")
+icon_size_px = 64
+font_size = 32
+label_offset_px = Vector2(0, -34)
 
 [node name="GridUI" type="PanelContainer" parent="Controllers/MapController"]
 editor_description = "Temporary UI"
@@ -453,6 +461,10 @@ _router = NodePath("../RadioController/OrdersRouter")
 [node name="MovementAdapter" type="Node" parent="Controllers/WorldController" node_paths=PackedStringArray("terrain_renderer")]
 script = ExtResource("9_fera7")
 terrain_renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
+
+[node name="FuelSystem" type="Node" parent="Controllers/WorldController"]
+script = ExtResource("14_hvywg")
+metadata/_custom_type_script = "uid://brp222cgifhj0"
 
 [node name="CombatController" type="Node" parent="Controllers" node_paths=PackedStringArray("terrain_renderer")]
 script = ExtResource("10_of8da")

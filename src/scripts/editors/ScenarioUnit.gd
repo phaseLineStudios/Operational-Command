@@ -135,11 +135,6 @@ func cancel_move() -> void:
 	_move_state = MoveState.IDLE
 
 
-## Get currently planned movement path.
-func get_planned_movement() -> PackedVector2Array:
-	return _move_path
-
-
 ## Advance movement by dt seconds on PathGrid (virtual position only).
 func tick(dt: float, grid: PathGrid) -> void:
 	if _move_state != MoveState.MOVING or _move_paused or _move_path.is_empty():
