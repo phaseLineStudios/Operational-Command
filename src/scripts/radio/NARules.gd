@@ -21,7 +21,7 @@ func get_parser_tables() -> Dictionary:
 			"india": "INDIA",
 			"juliett": "JULIETT",
 			"kilo": "KILO",
-			"lima": "LIMA",  #juliett with teo t's
+			"lima": "LIMA",
 			"mike": "MIKE",
 			"november": "NOVEMBER",
 			"oscar": "OSCAR",
@@ -35,7 +35,7 @@ func get_parser_tables() -> Dictionary:
 			"whiskey": "WHISKEY",
 			"xray": "XRAY",
 			"yankee": "YANKEE",
-			"zulu": "ZULU"  # ← fixed YANKEE
+			"zulu": "ZULU"
 		},
 		"action_synonyms":
 		{

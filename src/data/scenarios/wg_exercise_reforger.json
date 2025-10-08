@@ -21,9 +21,9 @@
 	"units": {
 		"unit_points": 1250,
 		"unit_slots": [
-			{ "key": "PLT_1", "title": "1st Platoon (ALPHA)", "allowed_roles": ["INF", "MECH", "ARMOR", "SUPPORT"] },
-			{ "key": "PLT_2", "title": "2nd Platoon (BRAVO)", "allowed_roles": ["INF", "MECH", "ARMOR", "SUPPORT"] },
-			{ "key": "WEAPONS", "title": "Weapons (CHARLIE)", "allowed_roles": ["SUPPORT"] }
+			{ "key": "PLT_1", "title": "1st Platoon (ALPHA)", "callsign": "ALPHA", "allowed_roles": ["INF", "MECH", "ARMOR", "SUPPORT"] },
+			{ "key": "PLT_2", "title": "2nd Platoon (BRAVO)", "callsign": "BRAVO", "allowed_roles": ["INF", "MECH", "ARMOR", "SUPPORT"] },
+			{ "key": "WEAPONS", "title": "Weapons (CHARLIE)", "callsign": "CHARLIE", "allowed_roles": ["SUPPORT"] }
 		],
 		"unit_recruits_ids": [
 			"heavy_weapons_plt_1",

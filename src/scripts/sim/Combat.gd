@@ -62,8 +62,9 @@ func _ready() -> void:
 	# Build ScenarioUnit wrappers for the imported UnitData (test harness)
 	attacker_su = _make_su(imported_attacker, "ALPHA", Vector2(0, 0))
 	defender_su = _make_su(imported_defender, "BRAVO", Vector2(300, 0))
-
-	notify_health.connect(print_unit_status)
+	
+	if debug_enabled:
+		notify_health.connect(print_unit_status)
 
 	# Start loop with ScenarioUnits
 	combat_loop(attacker_su, defender_su)
@@ -227,12 +228,12 @@ func check_abort_condition(attacker: ScenarioUnit, defender: ScenarioUnit) -> vo
 
 ##check unit mid combat status for testing of combat status
 func print_unit_status(attacker: UnitData, defender: UnitData) -> void:
-	LogService.info(
-		"[b]Attacker(%s)[/b]\n\t%s\n\t%s" % [attacker.id, attacker.morale, attacker.strength],
+	LogService.trace(
+		"Attacker(%s) • morale %s • strength %s" % [attacker.id, attacker.morale, attacker.strength],
 		"Combat.gd:85"
 	)
-	LogService.info(
-		"[b]Defender(%s)[/b]\n\t%s\n\t%s" % [defender.id, defender.morale, defender.strength],
+	LogService.trace(
+		"Defender(%s) • morale %s • strength %s" % [defender.id, defender.morale, defender.strength],
 		"Combat.gd:86"
 	)
 	return
@@ -375,7 +376,7 @@ func _emit_debug_snapshot(
 
 	if debug_log_console:
 		var c: Variant = dbg.components
-		print(
+		LogService.info(
 			(
 				"""[COMBAT] r=%.0fm LOS=%s acc=%.2f dmg=%.2f | h=%.1f cover=%.2f \
 				conceal=%.2f atten=%.2f wx=%.2f | %s S%.0f/M%.2f -> %s S%.0f/M%.2f"""
@@ -389,10 +390,10 @@ func _emit_debug_snapshot(
 					float(c.get("conceal", 0.0)),
 					float(c.get("atten_integral", 0.0)),
 					float(c.get("weather_severity", 0.0)),
-					String(dbg.attacker.cs),
+					str(dbg.attacker.cs),
 					float(dbg.attacker.strength),
 					float(dbg.attacker.morale),
-					String(dbg.defender.cs),
+					str(dbg.defender.cs),
 					float(dbg.defender.strength),
 					float(dbg.defender.morale)
 				]

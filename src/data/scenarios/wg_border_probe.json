@@ -1,33 +1,124 @@
 {
-	"id": "wg_border_probe",
-	"title": "Border Probe",
-	"description": "Soviet recon-in-force tests your line near Fulda.",
-	"preview_path": "res://campaigns/previews/wg_border_probe.png",
-	"terrain_path": "res://campaigns/terrains/fulda_gap.tres",
-	"difficulty": 1,
-	"map_position": [0.52, 0.55],
-	"scenario_order": 0,
-	"weather": {
-			"rain": 0.0,
-			"fog_m": 8000.0,
-			"wind_dir": 0.0,
-			"wind_speed_m": 0.5
-	},
-		"datetime": {
-			"year": 1983, "month": 9, "day": 11, "hour": 12, "minute": 0
+  "briefing_id": null,
+  "content": {
+	"drawings": [],
+	"tasks": [],
+	"triggers": [],
+	"units": [
+	  {
+		"affiliation": 1,
+		"behaviour": 1,
+		"callsign": "VICTOR",
+		"combat_mode": 2,
+		"id": "infantry_plt_1_1",
+		"position": {
+		  "x": 745.605834960938,
+		  "y": 839.346618652344
 		},
-	"units": {
-		"unit_points": 1250,
-		"unit_slots": [
-			{ "key": "PLT_1", "title": "1st Platoon (ALPHA)", "allowed_roles": ["INF", "MECH", "ARMOR", "SUPPORT"] },
-			{ "key": "PLT_2", "title": "2nd Platoon (BRAVO)", "allowed_roles": ["INF", "MECH", "ARMOR", "SUPPORT"] },
-			{ "key": "WEAPONS", "title": "Weapons (CHARLIE)", "allowed_roles": ["SUPPORT"] }
+		"unit_id": "infantry_plt_1"
+	  },
+	  {
+		"affiliation": 1,
+		"behaviour": 1,
+		"callsign": "BORIS",
+		"combat_mode": 2,
+		"id": "infantry_plt_2_1",
+		"position": {
+		  "x": 811.908325195313,
+		  "y": 665.302612304688
+		},
+		"unit_id": "infantry_plt_2"
+	  },
+	  {
+		"affiliation": 0,
+		"behaviour": 1,
+		"callsign": "DELTA",
+		"combat_mode": 2,
+		"id": "logistics_platoon_1_1",
+		"position": {
+		  "x": 892.714477539063,
+		  "y": 107.947509765625
+		},
+		"unit_id": "logistics_platoon_1"
+	  }
+	]
+  },
+  "datetime": {
+	"day": 11,
+	"hour": 12,
+	"minute": 0,
+	"month": 9,
+	"year": 1983
+  },
+  "description": "Soviet recon-in-force tests your line near Fulda.",
+  "difficulty": 1,
+  "id": "wg_border_probe",
+  "map_position": {
+	"x": 0.519999980926514,
+	"y": 0.550000011920929
+  },
+  "preview_path": "res://campaigns/previews/wg_border_probe.png",
+  "scenario_order": 0,
+  "terrain_path": "res://campaigns/terrains/fulda_gap.tres",
+  "title": "Border Probe",
+  "units": {
+	"unit_points": 1250,
+	"unit_recruits_ids": [
+	  "heavy_weapons_plt_1",
+	  "logistics_platoon_1",
+	  "infantry_plt_1",
+      "infantry_plt_2"
+	],
+	"unit_reserves": [],
+	"unit_slots": [
+	  {
+		"allowed_roles": [
+		  "INF",
+		  "MECH",
+		  "ARMOR",
+          "SUPPORT"
 		],
-		"unit_recruits_ids": [
-			"heavy_weapons_plt_1",
-			"logistics_platoon_1",
-			"infantry_plt_1",
-			"infantry_plt_2"
-		]
-	}
+		"callsign": "ALPHA",
+		"key": "PLT_1",
+		"start_position": {
+		  "x": 496.141540527344,
+		  "y": 120.085235595703
+		},
+		"title": "1st Platoon (ALPHA)"
+	  },
+	  {
+		"allowed_roles": [
+		  "INF",
+		  "MECH",
+		  "ARMOR",
+          "SUPPORT"
+		],
+		"callsign": "BRAVO",
+		"key": "PLT_2",
+		"start_position": {
+		  "x": 665.208923339844,
+		  "y": 34.7615051269531
+		},
+		"title": "2nd Platoon (BRAVO)"
+	  },
+	  {
+		"allowed_roles": [
+          "SUPPORT"
+		],
+		"callsign": "CHARLIE",
+		"key": "WEAPONS",
+		"start_position": {
+		  "x": 383.956665039063,
+		  "y": 30.0213012695313
+		},
+		"title": "Weapons (CHARLIE)"
+	  }
+	]
+  },
+  "weather": {
+	"fog_m": 8000.0,
+	"rain": 0.0,
+	"wind_dir": 0.0,
+	"wind_speed_m": 0.5
+  }
 }

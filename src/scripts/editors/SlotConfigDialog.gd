@@ -8,6 +8,7 @@ var _before: UnitSlotData
 
 @onready var key_input: LineEdit = %Key
 @onready var title_input: LineEdit = %Title
+@onready var callsign_input: LineEdit = %Callsign
 @onready var roles_input: LineEdit = %RoleInput
 @onready var roles_add: Button = %RoleAdd
 @onready var roles_list: VBoxContainer = %RoleVBox
@@ -31,6 +32,7 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 
 	key_input.text = String(s.key)
 	title_input.text = s.title
+	callsign_input.text = s.callsign
 	_roles = s.allowed_roles
 	_refresh_role_list()
 	visible = true
@@ -45,6 +47,7 @@ func _on_save() -> void:
 	var after := live.duplicate(true)
 	after.key = key_input.text
 	after.title = title_input.text
+	after.callsign = callsign_input.text
 	after.allowed_roles = _roles
 
 	if editor.history:
@@ -55,6 +58,7 @@ func _on_save() -> void:
 	else:
 		live.key = after.key
 		live.title = after.title
+		live.callsign = after.callsign
 		live.allowed_roles = after.allowed_roles
 
 	visible = false

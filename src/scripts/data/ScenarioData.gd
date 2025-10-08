@@ -64,6 +64,8 @@ enum ScenarioDifficulty { EASY, NORMAL, HARD }
 @export_group("Content")
 ## List of units placed in this scenario
 @export var units: Array[ScenarioUnit] = []
+## List of playable units. Populated on game start
+@export var playable_units: Array[ScenarioUnit] = []
 ## Triggers that define scripted events and conditions
 @export var triggers: Array[ScenarioTrigger] = []
 ## Tasks or objectives for the AI to complete
