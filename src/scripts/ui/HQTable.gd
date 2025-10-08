@@ -9,8 +9,8 @@ extends Node3D
 
 
 func _ready() -> void:
-	var _playable_units := generate_playable_units(Game.current_scenario.unit_slots)
-	Game.current_scenario.playable_units = _playable_units
+	var playable_units := generate_playable_units(Game.current_scenario.unit_slots)
+	Game.current_scenario.playable_units = playable_units
 	map.init_terrain(Game.current_scenario)
 	sim.init_world(Game.current_scenario)
 	sim.bind_radio(%RadioController, %OrdersParser)
@@ -21,7 +21,7 @@ func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]:
 	var units: Array[ScenarioUnit] = []
 	var loadout := Game.current_scenario_loadout
 	var assignments: Array = loadout.get("assignments", [])
-	var _callsigns := []
+	var callsigns := []
 	for slot in slots:
 		var key := slot.key
 
@@ -40,7 +40,7 @@ func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]:
 				su.position_m = slot.start_position
 				su.playable = true
 				units.append(su)
-				_callsigns.append(slot.callsign)
+				callsigns.append(slot.callsign)
 
-	LogService.trace("Generated playable units: %s" % str(_callsigns), "HQTable.gd:42")
+	LogService.trace("Generated playable units: %s" % str(callsigns), "HQTable.gd:42")
 	return units

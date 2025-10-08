@@ -65,11 +65,11 @@ func init_world(scenario: ScenarioData) -> void:
 	_units_by_callsign.clear()
 	_friendlies.clear()
 	_enemies.clear()
-	
+
 	var all: Array = []
 	all.append_array(scenario.units)
 	all.append_array(scenario.playable_units)
-	
+
 	for su: ScenarioUnit in all:
 		if su == null:
 			continue

@@ -31,24 +31,25 @@ extends Control
 @export var path_width_px := 2.0
 @export var dest_radius_px := 6.0
 @export var friend_color: Color = Color(0.09, 0.43, 0.78, 1.0)
-@export var enemy_color: Color  = Color(0.78, 0.16, 0.12, 1.0)
-@export var text_color: Color   = Color(0.08, 0.08, 0.08, 1.0)
-@export var hot_color: Color    = Color(0.78, 0.16, 0.12, 1.0)
-@export var bar_bg: Color       = Color(0,0,0,0.25)
+@export var enemy_color: Color = Color(0.78, 0.16, 0.12, 1.0)
+@export var text_color: Color = Color(0.08, 0.08, 0.08, 1.0)
+@export var hot_color: Color = Color(0.78, 0.16, 0.12, 1.0)
+@export var bar_bg: Color = Color(0, 0, 0, 0.25)
 @export var bar_strength: Color = Color(0.12, 0.65, 0.28)
-@export var bar_morale: Color   = Color(0.16, 0.42, 0.78)
-@export var bar_fuel: Color     = Color(0.75, 0.65, 0.15)
+@export var bar_morale: Color = Color(0.16, 0.42, 0.78)
+@export var bar_fuel: Color = Color(0.75, 0.65, 0.15)
 @export var font_size := 12
 @export var label_offset_px := Vector2(0, -24)
 
 ## --- Runtime caches -------------------------------------------------------
-var _terrain_base: Control                 ## TerrainRender/MapMargin/TerrainBase
-var _map_tf: Transform2D                   ## Base→overlay transform
-var _map_rect: Rect2                       ## Base rect in overlay-space
+var _terrain_base: Control  ## TerrainRender/MapMargin/TerrainBase
+var _map_tf: Transform2D  ## Base→overlay transform
+var _map_rect: Rect2  ## Base rect in overlay-space
 
-var _unit_by_id: Dictionary = {}           ## String → ScenarioUnit
-var _last_order: Dictionary = {}           ## String → String (pretty order)
-var _recent_contact_until: Dictionary = {} ## String → float (mission time when cold)
+var _unit_by_id: Dictionary = {}  ## String → ScenarioUnit
+var _last_order: Dictionary = {}  ## String → String (pretty order)
+var _recent_contact_until: Dictionary = {}  ## String → float (mission time when cold)
+
 
 ## Auto-wire references, build caches, and connect signals.
 func _ready() -> void:
@@ -76,6 +77,7 @@ func _ready() -> void:
 
 	set_process(debug_enabled)
 
+
 ## Housekeeping per-frame: fade recent combat markers and request redraws.
 func _process(_dt: float) -> void:
 	if show_combat_hot and _sim:
@@ -90,10 +92,12 @@ func _process(_dt: float) -> void:
 
 	queue_redraw()
 
+
 ## Recompute transforms on any host or base resize.
 func _on_resized() -> void:
 	_compute_map_transform()
 	queue_redraw()
+
 
 ## Compute Base→Overlay transform so the overlay aligns with the map area.
 func _compute_map_transform() -> void:
@@ -105,6 +109,7 @@ func _compute_map_transform() -> void:
 	var my_xform := get_global_transform_with_canvas()
 	_map_tf = my_xform.affine_inverse() * base_xform
 	_map_rect = Rect2(_map_tf.origin, _terrain_base.size)
+
 
 ## Build id → ScenarioUnit index for quick lookups.
 ## Build a lookup: unit_id → ScenarioUnit, from ScenarioData.units.
@@ -120,6 +125,7 @@ func _rebuild_id_index() -> void:
 		if su != null:
 			_unit_by_id[su.id] = su
 
+
 ## Record last applied order for labels.
 ## Capture last applied order per unit for display.
 func _on_order_applied(order: Dictionary) -> void:
@@ -128,6 +134,7 @@ func _on_order_applied(order: Dictionary) -> void:
 	if uid != "":
 		_last_order[uid] = typ
 	queue_redraw()
+
 
 ## Also show failed orders (marked ✖) to aid debugging.
 func _on_order_failed(order: Dictionary, _reason: String) -> void:
@@ -138,27 +145,32 @@ func _on_order_failed(order: Dictionary, _reason: String) -> void:
 		_last_order[uid] = typ
 	queue_redraw()
 
+
 ## Flag attacker/defender as "hot" for a short period after contact.
 func _on_contact(attacker_id: String, defender_id: String) -> void:
-	if not show_combat_hot: return
+	if not show_combat_hot:
+		return
 	var now := _sim.get_mission_time_s() if _sim else Time.get_ticks_msec() / 1000.0
 	_recent_contact_until[attacker_id] = now + 10.0
 	_recent_contact_until[defender_id] = now + 10.0
 	queue_redraw()
 
+
 ## Redraw on mission state changes (RUNNING/PAUSED/etc.).
 func _on_state(_prev, _next) -> void:
 	queue_redraw()
+
 
 ## Redraw when units change (position/state snapshots).
 func _on_unit_updated(_id: String, _snap: Dictionary) -> void:
 	queue_redraw()
 
+
 ## Main draw pass for icons, paths, and labels.
 func _draw() -> void:
-	if not debug_enabled: 
+	if not debug_enabled:
 		return
-	
+
 	if terrain_renderer == null or terrain_renderer.data == null:
 		return
 
@@ -210,22 +222,38 @@ func _draw() -> void:
 			var cmb := _enum_name(ScenarioUnit.CombatMode, unit.combat_mode)
 			var s_ratio := _norm_ratio(unit.unit.state_strength, unit.unit.strength)
 			var m_ratio := _norm_ratio(unit.unit.morale)
-			var fuel_ratio := _fuel.get_fuel_state(unit.id).ratio() if show_fuel and _fuel and _fuel.get_fuel_state(unit.id) else -1.0
+			var fuel_ratio := (
+				_fuel.get_fuel_state(unit.id).ratio()
+				if show_fuel and _fuel and _fuel.get_fuel_state(unit.id)
+				else -1.0
+			)
 
 			if show_labels:
 				var hot := show_combat_hot and _recent_contact_until.has(unit.id)
-				var lbl := "%s  %s  [%s/%s]  S:%d%%  M:%d%%" % [
-					unit.callsign,
-					(order_txt if order_txt != "" else _state_name(int(unit.move_state()))),
-					beh, cmb,
-					int(roundi(s_ratio * 100.0)),
-					int(roundi(m_ratio * 100.0))
-				]
+				var lbl := (
+					"%s  %s  [%s/%s]  S:%d%%  M:%d%%"
+					% [
+						unit.callsign,
+						order_txt if order_txt != "" else _state_name(int(unit.move_state())),
+						beh,
+						cmb,
+						int(roundi(s_ratio * 100.0)),
+						int(roundi(m_ratio * 100.0))
+					]
+				)
 				if fuel_ratio >= 0.0:
 					lbl += "  F:%d%%" % roundi(fuel_ratio * 100.0)
 				draw_set_transform(pos_m + label_offset_px)
-				draw_string(get_theme_default_font(), Vector2.ZERO, lbl, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, hot_color if hot else text_color)
-				draw_set_transform(Vector2(0,0))
+				draw_string(
+					get_theme_default_font(),
+					Vector2.ZERO,
+					lbl,
+					HORIZONTAL_ALIGNMENT_LEFT,
+					-1.0,
+					font_size,
+					hot_color if hot else text_color
+				)
+				draw_set_transform(Vector2(0, 0))
 
 			if show_bars:
 				var bar_w := 54.0
@@ -239,18 +267,21 @@ func _draw() -> void:
 					top.y += bar_h + gap
 					_draw_bar(top, bar_w, bar_h, fuel_ratio, bar_fuel)
 
+
 ## Helper: draw a ratio bar with background.
 ## Draw a ratio bar with background and thin border.
 func _draw_bar(tl: Vector2, w: float, h: float, ratio: float, col: Color) -> void:
 	ratio = clampf(ratio, 0.0, 1.0)
 	draw_rect(Rect2(tl, Vector2(w, h)), bar_bg, true)
 	draw_rect(Rect2(tl, Vector2(w * ratio, h)), col, true)
-	draw_rect(Rect2(tl, Vector2(w, h)), Color(0,0,0,0.65), false, 1.0)
+	draw_rect(Rect2(tl, Vector2(w, h)), Color(0, 0, 0, 0.65), false, 1.0)
+
 
 ## Helper: normalize unknown ranges (treat >1 as percent 0..100).
 ## Normalize unknown ranges (treat >1 as percent 0..100).
 func _norm_ratio(v: float, t: float = 100.0) -> float:
 	return clampf(v if v <= 1.0 else (v / t), 0.0, 1.0)
+
 
 ## Convert enum value to name (without prefix numbers).
 ## Convert enum value to a short human label.
@@ -258,26 +289,42 @@ func _enum_name(_enum: Variant, value: int) -> String:
 	match _enum:
 		ScenarioUnit.Behaviour:
 			match value:
-				ScenarioUnit.Behaviour.CARELESS: return "Careless"
-				ScenarioUnit.Behaviour.SAFE: return "Safe"
-				ScenarioUnit.Behaviour.AWARE: return "Aware"
-				ScenarioUnit.Behaviour.COMBAT: return "Combat"
-				ScenarioUnit.Behaviour.STEALTH: return "Stealth"
+				ScenarioUnit.Behaviour.CARELESS:
+					return "Careless"
+				ScenarioUnit.Behaviour.SAFE:
+					return "Safe"
+				ScenarioUnit.Behaviour.AWARE:
+					return "Aware"
+				ScenarioUnit.Behaviour.COMBAT:
+					return "Combat"
+				ScenarioUnit.Behaviour.STEALTH:
+					return "Stealth"
 		ScenarioUnit.CombatMode:
 			match value:
-				ScenarioUnit.CombatMode.FORCED_HOLD_FIRE: return "Hold"
-				ScenarioUnit.CombatMode.DO_NOT_FIRE_UNLESS_FIRED_UPON: return "Return"
-				ScenarioUnit.CombatMode.OPEN_FIRE: return "Open"
+				ScenarioUnit.CombatMode.FORCED_HOLD_FIRE:
+					return "Hold"
+				ScenarioUnit.CombatMode.DO_NOT_FIRE_UNLESS_FIRED_UPON:
+					return "Return"
+				ScenarioUnit.CombatMode.OPEN_FIRE:
+					return "Open"
 	return str(value)
+
 
 ## Convert ScenarioUnit.MoveState → label.
 ## Convert ScenarioUnit.MoveState to a compact label.
 func _state_name(s: int) -> String:
 	match s:
-		ScenarioUnit.MoveState.IDLE: return "IDLE"
-		ScenarioUnit.MoveState.PLANNING: return "PLAN"
-		ScenarioUnit.MoveState.MOVING: return "MOVE"
-		ScenarioUnit.MoveState.PAUSED: return "PAUSE"
-		ScenarioUnit.MoveState.BLOCKED: return "BLOCK"
-		ScenarioUnit.MoveState.ARRIVED: return "ARRIVE"
-		_: return str(s)
+		ScenarioUnit.MoveState.IDLE:
+			return "IDLE"
+		ScenarioUnit.MoveState.PLANNING:
+			return "PLAN"
+		ScenarioUnit.MoveState.MOVING:
+			return "MOVE"
+		ScenarioUnit.MoveState.PAUSED:
+			return "PAUSE"
+		ScenarioUnit.MoveState.BLOCKED:
+			return "BLOCK"
+		ScenarioUnit.MoveState.ARRIVED:
+			return "ARRIVE"
+		_:
+			return str(s)

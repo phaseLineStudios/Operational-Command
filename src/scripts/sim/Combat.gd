@@ -127,18 +127,18 @@ func combat_loop(attacker: ScenarioUnit, defender: ScenarioUnit) -> void:
 func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 	if attacker == null or defender == null or attacker.unit == null or defender.unit == null:
 		return 0.0
-	
+
 	match attacker.combat_mode:
 		ScenarioUnit.CombatMode.FORCED_HOLD_FIRE:
 			return 0.0
 		ScenarioUnit.CombatMode.DO_NOT_FIRE_UNLESS_FIRED_UPON:
-			if not defender.has_meta("recently_attacked_"+attacker.id):
+			if not defender.has_meta("recently_attacked_" + attacker.id):
 				return 0.0
 		_:
 			pass
 
 	# --- range & terrain/spotting gates ---
-	var dist_m  := attacker.position_m.distance_to(defender.position_m)
+	var dist_m := attacker.position_m.distance_to(defender.position_m)
 	if not _within_engagement_envelope(attacker, dist_m):
 		return 0.0
 
@@ -314,6 +314,7 @@ func _apply_casualties(u: UnitData, raw_losses: int) -> int:
 	u.state_equipment = max(0.0, u.state_equipment - float(loss) * eqp_per_cas)
 	return loss
 
+
 ## True if attacker is permitted to fire at defender at distance 'dist_m'.
 func _within_engagement_envelope(attacker: ScenarioUnit, dist_m: float) -> bool:
 	var spot_m := attacker.unit.spot_m
@@ -321,6 +322,7 @@ func _within_engagement_envelope(attacker: ScenarioUnit, dist_m: float) -> bool:
 	if spot_m <= 0.0 or engage_m <= 0.0:
 		return false
 	return (dist_m <= spot_m + 0.5) and (dist_m <= engage_m + 0.5)
+
 
 ## Debug - build and emit a snapshot (for overlays/logging)
 func _emit_debug_snapshot(

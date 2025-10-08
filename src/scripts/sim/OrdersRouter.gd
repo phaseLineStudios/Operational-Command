@@ -8,15 +8,6 @@ signal order_applied(order: Dictionary)
 ## Emitted when an order cannot be applied.
 signal order_failed(order: Dictionary, reason: String)
 
-## Movement/LOS/Combat bridges
-@export var movement_adapter: MovementAdapter  ## Movement adapter node path
-@export var los_adapter: LOSAdapter  ## LOS adapter node path
-@export var combat_controller: CombatController  ## Combat controller path
-@export var terrain_renderer: TerrainRender  ## Used for grid/metric conversions
-
-var _units_by_id: Dictionary
-var _units_by_callsign: Dictionary
-
 ## Map OrdersParser.OrderType enum indices to names.
 const _TYPE_NAMES := {
 	0: "MOVE",
@@ -29,6 +20,15 @@ const _TYPE_NAMES := {
 	7: "CANCEL",
 	8: "UNKNOWN"
 }
+
+## Movement/LOS/Combat bridges
+@export var movement_adapter: MovementAdapter  ## Movement adapter node path
+@export var los_adapter: LOSAdapter  ## LOS adapter node path
+@export var combat_controller: CombatController  ## Combat controller path
+@export var terrain_renderer: TerrainRender  ## Used for grid/metric conversions
+
+var _units_by_id: Dictionary
+var _units_by_callsign: Dictionary
 
 
 ## Provide unit indices used to resolve targets.
