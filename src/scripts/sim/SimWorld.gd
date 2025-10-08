@@ -22,7 +22,7 @@ extends Node
 ## Create and configure AmmoSystem; optionally hook up RadioFeedback.
 func _ready() -> void:
 	add_child(_ammo)
-	_ammo.ammo_profile = preload("res://data/ammo/default_caps.tres")
+	_ammo.ammo_profile = AmmoProfile.deserialize(preload("res://data/ammo/default_caps.json"))
 
 	add_child(_adapter)
 	_adapter.add_to_group("CombatAdapter")
