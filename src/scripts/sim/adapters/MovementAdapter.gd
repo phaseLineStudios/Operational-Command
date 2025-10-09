@@ -30,12 +30,14 @@ const _PROFILE_BY_TAG := {
 var _grid: PathGrid
 var _labels: Dictionary = {}
 
+
 func _ready() -> void:
 	_grid = renderer.path_grid
 	_refresh_label_index()
 
 	if _grid and not _grid.is_connected("build_ready", Callable(self, "_on_grid_ready")):
 		_grid.build_ready.connect(_on_grid_ready)
+
 
 ## Rebuild the label lookup from TerrainData.labels.
 func _refresh_label_index() -> void:
@@ -45,9 +47,9 @@ func _refresh_label_index() -> void:
 	if renderer == null or renderer.data == null:
 		return
 	var labels := renderer.data.labels
-	for L in labels:
-		var txt := str(L.get("text", "")).strip_edges()
-		var pos: Vector2 = L.get("pos", null)
+	for label in labels:
+		var txt := str(label.get("text", "")).strip_edges()
+		var pos: Vector2 = label.get("pos", null)
 		if txt == "" or typeof(pos) != TYPE_VECTOR2:
 			continue
 		var key := _norm_label(txt)
@@ -55,15 +57,41 @@ func _refresh_label_index() -> void:
 			_labels[key] = []
 		_labels[key].append(pos)
 
+
 ## Normalize label text for matching (case/space/punctuation tolerant).
 func _norm_label(s: String) -> String:
 	var t := s.strip_edges().to_lower()
-	for bad in [",", ".", ":", ";", "(", ")", "[", "]", "'", "\"", "?", "!", "@", "#", "$", "%", "^", "&", "*", "+", "=", "|", "\\"]:
+	for bad in [
+		",",
+		".",
+		":",
+		";",
+		"(",
+		")",
+		"[",
+		"]",
+		"'",
+		'"',
+		"?",
+		"!",
+		"@",
+		"#",
+		"$",
+		"%",
+		"^",
+		"&",
+		"*",
+		"+",
+		"=",
+		"|",
+		"\\"
+	]:
 		t = t.replace(bad, "")
 	t = t.replace("-", " ").replace("_", " ").replace("/", " ")
 	while t.find("  ") != -1:
 		t = t.replace("  ", " ")
 	return t
+
 
 ## Resolve a label (phrase) to a terrain position; if multiple matches,
 ## chooses the one closest to `origin_m` (unit position) when provided.
@@ -87,6 +115,7 @@ func _resolve_label_to_pos(label_text: String, origin_m: Vector2 = Vector2.INF) 
 		return best
 	return arr[0]
 
+
 ## Public helper: plan move to a map label.
 func plan_and_start_to_label(su: ScenarioUnit, label_text: String) -> bool:
 	if su == null:
@@ -96,6 +125,7 @@ func plan_and_start_to_label(su: ScenarioUnit, label_text: String) -> bool:
 		return plan_and_start(su, pos)
 	LogService.warning("label not found: %s" % label_text, "MovementAdapter.gd:88")
 	return false
+
 
 ## Public helper: plan move to an arbitrary destination (Vector2 or String label).
 func plan_and_start_any(su: ScenarioUnit, dest: Variant) -> bool:
@@ -113,6 +143,7 @@ func plan_and_start_any(su: ScenarioUnit, dest: Variant) -> bool:
 					return plan_and_start(su, p)
 	return false
 
+
 ## Build any missing profiles we will need for the given unit list.
 func _prebuild_needed_profiles(units: Array[ScenarioUnit]) -> void:
 	if _grid == null:
@@ -124,6 +155,7 @@ func _prebuild_needed_profiles(units: Array[ScenarioUnit]) -> void:
 	for p in wanted.keys():
 		if not _grid.has_profile(p):
 			_grid.ensure_profile(p)
+
 
 ## Tick units grouped by their profile. Skips units whose profile grid
 ## is still building this frame (will run once build_ready fires).
@@ -146,11 +178,13 @@ func tick_units(units: Array[ScenarioUnit], dt: float) -> void:
 			for u in groups[p]:
 				u.tick(dt, _grid)
 
+
 ## Cancel/hold current movement for [param su].
 func cancel_move(su: ScenarioUnit) -> void:
 	if su == null:
 		return
 	su.pause_move()
+
 
 ## Plan + immediately start unit movement to `dest_m`.
 func plan_and_start(su: ScenarioUnit, dest_m: Vector2) -> bool:
@@ -168,6 +202,7 @@ func plan_and_start(su: ScenarioUnit, dest_m: Vector2) -> bool:
 		return true
 	LogService.warning("plan_move failed", "MovementAdapter.gd:163")
 	return false
+
 
 ## When a needed profile finishes building, start any deferred moves and
 ## force a movement tick so units immediately advance.

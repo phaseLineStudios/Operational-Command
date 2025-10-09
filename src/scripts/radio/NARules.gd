@@ -167,17 +167,20 @@ func get_parser_tables() -> Dictionary:
 		}
 	}
 
+
 ## Build a deduped list of grammar words (and phrases) with mission overrides.
-func build_vosk_word_array(callsigns_override: Array[String] = [], label_texts: Array[String] = []) -> PackedStringArray:
+func build_vosk_word_array(
+	callsigns_override: Array[String] = [], label_texts: Array[String] = []
+) -> PackedStringArray:
 	var words: Array[String] = []
 	var tables := get_parser_tables()
 
 	words.append_array(tables["action_synonyms"].keys())
 	words.append_array(["now", "immediately"])
 
-	var calls: Array = callsigns_override \
-		if callsigns_override.size() > 0 \
-		else tables["callsigns"].keys()
+	var calls: Array = (
+		callsigns_override if callsigns_override.size() > 0 else tables["callsigns"].keys()
+	)
 	for c in calls:
 		var s := str(c).strip_edges().to_lower()
 		if s != "":
@@ -215,10 +218,10 @@ func build_vosk_word_array(callsigns_override: Array[String] = [], label_texts: 
 
 	return PackedStringArray(out)
 
+
 ## Build and return Vosk grammar JSON with mission overrides.
 func get_vosk_grammar_words(
-	callsigns_override: Array[String] = [], 
-	label_texts: Array[String] = []
+	callsigns_override: Array[String] = [], label_texts: Array[String] = []
 ) -> String:
 	var arr := build_vosk_word_array(callsigns_override, label_texts)
 	return JSON.stringify(arr)

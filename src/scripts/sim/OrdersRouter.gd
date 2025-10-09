@@ -171,11 +171,11 @@ func _compute_destination(
 		if s != "" and _is_label_name(s):
 			print(movement_adapter._resolve_label_to_pos(_norm_label(s)))
 			return movement_adapter._resolve_label_to_pos(_norm_label(s))
-			
+
 	if str(order.get("zone", "")).to_lower() == "grid" and order.has("quantity"):
 		if terrain_renderer:
 			return terrain_renderer.grid_to_pos(str(order.get("quantity", 000000)))
-	
+
 	if order.has("target_callsign"):
 		var s3 := str(order.get("target_callsign", "")).strip_edges()
 		var tgt2 := _resolve_target(order)
@@ -184,7 +184,7 @@ func _compute_destination(
 		if s3 != "" and _is_label_name(s3):
 			print(movement_adapter._resolve_label_to_pos(_norm_label(s3)))
 			return movement_adapter._resolve_label_to_pos(_norm_label(s3))
-	
+
 	var dir := str(order.get("direction", ""))
 	var qty := int(order.get("quantity", 0))
 	if dir != "" and qty > 0:
@@ -203,28 +203,55 @@ func _resolve_target(order: Dictionary) -> ScenarioUnit:
 	var other_uid: String = _units_by_callsign.get(cs, "")
 	return _units_by_id.get(other_uid)
 
+
 ## True if [param l_name] matches a TerrainData label (case/spacing tolerant).
 func _is_label_name(l_name: String) -> bool:
 	if terrain_renderer == null or terrain_renderer.data == null:
 		return false
 	var key := _norm_label(l_name)
-	for L in terrain_renderer.data.labels:
-		var txt := str(L.get("text", "")).strip_edges()
+	for label in terrain_renderer.data.labels:
+		var txt := str(label.get("text", "")).strip_edges()
 		if txt == "":
 			continue
 		if _norm_label(txt) == key:
 			return true
 	return false
 
+
 ## Normalize label text for matching.
 func _norm_label(s: String) -> String:
 	var t := s.strip_edges().to_lower()
-	for bad in [",", ".", ":", ";", "(", ")", "[", "]", "'", "\"", "?", "!", "@", "#", "$", "%", "^", "&", "*", "+", "=", "|", "\\"]:
+	for bad in [
+		",",
+		".",
+		":",
+		";",
+		"(",
+		")",
+		"[",
+		"]",
+		"'",
+		'"',
+		"?",
+		"!",
+		"@",
+		"#",
+		"$",
+		"%",
+		"^",
+		"&",
+		"*",
+		"+",
+		"=",
+		"|",
+		"\\"
+	]:
 		t = t.replace(bad, "")
 	t = t.replace("-", " ").replace("_", " ").replace("/", " ")
 	while t.find("  ") != -1:
 		t = t.replace("  ", " ")
 	return t
+
 
 ## Normalize order type to string token.
 func _normalize_type(t: Variant) -> String:
