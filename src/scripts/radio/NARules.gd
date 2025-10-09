@@ -167,36 +167,58 @@ func get_parser_tables() -> Dictionary:
 		}
 	}
 
-
-## Build and return a vosk grammar list
-func get_vosk_grammar_words() -> String:
-	var words := []
-
+## Build a deduped list of grammar words (and phrases) with mission overrides.
+func build_vosk_word_array(callsigns_override: Array[String] = [], label_texts: Array[String] = []) -> PackedStringArray:
+	var words: Array[String] = []
 	var tables := get_parser_tables()
 
-	# Actions / prowords
 	words.append_array(tables["action_synonyms"].keys())
 	words.append_array(["now", "immediately"])
 
-	# Callsigns / Directions
-	words.append_array(tables["callsigns"].keys())
-	words.append_array(tables["directions"].keys())
+	var calls: Array = callsigns_override \
+		if callsigns_override.size() > 0 \
+		else tables["callsigns"].keys()
+	for c in calls:
+		var s := str(c).strip_edges().to_lower()
+		if s != "":
+			words.append(s)
 
-	# Prepositions (from tables)
+	words.append_array(tables["directions"].keys())
 	words.append_array(tables["prepositions"].keys())
 
-	# Quantity labels (all variants + normalized units)
 	var qlbl: Dictionary = tables["quantity_labels"]
 	words.append_array(qlbl.keys())
 	for v in qlbl.values():
-		words.append(v)
+		words.append(str(v))
 
-	# Number words & digits
 	words.append_array(tables["number_words"].keys())
 	for d in 10:
 		words.append(str(d))
 
-	# Unknown token
+	for label in label_texts:
+		var phrase := str(label).strip_edges().to_lower()
+		if phrase == "":
+			continue
+		words.append(phrase)
+		for tok in phrase.split(" ", false):
+			if tok != "":
+				words.append(tok)
+
 	words.append("[unk]")
 
-	return JSON.stringify(words)
+	var seen := {}
+	var out: Array[String] = []
+	for w in words:
+		if not seen.has(w):
+			seen[w] = true
+			out.append(w)
+
+	return PackedStringArray(out)
+
+## Build and return Vosk grammar JSON with mission overrides.
+func get_vosk_grammar_words(
+	callsigns_override: Array[String] = [], 
+	label_texts: Array[String] = []
+) -> String:
+	var arr := build_vosk_word_array(callsigns_override, label_texts)
+	return JSON.stringify(arr)

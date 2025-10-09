@@ -6,6 +6,7 @@ extends Node3D
 @onready var sim: SimWorld = %WorldController
 @onready var map: MapController = %MapController
 @onready var debug_overlay: Control = %DebugOverlay
+@onready var wordlist: SpeechWordlistUpdater = %WordListUpdater
 
 
 func _ready() -> void:
@@ -14,6 +15,7 @@ func _ready() -> void:
 	map.init_terrain(Game.current_scenario)
 	sim.init_world(Game.current_scenario)
 	sim.bind_radio(%RadioController, %OrdersParser)
+	wordlist.bind_recognizer(STTService.get_recognizer())
 
 
 ## Build playable units array.

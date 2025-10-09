@@ -179,3 +179,7 @@ func _join_non_empty(a: String, b: String) -> String:
 	if b.length() == 0:
 		return a
 	return a + ("" if a.ends_with(" ") else " ") + b
+
+## Return a reference to the current recognizer.
+func get_recognizer() -> Vosk:
+	return _stt
