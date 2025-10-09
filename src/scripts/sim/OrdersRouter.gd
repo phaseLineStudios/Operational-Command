@@ -1,14 +1,17 @@
 class_name OrdersRouter
 extends Node
-## Routes validated orders from OrdersParser to units via adapters.
-## Supports: MOVE, HOLD, CANCEL, ATTACK, DEFEND, RECON, FIRE, REPORT.
+## Orders router for validated commands.
+##
+## Routes parsed orders to movement/LOS/combat adapters and utilities.
+## Supports MOVE, HOLD, CANCEL, ATTACK, DEFEND, RECON, FIRE, REPORT.
+## @experimental
 
 ## Emitted when an order is applied to a unit.
 signal order_applied(order: Dictionary)
 ## Emitted when an order cannot be applied.
 signal order_failed(order: Dictionary, reason: String)
 
-## Map OrdersParser.OrderType enum indices to names.
+## Map OrdersParser.OrderType enum indices to string tokens.
 const _TYPE_NAMES := {
 	0: "MOVE",
 	1: "HOLD",
@@ -21,23 +24,30 @@ const _TYPE_NAMES := {
 	8: "UNKNOWN"
 }
 
-## Movement/LOS/Combat bridges
-@export var movement_adapter: MovementAdapter  ## Movement adapter node path
-@export var los_adapter: LOSAdapter  ## LOS adapter node path
-@export var combat_controller: CombatController  ## Combat controller path
-@export var terrain_renderer: TerrainRender  ## Used for grid/metric conversions
+## Movement adapter used to plan and start moves.
+@export var movement_adapter: MovementAdapter
+## LOS adapter used for visibility-related routing.
+@export var los_adapter: LOSAdapter
+## Combat controller used to set intent/targets and fire missions.
+@export var combat_controller: CombatController
+## Terrain renderer for grid/metric conversions.
+@export var terrain_renderer: TerrainRender
 
 var _units_by_id: Dictionary
 var _units_by_callsign: Dictionary
 
 
-## Provide unit indices used to resolve targets.
+## Supply unit indices used by this router.
+## [param id_index] Dictionary String->ScenarioUnit (by unit id).
+## [param callsign_index] Dictionary String->unit_id (by callsign).
 func bind_units(id_index: Dictionary, callsign_index: Dictionary) -> void:
 	_units_by_id = id_index
 	_units_by_callsign = callsign_index
 
 
-## Apply a single validated [param order]. Returns true if applied.
+## Apply a single validated order.
+## [param order] Normalized order dictionary from OrdersParser.
+## [return] `true` if applied, otherwise `false`.
 func apply(order: Dictionary) -> bool:
 	var t := _normalize_type(order.get("type", "UNKNOWN"))
 	var uid := str(order.get("unit_id", ""))
@@ -66,7 +76,10 @@ func apply(order: Dictionary) -> bool:
 			return false
 
 
-## MOVE: compute destination from grid id, target_callsign, or direction+quantity.
+## MOVE: compute destination from grid, target_callsign (unit or label), or direction+quantity.
+## [param unit] Subject unit.
+## [param order] Order dictionary.
+## [return] `true` if movement was planned/started, else `false`.
 func _apply_move(unit: ScenarioUnit, order: Dictionary) -> bool:
 	var dest: Variant = _compute_destination(unit, order)
 	if dest == null:
@@ -82,7 +95,10 @@ func _apply_move(unit: ScenarioUnit, order: Dictionary) -> bool:
 	return false
 
 
-## HOLD/CANCEL: stop movement and clear combat intent if exposed by combat controller.
+## HOLD/CANCEL: stop movement and clear combat intent (if supported).
+## [param unit] Subject unit.
+## [param order] Order dictionary.
+## [return] Always `true`.
 func _apply_hold(unit: ScenarioUnit, order: Dictionary) -> bool:
 	if movement_adapter:
 		movement_adapter.cancel_move(unit)
@@ -92,7 +108,10 @@ func _apply_hold(unit: ScenarioUnit, order: Dictionary) -> bool:
 	return true
 
 
-## ATTACK: prefer target_callsign; otherwise move by direction/quantity.
+## ATTACK: prefer target_callsign; otherwise use movement fallback.
+## [param unit] Subject unit.
+## [param order] Order dictionary.
+## [return] Always `true` (intent set even if no move).
 func _apply_attack(unit: ScenarioUnit, order: Dictionary) -> bool:
 	if combat_controller and combat_controller.has_method("set_engagement_intent"):
 		combat_controller.set_engagement_intent(unit, "attack")
@@ -104,7 +123,10 @@ func _apply_attack(unit: ScenarioUnit, order: Dictionary) -> bool:
 	return true
 
 
-## DEFEND: move to a point if provided, else hold in place; flag posture if available.
+## DEFEND: move to destination if present; otherwise hold.
+## [param unit] Subject unit.
+## [param order] Order dictionary.
+## [return] `true` if applied.
 func _apply_defend(unit: ScenarioUnit, order: Dictionary) -> bool:
 	if combat_controller and combat_controller.has_method("set_posture"):
 		combat_controller.set_posture(unit, "defend")
@@ -116,6 +138,9 @@ func _apply_defend(unit: ScenarioUnit, order: Dictionary) -> bool:
 
 
 ## RECON: move with recon posture if supported.
+## [param unit] Subject unit.
+## [param order] Order dictionary.
+## [return] `true` if applied, `false` if missing destination.
 func _apply_recon(unit: ScenarioUnit, order: Dictionary) -> bool:
 	if combat_controller and combat_controller.has_method("set_posture"):
 		combat_controller.set_posture(unit, "recon")
@@ -127,7 +152,10 @@ func _apply_recon(unit: ScenarioUnit, order: Dictionary) -> bool:
 	return false
 
 
-## FIRE: request an immediate/direct fire task if combat controller supports it.
+## FIRE: request fire mission if possible; else move to target unit.
+## [param unit] Subject unit.
+## [param order] Order dictionary.
+## [return] `true` if applied, otherwise `false`.
 func _apply_fire(unit: ScenarioUnit, order: Dictionary) -> bool:
 	var target: ScenarioUnit = _resolve_target(order)
 	if target == null:
@@ -153,13 +181,24 @@ func _apply_fire(unit: ScenarioUnit, order: Dictionary) -> bool:
 	return false
 
 
-## REPORT: informational; let SimWorld/RadioFeedback surface the message.
+## REPORT: informational pass-through.
+## [param _unit] Subject unit (unused).
+## [param order] Order dictionary.
+## [return] Always `true`.
 func _apply_report(_unit: ScenarioUnit, order: Dictionary) -> bool:
 	emit_signal("order_applied", order)
 	return true
 
 
-## Compute destination from order fields. If [param prefer_target] is true, favor target_callsign.
+## Compute a concrete destination from an order.
+## Priority: target unit (when [param prefer_target]) -> grid position
+## -> label via target_callsign -> plain target_callsign unit -> direction+quantity.
+## When a label is detected in `target_callsign`, returns a Vector2 position
+## resolved through the movement adapter.
+## [param unit] Subject unit (for direction-based movement).
+## [param order] Order dictionary.
+## [param prefer_target] If `true`, prefer unit target for ATTACK.
+## [return] Vector2 destination or `null` if none.
 func _compute_destination(
 	unit: ScenarioUnit, order: Dictionary, prefer_target: bool = false
 ) -> Variant:
@@ -195,7 +234,9 @@ func _compute_destination(
 	return null
 
 
-## Resolve unit target from callsign.
+## Resolve a unit from `target_callsign`.
+## [param order] Order dictionary.
+## [return] ScenarioUnit or `null`.
 func _resolve_target(order: Dictionary) -> ScenarioUnit:
 	var cs := str(order.get("target_callsign", ""))
 	if cs == "":
@@ -204,7 +245,9 @@ func _resolve_target(order: Dictionary) -> ScenarioUnit:
 	return _units_by_id.get(other_uid)
 
 
-## True if [param l_name] matches a TerrainData label (case/spacing tolerant).
+## Test whether a string matches a TerrainData label (tolerant).
+## [param l_name] Candidate label text.
+## [return] `true` if a matching label exists.
 func _is_label_name(l_name: String) -> bool:
 	if terrain_renderer == null or terrain_renderer.data == null:
 		return false
@@ -218,7 +261,9 @@ func _is_label_name(l_name: String) -> bool:
 	return false
 
 
-## Normalize label text for matching.
+## Normalize label text for matching (lowercase, strip punctuation, collapse spaces).
+## [param s] Input text.
+## [return] Normalized key string.
 func _norm_label(s: String) -> String:
 	var t := s.strip_edges().to_lower()
 	for bad in [
@@ -253,7 +298,9 @@ func _norm_label(s: String) -> String:
 	return t
 
 
-## Normalize order type to string token.
+## Normalize an order type to its string token.
+## [param t] Enum index or string.
+## [return] Uppercase type token.
 func _normalize_type(t: Variant) -> String:
 	match typeof(t):
 		TYPE_INT:
@@ -264,7 +311,9 @@ func _normalize_type(t: Variant) -> String:
 			return "UNKNOWN"
 
 
-## Convert direction label to a 2D vector (meters coordinate space).
+## Convert a cardinal/intercardinal label to a unit vector (meters space).
+## [param dir] Direction label (e.g. "NE", "southwest").
+## [return] Vector2 direction (length may be 0 if unknown).
 func _dir_to_vec(dir: String) -> Vector2:
 	var d := dir.to_lower()
 	match d:
@@ -288,7 +337,10 @@ func _dir_to_vec(dir: String) -> Vector2:
 			return Vector2.ZERO
 
 
-## Convert quantity + zone to meters.
+## Convert a quantity and zone to meters.
+## [param qty] Quantity value.
+## [param zone] Unit label (e.g. "m", "km", "grid").
+## [return] Distance in meters.
 func _quantity_to_meters(qty: int, zone: String) -> float:
 	var z := zone.to_lower()
 	match z:

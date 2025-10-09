@@ -1,6 +1,11 @@
 class_name HQTable
 extends Node3D
+## Headquarter table bootstrapper for a mission.
+##
+## Sets up terrain, simulation world, radio pipeline, and speech word list.
+## Generates playable units from scenario slots and binds controllers.
 
+## Enable extra debug paths/overlays in connected systems.
 @export var debug: bool = false
 
 @onready var sim: SimWorld = %WorldController
@@ -9,6 +14,7 @@ extends Node3D
 @onready var wordlist: SpeechWordlistUpdater = %WordListUpdater
 
 
+## Initialize mission systems and bind services.
 func _ready() -> void:
 	var playable_units := generate_playable_units(Game.current_scenario.unit_slots)
 	Game.current_scenario.playable_units = playable_units
@@ -18,7 +24,10 @@ func _ready() -> void:
 	wordlist.bind_recognizer(STTService.get_recognizer())
 
 
-## Build playable units array.
+## Build the list of playable units from scenario slots and current loadout.
+## Assigns callsigns, positions, affiliation, and marks them as playable.
+## [param slots] Array of UnitSlotData describing player-assignable slots.
+## [return] Array[ScenarioUnit] created from the active loadout assignments.
 func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]:
 	var units: Array[ScenarioUnit] = []
 	var loadout := Game.current_scenario_loadout

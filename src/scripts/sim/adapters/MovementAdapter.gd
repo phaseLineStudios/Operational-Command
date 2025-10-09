@@ -1,12 +1,13 @@
 class_name MovementAdapter
 extends Node
-## Bridges game orders to pathfinding-based unit movement.
+## Movement adapter for pathfinding-based unit orders.
 ##
-## Per-unit movement profiles (FOOT/WHEELED/TRACKED/RIVERINE) with
-## on-demand grid builds and grouped ticks for performance. Also resolves
+## @brief Plans and ticks movement using per-unit profiles (FOOT/WHEELED/
+## TRACKED/RIVERINE), groups ticks by profile for performance, and resolves
+## map label names into terrain positions for destination orders.
 ## @experimental
 
-## Map lowercase tags/strings to profiles.
+## Map lowercase mobility tags/strings to movement profiles.
 const _PROFILE_BY_TAG := {
 	"foot": TerrainBrush.MoveProfile.FOOT,
 	"infantry": TerrainBrush.MoveProfile.FOOT,
@@ -20,17 +21,18 @@ const _PROFILE_BY_TAG := {
 	"boat": TerrainBrush.MoveProfile.RIVERINE,
 }
 
-## Nodepath to terrain renderer.
+## Terrain renderer providing the PathGrid and TerrainData.
 @export var renderer: TerrainRender
-## Default profile if nothing is specified on the unit or its data.
+## Default profile used when a unit has no explicit movement profile.
 @export var default_profile: int = TerrainBrush.MoveProfile.FOOT
-## Allow resolving string destinations via TerrainData.labels[].text
+## Enable resolving String destinations using TerrainData.labels[].text.
 @export var enable_label_destinations := true
 
 var _grid: PathGrid
 var _labels: Dictionary = {}
 
 
+## Initialize grid hooks and build the label index.
 func _ready() -> void:
 	_grid = renderer.path_grid
 	_refresh_label_index()
@@ -39,7 +41,8 @@ func _ready() -> void:
 		_grid.build_ready.connect(_on_grid_ready)
 
 
-## Rebuild the label lookup from TerrainData.labels.
+## Rebuilds the label lookup from TerrainData.labels.
+## Stores: normalized_text -> Array[Vector2] (terrain meters).
 func _refresh_label_index() -> void:
 	_labels.clear()
 	if not enable_label_destinations:
@@ -58,7 +61,10 @@ func _refresh_label_index() -> void:
 		_labels[key].append(pos)
 
 
-## Normalize label text for matching (case/space/punctuation tolerant).
+## Normalizes label text for tolerant matching.
+## Removes punctuation, collapses spaces, and lowercases.
+## [param s] Original label text.
+## [return] Normalized key.
 func _norm_label(s: String) -> String:
 	var t := s.strip_edges().to_lower()
 	for bad in [
@@ -93,8 +99,11 @@ func _norm_label(s: String) -> String:
 	return t
 
 
-## Resolve a label (phrase) to a terrain position; if multiple matches,
-## chooses the one closest to `origin_m` (unit position) when provided.
+## Resolves a label phrase to a terrain position in meters.
+## When multiple labels share the same text, picks the closest to origin.
+## [param label_text] Label string to look up.
+## [param origin_m] Optional origin (unit position) for tie-breaking.
+## [return] Vector2 position if found, otherwise null.
 func _resolve_label_to_pos(label_text: String, origin_m: Vector2 = Vector2.INF) -> Variant:
 	if not enable_label_destinations:
 		return null
@@ -116,7 +125,10 @@ func _resolve_label_to_pos(label_text: String, origin_m: Vector2 = Vector2.INF) 
 	return arr[0]
 
 
-## Public helper: plan move to a map label.
+## Plans and starts movement to a map label.
+## [param su] ScenarioUnit to move.
+## [param label_text] Label name to resolve.
+## [return] True if the order was accepted (or deferred), else false.
 func plan_and_start_to_label(su: ScenarioUnit, label_text: String) -> bool:
 	if su == null:
 		return false
@@ -127,7 +139,11 @@ func plan_and_start_to_label(su: ScenarioUnit, label_text: String) -> bool:
 	return false
 
 
-## Public helper: plan move to an arbitrary destination (Vector2 or String label).
+## Plans and starts movement to either a Vector2 destination or a label.
+## Also accepts {x,y} or {pos: Vector2} dictionaries.
+## [param su] ScenarioUnit to move.
+## [param dest] Vector2 | String | Dictionary destination.
+## [return] True if the order was accepted (or deferred), else false.
 func plan_and_start_any(su: ScenarioUnit, dest: Variant) -> bool:
 	match typeof(dest):
 		TYPE_VECTOR2:
@@ -144,7 +160,8 @@ func plan_and_start_any(su: ScenarioUnit, dest: Variant) -> bool:
 	return false
 
 
-## Build any missing profiles we will need for the given unit list.
+## Ensures PathGrid profiles needed by [param units] are available.
+## Triggers async builds for any missing profiles.
 func _prebuild_needed_profiles(units: Array[ScenarioUnit]) -> void:
 	if _grid == null:
 		return
@@ -157,8 +174,10 @@ func _prebuild_needed_profiles(units: Array[ScenarioUnit]) -> void:
 			_grid.ensure_profile(p)
 
 
-## Tick units grouped by their profile. Skips units whose profile grid
-## is still building this frame (will run once build_ready fires).
+## Ticks unit movement grouped by profile (reduces grid switching).
+## Skips groups whose profile grid is still building this frame.
+## [param units] Units to tick.
+## [param dt] Delta time in seconds.
 func tick_units(units: Array[ScenarioUnit], dt: float) -> void:
 	if _grid == null or units.is_empty():
 		return
@@ -179,14 +198,19 @@ func tick_units(units: Array[ScenarioUnit], dt: float) -> void:
 				u.tick(dt, _grid)
 
 
-## Cancel/hold current movement for [param su].
+## Pauses current movement for a unit.
+## [param su] ScenarioUnit to pause.
 func cancel_move(su: ScenarioUnit) -> void:
 	if su == null:
 		return
 	su.pause_move()
 
 
-## Plan + immediately start unit movement to `dest_m`.
+## Plans and immediately starts movement to [param dest_m].
+## Defers start if the profile grid is still building.
+## [param su] ScenarioUnit to move.
+## [param dest_m] Destination in terrain meters.
+## [return] True if planned (or deferred), false on error or plan failure.
 func plan_and_start(su: ScenarioUnit, dest_m: Vector2) -> bool:
 	if su == null or _grid == null:
 		LogService.warning("unit or grid null", "MovementAdapter.gd:151")
@@ -204,8 +228,8 @@ func plan_and_start(su: ScenarioUnit, dest_m: Vector2) -> bool:
 	return false
 
 
-## When a needed profile finishes building, start any deferred moves and
-## force a movement tick so units immediately advance.
+## Starts any deferred moves whose profile just finished building.
+## [param profile] Movement profile that became available.
 func _on_grid_ready(profile: int) -> void:
 	var scen := Game.current_scenario
 	if scen == null:

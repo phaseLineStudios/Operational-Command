@@ -1,29 +1,38 @@
 class_name SimWorld
 extends Node
-## Authoritative deterministic simulation loop (INIT→RUNNING→PAUSED→COMPLETED).
-## Ticks subsystems in order: process_orders → update_movement → update_los →
-## resolve_combat → update_morale → emit_events → radio_feedback.
-## Exposes read-only queries for UI and an event bus via signals.
+## Authoritative deterministic simulation loop.
+##
+## Runs a fixed-step mission sim (INIT->RUNNING->PAUSED->COMPLETED):
+## process_orders -> update_movement -> update_los -> resolve_combat ->
+## update_morale -> emit_events -> record_replay. Provides read-only queries
+## and emits events via signals for UI/logging.
+## @experimental
 
-## Event bus for UI/logging
+## Emitted when a unit snapshot changes.
 signal unit_updated(unit_id: String, snapshot: Dictionary)
+## Emitted when LOS contact is reported (attacker->defender).
 signal contact_reported(attacker_id: String, defender_id: String)
+## Emitted for radio/log feedback.
 signal radio_message(level: String, text: String)
+## Emitted when mission state transitions.
 signal mission_state_changed(prev: State, next: State)
-## Emitted when damage > 0 is applied attacker→defender this tick.
+## Emitted when damage > 0 is applied this tick (attacker->defender).
 signal engagement_reported(attacker_id: String, defender_id: String, damage: float)
 
-## Simulation state machine
+## Simulation state machine.
 enum State { INIT, RUNNING, PAUSED, COMPLETED }
 
-## Fixed tick rate (Hz)
+## Fixed tick rate (Hz).
 @export var tick_hz := 5.0
-## Initial RNG seed (0 → randomize)
+## Initial RNG seed (0 -> randomize)
 @export var rng_seed: int = 0
-## LOS/Combat/Movement bridges
+## LOS helper/adapter.
 @export var los_adapter: LOSAdapter
+## Movement adapter.
 @export var movement_adapter: MovementAdapter
+## Combat controller.
 @export var combat_controller: CombatController
+## Orders router.
 @export var _router: OrdersRouter
 
 var _state: State = State.INIT
@@ -45,6 +54,7 @@ var _replay: Array[Dictionary] = []
 var _last_contacts: PackedStringArray = []
 
 
+## Initializes tick timing/RNG and wires router signals. Starts processing.
 func _ready() -> void:
 	_tick_dt = 1.0 / max(tick_hz, 0.001)
 	if rng_seed == 0:
@@ -58,7 +68,8 @@ func _ready() -> void:
 	set_process(true)
 
 
-## Initialize world from [param scenario]. Also wires unit indices.
+## Initialize world from a scenario and build unit indices.
+## [param scenario] ScenarioData to load.
 func init_world(scenario: ScenarioData) -> void:
 	_scenario = scenario
 	_units_by_id.clear()
@@ -86,6 +97,8 @@ func init_world(scenario: ScenarioData) -> void:
 	_transition(State.INIT, State.RUNNING)
 
 
+## Fixed-rate loop; advances the sim in discrete ticks while RUNNING.
+## [param dt] Frame delta seconds.
 func _process(dt: float) -> void:
 	if _state != State.RUNNING:
 		return
@@ -95,7 +108,8 @@ func _process(dt: float) -> void:
 		_dt_accum -= _tick_dt
 
 
-## Single deterministic sim tick.
+## Executes a single sim tick (deterministic order).
+## [param dt] Tick delta seconds.
 func _step_tick(dt: float) -> void:
 	_tick_idx += 1
 	_process_orders()
@@ -107,14 +121,14 @@ func _step_tick(dt: float) -> void:
 	_record_replay()
 
 
-## Consume queued orders and route them.
+## Pops ready orders and routes them via the OrdersRouter.
 func _process_orders() -> void:
 	var order_ready := _orders.pop_many(16)
 	for o in order_ready:
 		_router.apply(o)
 
 
-## Drive unit movement.
+## Advances movement for all sides and emits unit snapshots.
 func _update_movement(dt: float) -> void:
 	if movement_adapter == null:
 		return
@@ -124,7 +138,7 @@ func _update_movement(dt: float) -> void:
 		emit_signal("unit_updated", su.id, _snapshot_unit(su))
 
 
-## Compute LOS contacts once per tick.
+## Computes LOS contact pairs once per tick and emits contact events.
 func _update_los() -> void:
 	if los_adapter == null:
 		return
@@ -138,7 +152,8 @@ func _update_los() -> void:
 		emit_signal("contact_reported", a.id, d.id)
 
 
-## Resolve combat for contact pairs that are in range.
+## Resolves combat for current contact pairs (range/logic inside controller).
+## Emits [signal engagement_reported] for damage > 0.
 func _resolve_combat() -> void:
 	if combat_controller == null:
 		return
@@ -154,17 +169,17 @@ func _resolve_combat() -> void:
 			emit_signal("engagement_reported", a.id, d.id)
 
 
-## Stub morale update hook (placeholder for now).
+## Updates morale (placeholder).
 func _update_morale() -> void:
 	pass
 
 
-## Flush per-tick messages to RadioFeedback (message level is free-form: info/warn/error).
+## Emits per-tick radio/log events (placeholder).
 func _emit_events() -> void:
 	pass
 
 
-## Record a compact snapshot for replays.
+## Records a compact snapshot for replays.
 func _record_replay() -> void:
 	var snap := {"tick": _tick_idx, "units": {}}
 	for su in _friendlies + _enemies:
@@ -177,11 +192,15 @@ func _record_replay() -> void:
 
 
 ## Enqueue structured orders parsed elsewhere.
+## [param orders] Array of order dictionaries.
+## [return] Number of orders accepted.
 func queue_orders(orders: Array) -> int:
 	return _orders.enqueue_many(orders, _playable_by_callsign)
 
 
-## Convenience: bind a Radio + OrdersParser pair so spoken results route into the queue.
+## Bind Radio and Parser so voice results are queued automatically.
+## [param radio] Radio node emitting `radio_result`.
+## [param parser] Parser node emitting `parsed(Array)` and `parse_error(String)`.
 func bind_radio(radio: Radio, parser: Node) -> void:
 	if radio and not radio.radio_result.is_connected(parser.parse):
 		radio.radio_result.connect(parser.parse)
@@ -214,29 +233,34 @@ func step() -> void:
 		_step_tick(_tick_dt)
 
 
-## Complete mission (stub — external objective resolver should call this).
+## Complete mission.
 func complete() -> void:
 	if _state != State.COMPLETED:
 		_transition(_state, State.COMPLETED)
 
 
-## Get current tick index.
+## Current tick index.
+## [return] Tick number.
 func get_tick() -> int:
 	return _tick_idx
 
 
-## Get mission clock in seconds.
+## Mission clock in seconds.
+## [return] Elapsed mission time.
 func get_mission_time_s() -> float:
 	return float(_tick_idx) * _tick_dt
 
 
-## Return a shallow snapshot of a unit for UI.
+## Shallow snapshot of a unit for UI.
+## [param unit_id] ScenarioUnit id.
+## [return] Snapshot dictionary.
 func get_unit_snapshot(unit_id: String) -> Dictionary:
 	var su: ScenarioUnit = _units_by_id.get(unit_id)
 	return _snapshot_unit(su)
 
 
-## Return snapshots of all units.
+## Snapshots of all units.
+## [return] Array of snapshot dictionaries.
 func get_unit_snapshots() -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	for su in _friendlies + _enemies:
@@ -244,21 +268,28 @@ func get_unit_snapshots() -> Array[Dictionary]:
 	return out
 
 
-## Out-of-band outcome status (stub).
+## Outcome status string.
+## [return] `"in_progress"` or `"completed"`.
 func get_outcome_status() -> String:
 	return "in_progress" if _state in [State.INIT, State.RUNNING, State.PAUSED] else "completed"
 
 
-## Read/write RNG seed for determinism.
+## Set RNG seed (determinism).
+## [param new_rng_seed] Seed value.
 func set_rng_seed(new_rng_seed: int) -> void:
 	rng_seed = new_rng_seed
 	_rng.seed = new_rng_seed
 
 
+## Get RNG seed.
+## [return] Current RNG seed.
 func get_rng_seed() -> int:
 	return _rng.seed
 
 
+## Build a compact unit snapshot.
+## [param su] ScenarioUnit instance (nullable).
+## [return] Snapshot dictionary or empty if null.
 func _snapshot_unit(su: ScenarioUnit) -> Dictionary:
 	if su == null:
 		return {}
@@ -271,13 +302,18 @@ func _snapshot_unit(su: ScenarioUnit) -> Dictionary:
 	}
 
 
+## Apply a state transition and emit [signal mission_state_changed].
+## [param prev] Previous state.
+## [param next] Next state.
 func _transition(prev: State, next: State) -> void:
 	_state = next
 	emit_signal("mission_state_changed", prev, next)
 	LogService.info("mission_state_changed: %s" % {"prev": prev, "next": next}, "SimWorld.gd:285")
 
 
-## Returns Array[Vector2] planned path in meters (for debug).
+## Planned path for a unit (for debug).
+## [param uid] Unit id.
+## [return] PackedVector2Array of path points (meters).
 func get_unit_debug_path(uid: String) -> PackedVector2Array:
 	var su: ScenarioUnit = _units_by_id.get(uid)
 	if su == null:
@@ -285,12 +321,17 @@ func get_unit_debug_path(uid: String) -> PackedVector2Array:
 	return su.move_path
 
 
+## Router callback: order applied.
+## [param order] Order dictionary.
 func _on_order_applied(order: Dictionary) -> void:
 	emit_signal("radio_message", "info", "Order applied: %s" % order.get("type", "?"))
 	var hr_order: String = OrdersParser.OrderType.keys()[int(order.get("type", -1))]
 	LogService.info("radio_message: %s" % {"Order applied": hr_order}, "SimWorld.gd:293")
 
 
+## Router callback: order failed.
+## [param _order] Order dictionary (unused).
+## [param reason] Failure reason.
 func _on_order_failed(_order: Dictionary, reason: String) -> void:
 	emit_signal("radio_message", "error", "Order failed (%s)." % reason)
 	LogService.warning("radio_message: %s" % {"Order failed": reason}, "SimWorld.gd:299")
