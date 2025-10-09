@@ -1,0 +1,25 @@
+# SimWorld::get_unit_snapshots Function Reference
+
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 264–270)</br>
+*Belongs to:* [SimWorld](../../SimWorld.md)
+
+**Signature**
+
+```gdscript
+func get_unit_snapshots() -> Array[Dictionary]
+```
+
+## Description
+
+Snapshots of all units.
+[return] Array of snapshot dictionaries.
+
+## Source
+
+```gdscript
+func get_unit_snapshots() -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for su in _friendlies + _enemies:
+		out.append(_snapshot_unit(su))
+	return out
+```

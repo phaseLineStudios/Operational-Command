@@ -1,6 +1,6 @@
 # DebugOverlay::_draw Function Reference
 
-*Defined at:* `scripts/test/DebugOverlay.gd` (lines 32–58)</br>
+*Defined at:* `scripts/test/DebugOverlay.gd` (lines 52–78)</br>
 *Belongs to:* [DebugOverlay](../../DebugOverlay.md)
 
 **Signature**

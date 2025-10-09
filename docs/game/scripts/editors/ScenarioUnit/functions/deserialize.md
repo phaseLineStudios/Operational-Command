@@ -1,6 +1,6 @@
 # ScenarioUnit::deserialize Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 240–249)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 269–279)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**
@@ -25,5 +25,6 @@ static func deserialize(d: Dictionary) -> ScenarioUnit:
 	u.affiliation = int(d.get("affiliation")) as Affiliation
 	u.combat_mode = int(d.get("combat_mode")) as CombatMode
 	u.behaviour = int(d.get("behaviour")) as Behaviour
+	u.playable = d.get("playable", u.playable)
 	return u
 ```

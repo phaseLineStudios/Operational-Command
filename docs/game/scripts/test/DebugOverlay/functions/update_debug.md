@@ -1,6 +1,6 @@
 # DebugOverlay::update_debug Function Reference
 
-*Defined at:* `scripts/test/DebugOverlay.gd` (lines 27–31)</br>
+*Defined at:* `scripts/test/DebugOverlay.gd` (lines 47–51)</br>
 *Belongs to:* [DebugOverlay](../../DebugOverlay.md)
 
 **Signature**

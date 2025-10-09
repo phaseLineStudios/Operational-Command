@@ -1,6 +1,6 @@
 # ScenarioUnitsCatalog::_refresh Function Reference
 
-*Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 70–136)</br>
+*Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 69–135)</br>
 *Belongs to:* [ScenarioUnitsCatalog](../../ScenarioUnitsCatalog.md)
 
 **Signature**

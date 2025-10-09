@@ -1,6 +1,6 @@
 # DebugOverlay::_draw_unit_glyphs Function Reference
 
-*Defined at:* `scripts/test/DebugOverlay.gd` (lines 59–125)</br>
+*Defined at:* `scripts/test/DebugOverlay.gd` (lines 79–145)</br>
 *Belongs to:* [DebugOverlay](../../DebugOverlay.md)
 
 **Signature**
@@ -13,8 +13,8 @@ func _draw_unit_glyphs(su: ScenarioUnit, _idx: int) -> void
 
 ```gdscript
 func _draw_unit_glyphs(su: ScenarioUnit, _idx: int) -> void:
-	var p := _screen_from_m(su.position_m)
-	var tex := _icon_for_unit(su)
+	var p: Vector2 = _screen_from_m(su.position_m)
+	var tex: Texture2D = _icon_for_unit(su)
 
 	if show_icons:
 		if icon_halo:

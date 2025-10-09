@@ -1,6 +1,6 @@
 # ScenarioEditor::_update_title Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 741–744)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 743–746)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

@@ -41,7 +41,8 @@ Radius (meters) for point markers.
 
 - [`func _ready() -> void`](MovementAgent/functions/_ready.md)
 - [`func _physics_process(delta: float) -> void`](MovementAgent/functions/_physics_process.md)
-- [`func _effective_speed_at(p_m: Vector2) -> float`](MovementAgent/functions/_effective_speed_at.md)
+- [`func _draw() -> void`](MovementAgent/functions/_draw.md)
+- [`func _effective_speed_at(p_m: Vector2) -> float`](MovementAgent/functions/_effective_speed_at.md) — Function does also include the fuel system penalties for the AI
 - [`func move_to_m(dest_m: Vector2) -> void`](MovementAgent/functions/move_to_m.md) — Command pathfind and start moving to a world-meter destination.
 - [`func stop() -> void`](MovementAgent/functions/stop.md) — Command stop immediately.
 - [`func eta_seconds() -> float`](MovementAgent/functions/eta_seconds.md) — ETA (seconds) along current remaining path with current base speed.
@@ -52,7 +53,6 @@ Radius (meters) for point markers.
 - [`func _debug_cell_rect_world(c: Vector2i) -> Rect2`](MovementAgent/functions/_debug_cell_rect_world.md) — Get a Rect2 (in *world meters*) for a cell id.
 - [`func _debug_weight_here() -> float`](MovementAgent/functions/_debug_weight_here.md) — Read current cell weight safely.
 - [`func _debug_instant_speed(delta: float) -> float`](MovementAgent/functions/_debug_instant_speed.md) — Compute instantaneous speed (m/s) based on last trail step.
-- [`func _draw() -> void`](MovementAgent/functions/_draw.md)
 - [`func _draw_cell_rect_m(rm: Rect2, col: Color, width: float, filled := false) -> void`](MovementAgent/functions/_draw_cell_rect_m.md)
 - [`func _to_local_from_terrain(p_m: Vector2) -> Vector2`](MovementAgent/functions/_to_local_from_terrain.md) — Convert terrain meters -> this node's local draw space
 
@@ -63,9 +63,11 @@ Radius (meters) for point markers.
 - `float base_speed_mps` — Base speed in meters/second (before terrain modifiers).
 - `float arrival_threshold_m` — Distance to consider a waypoint reached (meters).
 - `Vector2 sim_pos_m` — Virtual position in terrain meters
+- `String unit_id` — link to FuelSystem for slowdown/stop.
 - `TerrainRender renderer`
 - `PackedVector2Array _path`
 - `PackedVector2Array _trail`
+- `FuelSystem _fuel`
 
 ## Signals
 
@@ -88,11 +90,19 @@ func _ready() -> void
 func _physics_process(delta: float) -> void
 ```
 
+### _draw
+
+```gdscript
+func _draw() -> void
+```
+
 ### _effective_speed_at
 
 ```gdscript
 func _effective_speed_at(p_m: Vector2) -> float
 ```
+
+Function does also include the fuel system penalties for the AI
 
 ### move_to_m
 
@@ -170,12 +180,6 @@ func _debug_instant_speed(delta: float) -> float
 
 Compute instantaneous speed (m/s) based on last trail step.
 
-### _draw
-
-```gdscript
-func _draw() -> void
-```
-
 ### _draw_cell_rect_m
 
 ```gdscript
@@ -230,6 +234,14 @@ var sim_pos_m: Vector2
 
 Virtual position in terrain meters
 
+### unit_id
+
+```gdscript
+var unit_id: String
+```
+
+link to FuelSystem for slowdown/stop.
+
 ### renderer
 
 ```gdscript
@@ -246,6 +258,12 @@ var _path: PackedVector2Array
 
 ```gdscript
 var _trail: PackedVector2Array
+```
+
+### _fuel
+
+```gdscript
+var _fuel: FuelSystem
 ```
 
 ## Signal Documentation

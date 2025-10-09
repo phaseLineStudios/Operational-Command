@@ -1,6 +1,6 @@
 # ScenarioEditor::_generate_trigger_id Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 780–793)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 782–795)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

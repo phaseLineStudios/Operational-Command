@@ -1,6 +1,6 @@
 # Radio::_exit_tree Function Reference
 
-*Defined at:* `scripts/radio/Radio.gd` (lines 67–69)</br>
+*Defined at:* `scripts/radio/Radio.gd` (lines 68–70)</br>
 *Belongs to:* [Radio](../../Radio.md)
 
 **Signature**

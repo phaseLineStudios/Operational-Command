@@ -1,6 +1,6 @@
 # PathGrid::_emit_build_started Function Reference
 
-*Defined at:* `scripts/terrain/PathGrid.gd` (lines 850–853)</br>
+*Defined at:* `scripts/terrain/PathGrid.gd` (lines 868–871)</br>
 *Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**

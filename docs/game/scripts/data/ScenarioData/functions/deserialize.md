@@ -1,6 +1,6 @@
 # ScenarioData::deserialize Function Reference
 
-*Defined at:* `scripts/data/ScenarioData.gd` (lines 130–214)</br>
+*Defined at:* `scripts/data/ScenarioData.gd` (lines 132–216)</br>
 *Belongs to:* [ScenarioData](../../ScenarioData.md)
 
 **Signature**

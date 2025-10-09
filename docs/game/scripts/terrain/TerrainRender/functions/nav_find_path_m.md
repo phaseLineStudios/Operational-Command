@@ -1,6 +1,6 @@
 # TerrainRender::nav_find_path_m Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 429–434)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 435–440)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # CombatController::check_abort_condition Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 206–227)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 218–239)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**

@@ -26,7 +26,7 @@ func _build_slots() -> void:
 		var key := String(def.key)
 
 		var allowed_roles: Array = def.allowed_roles
-		var slot_id := "%s#%d" % [key, _total_slots + 1]
+		var slot_id := key
 		_slot_data[slot_id] = {
 			"key": key,
 			"title": title,

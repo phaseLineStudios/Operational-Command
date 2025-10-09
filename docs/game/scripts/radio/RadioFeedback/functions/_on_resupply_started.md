@@ -1,6 +1,6 @@
 # RadioFeedback::_on_resupply_started Function Reference
 
-*Defined at:* `scripts/radio/RadioFeedback.gd` (lines 52–55)</br>
+*Defined at:* `scripts/radio/RadioFeedback.gd` (lines 81–84)</br>
 *Belongs to:* [RadioFeedback](../../RadioFeedback.md)
 
 **Signature**

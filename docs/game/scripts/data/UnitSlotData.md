@@ -19,6 +19,8 @@ A unique key identifying this slot.
 
 A human-readable title for the slot.
 
+Ingame Callsign
+
 Unit starting position
 
 ## Public Member Functions
@@ -30,6 +32,7 @@ Unit starting position
 
 - `String key`
 - `String title`
+- `String callsign`
 - `Array[String] allowed_roles` — A list of allowed roles
 - `Vector2 start_position`
 
@@ -63,6 +66,12 @@ var key: String
 
 ```gdscript
 var title: String
+```
+
+### callsign
+
+```gdscript
+var callsign: String
 ```
 
 ### allowed_roles

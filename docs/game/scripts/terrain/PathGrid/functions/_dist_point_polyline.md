@@ -1,6 +1,6 @@
 # PathGrid::_dist_point_polyline Function Reference
 
-*Defined at:* `scripts/terrain/PathGrid.gd` (lines 891–899)</br>
+*Defined at:* `scripts/terrain/PathGrid.gd` (lines 909–917)</br>
 *Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # ScenarioUnit::tick Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 126–162)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 141–177)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**

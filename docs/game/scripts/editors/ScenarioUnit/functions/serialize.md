@@ -1,6 +1,6 @@
 # ScenarioUnit::serialize Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 227–238)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 255–267)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**
@@ -24,6 +24,7 @@ func serialize() -> Dictionary:
 		"position": ContentDB.v2(position_m),
 		"affiliation": int(affiliation),
 		"combat_mode": int(combat_mode),
-		"behaviour": int(behaviour)
+		"behaviour": int(behaviour),
+		"playable": playable
 	}
 ```

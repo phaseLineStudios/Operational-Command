@@ -1,6 +1,6 @@
 # ScenarioData::_vec2_to_dict Function Reference
 
-*Defined at:* `scripts/data/ScenarioData.gd` (lines 215–218)</br>
+*Defined at:* `scripts/data/ScenarioData.gd` (lines 217–220)</br>
 *Belongs to:* [ScenarioData](../../ScenarioData.md)
 
 **Signature**

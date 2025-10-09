@@ -28,6 +28,7 @@ extends Window
 - `UnitSlotData _before`
 - `LineEdit key_input`
 - `LineEdit title_input`
+- `LineEdit callsign_input`
 - `LineEdit roles_input`
 - `Button roles_add`
 - `VBoxContainer roles_list`
@@ -120,6 +121,12 @@ var key_input: LineEdit
 
 ```gdscript
 var title_input: LineEdit
+```
+
+### callsign_input
+
+```gdscript
+var callsign_input: LineEdit
 ```
 
 ### roles_input

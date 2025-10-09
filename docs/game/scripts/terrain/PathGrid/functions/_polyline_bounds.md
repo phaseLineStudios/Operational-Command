@@ -1,6 +1,6 @@
 # PathGrid::_polyline_bounds Function Reference
 
-*Defined at:* `scripts/terrain/PathGrid.gd` (lines 884–890)</br>
+*Defined at:* `scripts/terrain/PathGrid.gd` (lines 902–908)</br>
 *Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**

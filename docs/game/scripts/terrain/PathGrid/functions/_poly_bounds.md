@@ -1,6 +1,6 @@
 # PathGrid::_poly_bounds Function Reference
 
-*Defined at:* `scripts/terrain/PathGrid.gd` (lines 877–883)</br>
+*Defined at:* `scripts/terrain/PathGrid.gd` (lines 895–901)</br>
 *Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MapController::_process Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 60–63)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 86–89)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

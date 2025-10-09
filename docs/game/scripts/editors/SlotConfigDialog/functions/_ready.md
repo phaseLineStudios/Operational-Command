@@ -1,6 +1,6 @@
 # SlotConfigDialog::_ready Function Reference
 
-*Defined at:* `scripts/editors/SlotConfigDialog.gd` (lines 18–24)</br>
+*Defined at:* `scripts/editors/SlotConfigDialog.gd` (lines 19–25)</br>
 *Belongs to:* [SlotConfigDialog](../../SlotConfigDialog.md)
 
 **Signature**

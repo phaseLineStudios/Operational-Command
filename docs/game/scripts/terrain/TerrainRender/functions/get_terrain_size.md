@@ -1,6 +1,6 @@
 # TerrainRender::get_terrain_size Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 374–377)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 380–383)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**

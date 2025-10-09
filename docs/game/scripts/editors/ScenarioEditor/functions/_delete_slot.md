@@ -1,6 +1,6 @@
 # ScenarioEditor::_delete_slot Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 533–548)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 535–550)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

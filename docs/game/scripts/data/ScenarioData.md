@@ -67,6 +67,7 @@ Position of the scenario on the campaign/selection map
 - `Array[String] friendly_callsigns` — Friendly Callsign List
 - `Array[String] enemy_callsigns` — Enemy Callsign List
 - `Array[ScenarioUnit] units` — List of units placed in this scenario
+- `Array[ScenarioUnit] playable_units` — List of playable units.
 - `Array[ScenarioTrigger] triggers` — Triggers that define scripted events and conditions
 - `Array[ScenarioTask] tasks` — Tasks or objectives for the AI to complete
 - `Array drawings` — Drawings or map overlays associated with the scenario
@@ -303,6 +304,14 @@ var units: Array[ScenarioUnit]
 ```
 
 List of units placed in this scenario
+
+### playable_units
+
+```gdscript
+var playable_units: Array[ScenarioUnit]
+```
+
+List of playable units. Populated on game start
 
 ### triggers
 

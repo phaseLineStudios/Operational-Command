@@ -1,6 +1,6 @@
 # PathGrid::debug_weight_at_cell Function Reference
 
-*Defined at:* `scripts/terrain/PathGrid.gd` (lines 739–746)</br>
+*Defined at:* `scripts/terrain/PathGrid.gd` (lines 757–764)</br>
 *Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**

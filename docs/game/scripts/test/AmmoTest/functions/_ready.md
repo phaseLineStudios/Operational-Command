@@ -18,7 +18,7 @@ func _ready() -> void:
 	add_child(ammo)
 	ammo.add_to_group("AmmoSystem")
 
-	profile = preload("res://data/ammo/default_caps.tres")
+	profile = AmmoProfile.deserialize(preload("res://data/ammo/default_caps.json"))
 	ammo.ammo_profile = profile
 
 	adapter = CombatAdapter.new()

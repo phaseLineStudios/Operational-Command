@@ -1,12 +1,14 @@
 # OrdersParser Class Reference
 
 *File:* `scripts/radio/OrdersParser.gd`
+*Class name:* `OrdersParser`
 *Inherits:* `Node`
 > **Experimental**
 
 ## Synopsis
 
 ```gdscript
+class_name OrdersParser
 extends Node
 ```
 

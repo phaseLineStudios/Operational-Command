@@ -27,6 +27,7 @@ Start movement; will plan if needed or if dest is provided.
 
 ## Public Member Functions
 
+- [`func bind_fuel_system(fs: FuelSystem) -> void`](ScenarioUnit/functions/bind_fuel_system.md) — Bind a FuelSystem instance at runtime.
 - [`func plan_move(grid: PathGrid, dest_m: Vector2) -> bool`](ScenarioUnit/functions/plan_move.md) — Plan a path from current position to dest_m using PathGrid.
 - [`func pause_move() -> void`](ScenarioUnit/functions/pause_move.md) — Pause.
 - [`func resume_move() -> void`](ScenarioUnit/functions/resume_move.md) — Resume.
@@ -52,9 +53,12 @@ Start movement; will plan if needed or if dest is provided.
 - `Affiliation affiliation`
 - `CombatMode combat_mode` — Unit Combat Mode
 - `Behaviour behaviour` — Unit Behaviour
+- `bool playable` — Is unit playable.
 - `MoveState _move_state`
 - `Vector2 _move_dest_m`
 - `PackedVector2Array _move_path`
+- `FuelSystem _fuel` — FuelSystem
+FuelSystem provider used to scale speed at LOW/CRITICAL and 0 at EMPTY.
 
 ## Signals
 
@@ -74,6 +78,14 @@ Start movement; will plan if needed or if dest is provided.
 - `enum MoveState` — Runtime movement states.
 
 ## Member Function Documentation
+
+### bind_fuel_system
+
+```gdscript
+func bind_fuel_system(fs: FuelSystem) -> void
+```
+
+Bind a FuelSystem instance at runtime.
 
 ### plan_move
 
@@ -156,6 +168,7 @@ func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float
 ```
 
 Terrain-modified speed at a point using PathGrid weight.
+_speed_here_mps also includes speed penalties for low fuel
 
 ### _estimate_time_along
 
@@ -237,6 +250,14 @@ var behaviour: Behaviour
 
 Unit Behaviour
 
+### playable
+
+```gdscript
+var playable: bool
+```
+
+Is unit playable.
+
 ### _move_state
 
 ```gdscript
@@ -254,6 +275,15 @@ var _move_dest_m: Vector2
 ```gdscript
 var _move_path: PackedVector2Array
 ```
+
+### _fuel
+
+```gdscript
+var _fuel: FuelSystem
+```
+
+FuelSystem
+FuelSystem provider used to scale speed at LOW/CRITICAL and 0 at EMPTY.
 
 ## Signal Documentation
 

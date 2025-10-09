@@ -1,6 +1,6 @@
 # ScenarioUnit::plan_move Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 54–87)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 65–102)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**
@@ -19,12 +19,15 @@ Plan a path from current position to dest_m using PathGrid.
 func plan_move(grid: PathGrid, dest_m: Vector2) -> bool:
 	if grid == null:
 		emit_signal("move_blocked", "no_grid")
+		LogService.warning("move blocked: no_grid", "ScenarioUnit.gd:66")
 		return false
 	if unit == null:
 		emit_signal("move_blocked", "no_unit")
+		LogService.warning("move blocked: no_unit", "ScenarioUnit.gd:69")
 		return false
 	if unit.speed_kph <= 0.0:
 		emit_signal("move_blocked", "no_speed")
+		LogService.warning("move blocked: no_speed", "ScenarioUnit.gd:74")
 		return false
 	if position_m.distance_to(dest_m) <= ARRIVE_EPSILON:
 		_move_dest_m = dest_m
@@ -41,6 +44,7 @@ func plan_move(grid: PathGrid, dest_m: Vector2) -> bool:
 		_move_path = []
 		_move_path_idx = 0
 		emit_signal("move_blocked", "no_path")
+		LogService.warning("move blocked: no_path", "ScenarioUnit.gd:91")
 		return false
 	_move_path = p
 	_move_path_idx = 0

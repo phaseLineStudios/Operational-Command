@@ -1,6 +1,6 @@
 # MapController::_unhandled_input Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 65–74)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 91–100)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # TerrainRender::grid_to_pos Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 334–372)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 334–378)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**
@@ -23,12 +23,18 @@ func grid_to_pos(grid: String) -> Vector2:
 			digits += ch
 
 	if digits.length() % 2 != 0:
-		push_warning("Grid label must have an even number of digits (6/8/10). Got: %s" % grid)
+		LogService.warning(
+			"Grid label must have an even number of digits (6/8/10). Got: %s" % grid,
+			"TerrainRender.gd:341"
+		)
 		return Vector2i.ZERO
 
 	@warning_ignore("integer_division") var half := digits.length() / 2
 	if half < 3 or half > 5:
-		push_warning("Grid label must be 6, 8, or 10 digits (got %d)." % digits.length())
+		LogService.warning(
+			"Grid label must be 6, 8, or 10 digits (got %d)." % digits.length(),
+			"TerrainRender.gd:341"
+		)
 		return Vector2i.ZERO
 
 	var east_str := digits.substr(0, half)
@@ -52,5 +58,5 @@ func grid_to_pos(grid: String) -> Vector2:
 		x += (0 if sub_x_str.is_empty() else sub_x_str.to_int()) * step
 		y += (0 if sub_y_str.is_empty() else sub_y_str.to_int()) * step
 
-	return Vector2i(x, y)
+	return Vector2i(x + 50, y + 50)
 ```

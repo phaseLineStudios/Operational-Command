@@ -1,0 +1,35 @@
+# OrdersRouter::_quantity_to_meters Function Reference
+
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 344–356)</br>
+*Belongs to:* [OrdersRouter](../../OrdersRouter.md)
+
+**Signature**
+
+```gdscript
+func _quantity_to_meters(qty: int, zone: String) -> float
+```
+
+## Description
+
+Convert a quantity and zone to meters.
+[param qty] Quantity value.
+[param zone] Unit label (e.g. "m", "km", "grid").
+[return] Distance in meters.
+
+## Source
+
+```gdscript
+func _quantity_to_meters(qty: int, zone: String) -> float:
+	var z := zone.to_lower()
+	match z:
+		"m", "meter", "meters":
+			return float(qty)
+		"km", "kilometer", "kilometers":
+			return float(qty) * 1000.0
+		"grid", "tile", "cell", "square":
+			if terrain_renderer and terrain_renderer.has_method("cell_size_m"):
+				return float(qty) * float(terrain_renderer.cell_size_m())
+			return float(qty) * 50.0
+		_:
+			return float(qty)
+```

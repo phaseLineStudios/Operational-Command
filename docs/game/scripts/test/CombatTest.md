@@ -36,6 +36,7 @@ IDs of the two placed units in ScenarioData.content.units
 - `ScenarioData _scenario`
 - `ScenarioUnit _su_a`
 - `ScenarioUnit _su_b`
+- `FuelSystem fuel` — Using FuelSystem
 - `TerrainRender renderer`
 - `Camera2D camera`
 - `Control input_overlay`
@@ -104,6 +105,14 @@ var _su_a: ScenarioUnit
 ```gdscript
 var _su_b: ScenarioUnit
 ```
+
+### fuel
+
+```gdscript
+var fuel: FuelSystem
+```
+
+Using FuelSystem
 
 ### renderer
 

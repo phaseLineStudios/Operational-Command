@@ -1,6 +1,6 @@
 # PathGrid::_emit_grid_rebuilt Function Reference
 
-*Defined at:* `scripts/terrain/PathGrid.gd` (lines 858–861)</br>
+*Defined at:* `scripts/terrain/PathGrid.gd` (lines 876–879)</br>
 *Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**
