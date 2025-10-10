@@ -1,6 +1,6 @@
 # MovementAgent::_draw Function Reference
 
-*Defined at:* `scripts/ai/MovementAgent.gd` (lines 195–290)</br>
+*Defined at:* `scripts/ai/MovementAgent.gd` (lines 97–192)</br>
 *Belongs to:* [MovementAgent](../../MovementAgent.md)
 
 **Signature**

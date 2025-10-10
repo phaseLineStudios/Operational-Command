@@ -27,7 +27,8 @@ Default thumb size.
 
 ## Public Attributes
 
-- `BriefData _brief` — Whiteboard Texture
+- `Texture2D default_whiteboard` — Whiteboard Texture
+- `BriefData _brief`
 - `Array _items`
 - `Button _btn_back`
 - `Button _btn_next`
@@ -71,15 +72,21 @@ Put the whiteboard background.
 
 ## Member Data Documentation
 
+### default_whiteboard
+
+```gdscript
+var default_whiteboard: Texture2D
+```
+
+Decorators: `@export`
+
+Whiteboard Texture
+
 ### _brief
 
 ```gdscript
 var _brief: BriefData
 ```
-
-Decorators: `@export var default_whiteboard: Texture2D`
-
-Whiteboard Texture
 
 ### _items
 

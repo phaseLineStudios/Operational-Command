@@ -40,6 +40,8 @@ Tunables for terrain & environment modifiers.
 var k_elev_acc_per_m: float
 ```
 
+Decorators: `@export`
+
 Elevation: accuracy *= 1 + k_elev_acc_per_m * clamp(Δh, -elev_cap_m, +elev_cap_m)
 
 ### elev_cap_m
@@ -47,6 +49,8 @@ Elevation: accuracy *= 1 + k_elev_acc_per_m * clamp(Δh, -elev_cap_m, +elev_cap_
 ```gdscript
 var elev_cap_m: float
 ```
+
+Decorators: `@export`
 
 Max height delta counted (meters)
 
@@ -56,6 +60,8 @@ Max height delta counted (meters)
 var cover_damage_scale: float
 ```
 
+Decorators: `@export_range(0.0, 2.0, 0.01)`
+
 Cover reduces damage: damage *= (1 - cover * cover_damage_scale)
 
 ### conceal_full_effect_range_m
@@ -63,6 +69,8 @@ Cover reduces damage: damage *= (1 - cover * cover_damage_scale)
 ```gdscript
 var conceal_full_effect_range_m: float
 ```
+
+Decorators: `@export_range(10.0, 2000.0, 5.0)`
 
 Concealment scales with range: factor = (range / conceal_full_effect_range_m) clamped to [0..1]
 
@@ -72,6 +80,8 @@ Concealment scales with range: factor = (range / conceal_full_effect_range_m) cl
 var los_raycast_step_m: float
 ```
 
+Decorators: `@export_range(1.0, 50.0, 1.0)`
+
 LOS ray sample spacing (meters)
 
 ### los_attacker_eye_h_m
@@ -79,6 +89,8 @@ LOS ray sample spacing (meters)
 ```gdscript
 var los_attacker_eye_h_m: float
 ```
+
+Decorators: `@export`
 
 Eye/target heights above ground (meters)
 
@@ -94,6 +106,8 @@ var los_target_h_m: float
 var weather_acc_penalty_at_severity1: float
 ```
 
+Decorators: `@export_range(0.0, 1.0, 0.01)`
+
 Worst-case weather penalty: accuracy *= (1 - weather_severity * penalty)
 
 ### moving_fire_penalty
@@ -101,6 +115,8 @@ Worst-case weather penalty: accuracy *= (1 - weather_severity * penalty)
 ```gdscript
 var moving_fire_penalty: float
 ```
+
+Decorators: `@export_range(0.0, 1.0, 0.01)`
 
 Attacker moving penalty (accuracy)
 
@@ -110,6 +126,8 @@ Attacker moving penalty (accuracy)
 var dug_in_cover_bonus: float
 ```
 
+Decorators: `@export_range(0.0, 1.0, 0.01)`
+
 Defender dug-in bonus (extra cover applied to damage)
 
 ### min_accuracy
@@ -117,6 +135,8 @@ Defender dug-in bonus (extra cover applied to damage)
 ```gdscript
 var min_accuracy: float
 ```
+
+Decorators: `@export_range(0.01, 1.0, 0.01)`
 
 Floors to avoid zeroing out
 
@@ -131,5 +151,7 @@ var min_damage: float
 ```gdscript
 var debug: bool
 ```
+
+Decorators: `@export`
 
 Verbose logging

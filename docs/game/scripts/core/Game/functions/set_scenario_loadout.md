@@ -23,4 +23,4 @@ func set_scenario_loadout(loadout: Dictionary) -> void:
 
 ## References
 
-- [`signal mission_loadout_selected`](../../Game.md#mission_loadout_selected)
+- [`signal mission_loadout_selected`](..\..\Game.md)

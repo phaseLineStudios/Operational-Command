@@ -20,10 +20,6 @@ Base task definition.
 A UnitTask describes a configurable behavior (e.g. Move, Defend).
 Instances are placed via TaskInstance and can override properties.
 
-Unique type id
-
-Task Icon
-
 Draw the task glyph
 
 ## Public Member Functions
@@ -33,10 +29,10 @@ Draw the task glyph
 
 ## Public Attributes
 
-- `StringName type_id`
+- `StringName type_id` — Unique type id
 - `String display_name` — Display name
 - `Color color` — Optional color used for overlay/links
-- `Texture2D icon`
+- `Texture2D icon` — Task Icon
 - `Texture2D itex`
 
 ## Member Function Documentation
@@ -65,11 +61,17 @@ Default parameter dictionary from exported properties.
 var type_id: StringName
 ```
 
+Decorators: `@export`
+
+Unique type id
+
 ### display_name
 
 ```gdscript
 var display_name: String
 ```
+
+Decorators: `@export`
 
 Display name
 
@@ -79,6 +81,8 @@ Display name
 var color: Color
 ```
 
+Decorators: `@export`
+
 Optional color used for overlay/links
 
 ### icon
@@ -86,6 +90,10 @@ Optional color used for overlay/links
 ```gdscript
 var icon: Texture2D
 ```
+
+Decorators: `@export`
+
+Task Icon
 
 ### itex
 

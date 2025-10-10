@@ -13,21 +13,9 @@ extends Resource
 
 ## Brief
 
-Unique identifier for the unit
-
-Human-readable title of the unit
-
-Current strength
-
-Current injured
-
-Current remaining equipment
-
-Current cohesion level (0.0–1.0).
+Ammunition variables
 
 ## Detailed Description
-
-Ammunition variables
 
 Logistics variables, is part of ammunition and we can add stuff here later, like fuel
 
@@ -38,8 +26,8 @@ Logistics variables, is part of ammunition and we can add stuff here later, like
 
 ## Public Attributes
 
-- `String id`
-- `String title`
+- `String id` — Unique identifier for the unit
+- `String title` — Human-readable title of the unit
 - `Texture2D icon` — Unit icon texture
 - `Texture2D enemy_icon` — Enemy unit icon texture
 - `String role` — role for this unit
@@ -56,10 +44,10 @@ Logistics variables, is part of ammunition and we can add stuff here later, like
 - `float range_m` — Effective weapon range in meters
 - `float morale` — Morale level (0 = broken, 1 = max)
 - `float speed_kph` — Movement speed in kilometers per hour
-- `float state_strength`
-- `float state_injured`
-- `float state_equipment`
-- `float cohesion`
+- `float state_strength` — Current strength
+- `float state_injured` — Current injured
+- `float state_equipment` — Current remaining equipment
+- `float cohesion` — Current cohesion level (0.0–1.0).
 - `Dictionary throughput` — Supply throughput { "supply_type": (int)amount }
 - `Array[String] equipment_tags` — Equipment tag codes associated with this unit [ "AMMO_PALLET" ]
 - `String doctrine` — Doctrine code used by the AI for this unit.
@@ -101,17 +89,27 @@ Deserialize Unit JSON
 var id: String
 ```
 
+Decorators: `@export`
+
+Unique identifier for the unit
+
 ### title
 
 ```gdscript
 var title: String
 ```
 
+Decorators: `@export`
+
+Human-readable title of the unit
+
 ### icon
 
 ```gdscript
 var icon: Texture2D
 ```
+
+Decorators: `@export`
 
 Unit icon texture
 
@@ -121,6 +119,8 @@ Unit icon texture
 var enemy_icon: Texture2D
 ```
 
+Decorators: `@export`
+
 Enemy unit icon texture
 
 ### role
@@ -128,6 +128,8 @@ Enemy unit icon texture
 ```gdscript
 var role: String
 ```
+
+Decorators: `@export`
 
 role for this unit
 
@@ -137,6 +139,8 @@ role for this unit
 var allowed_slots: Array[String]
 ```
 
+Decorators: `@export`
+
 Allowed slot codes where this unit can be deployed
 
 ### cost
@@ -144,6 +148,8 @@ Allowed slot codes where this unit can be deployed
 ```gdscript
 var cost: int
 ```
+
+Decorators: `@export`
 
 Deployment cost in points
 
@@ -153,6 +159,8 @@ Deployment cost in points
 var movement_profile: TerrainBrush.MoveProfile
 ```
 
+Decorators: `@export`
+
 Movement Profile for navigation
 
 ### size
@@ -160,6 +168,8 @@ Movement Profile for navigation
 ```gdscript
 var size: UnitSize
 ```
+
+Decorators: `@export`
 
 Organizational size of the unit
 
@@ -169,6 +179,8 @@ Organizational size of the unit
 var strength: int
 ```
 
+Decorators: `@export`
+
 Number of personnel in the unit at full strength
 
 ### equipment
@@ -176,6 +188,8 @@ Number of personnel in the unit at full strength
 ```gdscript
 var equipment: Dictionary
 ```
+
+Decorators: `@export`
 
 Dictionary of equipment definitions
 
@@ -185,6 +199,8 @@ Dictionary of equipment definitions
 var experience: float
 ```
 
+Decorators: `@export`
+
 Average experience level
 
 ### attack
@@ -192,6 +208,8 @@ Average experience level
 ```gdscript
 var attack: float
 ```
+
+Decorators: `@export`
 
 Offensive rating of the unit
 
@@ -201,6 +219,8 @@ Offensive rating of the unit
 var defense: float
 ```
 
+Decorators: `@export`
+
 Defensive rating of the unit
 
 ### spot_m
@@ -208,6 +228,8 @@ Defensive rating of the unit
 ```gdscript
 var spot_m: float
 ```
+
+Decorators: `@export`
 
 Spotting range in meters
 
@@ -217,6 +239,8 @@ Spotting range in meters
 var range_m: float
 ```
 
+Decorators: `@export`
+
 Effective weapon range in meters
 
 ### morale
@@ -224,6 +248,8 @@ Effective weapon range in meters
 ```gdscript
 var morale: float
 ```
+
+Decorators: `@export_range(0.0, 1.0, 0.05)`
 
 Morale level (0 = broken, 1 = max)
 
@@ -233,6 +259,8 @@ Morale level (0 = broken, 1 = max)
 var speed_kph: float
 ```
 
+Decorators: `@export`
+
 Movement speed in kilometers per hour
 
 ### state_strength
@@ -241,11 +269,19 @@ Movement speed in kilometers per hour
 var state_strength: float
 ```
 
+Decorators: `@export`
+
+Current strength
+
 ### state_injured
 
 ```gdscript
 var state_injured: float
 ```
+
+Decorators: `@export`
+
+Current injured
 
 ### state_equipment
 
@@ -253,17 +289,27 @@ var state_injured: float
 var state_equipment: float
 ```
 
+Decorators: `@export`
+
+Current remaining equipment
+
 ### cohesion
 
 ```gdscript
 var cohesion: float
 ```
 
+Decorators: `@export_range(0.0, 1.0, 0.01)`
+
+Current cohesion level (0.0–1.0).
+
 ### throughput
 
 ```gdscript
 var throughput: Dictionary
 ```
+
+Decorators: `@export`
 
 Supply throughput { "supply_type": (int)amount }
 
@@ -273,6 +319,8 @@ Supply throughput { "supply_type": (int)amount }
 var equipment_tags: Array[String]
 ```
 
+Decorators: `@export`
+
 Equipment tag codes associated with this unit [ "AMMO_PALLET" ]
 
 ### doctrine
@@ -280,6 +328,8 @@ Equipment tag codes associated with this unit [ "AMMO_PALLET" ]
 ```gdscript
 var doctrine: String
 ```
+
+Decorators: `@export`
 
 Doctrine code used by the AI for this unit.
 
@@ -295,6 +345,8 @@ var unit_category: UnitCategoryData
 var ammunition: Dictionary
 ```
 
+Decorators: `@export`
+
 Ammo capacity per type, e.g. `{ "small_arms": 30, "he": 10 }`.
 
 ### state_ammunition
@@ -302,6 +354,8 @@ Ammo capacity per type, e.g. `{ "small_arms": 30, "he": 10 }`.
 ```gdscript
 var state_ammunition: Dictionary
 ```
+
+Decorators: `@export`
 
 Current ammo per type for this unit, same keys as `ammunition`.
 
@@ -311,6 +365,8 @@ Current ammo per type for this unit, same keys as `ammunition`.
 var ammunition_low_threshold: float
 ```
 
+Decorators: `@export_range(0.0, 1.0, 0.01)`
+
 Ratio (0..1): when `current/capacity <= ammunition_low_threshold` emit “Bingo ammo”.
 
 ### ammunition_critical_threshold
@@ -318,6 +374,8 @@ Ratio (0..1): when `current/capacity <= ammunition_low_threshold` emit “Bingo 
 ```gdscript
 var ammunition_critical_threshold: float
 ```
+
+Decorators: `@export_range(0.0, 1.0, 0.01)`
 
 Ratio (0..1): when `current/capacity <= ammunition_critical_threshold` emit “Ammo critical”.
 
@@ -327,6 +385,8 @@ Ratio (0..1): when `current/capacity <= ammunition_critical_threshold` emit “A
 var supply_transfer_rate: float
 ```
 
+Decorators: `@export`
+
 Transfer rate (rounds per second) a logistics unit can push to a recipient in range.
 
 ### supply_transfer_radius_m
@@ -334,6 +394,8 @@ Transfer rate (rounds per second) a logistics unit can push to a recipient in ra
 ```gdscript
 var supply_transfer_radius_m: float
 ```
+
+Decorators: `@export`
 
 Transfer radius in meters within which resupply is possible.
 

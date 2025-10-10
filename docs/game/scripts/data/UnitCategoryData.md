@@ -11,16 +11,6 @@ class_name UnitCategoryData
 extends Resource
 ```
 
-## Brief
-
-Unique key identifying this category
-
-## Detailed Description
-
-Unit Category Title
-
-Unit Category Editor Icon
-
 ## Public Member Functions
 
 - [`func serialize() -> Dictionary`](UnitCategoryData/functions/serialize.md) — Serialize data to JSON
@@ -28,9 +18,9 @@ Unit Category Editor Icon
 
 ## Public Attributes
 
-- `String id`
-- `String title`
-- `Texture2D editor_icon`
+- `String id` — Unique key identifying this category
+- `String title` — Unit Category Title
+- `Texture2D editor_icon` — Unit Category Editor Icon
 
 ## Member Function Documentation
 
@@ -58,14 +48,26 @@ Deserialize data from JSON
 var id: String
 ```
 
+Decorators: `@export`
+
+Unique key identifying this category
+
 ### title
 
 ```gdscript
 var title: String
 ```
 
+Decorators: `@export`
+
+Unit Category Title
+
 ### editor_icon
 
 ```gdscript
 var editor_icon: Texture2D
 ```
+
+Decorators: `@export`
+
+Unit Category Editor Icon

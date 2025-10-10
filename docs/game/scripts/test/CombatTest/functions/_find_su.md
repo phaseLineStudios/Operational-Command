@@ -1,6 +1,6 @@
 # CombatTest::_find_su Function Reference
 
-*Defined at:* `scripts/test/CombatTest.gd` (lines 106–114)</br>
+*Defined at:* `scripts/test/CombatTest.gd` (lines 118–126)</br>
 *Belongs to:* [CombatTest](../../CombatTest.md)
 
 **Signature**

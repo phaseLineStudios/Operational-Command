@@ -20,17 +20,9 @@ Combat resolution for direct/indirect engagements.
 Applies firepower, defense, morale, terrain, elevation, surprise, and posture
 to produce losses, suppression, retreats, or destruction.
 
-Current Scenario reference
-
-Terrain renderer reference
-
 Debug sample rate (Hz) while scene runs
 
-Optional Control that implements `update_debug(data: Dictionary)`
-
 Also print compact line to console
-
-Ammo
 
 Debug - build and emit a snapshot (for overlays/logging)
 
@@ -49,11 +41,11 @@ Debug - build and emit a snapshot (for overlays/logging)
 
 ## Public Attributes
 
-- `ScenarioData scenario`
-- `TerrainRender terrain_renderer`
+- `ScenarioData scenario` — Current Scenario reference
+- `TerrainRender terrain_renderer` — Terrain renderer reference
 - `TerrainEffectsConfig terrain_config` — TerrainEffectConfig reference
-- `Control debug_overlay`
-- `NodePath combat_adapter_path`
+- `Control debug_overlay` — Optional Control that implements `update_debug(data: Dictionary)`
+- `NodePath combat_adapter_path` — Ammo
 - `UnitData imported_attacker` — imported units manually for testing purposes
 - `UnitData imported_defender`
 - `ScenarioUnit attacker_su`
@@ -176,11 +168,19 @@ Toggle debug at runtime
 var scenario: ScenarioData
 ```
 
+Decorators: `@export`
+
+Current Scenario reference
+
 ### terrain_renderer
 
 ```gdscript
 var terrain_renderer: TerrainRender
 ```
+
+Decorators: `@export`
+
+Terrain renderer reference
 
 ### terrain_config
 
@@ -198,11 +198,19 @@ TerrainEffectConfig reference
 var debug_overlay: Control
 ```
 
+Decorators: `@export`
+
+Optional Control that implements `update_debug(data: Dictionary)`
+
 ### combat_adapter_path
 
 ```gdscript
 var combat_adapter_path: NodePath
 ```
+
+Decorators: `@export`
+
+Ammo
 
 ### imported_attacker
 

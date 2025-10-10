@@ -11,16 +11,6 @@ class_name ScenarioObjectiveData
 extends Resource
 ```
 
-## Brief
-
-Unique identifier for this objective
-
-## Detailed Description
-
-Human-readable title of the objective
-
-Description of success conditions for this objective
-
 ## Public Member Functions
 
 - [`func serialize() -> Dictionary`](ScenarioObjectiveData/functions/serialize.md) — Serialize into JSON
@@ -28,9 +18,9 @@ Description of success conditions for this objective
 
 ## Public Attributes
 
-- `String id`
-- `String title`
-- `String success`
+- `String id` — Unique identifier for this objective
+- `String title` — Human-readable title of the objective
+- `String success` — Description of success conditions for this objective
 - `int score` — Score awarded for completing this objective
 
 ## Member Function Documentation
@@ -59,11 +49,19 @@ Deserialize from JSON
 var id: String
 ```
 
+Decorators: `@export`
+
+Unique identifier for this objective
+
 ### title
 
 ```gdscript
 var title: String
 ```
+
+Decorators: `@export`
+
+Human-readable title of the objective
 
 ### success
 
@@ -71,10 +69,16 @@ var title: String
 var success: String
 ```
 
+Decorators: `@export`
+
+Description of success conditions for this objective
+
 ### score
 
 ```gdscript
 var score: int
 ```
+
+Decorators: `@export`
 
 Score awarded for completing this objective

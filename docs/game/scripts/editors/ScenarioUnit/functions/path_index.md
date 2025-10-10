@@ -1,6 +1,6 @@
 # ScenarioUnit::path_index Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 187–190)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 196–199)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**

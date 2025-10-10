@@ -11,7 +11,7 @@ func list_saves_for_campaign(_campaign_id: StringName) -> Array
 
 ## Description
 
-Return array of save dicts for [param campaign_id].
+Return array of save dicts for `campaign_id`.
 
 ## Source
 

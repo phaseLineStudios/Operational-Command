@@ -19,12 +19,6 @@ A placed task for a unit with per-instance params and linking
 
 Where to find task scripts
 
-Unique Id within scenario
-
-The task definition
-
-World position (meters)
-
 ## Public Member Functions
 
 - [`func serialize() -> Dictionary`](ScenarioTask/functions/serialize.md) — Convert this task into a JSON-safe dictionary
@@ -34,9 +28,9 @@ World position (meters)
 
 ## Public Attributes
 
-- `String id`
-- `UnitBaseTask task`
-- `Vector2 position_m`
+- `String id` — Unique Id within scenario
+- `UnitBaseTask task` — The task definition
+- `Vector2 position_m` — World position (meters)
 - `Dictionary params` — Overrides per exported property of `task`
 - `int unit_index` — Owner unit index in ScenarioData.units
 - `int next_index` — Link to next ScenarioTask in the chain
@@ -84,11 +78,19 @@ Resolve and instance a UnitBaseTask by type_id (or null)
 var id: String
 ```
 
+Decorators: `@export`
+
+Unique Id within scenario
+
 ### task
 
 ```gdscript
 var task: UnitBaseTask
 ```
+
+Decorators: `@export`
+
+The task definition
 
 ### position_m
 
@@ -96,11 +98,17 @@ var task: UnitBaseTask
 var position_m: Vector2
 ```
 
+Decorators: `@export`
+
+World position (meters)
+
 ### params
 
 ```gdscript
 var params: Dictionary
 ```
+
+Decorators: `@export`
 
 Overrides per exported property of `task`
 
@@ -110,6 +118,8 @@ Overrides per exported property of `task`
 var unit_index: int
 ```
 
+Decorators: `@export`
+
 Owner unit index in ScenarioData.units
 
 ### next_index
@@ -118,6 +128,8 @@ Owner unit index in ScenarioData.units
 var next_index: int
 ```
 
+Decorators: `@export`
+
 Link to next ScenarioTask in the chain
 
 ### prev_index
@@ -125,5 +137,7 @@ Link to next ScenarioTask in the chain
 ```gdscript
 var prev_index: int
 ```
+
+Decorators: `@export`
 
 Link to previous ScenarioTask in the chain

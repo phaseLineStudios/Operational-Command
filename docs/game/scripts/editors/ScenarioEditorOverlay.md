@@ -29,8 +29,6 @@ Context menu id: open trigger configuration
 
 Context menu id: delete picked entity
 
-Owning editor reference (provides ctx, data, and services)
-
 ## Public Member Functions
 
 - [`func _ready() -> void`](ScenarioEditorOverlay/functions/_ready.md) — Initialize popup menu and mouse handling
@@ -72,7 +70,7 @@ Owning editor reference (provides ctx, data, and services)
 
 ## Public Attributes
 
-- `ScenarioEditor editor`
+- `ScenarioEditor editor` — Owning editor reference (provides ctx, data, and services)
 - `int unit_icon_px` — Pixel size of unit icons on the overlay
 - `int slot_icon_px` — Pixel size of player slot icons on the overlay
 - `int task_icon_px` — Pixel size of outer task glyphs on the overlay
@@ -392,11 +390,17 @@ Shorten a segment at both ends by given trims (pixels)
 var editor: ScenarioEditor
 ```
 
+Decorators: `@export`
+
+Owning editor reference (provides ctx, data, and services)
+
 ### unit_icon_px
 
 ```gdscript
 var unit_icon_px: int
 ```
+
+Decorators: `@export`
 
 Pixel size of unit icons on the overlay
 
@@ -406,6 +410,8 @@ Pixel size of unit icons on the overlay
 var slot_icon_px: int
 ```
 
+Decorators: `@export`
+
 Pixel size of player slot icons on the overlay
 
 ### task_icon_px
@@ -413,6 +419,8 @@ Pixel size of player slot icons on the overlay
 ```gdscript
 var task_icon_px: int
 ```
+
+Decorators: `@export`
 
 Pixel size of outer task glyphs on the overlay
 
@@ -422,6 +430,8 @@ Pixel size of outer task glyphs on the overlay
 var task_icon_inner_px: int
 ```
 
+Decorators: `@export`
+
 Pixel size of inner task glyph icons
 
 ### trigger_icon_px
@@ -429,6 +439,8 @@ Pixel size of inner task glyph icons
 ```gdscript
 var trigger_icon_px: int
 ```
+
+Decorators: `@export`
 
 Pixel size of trigger center icon
 
@@ -438,6 +450,8 @@ Pixel size of trigger center icon
 var trigger_fill: Color
 ```
 
+Decorators: `@export`
+
 Trigger area fill color (semi-transparent)
 
 ### trigger_outline
@@ -445,6 +459,8 @@ Trigger area fill color (semi-transparent)
 ```gdscript
 var trigger_outline: Color
 ```
+
+Decorators: `@export`
 
 Trigger area outline color
 
@@ -454,6 +470,8 @@ Trigger area outline color
 var sync_line_color: Color
 ```
 
+Decorators: `@export`
+
 Color for synchronization link lines
 
 ### sync_line_width
@@ -461,6 +479,8 @@ Color for synchronization link lines
 ```gdscript
 var sync_line_width: float
 ```
+
+Decorators: `@export`
 
 Width in pixels for synchronization link lines
 
@@ -470,6 +490,8 @@ Width in pixels for synchronization link lines
 var slot_icon: Texture2D
 ```
 
+Decorators: `@export`
+
 Texture used for slot icons
 
 ### hover_scale
@@ -477,6 +499,8 @@ Texture used for slot icons
 ```gdscript
 var hover_scale: float
 ```
+
+Decorators: `@export`
 
 Scale multiplier for hovered glyphs
 
@@ -486,6 +510,8 @@ Scale multiplier for hovered glyphs
 var hover_title_offset: Vector2
 ```
 
+Decorators: `@export`
+
 Screen-space offset for hover title labels
 
 ### link_gap_px
@@ -494,6 +520,8 @@ Screen-space offset for hover title labels
 var link_gap_px: float
 ```
 
+Decorators: `@export`
+
 Extra pixel gap between link line and glyph edge
 
 ### arrow_head_len_px
@@ -501,6 +529,8 @@ Extra pixel gap between link line and glyph edge
 ```gdscript
 var arrow_head_len_px: float
 ```
+
+Decorators: `@export`
 
 Arrow head length (pixels) for link arrows
 

@@ -36,6 +36,8 @@ func _init() -> void
 var duration_s: float
 ```
 
+Decorators: `@export_range(0.0, 36000.0, 1.0)`
+
 Wait/hold for a duration.
 
 ### itex

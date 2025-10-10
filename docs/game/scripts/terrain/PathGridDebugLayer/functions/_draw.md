@@ -9,12 +9,6 @@
 func _draw() -> void
 ```
 
-**Decorators:** `@export var grid: PathGrid`
-
-## Description
-
-Simple on-canvas PathGrid visualizer
-
 ## Source
 
 ```gdscript

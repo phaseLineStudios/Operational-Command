@@ -41,7 +41,8 @@ Config path.
 - `Array[String] audio_buses` — Exposed buses.
 - `Array[String] actions_to_rebind` — Actions to rebind (must exist in InputMap).
 - `Array[Vector2i] resolutions` — Resolution list.
-- `Dictionary _bus_rows` — Scene to navigate to on back (leave empty for no action)
+- `PackedScene back_scene` — Scene to navigate to on back (leave empty for no action)
+- `Dictionary _bus_rows`
 - `Button btn_back`
 - `Button _btn_apply`
 - `Button _btn_defaults`
@@ -219,6 +220,8 @@ API to set settigns visibility
 var audio_buses: Array[String]
 ```
 
+Decorators: `@export`
+
 Exposed buses. Missing buses are ignored.
 
 ### actions_to_rebind
@@ -226,6 +229,8 @@ Exposed buses. Missing buses are ignored.
 ```gdscript
 var actions_to_rebind: Array[String]
 ```
+
+Decorators: `@export`
 
 Actions to rebind (must exist in InputMap).
 
@@ -235,17 +240,25 @@ Actions to rebind (must exist in InputMap).
 var resolutions: Array[Vector2i]
 ```
 
+Decorators: `@export`
+
 Resolution list.
+
+### back_scene
+
+```gdscript
+var back_scene: PackedScene
+```
+
+Decorators: `@export`
+
+Scene to navigate to on back (leave empty for no action)
 
 ### _bus_rows
 
 ```gdscript
 var _bus_rows: Dictionary
 ```
-
-Decorators: `@export var back_scene: PackedScene`
-
-Scene to navigate to on back (leave empty for no action)
 
 ### btn_back
 

@@ -21,8 +21,6 @@ influences simulation (movement, LOS, combat).
 
 Designers create .tres instances for roads, rivers, forests, urban, etc.
 
-Symbol texture for tiled rendering.
-
 ## Public Member Functions
 
 - [`func movement_multiplier(profile: int) -> float`](TerrainBrush/functions/movement_multiplier.md) — Returns the movement multiplier for a given profile.
@@ -43,7 +41,7 @@ Symbol texture for tiled rendering.
 - `Color fill_color` — Fill color of polygons.
 - `float hatch_spacing_px` — Spacing of hatch lines in pixels.
 - `float hatch_angle_deg` — Angle of hatch lines in degrees.
-- `Texture2D symbol`
+- `Texture2D symbol` — Symbol texture for tiled rendering.
 - `float symbol_spacing_px` — Spacing between repeated symbols in pixels.
 - `float symbol_size_m` — Symbol size in meters
 - `SymbolAlign symbol_align` — Alignment of symbols relative to geometry.
@@ -107,6 +105,8 @@ Provide a light-weight draw recipe for the renderer.
 var legend_title: String
 ```
 
+Decorators: `@export`
+
 Legend Title
 
 ### feature_type
@@ -114,6 +114,8 @@ Legend Title
 ```gdscript
 var feature_type: FeatureType
 ```
+
+Decorators: `@export`
 
 The geometry type of the feature (line, polygon, or point).
 
@@ -123,6 +125,8 @@ The geometry type of the feature (line, polygon, or point).
 var draw_mode: DrawMode
 ```
 
+Decorators: `@export`
+
 Drawing style used for rendering the feature.
 
 ### z_index
@@ -130,6 +134,8 @@ Drawing style used for rendering the feature.
 ```gdscript
 var z_index: int
 ```
+
+Decorators: `@export`
 
 Rendering order relative to other features.
 
@@ -139,6 +145,8 @@ Rendering order relative to other features.
 var stroke_color: Color
 ```
 
+Decorators: `@export`
+
 Outline color of the feature.
 
 ### stroke_width_px
@@ -146,6 +154,8 @@ Outline color of the feature.
 ```gdscript
 var stroke_width_px: float
 ```
+
+Decorators: `@export_range(0.5, 12.0, 0.5)`
 
 Outline width in pixels.
 
@@ -155,6 +165,8 @@ Outline width in pixels.
 var dash_px: float
 ```
 
+Decorators: `@export`
+
 Dash length in pixels (when dashed mode is used).
 
 ### gap_px
@@ -162,6 +174,8 @@ Dash length in pixels (when dashed mode is used).
 ```gdscript
 var gap_px: float
 ```
+
+Decorators: `@export`
 
 Gap length between dashes (when dashed mode is used).
 
@@ -171,6 +185,8 @@ Gap length between dashes (when dashed mode is used).
 var fill_color: Color
 ```
 
+Decorators: `@export`
+
 Fill color of polygons.
 
 ### hatch_spacing_px
@@ -178,6 +194,8 @@ Fill color of polygons.
 ```gdscript
 var hatch_spacing_px: float
 ```
+
+Decorators: `@export`
 
 Spacing of hatch lines in pixels.
 
@@ -187,6 +205,8 @@ Spacing of hatch lines in pixels.
 var hatch_angle_deg: float
 ```
 
+Decorators: `@export`
+
 Angle of hatch lines in degrees.
 
 ### symbol
@@ -195,11 +215,17 @@ Angle of hatch lines in degrees.
 var symbol: Texture2D
 ```
 
+Decorators: `@export`
+
+Symbol texture for tiled rendering.
+
 ### symbol_spacing_px
 
 ```gdscript
 var symbol_spacing_px: float
 ```
+
+Decorators: `@export`
 
 Spacing between repeated symbols in pixels.
 
@@ -209,6 +235,8 @@ Spacing between repeated symbols in pixels.
 var symbol_size_m: float
 ```
 
+Decorators: `@export`
+
 Symbol size in meters
 
 ### symbol_align
@@ -216,6 +244,8 @@ Symbol size in meters
 ```gdscript
 var symbol_align: SymbolAlign
 ```
+
+Decorators: `@export`
 
 Alignment of symbols relative to geometry.
 
@@ -225,6 +255,8 @@ Alignment of symbols relative to geometry.
 var mv_tracked: float
 ```
 
+Decorators: `@export`
+
 Movement multiplier for tracked vehicles.
 
 ### mv_wheeled
@@ -232,6 +264,8 @@ Movement multiplier for tracked vehicles.
 ```gdscript
 var mv_wheeled: float
 ```
+
+Decorators: `@export`
 
 Movement multiplier for wheeled vehicles.
 
@@ -241,6 +275,8 @@ Movement multiplier for wheeled vehicles.
 var mv_foot: float
 ```
 
+Decorators: `@export`
+
 Movement multiplier for foot infantry.
 
 ### mv_riverine
@@ -248,6 +284,8 @@ Movement multiplier for foot infantry.
 ```gdscript
 var mv_riverine: float
 ```
+
+Decorators: `@export`
 
 Movement multiplier for riverine units.
 
@@ -257,6 +295,8 @@ Movement multiplier for riverine units.
 var los_attenuation_per_m: float
 ```
 
+Decorators: `@export_range(0.0, 1.0, 0.01)`
+
 Linear attenuation per meter traversed “through” the feature (0..1).
 
 ### spotting_penalty_m
@@ -264,6 +304,8 @@ Linear attenuation per meter traversed “through” the feature (0..1).
 ```gdscript
 var spotting_penalty_m: float
 ```
+
+Decorators: `@export`
 
 Additive penalty to initial detection (meters).
 
@@ -273,6 +315,8 @@ Additive penalty to initial detection (meters).
 var cover_reduction: float
 ```
 
+Decorators: `@export_range(0.0, 1.0, 0.05)`
+
 Percentage reduction to incoming attack power (0..1).
 
 ### concealment
@@ -280,6 +324,8 @@ Percentage reduction to incoming attack power (0..1).
 ```gdscript
 var concealment: float
 ```
+
+Decorators: `@export_range(0.0, 1.0, 0.05)`
 
 Percentage reduction to chance of being spotted (0..1).
 
@@ -289,6 +335,8 @@ Percentage reduction to chance of being spotted (0..1).
 var road_bias: float
 ```
 
+Decorators: `@export`
+
 (Roads) Preferred multiplier for routing heuristic (<1 = preferred).
 
 ### bridge_capacity_tons
@@ -296,6 +344,8 @@ var road_bias: float
 ```gdscript
 var bridge_capacity_tons: float
 ```
+
+Decorators: `@export`
 
 (Bridges) Max mass in tons that can traverse; 0 = unlimited/not a bridge.
 

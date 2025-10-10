@@ -1,6 +1,6 @@
 # ScenarioUnit::plan_move Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 54–87)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 63–96)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**

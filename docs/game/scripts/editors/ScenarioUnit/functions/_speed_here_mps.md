@@ -1,6 +1,6 @@
 # ScenarioUnit::_speed_here_mps Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 192–203)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 202–225)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**
@@ -12,18 +12,31 @@ func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float
 ## Description
 
 Terrain-modified speed at a point using PathGrid weight.
+_speed_here_mps also includes speed penalties for low fuel
 
 ## Source
 
 ```gdscript
 func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 	if grid == null or grid._astar == null:
-		return _kph_to_mps(unit.speed_kph)
+		var v := _kph_to_mps(unit.speed_kph)
+		if _fuel != null:
+			v *= _fuel.speed_mult(id)
+		return v
+
 	var c := grid.world_to_cell(p_m)
 	if not grid._in_bounds(c):
-		return _kph_to_mps(unit.speed_kph)
+		var v := _kph_to_mps(unit.speed_kph)
+		if _fuel != null:
+			v *= _fuel.speed_mult(id)
+		return v
+
 	if grid._astar.is_in_boundsv(c) and grid._astar.is_point_solid(c):
 		return 0.0
+
 	var w: float = max(grid._astar.get_point_weight_scale(c), 0.001)
-	return _kph_to_mps(unit.speed_kph) / w
+	var v := _kph_to_mps(unit.speed_kph) / w
+	if _fuel != null:
+		v *= _fuel.speed_mult(id)
+	return v
 ```

@@ -11,26 +11,6 @@ class_name ScenarioData
 extends Resource
 ```
 
-## Brief
-
-Unique identifier for this scenario
-
-## Detailed Description
-
-Human-readable title of the scenario
-
-Short Scenario description shown to the player
-
-File path to the scenario preview image
-
-The scenario terrain data
-
-The scenario briefing data
-
-Difficulty of the scenario
-
-Position of the scenario on the campaign/selection map
-
 ## Public Member Functions
 
 - [`func serialize() -> Dictionary`](ScenarioData/functions/serialize.md) — Serialize data to JSON
@@ -43,13 +23,14 @@ Position of the scenario on the campaign/selection map
 
 ## Public Attributes
 
-- `String id`
-- `String title`
-- `String description`
-- `TerrainData terrain`
-- `BriefData briefing`
-- `ScenarioDifficulty difficulty`
-- `Vector2 map_position`
+- `String id` — Unique identifier for this scenario
+- `String title` — Human-readable title of the scenario
+- `String description` — Short Scenario description shown to the player
+- `String preview_path` — File path to the scenario preview image
+- `TerrainData terrain` — The scenario terrain data
+- `BriefData briefing` — The scenario briefing data
+- `ScenarioDifficulty difficulty` — Difficulty of the scenario
+- `Vector2 map_position` — Position of the scenario on the campaign/selection map
 - `int scenario_order` — Order index of the scenario in a campaign sequence
 - `float rain` — Rainfall in millimeters per hour
 - `float fog_m` — Fog visibility in meters
@@ -132,11 +113,19 @@ func _difficulty_from(json_value: Variant) -> int
 var id: String
 ```
 
+Decorators: `@export`
+
+Unique identifier for this scenario
+
 ### title
 
 ```gdscript
 var title: String
 ```
+
+Decorators: `@export`
+
+Human-readable title of the scenario
 
 ### description
 
@@ -144,11 +133,29 @@ var title: String
 var description: String
 ```
 
+Decorators: `@export`
+
+Short Scenario description shown to the player
+
+### preview_path
+
+```gdscript
+var preview_path: String
+```
+
+Decorators: `@export_file("*.png *.jpg ; Image")`
+
+File path to the scenario preview image
+
 ### terrain
 
 ```gdscript
 var terrain: TerrainData
 ```
+
+Decorators: `@export`
+
+The scenario terrain data
 
 ### briefing
 
@@ -156,11 +163,19 @@ var terrain: TerrainData
 var briefing: BriefData
 ```
 
+Decorators: `@export`
+
+The scenario briefing data
+
 ### difficulty
 
 ```gdscript
 var difficulty: ScenarioDifficulty
 ```
+
+Decorators: `@export`
+
+Difficulty of the scenario
 
 ### map_position
 
@@ -168,11 +183,17 @@ var difficulty: ScenarioDifficulty
 var map_position: Vector2
 ```
 
+Decorators: `@export`
+
+Position of the scenario on the campaign/selection map
+
 ### scenario_order
 
 ```gdscript
 var scenario_order: int
 ```
+
+Decorators: `@export`
 
 Order index of the scenario in a campaign sequence
 
@@ -182,6 +203,8 @@ Order index of the scenario in a campaign sequence
 var rain: float
 ```
 
+Decorators: `@export_range(0.0, 50.0, 0.05)`
+
 Rainfall in millimeters per hour
 
 ### fog_m
@@ -189,6 +212,8 @@ Rainfall in millimeters per hour
 ```gdscript
 var fog_m: float
 ```
+
+Decorators: `@export_range(0.0, 10000.0, 1.0)`
 
 Fog visibility in meters
 
@@ -198,6 +223,8 @@ Fog visibility in meters
 var wind_dir: float
 ```
 
+Decorators: `@export_range(0.0, 360.0, 1.0)`
+
 Wind direction in degrees
 
 ### wind_speed_m
@@ -205,6 +232,8 @@ Wind direction in degrees
 ```gdscript
 var wind_speed_m: float
 ```
+
+Decorators: `@export_range(0.0, 110.0, 0.5)`
 
 Wind speed in meters per second
 
@@ -214,6 +243,8 @@ Wind speed in meters per second
 var year: int
 ```
 
+Decorators: `@export`
+
 Year when the scenario takes place
 
 ### month
@@ -221,6 +252,8 @@ Year when the scenario takes place
 ```gdscript
 var month: int
 ```
+
+Decorators: `@export_range(1.0, 12.0, 1.0)`
 
 Month when the scenario takes place
 
@@ -230,6 +263,8 @@ Month when the scenario takes place
 var day: int
 ```
 
+Decorators: `@export_range(1.0, 31.0, 1.0)`
+
 Day of the month
 
 ### hour
@@ -237,6 +272,8 @@ Day of the month
 ```gdscript
 var hour: int
 ```
+
+Decorators: `@export_range(0.0, 23.0, 1.0)`
 
 Hour of the day
 
@@ -246,6 +283,8 @@ Hour of the day
 var minute: int
 ```
 
+Decorators: `@export_range(0.0, 59.0, 1.0)`
+
 Minute of the hour
 
 ### unit_points
@@ -253,6 +292,8 @@ Minute of the hour
 ```gdscript
 var unit_points: int
 ```
+
+Decorators: `@export`
 
 Total points available to the player to deploy units
 
@@ -262,6 +303,8 @@ Total points available to the player to deploy units
 var unit_slots: Array[UnitSlotData]
 ```
 
+Decorators: `@export`
+
 Slots available for units to be placed into
 
 ### unit_recruits
@@ -269,6 +312,8 @@ Slots available for units to be placed into
 ```gdscript
 var unit_recruits: Array[UnitData]
 ```
+
+Decorators: `@export`
 
 Recruitable units available at the start
 
@@ -278,6 +323,8 @@ Recruitable units available at the start
 var unit_reserves: Array[UnitSlotData]
 ```
 
+Decorators: `@export`
+
 Reserve slots for reinforcements or delayed units
 
 ### friendly_callsigns
@@ -285,6 +332,8 @@ Reserve slots for reinforcements or delayed units
 ```gdscript
 var friendly_callsigns: Array[String]
 ```
+
+Decorators: `@export`
 
 Friendly Callsign List
 
@@ -294,6 +343,8 @@ Friendly Callsign List
 var enemy_callsigns: Array[String]
 ```
 
+Decorators: `@export`
+
 Enemy Callsign List
 
 ### units
@@ -301,6 +352,8 @@ Enemy Callsign List
 ```gdscript
 var units: Array[ScenarioUnit]
 ```
+
+Decorators: `@export`
 
 List of units placed in this scenario
 
@@ -310,6 +363,8 @@ List of units placed in this scenario
 var triggers: Array[ScenarioTrigger]
 ```
 
+Decorators: `@export`
+
 Triggers that define scripted events and conditions
 
 ### tasks
@@ -318,6 +373,8 @@ Triggers that define scripted events and conditions
 var tasks: Array[ScenarioTask]
 ```
 
+Decorators: `@export`
+
 Tasks or objectives for the AI to complete
 
 ### drawings
@@ -325,6 +382,8 @@ Tasks or objectives for the AI to complete
 ```gdscript
 var drawings: Array
 ```
+
+Decorators: `@export`
 
 Drawings or map overlays associated with the scenario
 

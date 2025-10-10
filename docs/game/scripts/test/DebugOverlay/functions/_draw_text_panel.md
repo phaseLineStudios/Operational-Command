@@ -1,6 +1,6 @@
 # DebugOverlay::_draw_text_panel Function Reference
 
-*Defined at:* `scripts/test/DebugOverlay.gd` (lines 139–233)</br>
+*Defined at:* `scripts/test/DebugOverlay.gd` (lines 162–263)</br>
 *Belongs to:* [DebugOverlay](../../DebugOverlay.md)
 
 **Signature**
@@ -75,13 +75,20 @@ func _draw_text_panel(d: Dictionary) -> void:
 			)
 		)
 
+	## Fuel line
+	if show_fuel_text and _fuel != null and _units.size() >= 2:
+		var atk: ScenarioUnit = _units[0]
+		var def: ScenarioUnit = _units[1]
+		lines.append(_format_fuel_line(atk, def))
+
+	## Panel sizing and draw
 	var w := 0.0
 	for line in lines:
 		w = max(w, f.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x)
 	var h := (font_size + 2.0) * float(lines.size())
 	var panel_size := Vector2(w + panel_pad.x * 2.0, h + panel_pad.y * 2.0)
 
-	var anchor := Vector2(panel_pad.x, panel_pad.y)  # fallback
+	var anchor := Vector2(panel_pad.x, panel_pad.y)
 	if d.has("attacker") and d.has("defender"):
 		var a := _screen_from_m(d.attacker.pos_m)
 		var b := _screen_from_m(d.defender.pos_m)

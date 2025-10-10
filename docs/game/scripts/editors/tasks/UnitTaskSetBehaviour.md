@@ -35,4 +35,6 @@ func _init() -> void
 var behaviour: int
 ```
 
+Decorators: `@export_enum("careless", "safe", "aware", "combat", "stealth")`
+
 Set unit behaviour.

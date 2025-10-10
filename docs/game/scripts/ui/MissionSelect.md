@@ -23,8 +23,6 @@ Path to unit select scene
 
 Size of each mission pin in pixels.
 
-Optional custom pin icon; if empty, a text-dot button is used.
-
 Show title labels next to pins.
 
 Offset for the label relative to the pin's top-left (px).
@@ -60,7 +58,7 @@ Extra padding inside the label panel (px).
 
 ## Public Attributes
 
-- `Texture2D pin_texture`
+- `Texture2D pin_texture` — Optional custom pin icon; if empty, a text-dot button is used.
 - `ScenarioData _selected_mission`
 - `CampaignData _campaign`
 - `Array[ScenarioData] _scenarios`
@@ -214,6 +212,10 @@ Remove all children from a node.
 ```gdscript
 var pin_texture: Texture2D
 ```
+
+Decorators: `@export`
+
+Optional custom pin icon; if empty, a text-dot button is used.
 
 ### _selected_mission
 
