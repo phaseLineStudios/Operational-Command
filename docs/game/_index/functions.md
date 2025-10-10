@@ -1,0 +1,1213 @@
+# Functions A–Z
+
+**Jump to:** [A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [F](#f) · [G](#g) · [H](#h) · [I](#i) · [J](#j) · [K](#k) · [L](#l) · [M](#m) · [N](#n) · [O](#o) · [P](#p) · [Q](#q) · [R](#r) · [S](#s) · [T](#t) · [U](#u) · [V](#v) · [W](#w) · [X](#x) · [Y](#y) · [Z](#z) · [#](##)
+
+## A
+
+- [ScenarioToolBase::activate](../scripts/editors/tools/ScenarioToolBase/functions/activate.md) — Called by the editor when tool becomes active
+- [MissionResolution::add_casualties](../scripts/core/MissionResolution/functions/add_casualties.md) — Record casualties (aggregated).
+- [FuelSystem::add_fuel](../scripts/sim/systems/FuelSystem/functions/add_fuel.md) — Directly add fuel to a unit (UI/depot use).
+- [TerrainData::add_label](../scripts/data/TerrainData/functions/add_label.md) — Add a new label.
+- [TerrainData::add_line](../scripts/data/TerrainData/functions/add_line.md) — Add a new line.
+- [TerrainData::add_point](../scripts/data/TerrainData/functions/add_point.md) — Add a new point.
+- [TerrainData::add_surface](../scripts/data/TerrainData/functions/add_surface.md) — Add a new surface.
+- [MissionResolution::add_units_lost](../scripts/core/MissionResolution/functions/add_units_lost.md) — Record fully destroyed friendly unit(s) (e.g., wiped marker).
+- [AmmoProfile::apply_defaults_if_missing](../scripts/data/AmmoProfile/functions/apply_defaults_if_missing.md) — Fill in caps/state/thresholds if the UnitData is missing them.
+- [FuelProfile::apply_defaults_if_missing](../scripts/data/FuelProfile/functions/apply_defaults_if_missing.md) — Ensures that a given UnitFuelState has valid default values for all its fuel properties.
+- [ContourLayer::apply_style](../scripts/terrain/ContourLayer/functions/apply_style.md) — Apply root style
+- [GridLayer::apply_style](../scripts/terrain/GridLayer/functions/apply_style.md) — Apply root style
+- [LabelLayer::apply_style](../scripts/terrain/LabelLayer/functions/apply_style.md) — Apply style fields from TerrainRender
+- [MarginLayer::apply_style](../scripts/terrain/MarginLayer/functions/apply_style.md) — Apply root style
+- [PathGrid::astar_setup_defaults](../scripts/terrain/PathGrid/functions/astar_setup_defaults.md)
+
+## B
+
+- [TerrainData::begin_batch](../scripts/data/TerrainData/functions/begin_batch.md) — Begin a batch - defers granular signals until end_batch().
+- [ScenarioDragLinkService::begin_drag](../scripts/editors/services/ScenarioDragLinkService/functions/begin_drag.md)
+- [ScenarioDragLinkService::begin_link](../scripts/editors/services/ScenarioDragLinkService/functions/begin_link.md)
+- [ScenarioEditorOverlay::begin_link_preview](../scripts/editors/ScenarioEditorOverlay/functions/begin_link_preview.md) — Begin live link line preview from a source pick
+- [RadioFeedback::bind_ammo](../scripts/radio/RadioFeedback/functions/bind_ammo.md) — Bind to an AmmoSystem instance to receive ammo/resupply events.
+- [RadioFeedback::bind_fuel](../scripts/radio/RadioFeedback/functions/bind_fuel.md) — Bind to a FuelSystem instance to receive fuel/refuel events.
+- [ScenarioUnit::bind_fuel_system](../scripts/editors/ScenarioUnit/functions/bind_fuel_system.md) — Bind a FuelSystem instance at runtime.
+- [SlotsList::build_from_slots](../scripts/ui/helpers/SlotsList/functions/build_from_slots.md) — Rebuild child SlotItems from the provided slot metadata map.
+- [ScenarioToolBase::build_hint_ui](../scripts/editors/tools/ScenarioToolBase/functions/build_hint_ui.md) — Short usage hint for the bottom bar
+- [ScenarioTriggerTool::build_hint_ui](../scripts/editors/tools/ScenarioTriggerTool/functions/build_hint_ui.md)
+- [TaskPlaceTool::build_hint_ui](../scripts/editors/tools/TaskPlaceTool/functions/build_hint_ui.md)
+- [TerrainElevationTool::build_hint_ui](../scripts/editors/tools/TerrainElevationTool/functions/build_hint_ui.md)
+- [TerrainLabelTool::build_hint_ui](../scripts/editors/tools/TerrainLabelTool/functions/build_hint_ui.md)
+- [TerrainLineTool::build_hint_ui](../scripts/editors/tools/TerrainLineTool/functions/build_hint_ui.md)
+- [TerrainPointTool::build_hint_ui](../scripts/editors/tools/TerrainPointTool/functions/build_hint_ui.md)
+- [TerrainPolygonTool::build_hint_ui](../scripts/editors/tools/TerrainPolygonTool/functions/build_hint_ui.md)
+- [TerrainToolBase::build_hint_ui](../scripts/editors/tools/TerrainToolBase/functions/build_hint_ui.md) — Populate hint UI
+- [UnitPlaceTool::build_hint_ui](../scripts/editors/tools/UnitPlaceTool/functions/build_hint_ui.md)
+- [TerrainElevationTool::build_info_ui](../scripts/editors/tools/TerrainElevationTool/functions/build_info_ui.md)
+- [TerrainLabelTool::build_info_ui](../scripts/editors/tools/TerrainLabelTool/functions/build_info_ui.md)
+- [TerrainLineTool::build_info_ui](../scripts/editors/tools/TerrainLineTool/functions/build_info_ui.md)
+- [TerrainPointTool::build_info_ui](../scripts/editors/tools/TerrainPointTool/functions/build_info_ui.md)
+- [TerrainPolygonTool::build_info_ui](../scripts/editors/tools/TerrainPolygonTool/functions/build_info_ui.md)
+- [TerrainToolBase::build_info_ui](../scripts/editors/tools/TerrainToolBase/functions/build_info_ui.md) — Populate info UI.
+- [TerrainElevationTool::build_options_ui](../scripts/editors/tools/TerrainElevationTool/functions/build_options_ui.md)
+- [TerrainLabelTool::build_options_ui](../scripts/editors/tools/TerrainLabelTool/functions/build_options_ui.md)
+- [TerrainLineTool::build_options_ui](../scripts/editors/tools/TerrainLineTool/functions/build_options_ui.md)
+- [TerrainPointTool::build_options_ui](../scripts/editors/tools/TerrainPointTool/functions/build_options_ui.md)
+- [TerrainPolygonTool::build_options_ui](../scripts/editors/tools/TerrainPolygonTool/functions/build_options_ui.md)
+- [TerrainToolBase::build_options_ui](../scripts/editors/tools/TerrainToolBase/functions/build_options_ui.md) — Populate options UI.
+- [ScenarioTriggersService::build_palette](../scripts/editors/services/ScenarioTriggersService/functions/build_palette.md)
+- [TerrainElevationTool::build_preview](../scripts/editors/tools/TerrainElevationTool/functions/build_preview.md)
+- [TerrainLabelTool::build_preview](../scripts/editors/tools/TerrainLabelTool/functions/build_preview.md)
+- [TerrainLineTool::build_preview](../scripts/editors/tools/TerrainLineTool/functions/build_preview.md)
+- [TerrainPointTool::build_preview](../scripts/editors/tools/TerrainPointTool/functions/build_preview.md)
+- [TerrainPolygonTool::build_preview](../scripts/editors/tools/TerrainPolygonTool/functions/build_preview.md)
+- [TerrainToolBase::build_preview](../scripts/editors/tools/TerrainToolBase/functions/build_preview.md) — Build tool preview
+
+## C
+
+- [CombatController::calculate_damage](../scripts/sim/CombatController/functions/calculate_damage.md) — Combat damage calculation with terrain/environment multipliers + ammo
+- [ScenarioUnit::cancel_move](../scripts/editors/ScenarioUnit/functions/cancel_move.md) — Cancel ongoing movement.
+- [PathGrid::cell_to_world_center_m](../scripts/terrain/PathGrid/functions/cell_to_world_center_m.md) — Convert grid cell -> world meters (cell center).
+- [CombatController::check_abort_condition](../scripts/sim/CombatController/functions/check_abort_condition.md) — Check the various conditions for if the combat is finished
+- [TerrainRender::clamp_point_to_terrain](../scripts/terrain/TerrainRender/functions/clamp_point_to_terrain.md) — Clamp a single point to the terrain (local map coordinates)
+- [TerrainRender::clamp_shape_to_terrain](../scripts/terrain/TerrainRender/functions/clamp_shape_to_terrain.md) — Clamp an entire polygon (without mutating the source array)
+- [SlotItem::clear_assignment](../scripts/ui/helpers/SlotItem/functions/clear_assignment.md) — Clear the assigned unit and refresh visuals.
+- [SlotsList::clear_assignment](../scripts/ui/helpers/SlotsList/functions/clear_assignment.md) — Clear the assigned unit from a specific SlotItem by slot_id.
+- [TerrainRender::clear_render_error](../scripts/terrain/TerrainRender/functions/clear_render_error.md) — Hide the render error
+- [ScenarioEditorOverlay::clear_selected](../scripts/editors/ScenarioEditorOverlay/functions/clear_selected.md) — Clear current selection highlight
+- [ScenarioSelectionService::clear_selection](../scripts/editors/services/ScenarioSelectionService/functions/clear_selection.md)
+- [ScenarioTasksService::collect_unit_chain](../scripts/editors/services/ScenarioTasksService/functions/collect_unit_chain.md)
+- [CombatController::combat_loop](../scripts/sim/CombatController/functions/combat_loop.md) — Loop triggered every turn to simulate unit behavior in combat
+- [Game::complete_objective](../scripts/core/Game/functions/complete_objective.md) — Complete objective
+- [SlotItem::configure](../scripts/ui/helpers/SlotItem/functions/configure.md) — Initialize slot metadata (id/title/roles/index/total) and update UI.
+- [AmmoSystem::consume](../scripts/sim/systems/AmmoSystem/functions/consume.md) — Decrease ammo for `unit_id` of type `t` by `amount`.
+- [Persistence::create_new_campaign_save](../scripts/core/Persistence/functions/create_new_campaign_save.md) — Create a new save for `campaign_id`; return new ID.
+- [ScenarioUnit::current_path](../scripts/editors/ScenarioUnit/functions/current_path.md)
+
+## D
+
+- [ScenarioToolBase::deactivate](../scripts/editors/tools/ScenarioToolBase/functions/deactivate.md) — Called when tool is removed
+- [PathGrid::debug_cell_from_world](../scripts/terrain/PathGrid/functions/debug_cell_from_world.md) — Return grid cell for world meters.
+- [PathGrid::debug_draw_overlay](../scripts/terrain/PathGrid/functions/debug_draw_overlay.md) — Render a grid overlay onto a CanvasItem (e.g., a Control).
+- [PathGrid::debug_is_solid_cell](../scripts/terrain/PathGrid/functions/debug_is_solid_cell.md) — True if solid.
+- [PathGrid::debug_line_dist_cell](../scripts/terrain/PathGrid/functions/debug_line_dist_cell.md) — Distance to nearest line at cell (uses cache if present; INF if none).
+- [PathGrid::debug_slope_mult_cell](../scripts/terrain/PathGrid/functions/debug_slope_mult_cell.md) — Slope multiplier at cell (uses cache if present).
+- [PathGrid::debug_weight_at_cell](../scripts/terrain/PathGrid/functions/debug_weight_at_cell.md) — Weight at cell (or INF if OOB/solid).
+- [PathGrid::debug_world_from_cell](../scripts/terrain/PathGrid/functions/debug_world_from_cell.md) — Return cell center in meters.
+- [TerrainBrush::defensive_modifiers](../scripts/terrain/TerrainBrush/functions/defensive_modifiers.md) — Returns a simple defensive modifier bundle for Combat.gd.
+- [BriefData::deserialize](../scripts/data/BriefData/functions/deserialize.md) — Deserializes briefing data from JSON
+- [BriefItemData::deserialize](../scripts/data/BriefItemData/functions/deserialize.md) — Deserializes briefing item from JSON
+- [CampaignData::deserialize](../scripts/data/CampaignData/functions/deserialize.md) — Deserialize Campaign data from JSON
+- [ScenarioData::deserialize](../scripts/data/ScenarioData/functions/deserialize.md) — Deserialize data from JSON
+- [ScenarioObjectiveData::deserialize](../scripts/data/ScenarioObjectiveData/functions/deserialize.md) — Deserialize from JSON
+- [ScenarioTask::deserialize](../scripts/editors/ScenarioTask/functions/deserialize.md) — Create/restore from a JSON dictionary
+- [ScenarioTrigger::deserialize](../scripts/editors/triggers/ScenarioTrigger/functions/deserialize.md)
+- [ScenarioUnit::deserialize](../scripts/editors/ScenarioUnit/functions/deserialize.md) — Deserialzie from JSON.
+- [TerrainData::deserialize](../scripts/data/TerrainData/functions/deserialize.md) — Deserialize from JSON
+- [UnitCategoryData::deserialize](../scripts/data/UnitCategoryData/functions/deserialize.md) — Deserialize data from JSON
+- [UnitData::deserialize](../scripts/data/UnitData/functions/deserialize.md) — Deserialize Unit JSON
+- [UnitSlotData::deserialize](../scripts/data/UnitSlotData/functions/deserialize.md) — Deserialize data from JSON
+- [ScenarioUnit::destination_m](../scripts/editors/ScenarioUnit/functions/destination_m.md)
+- [TerrainToolBase::destroy_preview](../scripts/editors/tools/TerrainToolBase/functions/destroy_preview.md) — Destroy the preview
+- [ScenarioToolBase::draw_overlay](../scripts/editors/tools/ScenarioToolBase/functions/draw_overlay.md) — Called from overlay _draw().
+- [ScenarioTriggerTool::draw_overlay](../scripts/editors/tools/ScenarioTriggerTool/functions/draw_overlay.md)
+- [TaskPlaceTool::draw_overlay](../scripts/editors/tools/TaskPlaceTool/functions/draw_overlay.md)
+- [UnitPlaceTool::draw_overlay](../scripts/editors/tools/UnitPlaceTool/functions/draw_overlay.md)
+
+## E
+
+- [TerrainData::elev_px_to_world](../scripts/data/TerrainData/functions/elev_px_to_world.md) — Convert elevation pixel coords to world meters (top-left origin).
+- [TerrainData::end_batch](../scripts/data/TerrainData/functions/end_batch.md) — End a batch - emits coalesced signals.
+- [ScenarioDragLinkService::end_drag](../scripts/editors/services/ScenarioDragLinkService/functions/end_drag.md)
+- [PickupItem::end_inspect](../scripts/core/PickupItem/functions/end_inspect.md) — Runs on inspect close
+- [ScenarioDragLinkService::end_link](../scripts/editors/services/ScenarioDragLinkService/functions/end_link.md)
+- [ScenarioEditorOverlay::end_link_preview](../scripts/editors/ScenarioEditorOverlay/functions/end_link_preview.md) — End live link preview and clear state
+- [Game::end_scenario_and_go_to_debrief](../scripts/core/Game/functions/end_scenario_and_go_to_debrief.md) — End mission and navigate to debrief
+- [ScenarioPersistenceService::ensure_json_ext](../scripts/editors/services/ScenarioPersistenceService/functions/ensure_json_ext.md)
+- [TerrainToolBase::ensure_preview](../scripts/editors/tools/TerrainToolBase/functions/ensure_preview.md) — Ensure the preview exists
+- [LogService::error](../scripts/core/LogService/functions/error.md) — Log ERROR level rich message
+- [ScenarioUnit::estimate_eta_s](../scripts/editors/ScenarioUnit/functions/estimate_eta_s.md) — Estimate remaining time using grid weights (cheap mid-segment sampling).
+- [MovementAgent::eta_seconds](../scripts/ai/MovementAgent/functions/eta_seconds.md) — ETA (seconds) along current remaining path with current base speed.
+- [MissionResolution::evaluate_outcome](../scripts/core/MissionResolution/functions/evaluate_outcome.md) — Compute current best-guess outcome (not final).
+
+## F
+
+- [Game::fail_objective](../scripts/core/Game/functions/fail_objective.md) — Fail objective
+- [MissionResolution::finalize](../scripts/core/MissionResolution/functions/finalize.md) — Finalize the mission (moves to immutable state).
+- [PathGrid::find_path_m](../scripts/terrain/PathGrid/functions/find_path_m.md) — Find a path (meters) for a profile.
+- [SlotsList::flash_denied](../scripts/ui/helpers/SlotsList/functions/flash_denied.md) — Briefly tint a SlotItem to indicate a denied action.
+- [FuelSystem::fuel_debug](../scripts/sim/systems/FuelSystem/functions/fuel_debug.md) — Compact UI snapshot for overlays / panels.
+
+## G
+
+- [ContentDB::get_all_objects](../scripts/core/ContentDB/functions/get_all_objects.md) — Read all objects in a directory.
+- [CombatAdapter::get_ammo_penalty](../scripts/sim/CombatAdapter/functions/get_ammo_penalty.md) — Compute penalty multipliers given the unit and ammo_type *without* consuming.
+- [ContentDB::get_briefing](../scripts/core/ContentDB/functions/get_briefing.md) — Briefing helpers.
+- [ContentDB::get_briefing_for_mission](../scripts/core/ContentDB/functions/get_briefing_for_mission.md) — Convenience explicit mission briefing resolver.
+- [ContentDB::get_briefings](../scripts/core/ContentDB/functions/get_briefings.md) — Get multiple briefings by ids
+- [ContentDB::get_campaign](../scripts/core/ContentDB/functions/get_campaign.md) — Campaigns helpers.
+- [ContentDB::get_campaigns](../scripts/core/ContentDB/functions/get_campaigns.md) — Get multiple campaigns by IDs
+- [UnitBaseTask::get_configurable_props](../scripts/editors/tasks/UnitBaseTask/functions/get_configurable_props.md) — Return list of exported properties for dynamic config UIs.
+- [TerrainBrush::get_draw_recipe](../scripts/terrain/TerrainBrush/functions/get_draw_recipe.md) — Provide a light-weight draw recipe for the renderer.
+- [TerrainData::get_elev_px](../scripts/data/TerrainData/functions/get_elev_px.md) — Get elevation (meters) at sample coord.
+- [TerrainData::get_elevation_block](../scripts/data/TerrainData/functions/get_elevation_block.md) — Returns a row-major block of elevation samples (r channel) for the clipped rect.
+- [STTService::get_final_result](../scripts/radio/STTService/functions/get_final_result.md) — Returns the last final result from the recognizer (non-blocking).
+- [FuelSystem::get_fuel_state](../scripts/sim/systems/FuelSystem/functions/get_fuel_state.md)
+- [Persistence::get_last_save_id_for_campaign](../scripts/core/Persistence/functions/get_last_save_id_for_campaign.md) — Return last save ID for `campaign_id`, or empty.
+- [ContentDB::get_object](../scripts/core/ContentDB/functions/get_object.md) — Read a single object by id.
+- [ContentDB::get_objects](../scripts/core/ContentDB/functions/get_objects.md) — Read multiple objects by ids (keeps order).
+- [NARules::get_parser_tables](../scripts/radio/NARules/functions/get_parser_tables.md) — Build and return the parser table
+- [STTService::get_partial](../scripts/radio/STTService/functions/get_partial.md) — Returns the latest partial result from the recognizer (non-blocking).
+- [ScenarioEditorOverlay::get_pick_at](../scripts/editors/ScenarioEditorOverlay/functions/get_pick_at.md) — Return the closest pickable entity under the given screen position
+- [ContentDB::get_scenario](../scripts/core/ContentDB/functions/get_scenario.md) — Missions helpers.
+- [ContentDB::get_scenarios](../scripts/core/ContentDB/functions/get_scenarios.md) — Get multiple scenarios by IDs
+- [Debrief::get_selected_commendation](../scripts/ui/Debrief/functions/get_selected_commendation.md) — Returns the currently selected award, or an empty string if none is selected.
+- [Debrief::get_selected_recipient](../scripts/ui/Debrief/functions/get_selected_recipient.md) — Returns the selected recipient name, or an empty string if none is selected.
+- [TerrainData::get_size](../scripts/data/TerrainData/functions/get_size.md) — Get terrain size (meters).
+- [TerrainRender::get_surface_at_terrain_position](../scripts/terrain/TerrainRender/functions/get_surface_at_terrain_position.md) — API to get surface at map position
+- [TerrainRender::get_terrain_position](../scripts/terrain/TerrainRender/functions/get_terrain_position.md) — API to get the map position
+- [TerrainRender::get_terrain_size](../scripts/terrain/TerrainRender/functions/get_terrain_size.md) — API to get the map size
+- [AmmoSystem::get_unit](../scripts/sim/systems/AmmoSystem/functions/get_unit.md) — Retrieve the UnitData previously registered (or null if unknown).
+- [ContentDB::get_unit](../scripts/core/ContentDB/functions/get_unit.md) — Units helpers.
+- [ContentDB::get_unit_categories](../scripts/core/ContentDB/functions/get_unit_categories.md) — Get unit categories by IDs
+- [ContentDB::get_unit_category](../scripts/core/ContentDB/functions/get_unit_category.md) — Unit Category helpers.
+- [ContentDB::get_units](../scripts/core/ContentDB/functions/get_units.md) — Get units by IDs
+- [NARules::get_vosk_grammar_words](../scripts/radio/NARules/functions/get_vosk_grammar_words.md) — Build and return a vosk grammar list
+- [Game::goto_scene](../scripts/core/Game/functions/goto_scene.md) — Change to scene at `path`; logs error if missing.
+- [TerrainRender::grid_to_pos](../scripts/terrain/TerrainRender/functions/grid_to_pos.md) — API to get terrain local position from grid number
+
+## H
+
+- [ScenarioToolBase::handle_input](../scripts/editors/tools/ScenarioToolBase/functions/handle_input.md) — Editor forwards overlay input here
+- [PickupItem::handle_inspect_input](../scripts/core/PickupItem/functions/handle_inspect_input.md)
+- [TerrainElevationTool::handle_view_input](../scripts/editors/tools/TerrainElevationTool/functions/handle_view_input.md)
+- [TerrainLabelTool::handle_view_input](../scripts/editors/tools/TerrainLabelTool/functions/handle_view_input.md)
+- [TerrainLineTool::handle_view_input](../scripts/editors/tools/TerrainLineTool/functions/handle_view_input.md)
+- [TerrainPointTool::handle_view_input](../scripts/editors/tools/TerrainPointTool/functions/handle_view_input.md)
+- [TerrainPolygonTool::handle_view_input](../scripts/editors/tools/TerrainPolygonTool/functions/handle_view_input.md)
+- [TerrainToolBase::handle_view_input](../scripts/editors/tools/TerrainToolBase/functions/handle_view_input.md) — Handle viewport input.
+
+## I
+
+- [ContentDB::ids_from_resources](../scripts/core/ContentDB/functions/ids_from_resources.md) — Serialize resources to IDs
+- [ContentDB::image_to_png_b64](../scripts/core/ContentDB/functions/image_to_png_b64.md) — Serialize a image to Base 64
+- [LogService::info](../scripts/core/LogService/functions/info.md) — Log INFO level rich message
+- [AmmoSystem::is_critical](../scripts/sim/systems/AmmoSystem/functions/is_critical.md) — True if current/cap <= critical threshold (and > 0).
+- [FuelSystem::is_critical](../scripts/sim/systems/FuelSystem/functions/is_critical.md)
+- [AmmoSystem::is_empty](../scripts/sim/systems/AmmoSystem/functions/is_empty.md) — True if current ammo is zero.
+- [FuelSystem::is_empty](../scripts/sim/systems/FuelSystem/functions/is_empty.md)
+- [TerrainRender::is_inside_map](../scripts/terrain/TerrainRender/functions/is_inside_map.md) — API to check if position is inside map
+- [TerrainRender::is_inside_terrain](../scripts/terrain/TerrainRender/functions/is_inside_terrain.md) — API to check if position is inside terrain
+- [PickupItem::is_inspecting](../scripts/core/PickupItem/functions/is_inspecting.md)
+- [AmmoSystem::is_low](../scripts/sim/systems/AmmoSystem/functions/is_low.md) — True if current/cap <= low threshold (and > 0).
+- [FuelSystem::is_low](../scripts/sim/systems/FuelSystem/functions/is_low.md)
+
+## L
+
+- [Settings::linear_to_db](../scripts/ui/Settings/functions/linear_to_db.md) — Linear→dB helper.
+- [ContentDB::list_briefings](../scripts/core/ContentDB/functions/list_briefings.md) — List all briefings
+- [ContentDB::list_campaigns](../scripts/core/ContentDB/functions/list_campaigns.md) — List all campaigns
+- [ContentDB::list_recruitable_units](../scripts/core/ContentDB/functions/list_recruitable_units.md) — Get list of reqreuitable units for scenario
+- [Persistence::list_saves_for_campaign](../scripts/core/Persistence/functions/list_saves_for_campaign.md) — Return array of save dicts for `campaign_id`.
+- [ContentDB::list_scenarios](../scripts/core/ContentDB/functions/list_scenarios.md) — list all scenarios
+- [ContentDB::list_scenarios_for_campaign](../scripts/core/ContentDB/functions/list_scenarios_for_campaign.md) — List all scenarios for a campaign by ID
+- [ContentDB::list_unit_categories](../scripts/core/ContentDB/functions/list_unit_categories.md) — List all unit categories
+- [ContentDB::list_units](../scripts/core/ContentDB/functions/list_units.md) — List all units
+- [ScenarioPersistenceService::load_from_path](../scripts/editors/services/ScenarioPersistenceService/functions/load_from_path.md)
+- [ContentDB::load_res](../scripts/core/ContentDB/functions/load_res.md) — Deserialize a resource
+- [AmmoRearmPanel::load_units](../scripts/ui/AmmoRearmPanel/functions/load_units.md)
+- [TerrainBrush::los_attenuation_for_length](../scripts/terrain/TerrainBrush/functions/los_attenuation_for_length.md) — Returns cumulative LOS attenuation for a ray marching `length_m`.
+
+## M
+
+- [UnitBaseTask::make_default_params](../scripts/editors/tasks/UnitBaseTask/functions/make_default_params.md) — Default parameter dictionary from exported properties.
+- [ScenarioTasksService::make_task_title](../scripts/editors/services/ScenarioTasksService/functions/make_task_title.md)
+- [TerrainEditor::map_to_screen](../scripts/editors/TerrainEditor/functions/map_to_screen.md) — API to convert terrain meters to a screen-space point
+- [TerrainEditor::map_to_terrain](../scripts/editors/TerrainEditor/functions/map_to_terrain.md) — Wrapper for map_to_terrain from terrain renderer
+- [TerrainRender::map_to_terrain](../scripts/terrain/TerrainRender/functions/map_to_terrain.md) — Helper function to convert terrain position to map position
+- [ContourLayer::mark_dirty](../scripts/terrain/ContourLayer/functions/mark_dirty.md) — API to request contour rebuild
+- [GridLayer::mark_dirty](../scripts/terrain/GridLayer/functions/mark_dirty.md)
+- [LabelLayer::mark_dirty](../scripts/terrain/LabelLayer/functions/mark_dirty.md) — Marks the whole layer as dirty and queues a redraw (forces full rebuild)
+- [LineLayer::mark_dirty](../scripts/terrain/LineLayer/functions/mark_dirty.md) — Marks the whole layer as dirty and queues a redraw (forces full rebuild)
+- [MarginLayer::mark_dirty](../scripts/terrain/MarginLayer/functions/mark_dirty.md) — Mark dirty for redraw
+- [PointLayer::mark_dirty](../scripts/terrain/PointLayer/functions/mark_dirty.md) — Marks the whole layer as dirty and queues a redraw (forces full rebuild)
+- [SurfaceLayer::mark_dirty](../scripts/terrain/SurfaceLayer/functions/mark_dirty.md) — Marks the whole layer as dirty and queues a redraw (forces full rebuild)
+- [PathGrid::mix](../scripts/terrain/PathGrid/functions/mix.md)
+- [ScenarioUnit::move_state](../scripts/editors/ScenarioUnit/functions/move_state.md) — Query helpers (for UI/AI).
+- [MovementAgent::move_to_m](../scripts/ai/MovementAgent/functions/move_to_m.md) — Command pathfind and start moving to a world-meter destination.
+- [TerrainBrush::movement_multiplier](../scripts/terrain/TerrainBrush/functions/movement_multiplier.md) — Returns the movement multiplier for a given profile.
+
+## N
+
+- [TerrainRender::nav_estimate_time_s](../scripts/terrain/TerrainRender/functions/nav_estimate_time_s.md) — Estimate travel time (seconds) along a path for a given base speed and profile
+- [TerrainRender::nav_find_path_m](../scripts/terrain/TerrainRender/functions/nav_find_path_m.md) — Request a path in terrain meters via attached PathGrid
+
+## O
+
+- [ScenarioEditorOverlay::on_ctx_open](../scripts/editors/ScenarioEditorOverlay/functions/on_ctx_open.md) — Open context menu at mouse position using current pick
+- [ScenarioEditorOverlay::on_dbl_click](../scripts/editors/ScenarioEditorOverlay/functions/on_dbl_click.md) — Handle double-click on a glyph (open config)
+- [PickupItem::on_drop](../scripts/core/PickupItem/functions/on_drop.md) — Runs on drop
+- [TerrainToolBase::on_mouse_inside](../scripts/editors/tools/TerrainToolBase/functions/on_mouse_inside.md) — Editor tells the tool the mouse entered/exited the viewport
+- [ScenarioEditorOverlay::on_mouse_move](../scripts/editors/ScenarioEditorOverlay/functions/on_mouse_move.md) — Update hover state and schedule redraw
+- [PickupItem::on_pickup](../scripts/core/PickupItem/functions/on_pickup.md) — Runs on pickup
+- [SimWorld::on_unit_position](../scripts/sim/SimWorld/functions/on_unit_position.md) — Movement hook: call from movement/controller code whenever a unit moves.
+- [NewTerrainDialog::open_for_edit](../scripts/editors/NewTerrainDialog/functions/open_for_edit.md) — Open the dialog for editing an existing TerrainData
+- [OrdersParser::order_to_string](../scripts/radio/OrdersParser/functions/order_to_string.md) — Human-friendly summary for a single order.
+
+## P
+
+- [OrdersParser::parse](../scripts/radio/OrdersParser/functions/parse.md) — Parse a full STT sentence into one or more structured orders.
+- [ScenarioUnit::path_index](../scripts/editors/ScenarioUnit/functions/path_index.md)
+- [ScenarioUnit::pause_move](../scripts/editors/ScenarioUnit/functions/pause_move.md) — Pause.
+- [ScenarioTriggersService::place_trigger](../scripts/editors/services/ScenarioTriggersService/functions/place_trigger.md)
+- [ScenarioUnit::plan_move](../scripts/editors/ScenarioUnit/functions/plan_move.md) — Plan a path from current position to dest_m using PathGrid.
+- [ContentDB::png_b64_to_image](../scripts/core/ContentDB/functions/png_b64_to_image.md) — Deserialize a image from Base 64
+- [Debrief::populate_from_dict](../scripts/ui/Debrief/functions/populate_from_dict.md) — Populates the entire UI from a single dictionary.
+- [TerrainRender::pos_to_grid](../scripts/terrain/TerrainRender/functions/pos_to_grid.md) — API to get grid number from terrain local position
+- [CombatController::print_unit_status](../scripts/sim/CombatController/functions/print_unit_status.md) — check unit mid combat status for testing of combat status
+- [ScenarioHistory::push_multi_replace](../scripts/editors/ScenarioHistory/functions/push_multi_replace.md) — Replace multiple arrays atomically.
+
+## R
+
+- [UnitFuelState::ratio](../scripts/data/UnitFuelState/functions/ratio.md) — Calculates and returns the current fuel ratio for the unit.
+- [Game::ready](../scripts/core/Game/functions/ready.md)
+- [PathGrid::rebuild](../scripts/terrain/PathGrid/functions/rebuild.md) — Build/rebuild grid for a movement profile
+- [ScenarioSceneTreeService::rebuild](../scripts/editors/services/ScenarioSceneTreeService/functions/rebuild.md)
+- [PathGrid::rebuild_async_cancel](../scripts/terrain/PathGrid/functions/rebuild_async_cancel.md) — Cancel an ongoing async build (best-effort)
+- [Game::record_casualties](../scripts/core/Game/functions/record_casualties.md) — Record casualties
+- [Game::record_unit_lost](../scripts/core/Game/functions/record_unit_lost.md) — record lost units
+- [ScenarioHistory::redo](../scripts/editors/ScenarioHistory/functions/redo.md) — Redo next action
+- [TerrainHistory::redo](../scripts/editors/TerrainHistory/functions/redo.md) — Redo the last action
+- [MapController::refresh](../scripts/core/MapController/functions/refresh.md) — Force-refresh the texture and refit
+- [ActionRebindButton::refresh_label](../scripts/ui/helpers/ActionRebindButton/functions/refresh_label.md) — Update text from current binding.
+- [FuelSystem::register_scenario_unit](../scripts/sim/systems/FuelSystem/functions/register_scenario_unit.md) — Public API
+- [AmmoSystem::register_unit](../scripts/sim/systems/AmmoSystem/functions/register_unit.md) — Register a unit so AmmoSystem tracks it and applies defaults if missing.
+- [TerrainData::remove_label](../scripts/data/TerrainData/functions/remove_label.md) — Remove label by id
+- [TerrainData::remove_line](../scripts/data/TerrainData/functions/remove_line.md) — Remove line by id.
+- [TerrainData::remove_point](../scripts/data/TerrainData/functions/remove_point.md) — Remove point by id
+- [TerrainData::remove_surface](../scripts/data/TerrainData/functions/remove_surface.md) — Remove surface by id.
+- [TerrainRender::render_error](../scripts/terrain/TerrainRender/functions/render_error.md) — Show a render error
+- [CombatAdapter::request_fire](../scripts/sim/CombatAdapter/functions/request_fire.md) — Request to fire: returns true if ammo was consumed; false if blocked.
+- [CombatAdapter::request_fire_with_penalty](../scripts/sim/CombatAdapter/functions/request_fire_with_penalty.md) — Request to fire *and* return penalty info for the caller to apply to accuracy/ROF/etc.
+- [ScenarioEditorContext::request_overlay_redraw](../scripts/editors/services/ScenarioEditorContext/functions/request_overlay_redraw.md)
+- [ScenarioEditorOverlay::request_redraw](../scripts/editors/ScenarioEditorOverlay/functions/request_redraw.md) — Request a redraw of the overlay
+- [ScenarioEditorContext::request_scene_tree_rebuild](../scripts/editors/services/ScenarioEditorContext/functions/request_scene_tree_rebuild.md)
+- [ContentDB::res_path_or_null](../scripts/core/ContentDB/functions/res_path_or_null.md) — serialize a resource
+- [ContentDB::resources_from_ids](../scripts/core/ContentDB/functions/resources_from_ids.md) — Deserialize resources from IDs
+- [ScenarioUnit::resume_move](../scripts/editors/ScenarioUnit/functions/resume_move.md) — Resume.
+
+## S
+
+- [ContentDB::safe_dup](../scripts/core/ContentDB/functions/safe_dup.md) — Safely duplicate a dictionary or array
+- [ScenarioPersistenceService::save_to_path](../scripts/editors/services/ScenarioPersistenceService/functions/save_to_path.md)
+- [TerrainEditor::screen_to_map](../scripts/editors/TerrainEditor/functions/screen_to_map.md) — API to convert a screen-space point to terrain-local meters,
+- [MapController::screen_to_map_and_terrain](../scripts/core/MapController/functions/screen_to_map_and_terrain.md) — Helper: from screen pos to map pixels & terrain meters.
+- [TerrainEditor::screen_to_world](../scripts/editors/TerrainEditor/functions/screen_to_world.md) — API to get screen position from world position
+- [Game::select_campaign](../scripts/core/Game/functions/select_campaign.md) — Set current campaign and emit `signal campaign_selected`.
+- [Game::select_save](../scripts/core/Game/functions/select_save.md) — Set current save and emit `signal save_selected`.
+- [Game::select_scenario](../scripts/core/Game/functions/select_scenario.md) — Set current mission and emit `signal mission_selected`.
+- [BriefData::serialize](../scripts/data/BriefData/functions/serialize.md) — Serializes briefing data to JSON
+- [BriefItemData::serialize](../scripts/data/BriefItemData/functions/serialize.md) — Serializes Briefing Item to JSON
+- [CampaignData::serialize](../scripts/data/CampaignData/functions/serialize.md) — Serialize campaign data to JSON
+- [ScenarioData::serialize](../scripts/data/ScenarioData/functions/serialize.md) — Serialize data to JSON
+- [ScenarioObjectiveData::serialize](../scripts/data/ScenarioObjectiveData/functions/serialize.md) — Serialize into JSON
+- [ScenarioTask::serialize](../scripts/editors/ScenarioTask/functions/serialize.md) — Convert this task into a JSON-safe dictionary
+- [ScenarioTrigger::serialize](../scripts/editors/triggers/ScenarioTrigger/functions/serialize.md)
+- [ScenarioUnit::serialize](../scripts/editors/ScenarioUnit/functions/serialize.md) — Serialize to JSON.
+- [TerrainData::serialize](../scripts/data/TerrainData/functions/serialize.md) — Serialize terrain to JSON
+- [UnitCategoryData::serialize](../scripts/data/UnitCategoryData/functions/serialize.md) — Serialize data to JSON
+- [UnitData::serialize](../scripts/data/UnitData/functions/serialize.md) — Serialize this unit to JSON
+- [UnitSlotData::serialize](../scripts/data/UnitSlotData/functions/serialize.md) — Serialize data to JSON
+- [ActionRebindButton::set_action](../scripts/ui/helpers/ActionRebindButton/functions/set_action.md) — Set action programmatically.
+- [SlotItem::set_assignment](../scripts/ui/helpers/SlotItem/functions/set_assignment.md) — Assign a unit to this slot and refresh visuals.
+- [SlotsList::set_assignment](../scripts/ui/helpers/SlotsList/functions/set_assignment.md) — Apply an assigned unit to a specific SlotItem by slot_id.
+- [Debrief::set_casualties](../scripts/ui/Debrief/functions/set_casualties.md) — Sets friendly and enemy casualty figures and updates the RichText labels.
+- [Debrief::set_commendation_options](../scripts/ui/Debrief/functions/set_commendation_options.md) — Sets the available commendation names in the Award dropdown.
+- [ContourLayer::set_data](../scripts/terrain/ContourLayer/functions/set_data.md) — API to set Terrain Data
+- [GridLayer::set_data](../scripts/terrain/GridLayer/functions/set_data.md)
+- [LabelLayer::set_data](../scripts/terrain/LabelLayer/functions/set_data.md) — Assigns TerrainData, resets caches, wires signals, and schedules redraw
+- [LineLayer::set_data](../scripts/terrain/LineLayer/functions/set_data.md) — Assigns TerrainData, resets caches, wires signals, and schedules redraw
+- [MarginLayer::set_data](../scripts/terrain/MarginLayer/functions/set_data.md) — API to set terrain data
+- [PointLayer::set_data](../scripts/terrain/PointLayer/functions/set_data.md) — Assigns TerrainData, resets caches, wires signals, and schedules redraw
+- [SurfaceLayer::set_data](../scripts/terrain/SurfaceLayer/functions/set_data.md) — Assigns TerrainData, resets caches, wires signals, and schedules redraw
+- [CombatController::set_debug_enabled](../scripts/sim/CombatController/functions/set_debug_enabled.md) — Toggle debug at runtime
+- [TerrainData::set_elev_px](../scripts/data/TerrainData/functions/set_elev_px.md) — Set elevation (meters) at sample coord.
+- [TerrainData::set_elevation_block](../scripts/data/TerrainData/functions/set_elevation_block.md) — Writes a row-major block of elevation samples (r channel) into the clipped rect.
+- [DebugOverlay::set_fuel_system](../scripts/test/DebugOverlay/functions/set_fuel_system.md) — Optionally bind FuelSystem explicitly if you do not use the group.
+- [TerrainData::set_label_pose](../scripts/data/TerrainData/functions/set_label_pose.md) — Update labels transform by id
+- [TerrainData::set_label_style](../scripts/data/TerrainData/functions/set_label_style.md) — Update labelstyle or metadata by id
+- [TerrainData::set_line_brush](../scripts/data/TerrainData/functions/set_line_brush.md) — Update line brush by id.
+- [TerrainData::set_line_points](../scripts/data/TerrainData/functions/set_line_points.md) — Update line points by id (fast path while drawing).
+- [TerrainData::set_line_style](../scripts/data/TerrainData/functions/set_line_style.md) — Update line style.
+- [Debrief::set_mission_name](../scripts/ui/Debrief/functions/set_mission_name.md) — Sets the mission name and refreshes the title label.
+- [MissionResolution::set_objective_state](../scripts/core/MissionResolution/functions/set_objective_state.md) — Update an objective state.
+- [Debrief::set_objectives_results](../scripts/ui/Debrief/functions/set_objectives_results.md) — Populates the objectives list with checkmarks and crosses.
+- [Debrief::set_outcome](../scripts/ui/Debrief/functions/set_outcome.md) — Sets the outcome label text and refreshes the title label.
+- [TerrainData::set_point_transform](../scripts/data/TerrainData/functions/set_point_transform.md) — Update points transformation
+- [Debrief::set_recipients_from_units](../scripts/ui/Debrief/functions/set_recipients_from_units.md) — Copies the unit names currently displayed into the Recipient dropdown.
+- [Game::set_scenario_loadout](../scripts/core/Game/functions/set_scenario_loadout.md) — Set current mission loadout and emit `signal mission_loadout_selected`
+- [Debrief::set_score](../scripts/ui/Debrief/functions/set_score.md) — Sets base, bonus, penalty, and total score fields.
+- [ScenarioEditorOverlay::set_selected](../scripts/editors/ScenarioEditorOverlay/functions/set_selected.md) — Set current selection highlight
+- [UnitCard::set_selected](../scripts/ui/helpers/UnitCard/functions/set_selected.md) — Mark card as selected by the controller.
+- [ScenarioSelectionService::set_selection](../scripts/editors/services/ScenarioSelectionService/functions/set_selection.md)
+- [TerrainData::set_surface_brush](../scripts/data/TerrainData/functions/set_surface_brush.md) — Update surface brush or metadata by id.
+- [TerrainData::set_surface_points](../scripts/data/TerrainData/functions/set_surface_points.md) — Update surface points by id (fast path while drawing).
+- [AmmoSystem::set_unit_position](../scripts/sim/systems/AmmoSystem/functions/set_unit_position.md) — Update a unit's world-space position (meters; XZ used, Y ignored).
+- [Debrief::set_units](../scripts/ui/Debrief/functions/set_units.md) — Populates the Units tree with per-unit rows.
+- [Settings::set_visibility](../scripts/ui/Settings/functions/set_visibility.md) — API to set settigns visibility
+- [ScenarioSceneTreeService::setup](../scripts/editors/services/ScenarioSceneTreeService/functions/setup.md)
+- [ScenarioTasksService::setup](../scripts/editors/services/ScenarioTasksService/functions/setup.md)
+- [ScenarioUnitsCatalog::setup](../scripts/editors/services/ScenarioUnitsCatalog/functions/setup.md)
+- [UnitCard::setup](../scripts/ui/helpers/UnitCard/functions/setup.md) — Initialize card visual with a unit dictionary.
+- [DebugOverlay::setup_overlay](../scripts/test/DebugOverlay/functions/setup_overlay.md) — Set up overlay with renderer and the two scenario units [attacker, defender].
+- [NewScenarioDialog::show_dialog](../scripts/editors/NewScenarioDialog/functions/show_dialog.md) — Show/hide dialog.
+- [NewTerrainDialog::show_dialog](../scripts/editors/NewTerrainDialog/functions/show_dialog.md) — Show/hide dialog
+- [ScenarioWeatherDialog::show_dialog](../scripts/editors/ScenarioWeatherDialog/functions/show_dialog.md) — Show/hide dialog
+- [SlotConfigDialog::show_dialog](../scripts/editors/SlotConfigDialog/functions/show_dialog.md) — Show/hide dialog
+- [SlotConfigDialog::show_for](../scripts/editors/SlotConfigDialog/functions/show_for.md) — Show dialog for a specific slot entry index in editor.ctx.data.unit_slots
+- [TaskConfigDialog::show_for](../scripts/editors/TaskConfigDialog/functions/show_for.md)
+- [TriggerConfigDialog::show_for](../scripts/editors/TriggerConfigDialog/functions/show_for.md)
+- [UnitConfigDialog::show_for](../scripts/editors/UnitConfigDialog/functions/show_for.md) — Open dialog for a unit index in editor.ctx.data.units
+- [FuelSystem::speed_mult](../scripts/sim/systems/FuelSystem/functions/speed_mult.md)
+- [MissionResolution::start](../scripts/core/MissionResolution/functions/start.md) — Initialize for a mission.
+- [STTService::start](../scripts/radio/STTService/functions/start.md) — Starts streaming mic audio into Vosk.
+- [PickupItem::start_inspect](../scripts/core/PickupItem/functions/start_inspect.md) — Runs on inspect start
+- [Game::start_scenario](../scripts/core/Game/functions/start_scenario.md) — Start mission
+- [MovementAgent::stop](../scripts/ai/MovementAgent/functions/stop.md) — Command stop immediately.
+- [STTService::stop](../scripts/radio/STTService/functions/stop.md) — Stops streaming mic audio.
+- [ScenarioPersistenceService::suggest_filename](../scripts/editors/services/ScenarioPersistenceService/functions/suggest_filename.md)
+
+## T
+
+- [TerrainEditor::terrain_to_map](../scripts/editors/TerrainEditor/functions/terrain_to_map.md) — Wrapper for terrain_to_map from terrain renderer
+- [TerrainRender::terrain_to_map](../scripts/terrain/TerrainRender/functions/terrain_to_map.md) — helepr function to convert map position to terrain position
+- [AmmoSystem::tick](../scripts/sim/systems/AmmoSystem/functions/tick.md) — Start links for needy units and transfer rounds along active links.
+- [FuelSystem::tick](../scripts/sim/systems/FuelSystem/functions/tick.md)
+- [MissionResolution::tick](../scripts/core/MissionResolution/functions/tick.md) — Advance internal timer.
+- [ScenarioUnit::tick](../scripts/editors/ScenarioUnit/functions/tick.md) — Advance movement by dt seconds on PathGrid (virtual position only).
+- [TerrainRender::to_local](../scripts/terrain/TerrainRender/functions/to_local.md)
+- [MissionResolution::to_summary_payload](../scripts/core/MissionResolution/functions/to_summary_payload.md) — Debrief/persistence payload; stable contract for other screens.
+- [ScenarioEditorContext::toast](../scripts/editors/services/ScenarioEditorContext/functions/toast.md)
+- [PickupItem::toggle_inspect](../scripts/core/PickupItem/functions/toggle_inspect.md)
+- [LogService::trace](../scripts/core/LogService/functions/trace.md) — Log TRACE level rich message
+- [ScenarioTriggersService::try_sync_link](../scripts/editors/services/ScenarioTriggersService/functions/try_sync_link.md)
+
+## U
+
+- [ScenarioHistory::undo](../scripts/editors/ScenarioHistory/functions/undo.md) — Undo last action
+- [TerrainHistory::undo](../scripts/editors/TerrainHistory/functions/undo.md) — undo the last action
+- [AmmoSystem::unregister_unit](../scripts/sim/systems/AmmoSystem/functions/unregister_unit.md) — Stop tracking a unit and tear down any active resupply links.
+- [FuelSystem::unregister_unit](../scripts/sim/systems/FuelSystem/functions/unregister_unit.md)
+- [DebugOverlay::update_debug](../scripts/test/DebugOverlay/functions/update_debug.md)
+- [ScenarioDragLinkService::update_drag](../scripts/editors/services/ScenarioDragLinkService/functions/update_drag.md)
+- [DebugMetricsDisplay::update_information_label](../scripts/ui/DebugMetricsDisplay/functions/update_information_label.md) — Update hardware/software information label
+- [ScenarioDragLinkService::update_link](../scripts/editors/services/ScenarioDragLinkService/functions/update_link.md)
+- [ScenarioEditorOverlay::update_link_preview](../scripts/editors/ScenarioEditorOverlay/functions/update_link_preview.md) — Update live link preview endpoint (mouse)
+- [Game::update_loop](../scripts/core/Game/functions/update_loop.md) — Call from mission tick.
+- [TerrainLineTool::update_preview_at_overlay](../scripts/editors/tools/TerrainLineTool/functions/update_preview_at_overlay.md)
+- [TerrainPolygonTool::update_preview_at_overlay](../scripts/editors/tools/TerrainPolygonTool/functions/update_preview_at_overlay.md)
+- [TerrainToolBase::update_preview_at_overlay](../scripts/editors/tools/TerrainToolBase/functions/update_preview_at_overlay.md) — Update preview location on viewport
+- [TerrainToolBase::update_preview_at_screen](../scripts/editors/tools/TerrainToolBase/functions/update_preview_at_screen.md) — Update preview position on screen
+- [DebugMetricsDisplay::update_settings_label](../scripts/ui/DebugMetricsDisplay/functions/update_settings_label.md) — Update hardware information label
+
+## V
+
+- [ContentDB::v2](../scripts/core/ContentDB/functions/v2.md) — Serialization helpers
+- [ContentDB::v2_from](../scripts/core/ContentDB/functions/v2_from.md) — Deserialize Vector2
+- [ContentDB::v2arr_deserialize](../scripts/core/ContentDB/functions/v2arr_deserialize.md) — deserialize PackedVector2Array
+- [ContentDB::v2arr_serialize](../scripts/core/ContentDB/functions/v2arr_serialize.md) — Serialize PackedVector2Array
+
+## W
+
+- [LogService::warning](../scripts/core/LogService/functions/warning.md) — Log WARNING level rich message
+- [TerrainEffects::weather_severity_from_scenario](../scripts/sim/TerrainEffects/functions/weather_severity_from_scenario.md) — Derive 0..1 weather severity from ScenarioData (fog/rain).
+- [PathGrid::world_to_cell](../scripts/terrain/PathGrid/functions/world_to_cell.md) — Convert world meters -> grid cell.
+- [TerrainData::world_to_elev_px](../scripts/data/TerrainData/functions/world_to_elev_px.md) — Convert world meters to elevation pixel coords.
+- [TerrainEditor::world_to_screen](../scripts/editors/TerrainEditor/functions/world_to_screen.md) — API to get world position from screen position
+
+## #
+
+- [UnitSelect::_active_roles](../scripts/ui/UnitSelect/functions/_active_roles.md) — Collect roles enabled in current filter
+- [TerrainLabelTool::_add_label](../scripts/editors/tools/TerrainLabelTool/functions/_add_label.md)
+- [TerrainPointTool::_add_point](../scripts/editors/tools/TerrainPointTool/functions/_add_point.md)
+- [AmmoRearmPanel::_add_section_label](../scripts/ui/AmmoRearmPanel/functions/_add_section_label.md)
+- [Debrief::_align_right_split](../scripts/ui/Debrief/functions/_align_right_split.md) — Computes the required commendation panel height so the bottom of the Units area
+aligns with the bottom of the Casualties panel, without shrinking below
+MIN_COMMEND_PANEL_HEIGHT.
+- [OrdersParser::_all_under_ten](../scripts/radio/OrdersParser/functions/_all_under_ten.md) — True if all numbers in array are 0..9.
+- [AmmoRearmPanel::_ammo_tooltip](../scripts/ui/AmmoRearmPanel/functions/_ammo_tooltip.md)
+- [TerrainElevationTool::_apply](../scripts/editors/tools/TerrainElevationTool/functions/_apply.md) — Draw elevation change
+- [Settings::_apply_and_save](../scripts/ui/Settings/functions/_apply_and_save.md) — Apply settings and persist.
+- [ScenarioHistory::_apply_array](../scripts/editors/ScenarioHistory/functions/_apply_array.md)
+- [TerrainHistory::_apply_array](../scripts/editors/TerrainHistory/functions/_apply_array.md) — Replace `data[array_name]` with `value` and emit change.
+- [Settings::_apply_audio](../scripts/ui/Settings/functions/_apply_audio.md) — Apply audio to buses.
+- [TerrainRender::_apply_base_style_if_needed](../scripts/terrain/TerrainRender/functions/_apply_base_style_if_needed.md) — Build base style
+- [CombatController::_apply_casualties](../scripts/sim/CombatController/functions/_apply_casualties.md) — Apply casualties to runtime state.
+- [TerrainHistory::_apply_elev_block](../scripts/editors/TerrainHistory/functions/_apply_elev_block.md) — Apply an elevation block via TerrainData API and emit change.
+- [AmmoRearmPanel::_apply_fill_ratio](../scripts/ui/AmmoRearmPanel/functions/_apply_fill_ratio.md)
+- [STTService::_apply_final](../scripts/radio/STTService/functions/_apply_final.md) — Apply a Vosk final by replacing the current partial segment with final text.
+- [Settings::_apply_gameplay](../scripts/ui/Settings/functions/_apply_gameplay.md) — Apply gameplay flags.
+- [TerrainHistory::_apply_item_by_id](../scripts/editors/TerrainHistory/functions/_apply_item_by_id.md) — Replace a single item (by id) in `data[array_name]` with `item`, then emit.
+- [FuelRefuelPanel::_apply_refuel](../scripts/ui/FuelRefuelPanel/functions/_apply_refuel.md)
+- [SlotItem::_apply_style](../scripts/ui/helpers/SlotItem/functions/_apply_style.md) — Apply style
+- [MissionSelect::_apply_transparent_button_style](../scripts/ui/MissionSelect/functions/_apply_transparent_button_style.md) — Remove all button styleboxes so only icon/text remains.
+- [Settings::_apply_ui_from_config](../scripts/ui/Settings/functions/_apply_ui_from_config.md) — Push saved values into UI.
+- [SurfaceLayer::_apply_union_result](../scripts/terrain/SurfaceLayer/functions/_apply_union_result.md) — Applies a finished union result to the group if still up-to-date
+- [Settings::_apply_video](../scripts/ui/Settings/functions/_apply_video.md) — Apply video settings to the window/engine.
+- [MapController::_apply_viewport_texture](../scripts/core/MapController/functions/_apply_viewport_texture.md) — Assign the terrain viewport as the map texture
+- [Debrief::_assert_nodes](../scripts/ui/Debrief/functions/_assert_nodes.md) — Emits editor warnings if required scene nodes are missing.
+- [PathGrid::_astar_key](../scripts/terrain/PathGrid/functions/_astar_key.md) — Create a stable cache key for A* instances (includes everything that changes weights)
+- [MissionSelect::_attach_pin_label](../scripts/ui/MissionSelect/functions/_attach_pin_label.md) — Create and attach a readable label to a pin button.
+- [GridLayer::_bake_grid_texture](../scripts/terrain/GridLayer/functions/_bake_grid_texture.md)
+- [ActionRebindButton::_begin_capture](../scripts/ui/helpers/ActionRebindButton/functions/_begin_capture.md) — Enter capture mode.
+- [AmmoSystem::_begin_link](../scripts/sim/systems/AmmoSystem/functions/_begin_link.md) — Begin a resupply link from `src_id` to `dst_id`.
+- [FuelSystem::_begin_link](../scripts/sim/systems/FuelSystem/functions/_begin_link.md)
+- [PathGrid::_bind_terrain_signals](../scripts/terrain/PathGrid/functions/_bind_terrain_signals.md)
+- [TerrainElevationTool::_block_from_image](../scripts/editors/tools/TerrainElevationTool/functions/_block_from_image.md) — Returns a row-major block of elevation samples for the clipped rect.
+- [TerrainEffects::_brush_fields](../scripts/sim/TerrainEffects/functions/_brush_fields.md) — Brush field adapter for either TerrainRender or TerrainData (area features only).
+- [SurfaceLayer::_brush_key](../scripts/terrain/SurfaceLayer/functions/_brush_key.md) — Builds a stable key string for grouping surfaces by brush/recipe
+- [TerrainElevationTool::_brush_rect_px](../scripts/editors/tools/TerrainElevationTool/functions/_brush_rect_px.md) — Helper function to get brush rect
+- [Settings::_build_audio_ui](../scripts/ui/Settings/functions/_build_audio_ui.md) — Create rows for each audio bus.
+- [Briefing::_build_board](../scripts/ui/Briefing/functions/_build_board.md) — Put the whiteboard background.
+- [ScenarioUnitsCatalog::_build_categories](../scripts/editors/services/ScenarioUnitsCatalog/functions/_build_categories.md)
+- [AmmoRearmPanel::_build_controls_for](../scripts/ui/AmmoRearmPanel/functions/_build_controls_for.md)
+- [Settings::_build_controls_ui](../scripts/ui/Settings/functions/_build_controls_ui.md) — Create rebind buttons for actions.
+- [SurfaceLayer::_build_draw_batches](../scripts/terrain/SurfaceLayer/functions/_build_draw_batches.md) — Builds draw batches by merging consecutive groups with identical recipes
+- [PauseMenu::_build_exit_dialog](../scripts/ui/PauseMenu/functions/_build_exit_dialog.md)
+- [TerrainEditor::_build_exit_dialog](../scripts/editors/TerrainEditor/functions/_build_exit_dialog.md) — Build exit dialog
+- [TaskConfigDialog::_build_form](../scripts/editors/TaskConfigDialog/functions/_build_form.md)
+- [STTService::_build_full_sentence](../scripts/radio/STTService/functions/_build_full_sentence.md) — Build the visible sentence from committed + segment with single spacing.
+- [ScenarioSelectionService::_build_hint](../scripts/editors/services/ScenarioSelectionService/functions/_build_hint.md)
+- [ScenarioTasksService::_build_list](../scripts/editors/services/ScenarioTasksService/functions/_build_list.md)
+- [MissionSelect::_build_pins](../scripts/ui/MissionSelect/functions/_build_pins.md) — Create pins and position them (normalized coords).
+- [UnitSelect::_build_pool](../scripts/ui/UnitSelect/functions/_build_pool.md) — Build the pool of recruitable unit cards
+- [PauseMenu::_build_restart_dialog](../scripts/ui/PauseMenu/functions/_build_restart_dialog.md)
+- [FuelRefuelPanel::_build_rows](../scripts/ui/FuelRefuelPanel/functions/_build_rows.md)
+- [UnitSelect::_build_slots](../scripts/ui/UnitSelect/functions/_build_slots.md) — Build slot list from mission slot definitions
+- [MainMenu::_build_submenu_buttons](../scripts/ui/MainMenu/functions/_build_submenu_buttons.md) — Creates 3 submenu buttons and wires them to scene changes.
+- [TerrainEditor::_build_tool_buttons](../scripts/editors/TerrainEditor/functions/_build_tool_buttons.md) — Build the tool panel
+- [Settings::_build_video_ui](../scripts/ui/Settings/functions/_build_video_ui.md) — Populate video controls.
+- [PathGrid::_call_main](../scripts/terrain/PathGrid/functions/_call_main.md)
+- [PoolDropArea::_can_drop_data](../scripts/ui/helpers/PoolDropArea/functions/_can_drop_data.md)
+- [SlotItem::_can_drop_data](../scripts/ui/helpers/SlotItem/functions/_can_drop_data.md) — Validate payload type and role compatibility for dropping onto this slot.
+- [SurfaceLayer::_cancel_all_threads](../scripts/terrain/SurfaceLayer/functions/_cancel_all_threads.md) — Cancels and clears all worker threads and pending versions
+- [TerrainLineTool::_cancel_edit_delete_line](../scripts/editors/tools/TerrainLineTool/functions/_cancel_edit_delete_line.md)
+- [TerrainPolygonTool::_cancel_edit_delete_polygon](../scripts/editors/tools/TerrainPolygonTool/functions/_cancel_edit_delete_polygon.md) — Delete polygon
+- [LogService::_captured_log](../scripts/core/LogService/functions/_captured_log.md) — Log generic message
+- [PathGrid::_cell_center_m](../scripts/terrain/PathGrid/functions/_cell_center_m.md)
+- [ContourLayer::_chaikin_once](../scripts/terrain/ContourLayer/functions/_chaikin_once.md) — One iteration of Chaikin corner cutting.
+- [FuelSystem::_check_thresholds](../scripts/sim/systems/FuelSystem/functions/_check_thresholds.md)
+- [TableCamera::_clamp_to_bounds](../scripts/core/TableCamera/functions/_clamp_to_bounds.md) — Clamp Camera position to bounds
+- [TableCamera::_clamp_vec3_to_bounds](../scripts/core/TableCamera/functions/_clamp_vec3_to_bounds.md) — Clamp an arbitrary position to bounds
+- [ScenarioTriggerTool::_clear](../scripts/editors/tools/ScenarioTriggerTool/functions/_clear.md)
+- [TaskPlaceTool::_clear](../scripts/editors/tools/TaskPlaceTool/functions/_clear.md)
+- [UnitPlaceTool::_clear](../scripts/editors/tools/UnitPlaceTool/functions/_clear.md)
+- [AmmoRearmPanel::_clear_children](../scripts/ui/AmmoRearmPanel/functions/_clear_children.md)
+- [MainMenu::_clear_children](../scripts/ui/MainMenu/functions/_clear_children.md)
+- [MissionSelect::_clear_children](../scripts/ui/MissionSelect/functions/_clear_children.md) — Remove all children from a node.
+- [ScenarioEditor::_clear_hint](../scripts/editors/ScenarioEditor/functions/_clear_hint.md) — Remove all hint widgets from the hint bar
+- [DebugMenu::_clear_log](../scripts/ui/DebugMenu/functions/_clear_log.md)
+- [ScenarioEditor::_clear_tool](../scripts/editors/ScenarioEditor/functions/_clear_tool.md) — Clear current tool
+- [TerrainData::_clip_rect_to_image](../scripts/data/TerrainData/functions/_clip_rect_to_image.md) — Helper function to clip a rect to image bounds
+- [DebugMenu::_close](../scripts/ui/DebugMenu/functions/_close.md)
+- [MissionSelect::_close_card](../scripts/ui/MissionSelect/functions/_close_card.md) — Hide card and clear selection.
+- [SurfaceLayer::_closed_copy](../scripts/terrain/SurfaceLayer/functions/_closed_copy.md) — Returns a closed copy of a polyline (appends first point if needed)
+- [PathGrid::_closed_no_dup](../scripts/terrain/PathGrid/functions/_closed_no_dup.md)
+- [ScenarioEditor::_cmd_open](../scripts/editors/ScenarioEditor/functions/_cmd_open.md) — Show Open dialog (asks to discard if dirty)
+- [ScenarioEditor::_cmd_save](../scripts/editors/ScenarioEditor/functions/_cmd_save.md) — Save to current path or fallback to Save As
+- [ScenarioEditor::_cmd_save_as](../scripts/editors/ScenarioEditor/functions/_cmd_save_as.md) — Show Save As dialog with suggested filename
+- [MainMenu::_collapse_if_needed](../scripts/ui/MainMenu/functions/_collapse_if_needed.md) — Collapse submenu only if expanded
+- [MainMenu::_collapse_submenu](../scripts/ui/MainMenu/functions/_collapse_submenu.md) — Collapse the submenu.
+- [PathGrid::_collect_features](../scripts/terrain/PathGrid/functions/_collect_features.md)
+- [SmokeCompile::_collect_files](../tools/ci/SmokeCompile/functions/_collect_files.md) — Collect files to compile
+- [TerrainData::_collect_ids](../scripts/data/TerrainData/functions/_collect_ids.md) — Collect valid IDs
+- [Debrief::_collect_payload](../scripts/ui/Debrief/functions/_collect_payload.md) — Collects a snapshot of all user-visible state for higher-level flow management.
+- [DebugMenu::_collect_scenes](../scripts/ui/DebugMenu/functions/_collect_scenes.md) — Collect all scenes
+- [ScenarioEditor::_collect_used_callsigns](../scripts/editors/ScenarioEditor/functions/_collect_used_callsigns.md) — Build set of already-used callsigns for uniqueness checks
+- [ScenarioEditor::_confirm_discard](../scripts/editors/ScenarioEditor/functions/_confirm_discard.md) — Confirm discarding unsaved changes; returns true if accepted
+- [CampaignSelect::_connect_signals](../scripts/ui/CampaignSelect/functions/_connect_signals.md) — Connects UI signals to handlers.
+- [Settings::_connect_signals](../scripts/ui/Settings/functions/_connect_signals.md) — Wire up buttons and live labels.
+- [UnitSelect::_connect_ui](../scripts/ui/UnitSelect/functions/_connect_ui.md) — Connect UI actions to methods
+- [FuelSystem::_consume_tick](../scripts/sim/systems/FuelSystem/functions/_consume_tick.md) — Fuel drain
+- [DebugMetricsDisplay::_cpu_graph_draw](../scripts/ui/DebugMetricsDisplay/functions/_cpu_graph_draw.md)
+- [TerrainLineTool::_current_points](../scripts/editors/tools/TerrainLineTool/functions/_current_points.md)
+- [TerrainPolygonTool::_current_points](../scripts/editors/tools/TerrainPolygonTool/functions/_current_points.md) — retrieve current polygon points
+- [TableCamera::_damp_scalar](../scripts/core/TableCamera/functions/_damp_scalar.md) — Exponential damping for scalars
+- [TableCamera::_damp_vec3](../scripts/core/TableCamera/functions/_damp_vec3.md) — Exponential damping for vectors
+- [TerrainRender::_debounce_relayout_and_push](../scripts/terrain/TerrainRender/functions/_debounce_relayout_and_push.md) — Debounce the relayout and push styles
+- [MovementAgent::_debug_cell_rect_world](../scripts/ai/MovementAgent/functions/_debug_cell_rect_world.md) — Get a Rect2 (in *world meters*) for a cell id.
+- [MovementAgent::_debug_current_cell](../scripts/ai/MovementAgent/functions/_debug_current_cell.md) — Get the agent's current cell (if grid exists).
+- [MovementAgent::_debug_instant_speed](../scripts/ai/MovementAgent/functions/_debug_instant_speed.md) — Compute instantaneous speed (m/s) based on last trail step.
+- [MovementAgent::_debug_push_trail](../scripts/ai/MovementAgent/functions/_debug_push_trail.md) — Push current position into the breadcrumb list.
+- [MovementAgent::_debug_weight_here](../scripts/ai/MovementAgent/functions/_debug_weight_here.md) — Read current cell weight safely.
+- [TerrainHistory::_deep_copy](../scripts/editors/TerrainHistory/functions/_deep_copy.md) — Deep copy for dictionaries, arrays, and common packed arrays used in TerrainData.
+- [ScenarioHistory::_deep_copy_array_res](../scripts/editors/ScenarioHistory/functions/_deep_copy_array_res.md)
+- [ScenarioEditor::_delete_pick](../scripts/editors/ScenarioEditor/functions/_delete_pick.md) — Route deletion to the correct entity handler
+- [ScenarioEditor::_delete_slot](../scripts/editors/ScenarioEditor/functions/_delete_slot.md) — Delete a slot; push history and refresh
+- [ScenarioEditor::_delete_task](../scripts/editors/ScenarioEditor/functions/_delete_task.md) — Delete a task; repair chain links and reindex; push history
+- [ScenarioEditor::_delete_trigger](../scripts/editors/ScenarioEditor/functions/_delete_trigger.md) — Delete a trigger; push history and refresh
+- [ScenarioEditor::_delete_unit](../scripts/editors/ScenarioEditor/functions/_delete_unit.md) — Delete a unit and all its tasks; reindex references; push history
+- [TerrainEditor::_deselect_tool](../scripts/editors/TerrainEditor/functions/_deselect_tool.md) — Deselect the active tool
+- [ScenarioData::_deserialize_unit_slots](../scripts/data/ScenarioData/functions/_deserialize_unit_slots.md)
+- [ScenarioData::_dict_to_vec2](../scripts/data/ScenarioData/functions/_dict_to_vec2.md)
+- [ScenarioData::_difficulty_from](../scripts/data/ScenarioData/functions/_difficulty_from.md)
+- [PathGrid::_dist_point_polyline](../scripts/terrain/PathGrid/functions/_dist_point_polyline.md)
+- [ContourLayer::_draw](../scripts/terrain/ContourLayer/functions/_draw.md)
+- [DebugOverlay::_draw](../scripts/test/DebugOverlay/functions/_draw.md)
+- [GridLayer::_draw](../scripts/terrain/GridLayer/functions/_draw.md)
+- [LabelLayer::_draw](../scripts/terrain/LabelLayer/functions/_draw.md)
+- [LineLayer::_draw](../scripts/terrain/LineLayer/functions/_draw.md)
+- [MarginLayer::_draw](../scripts/terrain/MarginLayer/functions/_draw.md)
+- [MovementAgent::_draw](../scripts/ai/MovementAgent/functions/_draw.md)
+- [PathGridDebugLayer::_draw](../scripts/terrain/PathGridDebugLayer/functions/_draw.md)
+- [PointLayer::_draw](../scripts/terrain/PointLayer/functions/_draw.md)
+- [ScenarioEditorOverlay::_draw](../scripts/editors/ScenarioEditorOverlay/functions/_draw.md) — Main overlay draw: links first, then glyphs, then active tool
+- [SurfaceLayer::_draw](../scripts/terrain/SurfaceLayer/functions/_draw.md)
+- [TerrainElevationTool::_draw](../scripts/editors/tools/TerrainElevationTool/functions/_draw.md)
+- [TerrainLabelTool::_draw](../scripts/editors/tools/TerrainLabelTool/functions/_draw.md)
+- [TerrainLineTool::_draw](../scripts/editors/tools/TerrainLineTool/functions/_draw.md)
+- [TerrainPointTool::_draw](../scripts/editors/tools/TerrainPointTool/functions/_draw.md)
+- [TerrainPolygonTool::_draw](../scripts/editors/tools/TerrainPolygonTool/functions/_draw.md)
+- [ScenarioEditorOverlay::_draw_arrow](../scripts/editors/ScenarioEditorOverlay/functions/_draw_arrow.md) — Draw an arrow line with two head strokes
+- [MovementAgent::_draw_cell_rect_m](../scripts/ai/MovementAgent/functions/_draw_cell_rect_m.md)
+- [GridLayer::_draw_h_line](../scripts/terrain/GridLayer/functions/_draw_h_line.md)
+- [ScenarioEditorOverlay::_draw_icon_with_hover](../scripts/editors/ScenarioEditorOverlay/functions/_draw_icon_with_hover.md) — Draw a texture centered, with hover scale/opacity feedback
+- [LabelLayer::_draw_label_centered](../scripts/terrain/LabelLayer/functions/_draw_label_centered.md) — Draw a centered label with a robust outline (multi-offset fallback)
+- [ContourLayer::_draw_labels_for_placements](../scripts/terrain/ContourLayer/functions/_draw_labels_for_placements.md) — Draw the text plaques using precomputed placements
+- [TerrainRender::_draw_map_size](../scripts/terrain/TerrainRender/functions/_draw_map_size.md) — Resize the map to fit the terrain data
+- [SurfaceLayer::_draw_polyline_closed](../scripts/terrain/SurfaceLayer/functions/_draw_polyline_closed.md) — Draws a closed polyline with optional last segment if not already closed
+- [LineLayer::_draw_polyline_solid](../scripts/terrain/LineLayer/functions/_draw_polyline_solid.md) — Draw a solid polyline
+- [ScenarioEditorOverlay::_draw_slots](../scripts/editors/ScenarioEditorOverlay/functions/_draw_slots.md) — Draw all player slot glyphs and hover titles
+- [ScenarioEditorOverlay::_draw_sync_links](../scripts/editors/ScenarioEditorOverlay/functions/_draw_sync_links.md) — Draw all synchronization lines from triggers to units/tasks
+- [ScenarioEditorOverlay::_draw_task_glyph](../scripts/editors/ScenarioEditorOverlay/functions/_draw_task_glyph.md) — Delegate task glyph drawing to the task resource
+- [ScenarioEditorOverlay::_draw_task_links](../scripts/editors/ScenarioEditorOverlay/functions/_draw_task_links.md) — Draw task chain arrows between unit/task and next task
+- [ScenarioEditorOverlay::_draw_tasks](../scripts/editors/ScenarioEditorOverlay/functions/_draw_tasks.md) — Draw all task glyphs and hover titles
+- [MarginLayer::_draw_text_center](../scripts/terrain/MarginLayer/functions/_draw_text_center.md) — Helper function to draw horizontally centered text
+- [DebugOverlay::_draw_text_panel](../scripts/test/DebugOverlay/functions/_draw_text_panel.md)
+- [ScenarioEditorOverlay::_draw_title](../scripts/editors/ScenarioEditorOverlay/functions/_draw_title.md) — Draw a small label next to a glyph
+- [ScenarioEditorOverlay::_draw_trigger_shape](../scripts/editors/ScenarioEditorOverlay/functions/_draw_trigger_shape.md) — Draw a single trigger's shape + icon with hover colors
+- [ScenarioEditorOverlay::_draw_triggers](../scripts/editors/ScenarioEditorOverlay/functions/_draw_triggers.md) — Draw trigger areas (circle/rect), outlines, and optional icon/title
+- [DebugOverlay::_draw_unit_glyphs](../scripts/test/DebugOverlay/functions/_draw_unit_glyphs.md)
+- [ScenarioEditorOverlay::_draw_units](../scripts/editors/ScenarioEditorOverlay/functions/_draw_units.md) — Draw all unit glyphs and hover titles
+- [GridLayer::_draw_v_line](../scripts/terrain/GridLayer/functions/_draw_v_line.md)
+- [PoolDropArea::_drop_data](../scripts/ui/helpers/PoolDropArea/functions/_drop_data.md)
+- [SlotItem::_drop_data](../scripts/ui/helpers/SlotItem/functions/_drop_data.md) — Emit assignment request for valid drops, else briefly flash deny.
+- [InteractionController::_drop_held](../scripts/core/InteractionController/functions/_drop_held.md)
+- [ScenarioHistory::_dup_res](../scripts/editors/ScenarioHistory/functions/_dup_res.md)
+- [TerrainEditor::_edit_terrain](../scripts/editors/TerrainEditor/functions/_edit_terrain.md) — Create new terrain data
+- [MovementAgent::_effective_speed_at](../scripts/ai/MovementAgent/functions/_effective_speed_at.md) — Function does also include the fuel system penalties for the AI
+- [PathGrid::_elev_m_at](../scripts/terrain/PathGrid/functions/_elev_m_at.md)
+- [FuelSystem::_elevation_delta_norm](../scripts/sim/systems/FuelSystem/functions/_elevation_delta_norm.md)
+- [AmmoTest::_embed_rearm_panel](../scripts/test/AmmoTest/functions/_embed_rearm_panel.md)
+- [PathGrid::_emit_build_failed](../scripts/terrain/PathGrid/functions/_emit_build_failed.md)
+- [PathGrid::_emit_build_progress](../scripts/terrain/PathGrid/functions/_emit_build_progress.md)
+- [PathGrid::_emit_build_ready](../scripts/terrain/PathGrid/functions/_emit_build_ready.md)
+- [PathGrid::_emit_build_started](../scripts/terrain/PathGrid/functions/_emit_build_started.md)
+- [ScenarioHistory::_emit_changed](../scripts/editors/ScenarioHistory/functions/_emit_changed.md)
+- [TerrainHistory::_emit_changed](../scripts/editors/TerrainHistory/functions/_emit_changed.md) — Emit a generic change notification on TerrainData.
+- [TerrainData::_emit_coalesced](../scripts/data/TerrainData/functions/_emit_coalesced.md)
+- [PathGrid::_emit_grid_rebuilt](../scripts/terrain/PathGrid/functions/_emit_grid_rebuilt.md)
+- [STTService::_emit_partial](../scripts/radio/STTService/functions/_emit_partial.md) — Emit the current accumulated sentence as a partial update.
+- [AmmoTest::_enable_log](../scripts/test/AmmoTest/functions/_enable_log.md)
+- [TerrainLineTool::_ensure_current_line_idx](../scripts/editors/tools/TerrainLineTool/functions/_ensure_current_line_idx.md) — Ensure _edit_idx points at the line with _edit_id, return index or -1
+- [TerrainPolygonTool::_ensure_current_poly_idx](../scripts/editors/tools/TerrainPolygonTool/functions/_ensure_current_poly_idx.md) — Ensure _edit_idx points at the polygon with _edit_id, return index or -1
+- [SurfaceLayer::_ensure_group](../scripts/terrain/SurfaceLayer/functions/_ensure_group.md) — Ensures a group record exists for the given brush key
+- [TerrainData::_ensure_id_on_item](../scripts/data/TerrainData/functions/_ensure_id_on_item.md) — Ensure item has ID
+- [TerrainData::_ensure_ids](../scripts/data/TerrainData/functions/_ensure_ids.md) — Ensure IDs are unique
+- [FuelTest::_ensure_panel_below_hud_block](../scripts/test/FuelTest/functions/_ensure_panel_below_hud_block.md)
+- [TerrainLabelTool::_ensure_surfaces](../scripts/editors/tools/TerrainLabelTool/functions/_ensure_surfaces.md)
+- [TerrainPointTool::_ensure_surfaces](../scripts/editors/tools/TerrainPointTool/functions/_ensure_surfaces.md)
+- [ScenarioTask::_ensure_task_index](../scripts/editors/ScenarioTask/functions/_ensure_task_index.md) — Build/refresh the type_id -> Script index
+- [LogService::_enter_tree](../scripts/core/LogService/functions/_enter_tree.md)
+- [TerrainHistory::_erase_item_by_id](../scripts/editors/TerrainHistory/functions/_erase_item_by_id.md) — Remove a single item (by id) from `data[array_name]`, then emit.
+- [ScenarioUnit::_estimate_time_along](../scripts/editors/ScenarioUnit/functions/_estimate_time_along.md) — Sum time for a polyline using mid-segment speed.
+- [DebugMetricsDisplay::_exit_tree](../scripts/ui/DebugMetricsDisplay/functions/_exit_tree.md)
+- [LogService::_exit_tree](../scripts/core/LogService/functions/_exit_tree.md)
+- [PathGrid::_exit_tree](../scripts/terrain/PathGrid/functions/_exit_tree.md)
+- [Radio::_exit_tree](../scripts/radio/Radio/functions/_exit_tree.md) — Ensure we stop capture when the radio node leaves.
+- [MainMenu::_expand_submenu](../scripts/ui/MainMenu/functions/_expand_submenu.md) — Expand the submenu below the Editor button.
+- [UnitSelect::_export_loadout](../scripts/ui/UnitSelect/functions/_export_loadout.md) — Export current mission loadout as dictionary
+- [STTService::_extract_final_text](../scripts/radio/STTService/functions/_extract_final_text.md) — Extract final text from Vosk's result(), which may be JSON or plain text.
+- [OrdersParser::_extract_orders](../scripts/radio/OrdersParser/functions/_extract_orders.md) — Scan tokens left→right and extract orders.
+- [TerrainEffects::_extract_pos](../scripts/sim/TerrainEffects/functions/_extract_pos.md)
+- [NewTerrainDialog::_fill_fields_from_data](../scripts/editors/NewTerrainDialog/functions/_fill_fields_from_data.md)
+- [OrdersParser::_finalize](../scripts/radio/OrdersParser/functions/_finalize.md) — Finalize a builder into an immutable order dictionary.
+- [FuelTest::_find_button](../scripts/test/FuelTest/functions/_find_button.md)
+- [TerrainData::_find_by_id](../scripts/data/TerrainData/functions/_find_by_id.md) — Find item by ID
+- [TerrainLineTool::_find_edit_index_by_id](../scripts/editors/tools/TerrainLineTool/functions/_find_edit_index_by_id.md)
+- [TerrainPolygonTool::_find_edit_index_by_id](../scripts/editors/tools/TerrainPolygonTool/functions/_find_edit_index_by_id.md) — Helper function to find current polygon in Terrain Data
+- [TerrainHistory::_find_index_by_id](../scripts/editors/TerrainHistory/functions/_find_index_by_id.md) — Find the index of the dictionary in `arr` whose `"id"` equals `id_value`.
+- [ScenarioHistory::_find_index_by_id_res](../scripts/editors/ScenarioHistory/functions/_find_index_by_id_res.md)
+- [FuelTest::_find_label](../scripts/test/FuelTest/functions/_find_label.md)
+- [LabelLayer::_find_label_by_id](../scripts/terrain/LabelLayer/functions/_find_label_by_id.md) — Find a label dictionary in TerrainData by id
+- [LineLayer::_find_line_by_id](../scripts/terrain/LineLayer/functions/_find_line_by_id.md) — Find a line dictionary in TerrainData by id
+- [FuelTest::_find_panel](../scripts/test/FuelTest/functions/_find_panel.md)
+- [PointLayer::_find_point_by_id](../scripts/terrain/PointLayer/functions/_find_point_by_id.md) — Find a point dictionary in TerrainData by id
+- [CombatTest::_find_su](../scripts/test/CombatTest/functions/_find_su.md)
+- [SurfaceLayer::_find_surface_by_id](../scripts/terrain/SurfaceLayer/functions/_find_surface_by_id.md) — Finds a surface dictionary in TerrainData by id
+- [ScenarioTasksService::_find_tail](../scripts/editors/services/ScenarioTasksService/functions/_find_tail.md)
+- [TerrainLineTool::_finish_edit_keep_line](../scripts/editors/tools/TerrainLineTool/functions/_finish_edit_keep_line.md)
+- [TerrainPolygonTool::_finish_edit_keep_polygon](../scripts/editors/tools/TerrainPolygonTool/functions/_finish_edit_keep_polygon.md) — Stop editing and save polygon
+- [AmmoSystem::_finish_link](../scripts/sim/systems/AmmoSystem/functions/_finish_link.md) — Finish an active resupply link for `dst_id`.
+- [FuelSystem::_finish_link](../scripts/sim/systems/FuelSystem/functions/_finish_link.md)
+- [LogService::_fmt_level](../scripts/core/LogService/functions/_fmt_level.md) — Get formatted level string
+- [LogService::_fmt_msg](../scripts/core/LogService/functions/_fmt_msg.md) — Get a formatted log message
+- [DebugOverlay::_format_fuel_line](../scripts/test/DebugOverlay/functions/_format_fuel_line.md)
+- [DebugMetricsDisplay::_fps_graph_draw](../scripts/ui/DebugMetricsDisplay/functions/_fps_graph_draw.md)
+- [DebugOverlay::_fuel_snapshot](../scripts/test/DebugOverlay/functions/_fuel_snapshot.md) — Build "68% LOW x0.85 (-15%)" style snippets per unit.
+- [CombatController::_gate_and_consume](../scripts/sim/CombatController/functions/_gate_and_consume.md) — Gate a fire attempt by ammunition and consume rounds when allowed.
+- [ScenarioTasksService::_gen_task_id](../scripts/editors/services/ScenarioTasksService/functions/_gen_task_id.md)
+- [ScenarioEditor::_generate_callsign](../scripts/editors/ScenarioEditor/functions/_generate_callsign.md) — Compute next available callsign for given affiliation
+- [ScenarioEditor::_generate_trigger_id](../scripts/editors/ScenarioEditor/functions/_generate_trigger_id.md) — Generate next unique trigger id (TRG_n)
+- [ScenarioEditor::_generate_unit_instance_id_for](../scripts/editors/ScenarioEditor/functions/_generate_unit_instance_id_for.md) — Generate unique unit instance id based on UnitData.id
+- [ContourLayer::_get_base_offset](../scripts/terrain/ContourLayer/functions/_get_base_offset.md) — Get base elevation offset
+- [ScenarioEditor::_get_callsign_pool](../scripts/editors/ScenarioEditor/functions/_get_callsign_pool.md) — Get callsign pool for faction (uses defaults if scenario lacks overrides)
+- [SlotItem::_get_drag_data](../scripts/ui/helpers/SlotItem/functions/_get_drag_data.md) — When filled, allow dragging the assigned unit out to pool or another slot.
+- [UnitCard::_get_drag_data](../scripts/ui/helpers/UnitCard/functions/_get_drag_data.md) — Provide drag payload.
+- [LogService::_get_fmt_time](../scripts/core/LogService/functions/_get_fmt_time.md) — get formatted time
+- [TerrainEffects::_get_h](../scripts/sim/TerrainEffects/functions/_get_h.md)
+- [ScenarioHistory::_get_id](../scripts/editors/ScenarioHistory/functions/_get_id.md) — Get id/key from a Resource
+- [TerrainPointTool::_get_minimum_size](../scripts/editors/tools/TerrainPointTool/functions/_get_minimum_size.md)
+- [ScenarioDragLinkService::_get_pos](../scripts/editors/services/ScenarioDragLinkService/functions/_get_pos.md)
+- [ScenarioEditorOverlay::_get_scaled_icon_slot](../scripts/editors/ScenarioEditorOverlay/functions/_get_scaled_icon_slot.md) — Get (and cache) the scaled slot icon
+- [ScenarioEditorOverlay::_get_scaled_icon_task](../scripts/editors/ScenarioEditorOverlay/functions/_get_scaled_icon_task.md) — Get (and cache) the scaled inner task icon
+- [ScenarioEditorOverlay::_get_scaled_icon_trigger](../scripts/editors/ScenarioEditorOverlay/functions/_get_scaled_icon_trigger.md) — Get (and cache) the scaled trigger center icon
+- [ScenarioEditorOverlay::_get_scaled_icon_unit](../scripts/editors/ScenarioEditorOverlay/functions/_get_scaled_icon_unit.md) — Get (and cache) a scaled unit icon respecting affiliation
+- [ScenarioEditorOverlay::_glyph_radius](../scripts/editors/ScenarioEditorOverlay/functions/_glyph_radius.md) — Return approximate visual radius for a glyph kind/index
+- [MainMenu::_go](../scripts/ui/MainMenu/functions/_go.md) — Change scene by key in SCENES.
+- [DebugMetricsDisplay::_gpu_graph_draw](../scripts/ui/DebugMetricsDisplay/functions/_gpu_graph_draw.md)
+- [SlotItem::_gui_input](../scripts/ui/helpers/SlotItem/functions/_gui_input.md) — On click, emit inspect signal if a unit is assigned.
+- [UnitCard::_gui_input](../scripts/ui/helpers/UnitCard/functions/_gui_input.md) — Click to inspect the unit.
+- [ScenarioHistory::_has_prop](../scripts/editors/ScenarioHistory/functions/_has_prop.md) — Does an Object expose a property with this name
+- [AmmoSystem::_has_stock](../scripts/sim/systems/AmmoSystem/functions/_has_stock.md) — True if unit has any stock left to transfer.
+- [FuelSystem::_has_stock](../scripts/sim/systems/FuelSystem/functions/_has_stock.md)
+- [DebugOverlay::_icon_for_unit](../scripts/test/DebugOverlay/functions/_icon_for_unit.md)
+- [PathGrid::_in_bounds](../scripts/terrain/PathGrid/functions/_in_bounds.md)
+- [DebugMetricsDisplay::_init](../scripts/ui/DebugMetricsDisplay/functions/_init.md)
+- [TerrainData::_init](../scripts/data/TerrainData/functions/_init.md)
+- [TerrainElevationTool::_init](../scripts/editors/tools/TerrainElevationTool/functions/_init.md)
+- [TerrainLabelTool::_init](../scripts/editors/tools/TerrainLabelTool/functions/_init.md)
+- [TerrainLineTool::_init](../scripts/editors/tools/TerrainLineTool/functions/_init.md)
+- [TerrainPointTool::_init](../scripts/editors/tools/TerrainPointTool/functions/_init.md)
+- [TerrainPolygonTool::_init](../scripts/editors/tools/TerrainPolygonTool/functions/_init.md)
+- [TerrainToolBase::_init](../scripts/editors/tools/TerrainToolBase/functions/_init.md) — Assign Metadata
+- [UnitTaskDefend::_init](../scripts/editors/tasks/UnitTaskDefend/functions/_init.md)
+- [UnitTaskMove::_init](../scripts/editors/tasks/UnitTaskMove/functions/_init.md) — Move to a position.
+- [UnitTaskPatrol::_init](../scripts/editors/tasks/UnitTaskPatrol/functions/_init.md)
+- [UnitTaskSetBehaviour::_init](../scripts/editors/tasks/UnitTaskSetBehaviour/functions/_init.md)
+- [UnitTaskSetCombatMode::_init](../scripts/editors/tasks/UnitTaskSetCombatMode/functions/_init.md)
+- [UnitTaskWait::_init](../scripts/editors/tasks/UnitTaskWait/functions/_init.md)
+- [ScenarioTasksService::_init_defs](../scripts/editors/services/ScenarioTasksService/functions/_init_defs.md)
+- [ScenarioEditor::_init_file_dialogs](../scripts/editors/ScenarioEditor/functions/_init_file_dialogs.md) — Create and configure FileDialog instances
+- [Debrief::_init_units_tree_columns](../scripts/ui/Debrief/functions/_init_units_tree_columns.md) — Applies headers and column sizing rules to the Units tree.
+- [SmokeCompile::_initialize](../tools/ci/SmokeCompile/functions/_initialize.md)
+- [CombatTest::_input](../scripts/test/CombatTest/functions/_input.md)
+- [SetupController::_input](../scripts/test/SetupController/functions/_input.md)
+- [TerrainCamera::_input](../scripts/editors/TerrainCamera/functions/_input.md)
+- [UnitPlaceTool::_is_already_used](../scripts/editors/tools/UnitPlaceTool/functions/_is_already_used.md)
+- [OrdersParser::_is_ascii_alpha_cp](../scripts/radio/OrdersParser/functions/_is_ascii_alpha_cp.md) — ASCII alpha test for a code point.
+- [OrdersParser::_is_ascii_digit_cp](../scripts/radio/OrdersParser/functions/_is_ascii_digit_cp.md) — ASCII digit test for a code point.
+- [TerrainEffects::_is_dug_in](../scripts/sim/TerrainEffects/functions/_is_dug_in.md) — Reserved for future posture logic.
+- [ScenarioEditorOverlay::_is_highlighted](../scripts/editors/ScenarioEditorOverlay/functions/_is_highlighted.md) — Check if a glyph of type/index is hovered or selected
+- [OrdersParser::_is_int_literal](../scripts/radio/OrdersParser/functions/_is_int_literal.md) — True if s consists only of ASCII digits (uses unicode_at()).
+- [AmmoSystem::_is_logistics](../scripts/sim/systems/AmmoSystem/functions/_is_logistics.md) — True if the unit should act as a logistics source.
+- [TerrainEffects::_is_moving](../scripts/sim/TerrainEffects/functions/_is_moving.md)
+- [ContourLayer::_is_multiple](../scripts/terrain/ContourLayer/functions/_is_multiple.md) — Helper function to check for multiple
+- [FuelSystem::_is_tanker](../scripts/sim/systems/FuelSystem/functions/_is_tanker.md) — Refuel logic
+- [LabelLayer::_is_terrain_pos_visible](../scripts/terrain/LabelLayer/functions/_is_terrain_pos_visible.md) — Visibility test against terrain rect (same as other layers)
+- [PointLayer::_is_terrain_pos_visible](../scripts/terrain/PointLayer/functions/_is_terrain_pos_visible.md) — Reuse your original visibility test against terrain rect
+- [ContourLayer::_is_thick_level_abs](../scripts/terrain/ContourLayer/functions/_is_thick_level_abs.md) — Check if thick level is absolute elevation
+- [SurfaceLayer::_join_and_clear_thread](../scripts/terrain/SurfaceLayer/functions/_join_and_clear_thread.md) — Joins the worker thread for a group (if running) and clears it
+- [STTService::_join_non_empty](../scripts/radio/STTService/functions/_join_non_empty.md) — Join a and b with a single space if both are non-empty.
+- [FuelTest::_kph_to_mps](../scripts/test/FuelTest/functions/_kph_to_mps.md)
+- [ScenarioUnit::_kph_to_mps](../scripts/editors/ScenarioUnit/functions/_kph_to_mps.md) — Convert kph to mps
+- [ScenarioTriggerTool::_label](../scripts/editors/tools/ScenarioTriggerTool/functions/_label.md)
+- [TaskPlaceTool::_label](../scripts/editors/tools/TaskPlaceTool/functions/_label.md)
+- [TerrainElevationTool::_label](../scripts/editors/tools/TerrainElevationTool/functions/_label.md) — Helper function to create a new label
+- [TerrainLabelTool::_label](../scripts/editors/tools/TerrainLabelTool/functions/_label.md)
+- [TerrainLineTool::_label](../scripts/editors/tools/TerrainLineTool/functions/_label.md)
+- [TerrainPointTool::_label](../scripts/editors/tools/TerrainPointTool/functions/_label.md)
+- [TerrainPolygonTool::_label](../scripts/editors/tools/TerrainPolygonTool/functions/_label.md) — Helper function to create a new label
+- [UnitPlaceTool::_label](../scripts/editors/tools/UnitPlaceTool/functions/_label.md)
+- [ContourLayer::_layout_labels_on_line](../scripts/terrain/ContourLayer/functions/_layout_labels_on_line.md) — Compute cumulative length, place labels every `spacing` meters.
+- [PathGrid::_line_multiplier_at](../scripts/terrain/PathGrid/functions/_line_multiplier_at.md)
+- [PathGrid::_line_px_to_meters](../scripts/terrain/PathGrid/functions/_line_px_to_meters.md)
+- [Briefing::_load_brief](../scripts/ui/Briefing/functions/_load_brief.md) — Load the new-structure brief (your schema).
+- [TerrainLineTool::_load_brushes](../scripts/editors/tools/TerrainLineTool/functions/_load_brushes.md)
+- [TerrainPointTool::_load_brushes](../scripts/editors/tools/TerrainPointTool/functions/_load_brushes.md)
+- [TerrainPolygonTool::_load_brushes](../scripts/editors/tools/TerrainPolygonTool/functions/_load_brushes.md)
+- [MissionSelect::_load_campaign_and_map](../scripts/ui/MissionSelect/functions/_load_campaign_and_map.md) — Load current campaign + map.
+- [Settings::_load_config](../scripts/ui/Settings/functions/_load_config.md) — Load config file (if present).
+- [NewScenarioDialog::_load_from_data](../scripts/editors/NewScenarioDialog/functions/_load_from_data.md) — Preload fields from existing ScenarioData.
+- [ContentDB::_load_json](../scripts/core/ContentDB/functions/_load_json.md) — Load a JSON file to Dictionary.
+- [UnitSelect::_load_mission](../scripts/ui/UnitSelect/functions/_load_mission.md) — Load mission data into the UI
+- [CombatTest::_load_scenario_json](../scripts/test/CombatTest/functions/_load_scenario_json.md)
+- [LogTap::_log_message](../scripts/core/LogTap/functions/_log_message.md) — Log a message
+- [DebugMenu::_log_msg](../scripts/ui/DebugMenu/functions/_log_msg.md) — Capture and store log message
+- [UnitCard::_make_drag_preview](../scripts/ui/helpers/UnitCard/functions/_make_drag_preview.md) — Build a fixed-size preview that matches the pool layout.
+- [MissionSelect::_make_pin](../scripts/ui/MissionSelect/functions/_make_pin.md) — Builds a pin control.
+- [CombatController::_make_su](../scripts/sim/CombatController/functions/_make_su.md) — Minimal factory for a ScenarioUnit used by this controller (test harness)
+- [ScenarioTask::_make_task_from_type_id](../scripts/editors/ScenarioTask/functions/_make_task_from_type_id.md) — Resolve and instance a UnitBaseTask by type_id (or null)
+- [ContourLayer::_march_level_segments](../scripts/terrain/ContourLayer/functions/_march_level_segments.md) — March over segments for a level
+- [TerrainRender::_mark_all_dirty](../scripts/terrain/TerrainRender/functions/_mark_all_dirty.md) — Mark elements as dirty to redraw
+- [SurfaceLayer::_move_if_key_changed](../scripts/terrain/SurfaceLayer/functions/_move_if_key_changed.md) — Moves a surface between groups if its brush (draw recipe) changed
+- [CombatTest::_move_su_to](../scripts/test/CombatTest/functions/_move_su_to.md)
+- [AmmoSystem::_needs_ammo](../scripts/sim/systems/AmmoSystem/functions/_needs_ammo.md) — True if any ammo type is below its cap.
+- [FuelSystem::_needs_fuel](../scripts/sim/systems/FuelSystem/functions/_needs_fuel.md)
+- [OrdersParser::_new_order_builder](../scripts/radio/OrdersParser/functions/_new_order_builder.md) — Builder for a fresh order dictionary.
+- [TerrainEditor::_new_terrain](../scripts/editors/TerrainEditor/functions/_new_terrain.md) — Create new terrain data
+- [ScenarioTriggersService::_next_id](../scripts/editors/services/ScenarioTriggersService/functions/_next_id.md)
+- [ScenarioEditor::_next_slot_key](../scripts/editors/ScenarioEditor/functions/_next_slot_key.md) — Generate next unique slot key (SLOT_n)
+- [ContentDB::_norm_dir](../scripts/core/ContentDB/functions/_norm_dir.md) — Normalize to res:// and remove trailing slash.
+- [OrdersParser::_normalize_and_tokenize](../scripts/radio/OrdersParser/functions/_normalize_and_tokenize.md) — Lowercase, strip, keep letters/digits/space/hyphen/brackets, and split.
+- [ContourLayer::_notification](../scripts/terrain/ContourLayer/functions/_notification.md) — Redraw contours on resize
+- [Debrief::_notification](../scripts/ui/Debrief/functions/_notification.md) — Reapplies alignment when the control is resized by the parent or user.
+- [GridLayer::_notification](../scripts/terrain/GridLayer/functions/_notification.md)
+- [LabelLayer::_notification](../scripts/terrain/LabelLayer/functions/_notification.md) — Redraw on resize so strokes match current Control rect
+- [LineLayer::_notification](../scripts/terrain/LineLayer/functions/_notification.md) — Redraw on resize so strokes match current Control rect.
+- [MarginLayer::_notification](../scripts/terrain/MarginLayer/functions/_notification.md) — Redraw margin on resize
+- [PointLayer::_notification](../scripts/terrain/PointLayer/functions/_notification.md) — Redraw on resize so points match current Control rect.
+- [SlotItem::_notification](../scripts/ui/helpers/SlotItem/functions/_notification.md) — Clear deny-hover at drag end to restore normal styling.
+- [TerrainEditor::_notification](../scripts/editors/TerrainEditor/functions/_notification.md) — Catch resize and close notifications
+- [UnitCard::_notification](../scripts/ui/helpers/UnitCard/functions/_notification.md) — Cache laid-out size for drag preview.
+- [FuelTest::_now_s](../scripts/test/FuelTest/functions/_now_s.md)
+- [LineLayer::_offset_half_px](../scripts/terrain/LineLayer/functions/_offset_half_px.md) — Offset all points by half a pixel to align odd widths to pixel centers
+- [SurfaceLayer::_offset_half_px](../scripts/terrain/SurfaceLayer/functions/_offset_half_px.md) — Offsets all points by (0.5, 0.5) to align odd-width strokes to pixel centers
+- [ScenarioToolBase::_on_activated](../scripts/editors/tools/ScenarioToolBase/functions/_on_activated.md)
+- [ScenarioTriggerTool::_on_activated](../scripts/editors/tools/ScenarioTriggerTool/functions/_on_activated.md)
+- [TaskPlaceTool::_on_activated](../scripts/editors/tools/TaskPlaceTool/functions/_on_activated.md)
+- [UnitPlaceTool::_on_activated](../scripts/editors/tools/UnitPlaceTool/functions/_on_activated.md)
+- [RadioFeedback::_on_ammo_critical](../scripts/radio/RadioFeedback/functions/_on_ammo_critical.md) — “Ammo critical” — remaining ammo <= critical threshold but > 0.
+- [RadioFeedback::_on_ammo_empty](../scripts/radio/RadioFeedback/functions/_on_ammo_empty.md) — “Winchester” — out of ammo.
+- [RadioFeedback::_on_ammo_low](../scripts/radio/RadioFeedback/functions/_on_ammo_low.md) — “Bingo ammo” — remaining ammo <= low threshold but > 0.
+- [Debrief::_on_assign_pressed](../scripts/ui/Debrief/functions/_on_assign_pressed.md) — Emits "commendation_assigned" only when both selection fields are non-empty.
+- [ScenarioEditor::_on_attributemenu_pressed](../scripts/editors/ScenarioEditor/functions/_on_attributemenu_pressed.md) — Attributes menu actions (Edit Scenario/Briefing/Weather)
+- [CampaignEditor::_on_back_pressed](../scripts/editors/CampaignEditor/functions/_on_back_pressed.md)
+- [CampaignSelect::_on_back_pressed](../scripts/ui/CampaignSelect/functions/_on_back_pressed.md) — Back to main menu.
+- [MissionSelect::_on_back_pressed](../scripts/ui/MissionSelect/functions/_on_back_pressed.md) — Return to campaign select.
+- [UnitSelect::_on_back_pressed](../scripts/ui/UnitSelect/functions/_on_back_pressed.md) — Go back to briefing scene
+- [MissionSelect::_on_backdrop_gui_input](../scripts/ui/MissionSelect/functions/_on_backdrop_gui_input.md) — Decide if an overlay click should close the card.
+- [TerrainRender::_on_base_layer_resize](../scripts/terrain/TerrainRender/functions/_on_base_layer_resize.md) — Emit a resize event for base layer
+- [TerrainEditor::_on_brush_overlay_gui_input](../scripts/editors/TerrainEditor/functions/_on_brush_overlay_gui_input.md) — Input handler for terrainview Viewport
+- [TerrainEditor::_on_brush_overlay_mouse_enter](../scripts/editors/TerrainEditor/functions/_on_brush_overlay_mouse_enter.md) — Triggers when mouse enters brush overlay
+- [TerrainEditor::_on_brush_overlay_mouse_exit](../scripts/editors/TerrainEditor/functions/_on_brush_overlay_mouse_exit.md) — Triggers when mouse exits brush overlay
+- [CampaignSelect::_on_campaign_selected](../scripts/ui/CampaignSelect/functions/_on_campaign_selected.md) — Handle campaign selection; update details + show actions.
+- [UnitSelect::_on_card_selected](../scripts/ui/UnitSelect/functions/_on_card_selected.md) — Handle card clicked in pool
+- [AmmoRearmPanel::_on_commit](../scripts/ui/AmmoRearmPanel/functions/_on_commit.md)
+- [FuelRefuelPanel::_on_commit](../scripts/ui/FuelRefuelPanel/functions/_on_commit.md)
+- [CampaignSelect::_on_continue_last_pressed](../scripts/ui/CampaignSelect/functions/_on_continue_last_pressed.md) — resolves last save for the current campaign (if any).
+- [Debrief::_on_continue_pressed](../scripts/ui/Debrief/functions/_on_continue_pressed.md) — Emits "continue_requested" with a snapshot of the current debrief state.
+- [ScenarioEditorOverlay::_on_ctx_pressed](../scripts/editors/ScenarioEditorOverlay/functions/_on_ctx_pressed.md) — Handle context menu actions for the last pick
+- [ScenarioEditor::_on_ctx_selection_changed](../scripts/editors/ScenarioEditor/functions/_on_ctx_selection_changed.md) — Handle palette selections (units, tasks, triggers)
+- [ContourLayer::_on_data_changed](../scripts/terrain/ContourLayer/functions/_on_data_changed.md) — Rebuild contours if terrain data changes
+- [ScenarioEditor::_on_data_changed](../scripts/editors/ScenarioEditor/functions/_on_data_changed.md) — Refresh UI/overlay/tree after data changes
+- [TerrainRender::_on_data_changed](../scripts/terrain/TerrainRender/functions/_on_data_changed.md) — Reconfigure if terrain data is changed
+- [ScenarioToolBase::_on_deactivated](../scripts/editors/tools/ScenarioToolBase/functions/_on_deactivated.md)
+- [ScenarioTriggerTool::_on_deactivated](../scripts/editors/tools/ScenarioTriggerTool/functions/_on_deactivated.md)
+- [TaskPlaceTool::_on_deactivated](../scripts/editors/tools/TaskPlaceTool/functions/_on_deactivated.md)
+- [UnitPlaceTool::_on_deactivated](../scripts/editors/tools/UnitPlaceTool/functions/_on_deactivated.md)
+- [UnitSelect::_on_deploy_pressed](../scripts/ui/UnitSelect/functions/_on_deploy_pressed.md) — Deploy current loadout if slots are filled
+- [FuelTest::_on_drain](../scripts/test/FuelTest/functions/_on_drain.md)
+- [TerrainEditor::_on_editmenu_pressed](../scripts/editors/TerrainEditor/functions/_on_editmenu_pressed.md) — On edit menu pressed event
+- [MainMenu::_on_editor_pressed](../scripts/ui/MainMenu/functions/_on_editor_pressed.md) — Toggle handler for the Editor button.
+- [TerrainEditor::_on_exit_save_confirmed](../scripts/editors/TerrainEditor/functions/_on_exit_save_confirmed.md) — Save then exit
+- [ScenarioEditor::_on_filemenu_pressed](../scripts/editors/ScenarioEditor/functions/_on_filemenu_pressed.md) — File menu actions (New/Open/Save/Save As/Back)
+- [TerrainEditor::_on_filemenu_pressed](../scripts/editors/TerrainEditor/functions/_on_filemenu_pressed.md) — On file menu pressed event
+- [UnitSelect::_on_filter_changed](../scripts/ui/UnitSelect/functions/_on_filter_changed.md) — Handle filter button toggled
+- [UnitSelect::_on_filter_text_changed](../scripts/ui/UnitSelect/functions/_on_filter_text_changed.md) — Handle text search filter changed
+- [AmmoTest::_on_fire_once](../scripts/test/AmmoTest/functions/_on_fire_once.md)
+- [RadioFeedback::_on_fuel_critical](../scripts/radio/RadioFeedback/functions/_on_fuel_critical.md) — “Fuel state red” — remaining fuel <= critical threshold but > 0.
+- [RadioFeedback::_on_fuel_empty](../scripts/radio/RadioFeedback/functions/_on_fuel_empty.md) — “Winchester fuel” — completely out of fuel.
+- [RadioFeedback::_on_fuel_low](../scripts/radio/RadioFeedback/functions/_on_fuel_low.md) — “Low fuel” — remaining fuel <= low threshold but > critical.
+- [RadioFeedback::_on_fuel_refuel_completed](../scripts/radio/RadioFeedback/functions/_on_fuel_refuel_completed.md) — Refuel operation completed successfully.
+- [RadioFeedback::_on_fuel_refuel_started](../scripts/radio/RadioFeedback/functions/_on_fuel_refuel_started.md) — Refuel operation started between two units.
+- [FuelRefuelPanel::_on_full](../scripts/ui/FuelRefuelPanel/functions/_on_full.md)
+- [MovementAgent::_on_grid_ready](../scripts/ai/MovementAgent/functions/_on_grid_ready.md)
+- [FuelRefuelPanel::_on_half](../scripts/ui/FuelRefuelPanel/functions/_on_half.md)
+- [ScenarioEditor::_on_history_changed](../scripts/editors/ScenarioEditor/functions/_on_history_changed.md) — Rebuild history side panel from UndoRedo stacks
+- [TerrainEditor::_on_history_changed](../scripts/editors/TerrainEditor/functions/_on_history_changed.md) — Show UndoRedo history
+- [ScenarioToolBase::_on_key](../scripts/editors/tools/ScenarioToolBase/functions/_on_key.md)
+- [ScenarioTriggerTool::_on_key](../scripts/editors/tools/ScenarioTriggerTool/functions/_on_key.md)
+- [TaskPlaceTool::_on_key](../scripts/editors/tools/TaskPlaceTool/functions/_on_key.md)
+- [UnitPlaceTool::_on_key](../scripts/editors/tools/UnitPlaceTool/functions/_on_key.md)
+- [LabelLayer::_on_labels_changed](../scripts/terrain/LabelLayer/functions/_on_labels_changed.md) — Handles TerrainData label mutations and marks affected labels dirty
+- [LineLayer::_on_lines_changed](../scripts/terrain/LineLayer/functions/_on_lines_changed.md) — Handles TerrainData line mutations and marks affected lines dirty
+- [DebugMenu::_on_load_pressed](../scripts/ui/DebugMenu/functions/_on_load_pressed.md) — Load scene
+- [PauseMenu::_on_main_menu_pressed](../scripts/ui/PauseMenu/functions/_on_main_menu_pressed.md) — Called on main menu pressed.
+- [ScenarioToolBase::_on_mouse_button](../scripts/editors/tools/ScenarioToolBase/functions/_on_mouse_button.md)
+- [ScenarioTriggerTool::_on_mouse_button](../scripts/editors/tools/ScenarioTriggerTool/functions/_on_mouse_button.md)
+- [TaskPlaceTool::_on_mouse_button](../scripts/editors/tools/TaskPlaceTool/functions/_on_mouse_button.md)
+- [UnitPlaceTool::_on_mouse_button](../scripts/editors/tools/UnitPlaceTool/functions/_on_mouse_button.md)
+- [UnitCard::_on_mouse_entered](../scripts/ui/helpers/UnitCard/functions/_on_mouse_entered.md) — Hover-in visual feedback.
+- [UnitCard::_on_mouse_exited](../scripts/ui/helpers/UnitCard/functions/_on_mouse_exited.md) — Hover-out visual feedback.
+- [ScenarioToolBase::_on_mouse_move](../scripts/editors/tools/ScenarioToolBase/functions/_on_mouse_move.md)
+- [ScenarioTriggerTool::_on_mouse_move](../scripts/editors/tools/ScenarioTriggerTool/functions/_on_mouse_move.md)
+- [TaskPlaceTool::_on_mouse_move](../scripts/editors/tools/TaskPlaceTool/functions/_on_mouse_move.md)
+- [UnitPlaceTool::_on_mouse_move](../scripts/editors/tools/UnitPlaceTool/functions/_on_mouse_move.md)
+- [FuelSystem::_on_move_arrived](../scripts/sim/systems/FuelSystem/functions/_on_move_arrived.md)
+- [FuelSystem::_on_move_blocked](../scripts/sim/systems/FuelSystem/functions/_on_move_blocked.md)
+- [AmmoTest::_on_move_far](../scripts/test/AmmoTest/functions/_on_move_far.md)
+- [AmmoTest::_on_move_near](../scripts/test/AmmoTest/functions/_on_move_near.md)
+- [FuelSystem::_on_move_paused](../scripts/sim/systems/FuelSystem/functions/_on_move_paused.md)
+- [FuelSystem::_on_move_progress](../scripts/sim/systems/FuelSystem/functions/_on_move_progress.md) — Movement signal handlers
+- [FuelSystem::_on_move_resumed](../scripts/sim/systems/FuelSystem/functions/_on_move_resumed.md)
+- [FuelSystem::_on_move_started](../scripts/sim/systems/FuelSystem/functions/_on_move_started.md)
+- [TerrainEditor::_on_new_pressed](../scripts/editors/TerrainEditor/functions/_on_new_pressed.md) — On New Terrain Pressed event
+- [CampaignSelect::_on_new_save_pressed](../scripts/ui/CampaignSelect/functions/_on_new_save_pressed.md) — Create/select new save and go to Mission Select.
+- [ScenarioEditor::_on_new_scenario](../scripts/editors/ScenarioEditor/functions/_on_new_scenario.md) — Apply brand-new scenario data from dialog
+- [ScenarioEditor::_on_open_file_selected](../scripts/editors/ScenarioEditor/functions/_on_open_file_selected.md) — Handle file selection to open a scenario
+- [ScenarioEditor::_on_overlay_gui_input](../scripts/editors/ScenarioEditor/functions/_on_overlay_gui_input.md) — Handle overlay input: hover, drag, link, select, and tool input
+- [FuelTest::_on_panel_done](../scripts/test/FuelTest/functions/_on_panel_done.md)
+- [RadioFeedback::_on_parse_error](../scripts/radio/RadioFeedback/functions/_on_parse_error.md) — Order parser signaled an error (e.g., invalid command).
+- [MissionSelect::_on_pin_pressed](../scripts/ui/MissionSelect/functions/_on_pin_pressed.md) — Open the mission card; create/remove image node depending on presence.
+- [PointLayer::_on_points_changed](../scripts/terrain/PointLayer/functions/_on_points_changed.md) — Handles TerrainData point mutations and marks affected points dirty
+- [NewScenarioDialog::_on_primary_pressed](../scripts/editors/NewScenarioDialog/functions/_on_primary_pressed.md)
+- [NewTerrainDialog::_on_primary_pressed](../scripts/editors/NewTerrainDialog/functions/_on_primary_pressed.md)
+- [ScenarioWeatherDialog::_on_primary_pressed](../scripts/editors/ScenarioWeatherDialog/functions/_on_primary_pressed.md)
+- [AmmoTest::_on_rearm_committed](../scripts/test/AmmoTest/functions/_on_rearm_committed.md)
+- [SlotConfigDialog::_on_remove_role](../scripts/editors/SlotConfigDialog/functions/_on_remove_role.md) — Remove a role from role list
+- [MapController::_on_renderer_map_resize](../scripts/core/MapController/functions/_on_renderer_map_resize.md) — Renderer callback: sync viewport to new map pixel size
+- [UnitSelect::_on_request_assign_drop](../scripts/ui/UnitSelect/functions/_on_request_assign_drop.md) — Called when a slot requests to assign a unit
+- [UnitSelect::_on_request_inspect_from_tree](../scripts/ui/UnitSelect/functions/_on_request_inspect_from_tree.md) — Inspect unit from slot list and show stats
+- [UnitSelect::_on_request_return_to_pool](../scripts/ui/UnitSelect/functions/_on_request_return_to_pool.md) — Called when a slot unit is returned to pool
+- [AmmoTest::_on_reset](../scripts/test/AmmoTest/functions/_on_reset.md)
+- [UnitSelect::_on_reset_pressed](../scripts/ui/UnitSelect/functions/_on_reset_pressed.md) — Reset all slots to empty
+- [PauseMenu::_on_restart_pressed](../scripts/ui/PauseMenu/functions/_on_restart_pressed.md) — Called on restart button pressed.
+- [PauseMenu::_on_restart_requested](../scripts/ui/PauseMenu/functions/_on_restart_requested.md) — Called when restart is requested.
+- [Radio::_on_result](../scripts/radio/Radio/functions/_on_result.md) — Temporary for testing
+- [PauseMenu::_on_resume_pressed](../scripts/ui/PauseMenu/functions/_on_resume_pressed.md) — Called on resume button pressed.
+- [RadioFeedback::_on_resupply_completed](../scripts/radio/RadioFeedback/functions/_on_resupply_completed.md) — Resupply finished because the recipient is full or the source ran out of stock.
+- [RadioFeedback::_on_resupply_started](../scripts/radio/RadioFeedback/functions/_on_resupply_started.md) — Logistics unit began resupplying a recipient.
+- [Debrief::_on_retry_pressed](../scripts/ui/Debrief/functions/_on_retry_pressed.md) — Emits "retry_requested" with the same payload format as continue.
+- [SlotConfigDialog::_on_role_add](../scripts/editors/SlotConfigDialog/functions/_on_role_add.md) — Add role to role list
+- [SlotConfigDialog::_on_save](../scripts/editors/SlotConfigDialog/functions/_on_save.md) — Save slot config
+- [TaskConfigDialog::_on_save](../scripts/editors/TaskConfigDialog/functions/_on_save.md)
+- [TriggerConfigDialog::_on_save](../scripts/editors/TriggerConfigDialog/functions/_on_save.md)
+- [UnitConfigDialog::_on_save](../scripts/editors/UnitConfigDialog/functions/_on_save.md)
+- [ScenarioEditor::_on_save_file_selected](../scripts/editors/ScenarioEditor/functions/_on_save_file_selected.md) — Handle file selection to save a scenario
+- [PauseMenu::_on_scenarios_pressed](../scripts/ui/PauseMenu/functions/_on_scenarios_pressed.md) — Called on scenario pressed.
+- [CampaignSelect::_on_select_save_pressed](../scripts/ui/CampaignSelect/functions/_on_select_save_pressed.md) — open a save picker filtered to the current campaign.
+- [ScenarioTasksService::_on_selected](../scripts/editors/services/ScenarioTasksService/functions/_on_selected.md)
+- [ScenarioTriggersService::_on_selected](../scripts/editors/services/ScenarioTriggersService/functions/_on_selected.md)
+- [PauseMenu::_on_setting_hide](../scripts/ui/PauseMenu/functions/_on_setting_hide.md) — called on settings back requested.
+- [PauseMenu::_on_setting_show](../scripts/ui/PauseMenu/functions/_on_setting_show.md) — Called on settings button pressed.
+- [FuelRefuelPanel::_on_slider_changed](../scripts/ui/FuelRefuelPanel/functions/_on_slider_changed.md)
+- [MissionSelect::_on_start_pressed](../scripts/ui/MissionSelect/functions/_on_start_pressed.md) — Start current mission.
+- [SurfaceLayer::_on_surfaces_changed](../scripts/terrain/SurfaceLayer/functions/_on_surfaces_changed.md) — Handles TerrainData surface mutations and marks affected groups dirty
+- [NewScenarioDialog::_on_terrain_select](../scripts/editors/NewScenarioDialog/functions/_on_terrain_select.md)
+- [NewScenarioDialog::_on_thumbnail_clear](../scripts/editors/NewScenarioDialog/functions/_on_thumbnail_clear.md)
+- [NewScenarioDialog::_on_thumbnail_select](../scripts/editors/NewScenarioDialog/functions/_on_thumbnail_select.md)
+- [AmmoTest::_on_toggle_auto](../scripts/test/AmmoTest/functions/_on_toggle_auto.md)
+- [FuelTest::_on_toggle_move](../scripts/test/FuelTest/functions/_on_toggle_move.md)
+- [FuelTest::_on_topup](../scripts/test/FuelTest/functions/_on_topup.md)
+- [FuelTest::_on_tp](../scripts/test/FuelTest/functions/_on_tp.md)
+- [ScenarioUnitsCatalog::_on_tree_item](../scripts/editors/services/ScenarioUnitsCatalog/functions/_on_tree_item.md)
+- [RadioFeedback::_on_unit_immobilized_fuel_out](../scripts/radio/RadioFeedback/functions/_on_unit_immobilized_fuel_out.md) — A unit became immobilized due to fuel depletion.
+- [RadioFeedback::_on_unit_mobilized_after_refuel](../scripts/radio/RadioFeedback/functions/_on_unit_mobilized_after_refuel.md) — A unit regained mobility after being refueled.
+- [AmmoRearmPanel::_on_unit_selected](../scripts/ui/AmmoRearmPanel/functions/_on_unit_selected.md)
+- [ScenarioEditor::_on_update_scenario](../scripts/editors/ScenarioEditor/functions/_on_update_scenario.md) — Apply edits to current scenario data from dialog
+- [MapController::_on_viewport_size_changed](../scripts/core/MapController/functions/_on_viewport_size_changed.md) — Viewport callback: refit plane on texture size change
+- [DebugMetricsDisplay::_on_visibility_changed](../scripts/ui/DebugMetricsDisplay/functions/_on_visibility_changed.md)
+- [TerrainEditor::_open](../scripts/editors/TerrainEditor/functions/_open.md) — Open terrain
+- [ScenarioEditor::_open_slot_config](../scripts/editors/ScenarioEditor/functions/_open_slot_config.md) — Open slot configuration dialog for a slot index
+- [ScenarioEditor::_open_task_config](../scripts/editors/ScenarioEditor/functions/_open_task_config.md) — Open task configuration dialog for a task index
+- [ScenarioEditor::_open_trigger_config](../scripts/editors/ScenarioEditor/functions/_open_trigger_config.md) — Open trigger configuration dialog for a trigger index
+- [ScenarioEditor::_open_unit_config](../scripts/editors/ScenarioEditor/functions/_open_unit_config.md) — Open unit configuration dialog for a unit index
+- [OrdersParser::_order_type_to_string](../scripts/radio/OrdersParser/functions/_order_type_to_string.md) — String name for OrderType.
+- [TerrainEditor::_perform_pending_exit](../scripts/editors/TerrainEditor/functions/_perform_pending_exit.md) — Exit application
+- [AmmoTest::_physics_process](../scripts/test/AmmoTest/functions/_physics_process.md)
+- [MovementAgent::_physics_process](../scripts/ai/MovementAgent/functions/_physics_process.md)
+- [SimWorld::_physics_process](../scripts/sim/SimWorld/functions/_physics_process.md) — Drive AmmoSystem every frame so in-field resupply progresses over time.
+- [TableCamera::_physics_process](../scripts/core/TableCamera/functions/_physics_process.md)
+- [ScenarioEditorOverlay::_pick_at](../scripts/editors/ScenarioEditorOverlay/functions/_pick_at.md) — Hit-test the closest entity under the overlay position
+- [TerrainLabelTool::_pick_label](../scripts/editors/tools/TerrainLabelTool/functions/_pick_label.md)
+- [AmmoSystem::_pick_link_for](../scripts/sim/systems/AmmoSystem/functions/_pick_link_for.md) — Pick a logistics source within radius that has stock (simple first-match).
+- [FuelSystem::_pick_link_for](../scripts/sim/systems/FuelSystem/functions/_pick_link_for.md)
+- [TerrainLineTool::_pick_point](../scripts/editors/tools/TerrainLineTool/functions/_pick_point.md)
+- [TerrainPointTool::_pick_point](../scripts/editors/tools/TerrainPointTool/functions/_pick_point.md)
+- [TerrainPolygonTool::_pick_point](../scripts/editors/tools/TerrainPolygonTool/functions/_pick_point.md) — Function to pick a point at position
+- [TaskPlaceTool::_place](../scripts/editors/tools/TaskPlaceTool/functions/_place.md)
+- [UnitPlaceTool::_place](../scripts/editors/tools/UnitPlaceTool/functions/_place.md)
+- [TerrainElevationTool::_place_preview](../scripts/editors/tools/TerrainElevationTool/functions/_place_preview.md)
+- [TerrainLabelTool::_place_preview](../scripts/editors/tools/TerrainLabelTool/functions/_place_preview.md)
+- [TerrainLineTool::_place_preview](../scripts/editors/tools/TerrainLineTool/functions/_place_preview.md)
+- [TerrainPointTool::_place_preview](../scripts/editors/tools/TerrainPointTool/functions/_place_preview.md)
+- [TerrainPolygonTool::_place_preview](../scripts/editors/tools/TerrainPolygonTool/functions/_place_preview.md)
+- [TerrainToolBase::_place_preview](../scripts/editors/tools/TerrainToolBase/functions/_place_preview.md) — Where to place the preview and how to feed parameters
+- [ScenarioEditor::_place_slot_from_tool](../scripts/editors/ScenarioEditor/functions/_place_slot_from_tool.md) — Place a player slot at world position (meters) and push to history
+- [ScenarioEditor::_place_trigger_from_tool](../scripts/editors/ScenarioEditor/functions/_place_trigger_from_tool.md) — Place a Trigger at world position (meters) and push to history
+- [ScenarioEditor::_place_unit_from_tool](../scripts/editors/ScenarioEditor/functions/_place_unit_from_tool.md) — Place a Unit at world position (meters) and push to history
+- [MapController::_plane_hit_to_map_px](../scripts/core/MapController/functions/_plane_hit_to_map_px.md) — Convert a world hit on the plane to map pixels (0..viewport size)
+- [FuelRefuelPanel::_planned_total_except](../scripts/ui/FuelRefuelPanel/functions/_planned_total_except.md)
+- [MissionSelect::_point_over_any_pin](../scripts/ui/MissionSelect/functions/_point_over_any_pin.md) — True if the viewport point lies over any mission pin.
+- [SurfaceLayer::_poly_bbox](../scripts/terrain/SurfaceLayer/functions/_poly_bbox.md) — Computes axis-aligned bounding box for a polygon
+- [PathGrid::_poly_bounds](../scripts/terrain/PathGrid/functions/_poly_bounds.md)
+- [SurfaceLayer::_polygon_area](../scripts/terrain/SurfaceLayer/functions/_polygon_area.md) — Returns polygon signed area (positive for CCW)
+- [PathGrid::_polyline_bounds](../scripts/terrain/PathGrid/functions/_polyline_bounds.md)
+- [ContourLayer::_polyline_is_closed](../scripts/terrain/ContourLayer/functions/_polyline_is_closed.md) — Helper to check if polyline is closed
+- [CampaignSelect::_populate_campaigns](../scripts/ui/CampaignSelect/functions/_populate_campaigns.md) — Fill ItemList from ContentDB.
+- [DebugMenu::_populate_scene_list](../scripts/ui/DebugMenu/functions/_populate_scene_list.md) — populate optionbutton with scenes
+- [MissionSelect::_position_card_near_pin](../scripts/ui/MissionSelect/functions/_position_card_near_pin.md) — Place the card near a pin and keep it on-screen.
+- [ContentDB::_postprocess](../scripts/core/ContentDB/functions/_postprocess.md) — Recursively convert special string literals to engine types (minimal).
+- [PathGrid::_prepare_line_dist_cache](../scripts/terrain/PathGrid/functions/_prepare_line_dist_cache.md) — distance-to-nearest-line cache (profile-agnostic)
+- [PathGrid::_prepare_slope_cache](../scripts/terrain/PathGrid/functions/_prepare_slope_cache.md) — Build or reuse the slope “multiplier” raster (profile-agnostic)
+- [DebugMenu::_pretty_scene_name](../scripts/ui/DebugMenu/functions/_pretty_scene_name.md) — Prettify scene name
+- [AmmoTest::_print](../scripts/test/AmmoTest/functions/_print.md)
+- [CombatTest::_process](../scripts/test/CombatTest/functions/_process.md)
+- [DebugMenu::_process](../scripts/ui/DebugMenu/functions/_process.md)
+- [DebugMetricsDisplay::_process](../scripts/ui/DebugMetricsDisplay/functions/_process.md)
+- [FuelTest::_process](../scripts/test/FuelTest/functions/_process.md)
+- [InteractionController::_process](../scripts/core/InteractionController/functions/_process.md)
+- [MapController::_process](../scripts/core/MapController/functions/_process.md)
+- [PathGridDebugLayer::_process](../scripts/terrain/PathGridDebugLayer/functions/_process.md)
+- [PickupItem::_process](../scripts/core/PickupItem/functions/_process.md)
+- [STTService::_process](../scripts/radio/STTService/functions/_process.md) — Pull audio from the capture bus and feed Vosk in small chunks.
+- [TerrainCamera::_process](../scripts/editors/TerrainCamera/functions/_process.md)
+- [InteractionController::_project_mouse_to_finite_plane](../scripts/core/InteractionController/functions/_project_mouse_to_finite_plane.md)
+- [TerrainRender::_push_data_to_layers](../scripts/terrain/TerrainRender/functions/_push_data_to_layers.md) — Push exports to their respective layers
+- [TerrainData::_queue_emit](../scripts/data/TerrainData/functions/_queue_emit.md) — Queue up signal emits
+- [MainMenu::_queue_free_children](../scripts/ui/MainMenu/functions/_queue_free_children.md)
+- [ScenarioEditor::_queue_free_children](../scripts/editors/ScenarioEditor/functions/_queue_free_children.md) — Utility: queue_free all children of a UI container
+- [ScenarioSelectionService::_queue_free_children](../scripts/editors/services/ScenarioSelectionService/functions/_queue_free_children.md)
+- [TerrainEditor::_queue_free_children](../scripts/editors/TerrainEditor/functions/_queue_free_children.md) — Helper function to delete all children of a parent node
+- [TerrainLabelTool::_queue_free_children](../scripts/editors/tools/TerrainLabelTool/functions/_queue_free_children.md)
+- [TerrainLineTool::_queue_free_children](../scripts/editors/tools/TerrainLineTool/functions/_queue_free_children.md)
+- [TerrainPointTool::_queue_free_children](../scripts/editors/tools/TerrainPointTool/functions/_queue_free_children.md)
+- [TerrainPolygonTool::_queue_free_children](../scripts/editors/tools/TerrainPolygonTool/functions/_queue_free_children.md) — Helper function to delete all children of a parent node
+- [TerrainLineTool::_queue_preview_redraw](../scripts/editors/tools/TerrainLineTool/functions/_queue_preview_redraw.md)
+- [TerrainPolygonTool::_queue_preview_redraw](../scripts/editors/tools/TerrainPolygonTool/functions/_queue_preview_redraw.md) — Queue a redraw of the preview
+- [MainMenu::_quit](../scripts/ui/MainMenu/functions/_quit.md)
+- [PathGrid::_raster_key](../scripts/terrain/PathGrid/functions/_raster_key.md) — Keys for intermediate rasters (don’t include profile so they can be reused)
+- [MapController::_raycast_to_map_plane](../scripts/core/MapController/functions/_raycast_to_map_plane.md) — World-space hit on the plane under a screen position; null if none
+- [OrdersParser::_read_number](../scripts/radio/OrdersParser/functions/_read_number.md) — Read a verbal or digit number from tokens[idx..]; sets 'consumed'.
+- [ActionRebindButton::_ready](../scripts/ui/helpers/ActionRebindButton/functions/_ready.md)
+- [AmmoRearmPanel::_ready](../scripts/ui/AmmoRearmPanel/functions/_ready.md)
+- [AmmoSystem::_ready](../scripts/sim/systems/AmmoSystem/functions/_ready.md) — Add to a group for convenient lookups.
+- [AmmoTest::_ready](../scripts/test/AmmoTest/functions/_ready.md)
+- [Briefing::_ready](../scripts/ui/Briefing/functions/_ready.md) — Init: load data, build board, wire UI.
+- [CampaignEditor::_ready](../scripts/editors/CampaignEditor/functions/_ready.md)
+- [CampaignSelect::_ready](../scripts/ui/CampaignSelect/functions/_ready.md) — Init UI, populate list, connect signals.
+- [CombatAdapter::_ready](../scripts/sim/CombatAdapter/functions/_ready.md) — Resolve the AmmoSystem reference when the node enters the tree.
+- [CombatController::_ready](../scripts/sim/CombatController/functions/_ready.md) — Init
+- [CombatTest::_ready](../scripts/test/CombatTest/functions/_ready.md)
+- [Debrief::_ready](../scripts/ui/Debrief/functions/_ready.md) — Initializes node references, connects button handlers, prepares the Units tree,
+draws the initial title, and aligns the right split after the first layout pass.
+- [DebugMenu::_ready](../scripts/ui/DebugMenu/functions/_ready.md)
+- [DebugMetricsDisplay::_ready](../scripts/ui/DebugMetricsDisplay/functions/_ready.md)
+- [FuelRefuelPanel::_ready](../scripts/ui/FuelRefuelPanel/functions/_ready.md)
+- [FuelSystem::_ready](../scripts/sim/systems/FuelSystem/functions/_ready.md)
+- [FuelTest::_ready](../scripts/test/FuelTest/functions/_ready.md)
+- [Game::_ready](../scripts/core/Game/functions/_ready.md)
+- [InteractionController::_ready](../scripts/core/InteractionController/functions/_ready.md)
+- [MainMenu::_ready](../scripts/ui/MainMenu/functions/_ready.md)
+- [MapController::_ready](../scripts/core/MapController/functions/_ready.md)
+- [MissionSelect::_ready](../scripts/ui/MissionSelect/functions/_ready.md) — Build UI, load map, place pins, hook resizes.
+- [MovementAgent::_ready](../scripts/ai/MovementAgent/functions/_ready.md)
+- [NewScenarioDialog::_ready](../scripts/editors/NewScenarioDialog/functions/_ready.md)
+- [NewTerrainDialog::_ready](../scripts/editors/NewTerrainDialog/functions/_ready.md)
+- [OrdersParser::_ready](../scripts/radio/OrdersParser/functions/_ready.md)
+- [PathGrid::_ready](../scripts/terrain/PathGrid/functions/_ready.md)
+- [PauseMenu::_ready](../scripts/ui/PauseMenu/functions/_ready.md)
+- [PickupItem::_ready](../scripts/core/PickupItem/functions/_ready.md)
+- [PoolDropArea::_ready](../scripts/ui/helpers/PoolDropArea/functions/_ready.md)
+- [Radio::_ready](../scripts/radio/Radio/functions/_ready.md) — Connect to STTService signals.
+- [RadioFeedback::_ready](../scripts/radio/RadioFeedback/functions/_ready.md) — Ready-time setup:
+- Connect to `OrdersParser.parse_error`
+- Try to locate `AmmoSystem` and `FuelSystem` instances in the scene by group lookup.
+- [ScenarioEditor::_ready](../scripts/editors/ScenarioEditor/functions/_ready.md) — Initialize context, services, signals, UI, and dialogs
+- [ScenarioEditorOverlay::_ready](../scripts/editors/ScenarioEditorOverlay/functions/_ready.md) — Initialize popup menu and mouse handling
+- [ScenarioWeatherDialog::_ready](../scripts/editors/ScenarioWeatherDialog/functions/_ready.md)
+- [Settings::_ready](../scripts/ui/Settings/functions/_ready.md) — Build UI and load config.
+- [SetupController::_ready](../scripts/test/SetupController/functions/_ready.md)
+- [SimWorld::_ready](../scripts/sim/SimWorld/functions/_ready.md) — Create and configure AmmoSystem; optionally hook up RadioFeedback.
+- [SlotConfigDialog::_ready](../scripts/editors/SlotConfigDialog/functions/_ready.md)
+- [SlotItem::_ready](../scripts/ui/helpers/SlotItem/functions/_ready.md) — Cache base style, wire hover, set mouse filters, and refresh visuals.
+- [STTService::_ready](../scripts/radio/STTService/functions/_ready.md)
+- [TableCamera::_ready](../scripts/core/TableCamera/functions/_ready.md)
+- [TaskConfigDialog::_ready](../scripts/editors/TaskConfigDialog/functions/_ready.md)
+- [TerrainCamera::_ready](../scripts/editors/TerrainCamera/functions/_ready.md)
+- [TerrainEditor::_ready](../scripts/editors/TerrainEditor/functions/_ready.md)
+- [TerrainRender::_ready](../scripts/terrain/TerrainRender/functions/_ready.md)
+- [TriggerConfigDialog::_ready](../scripts/editors/TriggerConfigDialog/functions/_ready.md)
+- [UnitCard::_ready](../scripts/ui/helpers/UnitCard/functions/_ready.md)
+- [UnitConfigDialog::_ready](../scripts/editors/UnitConfigDialog/functions/_ready.md)
+- [UnitSelect::_ready](../scripts/ui/UnitSelect/functions/_ready.md) — Build UI, load mission
+- [SurfaceLayer::_rebuild_all_from_data](../scripts/terrain/SurfaceLayer/functions/_rebuild_all_from_data.md) — Full rebuild from TerrainData
+- [ContourLayer::_rebuild_contours](../scripts/terrain/ContourLayer/functions/_rebuild_contours.md) — Rebuild the contour lines
+- [SurfaceLayer::_rebuild_dirty_groups](../scripts/terrain/SurfaceLayer/functions/_rebuild_dirty_groups.md) — Starts asynchronous unions for any groups currently marked dirty
+- [LabelLayer::_rebuild_draw_items](../scripts/terrain/LabelLayer/functions/_rebuild_draw_items.md) — Build sorted list from cache
+- [PointLayer::_rebuild_draw_items](../scripts/terrain/PointLayer/functions/_rebuild_draw_items.md) — Build/refresh array used by _draw(), sorted by z
+- [TerrainEditor::_rebuild_info_panel](../scripts/editors/TerrainEditor/functions/_rebuild_info_panel.md) — Builds the tool info panel
+- [TerrainLineTool::_rebuild_info_ui](../scripts/editors/tools/TerrainLineTool/functions/_rebuild_info_ui.md)
+- [TerrainPointTool::_rebuild_info_ui](../scripts/editors/tools/TerrainPointTool/functions/_rebuild_info_ui.md)
+- [TerrainPolygonTool::_rebuild_info_ui](../scripts/editors/tools/TerrainPolygonTool/functions/_rebuild_info_ui.md) — Rebuild the Info UI with info on the active brush
+- [TerrainEditor::_rebuild_options_panel](../scripts/editors/TerrainEditor/functions/_rebuild_options_panel.md) — Rebuild the options panel for the selected tool
+- [ScenarioEditor::_rebuild_scene_tree](../scripts/editors/ScenarioEditor/functions/_rebuild_scene_tree.md) — Rebuild the left scene tree and restore selection
+- [LineLayer::_rebuild_stroke_batches](../scripts/terrain/LineLayer/functions/_rebuild_stroke_batches.md) — Build stroke groups (outline/core) per identical state and sort by z
+- [TerrainEditor::_rebuild_tool_hint](../scripts/editors/TerrainEditor/functions/_rebuild_tool_hint.md) — Builds the tool info panel
+- [SurfaceLayer::_rec_key](../scripts/terrain/SurfaceLayer/functions/_rec_key.md) — Produces a stable batching key based on draw state (z/mode/colors/texture)
+- [UnitSelect::_recompute_logistics](../scripts/ui/UnitSelect/functions/_recompute_logistics.md) — Recalculate logistics totals from assigned units
+- [MissionResolution::_recompute_score](../scripts/core/MissionResolution/functions/_recompute_score.md)
+- [ScenarioHistory::_record_commit](../scripts/editors/ScenarioHistory/functions/_record_commit.md)
+- [TerrainHistory::_record_commit](../scripts/editors/TerrainHistory/functions/_record_commit.md) — Record a commit to history
+- [TerrainElevationTool::_rect_union](../scripts/editors/tools/TerrainElevationTool/functions/_rect_union.md) — Helper function to union join a rect
+- [DebugMenu::_recursive_collect_scenes](../scripts/ui/DebugMenu/functions/_recursive_collect_scenes.md) — recursivly collect all scenes in project
+- [ScenarioUnitsCatalog::_refresh](../scripts/editors/services/ScenarioUnitsCatalog/functions/_refresh.md)
+- [UnitSelect::_refresh_filters](../scripts/ui/UnitSelect/functions/_refresh_filters.md) — Reset all role filter buttons
+- [LineLayer::_refresh_geometry](../scripts/terrain/LineLayer/functions/_refresh_geometry.md)
+- [SurfaceLayer::_refresh_geometry_same_group](../scripts/terrain/SurfaceLayer/functions/_refresh_geometry_same_group.md) — Refreshes geometry when points changed but the brush grouping stayed the same
+- [SlotItem::_refresh_labels](../scripts/ui/helpers/SlotItem/functions/_refresh_labels.md) — Update Title, and Type.
+- [DebugMenu::_refresh_log](../scripts/ui/DebugMenu/functions/_refresh_log.md) — refresh log display
+- [MissionSelect::_refresh_pin_labels](../scripts/ui/MissionSelect/functions/_refresh_pin_labels.md) — Refresh label visibility on all pins.
+- [UnitSelect::_refresh_pool_filter](../scripts/ui/UnitSelect/functions/_refresh_pool_filter.md) — Refresh pool visibility based on filter/search/assignment
+- [PointLayer::_refresh_pose](../scripts/terrain/PointLayer/functions/_refresh_pose.md) — Update only pos/rot/scale/size/visibility
+- [LabelLayer::_refresh_pose_only](../scripts/terrain/LabelLayer/functions/_refresh_pose_only.md) — Update position/rotation only (fast path for drags)
+- [TerrainLabelTool::_refresh_preview](../scripts/editors/tools/TerrainLabelTool/functions/_refresh_preview.md)
+- [LineLayer::_refresh_recipe_and_geometry](../scripts/terrain/LineLayer/functions/_refresh_recipe_and_geometry.md) — Recompute recipe (colors/mode/widths) and geometry (since snapping may change)
+- [SlotConfigDialog::_refresh_role_list](../scripts/editors/SlotConfigDialog/functions/_refresh_role_list.md) — Refresh role list
+- [UnitSelect::_refresh_topbar](../scripts/ui/UnitSelect/functions/_refresh_topbar.md) — Update topbar with used slots and points
+- [AmmoRearmPanel::_refresh_units](../scripts/ui/AmmoRearmPanel/functions/_refresh_units.md)
+- [FuelSystem::_refuel_tick](../scripts/sim/systems/FuelSystem/functions/_refuel_tick.md)
+- [SurfaceLayer::_remove_id](../scripts/terrain/SurfaceLayer/functions/_remove_id.md) — Removes a surface by id and marks its group dirty
+- [TerrainLabelTool::_remove_label](../scripts/editors/tools/TerrainLabelTool/functions/_remove_label.md)
+- [TerrainPointTool::_remove_point](../scripts/editors/tools/TerrainPointTool/functions/_remove_point.md)
+- [Debrief::_request_align](../scripts/ui/Debrief/functions/_request_align.md) — Defers alignment one frame so container sizes update before measuring.
+- [TerrainEditor::_request_exit](../scripts/editors/TerrainEditor/functions/_request_exit.md) — Request to exit the editor
+- [TerrainData::_resample_or_resize](../scripts/data/TerrainData/functions/_resample_or_resize.md) — Resmaple or resize heightmap
+- [MissionResolution::_reset](../scripts/core/MissionResolution/functions/_reset.md) — Clear all state.
+- [Settings::_reset_all_bindings](../scripts/ui/Settings/functions/_reset_all_bindings.md) — Remove custom bindings and restore defaults (uses InputSchema if present).
+- [STTService::_reset_buffers](../scripts/radio/STTService/functions/_reset_buffers.md) — Reset sentence buffers for a new recording session.
+- [Settings::_reset_defaults](../scripts/ui/Settings/functions/_reset_defaults.md) — Reset to defaults.
+- [NewScenarioDialog::_reset_values](../scripts/editors/NewScenarioDialog/functions/_reset_values.md) — Reset values before popup (only when hiding)
+- [NewTerrainDialog::_reset_values](../scripts/editors/NewTerrainDialog/functions/_reset_values.md) — Reset values before popup (only when hiding)
+- [ScenarioWeatherDialog::_reset_values](../scripts/editors/ScenarioWeatherDialog/functions/_reset_values.md) — Reset values before popup
+- [ContentDB::_resolve_id_path](../scripts/core/ContentDB/functions/_resolve_id_path.md) — Get absolute file path for id in a directory.
+- [PathGrid::_road_bias_at](../scripts/terrain/PathGrid/functions/_road_bias_at.md)
+- [FuelRefuelPanel::_row_label_for](../scripts/ui/FuelRefuelPanel/functions/_row_label_for.md)
+- [SurfaceLayer::_sanitize_polygon](../scripts/terrain/SurfaceLayer/functions/_sanitize_polygon.md) — Removes duplicate/adjacent points and optional duplicated closing vertex
+- [TerrainEditor::_save](../scripts/editors/TerrainEditor/functions/_save.md) — Save terrain
+- [TerrainEditor::_save_as](../scripts/editors/TerrainEditor/functions/_save_as.md) — Save terrain as
+- [AmmoTest::_save_campaign_state](../scripts/test/AmmoTest/functions/_save_campaign_state.md)
+- [Settings::_save_config](../scripts/ui/Settings/functions/_save_config.md) — Save config file.
+- [ScenarioEditorOverlay::_scale_icon](../scripts/editors/ScenarioEditorOverlay/functions/_scale_icon.md) — Utility used by task glyphs to request scaled textures
+- [ScenarioEditorOverlay::_scaled_cached](../scripts/editors/ScenarioEditorOverlay/functions/_scaled_cached.md) — Scale and cache a texture by key and target pixel size
+- [ContourLayer::_schedule_rebuild](../scripts/terrain/ContourLayer/functions/_schedule_rebuild.md) — Schedule a Rebuild of the contour lines
+- [MissionResolution::_score_breakdown](../scripts/core/MissionResolution/functions/_score_breakdown.md)
+- [DebugOverlay::_screen_from_m](../scripts/test/DebugOverlay/functions/_screen_from_m.md)
+- [ScenarioEditorOverlay::_screen_pos_for_pick](../scripts/editors/ScenarioEditorOverlay/functions/_screen_pos_for_pick.md) — Return on-screen center of a given pick (fallback to hover pos)
+- [AmmoTest::_scroll_log_bottom](../scripts/test/AmmoTest/functions/_scroll_log_bottom.md)
+- [ScenarioSelectionService::_select_in_tree](../scripts/editors/services/ScenarioSelectionService/functions/_select_in_tree.md)
+- [ScenarioSelectionService::_select_recursive](../scripts/editors/services/ScenarioSelectionService/functions/_select_recursive.md)
+- [TerrainEditor::_select_tool](../scripts/editors/TerrainEditor/functions/_select_tool.md) — Select the active tool
+- [ScenarioData::_serialize_unit_slots](../scripts/data/ScenarioData/functions/_serialize_unit_slots.md)
+- [CampaignSelect::_set_action_buttons_visible](../scripts/ui/CampaignSelect/functions/_set_action_buttons_visible.md) — Show/hide the three action buttons.
+- [Settings::_set_bus_mute](../scripts/ui/Settings/functions/_set_bus_mute.md) — Mute/unmute bus.
+- [Settings::_set_bus_volume](../scripts/ui/Settings/functions/_set_bus_volume.md) — Set bus volume (linear 0..1).
+- [TerrainData::_set_contour_interval_m](../scripts/data/TerrainData/functions/_set_contour_interval_m.md)
+- [TerrainRender::_set_data](../scripts/terrain/TerrainRender/functions/_set_data.md) — Set new Terrain Data
+- [CombatController::_set_debug_rate](../scripts/sim/CombatController/functions/_set_debug_rate.md) — Adjust debug timer
+- [TerrainData::_set_elev](../scripts/data/TerrainData/functions/_set_elev.md)
+- [ScenarioUnitsCatalog::_set_faction](../scripts/editors/services/ScenarioUnitsCatalog/functions/_set_faction.md)
+- [TerrainData::_set_grid_x](../scripts/data/TerrainData/functions/_set_grid_x.md)
+- [TerrainData::_set_grid_y](../scripts/data/TerrainData/functions/_set_grid_y.md)
+- [TerrainData::_set_height](../scripts/data/TerrainData/functions/_set_height.md)
+- [TerrainLabelTool::_set_label_pos](../scripts/editors/tools/TerrainLabelTool/functions/_set_label_pos.md)
+- [TerrainData::_set_labels](../scripts/data/TerrainData/functions/_set_labels.md)
+- [TerrainData::_set_lines](../scripts/data/TerrainData/functions/_set_lines.md)
+- [DebugMenu::_set_metrics_visibility](../scripts/ui/DebugMenu/functions/_set_metrics_visibility.md) — Set visibility for metrics display
+- [MovementAgent::_set_path](../scripts/ai/MovementAgent/functions/_set_path.md)
+- [TerrainPointTool::_set_point_pos](../scripts/editors/tools/TerrainPointTool/functions/_set_point_pos.md)
+- [TerrainData::_set_points](../scripts/data/TerrainData/functions/_set_points.md)
+- [ScenarioDragLinkService::_set_pos](../scripts/editors/services/ScenarioDragLinkService/functions/_set_pos.md)
+- [TerrainData::_set_resolution](../scripts/data/TerrainData/functions/_set_resolution.md)
+- [TerrainData::_set_surfaces](../scripts/data/TerrainData/functions/_set_surfaces.md)
+- [ScenarioEditor::_set_tool](../scripts/editors/ScenarioEditor/functions/_set_tool.md) — Set or clear current tool and wire its signals
+- [TerrainData::_set_width](../scripts/data/TerrainData/functions/_set_width.md)
+- [ScenarioEditor::_setup_scene_tree_signals](../scripts/editors/ScenarioEditor/functions/_setup_scene_tree_signals.md) — Connect scene tree selection to selection service
+- [ScenarioUnitsCatalog::_setup_tree](../scripts/editors/services/ScenarioUnitsCatalog/functions/_setup_tree.md)
+- [ScenarioEditor::_show_info](../scripts/editors/ScenarioEditor/functions/_show_info.md) — Show a non-blocking info toast/dialog with a message
+- [MainMenu::_show_missing_scene_dialog](../scripts/ui/MainMenu/functions/_show_missing_scene_dialog.md) — Used in development for missing scenes.
+- [UnitSelect::_show_unit_stats](../scripts/ui/UnitSelect/functions/_show_unit_stats.md) — Update stats panel with selected unit data
+- [PathGrid::_slope_multiplier_at_cell](../scripts/terrain/PathGrid/functions/_slope_multiplier_at_cell.md)
+- [ScenarioEditorOverlay::_slot_pos_m](../scripts/editors/ScenarioEditorOverlay/functions/_slot_pos_m.md) — Extract slot world position from either dict or resource
+- [TerrainElevationTool::_smooth01](../scripts/editors/tools/TerrainElevationTool/functions/_smooth01.md) — Helper for smooth fade
+- [ScenarioTasksService::_snap](../scripts/editors/services/ScenarioTasksService/functions/_snap.md)
+- [TaskPlaceTool::_snap](../scripts/editors/tools/TaskPlaceTool/functions/_snap.md)
+- [UnitPlaceTool::_snap](../scripts/editors/tools/UnitPlaceTool/functions/_snap.md)
+- [ScenarioEditor::_snapshot_arrays](../scripts/editors/ScenarioEditor/functions/_snapshot_arrays.md) — Deep-copy key arrays for history operations
+- [SurfaceLayer::_sorted_groups](../scripts/terrain/SurfaceLayer/functions/_sorted_groups.md) — Returns groups sorted by z-index
+- [AmmoTest::_spawn_units](../scripts/test/AmmoTest/functions/_spawn_units.md)
+- [ScenarioUnit::_speed_here_mps](../scripts/editors/ScenarioUnit/functions/_speed_here_mps.md) — Terrain-modified speed at a point using PathGrid weight.
+- [TerrainLineTool::_start_new_line](../scripts/editors/tools/TerrainLineTool/functions/_start_new_line.md)
+- [TerrainPolygonTool::_start_new_polygon](../scripts/editors/tools/TerrainPolygonTool/functions/_start_new_polygon.md) — Start creating a new polygon
+- [ScenarioEditor::_start_place_task_tool](../scripts/editors/ScenarioEditor/functions/_start_place_task_tool.md) — Begin Task placement tool with a given task prototype
+- [ScenarioEditor::_start_place_trigger_tool](../scripts/editors/ScenarioEditor/functions/_start_place_trigger_tool.md) — Begin Trigger placement tool with a trigger prototype
+- [ScenarioEditor::_start_place_unit_tool](../scripts/editors/ScenarioEditor/functions/_start_place_unit_tool.md) — Begin Unit/Slot placement tool with a given payload
+- [Radio::_start_tx](../scripts/radio/Radio/functions/_start_tx.md) — Manually enable the radio / STT.
+- [SurfaceLayer::_start_union_thread](../scripts/terrain/SurfaceLayer/functions/_start_union_thread.md) — Starts/queues a worker thread to compute AABB-filtered union for a group
+- [ContourLayer::_stitch_segments_to_polylines](../scripts/terrain/ContourLayer/functions/_stitch_segments_to_polylines.md) — Stitch segments into polylines
+- [Radio::_stop_tx](../scripts/radio/Radio/functions/_stop_tx.md) — Manually disable the radio / STT.
+- [LineLayer::_stroke_key](../scripts/terrain/LineLayer/functions/_stroke_key.md) — Stable key for batching strokes that share draw state
+- [FuelSystem::_surface_mult_at](../scripts/sim/systems/FuelSystem/functions/_surface_mult_at.md)
+- [PathGrid::_surface_multiplier_at](../scripts/terrain/PathGrid/functions/_surface_multiplier_at.md)
+- [TerrainLineTool::_sync_edit_brush_to_active_if_needed](../scripts/editors/tools/TerrainLineTool/functions/_sync_edit_brush_to_active_if_needed.md)
+- [FuelSystem::_terrain_slope_multiplier](../scripts/sim/systems/FuelSystem/functions/_terrain_slope_multiplier.md) — Terrain and slope
+- [PathGrid::_thread_build](../scripts/terrain/PathGrid/functions/_thread_build.md) — Internal: worker function (runs off the main thread)
+- [PathGrid::_thread_finish](../scripts/terrain/PathGrid/functions/_thread_finish.md) — Create A* on main thread, cache it, swap in, and emit signals.
+- [NewScenarioDialog::_title_button_from_mode](../scripts/editors/NewScenarioDialog/functions/_title_button_from_mode.md) — Update window title and primary button text to reflect mode.
+- [PathGrid::_to_cell](../scripts/terrain/PathGrid/functions/_to_cell.md)
+- [MovementAgent::_to_local_from_terrain](../scripts/ai/MovementAgent/functions/_to_local_from_terrain.md) — Convert terrain meters -> this node's local draw space
+- [DebugMetricsDisplay::_total_graph_draw](../scripts/ui/DebugMetricsDisplay/functions/_total_graph_draw.md)
+- [AmmoSystem::_transfer_tick](../scripts/sim/systems/AmmoSystem/functions/_transfer_tick.md) — Transfer rounds for all active links using a fractional-rate accumulator so
+low rates still work at high frame rates (e.g., 20 rps @ 60 FPS).
+- [ScenarioEditorOverlay::_trim_segment](../scripts/editors/ScenarioEditorOverlay/functions/_trim_segment.md) — Shorten a segment at both ends by given trims (pixels)
+- [UnitSelect::_try_assign](../scripts/ui/UnitSelect/functions/_try_assign.md) — Attempt to assign a unit to a slot with validation
+- [TerrainEffects::_try_field](../scripts/sim/TerrainEffects/functions/_try_field.md)
+- [InteractionController::_try_pickup](../scripts/core/InteractionController/functions/_try_pickup.md)
+- [UnitSelect::_unassign_slot](../scripts/ui/UnitSelect/functions/_unassign_slot.md) — Unassign a unit from the given slot
+- [ActionRebindButton::_unhandled_input](../scripts/ui/helpers/ActionRebindButton/functions/_unhandled_input.md) — Capture input and assign.
+- [InteractionController::_unhandled_input](../scripts/core/InteractionController/functions/_unhandled_input.md)
+- [MapController::_unhandled_input](../scripts/core/MapController/functions/_unhandled_input.md) — Handle *unhandled* input and emit when it hits the map.
+- [Radio::_unhandled_input](../scripts/radio/Radio/functions/_unhandled_input.md) — Handle PTT input.
+- [PauseMenu::_unhandled_key_input](../scripts/ui/PauseMenu/functions/_unhandled_key_input.md)
+- [ScenarioEditor::_unhandled_key_input](../scripts/editors/ScenarioEditor/functions/_unhandled_key_input.md) — Global key handling: delete, undo/redo, and tool input
+- [TerrainEditor::_unhandled_key_input](../scripts/editors/TerrainEditor/functions/_unhandled_key_input.md) — Handle unhandled input
+- [SurfaceLayer::_union_group](../scripts/terrain/SurfaceLayer/functions/_union_group.md) — Convenience passthrough to the non-AABB union implementation
+- [SurfaceLayer::_union_group_aabb](../scripts/terrain/SurfaceLayer/functions/_union_group_aabb.md) — Unions polygons using connected AABB clusters to minimize pairwise merges
+- [SurfaceLayer::_union_polys](../scripts/terrain/SurfaceLayer/functions/_union_polys.md) — Unions an array of polygons pairwise (fallback/slow path)
+- [SurfaceLayer::_union_worker](../scripts/terrain/SurfaceLayer/functions/_union_worker.md) — Worker entry, performs AABB clustering and unions the cluster polygons
+- [UnitSelect::_update_card_selection](../scripts/ui/UnitSelect/functions/_update_card_selection.md) — Highlight the selected card in the pool
+- [UnitSelect::_update_deploy_enabled](../scripts/ui/UnitSelect/functions/_update_deploy_enabled.md) — Enable/disable deploy button based on slot fill
+- [AmmoRearmPanel::_update_depot_label](../scripts/ui/AmmoRearmPanel/functions/_update_depot_label.md)
+- [FuelRefuelPanel::_update_depot_label](../scripts/ui/FuelRefuelPanel/functions/_update_depot_label.md)
+- [CampaignSelect::_update_details_placeholder](../scripts/ui/CampaignSelect/functions/_update_details_placeholder.md) — Placeholder details update (to be replaced later).
+- [AmmoTest::_update_hud](../scripts/test/AmmoTest/functions/_update_hud.md)
+- [SlotItem::_update_icon](../scripts/ui/helpers/SlotItem/functions/_update_icon.md) — Set icon to assigned unit's icon or fall back to exported default.
+- [FuelTest::_update_labels](../scripts/test/FuelTest/functions/_update_labels.md)
+- [AmmoTest::_update_link_status](../scripts/test/AmmoTest/functions/_update_link_status.md)
+- [UnitSelect::_update_logistics_labels](../scripts/ui/UnitSelect/functions/_update_logistics_labels.md) — Update logistics labels with current totals
+- [MapController::_update_mesh_fit](../scripts/core/MapController/functions/_update_mesh_fit.md) — Fit PlaneMesh to the viewport aspect ratio, clamped to _start_world_max
+- [MapController::_update_mouse_grid_ui](../scripts/core/MapController/functions/_update_mouse_grid_ui.md) — Grid hover label update
+- [STTService::_update_partial_segment](../scripts/radio/STTService/functions/_update_partial_segment.md) — Update the current segment with a new partial.
+- [MissionSelect::_update_pin_positions](../scripts/ui/MissionSelect/functions/_update_pin_positions.md) — Reposition pins with letterbox awareness.
+- [TerrainPointTool::_update_preview_appearance](../scripts/editors/tools/TerrainPointTool/functions/_update_preview_appearance.md)
+- [TerrainData::_update_scale](../scripts/data/TerrainData/functions/_update_scale.md) — Update heightmap scale
+- [UnitCard::_update_style](../scripts/ui/helpers/UnitCard/functions/_update_style.md) — Apply hover/selected panel styling.
+- [TableCamera::_update_target_tilt_from_z](../scripts/core/TableCamera/functions/_update_target_tilt_from_z.md) — Update camera tilt
+- [Debrief::_update_title](../scripts/ui/Debrief/functions/_update_title.md) — Keeps the bottom title in sync with the latest mission and outcome.
+- [ScenarioEditor::_update_title](../scripts/editors/ScenarioEditor/functions/_update_title.md) — Update window title label from scenario title
+- [TerrainEditor::_update_tool_button_tint](../scripts/editors/TerrainEditor/functions/_update_tool_button_tint.md) — Update tool button tint
+- [MapController::_update_viewport_to_renderer](../scripts/core/MapController/functions/_update_viewport_to_renderer.md) — Resize the Viewport to match the renderer's pixel size (including margins)
+- [LabelLayer::_upsert_from_data](../scripts/terrain/LabelLayer/functions/_upsert_from_data.md) — Insert/update a label from TerrainData
+- [LineLayer::_upsert_from_data](../scripts/terrain/LineLayer/functions/_upsert_from_data.md) — Insert/update a line by id from TerrainData and (optionally) rebuild recipe
+- [PointLayer::_upsert_from_data](../scripts/terrain/PointLayer/functions/_upsert_from_data.md) — Insert/update a point by id, recomputing size/tex/visibility as needed
+- [SurfaceLayer::_upsert_from_data](../scripts/terrain/SurfaceLayer/functions/_upsert_from_data.md) — Inserts/updates one surface from data, moving between groups if needed
+- [ScenarioUnitsCatalog::_used_unit_ids](../scripts/editors/services/ScenarioUnitsCatalog/functions/_used_unit_ids.md)
+- [FuelRefuelPanel::_value_labels_refresh](../scripts/ui/FuelRefuelPanel/functions/_value_labels_refresh.md)
+- [ScenarioData::_vec2_to_dict](../scripts/data/ScenarioData/functions/_vec2_to_dict.md)
+- [SmokeCompile::_walk_dir](../tools/ci/SmokeCompile/functions/_walk_dir.md) — Walk directories
+- [PathGrid::_weight_for_cell](../scripts/terrain/PathGrid/functions/_weight_for_cell.md)
+- [NewTerrainDialog::_window_title_and_cta](../scripts/editors/NewTerrainDialog/functions/_window_title_and_cta.md)
+- [AmmoTest::_wire_ui](../scripts/test/AmmoTest/functions/_wire_ui.md)
+- [FuelTest::_wire_ui](../scripts/test/FuelTest/functions/_wire_ui.md)
+- [AmmoSystem::_within_radius](../scripts/sim/systems/AmmoSystem/functions/_within_radius.md) — True if src is within its transfer radius of dst.
+- [FuelSystem::_within_radius](../scripts/sim/systems/FuelSystem/functions/_within_radius.md)
+- [MainMenu::_wrap_editor_button](../scripts/ui/MainMenu/functions/_wrap_editor_button.md) — Reparents the Editor button into a VBox to host submenu buttons below it.
+- [TerrainCamera::_zoom_at_mouse](../scripts/editors/TerrainCamera/functions/_zoom_at_mouse.md)
