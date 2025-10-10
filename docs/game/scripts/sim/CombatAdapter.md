@@ -29,7 +29,8 @@ this into AmmoSystem or combat resolution.
 
 ## Public Attributes
 
-- `AmmoSystem  ## Cached AmmoSystem reference _ammo` — NodePath to an AmmoSystem node in the scene.
+- `NodePath ammo_system_path` — NodePath to an AmmoSystem node in the scene.
+- `AmmoSystem  ## Cached AmmoSystem reference _ammo`
 
 ## Signals
 
@@ -94,15 +95,21 @@ suppression *= r.suppression_mult
 
 ## Member Data Documentation
 
+### ammo_system_path
+
+```gdscript
+var ammo_system_path: NodePath
+```
+
+Decorators: `@export`
+
+NodePath to an AmmoSystem node in the scene.
+
 ### _ammo
 
 ```gdscript
 var _ammo: AmmoSystem  ## Cached AmmoSystem reference
 ```
-
-Decorators: `@export var ammo_system_path: NodePath`
-
-NodePath to an AmmoSystem node in the scene.
 
 ## Signal Documentation
 

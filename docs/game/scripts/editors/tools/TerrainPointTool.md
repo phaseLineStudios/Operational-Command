@@ -37,6 +37,7 @@ extends TerrainToolBase
 
 - `TerrainBrush active_brush`
 - `float symbol_scale`
+- `float symbol_rotation_deg`
 - `Control _info_ui_parent`
 - `int _hover_idx`
 - `int _drag_idx`
@@ -172,6 +173,12 @@ var active_brush: TerrainBrush
 
 ```gdscript
 var symbol_scale: float
+```
+
+### symbol_rotation_deg
+
+```gdscript
+var symbol_rotation_deg: float
 ```
 
 ### _info_ui_parent

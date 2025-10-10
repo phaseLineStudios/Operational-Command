@@ -23,8 +23,6 @@ Action on exit
 
 Order of editor tools
 
-Initial Terrain Data
-
 ## Public Member Functions
 
 - [`func _ready()`](TerrainEditor/functions/_ready.md)
@@ -63,7 +61,7 @@ Initial Terrain Data
 
 ## Public Attributes
 
-- `TerrainData data`
+- `TerrainData data` — Initial Terrain Data
 - `Vector2 tool_icon_size` — Icon size for tool buttons
 - `Array[TerrainBrush] brushes`
 - `Array[Variant] features`
@@ -364,11 +362,17 @@ Wrapper for terrain_to_map from terrain renderer
 var data: TerrainData
 ```
 
+Decorators: `@export`
+
+Initial Terrain Data
+
 ### tool_icon_size
 
 ```gdscript
 var tool_icon_size: Vector2
 ```
+
+Decorators: `@export`
 
 Icon size for tool buttons
 

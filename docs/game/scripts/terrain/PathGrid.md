@@ -19,8 +19,6 @@ Grid weights + A* over TerrainData.
 
 Builds per-profile movement costs from surfaces + slope.
 
-Terrain source.
-
 Cell size in meters (pathfinding resolution).
 
 Allow diagonal movement.
@@ -94,7 +92,7 @@ Estimate travel time (seconds) along path for unit base speed and profile
 
 ## Public Attributes
 
-- `TerrainData data`
+- `TerrainData data` — Terrain source.
 - `TerrainBrush.MoveProfile debug_profile` — Movement profile
 - `DebugLayer debug_layer` — Which layer to draw
 - `Array _area_features`
@@ -427,11 +425,17 @@ func mix(a: float, b: float, t: float) -> float
 var data: TerrainData
 ```
 
+Decorators: `@export`
+
+Terrain source.
+
 ### debug_profile
 
 ```gdscript
 var debug_profile: TerrainBrush.MoveProfile
 ```
+
+Decorators: `@export`
 
 Movement profile
 
@@ -440,6 +444,8 @@ Movement profile
 ```gdscript
 var debug_layer: DebugLayer
 ```
+
+Decorators: `@export`
 
 Which layer to draw
 

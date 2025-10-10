@@ -1,6 +1,6 @@
 # RadioFeedback::_on_ammo_empty Function Reference
 
-*Defined at:* `scripts/radio/RadioFeedback.gd` (lines 47–50)</br>
+*Defined at:* `scripts/radio/RadioFeedback.gd` (lines 75–78)</br>
 *Belongs to:* [RadioFeedback](../../RadioFeedback.md)
 
 **Signature**

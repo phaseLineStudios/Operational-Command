@@ -35,6 +35,7 @@ Ammo integration:
 
 - `AmmoSystem _ammo` — Central mission-scoped AmmoSystem instance.
 - `CombatAdapter _adapter`
+- `FuelSystem _fuel` — Initialize a new FuelSystem
 
 ## Member Function Documentation
 
@@ -71,6 +72,8 @@ Movement hook: call from movement/controller code whenever a unit moves.
 var _ammo: AmmoSystem
 ```
 
+Decorators: `@onready`
+
 Central mission-scoped AmmoSystem instance. Created at runtime here.
 
 ### _adapter
@@ -78,3 +81,13 @@ Central mission-scoped AmmoSystem instance. Created at runtime here.
 ```gdscript
 var _adapter: CombatAdapter
 ```
+
+### _fuel
+
+```gdscript
+var _fuel: FuelSystem
+```
+
+Decorators: `@onready`
+
+Initialize a new FuelSystem

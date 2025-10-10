@@ -60,6 +60,8 @@ Walk directories
 var roots: PackedStringArray
 ```
 
+Decorators: `@export`
+
 Roots to scan (res:// paths).
 
 ### include_exts
@@ -67,6 +69,8 @@ Roots to scan (res:// paths).
 ```gdscript
 var include_exts: PackedStringArray
 ```
+
+Decorators: `@export`
 
 File extensions to include.
 
@@ -76,6 +80,8 @@ File extensions to include.
 var exclude_dirs: PackedStringArray
 ```
 
+Decorators: `@export`
+
 Directories to skip (prefix match).
 
 ### report_every
@@ -83,5 +89,7 @@ Directories to skip (prefix match).
 ```gdscript
 var report_every: int
 ```
+
+Decorators: `@export`
 
 Print progress every N files (0 = disabled).

@@ -11,16 +11,6 @@ class_name BriefItemData
 extends Resource
 ```
 
-## Brief
-
-Unique identifier for this briefing item
-
-Human-readable title of the briefing item
-
-Path to the resource backing this item
-
-Position of the item on the briefing board.
-
 ## Public Member Functions
 
 - [`func serialize() -> Dictionary`](BriefItemData/functions/serialize.md) — Serializes Briefing Item to JSON
@@ -28,10 +18,11 @@ Position of the item on the briefing board.
 
 ## Public Attributes
 
-- `String id`
-- `String title`
+- `String id` — Unique identifier for this briefing item
+- `String title` — Human-readable title of the briefing item
 - `ItemType type` — Type of the briefing item
-- `Vector2 board_position`
+- `resource` — Path to the resource backing this item
+- `Vector2 board_position` — Position of the item on the briefing board.
 
 ## Enumerations
 
@@ -63,11 +54,19 @@ Deserializes briefing item from JSON
 var id: String
 ```
 
+Decorators: `@export`
+
+Unique identifier for this briefing item
+
 ### title
 
 ```gdscript
 var title: String
 ```
+
+Decorators: `@export`
+
+Human-readable title of the briefing item
 
 ### type
 
@@ -75,13 +74,29 @@ var title: String
 var type: ItemType
 ```
 
+Decorators: `@export`
+
 Type of the briefing item
+
+### resource
+
+```gdscript
+var resource
+```
+
+Decorators: `@export_file("*.* ; Any Resource")`
+
+Path to the resource backing this item
 
 ### board_position
 
 ```gdscript
 var board_position: Vector2
 ```
+
+Decorators: `@export`
+
+Position of the item on the briefing board.
 
 ## Enumeration Type Documentation
 

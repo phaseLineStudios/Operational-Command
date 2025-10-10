@@ -13,12 +13,6 @@ extends PanelContainer
 
 ## Brief
 
-Font size for map title
-
-## Detailed Description
-
-Font of grid number
-
 Helper function to draw vertically centered text
 
 ## Public Member Functions
@@ -32,7 +26,7 @@ Helper function to draw vertically centered text
 
 ## Public Attributes
 
-- `int title_size`
+- `int title_size` — Font size for map title
 - `Color margin_color` — Color of outer margin
 - `int margin_top_px` — Size of outer margin top
 - `int margin_bottom_px` — Size of outer margin bottom
@@ -40,7 +34,7 @@ Helper function to draw vertically centered text
 - `int margin_right_px` — Size of outer margin right
 - `int margin_label_every_m` — When to show a grid number (per meter)
 - `Color label_color` — Color of grid number
-- `Font label_font`
+- `Font label_font` — Font of grid number
 - `int label_size` — Font size of grid number
 - `bool show_top` — Show grid numbers at top
 - `bool show_bottom` — Show grid numbers at bottom
@@ -109,11 +103,17 @@ Helper function to draw horizontally centered text
 var title_size: int
 ```
 
+Decorators: `@export`
+
+Font size for map title
+
 ### margin_color
 
 ```gdscript
 var margin_color: Color
 ```
+
+Decorators: `@export`
 
 Color of outer margin
 
@@ -123,6 +123,8 @@ Color of outer margin
 var margin_top_px: int
 ```
 
+Decorators: `@export`
+
 Size of outer margin top
 
 ### margin_bottom_px
@@ -130,6 +132,8 @@ Size of outer margin top
 ```gdscript
 var margin_bottom_px: int
 ```
+
+Decorators: `@export`
 
 Size of outer margin bottom
 
@@ -139,6 +143,8 @@ Size of outer margin bottom
 var margin_left_px: int
 ```
 
+Decorators: `@export`
+
 Size of outer margin left
 
 ### margin_right_px
@@ -146,6 +152,8 @@ Size of outer margin left
 ```gdscript
 var margin_right_px: int
 ```
+
+Decorators: `@export`
 
 Size of outer margin right
 
@@ -155,6 +163,8 @@ Size of outer margin right
 var margin_label_every_m: int
 ```
 
+Decorators: `@export`
+
 When to show a grid number (per meter)
 
 ### label_color
@@ -162,6 +172,8 @@ When to show a grid number (per meter)
 ```gdscript
 var label_color: Color
 ```
+
+Decorators: `@export`
 
 Color of grid number
 
@@ -171,11 +183,17 @@ Color of grid number
 var label_font: Font
 ```
 
+Decorators: `@export`
+
+Font of grid number
+
 ### label_size
 
 ```gdscript
 var label_size: int
 ```
+
+Decorators: `@export`
 
 Font size of grid number
 
@@ -185,6 +203,8 @@ Font size of grid number
 var show_top: bool
 ```
 
+Decorators: `@export`
+
 Show grid numbers at top
 
 ### show_bottom
@@ -192,6 +212,8 @@ Show grid numbers at top
 ```gdscript
 var show_bottom: bool
 ```
+
+Decorators: `@export`
 
 Show grid numbers at bottom
 
@@ -201,6 +223,8 @@ Show grid numbers at bottom
 var show_left: bool
 ```
 
+Decorators: `@export`
+
 Show grid numbers at left
 
 ### show_right
@@ -208,6 +232,8 @@ Show grid numbers at left
 ```gdscript
 var show_right: bool
 ```
+
+Decorators: `@export`
 
 Show grid numbers at right
 
@@ -217,6 +243,8 @@ Show grid numbers at right
 var base_border_px: float
 ```
 
+Decorators: `@export`
+
 width of map border
 
 ### offset_top_px
@@ -224,6 +252,8 @@ width of map border
 ```gdscript
 var offset_top_px: float
 ```
+
+Decorators: `@export`
 
 grid number offset top
 
@@ -233,6 +263,8 @@ grid number offset top
 var offset_bottom_px: float
 ```
 
+Decorators: `@export`
+
 grid number offset bottom
 
 ### offset_left_px
@@ -241,6 +273,8 @@ grid number offset bottom
 var offset_left_px: float
 ```
 
+Decorators: `@export`
+
 grid number offset left
 
 ### offset_right_px
@@ -248,6 +282,8 @@ grid number offset left
 ```gdscript
 var offset_right_px: float
 ```
+
+Decorators: `@export`
 
 grid number offset right
 

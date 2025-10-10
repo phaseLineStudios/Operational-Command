@@ -41,7 +41,8 @@ Class to draw a point handle
 
 ## Public Attributes
 
-- `Control _info_ui_parent` — Elevation editing: raise/lower/smooth brush.
+- `TerrainBrush active_brush` — Elevation editing: raise/lower/smooth brush.
+- `Control _info_ui_parent`
 - `int _edit_id`
 - `int _edit_idx`
 - `int _drag_idx`
@@ -202,15 +203,21 @@ func _draw() -> void
 
 ## Member Data Documentation
 
+### active_brush
+
+```gdscript
+var active_brush: TerrainBrush
+```
+
+Decorators: `@export`
+
+Elevation editing: raise/lower/smooth brush.
+
 ### _info_ui_parent
 
 ```gdscript
 var _info_ui_parent: Control
 ```
-
-Decorators: `@export var active_brush: TerrainBrush`
-
-Elevation editing: raise/lower/smooth brush.
 
 ### _edit_id
 

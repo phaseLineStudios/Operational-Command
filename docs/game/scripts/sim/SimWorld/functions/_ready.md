@@ -1,6 +1,6 @@
 # SimWorld::_ready Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 20–38)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 23–46)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -25,12 +25,17 @@ func _ready() -> void:
 	_adapter.ammo_system_path = _ammo.get_path()
 	# Register units once roster is ready (left commented for now; call from roster code):
 	# for u in _current_units:
-	#     _ammo.register_unit(u)
+	#	_ammo.register_unit(u)
+	#	su.bind_fuel_system(_fuel)
+
+	# Fuel System
+	add_child(_fuel)
 
 	# Optional radio hookup (if a RadioFeedback node exists in the scene).
 	var radio := get_tree().get_first_node_in_group("RadioFeedback") as RadioFeedback
 	if radio:
 		radio.bind_ammo(_ammo)
+		radio.bind_fuel(_fuel)
 
 	Game.start_scenario([])
 ```

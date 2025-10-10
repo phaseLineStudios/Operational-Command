@@ -1,6 +1,6 @@
 # CombatTest::_process Function Reference
 
-*Defined at:* `scripts/test/CombatTest.gd` (lines 61–70)</br>
+*Defined at:* `scripts/test/CombatTest.gd` (lines 72–82)</br>
 *Belongs to:* [CombatTest](../../CombatTest.md)
 
 **Signature**
@@ -20,4 +20,5 @@ func _process(dt: float) -> void:
 			_su_b.tick(dt, renderer.path_grid)
 	if input_overlay:
 		input_overlay.queue_redraw()
+	fuel.tick(dt)
 ```

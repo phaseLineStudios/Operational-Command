@@ -15,17 +15,7 @@ extends Control
 
 Renders map: grid, margins, contours, surfaces, features, labels
 
-Terrain Data
-
 Visual Style
-
-Font for text
-
-Contour label font
-
-reference to the PathGrid used for movement/pathfinding.
-
-## Detailed Description
 
 If true, rebuild the grid automatically when data is set/changed.
 
@@ -59,7 +49,7 @@ If true, rebuild the grid automatically when data is set/changed.
 
 ## Public Attributes
 
-- `TerrainData: data`
+- `TerrainData: data` — Terrain Data
 - `Color base_color` — Base background map color
 - `Color terrain_border_color` — Color of the map border
 - `int terrain_border_px` — Width of the map border
@@ -70,7 +60,7 @@ If true, rebuild the grid automatically when data is set/changed.
 - `int margin_left_px` — Size of outer margin left
 - `int margin_right_px` — Size of outer margin right
 - `Color label_color` — Color for text
-- `Font label_font`
+- `Font label_font` — Font for text
 - `int label_size` — Font size of grid number text
 - `Color grid_100m_color` — Color of grid lines for every 100m
 - `Color grid_1km_color` — Color of grid lines for every 1000m
@@ -88,10 +78,10 @@ If true, rebuild the grid automatically when data is set/changed.
 - `Color contour_label_color` — Contour label color
 - `Color contour_label_bg` — Contour label background
 - `float contour_label_padding_px` — Contour label padding
-- `Font contour_label_font`
+- `Font contour_label_font` — Contour label font
 - `int contour_label_size` — Contour label font size
 - `float contour_label_gap_extra_px` — Extra space beyond plaque width
-- `PathGrid path_grid`
+- `PathGrid path_grid` — reference to the PathGrid used for movement/pathfinding.
 - `int nav_default_profile` — Default profile to rebuild for when auto-building.
 - `StyleBoxFlat _base_sb`
 - `SceneTreeTimer _debounce_timer`
@@ -320,11 +310,17 @@ Estimate travel time (seconds) along a path for a given base speed and profile
 var data: TerrainData:
 ```
 
+Decorators: `@export`
+
+Terrain Data
+
 ### base_color
 
 ```gdscript
 var base_color: Color
 ```
+
+Decorators: `@export`
 
 Base background map color
 
@@ -334,6 +330,8 @@ Base background map color
 var terrain_border_color: Color
 ```
 
+Decorators: `@export`
+
 Color of the map border
 
 ### terrain_border_px
@@ -341,6 +339,8 @@ Color of the map border
 ```gdscript
 var terrain_border_px: int
 ```
+
+Decorators: `@export`
 
 Width of the map border
 
@@ -350,6 +350,8 @@ Width of the map border
 var title_size: int
 ```
 
+Decorators: `@export`
+
 Font size for map title
 
 ### margin_color
@@ -357,6 +359,8 @@ Font size for map title
 ```gdscript
 var margin_color: Color
 ```
+
+Decorators: `@export`
 
 Color of outer margin
 
@@ -366,6 +370,8 @@ Color of outer margin
 var margin_top_px: int
 ```
 
+Decorators: `@export`
+
 Size of outer margin top
 
 ### margin_bottom_px
@@ -373,6 +379,8 @@ Size of outer margin top
 ```gdscript
 var margin_bottom_px: int
 ```
+
+Decorators: `@export`
 
 Size of outer margin bottom
 
@@ -382,6 +390,8 @@ Size of outer margin bottom
 var margin_left_px: int
 ```
 
+Decorators: `@export`
+
 Size of outer margin left
 
 ### margin_right_px
@@ -389,6 +399,8 @@ Size of outer margin left
 ```gdscript
 var margin_right_px: int
 ```
+
+Decorators: `@export`
 
 Size of outer margin right
 
@@ -398,6 +410,8 @@ Size of outer margin right
 var label_color: Color
 ```
 
+Decorators: `@export`
+
 Color for text
 
 ### label_font
@@ -406,11 +420,17 @@ Color for text
 var label_font: Font
 ```
 
+Decorators: `@export`
+
+Font for text
+
 ### label_size
 
 ```gdscript
 var label_size: int
 ```
+
+Decorators: `@export`
 
 Font size of grid number text
 
@@ -420,6 +440,8 @@ Font size of grid number text
 var grid_100m_color: Color
 ```
 
+Decorators: `@export`
+
 Color of grid lines for every 100m
 
 ### grid_1km_color
@@ -427,6 +449,8 @@ Color of grid lines for every 100m
 ```gdscript
 var grid_1km_color: Color
 ```
+
+Decorators: `@export`
 
 Color of grid lines for every 1000m
 
@@ -436,6 +460,8 @@ Color of grid lines for every 1000m
 var grid_line_px: float
 ```
 
+Decorators: `@export`
+
 Width of grid lines for every 100m
 
 ### grid_1km_line_px
@@ -443,6 +469,8 @@ Width of grid lines for every 100m
 ```gdscript
 var grid_1km_line_px: float
 ```
+
+Decorators: `@export`
 
 Width of grid lines for every 1000m
 
@@ -452,6 +480,8 @@ Width of grid lines for every 1000m
 var contour_color: Color
 ```
 
+Decorators: `@export`
+
 Base contour color
 
 ### contour_thick_color
@@ -459,6 +489,8 @@ Base contour color
 ```gdscript
 var contour_thick_color: Color
 ```
+
+Decorators: `@export`
 
 Contour color for thick lines
 
@@ -468,6 +500,8 @@ Contour color for thick lines
 var contour_px: float
 ```
 
+Decorators: `@export`
+
 Base width for contour lines
 
 ### contour_thick_every_m
@@ -475,6 +509,8 @@ Base width for contour lines
 ```gdscript
 var contour_thick_every_m: int
 ```
+
+Decorators: `@export`
 
 How often should contour lines be thick (in m)
 
@@ -484,6 +520,8 @@ How often should contour lines be thick (in m)
 var smooth_iterations: int
 ```
 
+Decorators: `@export`
+
 Smoothing iterations
 
 ### smooth_segment_len_m
@@ -491,6 +529,8 @@ Smoothing iterations
 ```gdscript
 var smooth_segment_len_m: float
 ```
+
+Decorators: `@export`
 
 Smoothing segment lengths
 
@@ -500,6 +540,8 @@ Smoothing segment lengths
 var smooth_keep_ends: bool
 ```
 
+Decorators: `@export`
+
 Should smoothing keep ends
 
 ### contour_label_every_m
@@ -507,6 +549,8 @@ Should smoothing keep ends
 ```gdscript
 var contour_label_every_m: int
 ```
+
+Decorators: `@export`
 
 Contour label spacing
 
@@ -516,6 +560,8 @@ Contour label spacing
 var contour_label_on_thick_only: bool
 ```
 
+Decorators: `@export`
+
 Only show elevation label on thick contours
 
 ### contour_label_color
@@ -523,6 +569,8 @@ Only show elevation label on thick contours
 ```gdscript
 var contour_label_color: Color
 ```
+
+Decorators: `@export`
 
 Contour label color
 
@@ -532,6 +580,8 @@ Contour label color
 var contour_label_bg: Color
 ```
 
+Decorators: `@export`
+
 Contour label background
 
 ### contour_label_padding_px
@@ -539,6 +589,8 @@ Contour label background
 ```gdscript
 var contour_label_padding_px: float
 ```
+
+Decorators: `@export`
 
 Contour label padding
 
@@ -548,11 +600,17 @@ Contour label padding
 var contour_label_font: Font
 ```
 
+Decorators: `@export`
+
+Contour label font
+
 ### contour_label_size
 
 ```gdscript
 var contour_label_size: int
 ```
+
+Decorators: `@export`
 
 Contour label font size
 
@@ -562,6 +620,8 @@ Contour label font size
 var contour_label_gap_extra_px: float
 ```
 
+Decorators: `@export`
+
 Extra space beyond plaque width
 
 ### path_grid
@@ -570,11 +630,17 @@ Extra space beyond plaque width
 var path_grid: PathGrid
 ```
 
+Decorators: `@export`
+
+reference to the PathGrid used for movement/pathfinding.
+
 ### nav_default_profile
 
 ```gdscript
 var nav_default_profile: int
 ```
+
+Decorators: `@export`
 
 Default profile to rebuild for when auto-building.
 

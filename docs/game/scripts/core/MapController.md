@@ -160,6 +160,8 @@ Force-refresh the texture and refit
 var grid_label_offset: Vector2
 ```
 
+Decorators: `@export`
+
 Pixel offset from the mouse to place the label
 
 ### viewport_oversample
@@ -167,6 +169,8 @@ Pixel offset from the mouse to place the label
 ```gdscript
 var viewport_oversample: int
 ```
+
+Decorators: `@export`
 
 Render the TerrainViewport at N× resolution for anti-aliasing (1=off)
 

@@ -11,7 +11,7 @@ func get_last_save_id_for_campaign(_campaign_id: StringName) -> String
 
 ## Description
 
-Return last save ID for [param campaign_id], or empty.
+Return last save ID for `campaign_id`, or empty.
 
 ## Source
 

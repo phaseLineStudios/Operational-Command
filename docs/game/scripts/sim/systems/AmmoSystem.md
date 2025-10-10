@@ -23,8 +23,6 @@ Responsibilities:
 - In-field resupply: logistics units within radius transfer rounds over time
 using their transfer rate; emits resupply started/completed.
 
-Default caps/thresholds applied to newly registered units if missing.
-
 ## Public Member Functions
 
 - [`func _ready() -> void`](AmmoSystem/functions/_ready.md) — Add to a group for convenient lookups.
@@ -49,7 +47,7 @@ low rates still work at high frame rates (e.g., 20 rps @ 60 FPS).
 
 ## Public Attributes
 
-- `AmmoProfile ammo_profile`
+- `AmmoProfile ammo_profile` — Default caps/thresholds applied to newly registered units if missing.
 - `Dictionary _units`
 - `Dictionary _positions`
 - `Dictionary _logi`
@@ -219,6 +217,10 @@ low rates still work at high frame rates (e.g., 20 rps @ 60 FPS).
 ```gdscript
 var ammo_profile: AmmoProfile
 ```
+
+Decorators: `@export`
+
+Default caps/thresholds applied to newly registered units if missing.
 
 ### _units
 
