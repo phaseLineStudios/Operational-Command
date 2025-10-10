@@ -42,6 +42,8 @@ func _init() -> void
 var radius_m: float
 ```
 
+Decorators: `@export`
+
 Radius of the defended area (meters)
 
 ### hold_time_s
@@ -49,6 +51,8 @@ Radius of the defended area (meters)
 ```gdscript
 var hold_time_s: float
 ```
+
+Decorators: `@export`
 
 Optional time to hold (seconds)
 

@@ -9,10 +9,11 @@
 func init_world(scenario: ScenarioData) -> void
 ```
 
+- **scenario**: ScenarioData to load.
+
 ## Description
 
 Initialize world from a scenario and build unit indices.
-[param scenario] ScenarioData to load.
 
 ## Source
 

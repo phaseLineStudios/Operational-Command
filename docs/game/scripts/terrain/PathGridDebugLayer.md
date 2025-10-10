@@ -13,8 +13,12 @@ extends Control
 
 ## Public Member Functions
 
-- [`func _draw() -> void`](PathGridDebugLayer/functions/_draw.md) — Simple on-canvas PathGrid visualizer
+- [`func _draw() -> void`](PathGridDebugLayer/functions/_draw.md)
 - [`func _process(_d: float) -> void`](PathGridDebugLayer/functions/_process.md)
+
+## Public Attributes
+
+- `PathGrid grid` — Simple on-canvas PathGrid visualizer
 
 ## Member Function Documentation
 
@@ -24,12 +28,20 @@ extends Control
 func _draw() -> void
 ```
 
-Decorators: `@export var grid: PathGrid`
-
-Simple on-canvas PathGrid visualizer
-
 ### _process
 
 ```gdscript
 func _process(_d: float) -> void
 ```
+
+## Member Data Documentation
+
+### grid
+
+```gdscript
+var grid: PathGrid
+```
+
+Decorators: `@export`
+
+Simple on-canvas PathGrid visualizer

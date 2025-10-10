@@ -9,12 +9,13 @@
 func _apply_report(_unit: ScenarioUnit, order: Dictionary) -> bool
 ```
 
+- **_unit**: Subject unit (unused).
+- **order**: Order dictionary.
+- **Return Value**: Always `true`.
+
 ## Description
 
 REPORT: informational pass-through.
-[param _unit] Subject unit (unused).
-[param order] Order dictionary.
-[return] Always `true`.
 
 ## Source
 

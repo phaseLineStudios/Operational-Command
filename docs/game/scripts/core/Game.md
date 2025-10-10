@@ -23,7 +23,7 @@ tactical map → debrief → unit management.
 
 - [`func ready() -> void`](Game/functions/ready.md)
 - [`func _ready() -> void`](Game/functions/_ready.md)
-- [`func goto_scene(path: String) -> void`](Game/functions/goto_scene.md) — Change to scene at [param path]; logs error if missing.
+- [`func goto_scene(path: String) -> void`](Game/functions/goto_scene.md) — Change to scene at `path`; logs error if missing.
 - [`func select_campaign(campaign: CampaignData) -> void`](Game/functions/select_campaign.md) — Set current campaign and emit `signal campaign_selected`.
 - [`func select_save(save_id: StringName) -> void`](Game/functions/select_save.md) — Set current save and emit `signal save_selected`.
 - [`func select_scenario(scenario: ScenarioData) -> void`](Game/functions/select_scenario.md) — Set current mission and emit `signal mission_selected`.
@@ -74,7 +74,7 @@ func _ready() -> void
 func goto_scene(path: String) -> void
 ```
 
-Change to scene at [param path]; logs error if missing.
+Change to scene at `path`; logs error if missing.
 
 ### select_campaign
 

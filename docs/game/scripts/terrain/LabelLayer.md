@@ -15,10 +15,6 @@ extends Control
 
 Outline thickness in pixels (>=1 draws outline)
 
-## Detailed Description
-
-Font resource used for labels
-
 ## Public Member Functions
 
 - [`func set_data(d: TerrainData) -> void`](LabelLayer/functions/set_data.md) — Assigns TerrainData, resets caches, wires signals, and schedules redraw
@@ -38,7 +34,7 @@ Font resource used for labels
 
 - `Color outline_color` — Outline color for labels
 - `Color text_color` — Fill color for label text
-- `Font font`
+- `Font font` — Font resource used for labels
 - `bool antialias` — Unused by text, kept for consistency
 - `TerrainData data`
 - `Dictionary _items`
@@ -149,6 +145,8 @@ Find a label dictionary in TerrainData by id
 var outline_color: Color
 ```
 
+Decorators: `@export`
+
 Outline color for labels
 
 ### text_color
@@ -156,6 +154,8 @@ Outline color for labels
 ```gdscript
 var text_color: Color
 ```
+
+Decorators: `@export`
 
 Fill color for label text
 
@@ -165,11 +165,17 @@ Fill color for label text
 var font: Font
 ```
 
+Decorators: `@export`
+
+Font resource used for labels
+
 ### antialias
 
 ```gdscript
 var antialias: bool
 ```
+
+Decorators: `@export`
 
 Unused by text, kept for consistency
 

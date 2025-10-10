@@ -9,10 +9,11 @@
 func _on_grid_ready(profile: int) -> void
 ```
 
+- **profile**: Movement profile that became available.
+
 ## Description
 
 Starts any deferred moves whose profile just finished building.
-[param profile] Movement profile that became available.
 
 ## Source
 

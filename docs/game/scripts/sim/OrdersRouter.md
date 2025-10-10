@@ -23,20 +23,14 @@ Supports MOVE, HOLD, CANCEL, ATTACK, DEFEND, RECON, FIRE, REPORT.
 
 Map OrdersParser.OrderType enum indices to string tokens.
 
-Movement adapter used to plan and start moves.
-
-LOS adapter used for visibility-related routing.
-
-Combat controller used to set intent/targets and fire missions.
-
 Compute a concrete destination from an order.
-Priority: target unit (when [param prefer_target]) -> grid position
+Priority: target unit (when `prefer_target`) -> grid position
 -> label via target_callsign -> plain target_callsign unit -> direction+quantity.
 When a label is detected in `target_callsign`, returns a Vector2 position
 resolved through the movement adapter.
-[param unit] Subject unit (for direction-based movement).
-[param order] Order dictionary.
-[param prefer_target] If `true`, prefer unit target for ATTACK.
+`unit` Subject unit (for direction-based movement).
+`order` Order dictionary.
+`prefer_target` If `true`, prefer unit target for ATTACK.
 [return] Vector2 destination or `null` if none.
 
 ## Public Member Functions
@@ -59,10 +53,11 @@ resolved through the movement adapter.
 
 ## Public Attributes
 
-- `MovementAdapter movement_adapter`
-- `LOSAdapter los_adapter`
-- `CombatController combat_controller`
-- `Dictionary _units_by_id` — Terrain renderer for grid/metric conversions.
+- `MovementAdapter movement_adapter` — Movement adapter used to plan and start moves.
+- `LOSAdapter los_adapter` — LOS adapter used for visibility-related routing.
+- `CombatController combat_controller` — Combat controller used to set intent/targets and fire missions.
+- `TerrainRender terrain_renderer` — Terrain renderer for grid/metric conversions.
+- `Dictionary _units_by_id`
 - `Dictionary _units_by_callsign`
 
 ## Signals
@@ -79,8 +74,8 @@ func bind_units(id_index: Dictionary, callsign_index: Dictionary) -> void
 ```
 
 Supply unit indices used by this router.
-[param id_index] Dictionary String->ScenarioUnit (by unit id).
-[param callsign_index] Dictionary String->unit_id (by callsign).
+`id_index` Dictionary String->ScenarioUnit (by unit id).
+`callsign_index` Dictionary String->unit_id (by callsign).
 
 ### apply
 
@@ -89,7 +84,7 @@ func apply(order: Dictionary) -> bool
 ```
 
 Apply a single validated order.
-[param order] Normalized order dictionary from OrdersParser.
+`order` Normalized order dictionary from OrdersParser.
 [return] `true` if applied, otherwise `false`.
 
 ### _apply_move
@@ -99,8 +94,8 @@ func _apply_move(unit: ScenarioUnit, order: Dictionary) -> bool
 ```
 
 MOVE: compute destination from grid, target_callsign (unit or label), or direction+quantity.
-[param unit] Subject unit.
-[param order] Order dictionary.
+`unit` Subject unit.
+`order` Order dictionary.
 [return] `true` if movement was planned/started, else `false`.
 
 ### _apply_hold
@@ -110,8 +105,8 @@ func _apply_hold(unit: ScenarioUnit, order: Dictionary) -> bool
 ```
 
 HOLD/CANCEL: stop movement and clear combat intent (if supported).
-[param unit] Subject unit.
-[param order] Order dictionary.
+`unit` Subject unit.
+`order` Order dictionary.
 [return] Always `true`.
 
 ### _apply_attack
@@ -121,8 +116,8 @@ func _apply_attack(unit: ScenarioUnit, order: Dictionary) -> bool
 ```
 
 ATTACK: prefer target_callsign; otherwise use movement fallback.
-[param unit] Subject unit.
-[param order] Order dictionary.
+`unit` Subject unit.
+`order` Order dictionary.
 [return] Always `true` (intent set even if no move).
 
 ### _apply_defend
@@ -132,8 +127,8 @@ func _apply_defend(unit: ScenarioUnit, order: Dictionary) -> bool
 ```
 
 DEFEND: move to destination if present; otherwise hold.
-[param unit] Subject unit.
-[param order] Order dictionary.
+`unit` Subject unit.
+`order` Order dictionary.
 [return] `true` if applied.
 
 ### _apply_recon
@@ -143,8 +138,8 @@ func _apply_recon(unit: ScenarioUnit, order: Dictionary) -> bool
 ```
 
 RECON: move with recon posture if supported.
-[param unit] Subject unit.
-[param order] Order dictionary.
+`unit` Subject unit.
+`order` Order dictionary.
 [return] `true` if applied, `false` if missing destination.
 
 ### _apply_fire
@@ -154,8 +149,8 @@ func _apply_fire(unit: ScenarioUnit, order: Dictionary) -> bool
 ```
 
 FIRE: request fire mission if possible; else move to target unit.
-[param unit] Subject unit.
-[param order] Order dictionary.
+`unit` Subject unit.
+`order` Order dictionary.
 [return] `true` if applied, otherwise `false`.
 
 ### _apply_report
@@ -165,8 +160,8 @@ func _apply_report(_unit: ScenarioUnit, order: Dictionary) -> bool
 ```
 
 REPORT: informational pass-through.
-[param _unit] Subject unit (unused).
-[param order] Order dictionary.
+`_unit` Subject unit (unused).
+`order` Order dictionary.
 [return] Always `true`.
 
 ### _resolve_target
@@ -176,7 +171,7 @@ func _resolve_target(order: Dictionary) -> ScenarioUnit
 ```
 
 Resolve a unit from `target_callsign`.
-[param order] Order dictionary.
+`order` Order dictionary.
 [return] ScenarioUnit or `null`.
 
 ### _is_label_name
@@ -186,7 +181,7 @@ func _is_label_name(l_name: String) -> bool
 ```
 
 Test whether a string matches a TerrainData label (tolerant).
-[param l_name] Candidate label text.
+`l_name` Candidate label text.
 [return] `true` if a matching label exists.
 
 ### _norm_label
@@ -196,7 +191,7 @@ func _norm_label(s: String) -> String
 ```
 
 Normalize label text for matching (lowercase, strip punctuation, collapse spaces).
-[param s] Input text.
+`s` Input text.
 [return] Normalized key string.
 
 ### _normalize_type
@@ -206,7 +201,7 @@ func _normalize_type(t: Variant) -> String
 ```
 
 Normalize an order type to its string token.
-[param t] Enum index or string.
+`t` Enum index or string.
 [return] Uppercase type token.
 
 ### _dir_to_vec
@@ -216,7 +211,7 @@ func _dir_to_vec(dir: String) -> Vector2
 ```
 
 Convert a cardinal/intercardinal label to a unit vector (meters space).
-[param dir] Direction label (e.g. "NE", "southwest").
+`dir` Direction label (e.g. "NE", "southwest").
 [return] Vector2 direction (length may be 0 if unknown).
 
 ### _quantity_to_meters
@@ -226,8 +221,8 @@ func _quantity_to_meters(qty: int, zone: String) -> float
 ```
 
 Convert a quantity and zone to meters.
-[param qty] Quantity value.
-[param zone] Unit label (e.g. "m", "km", "grid").
+`qty` Quantity value.
+`zone` Unit label (e.g. "m", "km", "grid").
 [return] Distance in meters.
 
 ## Member Data Documentation
@@ -238,11 +233,19 @@ Convert a quantity and zone to meters.
 var movement_adapter: MovementAdapter
 ```
 
+Decorators: `@export`
+
+Movement adapter used to plan and start moves.
+
 ### los_adapter
 
 ```gdscript
 var los_adapter: LOSAdapter
 ```
+
+Decorators: `@export`
+
+LOS adapter used for visibility-related routing.
 
 ### combat_controller
 
@@ -250,15 +253,25 @@ var los_adapter: LOSAdapter
 var combat_controller: CombatController
 ```
 
+Decorators: `@export`
+
+Combat controller used to set intent/targets and fire missions.
+
+### terrain_renderer
+
+```gdscript
+var terrain_renderer: TerrainRender
+```
+
+Decorators: `@export`
+
+Terrain renderer for grid/metric conversions.
+
 ### _units_by_id
 
 ```gdscript
 var _units_by_id: Dictionary
 ```
-
-Decorators: `@export var terrain_renderer: TerrainRender`
-
-Terrain renderer for grid/metric conversions.
 
 ### _units_by_callsign
 

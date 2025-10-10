@@ -13,8 +13,6 @@ extends Control
 
 ## Brief
 
-Contour label font
-
 Rebuild delay in seconds
 
 Rebuild contours if elevation data changes
@@ -61,7 +59,7 @@ Draw subrange of a single segment given absolute arclengths
 - `Color contour_label_color` — Contour label color
 - `Color contour_label_bg` — Contour label background
 - `float contour_label_padding_px` — Contour label padding
-- `Font contour_label_font`
+- `Font contour_label_font` — Contour label font
 - `int contour_label_size` — Contour label font size
 - `float contour_label_gap_extra_px` — Extra space beyond plaque width
 - `TerrainData data`
@@ -218,6 +216,8 @@ Draw the text plaques using precomputed placements
 var contour_color: Color
 ```
 
+Decorators: `@export`
+
 Base contour color
 
 ### contour_thick_color
@@ -225,6 +225,8 @@ Base contour color
 ```gdscript
 var contour_thick_color: Color
 ```
+
+Decorators: `@export`
 
 Contour color for thick lines
 
@@ -234,6 +236,8 @@ Contour color for thick lines
 var contour_px: float
 ```
 
+Decorators: `@export`
+
 Base width for contour lines
 
 ### contour_thick_every_m
@@ -241,6 +245,8 @@ Base width for contour lines
 ```gdscript
 var contour_thick_every_m: int
 ```
+
+Decorators: `@export`
 
 How often should contour lines be thick (in m)
 
@@ -250,6 +256,8 @@ How often should contour lines be thick (in m)
 var smooth_iterations: int
 ```
 
+Decorators: `@export`
+
 Smoothing iterations
 
 ### smooth_segment_len_m
@@ -257,6 +265,8 @@ Smoothing iterations
 ```gdscript
 var smooth_segment_len_m: float
 ```
+
+Decorators: `@export`
 
 Smoothing segment lengths
 
@@ -266,6 +276,8 @@ Smoothing segment lengths
 var smooth_keep_ends: bool
 ```
 
+Decorators: `@export`
+
 Should smoothing keep ends
 
 ### contour_label_every_m
@@ -273,6 +285,8 @@ Should smoothing keep ends
 ```gdscript
 var contour_label_every_m: int
 ```
+
+Decorators: `@export`
 
 Contour label spacing
 
@@ -282,6 +296,8 @@ Contour label spacing
 var contour_label_on_thick_only: bool
 ```
 
+Decorators: `@export`
+
 Only show elevation label on thick contours
 
 ### contour_label_color
@@ -289,6 +305,8 @@ Only show elevation label on thick contours
 ```gdscript
 var contour_label_color: Color
 ```
+
+Decorators: `@export`
 
 Contour label color
 
@@ -298,6 +316,8 @@ Contour label color
 var contour_label_bg: Color
 ```
 
+Decorators: `@export`
+
 Contour label background
 
 ### contour_label_padding_px
@@ -305,6 +325,8 @@ Contour label background
 ```gdscript
 var contour_label_padding_px: float
 ```
+
+Decorators: `@export`
 
 Contour label padding
 
@@ -314,11 +336,17 @@ Contour label padding
 var contour_label_font: Font
 ```
 
+Decorators: `@export`
+
+Contour label font
+
 ### contour_label_size
 
 ```gdscript
 var contour_label_size: int
 ```
+
+Decorators: `@export`
 
 Contour label font size
 
@@ -327,6 +355,8 @@ Contour label font size
 ```gdscript
 var contour_label_gap_extra_px: float
 ```
+
+Decorators: `@export`
 
 Extra space beyond plaque width
 

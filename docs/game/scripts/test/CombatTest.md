@@ -17,8 +17,6 @@ Minimal combat/movement + combat debug harness.
 
 ## Detailed Description
 
-Scenario JSON file
-
 IDs of the two placed units in ScenarioData.content.units
 
 ## Public Member Functions
@@ -32,7 +30,7 @@ IDs of the two placed units in ScenarioData.content.units
 
 ## Public Attributes
 
-- `String scenario_data_json`
+- `String scenario_data_json` — Scenario JSON file
 - `ScenarioData _scenario`
 - `ScenarioUnit _su_a`
 - `ScenarioUnit _su_b`
@@ -88,6 +86,10 @@ func _find_su(list: Array[ScenarioUnit], key: String) -> ScenarioUnit
 var scenario_data_json: String
 ```
 
+Decorators: `@export_file("*.json ; Scenario")`
+
+Scenario JSON file
+
 ### _scenario
 
 ```gdscript
@@ -111,6 +113,8 @@ var _su_b: ScenarioUnit
 ```gdscript
 var fuel: FuelSystem
 ```
+
+Decorators: `@onready`
 
 Using FuelSystem
 

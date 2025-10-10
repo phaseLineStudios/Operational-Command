@@ -9,11 +9,12 @@
 func _collect_mission_callsigns() -> Array[String]
 ```
 
+- **Return Value**: Array[String] of callsigns.
+
 ## Description
 
 Collects callsigns from both scenario units and playable units.
 Returns a lowercase, de-duplicated list.
-[return] Array[String] of callsigns.
 
 ## Source
 

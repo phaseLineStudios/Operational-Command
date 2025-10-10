@@ -9,11 +9,12 @@
 func apply(order: Dictionary) -> bool
 ```
 
+- **order**: Normalized order dictionary from OrdersParser.
+- **Return Value**: `true` if applied, otherwise `false`.
+
 ## Description
 
 Apply a single validated order.
-[param order] Normalized order dictionary from OrdersParser.
-[return] `true` if applied, otherwise `false`.
 
 ## Source
 

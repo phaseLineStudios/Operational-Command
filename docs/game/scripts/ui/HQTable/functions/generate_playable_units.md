@@ -9,12 +9,13 @@
 func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]
 ```
 
+- **slots**: Array of UnitSlotData describing player-assignable slots.
+- **Return Value**: Array[ScenarioUnit] created from the active loadout assignments.
+
 ## Description
 
 Build the list of playable units from scenario slots and current loadout.
 Assigns callsigns, positions, affiliation, and marks them as playable.
-[param slots] Array of UnitSlotData describing player-assignable slots.
-[return] Array[ScenarioUnit] created from the active loadout assignments.
 
 ## Source
 

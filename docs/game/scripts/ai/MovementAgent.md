@@ -19,8 +19,6 @@ Moves this node over PathGrid in world meters.
 
 Uses base speed modified by PathGrid cell weight and terrain lines/areas.
 
-Pathfinding grid (provide in inspector or at runtime).
-
 If true, agent waits for grid build_ready before pathing.
 
 Master switch for all debug drawing.
@@ -58,7 +56,7 @@ Radius (meters) for point markers.
 
 ## Public Attributes
 
-- `PathGrid grid`
+- `PathGrid grid` — Pathfinding grid (provide in inspector or at runtime).
 - `TerrainBrush.MoveProfile profile` — Movement profile used for costs.
 - `float base_speed_mps` — Base speed in meters/second (before terrain modifiers).
 - `float arrival_threshold_m` — Distance to consider a waypoint reached (meters).
@@ -202,11 +200,17 @@ Convert terrain meters -> this node's local draw space
 var grid: PathGrid
 ```
 
+Decorators: `@export`
+
+Pathfinding grid (provide in inspector or at runtime).
+
 ### profile
 
 ```gdscript
 var profile: TerrainBrush.MoveProfile
 ```
+
+Decorators: `@export`
 
 Movement profile used for costs.
 
@@ -216,6 +220,8 @@ Movement profile used for costs.
 var base_speed_mps: float
 ```
 
+Decorators: `@export`
+
 Base speed in meters/second (before terrain modifiers).
 
 ### arrival_threshold_m
@@ -223,6 +229,8 @@ Base speed in meters/second (before terrain modifiers).
 ```gdscript
 var arrival_threshold_m: float
 ```
+
+Decorators: `@export`
 
 Distance to consider a waypoint reached (meters).
 
@@ -232,6 +240,8 @@ Distance to consider a waypoint reached (meters).
 var sim_pos_m: Vector2
 ```
 
+Decorators: `@export`
+
 Virtual position in terrain meters
 
 ### unit_id
@@ -239,6 +249,8 @@ Virtual position in terrain meters
 ```gdscript
 var unit_id: String
 ```
+
+Decorators: `@export`
 
 link to FuelSystem for slowdown/stop.
 

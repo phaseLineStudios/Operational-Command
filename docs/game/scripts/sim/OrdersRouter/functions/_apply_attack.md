@@ -9,12 +9,13 @@
 func _apply_attack(unit: ScenarioUnit, order: Dictionary) -> bool
 ```
 
+- **unit**: Subject unit.
+- **order**: Order dictionary.
+- **Return Value**: Always `true` (intent set even if no move).
+
 ## Description
 
 ATTACK: prefer target_callsign; otherwise use movement fallback.
-[param unit] Subject unit.
-[param order] Order dictionary.
-[return] Always `true` (intent set even if no move).
 
 ## Source
 

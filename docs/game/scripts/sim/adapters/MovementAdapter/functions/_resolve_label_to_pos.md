@@ -9,13 +9,14 @@
 func _resolve_label_to_pos(label_text: String, origin_m: Vector2 = Vector2.INF) -> Variant
 ```
 
+- **label_text**: Label string to look up.
+- **origin_m**: Optional origin (unit position) for tie-breaking.
+- **Return Value**: Vector2 position if found, otherwise null.
+
 ## Description
 
 Resolves a label phrase to a terrain position in meters.
 When multiple labels share the same text, picks the closest to origin.
-[param label_text] Label string to look up.
-[param origin_m] Optional origin (unit position) for tie-breaking.
-[return] Vector2 position if found, otherwise null.
 
 ## Source
 

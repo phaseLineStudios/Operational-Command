@@ -9,10 +9,11 @@
 func get_mission_time_s() -> float
 ```
 
+- **Return Value**: Elapsed mission time.
+
 ## Description
 
 Mission clock in seconds.
-[return] Elapsed mission time.
 
 ## Source
 

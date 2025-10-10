@@ -9,10 +9,11 @@
 func _on_order_applied(order: Dictionary) -> void
 ```
 
+- **order**: Order dictionary that was applied.
+
 ## Description
 
 Record the last applied order per unit for label display.
-[param order] Order dictionary that was applied.
 
 ## Source
 

@@ -93,6 +93,8 @@ Exponential damping for scalars
 var move_speed: Vector2
 ```
 
+Decorators: `@export`
+
 Camera movement speed
 
 ### move_smooth
@@ -100,6 +102,8 @@ Camera movement speed
 ```gdscript
 var move_smooth: float
 ```
+
+Decorators: `@export`
 
 Camera movement smoothing
 
@@ -109,6 +113,8 @@ Camera movement smoothing
 var z_tilt_min_deg: float
 ```
 
+Decorators: `@export`
+
 Camera minimum tilt angle in degrees
 
 ### z_tilt_max_deg
@@ -117,6 +123,8 @@ Camera minimum tilt angle in degrees
 var z_tilt_max_deg: float
 ```
 
+Decorators: `@export`
+
 Camera maximum tilt angle in degrees
 
 ### tilt_smooth
@@ -124,6 +132,8 @@ Camera maximum tilt angle in degrees
 ```gdscript
 var tilt_smooth: float
 ```
+
+Decorators: `@export`
 
 Camera tilt smoothing
 

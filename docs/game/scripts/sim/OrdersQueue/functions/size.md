@@ -9,10 +9,11 @@
 func size() -> int
 ```
 
+- **Return Value**: Number of pending orders.
+
 ## Description
 
 Current queue size.
-[return] Number of pending orders.
 
 ## Source
 

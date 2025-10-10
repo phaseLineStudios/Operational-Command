@@ -9,11 +9,12 @@
 func _on_contact(attacker_id: String, defender_id: String) -> void
 ```
 
+- **attacker_id**: Attacker unit id.
+- **defender_id**: Defender unit id.
+
 ## Description
 
 Mark attacker/defender as “hot” for a short period after combat.
-[param attacker_id] Attacker unit id.
-[param defender_id] Defender unit id.
 
 ## Source
 

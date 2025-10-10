@@ -9,12 +9,13 @@
 func _apply_hold(unit: ScenarioUnit, order: Dictionary) -> bool
 ```
 
+- **unit**: Subject unit.
+- **order**: Order dictionary.
+- **Return Value**: Always `true`.
+
 ## Description
 
 HOLD/CANCEL: stop movement and clear combat intent (if supported).
-[param unit] Subject unit.
-[param order] Order dictionary.
-[return] Always `true`.
 
 ## Source
 

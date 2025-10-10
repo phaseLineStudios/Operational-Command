@@ -9,11 +9,12 @@
 func _normalize_type(t: Variant) -> String
 ```
 
+- **t**: Enum index or string.
+- **Return Value**: Uppercase type token.
+
 ## Description
 
 Normalize an order type to its string token.
-[param t] Enum index or string.
-[return] Uppercase type token.
 
 ## Source
 

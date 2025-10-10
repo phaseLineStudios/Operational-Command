@@ -9,12 +9,13 @@
 func tick_units(units: Array[ScenarioUnit], dt: float) -> void
 ```
 
+- **units**: Units to tick.
+- **dt**: Delta time in seconds.
+
 ## Description
 
 Ticks unit movement grouped by profile (reduces grid switching).
 Skips groups whose profile grid is still building this frame.
-[param units] Units to tick.
-[param dt] Delta time in seconds.
 
 ## Source
 

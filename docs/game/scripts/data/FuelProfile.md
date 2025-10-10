@@ -44,6 +44,8 @@ this function replaces it with predefined default values.
 var default_capacity: float
 ```
 
+Decorators: `@export`
+
 Defaults per unit class and simple slope multiplier.
 
 ### default_low_threshold
@@ -75,5 +77,7 @@ var default_move_rate_per_m: float
 ```gdscript
 var slope_k: float
 ```
+
+Decorators: `@export`
 
 Slope factor applied as (1.0 + slope_k * normalized_slope).

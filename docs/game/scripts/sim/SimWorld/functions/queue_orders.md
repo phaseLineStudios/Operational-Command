@@ -9,11 +9,12 @@
 func queue_orders(orders: Array) -> int
 ```
 
+- **orders**: Array of order dictionaries.
+- **Return Value**: Number of orders accepted.
+
 ## Description
 
 Enqueue structured orders parsed elsewhere.
-[param orders] Array of order dictionaries.
-[return] Number of orders accepted.
 
 ## Source
 

@@ -9,11 +9,12 @@
 func _on_order_failed(order: Dictionary, _reason: String) -> void
 ```
 
+- **order**: Order dictionary that failed.
+- **_reason**: Failure reason (unused here).
+
 ## Description
 
 Record failed order attempts (marked ✖) to aid debugging.
-[param order] Order dictionary that failed.
-[param _reason] Failure reason (unused here).
 
 ## Source
 

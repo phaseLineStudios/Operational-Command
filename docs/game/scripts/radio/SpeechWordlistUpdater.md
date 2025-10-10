@@ -22,12 +22,6 @@ Builds a mission-scoped Vosk word list from unit callsigns and
 TerrainData labels, then pushes it to the recognizer.
 On mission start (RUN/RUNNING), it refreshes the list automatically.
 
-Simulation world that emits the mission state changes used to trigger refresh.
-
-Terrain renderer providing access to `member TerrainRender.data.labels`.
-
-Vosk recognizer instance exposing `set_wordlist(String)`.
-
 ## Public Member Functions
 
 - [`func _ready() -> void`](SpeechWordlistUpdater/functions/_ready.md) — Connects mission state change and performs an initial refresh.
@@ -41,9 +35,9 @@ serializes it to JSON, and applies it to the recognizer.
 
 ## Public Attributes
 
-- `SimWorld sim`
-- `TerrainRender terrain_renderer`
-- `Vosk recognizer`
+- `SimWorld sim` — Simulation world that emits the mission state changes used to trigger refresh.
+- `TerrainRender terrain_renderer` — Terrain renderer providing access to `member TerrainRender.data.labels`.
+- `Vosk recognizer` — Vosk recognizer instance exposing `set_wordlist(String)`.
 
 ## Signals
 
@@ -67,7 +61,7 @@ func bind_recognizer(r: Vosk) -> void
 
 Bind or replace the active recognizer.
 Use when the recognizer is created after this node is ready.
-[param r] Recognizer instance exposing `set_wordlist(String)`.
+`r` Recognizer instance exposing `set_wordlist(String)`.
 
 ### _on_state_changed
 
@@ -77,8 +71,8 @@ func _on_state_changed(_prev, next) -> void
 
 Handles mission state transitions.
 Refreshes the word list when the new state string contains "RUN".
-[param _prev] Previous state (unused).
-[param next] New state token or enum string.
+`_prev` Previous state (unused).
+`next` New state token or enum string.
 
 ### _refresh_wordlist
 
@@ -116,7 +110,7 @@ func _dedup_preserve(arr: Array[String]) -> Array[String]
 ```
 
 De-duplicates an array while preserving order.
-[param arr] Input list.
+`arr` Input list.
 [return] New list with unique items, first occurrence kept.
 
 ## Member Data Documentation
@@ -127,17 +121,29 @@ De-duplicates an array while preserving order.
 var sim: SimWorld
 ```
 
+Decorators: `@export`
+
+Simulation world that emits the mission state changes used to trigger refresh.
+
 ### terrain_renderer
 
 ```gdscript
 var terrain_renderer: TerrainRender
 ```
 
+Decorators: `@export`
+
+Terrain renderer providing access to `member TerrainRender.data.labels`.
+
 ### recognizer
 
 ```gdscript
 var recognizer: Vosk
 ```
+
+Decorators: `@export`
+
+Vosk recognizer instance exposing `set_wordlist(String)`.
 
 ## Signal Documentation
 
@@ -148,4 +154,4 @@ signal wordlist_updated(count: int)
 ```
 
 Emitted after the recognizer's word list is updated.
-[param count] Number of entries in the applied word list.
+`count` Number of entries in the applied word list.

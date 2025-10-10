@@ -197,6 +197,8 @@ Order parser signaled an error (e.g., invalid command). Plays a short error soun
 var error_player: AudioStreamPlayer2D
 ```
 
+Decorators: `@onready`
+
 UI audio for parse errors (must exist in the scene tree at %ErrorSound).
 
 ### radio_controller

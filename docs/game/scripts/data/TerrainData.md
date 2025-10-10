@@ -15,10 +15,6 @@ extends Resource
 
 Terrain model: size, elevation, surfaces, features, labels.
 
-## Detailed Description
-
-Name of the terrain.
-
 ## Public Member Functions
 
 - [`func begin_batch() -> void`](TerrainData/functions/begin_batch.md) — Begin a batch - defers granular signals until end_batch().
@@ -72,7 +68,7 @@ Name of the terrain.
 
 ## Public Attributes
 
-- `String name`
+- `String name` — Name of the terrain.
 - `int width_m` — Width of the map in meters.
 - `int height_m` — Height of the map in meters.
 - `int elevation_resolution_m` — World meters per elevation sample (grid step).
@@ -467,11 +463,17 @@ Deserialize from JSON
 var name: String
 ```
 
+Decorators: `@export`
+
+Name of the terrain.
+
 ### width_m
 
 ```gdscript
 var width_m: int
 ```
+
+Decorators: `@export`
 
 Width of the map in meters.
 
@@ -481,6 +483,8 @@ Width of the map in meters.
 var height_m: int
 ```
 
+Decorators: `@export`
+
 Height of the map in meters.
 
 ### elevation_resolution_m
@@ -488,6 +492,8 @@ Height of the map in meters.
 ```gdscript
 var elevation_resolution_m: int
 ```
+
+Decorators: `@export`
 
 World meters per elevation sample (grid step). Lower = denser.
 
@@ -497,6 +503,8 @@ World meters per elevation sample (grid step). Lower = denser.
 var grid_start_x: int
 ```
 
+Decorators: `@export`
+
 Starting number on X axis labels.
 
 ### grid_start_y
@@ -504,6 +512,8 @@ Starting number on X axis labels.
 ```gdscript
 var grid_start_y: int
 ```
+
+Decorators: `@export`
 
 Starting number on Y axis labels.
 
@@ -513,6 +523,8 @@ Starting number on Y axis labels.
 var base_elevation_m: int
 ```
 
+Decorators: `@export`
+
 The base elevation of the terrain in meters.
 
 ### contour_interval_m
@@ -520,6 +532,8 @@ The base elevation of the terrain in meters.
 ```gdscript
 var contour_interval_m: int
 ```
+
+Decorators: `@export`
 
 Contour interval in meters.
 
@@ -529,6 +543,8 @@ Contour interval in meters.
 var elevation: Image
 ```
 
+Decorators: `@export`
+
 Elevation image (R channel = meters; 16F or 32F preferred).
 
 ### surfaces
@@ -536,6 +552,8 @@ Elevation image (R channel = meters; 16F or 32F preferred).
 ```gdscript
 var surfaces: Array
 ```
+
+Decorators: `@export`
 
 Surfaces: { id:int, brush:TerrainBrush, type:String, points:PackedVector2Array, closed:bool }.
 
@@ -545,6 +563,8 @@ Surfaces: { id:int, brush:TerrainBrush, type:String, points:PackedVector2Array, 
 var lines: Array
 ```
 
+Decorators: `@export`
+
 Lines: { id:int, brush:TerrainBrush, points:PackedVector2Array, closed:bool, width_px:float }.
 
 ### points
@@ -553,6 +573,8 @@ Lines: { id:int, brush:TerrainBrush, points:PackedVector2Array, closed:bool, wid
 var points: Array
 ```
 
+Decorators: `@export`
+
 Points: { id:int, brush:TerrainBrush, pos:Vector2, rot:float, scale:float }.
 
 ### labels
@@ -560,6 +582,8 @@ Points: { id:int, brush:TerrainBrush, pos:Vector2, rot:float, scale:float }.
 ```gdscript
 var labels: Array
 ```
+
+Decorators: `@export`
 
 Labels: { id:int, text:String, pos:Vector2, size:int, rot:float, z:int }.
 

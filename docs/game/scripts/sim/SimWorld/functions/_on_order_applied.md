@@ -9,10 +9,11 @@
 func _on_order_applied(order: Dictionary) -> void
 ```
 
+- **order**: Order dictionary.
+
 ## Description
 
 Router callback: order applied.
-[param order] Order dictionary.
 
 ## Source
 

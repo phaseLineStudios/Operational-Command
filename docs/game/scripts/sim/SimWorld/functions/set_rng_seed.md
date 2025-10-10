@@ -9,10 +9,11 @@
 func set_rng_seed(new_rng_seed: int) -> void
 ```
 
+- **new_rng_seed**: Seed value.
+
 ## Description
 
 Set RNG seed (determinism).
-[param new_rng_seed] Seed value.
 
 ## Source
 

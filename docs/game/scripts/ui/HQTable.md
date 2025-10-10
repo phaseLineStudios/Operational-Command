@@ -51,7 +51,7 @@ func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]
 
 Build the list of playable units from scenario slots and current loadout.
 Assigns callsigns, positions, affiliation, and marks them as playable.
-[param slots] Array of UnitSlotData describing player-assignable slots.
+`slots` Array of UnitSlotData describing player-assignable slots.
 [return] Array[ScenarioUnit] created from the active loadout assignments.
 
 ## Member Data Documentation
@@ -61,6 +61,8 @@ Assigns callsigns, positions, affiliation, and marks them as playable.
 ```gdscript
 var debug: bool
 ```
+
+Decorators: `@export`
 
 Enable extra debug paths/overlays in connected systems.
 

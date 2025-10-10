@@ -15,12 +15,6 @@ extends Control
 
 Path to return to main menu scene
 
-## Detailed Description
-
-Active scenario data resource bound to the editor UI
-
-Global undo/redo history stack for scenario edits
-
 ## Public Member Functions
 
 - [`func _ready()`](ScenarioEditor/functions/_ready.md) — Initialize context, services, signals, UI, and dialogs
@@ -73,8 +67,8 @@ Global undo/redo history stack for scenario edits
 
 ## Public Attributes
 
-- `ScenarioData data`
-- `ScenarioHistory history`
+- `ScenarioData data` — Active scenario data resource bound to the editor UI
+- `ScenarioHistory history` — Global undo/redo history stack for scenario edits
 - `FileDialog _open_dlg`
 - `FileDialog _save_dlg`
 - `MenuButton file_menu`
@@ -492,11 +486,19 @@ Utility: queue_free all children of a UI container
 var data: ScenarioData
 ```
 
+Decorators: `@export`
+
+Active scenario data resource bound to the editor UI
+
 ### history
 
 ```gdscript
 var history: ScenarioHistory
 ```
+
+Decorators: `@export`
+
+Global undo/redo history stack for scenario edits
 
 ### _open_dlg
 

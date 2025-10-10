@@ -11,7 +11,7 @@ func goto_scene(path: String) -> void
 
 ## Description
 
-Change to scene at [param path]; logs error if missing.
+Change to scene at `path`; logs error if missing.
 
 ## Source
 

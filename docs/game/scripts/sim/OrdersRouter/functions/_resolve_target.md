@@ -9,11 +9,12 @@
 func _resolve_target(order: Dictionary) -> ScenarioUnit
 ```
 
+- **order**: Order dictionary.
+- **Return Value**: ScenarioUnit or `null`.
+
 ## Description
 
 Resolve a unit from `target_callsign`.
-[param order] Order dictionary.
-[return] ScenarioUnit or `null`.
 
 ## Source
 

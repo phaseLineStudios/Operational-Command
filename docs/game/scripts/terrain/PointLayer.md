@@ -120,6 +120,8 @@ Find a point dictionary in TerrainData by id
 var antialias: bool
 ```
 
+Decorators: `@export`
+
 Enable antialiasing
 
 ### data

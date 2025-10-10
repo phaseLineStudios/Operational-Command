@@ -9,12 +9,13 @@
 func _norm_ratio(v: float, t: float = 100.0) -> float
 ```
 
+- **v**: Input value (0..1 or 0..t).
+- **t**: Maximum when v is in “percent-like” scale (default 100).
+- **Return Value**: Ratio clamped to [0, 1].
+
 ## Description
 
-Normalize values; treat values >1 as percentages using [param t] as max.
-[param v] Input value (0..1 or 0..t).
-[param t] Maximum when v is in “percent-like” scale (default 100).
-[return] Ratio clamped to [0, 1].
+Normalize values; treat values >1 as percentages using `t` as max.
 
 ## Source
 

@@ -9,11 +9,12 @@
 func bind_units(id_index: Dictionary, callsign_index: Dictionary) -> void
 ```
 
+- **id_index**: Dictionary String->ScenarioUnit (by unit id).
+- **callsign_index**: Dictionary String->unit_id (by callsign).
+
 ## Description
 
 Supply unit indices used by this router.
-[param id_index] Dictionary String->ScenarioUnit (by unit id).
-[param callsign_index] Dictionary String->unit_id (by callsign).
 
 ## Source
 

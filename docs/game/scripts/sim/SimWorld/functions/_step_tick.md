@@ -9,10 +9,11 @@
 func _step_tick(dt: float) -> void
 ```
 
+- **dt**: Tick delta seconds.
+
 ## Description
 
 Executes a single sim tick (deterministic order).
-[param dt] Tick delta seconds.
 
 ## Source
 

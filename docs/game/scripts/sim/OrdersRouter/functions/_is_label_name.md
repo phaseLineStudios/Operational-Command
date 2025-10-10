@@ -9,11 +9,12 @@
 func _is_label_name(l_name: String) -> bool
 ```
 
+- **l_name**: Candidate label text.
+- **Return Value**: `true` if a matching label exists.
+
 ## Description
 
 Test whether a string matches a TerrainData label (tolerant).
-[param l_name] Candidate label text.
-[return] `true` if a matching label exists.
 
 ## Source
 

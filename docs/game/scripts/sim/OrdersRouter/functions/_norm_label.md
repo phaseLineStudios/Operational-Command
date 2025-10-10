@@ -9,11 +9,12 @@
 func _norm_label(s: String) -> String
 ```
 
+- **s**: Input text.
+- **Return Value**: Normalized key string.
+
 ## Description
 
 Normalize label text for matching (lowercase, strip punctuation, collapse spaces).
-[param s] Input text.
-[return] Normalized key string.
 
 ## Source
 

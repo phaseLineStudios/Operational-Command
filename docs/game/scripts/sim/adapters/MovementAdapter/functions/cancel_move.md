@@ -9,10 +9,11 @@
 func cancel_move(su: ScenarioUnit) -> void
 ```
 
+- **su**: ScenarioUnit to pause.
+
 ## Description
 
 Pauses current movement for a unit.
-[param su] ScenarioUnit to pause.
 
 ## Source
 

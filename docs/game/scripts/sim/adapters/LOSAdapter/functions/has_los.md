@@ -9,12 +9,13 @@
 func has_los(a: ScenarioUnit, b: ScenarioUnit) -> bool
 ```
 
+- **a**: Attacking/observing unit.
+- **b**: Defending/observed unit.
+- **Return Value**: True if LOS is clear, otherwise false.
+
 ## Description
 
-Returns true if there is an unobstructed LOS from [param a] to [param b].
-[param a] Attacking/observing unit.
-[param b] Defending/observed unit.
-[return] True if LOS is clear, otherwise false.
+Returns true if there is an unobstructed LOS from `a` to `b`.
 
 ## Source
 

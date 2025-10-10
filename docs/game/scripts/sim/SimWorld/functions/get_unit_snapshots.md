@@ -9,10 +9,11 @@
 func get_unit_snapshots() -> Array[Dictionary]
 ```
 
+- **Return Value**: Array of snapshot dictionaries.
+
 ## Description
 
 Snapshots of all units.
-[return] Array of snapshot dictionaries.
 
 ## Source
 

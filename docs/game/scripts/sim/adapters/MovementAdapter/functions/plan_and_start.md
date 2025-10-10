@@ -9,13 +9,14 @@
 func plan_and_start(su: ScenarioUnit, dest_m: Vector2) -> bool
 ```
 
+- **su**: ScenarioUnit to move.
+- **dest_m**: Destination in terrain meters.
+- **Return Value**: True if planned (or deferred), false on error or plan failure.
+
 ## Description
 
-Plans and immediately starts movement to [param dest_m].
+Plans and immediately starts movement to `dest_m`.
 Defers start if the profile grid is still building.
-[param su] ScenarioUnit to move.
-[param dest_m] Destination in terrain meters.
-[return] True if planned (or deferred), false on error or plan failure.
 
 ## Source
 

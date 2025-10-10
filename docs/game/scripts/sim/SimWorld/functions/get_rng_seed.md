@@ -9,10 +9,11 @@
 func get_rng_seed() -> int
 ```
 
+- **Return Value**: Current RNG seed.
+
 ## Description
 
 Get RNG seed.
-[return] Current RNG seed.
 
 ## Source
 

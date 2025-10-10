@@ -9,11 +9,12 @@
 func bind_radio(radio: Radio, parser: Node) -> void
 ```
 
+- **radio**: Radio node emitting `radio_result`.
+- **parser**: Parser node emitting `parsed(Array)` and `parse_error(String)`.
+
 ## Description
 
 Bind Radio and Parser so voice results are queued automatically.
-[param radio] Radio node emitting `radio_result`.
-[param parser] Parser node emitting `parsed(Array)` and `parse_error(String)`.
 
 ## Source
 

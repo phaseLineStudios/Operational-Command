@@ -111,6 +111,8 @@ func _process(delta: float) -> void
 var held_rotation: Vector3
 ```
 
+Decorators: `@export`
+
 Rotation of object when held
 
 ### pick_toggle
@@ -118,6 +120,8 @@ Rotation of object when held
 ```gdscript
 var pick_toggle: bool
 ```
+
+Decorators: `@export`
 
 Should pick be a toggle action or a held action
 
@@ -127,6 +131,8 @@ Should pick be a toggle action or a held action
 var hide_mouse: bool
 ```
 
+Decorators: `@export`
+
 Should the mouse be hidden when object is held
 
 ### snap_to_origin_position
@@ -135,6 +141,8 @@ Should the mouse be hidden when object is held
 var snap_to_origin_position: bool
 ```
 
+Decorators: `@export`
+
 Snap back to origin position on drop
 
 ### snap_to_origin_rotation
@@ -142,6 +150,8 @@ Snap back to origin position on drop
 ```gdscript
 var snap_to_origin_rotation: bool
 ```
+
+Decorators: `@export`
 
 Snap back to origin rotation on drop
 
@@ -157,6 +167,8 @@ var inspect_enabled: bool
 var inspect_offset: Vector3
 ```
 
+Decorators: `@export`
+
 Local offset from the camera (Godot forward is -Z)
 
 ### inspect_rotation
@@ -165,6 +177,8 @@ Local offset from the camera (Godot forward is -Z)
 var inspect_rotation: Vector3
 ```
 
+Decorators: `@export`
+
 Rotation relative to camera (degrees)
 
 ### inspect_smooth
@@ -172,6 +186,8 @@ Rotation relative to camera (degrees)
 ```gdscript
 var inspect_smooth: float
 ```
+
+Decorators: `@export`
 
 Higher = snappier follow in inspect (0 = teleport)
 

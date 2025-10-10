@@ -24,8 +24,6 @@ map label names into terrain positions for destination orders.
 
 Map lowercase mobility tags/strings to movement profiles.
 
-Terrain renderer providing the PathGrid and TerrainData.
-
 Enable resolving String destinations using TerrainData.labels[].text.
 
 ## Public Member Functions
@@ -36,15 +34,15 @@ Enable resolving String destinations using TerrainData.labels[].text.
 - [`func _resolve_label_to_pos(label_text: String, origin_m: Vector2 = Vector2.INF) -> Variant`](MovementAdapter/functions/_resolve_label_to_pos.md) — Resolves a label phrase to a terrain position in meters.
 - [`func plan_and_start_to_label(su: ScenarioUnit, label_text: String) -> bool`](MovementAdapter/functions/plan_and_start_to_label.md) — Plans and starts movement to a map label.
 - [`func plan_and_start_any(su: ScenarioUnit, dest: Variant) -> bool`](MovementAdapter/functions/plan_and_start_any.md) — Plans and starts movement to either a Vector2 destination or a label.
-- [`func _prebuild_needed_profiles(units: Array[ScenarioUnit]) -> void`](MovementAdapter/functions/_prebuild_needed_profiles.md) — Ensures PathGrid profiles needed by [param units] are available.
+- [`func _prebuild_needed_profiles(units: Array[ScenarioUnit]) -> void`](MovementAdapter/functions/_prebuild_needed_profiles.md) — Ensures PathGrid profiles needed by `units` are available.
 - [`func tick_units(units: Array[ScenarioUnit], dt: float) -> void`](MovementAdapter/functions/tick_units.md) — Ticks unit movement grouped by profile (reduces grid switching).
 - [`func cancel_move(su: ScenarioUnit) -> void`](MovementAdapter/functions/cancel_move.md) — Pauses current movement for a unit.
-- [`func plan_and_start(su: ScenarioUnit, dest_m: Vector2) -> bool`](MovementAdapter/functions/plan_and_start.md) — Plans and immediately starts movement to [param dest_m].
+- [`func plan_and_start(su: ScenarioUnit, dest_m: Vector2) -> bool`](MovementAdapter/functions/plan_and_start.md) — Plans and immediately starts movement to `dest_m`.
 - [`func _on_grid_ready(profile: int) -> void`](MovementAdapter/functions/_on_grid_ready.md) — Starts any deferred moves whose profile just finished building.
 
 ## Public Attributes
 
-- `TerrainRender renderer`
+- `TerrainRender renderer` — Terrain renderer providing the PathGrid and TerrainData.
 - `int default_profile` — Default profile used when a unit has no explicit movement profile.
 - `PathGrid _grid`
 - `Dictionary _labels`
@@ -76,7 +74,7 @@ func _norm_label(s: String) -> String
 
 Normalizes label text for tolerant matching.
 Removes punctuation, collapses spaces, and lowercases.
-[param s] Original label text.
+`s` Original label text.
 [return] Normalized key.
 
 ### _resolve_label_to_pos
@@ -87,8 +85,8 @@ func _resolve_label_to_pos(label_text: String, origin_m: Vector2 = Vector2.INF) 
 
 Resolves a label phrase to a terrain position in meters.
 When multiple labels share the same text, picks the closest to origin.
-[param label_text] Label string to look up.
-[param origin_m] Optional origin (unit position) for tie-breaking.
+`label_text` Label string to look up.
+`origin_m` Optional origin (unit position) for tie-breaking.
 [return] Vector2 position if found, otherwise null.
 
 ### plan_and_start_to_label
@@ -98,8 +96,8 @@ func plan_and_start_to_label(su: ScenarioUnit, label_text: String) -> bool
 ```
 
 Plans and starts movement to a map label.
-[param su] ScenarioUnit to move.
-[param label_text] Label name to resolve.
+`su` ScenarioUnit to move.
+`label_text` Label name to resolve.
 [return] True if the order was accepted (or deferred), else false.
 
 ### plan_and_start_any
@@ -110,8 +108,8 @@ func plan_and_start_any(su: ScenarioUnit, dest: Variant) -> bool
 
 Plans and starts movement to either a Vector2 destination or a label.
 Also accepts {x,y} or {pos: Vector2} dictionaries.
-[param su] ScenarioUnit to move.
-[param dest] Vector2 | String | Dictionary destination.
+`su` ScenarioUnit to move.
+`dest` Vector2 | String | Dictionary destination.
 [return] True if the order was accepted (or deferred), else false.
 
 ### _prebuild_needed_profiles
@@ -120,7 +118,7 @@ Also accepts {x,y} or {pos: Vector2} dictionaries.
 func _prebuild_needed_profiles(units: Array[ScenarioUnit]) -> void
 ```
 
-Ensures PathGrid profiles needed by [param units] are available.
+Ensures PathGrid profiles needed by `units` are available.
 Triggers async builds for any missing profiles.
 
 ### tick_units
@@ -131,8 +129,8 @@ func tick_units(units: Array[ScenarioUnit], dt: float) -> void
 
 Ticks unit movement grouped by profile (reduces grid switching).
 Skips groups whose profile grid is still building this frame.
-[param units] Units to tick.
-[param dt] Delta time in seconds.
+`units` Units to tick.
+`dt` Delta time in seconds.
 
 ### cancel_move
 
@@ -141,7 +139,7 @@ func cancel_move(su: ScenarioUnit) -> void
 ```
 
 Pauses current movement for a unit.
-[param su] ScenarioUnit to pause.
+`su` ScenarioUnit to pause.
 
 ### plan_and_start
 
@@ -149,10 +147,10 @@ Pauses current movement for a unit.
 func plan_and_start(su: ScenarioUnit, dest_m: Vector2) -> bool
 ```
 
-Plans and immediately starts movement to [param dest_m].
+Plans and immediately starts movement to `dest_m`.
 Defers start if the profile grid is still building.
-[param su] ScenarioUnit to move.
-[param dest_m] Destination in terrain meters.
+`su` ScenarioUnit to move.
+`dest_m` Destination in terrain meters.
 [return] True if planned (or deferred), false on error or plan failure.
 
 ### _on_grid_ready
@@ -162,7 +160,7 @@ func _on_grid_ready(profile: int) -> void
 ```
 
 Starts any deferred moves whose profile just finished building.
-[param profile] Movement profile that became available.
+`profile` Movement profile that became available.
 
 ## Member Data Documentation
 
@@ -172,11 +170,17 @@ Starts any deferred moves whose profile just finished building.
 var renderer: TerrainRender
 ```
 
+Decorators: `@export`
+
+Terrain renderer providing the PathGrid and TerrainData.
+
 ### default_profile
 
 ```gdscript
 var default_profile: int
 ```
+
+Decorators: `@export`
 
 Default profile used when a unit has no explicit movement profile.
 

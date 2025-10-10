@@ -23,4 +23,4 @@ func select_campaign(campaign: CampaignData) -> void:
 
 ## References
 
-- [`signal campaign_selected`](../../Game.md#campaign_selected)
+- [`signal campaign_selected`](..\..\Game.md#campaign_selected)

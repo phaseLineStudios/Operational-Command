@@ -23,8 +23,6 @@ Path to briefing scene
 
 Path to hq table scene
 
-Default fallback icon for units.
-
 ## Public Member Functions
 
 - [`func _ready() -> void`](UnitSelect/functions/_ready.md) — Build UI, load mission
@@ -56,8 +54,9 @@ Default fallback icon for units.
 
 ## Public Attributes
 
-- `Texture2D default_unit_icon`
-- `int _total_points` — Scene used for unit cards
+- `Texture2D default_unit_icon` — Default fallback icon for units.
+- `PackedScene unit_card_scene` — Scene used for unit cards
+- `int _total_points`
 - `int _total_slots`
 - `Dictionary _cards_by_unit`
 - `Dictionary _units_by_id`
@@ -311,15 +310,25 @@ Export current mission loadout as dictionary
 var default_unit_icon: Texture2D
 ```
 
+Decorators: `@export`
+
+Default fallback icon for units.
+
+### unit_card_scene
+
+```gdscript
+var unit_card_scene: PackedScene
+```
+
+Decorators: `@export`
+
+Scene used for unit cards
+
 ### _total_points
 
 ```gdscript
 var _total_points: int
 ```
-
-Decorators: `@export var unit_card_scene: PackedScene`
-
-Scene used for unit cards
 
 ### _total_slots
 

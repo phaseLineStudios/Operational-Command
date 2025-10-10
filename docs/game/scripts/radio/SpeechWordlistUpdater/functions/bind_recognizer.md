@@ -9,11 +9,12 @@
 func bind_recognizer(r: Vosk) -> void
 ```
 
+- **r**: Recognizer instance exposing `set_wordlist(String)`.
+
 ## Description
 
 Bind or replace the active recognizer.
 Use when the recognizer is created after this node is ready.
-[param r] Recognizer instance exposing `set_wordlist(String)`.
 
 ## Source
 

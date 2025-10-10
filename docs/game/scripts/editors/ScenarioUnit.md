@@ -13,16 +13,6 @@ extends Resource
 
 ## Brief
 
-Unique identifier
-
-Callsign
-
-Unit Data
-
-Unit Position
-
-Unit Affiliation
-
 Start movement; will plan if needed or if dest is provided.
 
 ## Public Member Functions
@@ -46,11 +36,11 @@ Start movement; will plan if needed or if dest is provided.
 
 ## Public Attributes
 
-- `String id`
-- `String callsign`
-- `UnitData unit`
-- `Vector2 position_m`
-- `Affiliation affiliation`
+- `String id` — Unique identifier
+- `String callsign` — Callsign
+- `UnitData unit` — Unit Data
+- `Vector2 position_m` — Unit Position
+- `Affiliation affiliation` — Unit Affiliation
 - `CombatMode combat_mode` — Unit Combat Mode
 - `Behaviour behaviour` — Unit Behaviour
 - `bool playable` — Is unit playable.
@@ -210,11 +200,19 @@ Deserialzie from JSON.
 var id: String
 ```
 
+Decorators: `@export`
+
+Unique identifier
+
 ### callsign
 
 ```gdscript
 var callsign: String
 ```
+
+Decorators: `@export`
+
+Callsign
 
 ### unit
 
@@ -222,11 +220,19 @@ var callsign: String
 var unit: UnitData
 ```
 
+Decorators: `@export`
+
+Unit Data
+
 ### position_m
 
 ```gdscript
 var position_m: Vector2
 ```
+
+Decorators: `@export`
+
+Unit Position
 
 ### affiliation
 
@@ -234,11 +240,17 @@ var position_m: Vector2
 var affiliation: Affiliation
 ```
 
+Decorators: `@export`
+
+Unit Affiliation
+
 ### combat_mode
 
 ```gdscript
 var combat_mode: CombatMode
 ```
+
+Decorators: `@export`
 
 Unit Combat Mode
 
@@ -248,6 +260,8 @@ Unit Combat Mode
 var behaviour: Behaviour
 ```
 
+Decorators: `@export`
+
 Unit Behaviour
 
 ### playable
@@ -255,6 +269,8 @@ Unit Behaviour
 ```gdscript
 var playable: bool
 ```
+
+Decorators: `@export`
 
 Is unit playable.
 
