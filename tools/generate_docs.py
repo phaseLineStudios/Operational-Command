@@ -95,7 +95,7 @@ def _ensure_pkg(color: bool, pip_quiet: int) -> None:
     try:
         ver = version(PKG)
         if not ver.startswith("4."):
-            print(_colorize(color, f"{PKG} {ver} found, but not {SPEC}\ninstalling {PKG}{SPEC}...", Ansi.YELLOW))
+            print(_colorize(color, f"{PKG} {ver} found, but not correct version {SPEC}\ninstalling {PKG}{SPEC}...", Ansi.YELLOW))
             _pip_install(color, pip_quiet)
         else:
             print(_colorize(color, f"{PKG} {ver} OK.", Ansi.GREEN))

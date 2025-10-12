@@ -1,6 +1,6 @@
 # SimWorld::_physics_process Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 40–43)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 48–52)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -18,4 +18,5 @@ Drive AmmoSystem every frame so in-field resupply progresses over time.
 ```gdscript
 func _physics_process(delta: float) -> void:
 	_ammo.tick(delta)
+	_fuel.tick(delta)
 ```

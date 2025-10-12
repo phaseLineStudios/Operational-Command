@@ -3,6 +3,7 @@
 </p>
 
 <p align="center">
+    <a href="https://github.com/phaseLineStudios/Operational-Command/actions/workflows/gdscript-lint-format.yml"><img alt="CI status" src="https://github.com/phaseLineStudios/Operational-Command/actions/workflows/gdscript-lint-format.yml/badge.svg" /></a>
     <a href="#"><img alt="Project Status" src="https://img.shields.io/badge/Project%20Status-Prototype-%2397c900?style=flat"/></a>
     <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg"/></a>
 </p>
