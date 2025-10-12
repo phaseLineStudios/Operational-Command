@@ -48,8 +48,8 @@ func enqueue(order: Dictionary, units_by_callsign: Dictionary = {}) -> bool
 ```
 
 Enqueue a single order.
-[param order] Order dictionary (may include "callsign" or "unit_id").
-[param units_by_callsign] Map callsign:String -> unit_id:String used to resolve targets.
+`order` Order dictionary (may include "callsign" or "unit_id").
+`units_by_callsign` Map callsign:String -> unit_id:String used to resolve targets.
 [return] true if accepted, false if rejected.
 
 ### enqueue_many
@@ -59,8 +59,8 @@ func enqueue_many(orders: Array, units_by_callsign: Dictionary = {}) -> int
 ```
 
 Enqueue multiple orders.
-[param orders] Array of order dictionaries.
-[param units_by_callsign] Callsign → unit_id map used to resolve targets.
+`orders` Array of order dictionaries.
+`units_by_callsign` Callsign → unit_id map used to resolve targets.
 [return] Number of orders accepted.
 
 ### pop_many
@@ -70,7 +70,7 @@ func pop_many(max_count: int = 8) -> Array[Dictionary]
 ```
 
 Pop up to `max_count` orders from the front of the queue.
-[param max_count] Maximum number of orders to pop (default `8`).
+`max_count` Maximum number of orders to pop (default `8`).
 [return] Array[Dictionary] of popped orders (≤ `max_count`).
 
 ### size
@@ -99,8 +99,8 @@ func validate(order: Dictionary, units_by_callsign: Dictionary = {}) -> Dictiona
 Validate and lightly normalize an order.
 Ensures the structure is a Dictionary, resolves `"callsign"` to `"unit_id"`
 when possible, and checks minimal fields per type.
-[param order] Order dictionary to validate.
-[param units_by_callsign] Callsign → unit_id map used to resolve targets.
+`order` Order dictionary to validate.
+`units_by_callsign` Callsign → unit_id map used to resolve targets.
 [return] Dictionary `{ "valid": bool, "reason": String, "order": Dictionary }`.
 
 ## Member Data Documentation

@@ -9,11 +9,12 @@
 func _on_order_failed(_order: Dictionary, reason: String) -> void
 ```
 
+- **_order**: Order dictionary (unused).
+- **reason**: Failure reason.
+
 ## Description
 
 Router callback: order failed.
-[param _order] Order dictionary (unused).
-[param reason] Failure reason.
 
 ## Source
 

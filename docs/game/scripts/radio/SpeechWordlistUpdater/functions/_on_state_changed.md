@@ -9,12 +9,13 @@
 func _on_state_changed(_prev, next) -> void
 ```
 
+- **_prev**: Previous state (unused).
+- **next**: New state token or enum string.
+
 ## Description
 
 Handles mission state transitions.
 Refreshes the word list when the new state string contains "RUN".
-[param _prev] Previous state (unused).
-[param next] New state token or enum string.
 
 ## Source
 

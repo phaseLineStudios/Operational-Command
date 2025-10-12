@@ -161,6 +161,8 @@ Find a line dictionary in TerrainData by id
 var antialias: bool
 ```
 
+Decorators: `@export`
+
 Antialiasing for draw_polyline/draw_line.
 
 ### data

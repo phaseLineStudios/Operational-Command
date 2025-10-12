@@ -9,10 +9,11 @@
 func get_tick() -> int
 ```
 
+- **Return Value**: Tick number.
+
 ## Description
 
 Current tick index.
-[return] Tick number.
 
 ## Source
 

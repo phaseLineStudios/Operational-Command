@@ -9,11 +9,12 @@
 func _snapshot_unit(su: ScenarioUnit) -> Dictionary
 ```
 
+- **su**: ScenarioUnit instance (nullable).
+- **Return Value**: Snapshot dictionary or empty if null.
+
 ## Description
 
 Build a compact unit snapshot.
-[param su] ScenarioUnit instance (nullable).
-[return] Snapshot dictionary or empty if null.
 
 ## Source
 

@@ -9,12 +9,13 @@
 func _quantity_to_meters(qty: int, zone: String) -> float
 ```
 
+- **qty**: Quantity value.
+- **zone**: Unit label (e.g. "m", "km", "grid").
+- **Return Value**: Distance in meters.
+
 ## Description
 
 Convert a quantity and zone to meters.
-[param qty] Quantity value.
-[param zone] Unit label (e.g. "m", "km", "grid").
-[return] Distance in meters.
 
 ## Source
 

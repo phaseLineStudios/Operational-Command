@@ -50,6 +50,8 @@ func _input(e: InputEvent) -> void
 var terrain: TerrainData
 ```
 
+Decorators: `@export`
+
 Terrain to load
 
 ### renderer

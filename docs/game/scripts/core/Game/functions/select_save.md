@@ -23,4 +23,4 @@ func select_save(save_id: StringName) -> void:
 
 ## References
 
-- [`signal save_selected`](../../Game.md#save_selected)
+- [`signal save_selected`](..\..\Game.md#save_selected)

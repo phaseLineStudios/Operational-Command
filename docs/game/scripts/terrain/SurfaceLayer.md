@@ -319,6 +319,8 @@ Produces a stable batching key based on draw state (z/mode/colors/texture)
 var antialias: bool
 ```
 
+Decorators: `@export`
+
 Enable antialiasing for polylines and strokes
 
 ### max_pattern_size_px
@@ -326,6 +328,8 @@ Enable antialiasing for polylines and strokes
 ```gdscript
 var max_pattern_size_px: int
 ```
+
+Decorators: `@export`
 
 Maximum allowed pattern/texture size in pixels (for tiled symbol fills)
 

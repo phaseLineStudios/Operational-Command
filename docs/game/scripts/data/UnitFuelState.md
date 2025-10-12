@@ -44,6 +44,8 @@ Returns 0.0 if the unit has no valid fuel capacity defined.
 var fuel_capacity: float
 ```
 
+Decorators: `@export`
+
 Per-unit fuel state and rates used by FuelSystem.
 
 ### state_fuel
@@ -70,6 +72,8 @@ var fuel_critical_threshold: float
 var fuel_idle_rate_per_s: float
 ```
 
+Decorators: `@export`
+
 Idle burn in fuel units per second while not moving.
 
 ### fuel_move_rate_per_m
@@ -77,5 +81,7 @@ Idle burn in fuel units per second while not moving.
 ```gdscript
 var fuel_move_rate_per_m: float
 ```
+
+Decorators: `@export`
 
 Movement burn in fuel units per meter traveled.

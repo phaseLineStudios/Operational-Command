@@ -9,12 +9,13 @@
 func _apply_move(unit: ScenarioUnit, order: Dictionary) -> bool
 ```
 
+- **unit**: Subject unit.
+- **order**: Order dictionary.
+- **Return Value**: `true` if movement was planned/started, else `false`.
+
 ## Description
 
 MOVE: compute destination from grid, target_callsign (unit or label), or direction+quantity.
-[param unit] Subject unit.
-[param order] Order dictionary.
-[return] `true` if movement was planned/started, else `false`.
 
 ## Source
 

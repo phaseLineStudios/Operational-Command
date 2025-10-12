@@ -9,14 +9,15 @@
 func validate(order: Dictionary, units_by_callsign: Dictionary = {}) -> Dictionary
 ```
 
+- **order**: Order dictionary to validate.
+- **units_by_callsign**: Callsign → unit_id map used to resolve targets.
+- **Return Value**: Dictionary `{ "valid": bool, "reason": String, "order": Dictionary }`.
+
 ## Description
 
 Validate and lightly normalize an order.
 Ensures the structure is a Dictionary, resolves `"callsign"` to `"unit_id"`
 when possible, and checks minimal fields per type.
-[param order] Order dictionary to validate.
-[param units_by_callsign] Callsign → unit_id map used to resolve targets.
-[return] Dictionary `{ "valid": bool, "reason": String, "order": Dictionary }`.
 
 ## Source
 

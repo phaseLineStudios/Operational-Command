@@ -20,14 +20,6 @@ Unit slot.
 
 Accepts drops and shows current assigned unit.
 
-Hover style when the slot is empty.
-
-Style when the slot is filled
-
-Hover style when the slot is filled.
-
-Style to show while hovering with an invalid payload (deny-hover).
-
 ## Public Member Functions
 
 - [`func _ready() -> void`](SlotItem/functions/_ready.md) — Cache base style, wire hover, set mouse filters, and refresh visuals.
@@ -45,11 +37,12 @@ Style to show while hovering with an invalid payload (deny-hover).
 
 ## Public Attributes
 
-- `StyleBox hover_style_empty`
-- `StyleBox filled_style`
-- `StyleBox hover_style_filled`
-- `StyleBox deny_hover_style`
-- `String slot_id` — Icon used when slot is empty or unit lacks icon.
+- `StyleBox hover_style_empty` — Hover style when the slot is empty.
+- `StyleBox filled_style` — Style when the slot is filled
+- `StyleBox hover_style_filled` — Hover style when the slot is filled.
+- `StyleBox deny_hover_style` — Style to show while hovering with an invalid payload (deny-hover).
+- `Texture2D default_icon` — Icon used when slot is empty or unit lacks icon.
+- `String slot_id`
 - `String title`
 - `Array allowed_roles`
 - `UnitData _assigned_unit`
@@ -171,11 +164,19 @@ Clear deny-hover at drag end to restore normal styling.
 var hover_style_empty: StyleBox
 ```
 
+Decorators: `@export`
+
+Hover style when the slot is empty.
+
 ### filled_style
 
 ```gdscript
 var filled_style: StyleBox
 ```
+
+Decorators: `@export`
+
+Style when the slot is filled
 
 ### hover_style_filled
 
@@ -183,21 +184,35 @@ var filled_style: StyleBox
 var hover_style_filled: StyleBox
 ```
 
+Decorators: `@export`
+
+Hover style when the slot is filled.
+
 ### deny_hover_style
 
 ```gdscript
 var deny_hover_style: StyleBox
 ```
 
+Decorators: `@export`
+
+Style to show while hovering with an invalid payload (deny-hover).
+
+### default_icon
+
+```gdscript
+var default_icon: Texture2D
+```
+
+Decorators: `@export`
+
+Icon used when slot is empty or unit lacks icon.
+
 ### slot_id
 
 ```gdscript
 var slot_id: String
 ```
-
-Decorators: `@export var default_icon: Texture2D`
-
-Icon used when slot is empty or unit lacks icon.
 
 ### title
 

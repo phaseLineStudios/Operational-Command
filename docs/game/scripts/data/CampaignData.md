@@ -11,20 +11,6 @@ class_name CampaignData
 extends Resource
 ```
 
-## Brief
-
-Unique identifier for this campaign
-
-## Detailed Description
-
-Human-readable title of the campaign
-
-Description of the campaign, shown to the player
-
-Preview image for the campaign
-
-Background texture for the scenario selection screen
-
 ## Public Member Functions
 
 - [`func serialize() -> Dictionary`](CampaignData/functions/serialize.md) — Serialize campaign data to JSON
@@ -32,11 +18,11 @@ Background texture for the scenario selection screen
 
 ## Public Attributes
 
-- `String id`
-- `String title`
-- `String description`
-- `Texture2D preview`
-- `Texture2D scenario_bg`
+- `String id` — Unique identifier for this campaign
+- `String title` — Human-readable title of the campaign
+- `String description` — Description of the campaign, shown to the player
+- `Texture2D preview` — Preview image for the campaign
+- `Texture2D scenario_bg` — Background texture for the scenario selection screen
 - `Array[ScenarioData] scenarios` — List of scenarios that make up this campaign
 - `int order` — Order index for this campaign
 - `Array saves` — Saved states of this campaign (future campaign save structure).
@@ -67,11 +53,19 @@ Deserialize Campaign data from JSON
 var id: String
 ```
 
+Decorators: `@export`
+
+Unique identifier for this campaign
+
 ### title
 
 ```gdscript
 var title: String
 ```
+
+Decorators: `@export`
+
+Human-readable title of the campaign
 
 ### description
 
@@ -79,11 +73,19 @@ var title: String
 var description: String
 ```
 
+Decorators: `@export`
+
+Description of the campaign, shown to the player
+
 ### preview
 
 ```gdscript
 var preview: Texture2D
 ```
+
+Decorators: `@export`
+
+Preview image for the campaign
 
 ### scenario_bg
 
@@ -91,11 +93,17 @@ var preview: Texture2D
 var scenario_bg: Texture2D
 ```
 
+Decorators: `@export`
+
+Background texture for the scenario selection screen
+
 ### scenarios
 
 ```gdscript
 var scenarios: Array[ScenarioData]
 ```
+
+Decorators: `@export`
 
 List of scenarios that make up this campaign
 
@@ -105,6 +113,8 @@ List of scenarios that make up this campaign
 var order: int
 ```
 
+Decorators: `@export`
+
 Order index for this campaign
 
 ### saves
@@ -112,5 +122,7 @@ Order index for this campaign
 ```gdscript
 var saves: Array
 ```
+
+Decorators: `@export`
 
 Saved states of this campaign (future campaign save structure).

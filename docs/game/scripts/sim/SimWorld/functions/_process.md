@@ -9,10 +9,11 @@
 func _process(dt: float) -> void
 ```
 
+- **dt**: Frame delta seconds.
+
 ## Description
 
 Fixed-rate loop; advances the sim in discrete ticks while RUNNING.
-[param dt] Frame delta seconds.
 
 ## Source
 

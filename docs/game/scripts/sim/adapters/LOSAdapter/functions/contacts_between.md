@@ -9,12 +9,13 @@
 func contacts_between(friends: Array[ScenarioUnit], enemies: Array[ScenarioUnit]) -> Array
 ```
 
+- **friends**: Array of friendly ScenarioUnit.
+- **enemies**: Array of enemy ScenarioUnit.
+- **Return Value**: Array of Dictionaries: { \"attacker\": ScenarioUnit, \"defender\": ScenarioUnit }.
+
 ## Description
 
-Builds contact pairs with clear LOS between [param friends] and [param enemies].
-[param friends] Array of friendly ScenarioUnit.
-[param enemies] Array of enemy ScenarioUnit.
-[return] Array of Dictionaries: { \"attacker\": ScenarioUnit, \"defender\": ScenarioUnit }.
+Builds contact pairs with clear LOS between `friends` and `enemies`.
 
 ## Source
 

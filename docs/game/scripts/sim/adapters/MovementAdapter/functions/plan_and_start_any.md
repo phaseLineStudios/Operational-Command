@@ -9,13 +9,14 @@
 func plan_and_start_any(su: ScenarioUnit, dest: Variant) -> bool
 ```
 
+- **su**: ScenarioUnit to move.
+- **dest**: Vector2 | String | Dictionary destination.
+- **Return Value**: True if the order was accepted (or deferred), else false.
+
 ## Description
 
 Plans and starts movement to either a Vector2 destination or a label.
 Also accepts {x,y} or {pos: Vector2} dictionaries.
-[param su] ScenarioUnit to move.
-[param dest] Vector2 | String | Dictionary destination.
-[return] True if the order was accepted (or deferred), else false.
 
 ## Source
 

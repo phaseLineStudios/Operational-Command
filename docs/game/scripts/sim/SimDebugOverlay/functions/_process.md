@@ -9,10 +9,11 @@
 func _process(_dt: float) -> void
 ```
 
+- **_dt**: Delta time (seconds).
+
 ## Description
 
 Fade recent-combat markers and request redraws while enabled.
-[param _dt] Delta time (seconds).
 
 ## Source
 

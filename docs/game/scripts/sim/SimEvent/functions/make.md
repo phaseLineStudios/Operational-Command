@@ -9,13 +9,14 @@
 func make(make_type: EventType, make_tick: int, make_payload: Dictionary = {}) -> SimEvent
 ```
 
+- **make_type**: Event type.
+- **make_tick**: Simulation tick index.
+- **make_payload**: Optional payload dictionary.
+- **Return Value**: Newly created [SimEvent].
+
 ## Description
 
 Construct a new event instance.
-[param make_type] Event type.
-[param make_tick] Simulation tick index.
-[param make_payload] Optional payload dictionary.
-[return] Newly created [SimEvent].
 
 ## Source
 

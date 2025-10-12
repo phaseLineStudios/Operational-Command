@@ -15,12 +15,6 @@ extends PanelContainer
 
 Recruitable unit card.
 
-## Detailed Description
-
-Fallback icon if unit["icon"] is missing/empty.
-
-Hover style
-
 ## Public Member Functions
 
 - [`func _ready() -> void`](UnitCard/functions/_ready.md)
@@ -36,9 +30,10 @@ Hover style
 
 ## Public Attributes
 
-- `Texture2D fallback_default_icon`
-- `StyleBox hover_style`
-- `UnitData unit` — Selected Style
+- `Texture2D fallback_default_icon` — Fallback icon if unit["icon"] is missing/empty.
+- `StyleBox hover_style` — Hover style
+- `StyleBox selected_style` — Selected Style
+- `UnitData unit`
 - `String unit_id`
 - `Texture2D default_icon`
 - `StyleBox _base_style`
@@ -140,21 +135,35 @@ Build a fixed-size preview that matches the pool layout.
 var fallback_default_icon: Texture2D
 ```
 
+Decorators: `@export`
+
+Fallback icon if unit["icon"] is missing/empty.
+
 ### hover_style
 
 ```gdscript
 var hover_style: StyleBox
 ```
 
+Decorators: `@export`
+
+Hover style
+
+### selected_style
+
+```gdscript
+var selected_style: StyleBox
+```
+
+Decorators: `@export`
+
+Selected Style
+
 ### unit
 
 ```gdscript
 var unit: UnitData
 ```
-
-Decorators: `@export var selected_style: StyleBox`
-
-Selected Style
 
 ### unit_id
 

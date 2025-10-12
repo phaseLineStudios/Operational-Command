@@ -70,6 +70,8 @@ func deserialize(d: Variant) -> ScenarioTrigger
 var id: String
 ```
 
+Decorators: `@export`
+
 Unique identifier of the trigger
 
 ### title
@@ -77,6 +79,8 @@ Unique identifier of the trigger
 ```gdscript
 var title: String
 ```
+
+Decorators: `@export`
 
 Trigger title
 
@@ -86,6 +90,8 @@ Trigger title
 var icon: Texture2D
 ```
 
+Decorators: `@export`
+
 Trigger icon
 
 ### area_shape
@@ -93,6 +99,8 @@ Trigger icon
 ```gdscript
 var area_shape: AreaShape
 ```
+
+Decorators: `@export`
 
 Area shape.
 
@@ -102,6 +110,8 @@ Area shape.
 var area_center_m: Vector2
 ```
 
+Decorators: `@export`
+
 Center of area in *terrain meters*
 
 ### area_size_m
@@ -109,6 +119,8 @@ Center of area in *terrain meters*
 ```gdscript
 var area_size_m: Vector2
 ```
+
+Decorators: `@export`
 
 Area size in meters (width, height)
 
@@ -118,6 +130,8 @@ Area size in meters (width, height)
 var presence: PresenceMode
 ```
 
+Decorators: `@export`
+
 Presence Mode
 
 ### require_duration_s
@@ -125,6 +139,8 @@ Presence Mode
 ```gdscript
 var require_duration_s: float
 ```
+
+Decorators: `@export`
 
 Time (seconds) the combined condition must stay true before activation
 
@@ -134,6 +150,8 @@ Time (seconds) the combined condition must stay true before activation
 var condition_expr: String
 ```
 
+Decorators: `@export_multiline`
+
 Extra condition (must be true along with presence), evaluated every frame
 
 ### on_activate_expr
@@ -141,6 +159,8 @@ Extra condition (must be true along with presence), evaluated every frame
 ```gdscript
 var on_activate_expr: String
 ```
+
+Decorators: `@export_multiline`
 
 Executed once on activation. Same variable scope as condition
 
@@ -150,6 +170,8 @@ Executed once on activation. Same variable scope as condition
 var on_deactivate_expr: String
 ```
 
+Decorators: `@export_multiline`
+
 Executed once when condition becomes false after being active
 
 ### synced_units
@@ -158,6 +180,8 @@ Executed once when condition becomes false after being active
 var synced_units: Array[int]
 ```
 
+Decorators: `@export`
+
 Synced editor units
 
 ### synced_tasks
@@ -165,6 +189,8 @@ Synced editor units
 ```gdscript
 var synced_tasks: Array[int]
 ```
+
+Decorators: `@export`
 
 Synced editor tasks
 

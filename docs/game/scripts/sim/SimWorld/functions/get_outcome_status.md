@@ -9,10 +9,11 @@
 func get_outcome_status() -> String
 ```
 
+- **Return Value**: `"in_progress"` or `"completed"`.
+
 ## Description
 
 Outcome status string.
-[return] `"in_progress"` or `"completed"`.
 
 ## Source
 

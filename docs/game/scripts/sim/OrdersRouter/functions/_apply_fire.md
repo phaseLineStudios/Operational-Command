@@ -9,12 +9,13 @@
 func _apply_fire(unit: ScenarioUnit, order: Dictionary) -> bool
 ```
 
+- **unit**: Subject unit.
+- **order**: Order dictionary.
+- **Return Value**: `true` if applied, otherwise `false`.
+
 ## Description
 
 FIRE: request fire mission if possible; else move to target unit.
-[param unit] Subject unit.
-[param order] Order dictionary.
-[return] `true` if applied, otherwise `false`.
 
 ## Source
 

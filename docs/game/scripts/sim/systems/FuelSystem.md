@@ -25,10 +25,6 @@ with optional terrain and slope multipliers.
 - Proximity refuel from tanker units with throughput["fuel"] stock.
 - Provide a speed multiplier so movement can slow at CRITICAL and stop at EMPTY.Y.
 
-Defaults and terrain hooks
-
-Optional terrain data for surface and slope multipliers.
-
 ## Public Member Functions
 
 - [`func _ready() -> void`](FuelSystem/functions/_ready.md)
@@ -64,8 +60,8 @@ Optional terrain data for surface and slope multipliers.
 
 ## Public Attributes
 
-- `FuelProfile fuel_profile`
-- `TerrainData terrain_data`
+- `FuelProfile fuel_profile` — Defaults and terrain hooks
+- `TerrainData terrain_data` — Optional terrain data for surface and slope multipliers.
 - `float critical_speed_mult` — Movement penalty at CRITICAL fuel.
 - `Dictionary[String, ScenarioUnit] _su` — Registered units and state (typed dictionaries to avoid Variant)
 - `Dictionary[String, UnitFuelState] _fuel`
@@ -289,17 +285,27 @@ Compact UI snapshot for overlays / panels.
 var fuel_profile: FuelProfile
 ```
 
+Decorators: `@export`
+
+Defaults and terrain hooks
+
 ### terrain_data
 
 ```gdscript
 var terrain_data: TerrainData
 ```
 
+Decorators: `@export`
+
+Optional terrain data for surface and slope multipliers.
+
 ### critical_speed_mult
 
 ```gdscript
 var critical_speed_mult: float
 ```
+
+Decorators: `@export_range(0.1, 1.0, 0.05)`
 
 Movement penalty at CRITICAL fuel. 1.0 means no penalty.
 

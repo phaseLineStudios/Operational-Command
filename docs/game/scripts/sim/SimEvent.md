@@ -22,15 +22,13 @@ with a tick timestamp and an arbitrary payload dictionary.
 
 Types of events emitted by the simulation.
 
-Event type token.
-
 ## Public Member Functions
 
 - [`func make(make_type: EventType, make_tick: int, make_payload: Dictionary = {}) -> SimEvent`](SimEvent/functions/make.md) — Construct a new event instance.
 
 ## Public Attributes
 
-- `EventType type`
+- `EventType type` — Event type token.
 - `int tick` — Simulation tick index when this event occurred.
 - `Dictionary payload` — Arbitrary payload data (treat as read-only by convention).
 
@@ -43,9 +41,9 @@ func make(make_type: EventType, make_tick: int, make_payload: Dictionary = {}) -
 ```
 
 Construct a new event instance.
-[param make_type] Event type.
-[param make_tick] Simulation tick index.
-[param make_payload] Optional payload dictionary.
+`make_type` Event type.
+`make_tick` Simulation tick index.
+`make_payload` Optional payload dictionary.
 [return] Newly created [SimEvent].
 
 ## Member Data Documentation
@@ -56,11 +54,17 @@ Construct a new event instance.
 var type: EventType
 ```
 
+Decorators: `@export`
+
+Event type token.
+
 ### tick
 
 ```gdscript
 var tick: int
 ```
+
+Decorators: `@export`
 
 Simulation tick index when this event occurred.
 
@@ -69,5 +73,7 @@ Simulation tick index when this event occurred.
 ```gdscript
 var payload: Dictionary
 ```
+
+Decorators: `@export`
 
 Arbitrary payload data (treat as read-only by convention).

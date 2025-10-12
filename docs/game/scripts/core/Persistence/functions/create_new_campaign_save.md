@@ -11,7 +11,7 @@ func create_new_campaign_save(_campaign_id: StringName) -> String
 
 ## Description
 
-Create a new save for [param campaign_id]; return new ID.
+Create a new save for `campaign_id`; return new ID.
 
 ## Source
 

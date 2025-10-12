@@ -9,11 +9,12 @@
 func get_unit_debug_path(uid: String) -> PackedVector2Array
 ```
 
+- **uid**: Unit id.
+- **Return Value**: PackedVector2Array of path points (meters).
+
 ## Description
 
 Planned path for a unit (for debug).
-[param uid] Unit id.
-[return] PackedVector2Array of path points (meters).
 
 ## Source
 

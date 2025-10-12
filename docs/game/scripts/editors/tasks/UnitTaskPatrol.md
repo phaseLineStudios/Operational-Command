@@ -38,6 +38,8 @@ func _init() -> void
 var radius_m: float
 ```
 
+Decorators: `@export_range(10.0, 5000.0, 1.0)`
+
 Patrol within a radius around the point.
 
 ### dwell_s

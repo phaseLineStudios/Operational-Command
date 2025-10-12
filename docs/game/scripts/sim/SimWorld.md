@@ -25,12 +25,6 @@ and emits events via signals for UI/logging.
 
 Fixed tick rate (Hz).
 
-LOS helper/adapter.
-
-Movement adapter.
-
-Combat controller.
-
 ## Public Member Functions
 
 - [`func _ready() -> void`](SimWorld/functions/_ready.md) — Initializes tick timing/RNG and wires router signals.
@@ -66,10 +60,11 @@ Combat controller.
 ## Public Attributes
 
 - `int rng_seed` — Initial RNG seed (0 -> randomize)
-- `LOSAdapter los_adapter`
-- `MovementAdapter movement_adapter`
-- `CombatController combat_controller`
-- `State _state` — Orders router.
+- `LOSAdapter los_adapter` — LOS helper/adapter.
+- `MovementAdapter movement_adapter` — Movement adapter.
+- `CombatController combat_controller` — Combat controller.
+- `OrdersRouter _router` — Orders router.
+- `State _state`
 - `OrdersQueue _orders`
 - `ScenarioData _scenario`
 - `Dictionary _units_by_id`
@@ -109,7 +104,7 @@ func init_world(scenario: ScenarioData) -> void
 ```
 
 Initialize world from a scenario and build unit indices.
-[param scenario] ScenarioData to load.
+`scenario` ScenarioData to load.
 
 ### _process
 
@@ -118,7 +113,7 @@ func _process(dt: float) -> void
 ```
 
 Fixed-rate loop; advances the sim in discrete ticks while RUNNING.
-[param dt] Frame delta seconds.
+`dt` Frame delta seconds.
 
 ### _step_tick
 
@@ -127,7 +122,7 @@ func _step_tick(dt: float) -> void
 ```
 
 Executes a single sim tick (deterministic order).
-[param dt] Tick delta seconds.
+`dt` Tick delta seconds.
 
 ### _process_orders
 
@@ -193,7 +188,7 @@ func queue_orders(orders: Array) -> int
 ```
 
 Enqueue structured orders parsed elsewhere.
-[param orders] Array of order dictionaries.
+`orders` Array of order dictionaries.
 [return] Number of orders accepted.
 
 ### bind_radio
@@ -203,8 +198,8 @@ func bind_radio(radio: Radio, parser: Node) -> void
 ```
 
 Bind Radio and Parser so voice results are queued automatically.
-[param radio] Radio node emitting `radio_result`.
-[param parser] Parser node emitting `parsed(Array)` and `parse_error(String)`.
+`radio` Radio node emitting `radio_result`.
+`parser` Parser node emitting `parsed(Array)` and `parse_error(String)`.
 
 ### pause
 
@@ -263,7 +258,7 @@ func get_unit_snapshot(unit_id: String) -> Dictionary
 ```
 
 Shallow snapshot of a unit for UI.
-[param unit_id] ScenarioUnit id.
+`unit_id` ScenarioUnit id.
 [return] Snapshot dictionary.
 
 ### get_unit_snapshots
@@ -291,7 +286,7 @@ func set_rng_seed(new_rng_seed: int) -> void
 ```
 
 Set RNG seed (determinism).
-[param new_rng_seed] Seed value.
+`new_rng_seed` Seed value.
 
 ### get_rng_seed
 
@@ -309,7 +304,7 @@ func _snapshot_unit(su: ScenarioUnit) -> Dictionary
 ```
 
 Build a compact unit snapshot.
-[param su] ScenarioUnit instance (nullable).
+`su` ScenarioUnit instance (nullable).
 [return] Snapshot dictionary or empty if null.
 
 ### _transition
@@ -319,8 +314,8 @@ func _transition(prev: State, next: State) -> void
 ```
 
 Apply a state transition and emit `signal mission_state_changed`.
-[param prev] Previous state.
-[param next] Next state.
+`prev` Previous state.
+`next` Next state.
 
 ### get_unit_debug_path
 
@@ -329,7 +324,7 @@ func get_unit_debug_path(uid: String) -> PackedVector2Array
 ```
 
 Planned path for a unit (for debug).
-[param uid] Unit id.
+`uid` Unit id.
 [return] PackedVector2Array of path points (meters).
 
 ### _on_order_applied
@@ -339,7 +334,7 @@ func _on_order_applied(order: Dictionary) -> void
 ```
 
 Router callback: order applied.
-[param order] Order dictionary.
+`order` Order dictionary.
 
 ### _on_order_failed
 
@@ -348,8 +343,8 @@ func _on_order_failed(_order: Dictionary, reason: String) -> void
 ```
 
 Router callback: order failed.
-[param _order] Order dictionary (unused).
-[param reason] Failure reason.
+`_order` Order dictionary (unused).
+`reason` Failure reason.
 
 ## Member Data Documentation
 
@@ -359,6 +354,8 @@ Router callback: order failed.
 var rng_seed: int
 ```
 
+Decorators: `@export`
+
 Initial RNG seed (0 -> randomize)
 
 ### los_adapter
@@ -367,11 +364,19 @@ Initial RNG seed (0 -> randomize)
 var los_adapter: LOSAdapter
 ```
 
+Decorators: `@export`
+
+LOS helper/adapter.
+
 ### movement_adapter
 
 ```gdscript
 var movement_adapter: MovementAdapter
 ```
+
+Decorators: `@export`
+
+Movement adapter.
 
 ### combat_controller
 
@@ -379,15 +384,25 @@ var movement_adapter: MovementAdapter
 var combat_controller: CombatController
 ```
 
+Decorators: `@export`
+
+Combat controller.
+
+### _router
+
+```gdscript
+var _router: OrdersRouter
+```
+
+Decorators: `@export`
+
+Orders router.
+
 ### _state
 
 ```gdscript
 var _state: State
 ```
-
-Decorators: `@export var _router: OrdersRouter`
-
-Orders router.
 
 ### _orders
 

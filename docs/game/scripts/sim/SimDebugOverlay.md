@@ -22,14 +22,6 @@ Renders unit icons, paths, destinations, labels (order/behaviour/
 combat mode), strength/morale/fuel bars, and recent combat highlights.
 Attach as a child of `TerrainRender` so drawing aligns with the map.
 
-Terrain renderer used for map/terrain coordinate transforms.
-
-Simulation world for unit snapshots and mission timing.
-
-Orders router to show last applied order per unit.
-
-Fuel system to display fuel state bars.
-
 Show unit icons.
 
 Show planned movement paths.
@@ -70,17 +62,17 @@ Label offset from icon center (pixels).
 - [`func _on_unit_updated(_id: String, _snap: Dictionary) -> void`](SimDebugOverlay/functions/_on_unit_updated.md) — Request redraw when a unit snapshot updates.
 - [`func _draw() -> void`](SimDebugOverlay/functions/_draw.md) — Draw icons, paths, destinations, labels, and bars for all units.
 - [`func _draw_bar(tl: Vector2, w: float, h: float, ratio: float, col: Color) -> void`](SimDebugOverlay/functions/_draw_bar.md) — Draw a ratio bar with background and thin border.
-- [`func _norm_ratio(v: float, t: float = 100.0) -> float`](SimDebugOverlay/functions/_norm_ratio.md) — Normalize values; treat values >1 as percentages using [param t] as max.
+- [`func _norm_ratio(v: float, t: float = 100.0) -> float`](SimDebugOverlay/functions/_norm_ratio.md) — Normalize values; treat values >1 as percentages using `t` as max.
 - [`func _enum_name(_enum: Variant, value: int) -> String`](SimDebugOverlay/functions/_enum_name.md) — Convert enum value to a short human label.
 - [`func _state_name(s: int) -> String`](SimDebugOverlay/functions/_state_name.md) — Convert ScenarioUnit.MoveState to a compact label.
 
 ## Public Attributes
 
 - `bool debug_enabled` — Master toggle; when false the overlay does not process or draw.
-- `TerrainRender terrain_renderer`
-- `SimWorld _sim`
-- `OrdersRouter _orders`
-- `FuelSystem _fuel`
+- `TerrainRender terrain_renderer` — Terrain renderer used for map/terrain coordinate transforms.
+- `SimWorld _sim` — Simulation world for unit snapshots and mission timing.
+- `OrdersRouter _orders` — Orders router to show last applied order per unit.
+- `FuelSystem _fuel` — Fuel system to display fuel state bars.
 - `Color friend_color` — Friendly color.
 - `Color enemy_color` — Enemy color.
 - `Color text_color` — Label text color.
@@ -113,7 +105,7 @@ func _process(_dt: float) -> void
 ```
 
 Fade recent-combat markers and request redraws while enabled.
-[param _dt] Delta time (seconds).
+`_dt` Delta time (seconds).
 
 ### _on_resized
 
@@ -146,7 +138,7 @@ func _on_order_applied(order: Dictionary) -> void
 ```
 
 Record the last applied order per unit for label display.
-[param order] Order dictionary that was applied.
+`order` Order dictionary that was applied.
 
 ### _on_order_failed
 
@@ -155,8 +147,8 @@ func _on_order_failed(order: Dictionary, _reason: String) -> void
 ```
 
 Record failed order attempts (marked ✖) to aid debugging.
-[param order] Order dictionary that failed.
-[param _reason] Failure reason (unused here).
+`order` Order dictionary that failed.
+`_reason` Failure reason (unused here).
 
 ### _on_contact
 
@@ -165,8 +157,8 @@ func _on_contact(attacker_id: String, defender_id: String) -> void
 ```
 
 Mark attacker/defender as “hot” for a short period after combat.
-[param attacker_id] Attacker unit id.
-[param defender_id] Defender unit id.
+`attacker_id` Attacker unit id.
+`defender_id` Defender unit id.
 
 ### _on_state
 
@@ -199,11 +191,11 @@ func _draw_bar(tl: Vector2, w: float, h: float, ratio: float, col: Color) -> voi
 ```
 
 Draw a ratio bar with background and thin border.
-[param tl] Top-left in overlay pixels.
-[param w] Width (px).
-[param h] Height (px).
-[param ratio] Fill ratio [0..1].
-[param col] Fill color.
+`tl` Top-left in overlay pixels.
+`w` Width (px).
+`h` Height (px).
+`ratio` Fill ratio [0..1].
+`col` Fill color.
 
 ### _norm_ratio
 
@@ -211,9 +203,9 @@ Draw a ratio bar with background and thin border.
 func _norm_ratio(v: float, t: float = 100.0) -> float
 ```
 
-Normalize values; treat values >1 as percentages using [param t] as max.
-[param v] Input value (0..1 or 0..t).
-[param t] Maximum when v is in “percent-like” scale (default 100).
+Normalize values; treat values >1 as percentages using `t` as max.
+`v` Input value (0..1 or 0..t).
+`t` Maximum when v is in “percent-like” scale (default 100).
 [return] Ratio clamped to [0, 1].
 
 ### _enum_name
@@ -223,8 +215,8 @@ func _enum_name(_enum: Variant, value: int) -> String
 ```
 
 Convert enum value to a short human label.
-[param _enum] Enum type marker.
-[param value] Enum value.
+`_enum` Enum type marker.
+`value` Enum value.
 [return] Short label string.
 
 ### _state_name
@@ -234,7 +226,7 @@ func _state_name(s: int) -> String
 ```
 
 Convert ScenarioUnit.MoveState to a compact label.
-[param s] MoveState enum value.
+`s` MoveState enum value.
 [return] Short label string.
 
 ## Member Data Documentation
@@ -245,6 +237,8 @@ Convert ScenarioUnit.MoveState to a compact label.
 var debug_enabled: bool
 ```
 
+Decorators: `@export`
+
 Master toggle; when false the overlay does not process or draw.
 
 ### terrain_renderer
@@ -253,11 +247,19 @@ Master toggle; when false the overlay does not process or draw.
 var terrain_renderer: TerrainRender
 ```
 
+Decorators: `@export`
+
+Terrain renderer used for map/terrain coordinate transforms.
+
 ### _sim
 
 ```gdscript
 var _sim: SimWorld
 ```
+
+Decorators: `@export`
+
+Simulation world for unit snapshots and mission timing.
 
 ### _orders
 
@@ -265,17 +267,27 @@ var _sim: SimWorld
 var _orders: OrdersRouter
 ```
 
+Decorators: `@export`
+
+Orders router to show last applied order per unit.
+
 ### _fuel
 
 ```gdscript
 var _fuel: FuelSystem
 ```
 
+Decorators: `@export`
+
+Fuel system to display fuel state bars.
+
 ### friend_color
 
 ```gdscript
 var friend_color: Color
 ```
+
+Decorators: `@export`
 
 Friendly color.
 
@@ -285,6 +297,8 @@ Friendly color.
 var enemy_color: Color
 ```
 
+Decorators: `@export`
+
 Enemy color.
 
 ### text_color
@@ -292,6 +306,8 @@ Enemy color.
 ```gdscript
 var text_color: Color
 ```
+
+Decorators: `@export`
 
 Label text color.
 
@@ -301,6 +317,8 @@ Label text color.
 var hot_color: Color
 ```
 
+Decorators: `@export`
+
 “Hot” label color for recent combat.
 
 ### bar_bg
@@ -308,6 +326,8 @@ var hot_color: Color
 ```gdscript
 var bar_bg: Color
 ```
+
+Decorators: `@export`
 
 Bar background color.
 
@@ -317,6 +337,8 @@ Bar background color.
 var bar_strength: Color
 ```
 
+Decorators: `@export`
+
 Strength bar color.
 
 ### bar_morale
@@ -325,6 +347,8 @@ Strength bar color.
 var bar_morale: Color
 ```
 
+Decorators: `@export`
+
 Morale bar color.
 
 ### bar_fuel
@@ -332,6 +356,8 @@ Morale bar color.
 ```gdscript
 var bar_fuel: Color
 ```
+
+Decorators: `@export`
 
 Fuel bar color.
 

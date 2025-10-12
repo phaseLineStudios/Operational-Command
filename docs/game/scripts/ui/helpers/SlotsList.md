@@ -31,7 +31,8 @@ Duration (seconds) for the denied flash fallback effect.
 
 ## Public Attributes
 
-- `Dictionary _items_by_slot` — Slot Scene
+- `PackedScene slot_item_scene` — Slot Scene
+- `Dictionary _items_by_slot`
 
 ## Signals
 
@@ -74,15 +75,21 @@ Briefly tint a SlotItem to indicate a denied action.
 
 ## Member Data Documentation
 
+### slot_item_scene
+
+```gdscript
+var slot_item_scene: PackedScene
+```
+
+Decorators: `@export`
+
+Slot Scene
+
 ### _items_by_slot
 
 ```gdscript
 var _items_by_slot: Dictionary
 ```
-
-Decorators: `@export var slot_item_scene: PackedScene`
-
-Slot Scene
 
 ## Signal Documentation
 

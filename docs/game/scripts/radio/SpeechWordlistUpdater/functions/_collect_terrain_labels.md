@@ -9,11 +9,12 @@
 func _collect_terrain_labels() -> Array[String]
 ```
 
+- **Return Value**: Array[String] of label texts.
+
 ## Description
 
 Extracts map label texts from `member TerrainRender.data.labels`.
 Returns a de-duplicated list (original casing).
-[return] Array[String] of label texts.
 
 ## Source
 
@@ -33,4 +34,4 @@ func _collect_terrain_labels() -> Array[String]:
 
 ## References
 
-- [`member TerrainRender.data.labels`](../../../terrain/TerrainRender.md#datalabels)
+- [`member TerrainRender.data.labels`](..\..\..\terrain\TerrainRender.md)

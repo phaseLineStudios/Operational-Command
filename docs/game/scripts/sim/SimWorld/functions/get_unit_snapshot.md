@@ -9,11 +9,12 @@
 func get_unit_snapshot(unit_id: String) -> Dictionary
 ```
 
+- **unit_id**: ScenarioUnit id.
+- **Return Value**: Snapshot dictionary.
+
 ## Description
 
 Shallow snapshot of a unit for UI.
-[param unit_id] ScenarioUnit id.
-[return] Snapshot dictionary.
 
 ## Source
 

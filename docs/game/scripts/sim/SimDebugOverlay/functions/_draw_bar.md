@@ -9,14 +9,15 @@
 func _draw_bar(tl: Vector2, w: float, h: float, ratio: float, col: Color) -> void
 ```
 
+- **tl**: Top-left in overlay pixels.
+- **w**: Width (px).
+- **h**: Height (px).
+- **ratio**: Fill ratio [0..1].
+- **col**: Fill color.
+
 ## Description
 
 Draw a ratio bar with background and thin border.
-[param tl] Top-left in overlay pixels.
-[param w] Width (px).
-[param h] Height (px).
-[param ratio] Fill ratio [0..1].
-[param col] Fill color.
 
 ## Source
 

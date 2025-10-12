@@ -77,4 +77,6 @@ Capture input and assign.
 var action_name: String
 ```
 
+Decorators: `@export`
+
 Action to rebind.

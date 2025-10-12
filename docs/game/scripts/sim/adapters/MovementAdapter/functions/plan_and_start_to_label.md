@@ -9,12 +9,13 @@
 func plan_and_start_to_label(su: ScenarioUnit, label_text: String) -> bool
 ```
 
+- **su**: ScenarioUnit to move.
+- **label_text**: Label name to resolve.
+- **Return Value**: True if the order was accepted (or deferred), else false.
+
 ## Description
 
 Plans and starts movement to a map label.
-[param su] ScenarioUnit to move.
-[param label_text] Label name to resolve.
-[return] True if the order was accepted (or deferred), else false.
 
 ## Source
 

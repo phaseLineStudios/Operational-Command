@@ -9,12 +9,13 @@
 func _norm_label(s: String) -> String
 ```
 
+- **s**: Original label text.
+- **Return Value**: Normalized key.
+
 ## Description
 
 Normalizes label text for tolerant matching.
 Removes punctuation, collapses spaces, and lowercases.
-[param s] Original label text.
-[return] Normalized key.
 
 ## Source
 

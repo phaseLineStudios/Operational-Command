@@ -9,11 +9,12 @@
 func _state_name(s: int) -> String
 ```
 
+- **s**: MoveState enum value.
+- **Return Value**: Short label string.
+
 ## Description
 
 Convert ScenarioUnit.MoveState to a compact label.
-[param s] MoveState enum value.
-[return] Short label string.
 
 ## Source
 

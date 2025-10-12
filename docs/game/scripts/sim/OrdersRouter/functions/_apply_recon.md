@@ -9,12 +9,13 @@
 func _apply_recon(unit: ScenarioUnit, order: Dictionary) -> bool
 ```
 
+- **unit**: Subject unit.
+- **order**: Order dictionary.
+- **Return Value**: `true` if applied, `false` if missing destination.
+
 ## Description
 
 RECON: move with recon posture if supported.
-[param unit] Subject unit.
-[param order] Order dictionary.
-[return] `true` if applied, `false` if missing destination.
 
 ## Source
 

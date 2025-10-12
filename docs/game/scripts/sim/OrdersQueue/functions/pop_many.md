@@ -9,11 +9,12 @@
 func pop_many(max_count: int = 8) -> Array[Dictionary]
 ```
 
+- **max_count**: Maximum number of orders to pop (default `8`).
+- **Return Value**: Array[Dictionary] of popped orders (≤ `max_count`).
+
 ## Description
 
 Pop up to `max_count` orders from the front of the queue.
-[param max_count] Maximum number of orders to pop (default `8`).
-[return] Array[Dictionary] of popped orders (≤ `max_count`).
 
 ## Source
 

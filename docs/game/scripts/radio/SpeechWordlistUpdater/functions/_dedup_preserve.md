@@ -9,11 +9,12 @@
 func _dedup_preserve(arr: Array[String]) -> Array[String]
 ```
 
+- **arr**: Input list.
+- **Return Value**: New list with unique items, first occurrence kept.
+
 ## Description
 
 De-duplicates an array while preserving order.
-[param arr] Input list.
-[return] New list with unique items, first occurrence kept.
 
 ## Source
 

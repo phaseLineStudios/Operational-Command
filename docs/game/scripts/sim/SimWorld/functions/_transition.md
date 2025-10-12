@@ -9,11 +9,12 @@
 func _transition(prev: State, next: State) -> void
 ```
 
+- **prev**: Previous state.
+- **next**: Next state.
+
 ## Description
 
 Apply a state transition and emit `signal mission_state_changed`.
-[param prev] Previous state.
-[param next] Next state.
 
 ## Source
 
@@ -26,4 +27,4 @@ func _transition(prev: State, next: State) -> void:
 
 ## References
 
-- [`signal mission_state_changed`](../../SimWorld.md#mission_state_changed)
+- [`signal mission_state_changed`](..\..\SimWorld.md#mission_state_changed)

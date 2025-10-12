@@ -9,12 +9,13 @@
 func enqueue_many(orders: Array, units_by_callsign: Dictionary = {}) -> int
 ```
 
+- **orders**: Array of order dictionaries.
+- **units_by_callsign**: Callsign → unit_id map used to resolve targets.
+- **Return Value**: Number of orders accepted.
+
 ## Description
 
 Enqueue multiple orders.
-[param orders] Array of order dictionaries.
-[param units_by_callsign] Callsign → unit_id map used to resolve targets.
-[return] Number of orders accepted.
 
 ## Source
 

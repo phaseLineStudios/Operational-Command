@@ -9,14 +9,15 @@
 func spotting_mul(pos_d: Vector2, range_m: float, weather_severity: float = 0.0) -> float
 ```
 
+- **pos_d**: Defender position in meters (terrain space).
+- **range_m**: Range from observer to defender in meters.
+- **weather_severity**: Optional 0..1 weather penalty factor.
+- **Return Value**: Spotting multiplier in [0, 1].
+
 ## Description
 
-Computes a spotting multiplier (0..1) at [param range_m] from [param pos_d].
+Computes a spotting multiplier (0..1) at `range_m` from `pos_d`.
 Values near 0 reduce detection; 1 means no penalty.
-[param pos_d] Defender position in meters (terrain space).
-[param range_m] Range from observer to defender in meters.
-[param weather_severity] Optional 0..1 weather penalty factor.
-[return] Spotting multiplier in [0, 1].
 
 ## Source
 

@@ -9,12 +9,13 @@
 func _apply_defend(unit: ScenarioUnit, order: Dictionary) -> bool
 ```
 
+- **unit**: Subject unit.
+- **order**: Order dictionary.
+- **Return Value**: `true` if applied.
+
 ## Description
 
 DEFEND: move to destination if present; otherwise hold.
-[param unit] Subject unit.
-[param order] Order dictionary.
-[return] `true` if applied.
 
 ## Source
 

@@ -11,7 +11,7 @@ func _prebuild_needed_profiles(units: Array[ScenarioUnit]) -> void
 
 ## Description
 
-Ensures PathGrid profiles needed by [param units] are available.
+Ensures PathGrid profiles needed by `units` are available.
 Triggers async builds for any missing profiles.
 
 ## Source

@@ -9,12 +9,13 @@
 func enqueue(order: Dictionary, units_by_callsign: Dictionary = {}) -> bool
 ```
 
+- **order**: Order dictionary (may include "callsign" or "unit_id").
+- **units_by_callsign**: Map callsign:String -> unit_id:String used to resolve targets.
+- **Return Value**: true if accepted, false if rejected.
+
 ## Description
 
 Enqueue a single order.
-[param order] Order dictionary (may include "callsign" or "unit_id").
-[param units_by_callsign] Map callsign:String -> unit_id:String used to resolve targets.
-[return] true if accepted, false if rejected.
 
 ## Source
 

@@ -9,11 +9,12 @@
 func _dir_to_vec(dir: String) -> Vector2
 ```
 
+- **dir**: Direction label (e.g. "NE", "southwest").
+- **Return Value**: Vector2 direction (length may be 0 if unknown).
+
 ## Description
 
 Convert a cardinal/intercardinal label to a unit vector (meters space).
-[param dir] Direction label (e.g. "NE", "southwest").
-[return] Vector2 direction (length may be 0 if unknown).
 
 ## Source
 

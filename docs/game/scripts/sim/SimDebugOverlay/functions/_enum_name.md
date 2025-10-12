@@ -9,12 +9,13 @@
 func _enum_name(_enum: Variant, value: int) -> String
 ```
 
+- **_enum**: Enum type marker.
+- **value**: Enum value.
+- **Return Value**: Short label string.
+
 ## Description
 
 Convert enum value to a short human label.
-[param _enum] Enum type marker.
-[param value] Enum value.
-[return] Short label string.
 
 ## Source
 
