@@ -29,6 +29,7 @@ Fixed tick rate (Hz).
 
 - [`func _ready() -> void`](SimWorld/functions/_ready.md) — Initializes tick timing/RNG and wires router signals.
 - [`func init_world(scenario: ScenarioData) -> void`](SimWorld/functions/init_world.md) — Initialize world from a scenario and build unit indices.
+- [`func init_resolution(primary_ids: Array[StringName], scenario: ScenarioData) -> void`](SimWorld/functions/init_resolution.md) — Initialize mission resolution and connect state changes.
 - [`func _process(dt: float) -> void`](SimWorld/functions/_process.md) — Fixed-rate loop; advances the sim in discrete ticks while RUNNING.
 - [`func _step_tick(dt: float) -> void`](SimWorld/functions/_step_tick.md) — Executes a single sim tick (deterministic order).
 - [`func _process_orders() -> void`](SimWorld/functions/_process_orders.md) — Pops ready orders and routes them via the OrdersRouter.
@@ -54,6 +55,7 @@ Fixed tick rate (Hz).
 - [`func _snapshot_unit(su: ScenarioUnit) -> Dictionary`](SimWorld/functions/_snapshot_unit.md) — Build a compact unit snapshot.
 - [`func _transition(prev: State, next: State) -> void`](SimWorld/functions/_transition.md) — Apply a state transition and emit `signal mission_state_changed`.
 - [`func get_unit_debug_path(uid: String) -> PackedVector2Array`](SimWorld/functions/get_unit_debug_path.md) — Planned path for a unit (for debug).
+- [`func _on_state_change_for_resolution(_prev: State, next: State) -> void`](SimWorld/functions/_on_state_change_for_resolution.md) — State change callback: finalize mission resolution.
 - [`func _on_order_applied(order: Dictionary) -> void`](SimWorld/functions/_on_order_applied.md) — Router callback: order applied.
 - [`func _on_order_failed(_order: Dictionary, reason: String) -> void`](SimWorld/functions/_on_order_failed.md) — Router callback: order failed.
 
@@ -105,6 +107,16 @@ func init_world(scenario: ScenarioData) -> void
 
 Initialize world from a scenario and build unit indices.
 `scenario` ScenarioData to load.
+
+### init_resolution
+
+```gdscript
+func init_resolution(primary_ids: Array[StringName], scenario: ScenarioData) -> void
+```
+
+Initialize mission resolution and connect state changes.
+`primary_ids` Objective IDs.
+`scenario` Scenario to initialize.
 
 ### _process
 
@@ -326,6 +338,16 @@ func get_unit_debug_path(uid: String) -> PackedVector2Array
 Planned path for a unit (for debug).
 `uid` Unit id.
 [return] PackedVector2Array of path points (meters).
+
+### _on_state_change_for_resolution
+
+```gdscript
+func _on_state_change_for_resolution(_prev: State, next: State) -> void
+```
+
+State change callback: finalize mission resolution.
+`prev` Previous state.
+`next` Next state.
 
 ### _on_order_applied
 

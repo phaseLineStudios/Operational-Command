@@ -1,6 +1,6 @@
 # SimWorld::_step_tick Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 113–123)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 119–131)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -27,4 +27,6 @@ func _step_tick(dt: float) -> void:
 	_update_morale()
 	_emit_events()
 	_record_replay()
+
+	Game.resolution.tick(dt)
 ```

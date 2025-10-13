@@ -1,6 +1,6 @@
 # SimWorld::_on_order_applied Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 326–331)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 354–359)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

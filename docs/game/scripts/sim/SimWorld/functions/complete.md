@@ -1,6 +1,6 @@
 # SimWorld::complete Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 237–241)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 257–261)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

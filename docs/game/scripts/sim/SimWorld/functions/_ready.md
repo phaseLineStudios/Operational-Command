@@ -1,6 +1,6 @@
 # SimWorld::_ready Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 58–70)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 55–67)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

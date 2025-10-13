@@ -70,7 +70,7 @@
 - [OrdersRouter](../scripts/sim/OrdersRouter.md) — 15 funcs · 6 vars · 2 signals · 0 consts · 0 enums — *inherits* `Node`
 - [SimDebugOverlay](../scripts/sim/SimDebugOverlay.md) — 15 funcs · 19 vars · 0 signals · 0 consts · 0 enums — *inherits* `Control`
 - [SimEvent](../scripts/sim/SimEvent.md) — 1 funcs · 3 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
-- [SimWorld](../scripts/sim/SimWorld.md) — 29 funcs · 15 vars · 5 signals · 0 consts · 1 enums — *inherits* `Node`
+- [SimWorld](../scripts/sim/SimWorld.md) — 31 funcs · 15 vars · 5 signals · 0 consts · 1 enums — *inherits* `Node`
 - [TerrainEffects](../scripts/sim/TerrainEffects.md) — 7 funcs · 13 vars · 0 signals · 0 consts · 0 enums — *inherits* `RefCounted`
 - [TerrainEffectsConfig](../scripts/sim/TerrainEffectsConfig.md) — 0 funcs · 13 vars · 0 signals · 0 consts · 0 enums — *inherits* `Resource`
 

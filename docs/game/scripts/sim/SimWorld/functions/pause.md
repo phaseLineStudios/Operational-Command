@@ -1,6 +1,6 @@
 # SimWorld::pause Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 219–223)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 239–243)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

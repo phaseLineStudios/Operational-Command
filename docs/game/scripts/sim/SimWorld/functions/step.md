@@ -1,6 +1,6 @@
 # SimWorld::step Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 231–235)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 251–255)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

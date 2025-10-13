@@ -1,6 +1,6 @@
 # SimWorld::_update_los Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 142–154)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 150–162)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # SimWorld::init_world Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 73–99)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 70–96)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

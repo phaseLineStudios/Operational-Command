@@ -1,6 +1,6 @@
 # SimWorld::_update_morale Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 173–176)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 193–196)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

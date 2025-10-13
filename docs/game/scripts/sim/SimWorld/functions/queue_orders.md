@@ -1,6 +1,6 @@
 # SimWorld::queue_orders Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 197–200)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 217–220)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

@@ -128,7 +128,7 @@
 - [SetupController](../scripts/test/SetupController.md) — 2 funcs · 5 vars · 0 signals — *inherits* `Node2D`
 - [SimDebugOverlay](../scripts/sim/SimDebugOverlay.md) — 15 funcs · 19 vars · 0 signals — *inherits* `Control`
 - [SimEvent](../scripts/sim/SimEvent.md) — 1 funcs · 3 vars · 0 signals — *inherits* `Node`
-- [SimWorld](../scripts/sim/SimWorld.md) — 29 funcs · 15 vars · 5 signals — *inherits* `Node`
+- [SimWorld](../scripts/sim/SimWorld.md) — 31 funcs · 15 vars · 5 signals — *inherits* `Node`
 - [SlotConfigDialog](../scripts/editors/SlotConfigDialog.md) — 7 funcs · 11 vars · 0 signals — *inherits* `Window`
 - [SlotItem](../scripts/ui/helpers/SlotItem.md) — 12 funcs · 15 vars · 2 signals — *inherits* `PanelContainer`
 - [SlotsList](../scripts/ui/helpers/SlotsList.md) — 4 funcs · 2 vars · 2 signals — *inherits* `VBoxContainer`

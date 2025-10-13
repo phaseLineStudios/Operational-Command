@@ -1,6 +1,6 @@
 # SimWorld::_resolve_combat Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 157–171)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 165–191)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -28,8 +28,20 @@ func _resolve_combat() -> void:
 			continue
 
 		var dmg := combat_controller.calculate_damage(a, d)
-		if dmg > 0.0:
-			emit_signal("engagement_reported", a.id, d.id)
+		if dmg <= 0.0:
+			continue
+
+		emit_signal("engagement_reported", a.id, d.id)
+
+		if typeof(dmg) == TYPE_DICTIONARY:
+			var f := int(d.unit.strength * d.unit.state_strength)
+			var e := int(a.unit.strength * a.unit.state_strength)
+			if f != 0 or e != 0:
+				Game.resolution.add_casualties(f, e)
+
+			if bool(d.unit.state_strength == 0):
+				if d.affiliation == ScenarioUnit.Affiliation.FRIEND:
+					Game.resolution.add_units_lost(1)
 ```
 
 ## References

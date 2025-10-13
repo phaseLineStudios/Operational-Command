@@ -211,6 +211,7 @@
 - [ContentDB::ids_from_resources](../scripts/core/ContentDB/functions/ids_from_resources.md) — Serialize resources to IDs
 - [ContentDB::image_to_png_b64](../scripts/core/ContentDB/functions/image_to_png_b64.md) — Serialize a image to Base 64
 - [LogService::info](../scripts/core/LogService/functions/info.md) — Log INFO level rich message
+- [SimWorld::init_resolution](../scripts/sim/SimWorld/functions/init_resolution.md) — Initialize mission resolution and connect state changes.
 - [MapController::init_terrain](../scripts/core/MapController/functions/init_terrain.md) — Initilizes terrain for scenario
 - [SimWorld::init_world](../scripts/sim/SimWorld/functions/init_world.md) — Initialize world from a scenario and build unit indices.
 - [AmmoSystem::is_critical](../scripts/sim/systems/AmmoSystem/functions/is_critical.md) — True if current/cap <= critical threshold (and > 0).
@@ -961,6 +962,7 @@ MIN_COMMEND_PANEL_HEIGHT.
 - [FuelRefuelPanel::_on_slider_changed](../scripts/ui/FuelRefuelPanel/functions/_on_slider_changed.md)
 - [MissionSelect::_on_start_pressed](../scripts/ui/MissionSelect/functions/_on_start_pressed.md) — Start current mission.
 - [SimDebugOverlay::_on_state](../scripts/sim/SimDebugOverlay/functions/_on_state.md) — Request redraw when mission state changes (e.g.
+- [SimWorld::_on_state_change_for_resolution](../scripts/sim/SimWorld/functions/_on_state_change_for_resolution.md) — State change callback: finalize mission resolution.
 - [SpeechWordlistUpdater::_on_state_changed](../scripts/radio/SpeechWordlistUpdater/functions/_on_state_changed.md) — Handles mission state transitions.
 - [SurfaceLayer::_on_surfaces_changed](../scripts/terrain/SurfaceLayer/functions/_on_surfaces_changed.md) — Handles TerrainData surface mutations and marks affected groups dirty
 - [NewScenarioDialog::_on_terrain_select](../scripts/editors/NewScenarioDialog/functions/_on_terrain_select.md)
