@@ -125,7 +125,7 @@ func _step_tick(dt: float) -> void:
 	_update_morale()
 	_emit_events()
 	_record_replay()
-	
+
 	Game.resolution.tick(dt)
 
 
@@ -175,9 +175,9 @@ func _resolve_combat() -> void:
 		var dmg := combat_controller.calculate_damage(a, d)
 		if dmg <= 0.0:
 			continue
-			
+
 		emit_signal("engagement_reported", a.id, d.id)
-		
+
 		if typeof(dmg) == TYPE_DICTIONARY:
 			var f := int(d.unit.strength * d.unit.state_strength)
 			var e := int(a.unit.strength * a.unit.state_strength)
