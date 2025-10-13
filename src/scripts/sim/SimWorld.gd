@@ -40,16 +40,13 @@ var _dt_accum := 0.0
 var _tick_dt := 0.2
 var _tick_idx := 0
 var _rng := RandomNumberGenerator.new()
-
 var _orders: OrdersQueue = OrdersQueue.new()
-
 var _scenario: ScenarioData
 var _units_by_id: Dictionary = {}
 var _units_by_callsign: Dictionary = {}
 var _playable_by_callsign: Dictionary = {}
 var _friendlies: Array[ScenarioUnit] = []
 var _enemies: Array[ScenarioUnit] = []
-
 var _replay: Array[Dictionary] = []
 var _last_contacts: PackedStringArray = []
 
@@ -97,6 +94,15 @@ func init_world(scenario: ScenarioData) -> void:
 	_transition(State.INIT, State.RUNNING)
 
 
+## Initialize mission resolution and connect state changes.
+## [param primary_ids] Objective IDs.
+## [param scenario] Scenario to initialize.
+func init_resolution(primary_ids: Array[StringName], scenario: ScenarioData) -> void:
+	Game.resolution.start(primary_ids, scenario.id)
+	if not mission_state_changed.is_connected(_on_state_change_for_resolution):
+		mission_state_changed.connect(_on_state_change_for_resolution)
+
+
 ## Fixed-rate loop; advances the sim in discrete ticks while RUNNING.
 ## [param dt] Frame delta seconds.
 func _process(dt: float) -> void:
@@ -119,6 +125,8 @@ func _step_tick(dt: float) -> void:
 	_update_morale()
 	_emit_events()
 	_record_replay()
+	
+	Game.resolution.tick(dt)
 
 
 ## Pops ready orders and routes them via the OrdersRouter.
@@ -165,8 +173,20 @@ func _resolve_combat() -> void:
 			continue
 
 		var dmg := combat_controller.calculate_damage(a, d)
-		if dmg > 0.0:
-			emit_signal("engagement_reported", a.id, d.id)
+		if dmg <= 0.0:
+			continue
+			
+		emit_signal("engagement_reported", a.id, d.id)
+		
+		if typeof(dmg) == TYPE_DICTIONARY:
+			var f := int(d.unit.strength * d.unit.state_strength)
+			var e := int(a.unit.strength * a.unit.state_strength)
+			if f != 0 or e != 0:
+				Game.resolution.add_casualties(f, e)
+
+			if bool(d.unit.state_strength == 0):
+				if d.affiliation == ScenarioUnit.Affiliation.FRIEND:
+					Game.resolution.add_units_lost(1)
 
 
 ## Updates morale (placeholder).
@@ -319,6 +339,14 @@ func get_unit_debug_path(uid: String) -> PackedVector2Array:
 	if su == null:
 		return []
 	return su.move_path
+
+
+## State change callback: finalize mission resolution.
+## [param prev] Previous state.
+## [param next] Next state.
+func _on_state_change_for_resolution(_prev: State, next: State) -> void:
+	if next == State.COMPLETED:
+		Game.resolution.finalize(false)
 
 
 ## Router callback: order applied.
