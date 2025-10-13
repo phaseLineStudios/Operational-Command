@@ -36,39 +36,38 @@ func combat_loop(attacker: UnitData, defender: UnitData) -> void:
 		unit_switch = attacker
 		attacker = defender
 		defender = unit_switch
-		
 
 ## Prototype of combat damage calculation, only using stats 
 func calculate_damage(attacker: UnitData, defender: UnitData) -> void:
-	var attacker_final_attackpower: float = attacker.strength * attacker.morale * attacker.attack
-	var defender_final_defensepower: float = defender.strength * defender.morale * defender.defense
+	var attacker_final_attackpower: float = attacker.strength * attacker._morale_sys.morale_effectiveness_mul() * attacker.attack
+	var defender_final_defensepower: float = defender.strength * defender._morale_sys.morale_effectiveness_mul() * defender.defense
 	
 	if attacker_final_attackpower - defender_final_defensepower > 0:
 		defender.strength = defender.strength - floor((attacker_final_attackpower 
 				- defender_final_defensepower) * 0.1 / defender.strength)
-		if defender.morale > 0:
-			defender.morale -= 0.05
+		if defender._morale_sys.getMorale() > 0:
+			defender._morale_sys.apply_morale_delta(-0.05, "combat_loss")
 	else:
 		defender.strength -= 1
-		if attacker.morale < 1:
-			attacker.morale -= 0.05
+		if attacker._morale_sys.get_morale() < 1:
+			attacker._morale_sys.apply_morale_delta(-0.05, "combat_loss")
 	return
 
 ## Check the various conditions for if the combat is finished
 func check_abort_condition(attacker: UnitData, defender: UnitData) -> void:
-	
 	## insert how destroyed units should be handled here and emit signal
 	if defender.strength <= 0: 
 		print(defender.id + " is destroyed")
-		if attacker.morale <= 0.8:
-			attacker.morale += 0.2
+		attacker._morale_sys.apply_morale_delta(0.2, "won battle")
 		unit_destroyed.emit()
 		abort_condition = 1
 		return
 		
 	## insert how surrendering defenders should be handled here and emit signal
-	elif defender.morale <= 0.2:
+	elif defender.MoraleStystem.get_morale() <= 0.2:
 		print(defender.id + " is surrendering")
+		defender._morale_sys.set_morale(0.0,"surrendered")
+		attacker._morale_sys.apply_morale_delta(0.2, "enemy surrendered")
 		unit_surrendered.emit()
 		abort_condition = 1
 		return
@@ -76,6 +75,7 @@ func check_abort_condition(attacker: UnitData, defender: UnitData) -> void:
 	## insert how retreating units should be handled here and emit signal
 	if called_retreat:
 		print(defender.id + " is retreating")
+		attacker._morale_sys.apply_morale_delta(0.1,"enemy retreating")
 		unit_retreated.emit()
 		abort_condition = 1
 		return
@@ -83,9 +83,9 @@ func check_abort_condition(attacker: UnitData, defender: UnitData) -> void:
 ##check unit mid combat status for testing of combat status
 func print_unit_status(attacker: UnitData, defender: UnitData) -> void:
 	print(attacker.id)
-	print(attacker.morale)
+	print(attacker._morale_sys.getmorale())
 	print(attacker.strength)
 	print(defender.id)
-	print(defender.morale)
+	print(defender._morale_sys.getmorale())
 	print(defender.strength)
 	return

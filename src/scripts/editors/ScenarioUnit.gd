@@ -48,6 +48,17 @@ var _move_path: PackedVector2Array = []
 var _move_path_idx := 0
 var _move_last_eta_s := 0.0
 var _move_paused := false
+var _morale_sys: MoraleSystem
+
+#initializing moraleSystem
+func _init() -> void:
+	_morale_sys = MoraleSystem.new(id, self)
+
+func _on_morale_changed(unit_id: String, prev: float, cur: float, source: String) -> void:
+	print("[%s] Morale changed from %.2f → %.2f (source: %s)" % [unit_id, prev, cur, source])
+
+func _on_morale_state_changed(unit_id: String, prev: int, cur: int) -> void:
+	print("[%s] Morale state changed: %s → %s" % [unit_id, prev, cur])
 
 ## Plan a path from current position to dest_m using PathGrid.
 func plan_move(grid: PathGrid, dest_m: Vector2) -> bool:
@@ -118,6 +129,8 @@ func cancel_move() -> void:
 
 ## Advance movement by dt seconds on PathGrid (virtual position only).
 func tick(dt: float, grid: PathGrid) -> void:
+	if _morale_sys:
+		_morale_sys.tick(dt)
 	if _move_state != MoveState.moving or _move_paused or _move_path.is_empty():
 		return
 
