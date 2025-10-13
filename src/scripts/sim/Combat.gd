@@ -59,6 +59,7 @@ func check_abort_condition(attacker: UnitData, defender: UnitData) -> void:
 	if defender.strength <= 0: 
 		print(defender.id + " is destroyed")
 		attacker._morale_sys.apply_morale_delta(0.2, "won battle")
+		attacker._morale_sys.nearby_morale_change(0.05)
 		unit_destroyed.emit()
 		abort_condition = 1
 		return
@@ -68,6 +69,7 @@ func check_abort_condition(attacker: UnitData, defender: UnitData) -> void:
 		print(defender.id + " is surrendering")
 		defender._morale_sys.set_morale(0.0,"surrendered")
 		attacker._morale_sys.apply_morale_delta(0.2, "enemy surrendered")
+		attacker._morale_sys.nearby_ally_morale_change(0.05)
 		unit_surrendered.emit()
 		abort_condition = 1
 		return
@@ -76,6 +78,7 @@ func check_abort_condition(attacker: UnitData, defender: UnitData) -> void:
 	if called_retreat:
 		print(defender.id + " is retreating")
 		attacker._morale_sys.apply_morale_delta(0.1,"enemy retreating")
+		attacker.attacker._morale_sys.nearby_ally_morale_change(0.05)
 		unit_retreated.emit()
 		abort_condition = 1
 		return
