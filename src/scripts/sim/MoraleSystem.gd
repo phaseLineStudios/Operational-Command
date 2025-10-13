@@ -1,10 +1,8 @@
 extends RefCounted
 class_name MoraleSystem
-# adjust on losses and wins [X]
-# allied win [X]
-# weather [X]
-# long idle (on frontline?) [X]
-# safe rest []
+
+#Morale system for units
+#handles changes in morale and decay of morale over time
 
 signal morale_changed(unit_id, prev, cur, source)
 signal morale_state_changed(unit_id, prev, cur)
@@ -45,20 +43,23 @@ func apply_morale_delta(delta: float, source: String = "delta") -> void:
 		set_morale(morale + delta, source)
 
 func get_morale_state(value: float = morale) -> int:
-	if value >= 0.6: return MoraleState.STEADY
-	elif value >= 0.3: return MoraleState.SHAKEN
-	else: return MoraleState.BROKEN
+	if value >= 0.6: return MoraleState.STEADY     #0
+	elif value >= 0.3: return MoraleState.SHAKEN   #1
+	else: return MoraleState.BROKEN                #2
+
+func is_broken() -> bool:
+	if get_morale_state() == MoraleState.BROKEN:
+		return true
+	else:
+		return false
 
 #sjekke om i safe område
 func tick(dt) -> void:
 	#idle
 	if owner.move_state() == ScenarioUnit.MoveState.idle:
 		apply_morale_delta(-0.001 * dt, "idle_decay")
-
-	# no safe zones implemented
-	#if is_in_safe_zone():
-		#apply_morale_delta(+0.02 * dt, "safe_zone")
-
+	#check if saferesting
+	safe_rest()
 	#weather
 	if scenario.rain > 10.0:
 		apply_morale_delta(-0.002 * dt, "heavy_rain")
@@ -88,9 +89,9 @@ func nearby_ally_morale_change(amount: float, source: String = "nearby victory")
 
 func morale_effectiveness_mul() -> float:
 	var state = get_morale_state()
-	if state == 2:
+	if state == MoraleState.SHAKEN:
 		return 0.9
-	elif state == 3:
+	elif state == MoraleState.BROKEN:
 		return 0.7
 	else:
 		return 1
@@ -105,7 +106,6 @@ func safe_rest() -> void:
 			continue
 		if other.affiliation == owner.affiliation:
 			continue
-	
 		var dist = other.position_m.distance_to(owner.position_m)
 		if dist <= min_distance:
 			safe = false
