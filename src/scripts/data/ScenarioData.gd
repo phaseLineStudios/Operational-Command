@@ -1,8 +1,8 @@
-extends Resource
 class_name ScenarioData
+extends Resource
 
 ## Enumeration of scenario difficulty levels
-enum scenarioDifficulty { easy, normal, hard }
+enum ScenarioDifficulty { EASY, NORMAL, HARD }
 
 ## Unique identifier for this scenario
 @export var id: String
@@ -19,7 +19,7 @@ enum scenarioDifficulty { easy, normal, hard }
 
 @export_category("Meta")
 ## Difficulty of the scenario
-@export var difficulty: scenarioDifficulty
+@export var difficulty: ScenarioDifficulty
 ## Position of the scenario on the campaign/selection map
 @export var map_position: Vector2
 ## Order index of the scenario in a campaign sequence
@@ -73,6 +73,7 @@ enum scenarioDifficulty { easy, normal, hard }
 
 var preview: Texture2D
 
+
 ## Serialize data to JSON
 func serialize() -> Dictionary:
 	var recruit_ids: Array = []
@@ -84,12 +85,12 @@ func serialize() -> Dictionary:
 	for unit in units:
 		if unit is ScenarioUnit:
 			placed_units.append(unit.serialize())
-			
+
 	var placed_triggers: Array = []
 	for trigger in triggers:
 		if trigger is ScenarioTrigger:
 			placed_triggers.append(trigger.serialize())
-			
+
 	var placed_tasks: Array = []
 	for task in tasks:
 		if task is ScenarioTask:
@@ -100,37 +101,30 @@ func serialize() -> Dictionary:
 		"title": title,
 		"description": description,
 		"preview_path": preview_path,
-		"terrain_path": (ContentDB.res_path_or_null(terrain)),
-		"briefing_id": (briefing.id as Variant if briefing else null as Variant),
+		"terrain_path": ContentDB.res_path_or_null(terrain),
+		"briefing_id": briefing.id as Variant if briefing else null as Variant,
 		"difficulty": int(difficulty),
 		"map_position": _vec2_to_dict(map_position),
 		"scenario_order": scenario_order,
-
-		"weather": {
-			"rain": rain,
-			"fog_m": fog_m,
-			"wind_dir": wind_dir,
-			"wind_speed_m": wind_speed_m
-		},
-
-		"datetime": {
-			"year": year, "month": month, "day": day, "hour": hour, "minute": minute
-		},
-
-		"units": {
+		"weather":
+		{"rain": rain, "fog_m": fog_m, "wind_dir": wind_dir, "wind_speed_m": wind_speed_m},
+		"datetime": {"year": year, "month": month, "day": day, "hour": hour, "minute": minute},
+		"units":
+		{
 			"unit_points": unit_points,
 			"unit_slots": _serialize_unit_slots(unit_slots),
 			"unit_recruits_ids": recruit_ids,
 			"unit_reserves": _serialize_unit_slots(unit_reserves)
 		},
-
-		"content": {
+		"content":
+		{
 			"units": placed_units,
 			"triggers": placed_triggers,
 			"tasks": placed_tasks,
 			"drawings": drawings
 		}
 	}
+
 
 ## Deserialize data from JSON
 static func deserialize(json: Variant) -> ScenarioData:
@@ -142,7 +136,7 @@ static func deserialize(json: Variant) -> ScenarioData:
 	s.title = json.get("title", s.title)
 	s.description = json.get("description", s.description)
 	s.preview_path = json.get("preview_path", s.preview_path)
-	
+
 	var terr_path: Variant = json.get("terrain_path", null)
 	if typeof(terr_path) == TYPE_STRING and terr_path != "":
 		var terr: Variant = ContentDB.load_res(String(terr_path))
@@ -193,14 +187,14 @@ static func deserialize(json: Variant) -> ScenarioData:
 			for unit in placed_units:
 				scenario_units.append(ScenarioUnit.deserialize(unit))
 			s.units = scenario_units
-			
+
 		var placed_triggers: Array = content.get("triggers", [])
 		if typeof(placed_triggers) == TYPE_ARRAY:
 			var scenario_triggers: Array[ScenarioTrigger] = []
 			for trig in placed_triggers:
 				scenario_triggers.append(ScenarioTrigger.deserialize(trig))
 			s.triggers = scenario_triggers
-			
+
 		var placed_tasks: Array = content.get("tasks", [])
 		if typeof(placed_tasks) == TYPE_ARRAY:
 			var scenario_tasks: Array[ScenarioTask] = []
@@ -217,8 +211,10 @@ static func deserialize(json: Variant) -> ScenarioData:
 
 	return s
 
+
 static func _vec2_to_dict(v: Vector2) -> Dictionary:
 	return {"x": v.x, "y": v.y}
+
 
 static func _dict_to_vec2(d: Variant) -> Vector2:
 	if typeof(d) == TYPE_DICTIONARY and d.has("x") and d.has("y"):
@@ -226,6 +222,7 @@ static func _dict_to_vec2(d: Variant) -> Vector2:
 	if typeof(d) == TYPE_ARRAY and d.size() >= 2:
 		return Vector2(float(d[0]), float(d[1]))
 	return Vector2.ZERO
+
 
 func _serialize_unit_slots(arr: Array) -> Array:
 	var out: Array = []
@@ -236,6 +233,7 @@ func _serialize_unit_slots(arr: Array) -> Array:
 
 		out.append(item.serialize())
 	return out
+
 
 static func _deserialize_unit_slots(payload: Variant) -> Array[UnitSlotData]:
 	var out: Array[UnitSlotData] = []
@@ -251,12 +249,16 @@ static func _deserialize_unit_slots(payload: Variant) -> Array[UnitSlotData]:
 			out.append(slot)
 	return out
 
+
 static func _difficulty_from(json_value: Variant) -> int:
 	if typeof(json_value) == TYPE_INT:
 		return clamp(int(json_value), 0, 2)
 	if typeof(json_value) == TYPE_STRING:
 		match String(json_value).to_lower():
-			"easy": return scenarioDifficulty.easy
-			"normal": return scenarioDifficulty.normal
-			"hard": return scenarioDifficulty.hard
-	return scenarioDifficulty.normal
+			"easy":
+				return ScenarioDifficulty.EASY
+			"normal":
+				return ScenarioDifficulty.NORMAL
+			"hard":
+				return ScenarioDifficulty.HARD
+	return ScenarioDifficulty.NORMAL

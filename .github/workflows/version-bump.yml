@@ -1,0 +1,50 @@
+name: Version Bump
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    if: ${{ !contains(github.event.head_commit.message || '', '[no bump]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Bump Godot version (patch)
+        id: bump
+        run: |
+          python tools/bump_godot_version.py ./src/project.godot --part patch > .bump_out
+          echo "out<<EOF" >> $GITHUB_OUTPUT
+          cat .bump_out >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "BUMP_MSG=$(cat .bump_out)" >> $GITHUB_ENV
+
+      - name: Commit & push if changed
+        run: |
+          if git diff --quiet project.godot; then
+            echo "No version change; exiting."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- ./src/project.godot
+          git commit -m "chore: bump version ${BUMP_MSG} [no bump]"
+          git push
+        
+      - name: Create tag
+        run: |
+          NEW_VER=$(grep -Po '^\s*config/version\s*=\s*"\K[^"]+' "./src/project.godot" || true)
+          if [ -n "$NEW_VER" ]; then
+            git tag -a "v${NEW_VER}" -m "Version ${NEW_VER}" || true
+            git push --tags || true
+          fi

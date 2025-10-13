@@ -1,5 +1,5 @@
-extends Node
 class_name Radio
+extends Node
 ## Simulated field radio: PTT state, audio FX, and routing to STT.
 ##
 ## Plays squelch/static, shows UI state, and opens/closes the mic path to the
@@ -13,11 +13,13 @@ signal radio_result(text: String)
 ## Turn on/off the radio stream
 var _tx := false
 
+
 ## Connect to STTService signals.
 func _ready() -> void:
-	STTService.partial.connect(func(t):emit_signal("radio_partial", t))
+	STTService.partial.connect(func(t): emit_signal("radio_partial", t))
 	STTService.result.connect(_on_result)
 	STTService.error.connect(func(m): push_error("[Radio] STT error: %s" % m))
+
 
 ## Handle PTT input.
 func _unhandled_input(event: InputEvent) -> void:
@@ -32,21 +34,24 @@ func _unhandled_input(event: InputEvent) -> void:
 		_stop_tx()
 		get_viewport().set_input_as_handled()
 
+
 ## Temporary for testing
 ## TODO Remove this
 func _on_result(t):
+	LogService.trace("Heard: %s" % t, "Radio.gd:39")
 	OrdersParser.parse(t)
-	print("[Radio] Heard: %s" % t)
 	emit_signal("radio_result", t)
+
 
 ## Manually enable the radio / STT.
 func _start_tx() -> void:
 	if _tx:
 		return
-	print("PTT Pressed")
+	LogService.info("PTT Pressed", "Radio.gd:46")
 	_tx = true
 	STTService.start()
 	emit_signal("radio_on")
+
 
 ## Manually disable the radio / STT.
 func _stop_tx() -> void:
@@ -55,7 +60,8 @@ func _stop_tx() -> void:
 	_tx = false
 	STTService.stop()
 	emit_signal("radio_off")
-	print("PTT Released")
+	LogService.info("PTT Released", "Radio.gd:58")
+
 
 ## Ensure we stop capture when the radio node leaves.
 func _exit_tree() -> void:

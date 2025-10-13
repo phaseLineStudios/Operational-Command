@@ -1,0 +1,75 @@
+[gd_scene load_steps=2 format=3 uid="uid://b2jhlarqtnqfi"]
+
+[ext_resource type="Script" uid="uid://e3k3lbksoqrw" path="res://scripts/ui/FuelRefuelPanel.gd" id="1_jr753"]
+
+[node name="FuelRefuelPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jr753")
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -200.0
+offset_right = 320.0
+offset_bottom = 220.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Header" type="HBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="Panel/VBox/Header"]
+layout_mode = 2
+text = "Refuel Units"
+
+[node name="DepotLabel" type="Label" parent="Panel/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Depot: 0.0"
+horizontal_alignment = 2
+
+[node name="RowsScroll" type="ScrollContainer" parent="Panel/VBox"]
+custom_minimum_size = Vector2(620, 260)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Rows" type="VBoxContainer" parent="Panel/VBox/RowsScroll"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Footer" type="HBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+
+[node name="FullButton" type="Button" parent="Panel/VBox/Footer"]
+layout_mode = 2
+text = "Full"
+
+[node name="HalfButton" type="Button" parent="Panel/VBox/Footer"]
+layout_mode = 2
+text = "Half"
+
+[node name="Spacer" type="Control" parent="Panel/VBox/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CancelButton" type="Button" parent="Panel/VBox/Footer"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="CommitButton" type="Button" parent="Panel/VBox/Footer"]
+layout_mode = 2
+text = "Commit"

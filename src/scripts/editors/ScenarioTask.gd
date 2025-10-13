@@ -1,6 +1,12 @@
-extends Resource
 class_name ScenarioTask
+extends Resource
 ## A placed task for a unit with per-instance params and linking
+
+## Where to find task scripts
+const TASKS_DIR := "res://scripts/editors/tasks"
+
+static var _task_by_typeid: Dictionary = {}
+static var _task_index_built := false
 
 ## Unique Id within scenario
 @export var id: String
@@ -17,11 +23,6 @@ class_name ScenarioTask
 ## Link to previous ScenarioTask in the chain
 @export var prev_index: int = -1
 
-## Where to find task scripts
-const TASKS_DIR := "res://scripts/editors/tasks"
-
-static var _task_by_typeid: Dictionary = {}
-static var _task_index_built := false
 
 ## Convert this task into a JSON-safe dictionary
 func serialize() -> Dictionary:
@@ -35,6 +36,7 @@ func serialize() -> Dictionary:
 		"prev_index": prev_index,
 	}
 
+
 ## Create/restore from a JSON dictionary
 static func deserialize(d: Dictionary) -> ScenarioTask:
 	var inst := ScenarioTask.new()
@@ -45,12 +47,13 @@ static func deserialize(d: Dictionary) -> ScenarioTask:
 
 	inst.position_m = ContentDB.v2_from(d.get("position_m"))
 
-	inst.params      = d.get("params", {})
-	inst.unit_index  = int(d.get("unit_index", -1))
-	inst.next_index  = int(d.get("next_index", -1))
-	inst.prev_index  = int(d.get("prev_index", -1))
+	inst.params = d.get("params", {})
+	inst.unit_index = int(d.get("unit_index", -1))
+	inst.next_index = int(d.get("next_index", -1))
+	inst.prev_index = int(d.get("prev_index", -1))
 
 	return inst
+
 
 ## Build/refresh the type_id -> Script index
 static func _ensure_task_index() -> void:
@@ -64,12 +67,16 @@ static func _ensure_task_index() -> void:
 	dir.list_dir_begin()
 	while true:
 		var f := dir.get_next()
-		if f == "": break
-		if dir.current_is_dir(): continue
-		if not f.to_lower().ends_with(".gd"): continue
+		if f == "":
+			break
+		if dir.current_is_dir():
+			continue
+		if not f.to_lower().ends_with(".gd"):
+			continue
 		var path := "%s/%s" % [TASKS_DIR, f]
 		var scr := load(path)
-		if scr == null: continue
+		if scr == null:
+			continue
 		var obj: Variant = scr.new()
 		var tid := ""
 		if obj is Object and obj.has_method("get"):
@@ -82,6 +89,7 @@ static func _ensure_task_index() -> void:
 			obj = null
 	dir.list_dir_end()
 	_task_index_built = true
+
 
 ## Resolve and instance a UnitBaseTask by type_id (or null)
 static func _make_task_from_type_id(type_id: StringName) -> UnitBaseTask:

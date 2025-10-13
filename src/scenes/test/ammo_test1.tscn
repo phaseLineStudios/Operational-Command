@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=3 uid="uid://dfx7tmagxnar5"]
+
+[ext_resource type="Script" uid="uid://gf5ukx6el8n3" path="res://scripts/test/AmmoTest.gd" id="1_14kud"]
+
+[node name="AmmoTest" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_14kud")
+
+[node name="UI" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Row1" type="HBoxContainer" parent="UI"]
+layout_mode = 2
+
+[node name="LblShooter" type="Label" parent="UI/Row1"]
+layout_mode = 2
+
+[node name="LblLogi" type="Label" parent="UI/Row1"]
+layout_mode = 2
+
+[node name="LblLink" type="Label" parent="UI/Row1"]
+layout_mode = 2
+
+[node name="Row2" type="HBoxContainer" parent="UI"]
+layout_mode = 2
+
+[node name="BtnFire" type="Button" parent="UI/Row2"]
+layout_mode = 2
+text = "Fire 5"
+
+[node name="BtnAutoFire" type="Button" parent="UI/Row2"]
+layout_mode = 2
+text = "Auto Fire"
+
+[node name="BtnNear" type="Button" parent="UI/Row2"]
+layout_mode = 2
+text = "Move Logi Near"
+
+[node name="BtnFar" type="Button" parent="UI/Row2"]
+layout_mode = 2
+text = "Move Logi Far"
+
+[node name="BtnReset" type="Button" parent="UI/Row2"]
+layout_mode = 2
+text = "Reset"
+
+[node name="Log" type="RichTextLabel" parent="UI"]
+layout_mode = 2
+
+[node name="FireTimer" type="Timer" parent="."]
+wait_time = 0.7

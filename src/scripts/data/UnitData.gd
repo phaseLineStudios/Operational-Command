@@ -1,9 +1,9 @@
 @tool
-extends Resource
 class_name UnitData
+extends Resource
 
 ## Enumeration of unit sizes
-enum unitSize { Team, Squad, Platoon, Company, Battalion }
+enum UnitSize { TEAM, SQUAD, PLATOON, COMPANY, BATTALION }
 
 ## Unique identifier for the unit
 @export var id: String
@@ -24,11 +24,11 @@ enum unitSize { Team, Squad, Platoon, Company, Battalion }
 
 @export_category("Meta")
 ## Organizational size of the unit
-@export var size: unitSize = unitSize.Platoon
+@export var size: UnitSize = UnitSize.PLATOON
 ## Number of personnel in the unit at full strength
 @export var strength: int = 36
 ## Dictionary of equipment definitions
-@export var equipment: Dictionary
+@export var equipment: Dictionary = {}
 ## Average experience level
 @export var experience: float = 0.0
 
@@ -60,7 +60,7 @@ enum unitSize { Team, Squad, Platoon, Company, Battalion }
 ## Supply throughput { "supply_type": (int)amount }
 @export var throughput: Dictionary = {}
 ## Equipment tag codes associated with this unit [ "AMMO_PALLET" ]
-@export var equipment_tags: Array[String]
+@export var equipment_tags: Array[String] = []
 
 @export_category("AI")
 ## Doctrine code used by the AI for this unit.
@@ -69,22 +69,41 @@ enum unitSize { Team, Squad, Platoon, Company, Battalion }
 @export_category("Editor meta")
 @export var unit_category: UnitCategoryData
 
-## Serialzie this unit to JSON
+## Ammunition variables
+@export_category("Ammunition")
+## Ammo capacity per type, e.g. `{ "small_arms": 30, "he": 10 }`.
+@export var ammunition: Dictionary = {}  # {type: cap}
+## Current ammo per type for this unit, same keys as `ammunition`.
+@export var state_ammunition: Dictionary = {}  # {type: current}
+## Ratio (0..1): when `current/capacity <= ammunition_low_threshold` emit “Bingo ammo”.
+@export_range(0.0, 1.0, 0.01) var ammunition_low_threshold: float = 0.25
+## Ratio (0..1): when `current/capacity <= ammunition_critical_threshold` emit “Ammo critical”.
+@export_range(0.0, 1.0, 0.01) var ammunition_critical_threshold: float = 0.1
+
+## Logistics variables, is part of ammunition and we can add stuff here later, like fuel
+@export_category("Logistics")
+## Transfer rate (rounds per second) a logistics unit can push to a recipient in range.
+@export var supply_transfer_rate: float = 10.0
+## Transfer radius in meters within which resupply is possible.
+@export var supply_transfer_radius_m: float = 30.0
+
+
+## Serialize this unit to JSON
 func serialize() -> Dictionary:
 	return {
 		"id": id,
 		"title": title,
-		"icon_path": (icon.resource_path as Variant if icon and icon.resource_path != "" else null as Variant),
+		"icon_path":
+		icon.resource_path as Variant if icon and icon.resource_path != "" else null as Variant,
 		"role": role,
 		"allowed_slots": allowed_slots.duplicate(),
 		"cost": cost,
-
 		"size": int(size),
 		"strength": strength,
 		"equipment": equipment.duplicate(),
 		"experience": experience,
-
-		"stats": {
+		"stats":
+		{
 			"attack": attack,
 			"defense": defense,
 			"spot_m": spot_m,
@@ -92,22 +111,26 @@ func serialize() -> Dictionary:
 			"morale": morale,
 			"speed_kph": speed_kph
 		},
-
-		"state": {
+		"state":
+		{
 			"state_strength": state_strength,
 			"state_injured": state_injured,
 			"state_equipment": state_equipment,
 			"cohesion": cohesion
 		},
-		
-		"editor": {
-			"unit_category": unit_category.id
-		},
-
+		"editor": {"unit_category": unit_category.id},
 		"throughput": throughput.duplicate(),
 		"equipment_tags": equipment_tags.duplicate(),
-		"doctrine": doctrine
+		"doctrine": doctrine,
+		# --- Ammo + Logistics persistence ---
+		"ammunition": ammunition.duplicate(),
+		"state_ammunition": state_ammunition.duplicate(),
+		"ammunition_low_threshold": ammunition_low_threshold,
+		"ammunition_critical_threshold": ammunition_critical_threshold,
+		"supply_transfer_rate": supply_transfer_rate,
+		"supply_transfer_radius_m": supply_transfer_radius_m,
 	}
+
 
 ## Deserialize Unit JSON
 static func deserialize(data: Variant) -> UnitData:
@@ -133,7 +156,7 @@ static func deserialize(data: Variant) -> UnitData:
 		if tex is Texture2D:
 			u.icon = tex
 
-	u.size = int(data.get("size", u.size)) as unitSize
+	u.size = int(data.get("size", u.size)) as UnitSize
 	u.strength = int(data.get("strength", u.strength))
 	u.equipment = data.get("equipment", u.equipment)
 	u.experience = float(data.get("experience", u.experience))
@@ -153,7 +176,7 @@ static func deserialize(data: Variant) -> UnitData:
 		u.state_injured = float(state.get("state_injured", u.state_injured))
 		u.state_equipment = float(state.get("state_equipment", u.state_equipment))
 		u.cohesion = float(state.get("cohesion", u.cohesion))
-		
+
 	var editor: Dictionary = data.get("editor", {})
 	if typeof(editor) == TYPE_DICTIONARY:
 		u.unit_category = ContentDB.get_unit_category(editor.get("unit_category", u.unit_category))
@@ -161,10 +184,35 @@ static func deserialize(data: Variant) -> UnitData:
 	u.throughput = data.get("throughput", u.throughput)
 	u.doctrine = data.get("doctrine", u.doctrine)
 	var equipment_t = data.get("equipment_tags", null)
-	if typeof(slots) == TYPE_ARRAY:
-		var tmp_slots: Array[String] = []
+	if typeof(equipment_t) == TYPE_ARRAY:
+		var tmp_tags: Array[String] = []
 		for e in equipment_t:
-			tmp_slots.append(str(e))
-		u.equipment_tags = tmp_slots
+			tmp_tags.append(str(e))
+		u.equipment_tags = tmp_tags
+
+	# --- Ammo + Logistics fields ---
+	var am_caps = data.get("ammunition", null)
+	if typeof(am_caps) == TYPE_DICTIONARY:
+		u.ammunition = am_caps
+
+	var am_state = data.get("state_ammunition", null)
+	if typeof(am_state) == TYPE_DICTIONARY:
+		u.state_ammunition = am_state
+
+	u.ammunition_low_threshold = float(
+		data.get("ammunition_low_threshold", u.ammunition_low_threshold)
+	)
+	u.ammunition_critical_threshold = float(
+		data.get("ammunition_critical_threshold", u.ammunition_critical_threshold)
+	)
+	u.supply_transfer_rate = float(data.get("supply_transfer_rate", u.supply_transfer_rate))
+	u.supply_transfer_radius_m = float(
+		data.get("supply_transfer_radius_m", u.supply_transfer_radius_m)
+	)
+
+	# Backfill ammo state if missing (for older saves)
+	if u.state_ammunition.is_empty() and not u.ammunition.is_empty():
+		for k in u.ammunition.keys():
+			u.state_ammunition[k] = int(u.ammunition[k])
 
 	return u

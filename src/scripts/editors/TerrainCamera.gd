@@ -1,5 +1,5 @@
-extends Camera2D
 class_name TerrainCamera
+extends Camera2D
 
 @export var pan_button: MouseButton = MOUSE_BUTTON_MIDDLE
 @export var pan_speed: float = 1.0
@@ -13,11 +13,13 @@ var _pan_cam_start: Vector2
 var _pan_mouse_world_start: Vector2
 var _delta_world: Vector2
 
+
 func _ready() -> void:
 	# Avoid anything that might fight direct positioning
 	position_smoothing_enabled = false
 	set_drag_horizontal_enabled(false)
 	set_drag_vertical_enabled(false)
+
 
 func _input(event: InputEvent) -> void:
 	# Toggle panning and record anchors
@@ -38,6 +40,7 @@ func _input(event: InputEvent) -> void:
 			_zoom_at_mouse(1.0 + zoom_step)
 			return
 
+
 func _process(_dt: float) -> void:
 	if !_panning:
 		return
@@ -46,6 +49,7 @@ func _process(_dt: float) -> void:
 	_delta_world += _pan_mouse_world_start - now_world
 	var dir := -1.0 if invert_pan else 1.0
 	position = _pan_cam_start + dir * _delta_world * pan_speed
+
 
 func _zoom_at_mouse(zoom_scale: float) -> void:
 	# Maintain cursor-anchored zoom (works fine during a pan, too)

@@ -5,7 +5,8 @@
 <!-- List all related issues -->
 
 ## Checklist before requesting a review
-- [ ] I have performed a self-review of my code
-- [ ] I have tested my code
-- [ ] I have requested a review in discord
-- [ ] I have moved the related issues to the review section in the [SCRUM Board](https://github.com/orgs/operationalCommandTeam/projects/1)
+- [ ] I have performed a self-review of my code.
+- [ ] I have tested my code.
+- [ ] I have documented my code and re-generated docs with `make docs`.
+- [ ] I have requested a review in discord.
+- [ ] I have moved the related issues to the review section in the [SCRUM Board](https://github.com/orgs/operationalCommandTeam/projects/1).

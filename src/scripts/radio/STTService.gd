@@ -22,15 +22,16 @@ var _segment := ""
 var _last_partial := ""
 var _last_emitted := ""
 
-var _effect : AudioEffectCapture
+var _effect: AudioEffectCapture
 var _stt: Vosk
+
 
 func _ready() -> void:
 	var bus := AudioServer.get_bus_index(CAPTURE_BUS)
 	if bus < 0:
 		emit_signal("error", "Audio bus '%s' not found." % CAPTURE_BUS)
 		return
-	
+
 	for i in AudioServer.get_bus_effect_count(bus):
 		var eff := AudioServer.get_bus_effect(bus, i)
 		if eff is AudioEffectCapture:
@@ -39,10 +40,11 @@ func _ready() -> void:
 	if _effect == null:
 		emit_signal("error", "No AudioEffectCapture on bus '%s'." % CAPTURE_BUS)
 		return
-	
+
 	_stt = Vosk.new()
 	var wordlist = NARules.get_vosk_grammar_words()
 	_stt.init_wordlist(ProjectSettings.globalize_path(LANG_MODEL), wordlist)
+
 
 ## Starts streaming mic audio into Vosk.
 func start() -> void:
@@ -51,6 +53,7 @@ func start() -> void:
 	_reset_buffers()
 	_recording = true
 	set_process(true)
+
 
 ## Stops streaming mic audio.
 func stop() -> void:
@@ -67,6 +70,7 @@ func stop() -> void:
 	var full := _build_full_sentence()
 	if full.length() > 0:
 		emit_signal("result", full)
+
 
 ## Pull audio from the capture bus and feed Vosk in small chunks.
 func _process(_dt: float) -> void:
@@ -95,13 +99,16 @@ func _process(_dt: float) -> void:
 				_update_partial_segment(String(j["partial"]))
 				_emit_partial()
 
+
 ## Returns the last final result from the recognizer (non-blocking).
 func get_final_result() -> String:
 	return _stt.result()
 
+
 ## Returns the latest partial result from the recognizer (non-blocking).
 func get_partial() -> String:
 	return _stt.partial_result()
+
 
 ## Reset sentence buffers for a new recording session.
 func _reset_buffers() -> void:
@@ -110,12 +117,13 @@ func _reset_buffers() -> void:
 	_last_partial = ""
 	_last_emitted = ""
 
+
 ## Update the current segment with a new partial.
 func _update_partial_segment(partial_text: String) -> void:
 	partial_text = partial_text.strip_edges()
 	if partial_text == _last_partial:
 		return
-	
+
 	# Grow by suffix when possible; otherwise replace the segment (Vosk rewrites).
 	if _last_partial != "" and partial_text.begins_with(_last_partial):
 		var suffix := partial_text.substr(_last_partial.length()).strip_edges()
@@ -127,8 +135,9 @@ func _update_partial_segment(partial_text: String) -> void:
 	else:
 		# Rewrite: drop previous segment and use the new partial as the entire segment.
 		_segment = partial_text
-	
+
 	_last_partial = partial_text
+
 
 ## Apply a Vosk final by replacing the current partial segment with final text.
 func _apply_final(final_text: String) -> void:
@@ -137,14 +146,16 @@ func _apply_final(final_text: String) -> void:
 	_segment = ""
 	_last_partial = ""
 
+
 ## Emit the current accumulated sentence as a partial update.
 func _emit_partial() -> void:
 	var full := _build_full_sentence()
 	if full.length() == 0 or full == _last_emitted:
 		return
 	_last_emitted = full
-	print("Partial: %s" % full)
+	LogService.trace("Partial: %s" % full, "STTService.gd:146")
 	emit_signal("partial", full)
+
 
 ## Extract final text from Vosk's result(), which may be JSON or plain text.
 func _extract_final_text(raw: String) -> String:
@@ -155,9 +166,11 @@ func _extract_final_text(raw: String) -> String:
 			return String(j["text"]).strip_edges()
 	return s
 
+
 ## Build the visible sentence from committed + segment with single spacing.
 func _build_full_sentence() -> String:
 	return _join_non_empty(_committed, _segment).strip_edges()
+
 
 ## Join a and b with a single space if both are non-empty.
 func _join_non_empty(a: String, b: String) -> String:

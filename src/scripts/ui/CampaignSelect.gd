@@ -7,13 +7,6 @@ extends Control
 ## 2) Details placeholder updates and action buttons become visible.
 ## 3) "Create new save" creates/selects a save and advances to Mission Select.
 
-@onready var list_campaigns: ItemList = $"HBoxContainer/VBoxContainer/CampaignList"
-@onready var details_root: VBoxContainer = $"HBoxContainer/DetailsRoot"
-@onready var btn_continue_last: Button = $"HBoxContainer/DetailsRoot/Options/ContinueLast"
-@onready var btn_select_save: Button = $"HBoxContainer/DetailsRoot/Options/SelectSave"
-@onready var btn_new_save: Button = $"HBoxContainer/DetailsRoot/Options/NewSave"
-@onready var btn_back: Button = $"HBoxContainer/VBoxContainer/HBoxContainer/BackToMainMenu"
-
 ## Path to Mission Select Scene
 const MISSION_SELECT_SCENE := "res://scenes/mission_select.tscn"
 
@@ -24,11 +17,20 @@ const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 var _campaign_rows: Array[CampaignData] = []
 var _selected_campaign: CampaignData
 
+@onready var list_campaigns: ItemList = $"HBoxContainer/VBoxContainer/CampaignList"
+@onready var details_root: VBoxContainer = $"HBoxContainer/DetailsRoot"
+@onready var btn_continue_last: Button = $"HBoxContainer/DetailsRoot/Options/ContinueLast"
+@onready var btn_select_save: Button = $"HBoxContainer/DetailsRoot/Options/SelectSave"
+@onready var btn_new_save: Button = $"HBoxContainer/DetailsRoot/Options/NewSave"
+@onready var btn_back: Button = $"HBoxContainer/VBoxContainer/HBoxContainer/BackToMainMenu"
+
+
 ## Init UI, populate list, connect signals.
 func _ready() -> void:
 	_set_action_buttons_visible(false)
 	_populate_campaigns()
 	_connect_signals()
+
 
 ## Connects UI signals to handlers.
 func _connect_signals() -> void:
@@ -38,6 +40,7 @@ func _connect_signals() -> void:
 	btn_select_save.pressed.connect(_on_select_save_pressed)
 	btn_back.pressed.connect(_on_back_pressed)
 
+
 ## Fill ItemList from ContentDB.
 func _populate_campaigns() -> void:
 	list_campaigns.clear()
@@ -46,18 +49,20 @@ func _populate_campaigns() -> void:
 	var campaigns := ContentDB.list_campaigns()
 	for c in campaigns:
 		var title: String = c.title
-		var _idx := list_campaigns.add_item(title)
+		list_campaigns.add_item(title)
 		_campaign_rows.append(c)
 
 	if list_campaigns.item_count > 0:
 		list_campaigns.select(0)
 		_on_campaign_selected(0)
 
+
 ## Handle campaign selection; update details + show actions.
 func _on_campaign_selected(index: int) -> void:
 	_selected_campaign = _campaign_rows[index]
 	_update_details_placeholder(_selected_campaign)
 	_set_action_buttons_visible(true)
+
 
 ## Placeholder details update (to be replaced later).
 func _update_details_placeholder(campaign: CampaignData) -> void:
@@ -67,11 +72,13 @@ func _update_details_placeholder(campaign: CampaignData) -> void:
 	if label:
 		label.text = "CAMPAIGN DETAILS Placeholder\n\nSelected: %s" % [String(campaign.id)]
 
+
 ## Show/hide the three action buttons.
 func _set_action_buttons_visible(state: bool) -> void:
 	btn_continue_last.visible = state
 	btn_select_save.visible = state
 	btn_new_save.visible = state
+
 
 ## Create/select new save and go to Mission Select.
 func _on_new_save_pressed() -> void:
@@ -82,6 +89,7 @@ func _on_new_save_pressed() -> void:
 	Game.select_campaign(_selected_campaign)
 	Game.select_save(save_id)
 	Game.goto_scene(MISSION_SELECT_SCENE)
+
 
 ## resolves last save for the current campaign (if any).
 func _on_continue_last_pressed() -> void:
@@ -97,12 +105,14 @@ func _on_continue_last_pressed() -> void:
 		# TODO: show "no saves found" dialog
 		push_warning("No previous save found for this campaign.")
 
+
 ## open a save picker filtered to the current campaign.
 func _on_select_save_pressed() -> void:
 	if not _selected_campaign:
 		return
 	# TODO Open a save picker dialog/scene filtered by campaign
 	push_warning("Save selection UI not implemented yet.")
+
 
 ## Back to main menu.
 func _on_back_pressed() -> void:

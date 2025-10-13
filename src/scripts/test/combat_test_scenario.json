@@ -1,0 +1,64 @@
+{
+  "briefing_id": null,
+  "content": {
+	"drawings": [],
+	"tasks": [],
+	"triggers": [],
+	"units": [
+	  {
+		"affiliation": 0,
+		"behaviour": 1,
+		"callsign": "ALPHA",
+		"combat_mode": 2,
+		"id": "infantry_plt_1_1",
+		"position": {
+		  "x": 467.456665039063,
+		  "y": 130.069747924805
+		},
+		"unit_id": "infantry_plt_1"
+	  },
+	  {
+		"affiliation": 1,
+		"behaviour": 1,
+		"callsign": "VICTOR",
+		"combat_mode": 2,
+		"id": "infantry_plt_2_1",
+		"position": {
+		  "x": 776.022216796875,
+		  "y": 699.320068359375
+		},
+		"unit_id": "infantry_plt_2"
+	  }
+	]
+  },
+  "datetime": {
+	"day": 1,
+	"hour": 12,
+	"minute": 0,
+	"month": 1,
+	"year": 1983
+  },
+  "description": "Scenario for combat testing",
+  "difficulty": 0,
+  "id": "",
+  "map_position": {
+	"x": 0.0,
+	"y": 0.0
+  },
+  "preview_path": "",
+  "scenario_order": 0,
+  "terrain_path": "res://campaigns/terrains/fulda_gap.tres",
+  "title": "Combat Test",
+  "units": {
+	"unit_points": 500,
+	"unit_recruits_ids": [],
+	"unit_reserves": [],
+	"unit_slots": []
+  },
+  "weather": {
+	"fog_m": 8000.0,
+	"rain": 0.0,
+	"wind_dir": 0.0,
+	"wind_speed_m": 1.0
+  }
+}

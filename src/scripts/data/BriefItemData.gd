@@ -1,19 +1,20 @@
-extends Resource
 class_name BriefItemData
+extends Resource
 
 ## Types of briefing item
-enum ItemType { document, image }
+enum ItemType { DOCUMENT, IMAGE }
 
 ## Unique identifier for this briefing item
 @export var id: String
 ## Human-readable title of the briefing item
 @export var title: String
 ## Type of the briefing item
-@export var type: ItemType = ItemType.document
+@export var type: ItemType = ItemType.DOCUMENT
 ## Path to the resource backing this item
 @export_file("*.* ; Any Resource") var resource
 ## Position of the item on the briefing board.
 @export var board_position: Vector2
+
 
 ## Serializes Briefing Item to JSON
 func serialize() -> Dictionary:
@@ -21,9 +22,15 @@ func serialize() -> Dictionary:
 		"id": id,
 		"title": title,
 		"type": int(type),
-		"resource_path": (resource if typeof(resource) == TYPE_STRING else (resource.resource_path if resource and resource.resource_path != "" else null)),
-		"board_position": { "x": board_position.x, "y": board_position.y }
+		"resource_path":
+		(
+			resource
+			if typeof(resource) == TYPE_STRING
+			else (resource.resource_path if resource and resource.resource_path != "" else null)
+		),
+		"board_position": {"x": board_position.x, "y": board_position.y}
 	}
+
 
 ## Deserializes briefing item from JSON
 static func deserialize(data: Variant) -> BriefItemData:
