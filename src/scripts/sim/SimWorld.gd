@@ -32,6 +32,8 @@ enum State { INIT, RUNNING, PAUSED, COMPLETED }
 @export var movement_adapter: MovementAdapter
 ## Combat controller.
 @export var combat_controller: CombatController
+## Combat controller.
+@export var trigger_engine: TriggerEngine
 ## Orders router.
 @export var _router: OrdersRouter
 
@@ -126,6 +128,7 @@ func _step_tick(dt: float) -> void:
 	_emit_events()
 	_record_replay()
 
+	trigger_engine.tick(dt)
 	Game.resolution.tick(dt)
 
 

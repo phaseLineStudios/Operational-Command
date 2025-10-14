@@ -12,14 +12,17 @@ extends Node3D
 @onready var map: MapController = %MapController
 @onready var debug_overlay: Control = %DebugOverlay
 @onready var wordlist: SpeechWordlistUpdater = %WordListUpdater
+@onready var trigger_engine: TriggerEngine = %TriggerEngine
 
 
 ## Initialize mission systems and bind services.
 func _ready() -> void:
-	var playable_units := generate_playable_units(Game.current_scenario.unit_slots)
-	Game.current_scenario.playable_units = playable_units
-	map.init_terrain(Game.current_scenario)
-	sim.init_world(Game.current_scenario)
+	var scenario = Game.current_scenario
+	var playable_units := generate_playable_units(scenario.unit_slots)
+	scenario.playable_units = playable_units
+	map.init_terrain(scenario)
+	sim.init_world(scenario)
+	trigger_engine.bind_scenario(scenario)
 	sim.bind_radio(%RadioController, %OrdersParser)
 	wordlist.bind_recognizer(STTService.get_recognizer())
 

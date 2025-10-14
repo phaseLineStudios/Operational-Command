@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=57 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -20,6 +20,7 @@
 [ext_resource type="Script" uid="uid://c5dqpttm5xyed" path="res://scripts/sim/LOS.gd" id="13_qgda6"]
 [ext_resource type="Script" uid="uid://cw4tt3twmh4gk" path="res://scripts/sim/adapters/LOSAdapter.gd" id="14_415kk"]
 [ext_resource type="Script" uid="uid://brp222cgifhj0" path="res://scripts/sim/systems/FuelSystem.gd" id="14_hvywg"]
+[ext_resource type="Script" uid="uid://bxi60at4j0nrr" path="res://scripts/sim/scenario/TriggerEngine.gd" id="16_rdwew"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
 size = Vector2(10, 30)
@@ -459,12 +460,13 @@ script = ExtResource("12_4otl8")
 sim = NodePath("../../WorldController")
 terrain_renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
 
-[node name="WorldController" type="Node" parent="Controllers" node_paths=PackedStringArray("los_adapter", "movement_adapter", "combat_controller", "_router")]
+[node name="WorldController" type="Node" parent="Controllers" node_paths=PackedStringArray("los_adapter", "movement_adapter", "combat_controller", "trigger_engine", "_router")]
 unique_name_in_owner = true
 script = ExtResource("7_ge8rp")
 los_adapter = NodePath("../LOSController/LOSAdapter")
 movement_adapter = NodePath("MovementAdapter")
 combat_controller = NodePath("../CombatController")
+trigger_engine = NodePath("TriggerEngine")
 _router = NodePath("../RadioController/OrdersRouter")
 
 [node name="MovementAdapter" type="Node" parent="Controllers/WorldController" node_paths=PackedStringArray("renderer")]
@@ -475,6 +477,12 @@ renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
 [node name="FuelSystem" type="Node" parent="Controllers/WorldController"]
 script = ExtResource("14_hvywg")
 metadata/_custom_type_script = "uid://brp222cgifhj0"
+
+[node name="TriggerEngine" type="Node" parent="Controllers/WorldController" node_paths=PackedStringArray("_sim")]
+unique_name_in_owner = true
+script = ExtResource("16_rdwew")
+_sim = NodePath("..")
+metadata/_custom_type_script = "uid://bxi60at4j0nrr"
 
 [node name="CombatController" type="Node" parent="Controllers" node_paths=PackedStringArray("terrain_renderer")]
 script = ExtResource("10_of8da")
