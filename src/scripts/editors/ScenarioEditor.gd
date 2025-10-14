@@ -654,6 +654,8 @@ func _on_attributemenu_pressed(id: int):
 			acc.popup_centered()
 		2:
 			%WeatherDialog.show_dialog(true)
+		3:
+			pass # objectives
 
 
 ## Save to current path or fallback to Save As

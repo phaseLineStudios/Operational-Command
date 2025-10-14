@@ -4,14 +4,18 @@
 
 [node name="NewScenarioDialog" type="Window"]
 auto_translate_mode = 1
+oversampling_override = 1.0
 title = "New Scenario"
 position = Vector2i(325, 36)
 size = Vector2i(500, 600)
 script = ExtResource("1_f0svs")
 
 [node name="VBox" type="VBoxContainer" parent="."]
-offset_right = 500.0
-offset_bottom = 300.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="TitleLabel" type="Label" parent="VBox"]
 layout_mode = 2

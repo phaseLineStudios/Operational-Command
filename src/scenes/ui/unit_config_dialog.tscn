@@ -4,14 +4,18 @@
 
 [node name="UnitConfigDialog" type="Window"]
 auto_translate_mode = 1
+oversampling_override = 1.0
 title = "Unit"
 position = Vector2i(325, 175)
 size = Vector2i(500, 300)
 script = ExtResource("1_y0txs")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
-offset_right = 500.0
-offset_bottom = 300.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="VBox" type="VBoxContainer" parent="ScrollContainer"]
 layout_mode = 2
