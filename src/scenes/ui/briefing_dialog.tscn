@@ -1,0 +1,205 @@
+[gd_scene load_steps=3 format=3 uid="uid://yvffgqffurqd"]
+
+[ext_resource type="Script" uid="uid://blf2sifjgcpqf" path="res://scripts/editors/BriefingDialog.gd" id="1_j5mmd"]
+[ext_resource type="PackedScene" uid="uid://ccroftleapws8" path="res://scenes/ui/objective_dialog.tscn" id="2_qdqxc"]
+
+[node name="BriefingDialog" type="Window"]
+auto_translate_mode = 1
+oversampling_override = 1.0
+title = "Playable Slot"
+position = Vector2i(325, 100)
+size = Vector2i(500, 500)
+script = ExtResource("1_j5mmd")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+offset_right = 500.0
+offset_bottom = 500.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TitleLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Title"
+
+[node name="Title" type="LineEdit" parent="VBox/ScrollContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Briefing Title"
+
+[node name="WarnoLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Warning Order (WARNO)"
+
+[node name="WarnoList" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SituationContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer/WarnoList"]
+layout_mode = 2
+folded = true
+title = "Situation"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/SituationContainer"]
+visible = false
+layout_mode = 2
+
+[node name="EnySituationLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/SituationContainer/VBoxContainer"]
+layout_mode = 2
+text = "Enemy Situation"
+
+[node name="EnySituation" type="TextEdit" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/SituationContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+placeholder_text = "Enemy composition, disposition and activity..."
+
+[node name="FrSituationLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/SituationContainer/VBoxContainer"]
+layout_mode = 2
+text = "Friendly Situation"
+
+[node name="FrSituation" type="TextEdit" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/SituationContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+placeholder_text = "Own/adjacent/supporting forces..."
+
+[node name="TerrainSituation" type="Label" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/SituationContainer/VBoxContainer"]
+layout_mode = 2
+text = "Terrain"
+
+[node name="Terrain" type="TextEdit" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/SituationContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+placeholder_text = "Key terrain, aveneus of approach..."
+
+[node name="StartTimeLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/SituationContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MissionContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer/WarnoList"]
+layout_mode = 2
+folded = true
+title = "Mission"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/MissionContainer"]
+visible = false
+layout_mode = 2
+
+[node name="MissionLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/MissionContainer/VBoxContainer"]
+layout_mode = 2
+text = "Mission Statement"
+
+[node name="Mission" type="TextEdit" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/MissionContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+placeholder_text = "Task and purpose..."
+
+[node name="ObjectivesLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/MissionContainer/VBoxContainer"]
+layout_mode = 2
+text = "Objectives"
+
+[node name="ObjectiveList" type="PanelContainer" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/MissionContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Scroll" type="ScrollContainer" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/MissionContainer/VBoxContainer/ObjectiveList"]
+layout_mode = 2
+
+[node name="ObjectiveVBox" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/MissionContainer/VBoxContainer/ObjectiveList/Scroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 3
+
+[node name="Objectives" type="HBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/MissionContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ObjectiveAdd" type="Button" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/MissionContainer/VBoxContainer/Objectives"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Add Objective"
+
+[node name="ExecutionContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer/WarnoList"]
+layout_mode = 2
+folded = true
+title = "Execution"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/ExecutionContainer"]
+visible = false
+layout_mode = 2
+
+[node name="ExecutionLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/ExecutionContainer/VBoxContainer"]
+layout_mode = 2
+text = "Execution guidance"
+
+[node name="Execution" type="TextEdit" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/ExecutionContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+placeholder_text = "e.g. scheme of maneuver"
+
+[node name="AdminLogiContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer/WarnoList"]
+layout_mode = 2
+folded = true
+title = "Administration and Logistics"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/AdminLogiContainer"]
+visible = false
+layout_mode = 2
+
+[node name="AdminLogiLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/AdminLogiContainer/VBoxContainer"]
+layout_mode = 2
+text = "Administration guidance"
+
+[node name="AdminLogi" type="TextEdit" parent="VBox/ScrollContainer/VBoxContainer/WarnoList/AdminLogiContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="IntelBoardLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Intel Board"
+
+[node name="PanelContainer" type="PanelContainer" parent="VBox/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/ScrollContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+text = "Not Yet Implemented."
+horizontal_alignment = 1
+
+[node name="ActionRow" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="Close" type="Button" parent="VBox/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"
+
+[node name="Spacer" type="Control" parent="VBox/ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Save" type="Button" parent="VBox/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Save"
+
+[node name="ObjectiveDialog" parent="." instance=ExtResource("2_qdqxc")]
+unique_name_in_owner = true
+visible = false

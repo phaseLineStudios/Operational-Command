@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c5vv37x66vtg7"]
+[gd_scene load_steps=12 format=3 uid="uid://c5vv37x66vtg7"]
 
 [ext_resource type="Script" uid="uid://cilbctp6dmcm" path="res://scripts/editors/ScenarioEditor.gd" id="1_wqbsy"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="2_gsqds"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://5awqyidom0l2" path="res://scenes/ui/scenario_new_dialog.tscn" id="4_un5t0"]
 [ext_resource type="Script" uid="uid://cjsu4sh4wfvmg" path="res://scripts/editors/TerrainCamera.gd" id="4_ysx1w"]
 [ext_resource type="PackedScene" uid="uid://qsm7784yjbw7" path="res://scenes/ui/weather_dialog.tscn" id="5_un5t0"]
+[ext_resource type="PackedScene" uid="uid://yvffgqffurqd" path="res://scenes/ui/briefing_dialog.tscn" id="11_csmny"]
 [ext_resource type="PackedScene" uid="uid://dkpal3npfyfbj" path="res://scenes/ui/task_config_dialog.tscn" id="11_ltmm0"]
 [ext_resource type="PackedScene" uid="uid://cb5oknciymdd4" path="res://scenes/ui/slot_config_dialog.tscn" id="12_csmny"]
 [ext_resource type="PackedScene" uid="uid://blt6fcbjfelax" path="res://scenes/ui/unit_config_dialog.tscn" id="13_dnx60"]
@@ -307,5 +308,9 @@ unique_name_in_owner = true
 visible = false
 
 [node name="TriggerConfigDialog" parent="." instance=ExtResource("17_72fj5")]
+unique_name_in_owner = true
+visible = false
+
+[node name="BriefingDialog" parent="." instance=ExtResource("11_csmny")]
 unique_name_in_owner = true
 visible = false
