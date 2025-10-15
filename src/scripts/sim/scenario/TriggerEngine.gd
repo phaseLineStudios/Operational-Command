@@ -60,7 +60,7 @@ func _refresh_unit_indices() -> void:
 
 	var pm := _scenario.playable_units
 	for su in pm:
-		if su and su.has("id"):
+		if su:
 			_player_ids[str(su.id)] = true
 
 
