@@ -1,6 +1,6 @@
 # SimWorld::bind_radio Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 224–237)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 334–347)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # ScenarioUnit::estimate_eta_s Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 179–188)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 185–194)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**

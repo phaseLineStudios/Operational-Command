@@ -1,6 +1,6 @@
 # SimDebugOverlay::_draw Function Reference
 
-*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 194–289)</br>
+*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 202–318)</br>
 *Belongs to:* [SimDebugOverlay](../../SimDebugOverlay.md)
 
 **Signature**
@@ -22,6 +22,23 @@ func _draw() -> void:
 
 	if terrain_renderer == null or terrain_renderer.data == null:
 		return
+
+	if show_combat_lines and _sim:
+		var pairs: Array = []
+		if _sim.has_method("get_current_contacts"):
+			pairs = _sim.get_current_contacts()
+		for p in pairs:
+			var aid := str(p.get("attacker", ""))
+			var did := str(p.get("defender", ""))
+			var a_su: ScenarioUnit = _unit_by_id.get(aid)
+			var d_su: ScenarioUnit = _unit_by_id.get(did)
+			if a_su == null or d_su == null:
+				continue
+			if a_su.is_dead() or d_su.is_dead():
+				continue
+			var a_px := terrain_renderer.terrain_to_map(a_su.position_m)
+			var d_px := terrain_renderer.terrain_to_map(d_su.position_m)
+			draw_line(a_px, d_px, combat_line_color, combat_line_width_px)
 
 	var units: Array[ScenarioUnit] = []
 	units.append_array(Game.current_scenario.units)
@@ -51,9 +68,13 @@ func _draw() -> void:
 			var tex: Texture2D = unit.unit.icon if friend else unit.unit.enemy_icon
 			if tex:
 				var half := Vector2(icon_size_px, icon_size_px) * 0.5
-				draw_texture_rect(tex, Rect2(pos_m - half, half * 2.0), false)
+				var mod := Color(1, 1, 1, dead_icon_alpha if unit.is_dead() else 1.0)
+				draw_texture_rect(tex, Rect2(pos_m - half, half * 2.0), false, mod)
 			else:
-				draw_circle(pos_m, icon_size_px * 0.5, col)
+				var c := col
+				if unit.is_dead():
+					c.a *= dead_icon_alpha
+				draw_circle(pos_m, icon_size_px * 0.5, c)
 
 		if show_labels or show_bars:
 			var y := 0.0

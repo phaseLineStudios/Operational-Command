@@ -1,6 +1,6 @@
 # OrdersRouter::_apply_defend Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 130–139)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 134–143)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**

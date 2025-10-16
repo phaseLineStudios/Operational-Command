@@ -1,6 +1,6 @@
 # ScenarioEditor::_get_callsign_pool Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 817–834)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 842–859)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

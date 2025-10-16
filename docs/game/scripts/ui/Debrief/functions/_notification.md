@@ -1,6 +1,6 @@
 # Debrief::_notification Function Reference
 
-*Defined at:* `scripts/ui/Debrief.gd` (lines 100–104)</br>
+*Defined at:* `scripts/ui/Debrief.gd` (lines 133–137)</br>
 *Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**

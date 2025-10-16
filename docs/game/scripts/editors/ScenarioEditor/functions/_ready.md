@@ -1,6 +1,6 @@
 # ScenarioEditor::_ready Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 120–174)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 121–178)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
@@ -48,6 +48,9 @@ func _ready():
 
 	new_scenario_dialog.request_create.connect(_on_new_scenario)
 	new_scenario_dialog.request_update.connect(_on_update_scenario)
+
+	brief_dialog.editor = self
+	brief_dialog.request_update.connect(_on_briefing_update)
 
 	terrain_overlay.gui_input.connect(_on_overlay_gui_input)
 	weather_dialog.editor = self

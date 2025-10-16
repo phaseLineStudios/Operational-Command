@@ -1,6 +1,6 @@
 # Debrief::_assert_nodes Function Reference
 
-*Defined at:* `scripts/ui/Debrief.gd` (lines 348–358)</br>
+*Defined at:* `scripts/ui/Debrief.gd` (lines 381–391)</br>
 *Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**

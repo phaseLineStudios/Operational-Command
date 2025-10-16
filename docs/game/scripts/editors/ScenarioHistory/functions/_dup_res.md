@@ -1,6 +1,6 @@
 # ScenarioHistory::_dup_res Function Reference
 
-*Defined at:* `scripts/editors/ScenarioHistory.gd` (lines 277–282)</br>
+*Defined at:* `scripts/editors/ScenarioHistory.gd` (lines 290–295)</br>
 *Belongs to:* [ScenarioHistory](../../ScenarioHistory.md)
 
 **Signature**

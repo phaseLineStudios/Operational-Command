@@ -6,7 +6,7 @@
 **Signature**
 
 ```gdscript
-func set_objective_state(id: StringName, state: ObjectiveState) -> void
+func set_objective_state(id: String, state: ObjectiveState) -> void
 ```
 
 ## Description
@@ -16,7 +16,7 @@ Update an objective state.
 ## Source
 
 ```gdscript
-func set_objective_state(id: StringName, state: ObjectiveState) -> void:
+func set_objective_state(id: String, state: ObjectiveState) -> void:
 	if _is_final:
 		return
 	if not _objective_states.has(id):

@@ -1,6 +1,6 @@
 # SimWorld::_on_state_change_for_resolution Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 347–351)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 480–484)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -21,5 +21,5 @@ State change callback: finalize mission resolution.
 ```gdscript
 func _on_state_change_for_resolution(_prev: State, next: State) -> void:
 	if next == State.COMPLETED:
-		Game.resolution.finalize(false)
+		Game.end_scenario_and_go_to_debrief()
 ```

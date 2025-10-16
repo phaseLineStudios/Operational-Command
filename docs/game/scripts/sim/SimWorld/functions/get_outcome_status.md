@@ -1,6 +1,6 @@
 # SimWorld::get_outcome_status Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 293–296)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 403–406)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

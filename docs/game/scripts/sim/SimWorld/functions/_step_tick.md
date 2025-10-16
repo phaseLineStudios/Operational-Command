@@ -1,6 +1,6 @@
 # SimWorld::_step_tick Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 119–131)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 167–182)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -22,11 +22,14 @@ func _step_tick(dt: float) -> void:
 	_tick_idx += 1
 	_process_orders()
 	_update_movement(dt)
+	_update_logistics(dt)
 	_update_los()
 	_resolve_combat()
 	_update_morale()
 	_emit_events()
 	_record_replay()
+	_mission_complete_check(dt)
 
+	trigger_engine.tick(dt)
 	Game.resolution.tick(dt)
 ```

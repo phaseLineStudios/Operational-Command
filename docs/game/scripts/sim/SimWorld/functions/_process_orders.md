@@ -1,6 +1,6 @@
 # SimWorld::_process_orders Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 133–138)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 184–189)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

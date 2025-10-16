@@ -32,6 +32,7 @@ Generates playable units from scenario slots and binds controllers.
 - `MapController map`
 - `Control debug_overlay`
 - `SpeechWordlistUpdater wordlist`
+- `TriggerEngine trigger_engine`
 
 ## Member Function Documentation
 
@@ -88,4 +89,10 @@ var debug_overlay: Control
 
 ```gdscript
 var wordlist: SpeechWordlistUpdater
+```
+
+### trigger_engine
+
+```gdscript
+var trigger_engine: TriggerEngine
 ```

@@ -1,6 +1,6 @@
 # SimDebugOverlay::_on_contact Function Reference
 
-*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 174–182)</br>
+*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 182–190)</br>
 *Belongs to:* [SimDebugOverlay](../../SimDebugOverlay.md)
 
 **Signature**

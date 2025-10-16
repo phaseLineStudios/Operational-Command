@@ -1,6 +1,6 @@
 # ScenarioEditor::_delete_trigger Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 610–625)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 614–629)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

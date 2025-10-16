@@ -1,6 +1,6 @@
 # OrdersRouter::_apply_recon Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 144–154)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 148–158)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**

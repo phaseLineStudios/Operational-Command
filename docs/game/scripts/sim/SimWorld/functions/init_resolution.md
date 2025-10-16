@@ -1,12 +1,12 @@
 # SimWorld::init_resolution Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 100–105)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 136–146)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
 
 ```gdscript
-func init_resolution(primary_ids: Array[StringName], scenario: ScenarioData) -> void
+func init_resolution(objs: Array[ScenarioObjectiveData]) -> void
 ```
 
 - **primary_ids**: Objective IDs.
@@ -19,8 +19,13 @@ Initialize mission resolution and connect state changes.
 ## Source
 
 ```gdscript
-func init_resolution(primary_ids: Array[StringName], scenario: ScenarioData) -> void:
-	Game.resolution.start(primary_ids, scenario.id)
+func init_resolution(objs: Array[ScenarioObjectiveData]) -> void:
+	var primary_ids: Array[String] = []
+	for obj in objs:
+		primary_ids.append(obj.id)
+	Game.start_scenario(primary_ids)
 	if not mission_state_changed.is_connected(_on_state_change_for_resolution):
 		mission_state_changed.connect(_on_state_change_for_resolution)
+	if Game.resolution.objective_updated.is_connected(_on_objective_updated):
+		Game.resolution.objective_updated.connect(_on_objective_updated)
 ```

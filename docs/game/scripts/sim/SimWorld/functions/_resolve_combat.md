@@ -1,6 +1,6 @@
 # SimWorld::_resolve_combat Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 165–191)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 228–255)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -26,7 +26,8 @@ func _resolve_combat() -> void:
 		var d: ScenarioUnit = _units_by_id.get(parts[1])
 		if a == null or d == null:
 			continue
-
+		if a.is_dead() or d.is_dead():
+			continue
 		var dmg := combat_controller.calculate_damage(a, d)
 		if dmg <= 0.0:
 			continue

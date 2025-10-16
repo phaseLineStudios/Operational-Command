@@ -1,6 +1,6 @@
 # SimWorld::get_unit_snapshots Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 284–290)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 394–400)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

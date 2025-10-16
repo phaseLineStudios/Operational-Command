@@ -1,6 +1,6 @@
 # SimDebugOverlay::_on_state Function Reference
 
-*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 184–187)</br>
+*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 192–195)</br>
 *Belongs to:* [SimDebugOverlay](../../SimDebugOverlay.md)
 
 **Signature**

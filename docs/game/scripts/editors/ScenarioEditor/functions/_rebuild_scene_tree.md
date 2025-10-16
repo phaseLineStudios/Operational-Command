@@ -1,6 +1,6 @@
 # ScenarioEditor::_rebuild_scene_tree Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 208–213)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 212–217)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # SimDebugOverlay::_enum_name Function Reference
 
-*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 315–339)</br>
+*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 344–368)</br>
 *Belongs to:* [SimDebugOverlay](../../SimDebugOverlay.md)
 
 **Signature**

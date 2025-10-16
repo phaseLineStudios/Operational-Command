@@ -1,6 +1,6 @@
 # SimWorld::_update_movement Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 140–148)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 191–207)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -19,8 +19,16 @@ Advances movement for all sides and emits unit snapshots.
 func _update_movement(dt: float) -> void:
 	if movement_adapter == null:
 		return
-	movement_adapter.tick_units(_friendlies, dt)
-	movement_adapter.tick_units(_enemies, dt)
+	var alive_friends: Array[ScenarioUnit] = []
+	var alive_enemies: Array[ScenarioUnit] = []
+	for su in _friendlies:
+		if not su.is_dead():
+			alive_friends.append(su)
+	for su in _enemies:
+		if not su.is_dead():
+			alive_enemies.append(su)
+	movement_adapter.tick_units(alive_friends, dt)
+	movement_adapter.tick_units(alive_enemies, dt)
 	for su in _friendlies + _enemies:
 		emit_signal("unit_updated", su.id, _snapshot_unit(su))
 ```

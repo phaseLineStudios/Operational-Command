@@ -1,6 +1,6 @@
 # OrdersRouter::apply Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 51–78)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 51–82)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**
@@ -25,6 +25,10 @@ func apply(order: Dictionary) -> bool:
 	var unit: ScenarioUnit = _units_by_id.get(uid)
 	if unit == null:
 		emit_signal("order_failed", order, "unknown_unit")
+		return false
+
+	if unit.is_dead():
+		emit_signal("order_failed", order, "dead_unit")
 		return false
 
 	match t:

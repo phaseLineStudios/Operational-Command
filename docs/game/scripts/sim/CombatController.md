@@ -44,14 +44,13 @@ Debug - build and emit a snapshot (for overlays/logging)
 
 - `ScenarioData scenario` — Current Scenario reference
 - `TerrainRender terrain_renderer` — Terrain renderer reference
+- `CombatAdapter combat_adapter` — Adapter used to gate fire and apply ammo penalties.
 - `TerrainEffectsConfig terrain_config` — TerrainEffectConfig reference
 - `Control debug_overlay` — Optional Control that implements `update_debug(data: Dictionary)`
-- `NodePath combat_adapter_path` — Ammo
 - `UnitData imported_attacker` — imported units manually for testing purposes
 - `UnitData imported_defender`
 - `ScenarioUnit attacker_su`
 - `ScenarioUnit defender_su`
-- `CombatAdapter _adapter`
 - `Dictionary _rof_cooldown` — Per-unit ROF cooldown (seconds since epoch when the next shot is allowed)
 - `ScenarioUnit _cur_att`
 - `ScenarioUnit _cur_def`
@@ -191,6 +190,16 @@ Decorators: `@export`
 
 Terrain renderer reference
 
+### combat_adapter
+
+```gdscript
+var combat_adapter: CombatAdapter
+```
+
+Decorators: `@export`
+
+Adapter used to gate fire and apply ammo penalties. Prefer assigning directly.
+
 ### terrain_config
 
 ```gdscript
@@ -210,16 +219,6 @@ var debug_overlay: Control
 Decorators: `@export`
 
 Optional Control that implements `update_debug(data: Dictionary)`
-
-### combat_adapter_path
-
-```gdscript
-var combat_adapter_path: NodePath
-```
-
-Decorators: `@export`
-
-Ammo
 
 ### imported_attacker
 
@@ -245,12 +244,6 @@ var attacker_su: ScenarioUnit
 
 ```gdscript
 var defender_su: ScenarioUnit
-```
-
-### _adapter
-
-```gdscript
-var _adapter: CombatAdapter
 ```
 
 ### _rof_cooldown

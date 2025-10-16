@@ -1,6 +1,6 @@
 # MissionSelect::_on_backdrop_gui_input Function Reference
 
-*Defined at:* `scripts/ui/MissionSelect.gd` (lines 244–254)</br>
+*Defined at:* `scripts/ui/MissionSelect.gd` (lines 252–262)</br>
 *Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**

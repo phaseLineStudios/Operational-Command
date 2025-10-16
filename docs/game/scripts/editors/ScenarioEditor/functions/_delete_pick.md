@@ -1,6 +1,6 @@
 # ScenarioEditor::_delete_pick Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 445–458)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 449–462)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

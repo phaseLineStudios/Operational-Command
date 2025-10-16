@@ -1,6 +1,6 @@
 # MissionSelect::_on_start_pressed Function Reference
 
-*Defined at:* `scripts/ui/MissionSelect.gd` (lines 233–237)</br>
+*Defined at:* `scripts/ui/MissionSelect.gd` (lines 241–245)</br>
 *Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**

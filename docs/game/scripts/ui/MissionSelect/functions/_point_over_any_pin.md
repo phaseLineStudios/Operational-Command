@@ -1,6 +1,6 @@
 # MissionSelect::_point_over_any_pin Function Reference
 
-*Defined at:* `scripts/ui/MissionSelect.gd` (lines 256–262)</br>
+*Defined at:* `scripts/ui/MissionSelect.gd` (lines 264–270)</br>
 *Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**

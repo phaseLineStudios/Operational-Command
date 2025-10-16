@@ -1,6 +1,6 @@
 # SimWorld::init_world Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 70–96)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 104–132)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -42,5 +42,7 @@ func init_world(scenario: ScenarioData) -> void:
 		if su.playable:
 			_playable_by_callsign[su.callsign] = su.id
 	_router.bind_units(_units_by_id, _units_by_callsign)
+	_register_logistics_units()
+
 	_transition(State.INIT, State.RUNNING)
 ```

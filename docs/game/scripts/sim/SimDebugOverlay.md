@@ -38,6 +38,8 @@ Highlight units recently in contact.
 
 Show fuel percentage (when available).
 
+Draw red lines between engaged pairs.
+
 Icon size in pixels (square).
 
 Path stroke width in pixels.
@@ -47,6 +49,10 @@ Destination ring radius in pixels.
 Label font size (pixels).
 
 Label offset from icon center (pixels).
+
+Combat line stroke width (pixels).
+
+Alpha for dead units' icons.
 
 ## Public Member Functions
 
@@ -81,6 +87,7 @@ Label offset from icon center (pixels).
 - `Color bar_strength` — Strength bar color.
 - `Color bar_morale` — Morale bar color.
 - `Color bar_fuel` — Fuel bar color.
+- `Color combat_line_color` — Combat line color.
 - `Control _terrain_base`
 - `Transform2D _map_tf`
 - `Rect2 _map_rect`
@@ -360,6 +367,16 @@ var bar_fuel: Color
 Decorators: `@export`
 
 Fuel bar color.
+
+### combat_line_color
+
+```gdscript
+var combat_line_color: Color
+```
+
+Decorators: `@export`
+
+Combat line color.
 
 ### _terrain_base
 

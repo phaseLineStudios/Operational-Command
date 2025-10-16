@@ -1,6 +1,6 @@
 # CombatController::calculate_damage Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 127–216)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 119–208)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**

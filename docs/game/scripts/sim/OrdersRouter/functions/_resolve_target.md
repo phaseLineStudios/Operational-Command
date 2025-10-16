@@ -1,6 +1,6 @@
 # OrdersRouter::_resolve_target Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 240–247)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 244–251)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**

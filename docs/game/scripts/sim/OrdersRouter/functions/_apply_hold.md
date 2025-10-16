@@ -1,6 +1,6 @@
 # OrdersRouter::_apply_hold Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 102–110)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 106–114)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**

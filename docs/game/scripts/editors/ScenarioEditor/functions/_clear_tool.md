@@ -1,6 +1,6 @@
 # ScenarioEditor::_clear_tool Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 351–355)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 355–359)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

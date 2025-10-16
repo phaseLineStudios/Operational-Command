@@ -1,6 +1,6 @@
 # SimDebugOverlay::_ready Function Reference
 
-*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 77–101)</br>
+*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 85–109)</br>
 *Belongs to:* [SimDebugOverlay](../../SimDebugOverlay.md)
 
 **Signature**

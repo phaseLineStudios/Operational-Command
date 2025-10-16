@@ -1,6 +1,6 @@
 # ScenarioEditor::_cmd_open Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 682–687)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 696–701)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

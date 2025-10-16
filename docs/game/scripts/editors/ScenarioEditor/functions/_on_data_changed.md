@@ -1,6 +1,6 @@
 # ScenarioEditor::_on_data_changed Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 730–741)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 755–766)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

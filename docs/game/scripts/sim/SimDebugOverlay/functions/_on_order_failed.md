@@ -1,6 +1,6 @@
 # SimDebugOverlay::_on_order_failed Function Reference
 
-*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 163–170)</br>
+*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 171–178)</br>
 *Belongs to:* [SimDebugOverlay](../../SimDebugOverlay.md)
 
 **Signature**

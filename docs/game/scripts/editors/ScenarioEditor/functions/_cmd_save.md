@@ -1,6 +1,6 @@
 # ScenarioEditor::_cmd_save Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 660–671)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 674–685)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

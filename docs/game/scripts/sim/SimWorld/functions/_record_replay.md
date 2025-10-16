@@ -1,6 +1,6 @@
 # SimWorld::_record_replay Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 203–213)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 313–323)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

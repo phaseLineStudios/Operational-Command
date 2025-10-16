@@ -1,6 +1,6 @@
 # SimWorld::get_unit_debug_path Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 337–343)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 452–458)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

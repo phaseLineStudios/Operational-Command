@@ -1,6 +1,6 @@
 # HQTable::_ready Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 18–26)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 19–30)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**
@@ -17,10 +17,13 @@ Initialize mission systems and bind services.
 
 ```gdscript
 func _ready() -> void:
-	var playable_units := generate_playable_units(Game.current_scenario.unit_slots)
-	Game.current_scenario.playable_units = playable_units
-	map.init_terrain(Game.current_scenario)
-	sim.init_world(Game.current_scenario)
+	var scenario = Game.current_scenario
+	var playable_units := generate_playable_units(scenario.unit_slots)
+	scenario.playable_units = playable_units
+	map.init_terrain(scenario)
+	sim.init_world(scenario)
+	trigger_engine.bind_scenario(scenario)
 	sim.bind_radio(%RadioController, %OrdersParser)
+	sim.init_resolution(scenario.briefing.frag_objectives)
 	wordlist.bind_recognizer(STTService.get_recognizer())
 ```

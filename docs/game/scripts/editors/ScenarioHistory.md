@@ -30,6 +30,8 @@ Replace entire array (atomic). Provide deep copies of before/after
 
 Move entity (unit/slot/task/trigger) by id. 'ent_type' is "unit"/"slot"/"task"/"trigger"
 
+Set a property on a Resource with undo/redo (emits changed).
+
 Set entity world position by id
 
 ## Public Member Functions

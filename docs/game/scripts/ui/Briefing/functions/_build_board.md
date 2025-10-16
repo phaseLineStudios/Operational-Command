@@ -1,6 +1,6 @@
 # Briefing::_build_board Function Reference
 
-*Defined at:* `scripts/ui/Briefing.gd` (lines 46–51)</br>
+*Defined at:* `scripts/ui/Briefing.gd` (lines 46–52)</br>
 *Belongs to:* [Briefing](../../Briefing.md)
 
 **Signature**
@@ -19,6 +19,7 @@ Put the whiteboard background.
 func _build_board() -> void:
 	if not _brief:
 		return
-	var tex: Texture2D = _brief.board_texture
-	_whiteboard.texture = tex
+	if _brief.board_texture != null:
+		var tex: Texture2D = _brief.board_texture
+		_whiteboard.texture = tex
 ```

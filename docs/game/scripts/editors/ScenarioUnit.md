@@ -17,6 +17,7 @@ Start movement; will plan if needed or if dest is provided.
 
 ## Public Member Functions
 
+- [`func is_dead() -> bool`](ScenarioUnit/functions/is_dead.md) — Check if unit is dead.
 - [`func bind_fuel_system(fs: FuelSystem) -> void`](ScenarioUnit/functions/bind_fuel_system.md) — Bind a FuelSystem instance at runtime.
 - [`func plan_move(grid: PathGrid, dest_m: Vector2) -> bool`](ScenarioUnit/functions/plan_move.md) — Plan a path from current position to dest_m using PathGrid.
 - [`func pause_move() -> void`](ScenarioUnit/functions/pause_move.md) — Pause.
@@ -68,6 +69,15 @@ FuelSystem provider used to scale speed at LOW/CRITICAL and 0 at EMPTY.
 - `enum MoveState` — Runtime movement states.
 
 ## Member Function Documentation
+
+### is_dead
+
+```gdscript
+func is_dead() -> bool
+```
+
+Check if unit is dead.
+[return] True if unit is destroyed.
 
 ### bind_fuel_system
 
