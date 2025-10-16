@@ -1,4 +1,4 @@
-[gd_scene load_steps=57 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=59 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -21,6 +21,7 @@
 [ext_resource type="Script" uid="uid://cw4tt3twmh4gk" path="res://scripts/sim/adapters/LOSAdapter.gd" id="14_415kk"]
 [ext_resource type="Script" uid="uid://brp222cgifhj0" path="res://scripts/sim/systems/FuelSystem.gd" id="14_hvywg"]
 [ext_resource type="Script" uid="uid://bxi60at4j0nrr" path="res://scripts/sim/scenario/TriggerEngine.gd" id="16_rdwew"]
+[ext_resource type="Script" uid="uid://dnnu3w3b3j5rk" path="res://scripts/data/FuelProfile.gd" id="16_yatot"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
 size = Vector2(10, 30)
@@ -144,6 +145,10 @@ albedo_color = Color(0, 0, 1, 0.47843137)
 [sub_resource type="PlaneMesh" id="PlaneMesh_uk27s"]
 material = SubResource("StandardMaterial3D_cx6my")
 size = Vector2(0.75, 0.35)
+
+[sub_resource type="Resource" id="Resource_2llyq"]
+script = ExtResource("16_yatot")
+metadata/_custom_type_script = "uid://dnnu3w3b3j5rk"
 
 [node name="HQTable" type="Node3D"]
 script = ExtResource("1_qgda6")
@@ -475,6 +480,7 @@ renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
 
 [node name="FuelSystem" type="Node" parent="Controllers/WorldController"]
 script = ExtResource("14_hvywg")
+fuel_profile = SubResource("Resource_2llyq")
 metadata/_custom_type_script = "uid://brp222cgifhj0"
 
 [node name="TriggerEngine" type="Node" parent="Controllers/WorldController" node_paths=PackedStringArray("_sim")]
@@ -483,9 +489,10 @@ script = ExtResource("16_rdwew")
 _sim = NodePath("..")
 metadata/_custom_type_script = "uid://bxi60at4j0nrr"
 
-[node name="CombatController" type="Node" parent="Controllers" node_paths=PackedStringArray("terrain_renderer")]
+[node name="CombatController" type="Node" parent="Controllers" node_paths=PackedStringArray("terrain_renderer", "combat_adapter")]
 script = ExtResource("10_of8da")
 terrain_renderer = NodePath("../MapController/TerrainViewport/TerrainRender")
+combat_adapter = NodePath("CombatAdapter")
 
 [node name="CombatAdapter" type="Node" parent="Controllers/CombatController"]
 script = ExtResource("9_vxnyp")

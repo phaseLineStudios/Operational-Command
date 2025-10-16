@@ -32,10 +32,16 @@ enum State { INIT, RUNNING, PAUSED, COMPLETED }
 @export var movement_adapter: MovementAdapter
 ## Combat controller.
 @export var combat_controller: CombatController
+## Combat adapter.
+@export var combat_adapter: CombatAdapter
 ## Combat controller.
 @export var trigger_engine: TriggerEngine
 ## Orders router.
 @export var _router: OrdersRouter
+## Ammo system node.
+@export var ammo_system: AmmoSystem
+## Fuel system node.
+@export var fuel_system: FuelSystem
 ## Grace period before ending (seconds) to avoid flapping.
 @export var auto_end_grace_s := 2.0
 
@@ -67,6 +73,16 @@ func _ready() -> void:
 
 	_router.order_applied.connect(_on_order_applied)
 	_router.order_failed.connect(_on_order_failed)
+	
+	if ammo_system:
+		ammo_system.ammo_low.connect(func(uid): emit_signal("radio_message", "warn", "%s low ammo." % uid))
+		ammo_system.ammo_critical.connect(func(uid): emit_signal("radio_message", "warn", "%s critical ammo." % uid))
+		ammo_system.ammo_empty.connect(func(uid): emit_signal("radio_message", "error", "%s winchester (out of ammo)." % uid))
+
+	if fuel_system:
+		fuel_system.fuel_low.connect(func(uid): emit_signal("radio_message", "warn", "%s fuel low." % uid))
+		fuel_system.fuel_critical.connect(func(uid): emit_signal("radio_message", "warn", "%s fuel critical." % uid))
+		fuel_system.fuel_empty.connect(func(uid): emit_signal("radio_message", "error", "%s immobilized: fuel out." % uid))
 
 	set_process(true)
 
@@ -97,6 +113,8 @@ func init_world(scenario: ScenarioData) -> void:
 		if su.playable:
 			_playable_by_callsign[su.callsign] = su.id
 	_router.bind_units(_units_by_id, _units_by_callsign)
+	_register_logistics_units()
+	
 	_transition(State.INIT, State.RUNNING)
 
 
@@ -138,6 +156,7 @@ func _step_tick(dt: float) -> void:
 	_tick_idx += 1
 	_process_orders()
 	_update_movement(dt)
+	_update_logistics(dt)
 	_update_los()
 	_resolve_combat()
 	_update_morale()
@@ -220,6 +239,18 @@ func _resolve_combat() -> void:
 			if bool(d.unit.state_strength == 0):
 				if d.affiliation == ScenarioUnit.Affiliation.FRIEND:
 					Game.resolution.add_units_lost(1)
+
+
+## Ticks logistics systems and updates positions for proximity logic.
+## [param dt] Step delta seconds.
+func _update_logistics(dt: float) -> void:
+	if ammo_system:
+		for su: ScenarioUnit in _friendlies + _enemies:
+			ammo_system.set_unit_position(su.id, _v3_from_m(su.position_m))
+		ammo_system.tick(dt)
+
+	if fuel_system:
+		fuel_system.tick(dt)
 
 
 ## Pairs in contact this tick: Array of { attacker: String, defender: String }.
@@ -410,6 +441,23 @@ func get_unit_debug_path(uid: String) -> PackedVector2Array:
 	if su == null:
 		return []
 	return su.move_path
+
+
+## Current XZ position to 3D vector for systems needing 3D.
+func _v3_from_m(p_m: Vector2) -> Vector3:
+	return Vector3(p_m.x, 0.0, p_m.y)
+
+## Register all units with logistics systems and bind hooks.
+func _register_logistics_units() -> void:
+	if fuel_system:
+		for su: ScenarioUnit in _friendlies + _enemies:
+			fuel_system.register_scenario_unit(su)
+			su.bind_fuel_system(fuel_system)
+
+	if ammo_system:
+		for su: ScenarioUnit in _friendlies + _enemies:
+			ammo_system.register_unit(su.unit)
+			ammo_system.set_unit_position(su.id, _v3_from_m(su.position_m))
 
 
 ## State change callback: finalize mission resolution.

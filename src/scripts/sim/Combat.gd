@@ -17,6 +17,8 @@ signal debug_updated(data: Dictionary)
 @export var scenario: ScenarioData
 ## Terrain renderer reference
 @export var terrain_renderer: TerrainRender
+## Adapter used to gate fire and apply ammo penalties. Prefer assigning directly.
+@export var combat_adapter: CombatAdapter
 ## TerrainEffectConfig reference
 @export
 var terrain_config: TerrainEffectsConfig = preload("res://assets/configs/terrain_effects.tres")
@@ -30,9 +32,6 @@ var terrain_config: TerrainEffectsConfig = preload("res://assets/configs/terrain
 ## Also print compact line to console
 @export var debug_log_console := false
 
-## Ammo
-@export var combat_adapter_path: NodePath
-
 ##imported units manually for testing purposes
 var imported_attacker: UnitData = ContentDB.get_unit("infantry_plt_1")
 var imported_defender: UnitData = ContentDB.get_unit("infantry_plt_2")
@@ -42,7 +41,6 @@ var defender_su: ScenarioUnit
 var abort_condition := false
 var called_retreat := false
 
-var _adapter: CombatAdapter
 ## Per-unit ROF cooldown (seconds since epoch when the next shot is allowed)
 var _rof_cooldown: Dictionary = {}  # uid -> float(next_time_allowed_s)
 
@@ -53,12 +51,6 @@ var _debug_timer: Timer
 
 ## Init
 func _ready() -> void:
-	# Ammo adapter wiring
-	if combat_adapter_path != NodePath(""):
-		_adapter = get_node(combat_adapter_path) as CombatAdapter
-	if _adapter == null:
-		_adapter = get_tree().get_first_node_in_group("CombatAdapter") as CombatAdapter
-
 	# Build ScenarioUnit wrappers for the imported UnitData (test harness)
 	attacker_su = _make_su(imported_attacker, "ALPHA", Vector2(0, 0))
 	defender_su = _make_su(imported_defender, "BRAVO", Vector2(300, 0))
@@ -268,7 +260,7 @@ func print_unit_status(attacker: UnitData, defender: UnitData) -> void:
 ## - If `CombatAdapter.request_fire_with_penalty()` exists → use it.
 ## - Else fall back to `request_fire()` and map to a neutral response.
 func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> Dictionary:
-	if _adapter == null:
+	if combat_adapter == null:
 		return {
 			"allow": true,
 			"state": "normal",
@@ -280,11 +272,11 @@ func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> Di
 		}
 
 	# Preferred path (penalties + consume)
-	if _adapter.has_method("request_fire_with_penalty"):
-		return _adapter.request_fire_with_penalty(attacker.id, ammo_type, rounds)
+	if combat_adapter.has_method("request_fire_with_penalty"):
+		return combat_adapter.request_fire_with_penalty(attacker.id, ammo_type, rounds)
 
 	# Fallback: just block/consume via request_fire, no penalties
-	var ok := _adapter.request_fire(attacker.id, ammo_type, rounds)
+	var ok := combat_adapter.request_fire(attacker.id, ammo_type, rounds)
 	return {
 		"allow": ok,
 		"state": "normal" if ok else "empty",
