@@ -44,7 +44,7 @@ func serialize() -> Dictionary:
 	var items: Array = []
 	for it in board_items:
 		items.append(it.serialize())
-	
+
 	var objs: Array = []
 	for obj in frag_objectives:
 		objs.append(obj.serialize())
@@ -60,10 +60,7 @@ func serialize() -> Dictionary:
 			"weather": frag_weather,
 			"start_time": frag_start_time
 		},
-		"mission": {
-			"statement": frag_mission, 
-			"objectives": objs
-		},
+		"mission": {"statement": frag_mission, "objectives": objs},
 		"execution": frag_execution,
 		"admin_logi": frago_logi,
 		"intel_board":

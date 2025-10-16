@@ -22,11 +22,13 @@ var _edit_index: int = -1
 @onready var _save: Button = %Save
 @onready var _cancel: Button = %Cancel
 
+
 ## Wire UI elements.
 func _ready() -> void:
 	_save.pressed.connect(_on_save)
 	_cancel.pressed.connect(_on_cancel)
 	close_requested.connect(_on_cancel)
+
 
 ## Open for creating a new objective (clears fields).
 func popup_create() -> void:
@@ -37,6 +39,7 @@ func popup_create() -> void:
 	_success.text = ""
 	_score.value = 100
 	popup_centered_ratio(0.55)
+
 
 ## Open for editing an objective (prefills fields).
 ## [param index] Row index in caller’s objectives list.
@@ -49,6 +52,7 @@ func popup_edit(index: int, obj: ScenarioObjectiveData) -> void:
 	_success.text = obj.success
 	_score.value = obj.score
 	popup_centered_ratio(0.55)
+
 
 ## Called when user presses Save.
 func _on_save() -> void:
@@ -64,6 +68,7 @@ func _on_save() -> void:
 		emit_signal("request_update", _edit_index, o)
 
 	hide()
+
 
 ## Called when dialog gets cancelled.
 func _on_cancel() -> void:

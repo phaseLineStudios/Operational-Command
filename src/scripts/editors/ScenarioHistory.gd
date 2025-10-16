@@ -163,7 +163,9 @@ func push_entity_move(
 
 
 ## Set a property on a Resource with undo/redo (emits changed).
-func push_prop_set(target: Object, prop: String, before: Variant, after: Variant, desc: String) -> void:
+func push_prop_set(
+	target: Object, prop: String, before: Variant, after: Variant, desc: String
+) -> void:
 	_ur.create_action(desc)
 	_ur.add_do_property(target, prop, after)
 	_ur.add_undo_property(target, prop, before)

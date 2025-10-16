@@ -63,11 +63,11 @@ func show_dialog(state: bool, existing: BriefData = null) -> void:
 
 ## Load UI from working copy.
 func _load_from_working() -> void:
-	title_input.text     = String(working.title)
-	enemy_input.text     = String(working.frag_enemy)
-	friendly_input.text  = String(working.frag_friendly)
-	terrain_input.text   = String(working.frag_terrain)
-	mission_input.text   = String(working.frag_mission)
+	title_input.text = String(working.title)
+	enemy_input.text = String(working.frag_enemy)
+	friendly_input.text = String(working.frag_friendly)
+	terrain_input.text = String(working.frag_terrain)
+	mission_input.text = String(working.frag_mission)
 	execution_input.text = String(working.frag_execution)
 	admin_logi_input.text = String(working.frago_logi)
 
@@ -78,7 +78,15 @@ func _load_from_working() -> void:
 
 ## Clear UI to defaults.
 func _reset_ui() -> void:
-	for node in [title_input, enemy_input, friendly_input, terrain_input, mission_input, execution_input, admin_logi_input]:
+	for node in [
+		title_input,
+		enemy_input,
+		friendly_input,
+		terrain_input,
+		mission_input,
+		execution_input,
+		admin_logi_input
+	]:
 		if node:
 			node.text = ""
 	for c in objectives_vbox.get_children():
@@ -87,13 +95,13 @@ func _reset_ui() -> void:
 
 ## Collect UI -> working copy.
 func _collect_into_working() -> void:
-	working.title         = title_input.text.strip_edges()
-	working.frag_enemy    = enemy_input.text.strip_edges()
+	working.title = title_input.text.strip_edges()
+	working.frag_enemy = enemy_input.text.strip_edges()
 	working.frag_friendly = friendly_input.text.strip_edges()
-	working.frag_terrain  = terrain_input.text.strip_edges()
-	working.frag_mission  = mission_input.text.strip_edges()
+	working.frag_terrain = terrain_input.text.strip_edges()
+	working.frag_mission = mission_input.text.strip_edges()
 	working.frag_execution = execution_input.text.strip_edges()
-	working.frago_logi    = admin_logi_input.text.strip_edges()
+	working.frago_logi = admin_logi_input.text.strip_edges()
 	if working.frag_objectives == null:
 		working.frag_objectives = []
 
@@ -126,16 +134,15 @@ func _rebuild_objectives() -> void:
 
 		var idx := i
 		var obj := o
-		edit.pressed.connect(func():
-			objective_dialog.popup_edit(idx, obj)
-		)
-		del.pressed.connect(func():
-			var nxt: Array[ScenarioObjectiveData] = []
-			for j in range(working.frag_objectives.size()):
-				if j != idx:
-					nxt.append(working.frag_objectives[j])
-			working.frag_objectives = nxt
-			_rebuild_objectives()
+		edit.pressed.connect(func(): objective_dialog.popup_edit(idx, obj))
+		del.pressed.connect(
+			func():
+				var nxt: Array[ScenarioObjectiveData] = []
+				for j in range(working.frag_objectives.size()):
+					if j != idx:
+						nxt.append(working.frag_objectives[j])
+				working.frag_objectives = nxt
+				_rebuild_objectives()
 		)
 
 		row.add_child(t)
@@ -145,15 +152,16 @@ func _rebuild_objectives() -> void:
 		objectives_vbox.add_child(row)
 
 
-
 ## Open small dialog to create a new [class ObjectiveData].
 func _on_add_objective() -> void:
 	objective_dialog.popup_create()
+
 
 ## Save [class ScenarioObjectiveData] to scenario.
 func _on_objective_create(obj: ScenarioObjectiveData) -> void:
 	working.frag_objectives.append(obj)
 	_rebuild_objectives()
+
 
 ## Apply edited objective at index (preserve id if it existed).
 func _on_objective_update(index: int, obj: ScenarioObjectiveData) -> void:
@@ -162,6 +170,7 @@ func _on_objective_update(index: int, obj: ScenarioObjectiveData) -> void:
 
 	working.frag_objectives[index] = obj
 	_rebuild_objectives()
+
 
 ## Save current working copy and notify parent.
 func _on_save() -> void:

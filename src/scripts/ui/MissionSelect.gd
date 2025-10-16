@@ -216,7 +216,9 @@ func _on_pin_pressed(mission: ScenarioData, pin_btn: BaseButton) -> void:
 	_card_title.text = mission.title
 	_card_image.texture = mission.preview
 	_card_desc.text = mission.description
-	_card_diff.text = "Difficulty: %s" % [ScenarioData.ScenarioDifficulty.keys()[mission.difficulty]]
+	_card_diff.text = (
+		"Difficulty: %s" % [ScenarioData.ScenarioDifficulty.keys()[mission.difficulty]]
+	)
 
 	_prepare_card_for_float()
 

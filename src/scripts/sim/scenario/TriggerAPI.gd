@@ -24,7 +24,7 @@ func radio(msg: String, level: String = "info") -> void:
 ## Set objective state to completed.
 ## [param id] Objective ID.
 func complete_objective(id: StringName) -> void:
-		Game.complete_objective(id)
+	Game.complete_objective(id)
 
 
 ## Set objective state to failed.

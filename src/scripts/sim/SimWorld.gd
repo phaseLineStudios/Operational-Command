@@ -73,16 +73,28 @@ func _ready() -> void:
 
 	_router.order_applied.connect(_on_order_applied)
 	_router.order_failed.connect(_on_order_failed)
-	
+
 	if ammo_system:
-		ammo_system.ammo_low.connect(func(uid): emit_signal("radio_message", "warn", "%s low ammo." % uid))
-		ammo_system.ammo_critical.connect(func(uid): emit_signal("radio_message", "warn", "%s critical ammo." % uid))
-		ammo_system.ammo_empty.connect(func(uid): emit_signal("radio_message", "error", "%s winchester (out of ammo)." % uid))
+		ammo_system.ammo_low.connect(
+			func(uid): emit_signal("radio_message", "warn", "%s low ammo." % uid)
+		)
+		ammo_system.ammo_critical.connect(
+			func(uid): emit_signal("radio_message", "warn", "%s critical ammo." % uid)
+		)
+		ammo_system.ammo_empty.connect(
+			func(uid): emit_signal("radio_message", "error", "%s winchester (out of ammo)." % uid)
+		)
 
 	if fuel_system:
-		fuel_system.fuel_low.connect(func(uid): emit_signal("radio_message", "warn", "%s fuel low." % uid))
-		fuel_system.fuel_critical.connect(func(uid): emit_signal("radio_message", "warn", "%s fuel critical." % uid))
-		fuel_system.fuel_empty.connect(func(uid): emit_signal("radio_message", "error", "%s immobilized: fuel out." % uid))
+		fuel_system.fuel_low.connect(
+			func(uid): emit_signal("radio_message", "warn", "%s fuel low." % uid)
+		)
+		fuel_system.fuel_critical.connect(
+			func(uid): emit_signal("radio_message", "warn", "%s fuel critical." % uid)
+		)
+		fuel_system.fuel_empty.connect(
+			func(uid): emit_signal("radio_message", "error", "%s immobilized: fuel out." % uid)
+		)
 
 	set_process(true)
 
@@ -114,7 +126,7 @@ func init_world(scenario: ScenarioData) -> void:
 			_playable_by_callsign[su.callsign] = su.id
 	_router.bind_units(_units_by_id, _units_by_callsign)
 	_register_logistics_units()
-	
+
 	_transition(State.INIT, State.RUNNING)
 
 
@@ -257,6 +269,7 @@ func _update_logistics(dt: float) -> void:
 func get_current_contacts() -> Array:
 	return _contact_pairs.duplicate()
 
+
 ## Updates morale (placeholder).
 func _update_morale() -> void:
 	pass
@@ -265,6 +278,7 @@ func _update_morale() -> void:
 ## Emits per-tick radio/log events (placeholder).
 func _emit_events() -> void:
 	pass
+
 
 ## Check if mission is complete.
 ## [param dt] Time since last tick.
@@ -277,7 +291,6 @@ func _mission_complete_check(dt: float) -> void:
 	if prim.is_empty():
 		return
 
-
 	var all_success := true
 	var all_failed := true
 	for id in prim:
@@ -287,7 +300,6 @@ func _mission_complete_check(dt: float) -> void:
 		if st != MissionResolution.ObjectiveState.FAILED:
 			all_failed = false
 
-
 	var should_end := all_success or all_failed
 	if should_end:
 		_mission_complete_accum += dt
@@ -295,6 +307,7 @@ func _mission_complete_check(dt: float) -> void:
 			complete(all_failed)
 	else:
 		_mission_complete_accum = 0.0
+
 
 ## Records a compact snapshot for replays.
 func _record_replay() -> void:
@@ -412,7 +425,7 @@ func _snapshot_unit(su: ScenarioUnit) -> Dictionary:
 		return {}
 	var strength := su.unit.strength * su.unit.state_strength
 	var destroyed := su.is_dead()
-	
+
 	return {
 		"id": su.id,
 		"callsign": su.callsign,
@@ -446,6 +459,7 @@ func get_unit_debug_path(uid: String) -> PackedVector2Array:
 ## Current XZ position to 3D vector for systems needing 3D.
 func _v3_from_m(p_m: Vector2) -> Vector3:
 	return Vector3(p_m.x, 0.0, p_m.y)
+
 
 ## Register all units with logistics systems and bind hooks.
 func _register_logistics_units() -> void:
