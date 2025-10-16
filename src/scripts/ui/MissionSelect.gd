@@ -38,7 +38,7 @@ var _card_pin_button: BaseButton
 @onready var _map_rect: TextureRect = $"Container/Map"
 @onready var _pins_layer: Control = $"Container/PinsLayer"
 
-@onready var _card: Panel = $"Container/MissionCard"
+@onready var _card: PanelContainer = $"Container/MissionCard"
 @onready var _card_title: Label = $"Container/MissionCard/VBoxContainer/Title"
 @onready var _card_desc: RichTextLabel = $"Container/MissionCard/VBoxContainer/HBoxContainer/Desc"
 @onready var _card_image: TextureRect = %CardImage
@@ -212,21 +212,27 @@ func _update_pin_positions() -> void:
 func _on_pin_pressed(mission: ScenarioData, pin_btn: BaseButton) -> void:
 	_selected_mission = mission
 	_card_pin_button = pin_btn
+
 	_card_title.text = mission.title
-
 	_card_image.texture = mission.preview
-
 	_card_desc.text = mission.description
-	_card_diff.text = "Difficulty: %s" % [mission.difficulty]
+	_card_diff.text = "Difficulty: %s" % [ScenarioData.ScenarioDifficulty.keys()[mission.difficulty]]
 
-	# BUG Unhiding card removes theme
-	_card.visible = true
-	_click_catcher.visible = true
-	_card.reset_size()
+	_prepare_card_for_float()
+
+	_card.visible = false
+	_click_catcher.visible = false
+
 	show_pin_labels = false
 	_refresh_pin_labels()
 
-	call_deferred("_position_card_near_pin", pin_btn)
+	_card.reset_size()
+	var min_size := _card.get_combined_minimum_size()
+	_card.size = min_size
+
+	_position_card_near_pin(pin_btn)
+	_card.visible = true
+	_click_catcher.visible = true
 
 
 ## Start current mission.
@@ -262,33 +268,39 @@ func _point_over_any_pin(view_pt: Vector2) -> bool:
 
 ## Place the card near a pin and keep it on-screen.
 func _position_card_near_pin(pin_btn: BaseButton) -> void:
-	var pin_center_global := pin_btn.global_position + pin_btn.size * 0.5
+	_card.set_anchors_preset(Control.PRESET_TOP_LEFT, false)
 
+	var pin_center_global := pin_btn.global_position + pin_btn.size * 0.5
 	var container_inv := _container.get_global_transform_with_canvas().affine_inverse()
 	var anchor: Vector2 = container_inv * pin_center_global
 
 	var gap := 12.0
-
 	var card_size := _card.size
 	if card_size == Vector2.ZERO:
 		card_size = _card.get_combined_minimum_size()
-
 	var bg_size := _container.size
-	var pos := anchor + Vector2(gap, -card_size.y * 0.5)
 
-	# Flip if overflowing right
+	var pos := anchor + Vector2(gap, gap)
+
 	if pos.x + card_size.x > bg_size.x:
 		pos.x = anchor.x - gap - card_size.x
-	# Clamp to container
+	if pos.y + card_size.y > bg_size.y:
+		pos.y = anchor.y - gap - card_size.y
+
 	pos.x = clampf(pos.x, 0.0, max(0.0, bg_size.x - card_size.x))
 	pos.y = clampf(pos.y, 0.0, max(0.0, bg_size.y - card_size.y))
 
-	# Absolute positioning inside the container
-	_card.anchor_left = 0.0
-	_card.anchor_top = 0.0
-	_card.anchor_right = 0.0
-	_card.anchor_bottom = 0.0
 	_card.position = pos
+
+
+## Prepare the card position.
+func _prepare_card_for_float() -> void:
+	_card.set_anchors_preset(Control.PRESET_TOP_LEFT, false)
+	_card.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	_card.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	_card.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	_card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	_card.pivot_offset = Vector2.ZERO
 
 
 ## Hide card and clear selection.
