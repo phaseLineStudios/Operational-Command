@@ -219,7 +219,7 @@ func check_abort_condition(attacker: ScenarioUnit, defender: ScenarioUnit) -> vo
 	if defender == null or defender.unit == null or attacker == null or attacker.unit == null:
 		return
 
-	if defender.unit.state_strength <= 0.5:
+	if defender.unit.strength / defender.unit.state_strength <= 0.5:
 		LogService.info(defender.unit.id + " is [b]destroyed[/b]", "Combat.gd:62")
 		if attacker.unit.morale <= 0.8:
 			attacker.unit.morale += 0.2

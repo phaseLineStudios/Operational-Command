@@ -56,6 +56,12 @@ var _move_paused := false
 var _fuel: FuelSystem = null
 
 
+## Check if unit is dead.
+## [return] True if unit is destroyed.
+func is_dead() -> bool:
+	return float(unit.state_strength / unit.strength) <= 0.0
+
+
 ## Bind a FuelSystem instance at runtime.
 func bind_fuel_system(fs: FuelSystem) -> void:
 	_fuel = fs

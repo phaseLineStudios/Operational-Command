@@ -408,7 +408,6 @@ _orders = NodePath("../../../../RadioController/OrdersRouter")
 _fuel = NodePath("../../../../WorldController/FuelSystem")
 icon_size_px = 92
 font_size = 42
-label_offset_px = Vector2(0, -34)
 
 [node name="GridUI" type="PanelContainer" parent="Controllers/MapController"]
 editor_description = "Temporary UI"

@@ -16,9 +16,10 @@
 		"speed_kph": 50
 	},
 	"state": {
-		"personnel_ratio": 0.85,
-		"equipment_ratio": 0.90,
-		"cohesion": 0.70
+		"state_strength": 15.0,
+		"state_injured": 0.0,
+		"state_equipment": 1.0,
+		"cohesion": 1.0
 	},
 	"editor": {
 		"unit_category": "us_army"

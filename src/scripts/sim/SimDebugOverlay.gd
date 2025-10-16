@@ -35,6 +35,8 @@ extends Control
 @export var show_combat_hot := true
 ## Show fuel percentage (when available).
 @export var show_fuel := true
+## Draw red lines between engaged pairs.
+@export var show_combat_lines := true
 
 @export_group("Style")
 ## Icon size in pixels (square).
@@ -63,6 +65,12 @@ extends Control
 @export var font_size := 12
 ## Label offset from icon center (pixels).
 @export var label_offset_px := Vector2(0, -24)
+## Combat line stroke width (pixels).
+@export var combat_line_width_px := 2.5
+## Combat line color.
+@export var combat_line_color: Color = Color(0.90, 0.08, 0.08, 0.95)
+## Alpha for dead units' icons.
+@export var dead_icon_alpha := 0.35
 
 var _terrain_base: Control
 var _map_tf: Transform2D
@@ -198,6 +206,23 @@ func _draw() -> void:
 	if terrain_renderer == null or terrain_renderer.data == null:
 		return
 
+	if show_combat_lines and _sim:
+		var pairs: Array = []
+		if _sim.has_method("get_current_contacts"):
+			pairs = _sim.get_current_contacts()
+		for p in pairs:
+			var aid := str(p.get("attacker", ""))
+			var did := str(p.get("defender", ""))
+			var a_su: ScenarioUnit = _unit_by_id.get(aid)
+			var d_su: ScenarioUnit = _unit_by_id.get(did)
+			if a_su == null or d_su == null:
+				continue
+			if a_su.is_dead() or d_su.is_dead():
+				continue
+			var a_px := terrain_renderer.terrain_to_map(a_su.position_m)
+			var d_px := terrain_renderer.terrain_to_map(d_su.position_m)
+			draw_line(a_px, d_px, combat_line_color, combat_line_width_px)
+
 	var units: Array[ScenarioUnit] = []
 	units.append_array(Game.current_scenario.units)
 	units.append_array(Game.current_scenario.playable_units)
@@ -226,9 +251,13 @@ func _draw() -> void:
 			var tex: Texture2D = unit.unit.icon if friend else unit.unit.enemy_icon
 			if tex:
 				var half := Vector2(icon_size_px, icon_size_px) * 0.5
-				draw_texture_rect(tex, Rect2(pos_m - half, half * 2.0), false)
+				var mod := Color(1, 1, 1, dead_icon_alpha if unit.is_dead() else 1.0)
+				draw_texture_rect(tex, Rect2(pos_m - half, half * 2.0), false, mod)
 			else:
-				draw_circle(pos_m, icon_size_px * 0.5, col)
+				var c := col
+				if unit.is_dead():
+					c.a *= dead_icon_alpha
+				draw_circle(pos_m, icon_size_px * 0.5, c)
 
 		if show_labels or show_bars:
 			var y := 0.0

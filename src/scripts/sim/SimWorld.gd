@@ -53,6 +53,7 @@ var _friendlies: Array[ScenarioUnit] = []
 var _enemies: Array[ScenarioUnit] = []
 var _replay: Array[Dictionary] = []
 var _last_contacts: PackedStringArray = []
+var _contact_pairs: Array = []
 var _mission_complete_accum := 0.0
 
 
@@ -159,8 +160,16 @@ func _process_orders() -> void:
 func _update_movement(dt: float) -> void:
 	if movement_adapter == null:
 		return
-	movement_adapter.tick_units(_friendlies, dt)
-	movement_adapter.tick_units(_enemies, dt)
+	var alive_friends: Array[ScenarioUnit] = []
+	var alive_enemies: Array[ScenarioUnit] = []
+	for su in _friendlies:
+		if not su.is_dead():
+			alive_friends.append(su)
+	for su in _enemies:
+		if not su.is_dead():
+			alive_enemies.append(su)
+	movement_adapter.tick_units(alive_friends, dt)
+	movement_adapter.tick_units(alive_enemies, dt)
 	for su in _friendlies + _enemies:
 		emit_signal("unit_updated", su.id, _snapshot_unit(su))
 
@@ -171,11 +180,15 @@ func _update_los() -> void:
 		return
 	var pairs := los_adapter.contacts_between(_friendlies, _enemies)
 	_last_contacts.clear()
+	_contact_pairs.clear()
 	for p in pairs:
 		var a: ScenarioUnit = p.attacker
 		var d: ScenarioUnit = p.defender
+		if a.is_dead() or d.is_dead():
+			continue
 		var key := "%s|%s" % [a.id, d.id]
 		_last_contacts.append(key)
+		_contact_pairs.append({"attacker": a.id, "defender": d.id})
 		emit_signal("contact_reported", a.id, d.id)
 
 
@@ -190,7 +203,8 @@ func _resolve_combat() -> void:
 		var d: ScenarioUnit = _units_by_id.get(parts[1])
 		if a == null or d == null:
 			continue
-
+		if a.is_dead() or d.is_dead():
+			continue
 		var dmg := combat_controller.calculate_damage(a, d)
 		if dmg <= 0.0:
 			continue
@@ -207,6 +221,10 @@ func _resolve_combat() -> void:
 				if d.affiliation == ScenarioUnit.Affiliation.FRIEND:
 					Game.resolution.add_units_lost(1)
 
+
+## Pairs in contact this tick: Array of { attacker: String, defender: String }.
+func get_current_contacts() -> Array:
+	return _contact_pairs.duplicate()
 
 ## Updates morale (placeholder).
 func _update_morale() -> void:
@@ -361,12 +379,17 @@ func get_rng_seed() -> int:
 func _snapshot_unit(su: ScenarioUnit) -> Dictionary:
 	if su == null:
 		return {}
+	var strength := su.unit.strength * su.unit.state_strength
+	var destroyed := su.is_dead()
+	
 	return {
 		"id": su.id,
 		"callsign": su.callsign,
 		"pos_m": su.position_m,
 		"aff": int(su.affiliation),
-		"state": int(su.move_state())
+		"state": int(su.move_state()),
+		"strength": strength,
+		"dead": destroyed or strength <= 0.0
 	}
 
 
