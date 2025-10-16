@@ -6,15 +6,11 @@ extends Control
 ##
 ## Public signals:
 ##   reinforcement_preview_changed(unit_id, new_amount)
-##   reinforcement_committed(assignments: Dictionary[String, int])
+##   reinforcement_committed(assignments: Dictionary[String, int])d.
 
 ## Emitted when the temporary planned amount for a unit changes.
-## unit_id: the UnitData.id
-## new_amount: currently planned additional personnel for that unit (not yet applied)
 signal reinforcement_preview_changed(unit_id: String, new_amount: int)
-
-## Emitted when the user presses Commit. The dictionary maps unit_id to amount.
-## The owner is expected to apply the mutation and persist it.
+## Emitted when the user presses Commit. Dictionary maps unit_id to amount.
 signal reinforcement_committed(assignments: Dictionary[String, int])
 
 ## Threshold below which a unit is displayed as UNDERSTRENGTH (percent of authorized)
@@ -51,35 +47,23 @@ class RowWidgets:
 	var plus: Button
 	var slider: HSlider
 	var max_lbl: Label
-
 	func _init(
-		b: HBoxContainer,
-		t: Label,
-		badge_n: UnitStrengthBadge,
-		m: Button,
-		v: Label,
-		p: Button,
-		s: HSlider,
-		ml: Label
+		b: HBoxContainer, t: Label, badge_n: UnitStrengthBadge,
+		m: Button, v: Label, p: Button, s: HSlider, ml: Label
 	) -> void:
-		box = b
-		title = t
-		badge = badge_n
-		minus = m
-		value = v
-		plus = p
-		slider = s
-		max_lbl = ml
+		box = b; title = t; badge = badge_n; minus = m
+		value = v; plus = p; slider = s; max_lbl = ml
 
-## Initialize buttons and labels.
+## Scene is ready: connect buttons and update labels.
 func _ready() -> void:
-	_btn_commit.pressed.connect(commit)
-	_btn_reset.pressed.connect(reset_pending)
+	if _btn_commit:
+		_btn_commit.pressed.connect(commit)
+	if _btn_reset:
+		_btn_reset.pressed.connect(reset_pending)
 	_update_pool_labels()
 	_update_commit_enabled()
 
-## Provide the list of units to display.
-## Rebuilds the row list and clears any pending plan.
+## Provide the list of units to display. Rebuilds the rows and clears any plan.
 func set_units(units: Array[UnitData]) -> void:
 	_units = []
 	_rows.clear()
@@ -92,7 +76,7 @@ func set_units(units: Array[UnitData]) -> void:
 	_update_pool_labels()
 	_update_commit_enabled()
 
-## Set available replacements in the pool and refresh UI.
+## Set the available replacements in the pool and refresh UI.
 func set_pool(amount: int) -> void:
 	_pool_total = max(0, amount)
 	_pool_remaining = _pool_total - _pending_sum()
@@ -115,7 +99,7 @@ func commit() -> void:
 	var plan: Dictionary[String, int] = _pending.duplicate(true)
 	emit_signal("reinforcement_committed", plan)
 
-## Create all row widgets for the current units.
+## Create row widgets for the current units.
 func _build_rows() -> void:
 	for u: UnitData in _units:
 		var uid: String = u.id
@@ -123,8 +107,8 @@ func _build_rows() -> void:
 		var cap: int = int(max(0, u.strength))
 		var missing: int = max(0, cap - current)
 
-		# Treat 0 (and very low) strength as wiped out and lock the row.
-		var is_wiped_out: bool = current <= 0 or u.state_strength <= 0.5
+		# WIPED_OUT means exactly zero personnel
+		var is_wiped_out: bool = current <= 0
 
 		var row := HBoxContainer.new()
 		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -144,8 +128,7 @@ func _build_rows() -> void:
 		spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(spacer)
 
-		var minus := Button.new()
-		minus.text = "-"
+		var minus := Button.new(); minus.text = "-"
 		row.add_child(minus)
 
 		var val := Label.new()
@@ -154,8 +137,7 @@ func _build_rows() -> void:
 		val.text = str(int(_pending.get(uid, 0)))
 		row.add_child(val)
 
-		var plus := Button.new()
-		plus.text = "+"
+		var plus := Button.new(); plus.text = "+"
 		row.add_child(plus)
 
 		var slider := HSlider.new()
@@ -173,12 +155,10 @@ func _build_rows() -> void:
 		var widgets := RowWidgets.new(row, title, badge, minus, val, plus, slider, max_lbl)
 		_rows[uid] = widgets
 
-		# Wire controls
 		minus.pressed.connect(func() -> void: _nudge(uid, -1))
 		plus.pressed.connect(func() -> void: _nudge(uid, +1))
 		slider.value_changed.connect(func(v: float) -> void: _set_amount(uid, int(round(v))))
 
-		# Lock wiped out rows
 		if is_wiped_out:
 			_disable_row(widgets, true)
 			title.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
@@ -209,22 +189,23 @@ func _update_all_rows_state() -> void:
 		w.slider.value = float(req)
 		w.max_lbl.text = "/ %d" % missing
 
-		var wiped: bool = cur <= 0 or u.state_strength <= 0.5
+		var wiped: bool = cur <= 0
 		_disable_row(w, wiped or (_pool_remaining <= 0 and req <= 0))
 
-		# Badge always reflects current state. It does not preview pending plan.
+		# Badge reflects current state, not the preview.
 		w.badge.set_unit(u, understrength_threshold)
 
 	_update_pool_labels()
 
-## Update the pool label UI.
+## Update the pool label.
 func _update_pool_labels() -> void:
 	if _lbl_pool:
 		_lbl_pool.text = "Pool: %d / %d" % [_pool_remaining, _pool_total]
 
 ## Enable Commit button only when there is any planned change.
 func _update_commit_enabled() -> void:
-	_btn_commit.disabled = (_pending_sum() <= 0)
+	if _btn_commit:
+		_btn_commit.disabled = (_pending_sum() <= 0)
 
 ## Sum of all pending allocations.
 func _pending_sum() -> int:
@@ -233,13 +214,12 @@ func _pending_sum() -> int:
 		t += int(v)
 	return t
 
-## Change the planned amount for a unit by a small delta.
+## Change the planned amount for a unit by a delta.
 func _nudge(uid: String, delta: int) -> void:
 	var target: int = int(_pending.get(uid, 0)) + delta
 	_set_amount(uid, target)
 
-## Set the planned amount for a unit.
-## The value is clamped to the unit's missing personnel and the available pool.
+## Set the planned amount for a unit. Clamped to capacity and pool.
 func _set_amount(uid: String, target: int) -> void:
 	var u: UnitData = _find_unit(uid)
 	if u == null:
