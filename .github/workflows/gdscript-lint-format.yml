@@ -1,19 +1,9 @@
 name: GDScript
 
 on:
-  pull_request:
-    paths:
-      - "**/*.gd"
-      - "**/*.gdshader"
-      - "tools/gdtoolkit_run.py"
-      - "tools/requirements-gdtoolkit.txt"
+  pull_request
   push:
     branches: [ main ]
-    paths:
-      - "**/*.gd"
-      - "**/*.gdshader"
-      - "tools/gdtoolkit_run.py"
-      - "tools/requirements-gdtoolkit.txt"
 
 concurrency:
   group: gdtoolkit-${{ github.workflow }}-${{ github.ref }}
