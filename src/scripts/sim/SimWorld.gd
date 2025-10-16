@@ -61,13 +61,13 @@ func on_unit_position(uid: String, pos: Vector3) -> void:
 func compute_strength_factor(u: UnitData) -> float:
 	var cap: float = float(max(1, u.strength))
 	var cur: float = float(max(0.0, u.state_strength))
-	if cur <= 0.5:
+	if cur <= 0.0:
 		return 0.0
 	return clamp(cur / cap, 0.0, 1.0)
 
 ## True if the unit should be spawned in the mission.
 func should_spawn_unit(u: UnitData) -> bool:
-	return u != null and u.state_strength > 0.5
+	return u != null and u.state_strength > 0.0
 
 ## Optionally filter a list of ScenarioUnit before spawning.
 ## Can be used to filter out any units that are already wiped out
