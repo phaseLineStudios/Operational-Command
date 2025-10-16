@@ -23,6 +23,9 @@ var current_scenario: ScenarioData
 var current_scenario_loadout: Dictionary = {}
 var current_scenario_summary: Dictionary = {}
 
+## Personnel replacements available for pre-mission reinforcement
+@export var campaign_replacement_pool: int = 0
+
 @onready var resolution: MissionResolution = MissionResolution.new()
 
 
@@ -105,3 +108,28 @@ func record_unit_lost(count: int = 1) -> void:
 func end_scenario_and_go_to_debrief() -> void:
 	current_scenario_summary = resolution.finalize(false)
 	goto_scene("res://scenes/debrief.tscn")
+
+
+## Return available replacements pool
+func get_replacement_pool() -> int:
+	return int(campaign_replacement_pool)
+
+
+## Set replacement pool (non-persistent placeholder)
+func set_replacement_pool(v: int) -> void:
+	campaign_replacement_pool = max(0, int(v))
+
+
+## Return current units in context for screens that need them.
+## Prefer Scenario.units entries, but fall back to unit_recruits.
+func get_current_units() -> Array:
+	var out: Array = []
+	if current_scenario:
+		for su in current_scenario.units:
+			if su and su.unit:
+				out.append(su)
+		if out.is_empty():
+			for u in current_scenario.unit_recruits:
+				if u:
+					out.append(u)
+	return out
