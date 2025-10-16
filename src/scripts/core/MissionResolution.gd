@@ -5,7 +5,7 @@ extends Node
 ## Use as a helper owned by your Game singleton / mission scene.
 ## @experimental
 
-signal objective_updated(objective_id: StringName, state: ObjectiveState)
+signal objective_updated(objective_id: String, state: ObjectiveState)
 signal score_changed(total: int)
 signal mission_finalized(outcome: MissionOutcome, summary: Dictionary)
 
@@ -21,8 +21,8 @@ enum MissionOutcome { UNDECIDED, SUCCESS, PARTIAL, FAILED, ABORTED }
 @export var score_unit_lost := -10
 @export var score_time_penalty_per_min := -1
 
-@export var scenario_id: StringName
-@export var primary_objectives: Array[StringName] = []
+@export var scenario_id: String
+@export var primary_objectives: Array[String] = []
 
 var _objective_states: Dictionary = {}
 var _casualties := {
@@ -37,9 +37,9 @@ var _is_final: bool = false
 
 
 ## Initialize for a mission.
-func start(prim: Array[StringName], scenario: StringName = &"") -> void:
+func start(prim: Array[String], scenario: String = "") -> void:
 	_reset()
-	scenario_id = scenario if scenario != &"" else scenario_id
+	scenario_id = scenario if scenario != "" else scenario_id
 	primary_objectives = prim
 	for id in prim:
 		_objective_states[id] = ObjectiveState.PENDING
@@ -55,7 +55,7 @@ func tick(dt: float) -> void:
 
 
 ## Update an objective state.
-func set_objective_state(id: StringName, state: ObjectiveState) -> void:
+func set_objective_state(id: String, state: ObjectiveState) -> void:
 	if _is_final:
 		return
 	if not _objective_states.has(id):

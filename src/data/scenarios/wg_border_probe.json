@@ -44,7 +44,7 @@
 		},
 		"condition_expr": "true",
 		"id": "TRG_1",
-		"on_activate_expr": "complete_objective(\"test_objective_1\")\ncomplete_objective(\"test_objective_2\")",
+		"on_activate_expr": "print(\"active trigger\")\ncomplete_objective(\"test_objective_1\")\ncomplete_objective(\"test_objective_2\")",
 		"on_deactivate_expr": "",
 		"presence": 1,
 		"require_duration_s": 0.0,

@@ -9,7 +9,6 @@ extends Node
 @export var run_in_process := false
 
 var _scenario: ScenarioData
-var _res: MissionResolution
 var _vm := TriggerVM.new()
 var _api := TriggerAPI.new()
 var _snap_by_id: Dictionary = {}
@@ -20,7 +19,6 @@ var _player_ids := {}
 ## Wire API.
 func _ready() -> void:
 	_api.sim = _sim
-	_api.res = _res
 	_api.engine = self
 	_vm.set_api(_api)
 	set_process(run_in_process)

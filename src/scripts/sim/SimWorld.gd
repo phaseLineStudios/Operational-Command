@@ -36,6 +36,8 @@ enum State { INIT, RUNNING, PAUSED, COMPLETED }
 @export var trigger_engine: TriggerEngine
 ## Orders router.
 @export var _router: OrdersRouter
+## Grace period before ending (seconds) to avoid flapping.
+@export var auto_end_grace_s := 2.0
 
 var _state: State = State.INIT
 var _dt_accum := 0.0
@@ -51,6 +53,7 @@ var _friendlies: Array[ScenarioUnit] = []
 var _enemies: Array[ScenarioUnit] = []
 var _replay: Array[Dictionary] = []
 var _last_contacts: PackedStringArray = []
+var _mission_complete_accum := 0.0
 
 
 ## Initializes tick timing/RNG and wires router signals. Starts processing.
@@ -99,10 +102,22 @@ func init_world(scenario: ScenarioData) -> void:
 ## Initialize mission resolution and connect state changes.
 ## [param primary_ids] Objective IDs.
 ## [param scenario] Scenario to initialize.
-func init_resolution(primary_ids: Array[StringName], scenario: ScenarioData) -> void:
-	Game.resolution.start(primary_ids, scenario.id)
+func init_resolution(objs: Array[ScenarioObjectiveData]) -> void:
+	var primary_ids: Array[String] = []
+	for obj in objs:
+		primary_ids.append(obj.id)
+	Game.start_scenario(primary_ids)
 	if not mission_state_changed.is_connected(_on_state_change_for_resolution):
 		mission_state_changed.connect(_on_state_change_for_resolution)
+	if Game.resolution.objective_updated.is_connected(_on_objective_updated):
+		Game.resolution.objective_updated.connect(_on_objective_updated)
+
+
+## Immidiatly check if mission is completed on objective state change.
+## [param _id] Id of updated objective.
+## [param _obj_state] New state of objective.
+func _on_objective_updated(_id: String, _obj_state: int) -> void:
+	_mission_complete_check(0.0)
 
 
 ## Fixed-rate loop; advances the sim in discrete ticks while RUNNING.
@@ -127,6 +142,7 @@ func _step_tick(dt: float) -> void:
 	_update_morale()
 	_emit_events()
 	_record_replay()
+	_mission_complete_check(dt)
 
 	trigger_engine.tick(dt)
 	Game.resolution.tick(dt)
@@ -201,6 +217,35 @@ func _update_morale() -> void:
 func _emit_events() -> void:
 	pass
 
+## Check if mission is complete.
+## [param dt] Time since last tick.
+func _mission_complete_check(dt: float) -> void:
+	if _state != State.RUNNING:
+		return
+	var d := Game.resolution.to_summary_payload()
+	var prim: Array = d.get("primary_objectives", [])
+	var objs: Dictionary = d.get("objectives", {})
+	if prim.is_empty():
+		return
+
+
+	var all_success := true
+	var all_failed := true
+	for id in prim:
+		var st := int(objs.get(id, MissionResolution.ObjectiveState.PENDING))
+		if st != MissionResolution.ObjectiveState.SUCCESS:
+			all_success = false
+		if st != MissionResolution.ObjectiveState.FAILED:
+			all_failed = false
+
+
+	var should_end := all_success or all_failed
+	if should_end:
+		_mission_complete_accum += dt
+		if _mission_complete_accum >= auto_end_grace_s:
+			complete(all_failed)
+	else:
+		_mission_complete_accum = 0.0
 
 ## Records a compact snapshot for replays.
 func _record_replay() -> void:
@@ -257,7 +302,7 @@ func step() -> void:
 
 
 ## Complete mission.
-func complete() -> void:
+func complete(_failed: bool) -> void:
 	if _state != State.COMPLETED:
 		_transition(_state, State.COMPLETED)
 
@@ -349,7 +394,7 @@ func get_unit_debug_path(uid: String) -> PackedVector2Array:
 ## [param next] Next state.
 func _on_state_change_for_resolution(_prev: State, next: State) -> void:
 	if next == State.COMPLETED:
-		Game.resolution.finalize(false)
+		Game.end_scenario_and_go_to_debrief()
 
 
 ## Router callback: order applied.

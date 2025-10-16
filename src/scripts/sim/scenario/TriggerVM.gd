@@ -46,6 +46,7 @@ func eval_condition(expr_src: String, ctx: Dictionary) -> bool:
 ## [param expr_src] Expression source.
 ## [param ctx] becomes constants accessible in the expression.
 func run(expr_src: String, ctx: Dictionary) -> void:
+	LogService.trace("Ran trigger expression", "TriggerVM.gd:49")
 	var src := expr_src.strip_edges()
 	if src == "":
 		return

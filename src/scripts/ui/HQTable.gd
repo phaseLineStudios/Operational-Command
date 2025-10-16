@@ -24,6 +24,7 @@ func _ready() -> void:
 	sim.init_world(scenario)
 	trigger_engine.bind_scenario(scenario)
 	sim.bind_radio(%RadioController, %OrdersParser)
+	sim.init_resolution(scenario.briefing.frag_objectives)
 	wordlist.bind_recognizer(STTService.get_recognizer())
 
 
