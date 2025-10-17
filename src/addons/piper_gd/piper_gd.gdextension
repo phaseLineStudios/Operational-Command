@@ -1,0 +1,18 @@
+{
+  "entry_symbol": "piper_gd_library_init",
+  "dependencies": {
+    "gdextension": {
+      "compatibility_min": "4.4"
+    }
+  },
+  "libraries": [
+    {
+      "linux.x86_64": "res://addons/piper_gd/piper_gd.template_release.so",
+      "linux.x86_64.debug": "res://addons/piper_gd/piper_gd.template_debug.so",
+      "windows.x86_64": "res://addons/piper_gd/piper_gd.windows.template_debug.x86_64.dll",
+      "windows.x86_64.debug": "res://addons/piper_gd/piper_gd.template_debug.x86_64.dll",
+      "macos.universal": "res://addons/piper_gd/piper_gd.template_release.dylib",
+      "macos.universal.debug": "res://addons/piper_gd/piper_gd.template_debug.dylib"
+    }
+  ]
+}
