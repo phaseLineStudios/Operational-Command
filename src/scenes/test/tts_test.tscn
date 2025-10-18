@@ -71,6 +71,7 @@ text = "Text to generate TTS of"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 130)
 layout_mode = 2
+text = "Company this is Alpha. We are located at grid 1. 9. 3. 4. 7. 6."
 
 [node name="Submit" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer/PanelContainer/VBoxContainer"]
 unique_name_in_owner = true

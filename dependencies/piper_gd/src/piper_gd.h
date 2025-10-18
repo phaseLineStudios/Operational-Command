@@ -14,6 +14,8 @@
 #include <godot_cpp/classes/audio_stream_wav.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/string.hpp>
+#include <godot_cpp/classes/thread.hpp>
+#include <godot_cpp/classes/mutex.hpp>
 
 #ifndef PIPER_GD_H
 #define PIPER_GD_H
@@ -48,12 +50,78 @@ class PiperTTS : public RefCounted {
      */
     String config_path;
 
+    /**
+     * @brief Thread for asynchronous synthesis.
+     * @details Used to run synthesis jobs without blocking the main thread.
+     */
+    Ref<Thread> _thread;
+
+    /**
+     * @brief Mutex for thread safety.
+     * @details Protects access to shared resources during synthesis.
+     */
+    Ref<Mutex>  _mtx;
+
+    /**
+     * @brief Busy flag indicating if a synthesis job is in progress.
+     * @details Prevents starting new jobs while one is active.
+     */
+    bool        _busy = false;
+
+    /**
+     * @brief Next job ID counter.
+     * @details Incremented for each new synthesis job to provide unique IDs.
+     */
+    int64_t     _next_id = 1;
+    
+    /**
+     * @brief Current job text.
+     * @details The text being synthesized in the current job.
+     */
+    String      _job_text;
+
+    /**
+     * @brief Current job options.
+     * @details Dictionary of options for the current synthesis job.
+     */
+    Dictionary  _job_opts;
+
+    /**
+     * @brief Current job ID.
+     * @details Unique identifier for the current synthesis job.
+     */
+    int64_t     _job_id = 0;
+
 protected:
     /**
      * @brief Registers methods and properties with the Godot ClassDB.
      * @internal Called by Godot during class initialization.
      */
     static void _bind_methods();
+
+    /**
+     * @brief Thread procedure for asynchronous synthesis.
+     */
+    void _thread_proc();
+
+    /**
+     * @brief Finalizes a successful synthesis job.
+     * 
+     * @param id Unique job ID.
+     * @param pcm Packed byte array containing PCM audio data.
+     * @param sample_rate Sample rate of the synthesized audio.
+     * @param channels Number of audio channels.
+     * @param bits Bits per sample.
+     */
+    void _finalize_success(int64_t id, PackedByteArray pcm, int sample_rate, int channels, int bits);
+
+    /**
+     * @brief Finalizes a failed synthesis job.
+     * 
+     * @param id Unique job ID.
+     * @param message Error message describing the failure.
+     */
+    void _finalize_failure(int64_t id, const String &message);
 
 public:
     /**
@@ -96,6 +164,24 @@ public:
      * @return A Ref<AudioStreamWAV> containing the synthesized audio, or an empty Ref on failure.
      */
     Ref<AudioStreamWAV> synthesize_to_stream(const String &text, const Dictionary &opts);
+
+    /**
+     * @brief Asynchronously synthesizes speech from text to a stream.
+     * 
+     * @param text The input text to synthesize.
+     * @param opts Optional dictionary of synthesis options (e.g., speaker, length_scale).
+     * @return A unique job ID for tracking the asynchronous synthesis task.
+     * 
+     * @note The synthesized audio will be delivered via a signal when complete.
+     */
+    int64_t synthesize_to_stream_async(const String &text, const Dictionary &opts = Dictionary());
+
+    /**
+     * @brief Waits for the current asynchronous synthesis job to complete.
+     * 
+     * @note This method blocks until the job is finished.
+     */
+    void wait();
 };
 
 } //namespace godot

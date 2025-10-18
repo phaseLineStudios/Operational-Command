@@ -2,6 +2,11 @@
 extends Node
 ## Piper CLI bridge using piper_gd.
 
+## Emitted when TTS message is ready
+signal tts_ready(id: int, stream: AudioStreamWAV)
+## Emitted when TTS message failed.
+signal tts_failed(id: int, message: String)
+
 ## Available speaker models.
 enum Model { EN_US_MEDIUM_RYAN }
 
@@ -34,6 +39,9 @@ func _ready() -> void:
 	_model_path = mdl.get("model", "")
 	_config_path = mdl.get("config", "")
 	_tts.set_voice(_abs_path(_model_path), _abs_path(_config_path))
+	
+	_tts.synthesis_completed.connect(_on_tts_done)
+	_tts.synthesis_failed.connect(_on_tts_failed)
 
 
 ## Check if TTS Service is ready.
@@ -58,23 +66,29 @@ func set_model(new_model: Model) -> bool:
 	return true
 
 
-## Generate a TTS response.
-## [param text] The text to say.
-## [return] True if TTS was played, false if failed.
-func say(text: String) -> bool:
+## Generate a TTS response (async).
+## [param text] The text to speak.
+## [return] Request id (>0) on success, 0 if busy, -1 if not ready.
+func say(text: String) -> int:
 	if not _tts.is_ready():
 		push_error("Piper not ready.")
-		return false
-	var stream := _tts.synthesize_to_stream(text, {})
-	if stream:
-		var p := AudioStreamPlayer.new()
-		p.stream = stream
-		add_child(p)
-		p.bus = "Radio"
-		p.play()
-		return true
-		
-	return false
+		return -1
+	return _tts.synthesize_to_stream_async(text, {})
+
+
+## Called on tts done.
+func _on_tts_done(id: int, stream: AudioStreamWAV) -> void:
+	var p := AudioStreamPlayer.new()
+	p.stream = stream
+	p.bus = "Radio"
+	add_child(p)
+	p.play()
+	emit_signal("tts_ready", id, stream)
+
+## Called on tts failed.
+func _on_tts_failed(id: int, message: String) -> void:
+	push_warning("TTS failed: %s" % message)
+	emit_signal("tts_failed", id, message)
 
 
 ## Get platform specific path for piper binary.

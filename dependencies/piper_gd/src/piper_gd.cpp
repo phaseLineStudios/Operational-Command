@@ -10,16 +10,13 @@
 
 #include "piper_gd.h"
 
-#include <cstdint>
-#include <cstring>
 #include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/dir_access.hpp>
 #include <godot_cpp/classes/os.hpp>
 #include <godot_cpp/classes/time.hpp>
-#include <godot_cpp/classes/audio_stream_wav.hpp>
-#include <godot_cpp/variant/utility_functions.hpp>
-#include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/project_settings.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
+#include <cstring> 
 
 
 using namespace godot;
@@ -30,6 +27,20 @@ void PiperTTS::_bind_methods() {
     ClassDB::bind_method(D_METHOD("synthesize_to_file","text","wav_path","opts"), &PiperTTS::synthesize_to_file, DEFVAL(Dictionary()));
     ClassDB::bind_method(D_METHOD("synthesize_to_stream","text","opts"), &PiperTTS::synthesize_to_stream, DEFVAL(Dictionary()));
     ClassDB::bind_method(D_METHOD("is_ready"), &PiperTTS::is_ready);
+    ClassDB::bind_method(D_METHOD("synthesize_to_stream_async","text","opts"), &PiperTTS::synthesize_to_stream_async, DEFVAL(Dictionary()));
+    ClassDB::bind_method(D_METHOD("wait"), &PiperTTS::wait);
+    ClassDB::bind_method(D_METHOD("_finalize_success","id","pcm","sample_rate","channels","bits"), &PiperTTS::_finalize_success);
+    ClassDB::bind_method(D_METHOD("_finalize_failure","id","message"), &PiperTTS::_finalize_failure);
+
+    ClassDB::add_signal(PiperTTS::get_class_static(),
+        MethodInfo("synthesis_completed",
+            PropertyInfo(Variant::INT, "id"),
+            PropertyInfo(Variant::OBJECT, "stream", PROPERTY_HINT_RESOURCE_TYPE, "AudioStreamWAV")));
+
+    ClassDB::add_signal(PiperTTS::get_class_static(),
+        MethodInfo("synthesis_failed",
+            PropertyInfo(Variant::INT, "id"),
+            PropertyInfo(Variant::STRING, "message")));
 }
 
 void PiperTTS::set_piper_path(const String &path) { piper_path = path; }
@@ -169,4 +180,128 @@ Ref<AudioStreamWAV> PiperTTS::synthesize_to_stream(const String &text, const Dic
     DirAccess::remove_absolute(tmp_wav);
 
     return wav;
+}
+
+int64_t PiperTTS::synthesize_to_stream_async(const String &text, const Dictionary &opts) {
+    ERR_FAIL_COND_V_MSG(!is_ready(), -1, "Piper path/model not set.");
+
+    if (_mtx.is_null()) { _mtx.instantiate(); }
+
+    _mtx->lock();
+    if (_busy) { _mtx->unlock(); return 0; }
+    _busy = true;
+    _job_text = text;
+    _job_opts = opts;
+    _job_id = _next_id++;
+    _mtx->unlock();
+
+    if (_thread.is_null()) { _thread.instantiate(); }
+    _thread->start(callable_mp(this, &PiperTTS::_thread_proc));
+    return _job_id;
+}
+
+void PiperTTS::wait() {
+    if (_thread.is_valid() && _thread->is_started()) {
+        _thread->wait_to_finish();
+    }
+}
+
+void PiperTTS::_thread_proc() {
+    String text; Dictionary opts; int64_t id = 0;
+    _mtx->lock();
+    text = _job_text; opts = _job_opts; id = _job_id;
+    _mtx->unlock();
+
+    const String tmp_wav = OS::get_singleton()->get_cache_dir()
+        .path_join(String::num_uint64(Time::get_singleton()->get_ticks_usec()) + ".wav");
+    if (!synthesize_to_file(text, tmp_wav, opts)) {
+        call_deferred("_finalize_failure", id, String("Piper synthesis failed"));
+        _mtx->lock(); _busy = false; _mtx->unlock();
+        return;
+    }
+
+    Ref<FileAccess> f = FileAccess::open(tmp_wav, FileAccess::READ);
+    if (f.is_null()) {
+        call_deferred("_finalize_failure", id, String("Cannot open temp wav"));
+        DirAccess::remove_absolute(tmp_wav);
+        _mtx->lock(); _busy = false; _mtx->unlock();
+        return;
+    }
+
+    auto read_tag = [&](char (&buf)[4]) {
+        buf[0]=buf[1]=buf[2]=buf[3]=0;
+        f->get_buffer(reinterpret_cast<uint8_t *>(buf), 4);
+    };
+
+    char tag[4]; read_tag(tag);
+    if (std::memcmp(tag, "RIFF", 4) != 0) {
+        DirAccess::remove_absolute(tmp_wav);
+        call_deferred("_finalize_failure", id, String("Not RIFF"));
+        _mtx->lock(); _busy = false; _mtx->unlock();
+        return;
+    }
+    (void)f->get_32(); read_tag(tag);
+    if (std::memcmp(tag, "WAVE", 4) != 0) {
+        DirAccess::remove_absolute(tmp_wav);
+        call_deferred("_finalize_failure", id, String("Not WAVE"));
+        _mtx->lock(); _busy = false; _mtx->unlock();
+        return;
+    }
+
+    uint16_t audio_format = 1, channels = 1;
+    uint32_t sample_rate = 22050, data_size = 0;
+    uint16_t bits_per_sample = 16;
+    uint64_t data_pos = 0;
+
+    while (!f->eof_reached()) {
+        read_tag(tag);
+        if (f->eof_reached()) break;
+        const uint32_t chunk_size = f->get_32();
+
+        if (std::memcmp(tag, "fmt ", 4) == 0) {
+            audio_format     = f->get_16();
+            channels         = f->get_16();
+            sample_rate      = f->get_32();
+            (void)f->get_32(); (void)f->get_16();
+            bits_per_sample  = f->get_16();
+            const int32_t extra = int32_t(chunk_size) - 16;
+            if (extra > 0) f->seek(f->get_position() + extra);
+        } else if (std::memcmp(tag, "data", 4) == 0) {
+            data_pos = f->get_position();
+            data_size = chunk_size;
+            f->seek(data_pos + data_size);
+        } else {
+            f->seek(f->get_position() + chunk_size);
+        }
+    }
+
+    if (!(audio_format == 1 && (bits_per_sample == 8 || bits_per_sample == 16)) || data_pos == 0 || data_size == 0) {
+        DirAccess::remove_absolute(tmp_wav);
+        call_deferred("_finalize_failure", id, String("Unsupported WAV or empty"));
+        _mtx->lock(); _busy = false; _mtx->unlock();
+        return;
+    }
+
+    f->seek(data_pos);
+    PackedByteArray pcm; pcm.resize(data_size);
+    f->get_buffer(pcm.ptrw(), data_size);
+    f.unref();
+    DirAccess::remove_absolute(tmp_wav);
+
+    call_deferred("_finalize_success", id, pcm, (int)sample_rate, (int)channels, (int)bits_per_sample);
+
+    _mtx->lock(); _busy = false; _mtx->unlock();
+}
+
+void PiperTTS::_finalize_success(int64_t id, PackedByteArray pcm, int sample_rate, int channels, int bits) {
+    Ref<AudioStreamWAV> wav; wav.instantiate();
+    wav->set_mix_rate(sample_rate);
+    wav->set_stereo(channels == 2);
+    wav->set_format(bits == 8 ? AudioStreamWAV::FORMAT_8_BITS : AudioStreamWAV::FORMAT_16_BITS);
+    wav->set_data(pcm);
+    emit_signal("synthesis_completed", id, wav);
+}
+
+void PiperTTS::_finalize_failure(int64_t id, const String &message) {
+    emit_signal("synthesis_failed", id, message);
 }
