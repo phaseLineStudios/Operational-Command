@@ -29,17 +29,17 @@ func _ready() -> void:
 		push_warning("Could not find piper binary.")
 		return
 	_tts.set_piper_path(_abs_path(_piper_path))
-	
+
 	var mdl := _get_model_path(model)
 	if mdl.is_empty():
 		LogService.warning("Could not find piper model.", "TTSService.gd:23")
 		push_warning("Could not find piper model.")
 		return
-	
+
 	_model_path = mdl.get("model", "")
 	_config_path = mdl.get("config", "")
 	_tts.set_voice(_abs_path(_model_path), _abs_path(_config_path))
-	
+
 	_tts.synthesis_completed.connect(_on_tts_done)
 	_tts.synthesis_failed.connect(_on_tts_failed)
 
@@ -59,7 +59,7 @@ func set_model(new_model: Model) -> bool:
 		LogService.warning("Could not find piper model.", "TTSService.gd:23")
 		push_warning("Could not find piper model.")
 		return false
-	
+
 	_model_path = mdl.get("model", "")
 	_config_path = mdl.get("config", "")
 	_tts.set_voice(_abs_path(_model_path), _abs_path(_config_path))
@@ -83,6 +83,7 @@ func _on_tts_done(id: int, stream: AudioStreamWAV) -> void:
 	LogService.trace("TTS Stream for %d is ready" % id, "TTSService.gd:81")
 	emit_signal("tts_ready", id, stream)
 
+
 ## Called on tts failed.
 func _on_tts_failed(id: int, message: String) -> void:
 	LogService.warning("TTS failed: %s" % message, "TTSService.gd:85")
@@ -93,7 +94,7 @@ func _on_tts_failed(id: int, message: String) -> void:
 ## [return] path to platform specific binary or empty string for unknown.
 func _get_platform_binary() -> String:
 	var platform := OS.get_name()
-	
+
 	if platform == "Windows":
 		return BASE_PATH + "/win64/piper.exe"
 	elif platform == "Linux":
