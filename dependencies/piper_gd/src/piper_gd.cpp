@@ -307,6 +307,7 @@ void PiperTTS::_finalize_success(int64_t id, PackedByteArray pcm, int sample_rat
 
     if (_thread.is_valid() && _thread->is_started()) _thread->wait_to_finish();
     _thread.unref();
+    _busy = false;
 }
 
 void PiperTTS::_finalize_failure(int64_t id, const String &message) {
@@ -314,4 +315,5 @@ void PiperTTS::_finalize_failure(int64_t id, const String &message) {
 
     if (_thread.is_valid() && _thread->is_started()) _thread->wait_to_finish();
     _thread.unref();
+    _busy = false;
 }
