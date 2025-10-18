@@ -73,21 +73,19 @@ func say(text: String) -> int:
 	if not _tts.is_ready():
 		push_error("Piper not ready.")
 		return -1
-	return _tts.synthesize_to_stream_async(text, {})
+	var id := _tts.synthesize_to_stream_async(text, {})
+	LogService.trace("Synthesizer started for %d" % id, "TTSService.gd:77")
+	return id
 
 
 ## Called on tts done.
 func _on_tts_done(id: int, stream: AudioStreamWAV) -> void:
-	var p := AudioStreamPlayer.new()
-	p.stream = stream
-	p.bus = "Radio"
-	add_child(p)
-	p.play()
+	LogService.trace("TTS Stream for %d is ready" % id, "TTSService.gd:81")
 	emit_signal("tts_ready", id, stream)
 
 ## Called on tts failed.
 func _on_tts_failed(id: int, message: String) -> void:
-	push_warning("TTS failed: %s" % message)
+	LogService.warning("TTS failed: %s" % message, "TTSService.gd:85")
 	emit_signal("tts_failed", id, message)
 
 

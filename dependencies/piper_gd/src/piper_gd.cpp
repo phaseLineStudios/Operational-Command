@@ -21,6 +21,10 @@
 
 using namespace godot;
 
+PiperTTS::~PiperTTS() {
+    wait();
+}
+
 void PiperTTS::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_piper_path","path"), &PiperTTS::set_piper_path);
     ClassDB::bind_method(D_METHOD("set_voice","model","config"), &PiperTTS::set_voice);
@@ -300,8 +304,14 @@ void PiperTTS::_finalize_success(int64_t id, PackedByteArray pcm, int sample_rat
     wav->set_format(bits == 8 ? AudioStreamWAV::FORMAT_8_BITS : AudioStreamWAV::FORMAT_16_BITS);
     wav->set_data(pcm);
     emit_signal("synthesis_completed", id, wav);
+
+    if (_thread.is_valid() && _thread->is_started()) _thread->wait_to_finish();
+    _thread.unref();
 }
 
 void PiperTTS::_finalize_failure(int64_t id, const String &message) {
     emit_signal("synthesis_failed", id, message);
+
+    if (_thread.is_valid() && _thread->is_started()) _thread->wait_to_finish();
+    _thread.unref();
 }

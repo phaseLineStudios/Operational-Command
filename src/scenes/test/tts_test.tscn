@@ -72,8 +72,13 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 130)
 layout_mode = 2
 text = "Company this is Alpha. We are located at grid 1. 9. 3. 4. 7. 6."
+wrap_mode = 1
 
 [node name="Submit" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer/PanelContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Generate Response"
+
+[node name="RadioPlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+bus = &"Radio"

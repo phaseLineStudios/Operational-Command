@@ -125,6 +125,12 @@ protected:
 
 public:
     /**
+     * @brief Deconstructor for the PiperTTS class.
+     * @details Cleans up resources used by the PiperTTS instance.
+     */
+    ~PiperTTS();
+
+    /**
      * @brief Sets the filesystem path to the Piper executable.
      * 
      * @param path Filesystem path to the Piper binary.
