@@ -2,7 +2,7 @@
 extends Node
 ## Piper CLI streaming bridge using piper_gd.
 
-## Emitted when the streaming daemon is ready. Receiver should attach this 
+## Emitted when the streaming daemon is ready. Receiver should attach this
 ## stream to their own AudioStreamPlayer.
 signal stream_ready(stream: AudioStreamGenerator)
 ## Emitted on streaming error.
@@ -29,6 +29,7 @@ var _sample_rate := 22050
 
 var _gen := AudioStreamGenerator.new()
 var _playback: AudioStreamGeneratorPlayback = null
+
 
 func _ready() -> void:
 	_piper_path = _get_platform_binary()
@@ -73,17 +74,17 @@ func set_voice(new_model: Model) -> bool:
 	call_deferred("emit_signal", "stream_ready", _gen)
 
 	var ok := _tts.start_stream(
-		_abs_path(_piper_path),
-		_abs_path(_model_path),
-		_abs_path(_config_path),
-		_sample_rate
+		_abs_path(_piper_path), _abs_path(_model_path), _abs_path(_config_path), _sample_rate
 	)
 	if not ok:
 		LogService.error("Failed to start Piper streaming process.", "TTSService.gd:81")
 		emit_signal("stream_error", "Failed to start Piper streaming process.")
 		return false
 
-	LogService.trace("Streaming TTS started (%s @ %d Hz)" % [Model.keys()[new_model], _sample_rate], "TTSService.gd:set_voice")
+	LogService.trace(
+		"Streaming TTS started (%s @ %d Hz)" % [Model.keys()[new_model], _sample_rate],
+		"TTSService.gd:set_voice"
+	)
 	return true
 
 
@@ -139,14 +140,19 @@ func _read_sample_rate(cfg_res_path: String, fallback: int) -> int:
 			sr = int(j["sample_rate"])
 	return sr
 
+
 ## Helper: Get platform specific path for piper binary.
 ## [return] path to platform specific binary or empty string for unknown.
 func _get_platform_binary() -> String:
 	match OS.get_name():
-		"Windows": return BASE_PATH + "/win64/piper.exe"
-		"Linux":   return BASE_PATH + "/linux/piper"
-		"macOS":   return BASE_PATH + "/macos/piper"
-		_:         return ""
+		"Windows":
+			return BASE_PATH + "/win64/piper.exe"
+		"Linux":
+			return BASE_PATH + "/linux/piper"
+		"macOS":
+			return BASE_PATH + "/macos/piper"
+		_:
+			return ""
 
 
 ## Helper: Get path of selected model.
@@ -164,6 +170,7 @@ func _get_model_path(mdl: Model) -> Dictionary:
 			"config": VOICES_PATH + "/medium-en-us/ryan/en_US-norman-medium.onnx.json",
 		}
 	return {}
+
 
 ## Helper: returns absolute path
 ## [param path] res path to translate.
