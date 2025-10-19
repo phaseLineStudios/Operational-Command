@@ -7,30 +7,32 @@ extends Control
 @onready var submit_btn: Button = %Submit
 @onready var radio_player: AudioStreamPlayer = %RadioPlayer
 
+var _current_model := -1
 
 func _ready() -> void:
 	for mdl in TTSService.Model.keys():
 		model_input.add_item(mdl)
+	model_input.select(TTSService.model)
+	_current_model = TTSService.model
 
-	model_input.select(0)
 	submit_btn.pressed.connect(_on_submit)
-	TTSService.tts_ready.connect(_on_tts_ready)
+	TTSService.stream_ready.connect(_on_stream_ready)
+
+	if TTSService.get_stream() != null:
+		_on_stream_ready(TTSService.get_stream())
 
 
 func _on_submit() -> void:
 	if not TTSService.is_ready():
 		LogService.warning("TTS Service not ready.", "TTSTest.gd:18")
 		return
-
-	var ok := TTSService.set_model(model_input.selected as TTSService.Model)
-	if not ok:
-		return
-
-	ok = TTSService.say(text_input.text.strip_edges())
+	
+	var ok := TTSService.say(text_input.text.strip_edges())
 	if not ok:
 		LogService.warning("Failed to send TTS")
 
 
-func _on_tts_ready(_id: int, stream: AudioStreamWAV) -> void:
+func _on_stream_ready(stream: AudioStreamGenerator) -> void:
 	radio_player.stream = stream
 	radio_player.play()
+	TTSService.register_playback(radio_player.get_stream_playback() as AudioStreamGeneratorPlayback)
