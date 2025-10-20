@@ -87,7 +87,7 @@ func _on_committed(plan: Dictionary) -> void:
 		var cur: int = int(round(u.state_strength))
 		var cap: int = int(max(0, u.strength))
 		var missing: int = max(0, cap - cur)
-		var give : float = min(add, missing, remaining)
+		var give : int = min(add, missing, remaining)
 		if give <= 0:
 			continue
 		u.state_strength = float(cur + give)
@@ -95,6 +95,7 @@ func _on_committed(plan: Dictionary) -> void:
 		emit_signal("unit_strength_changed", uid, int(round(u.state_strength)), _status_string(u))
 
 	_set_pool(remaining)
+	_panel.set_pool(remaining)
 	_refresh_from_game()
 
 ## Find a unit by id in the cached list.
