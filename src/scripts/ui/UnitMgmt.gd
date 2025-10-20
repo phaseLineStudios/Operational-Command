@@ -76,27 +76,35 @@ func _set_pool(v: int) -> void:
 func _on_preview_changed(unit_id: String, amt: int) -> void:
 	pass
 
-## Apply a committed plan: clamp to capacity and pool, then signal status changes.
+## Apply a committed plan: 
+## clamp to capacity and pool, then signal status changes.
 func _on_committed(plan: Dictionary) -> void:
-	var remaining := _get_pool()
+	var remaining : int = _get_pool()
 	for uid in plan.keys():
 		var add := int(plan[uid])
 		var u := _find_unit(uid)
 		if u == null:
 			continue
+
+		# Authoritative gate: skip wiped-out here
+		if not _can_reinforce(u):
+			continue
+
 		var cur: int = int(round(u.state_strength))
 		var cap: int = int(max(0, u.strength))
 		var missing: int = max(0, cap - cur)
 		var give : int = min(add, missing, remaining)
 		if give <= 0:
 			continue
+
 		u.state_strength = float(cur + give)
 		remaining -= give
 		emit_signal("unit_strength_changed", uid, int(round(u.state_strength)), _status_string(u))
 
 	_set_pool(remaining)
-	_panel.set_pool(remaining)
+	_panel.set_pool(remaining)   # keep UI in sync immediately
 	_refresh_from_game()
+
 
 ## Find a unit by id in the cached list.
 func _find_unit(uid: String) -> UnitData:
@@ -114,3 +122,8 @@ func _status_string(u: UnitData) -> String:
 	if pct < _panel.understrength_threshold:
 		return "UNDERSTRENGTH"
 	return "ACTIVE"
+
+## test if a unit can be reinforced
+## this screen cannot reinforce wiped-out units
+func _can_reinforce(u: UnitData) -> bool:
+	return u != null and u.state_strength > 0.0

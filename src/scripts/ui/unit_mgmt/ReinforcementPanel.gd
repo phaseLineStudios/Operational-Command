@@ -84,6 +84,11 @@ func reset_pending() -> void:
 ## Emit the current plan to the owner. Does not mutate UnitData here.
 func commit() -> void:
 	var plan: Dictionary[String, int] = _pending.duplicate(true)
+	# strip any zero/negative or wiped-out entries (if units list is present)
+	for uid in plan.keys():
+		var u := _find_unit(uid)
+		if u == null or u.state_strength <= 0.0 or int(plan[uid]) <= 0:
+			plan.erase(uid)
 	emit_signal("reinforcement_committed", plan)
 
 ## Create row widgets for current units.
