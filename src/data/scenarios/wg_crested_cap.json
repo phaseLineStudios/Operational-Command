@@ -1,13 +1,16 @@
 {
-	"id": "wg_exercise_reforger",
-	"title": "Exercise Reforger 85'",
-	"briefing": "wg_exercise_reforger_brief",
+	"id": "wg_crested_cap",
+	"title": "Crested Cap Checkride",
+	"briefing": {},
 	"terrain": "",
-	"description": "Annual NATO exercise held in West Germany.",
+	"description": "A routine lane evaluation at Wildflecken caps a week of Autumn Forge drills. Range Control wants clean radio work, safe bounds, and a pretty AAR for visiting brass. Your troop runs the lanes, pops smoke on cue, and rehearses river drills with engineers who’ve done this a hundred times. The only tension is the weather and the stopwatch—until distant artillery thumps roll in from the border. Umpires shrug it off as another unit’s live-fire. Your RTO doesn’t like the pattern; neither do you.",
 	"preview_path": "res://campaigns/previews/wg_exercise_reforger.png",
 	"terrain_path": "res://campaigns/terrains/exercise_reforger.tres",
 	"difficulty": 0,
-	"map_position": [0.44, 0.40],
+	"map_position": {
+		"x": 0.45,
+		"y": 0.58
+	  },
 	"scenario_order": 0,
 	"weather": {
 			"rain": 0.0,

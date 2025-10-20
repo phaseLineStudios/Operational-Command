@@ -1,9 +1,9 @@
 {
 	"id": "nato_1985_west_ger",
-	"title": "NATO 1985 – West German Front",
+	"title": "NATO – Autumn To Fire 83'",
 	"blurb": "Defensive to counteroffensive along the Inner German Border.",
 	"preview_path": "",
-	"scenario_bg_path": "res://campaigns/campaign/west_ger_map.png",
-	"scenarios": ["wg_exercise_reforger", "wg_border_probe"],
+	"scenario_bg_path": "res://assets/textures/campaigns/nato_autumn_to_iron.png",
+	"scenarios": ["wg_crested_cap", "wg_border_probe"],
 	"order": 0
 }

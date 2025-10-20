@@ -1,7 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://bogs2qcpwnuwd"]
+[gd_scene load_steps=5 format=3 uid="uid://bogs2qcpwnuwd"]
 
 [ext_resource type="Script" uid="uid://c5k2l7sek5n6j" path="res://scripts/ui/MissionSelect.gd" id="1_f8bqk"]
 [ext_resource type="Texture2D" uid="uid://iwgc27ircpxw" path="res://campaigns/campaign/west_ger_map.png" id="2_qrooi"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wh8vx"]
+bg_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qrooi"]
 content_margin_left = 5.0
@@ -22,6 +25,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_f8bqk")
+show_pin_labels = false
 
 [node name="Container" type="Panel" parent="."]
 layout_mode = 1
@@ -30,6 +34,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wh8vx")
 
 [node name="Map" type="TextureRect" parent="Container"]
 layout_mode = 1
@@ -68,7 +73,7 @@ mouse_filter = 1
 [node name="MissionCard" type="PanelContainer" parent="Container"]
 visible = false
 z_index = 10
-custom_minimum_size = Vector2(420, 0)
+custom_minimum_size = Vector2(500, 300)
 layout_mode = 0
 offset_right = 425.0
 offset_bottom = 283.0
@@ -84,6 +89,7 @@ text = "Placeholder Title"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Container/MissionCard/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="Desc" type="RichTextLabel" parent="Container/MissionCard/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -95,7 +101,6 @@ theme_override_font_sizes/italics_font_size = 12
 theme_override_font_sizes/mono_font_size = 12
 bbcode_enabled = true
 text = "Placeholder Desc"
-scroll_active = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Container/MissionCard/VBoxContainer/HBoxContainer"]
 layout_mode = 2

@@ -111,8 +111,8 @@
   "difficulty": 1,
   "id": "wg_border_probe",
   "map_position": {
-	"x": 0.519999980926514,
-	"y": 0.550000011920929
+	"x": 0.46,
+	"y": 0.55
   },
   "preview_path": "res://campaigns/previews/wg_border_probe.png",
   "scenario_order": 0,

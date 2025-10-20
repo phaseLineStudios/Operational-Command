@@ -15,6 +15,8 @@ const SCENE_BRIEFING := "res://scenes/briefing.tscn"
 @export var pin_texture: Texture2D
 ## Show title labels next to pins.
 @export var show_pin_labels := true
+## Show title tooltip for pins.
+@export var show_pin_tooltips := true
 ## Offset for the label relative to the pin's top-left (px).
 @export var pin_label_offset := Vector2(16, -8)
 ## Label background color (with alpha).
@@ -74,6 +76,10 @@ func _load_campaign_and_map() -> void:
 
 	if _campaign.scenario_bg:
 		_map_rect.texture = _campaign.scenario_bg
+		var color := _campaign.scenario_bg.get_image().get_pixel(0, 0)
+		var sb := _container.get_theme_stylebox("panel")
+		sb.bg_color = color
+		_container.add_theme_stylebox_override("panel", sb)
 	else:
 		push_warning("MissionSelect: Failed to load map: %s" % _campaign.scenario_bg)
 
@@ -105,6 +111,8 @@ func _make_pin(m: ScenarioData) -> BaseButton:
 		t.custom_minimum_size = Vector2(pin_size)
 		t.focus_mode = Control.FOCUS_NONE
 		_attach_pin_label(t, title)
+		if show_pin_tooltips:
+			t.tooltip_text = title
 		return t
 	else:
 		var b := Button.new()
@@ -115,6 +123,8 @@ func _make_pin(m: ScenarioData) -> BaseButton:
 		b.add_theme_font_size_override("font_size", pin_size.y)
 		_apply_transparent_button_style(b)
 		_attach_pin_label(b, title)
+		if show_pin_tooltips:
+			b.tooltip_text = title
 		return b
 
 
