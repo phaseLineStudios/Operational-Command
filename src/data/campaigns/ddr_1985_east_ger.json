@@ -1,9 +1,9 @@
 {
 	"id": "ddr_1985_east_ger",
-	"title": "DDR 1985 – Berlin Gambit",
+	"title": "DDR – Berlin Gambit 83'",
 	"blurb": "Alt-history coup & breakout from Berlin.",
 	"preview_path": "",
-	"scenario_bg_path": "res://campaigns/campaign/east_ger_map.png",
+	"scenario_bg_path": "res://assets/textures/campaigns/ddr_berlin_gambit.png",
 	"scenarios": ["berlin_airlift"],
 	"order": 1
 }
