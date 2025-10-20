@@ -50,7 +50,7 @@ Pre-dawn fog hugs the hedgerows when OP Alpha goes dark. Reports of armor tracks
 >"Contact front—multiple! This isn’t a drill."
 
 **Date/Time:** 8 Nov 1983, 05:10 – pre-dawn fog<br/>
-**Location/Map:** Rasdorf–Geisa (OP Alpha environs, Fulda Gap), 2x2 km<br/>
+**Location/Map:** [Rasdorf–Geisa](https://maps.app.goo.gl/9AaMDj6EZYsZKsHQ7) (OP Alpha environs, Fulda Gap), 2x2 km<br/>
 **Player Slots:**
 - `3x` Maneuver (INF, MECH, ARMOR)
 - `1x` Fires (FIRES) (Off map via FO)
@@ -93,7 +93,7 @@ The Fulda screen buys hours; you have minutes. Two bridges over the Werra are th
 >"Fire in the hole—bridge, bridge, bridge!""
 
 **Date/Time:** 8 Nov, 12:00 – overcast, light rain<br/>
-**Location/Map:** Herleshausen – Hörschel (Werra crossings), 3x3 km<br/>
+**Location/Map:** [Herleshausen – Hörschel](https://maps.app.goo.gl/2A82waQqxjYWRpow7) (Werra crossings), 3x3 km<br/>
 **Player Slots:**
 - `2x` Maneuver (INF, MECH, ARMOR)
 - `1x` Engineers (ENG)
