@@ -99,13 +99,12 @@ The Fulda screen buys hours; you have minutes. Two bridges over the Werra are th
 - `1x` Engineers (ENG)
 - `2x` Support/TOW/FIRES (SUPPORT/FIRES)
 
-<!-- @TODO: Continue using 11th ACR on similar units. Need more research though -->
 **Player Unit Pool:**
 - Mech Inf Plt, 2/B/1-8 IN (Mech), 8ID
 - Weapons Plt (MG/MAW), HHC/1-8 IN (Mech), 8ID
-- Combat Engr Plt (Demo), Co/12th Engr Bn, 8ID
-- AT/TOW Sec, ITV, 2-68 AR (8ID) AT Sec
-- Mortar Sec, M106, 1-8 IN (Mech)
+- Engr PLT, 58th Engr Co, 11th ACR
+- AT/TOW Team, ITV, A Trip/1-11 ACR (M901)
+- Mortar Team, M106 4.2, A Trip/1-11 ACR
 - Pioniere-Zug (demo switch), 2./PiBtl 2, PzGrenBrig 5 (BW)
 
 **Friendly AI:** 
