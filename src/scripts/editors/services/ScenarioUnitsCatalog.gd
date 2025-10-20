@@ -137,8 +137,8 @@ func _refresh(ctx: ScenarioEditorContext) -> void:
 func _setup_unit_create(ctx: ScenarioEditorContext):
 	if not ctx.unit_create_btn.pressed.is_connected(func(): _on_create_pressed(ctx)):
 		ctx.unit_create_btn.pressed.connect(func(): _on_create_pressed(ctx))
-	
-	if not ctx.unit_create_dlg.unit_saved.is_connected(func(u, p): _on_unit_saved(ctx, u, p)):	
+
+	if not ctx.unit_create_dlg.unit_saved.is_connected(func(u, p): _on_unit_saved(ctx, u, p)):
 		ctx.unit_create_dlg.unit_saved.connect(func(u, p): _on_unit_saved(ctx, u, p))
 
 
@@ -148,7 +148,7 @@ func _on_create_pressed(ctx: ScenarioEditorContext) -> void:
 		ctx.unit_create_dlg.show_dialog(true, null)
 	else:
 		ctx.unit_create_dlg.show_dialog(true, sel)
-	
+
 
 func _on_unit_saved(ctx: ScenarioEditorContext, unit: UnitData, _path: String) -> void:
 	ContentDB.save_unit(unit)
@@ -163,7 +163,7 @@ func _get_selected_unit(ctx: ScenarioEditorContext) -> UnitData:
 	var payload: Variant = it.get_metadata(0)
 	if payload is UnitData:
 		return payload
-	
+
 	return null
 
 
@@ -174,11 +174,19 @@ func _register_unit_to_contentdb(path: String) -> void:
 
 	var called := false
 	for m in [
-		"register_unit_from_json", "register_unit_json", "register_unit",
-		"reload_unit", "reload_units", "refresh_units", "scan_units"
+		"register_unit_from_json",
+		"register_unit_json",
+		"register_unit",
+		"reload_unit",
+		"reload_units",
+		"refresh_units",
+		"scan_units"
 	]:
 		if ContentDB.has_method(m):
-			if m in ["register_unit_from_json", "register_unit_json", "register_unit", "reload_unit"]:
+			if (
+				m
+				in ["register_unit_from_json", "register_unit_json", "register_unit", "reload_unit"]
+			):
 				ContentDB.call(m, path)
 			else:
 				ContentDB.call(m)
