@@ -110,7 +110,7 @@ func _make_pin(m: ScenarioData) -> BaseButton:
 		t.ignore_texture_size = true
 		t.custom_minimum_size = Vector2(pin_size)
 		t.focus_mode = Control.FOCUS_NONE
-		_attach_pin_label(t, title)
+		#_attach_pin_label(t, title)
 		if show_pin_tooltips:
 			t.tooltip_text = title
 		return t
@@ -122,7 +122,7 @@ func _make_pin(m: ScenarioData) -> BaseButton:
 		b.focus_mode = Control.FOCUS_NONE
 		b.add_theme_font_size_override("font_size", pin_size.y)
 		_apply_transparent_button_style(b)
-		_attach_pin_label(b, title)
+		#_attach_pin_label(b, title)
 		if show_pin_tooltips:
 			b.tooltip_text = title
 		return b
@@ -236,7 +236,7 @@ func _on_pin_pressed(mission: ScenarioData, pin_btn: BaseButton) -> void:
 	_click_catcher.visible = false
 
 	show_pin_labels = false
-	_refresh_pin_labels()
+	#_refresh_pin_labels()
 
 	_card.reset_size()
 	var min_size := _card.get_combined_minimum_size()
@@ -320,7 +320,7 @@ func _close_card() -> void:
 	_card.visible = false
 	_click_catcher.visible = false
 	show_pin_labels = true
-	_refresh_pin_labels()
+	#_refresh_pin_labels()
 	_selected_mission = null
 	_card_pin_button = null
 

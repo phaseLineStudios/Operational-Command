@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dkugvwc2gd622"]
+[gd_scene load_steps=3 format=3 uid="uid://dkugvwc2gd622"]
 
 [ext_resource type="Script" uid="uid://caw3u0ea5whm4" path="res://scripts/ui/MainMenu.gd" id="1_l6cm7"]
+[ext_resource type="Script" uid="uid://dggjwpue6bj8k" path="res://scripts/utils/theme_generator.gd" id="2_ekxnf"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -58,3 +59,15 @@ text = "SETTINGS"
 unique_name_in_owner = true
 layout_mode = 2
 text = "CLOSE GAME"
+
+[node name="ThemeGenerator" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_ekxnf")
+ui_font_path = "uid://b7vlkovyvotx8"
+condensed_font_path = "uid://d4inbl0dnmn0y"
+mono_font_path = "uid://do2h0cg7hkwgy"
+radius = 3
+shadow = 1
+pad = 6

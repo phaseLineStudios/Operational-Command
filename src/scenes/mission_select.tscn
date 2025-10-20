@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://bogs2qcpwnuwd"]
+[gd_scene load_steps=6 format=3 uid="uid://bogs2qcpwnuwd"]
 
 [ext_resource type="Script" uid="uid://c5k2l7sek5n6j" path="res://scripts/ui/MissionSelect.gd" id="1_f8bqk"]
 [ext_resource type="Texture2D" uid="uid://iwgc27ircpxw" path="res://campaigns/campaign/west_ger_map.png" id="2_qrooi"]
+
+[sub_resource type="Theme" id="Theme_qrooi"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wh8vx"]
 bg_color = Color(0, 0, 0, 1)
@@ -34,6 +36,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_qrooi")
 theme_override_styles/panel = SubResource("StyleBoxFlat_wh8vx")
 
 [node name="Map" type="TextureRect" parent="Container"]

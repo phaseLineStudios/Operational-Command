@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://xjb7jlwvtuc3" path="res://scripts/ui/DebugMetricsDisplay.gd" id="1_tc4bw"]
 [ext_resource type="Script" uid="uid://we3y4ug41ivm" path="res://scripts/ui/DebugMenu.gd" id="2_ij3wc"]
-[ext_resource type="FontFile" uid="uid://cm5bhtv1cbqw6" path="res://assets/fonts/JetBrainsMono-Regular.ttf" id="3_jtkf4"]
+[ext_resource type="FontFile" uid="uid://cur8nvqxih1gl" path="res://assets/fonts/jet_brains_mono/JetBrainsMono-Regular.ttf" id="3_jtkf4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xpsq0"]
 bg_color = Color(0, 0, 0, 0.25098)
