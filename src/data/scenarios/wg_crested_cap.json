@@ -1,39 +1,106 @@
 {
-	"id": "wg_crested_cap",
-	"title": "Crested Cap Checkride",
-	"briefing": {},
-	"terrain": "",
-	"description": "A routine lane evaluation at Wildflecken caps a week of Autumn Forge drills. Range Control wants clean radio work, safe bounds, and a pretty AAR for visiting brass. Your troop runs the lanes, pops smoke on cue, and rehearses river drills with engineers who’ve done this a hundred times. The only tension is the weather and the stopwatch—until distant artillery thumps roll in from the border. Umpires shrug it off as another unit’s live-fire. Your RTO doesn’t like the pattern; neither do you.",
-	"preview_path": "res://campaigns/previews/wg_exercise_reforger.png",
-	"terrain_path": "res://campaigns/terrains/exercise_reforger.tres",
-	"difficulty": 0,
-	"map_position": {
-		"x": 0.45,
-		"y": 0.58
-	  },
-	"scenario_order": 0,
-	"weather": {
-			"rain": 0.0,
-			"fog_m": 8000.0,
-			"wind_dir": 0.0,
-			"wind_speed_m": 0.5
-	},
-		"datetime": {
-			"year": 1983, "month": 9, "day": 11, "hour": 12, "minute": 0
-		},
-	"units": {
-		"unit_points": 1250,
-		"unit_slots": [
-			{ "key": "PLT_1", "title": "1st Platoon (ALPHA)", "callsign": "ALPHA", "allowed_roles": ["INF", "MECH", "ARMOR", "SUPPORT"] },
-			{ "key": "PLT_2", "title": "2nd Platoon (BRAVO)", "callsign": "BRAVO", "allowed_roles": ["INF", "MECH", "ARMOR", "SUPPORT"] },
-			{ "key": "WEAPONS", "title": "Weapons (CHARLIE)", "callsign": "CHARLIE", "allowed_roles": ["SUPPORT"] }
-		],
-		"unit_recruits_ids": [
-			"heavy_weapons_plt_1",
-			"logistics_platoon_1",
-			"infantry_plt_1",
-			"infantry_plt_2"
-		]
-	},
-	"has_reserve_unit": true
+  "briefing": null,
+  "content": {
+    "drawings": [],
+    "tasks": [],
+    "triggers": [],
+    "units": []
+  },
+  "datetime": {
+    "day": 1,
+    "hour": 12,
+    "minute": 0,
+    "month": 1,
+    "year": 1983
+  },
+  "description": "A routine lane evaluation at Wildflecken caps a week of Autumn Forge drills. Range Control wants clean radio work, safe bounds, and a pretty AAR for visiting brass. Your troop runs the lanes, pops smoke on cue, and rehearses river drills with engineers who’ve done this a hundred times. \n\nThe only tension is the weather and the stopwatch—until distant artillery thumps roll in from the border. Umpires shrug it off as another unit’s live-fire. Your RTO doesn’t like the pattern; neither do you.\n\n>\"It’s just an exercise—until it isn’t.\"",
+  "difficulty": 1,
+  "id": "",
+  "map_position": {
+    "x": 0.0,
+    "y": 0.0
+  },
+  "preview_path": "",
+  "scenario_order": 0,
+  "terrain_path": "res://assets/terrains/wildflecken_ftx.tres",
+  "title": "Crested Cap Checkride",
+  "units": {
+    "unit_points": 500,
+    "unit_recruits_ids": [],
+    "unit_reserves": [],
+    "unit_slots": [
+      {
+        "allowed_roles": [
+          "INF",
+          "MECH",
+          "ARMOR"
+        ],
+        "callsign": "ALPHA",
+        "key": "SLOT_1",
+        "start_position": {
+          "x": 504.539459228516,
+          "y": 1718.78479003906
+        },
+        "title": "ALPHA"
+      },
+      {
+        "allowed_roles": [
+          "INF",
+          "MECH",
+          "ARMOR"
+        ],
+        "callsign": "BRAVO",
+        "key": "SLOT_2",
+        "start_position": {
+          "x": 701.886596679688,
+          "y": 1888.73376464844
+        },
+        "title": "BRAVO"
+      },
+      {
+        "allowed_roles": [
+          "INF",
+          "MECH",
+          "ARMOR"
+        ],
+        "callsign": "CHARLIE",
+        "key": "SLOT_3",
+        "start_position": {
+          "x": 597.212585449219,
+          "y": 1813.87329101563
+        },
+        "title": "CHARLIE"
+      },
+      {
+        "allowed_roles": [
+          "FIRES"
+        ],
+        "callsign": "DELTA",
+        "key": "SLOT_4",
+        "start_position": {
+          "x": 412.263061523438,
+          "y": 1858.07702636719
+        },
+        "title": "DELTA"
+      },
+      {
+        "allowed_roles": [
+          "LOGI"
+        ],
+        "callsign": "ECHO",
+        "key": "SLOT_5",
+        "start_position": {
+          "x": 484.099182128906,
+          "y": 1949.60986328125
+        },
+        "title": "ECHO"
+      }
+    ]
+  },
+  "weather": {
+    "fog_m": 8000.0,
+    "rain": 0.0,
+    "wind_dir": 0.0,
+    "wind_speed_m": 1.0
+  }
 }

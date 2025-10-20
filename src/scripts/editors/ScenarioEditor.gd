@@ -105,6 +105,8 @@ var _dirty := false
 @onready var unit_category_opt: OptionButton = %UnitCategory
 @onready var unit_search: LineEdit = %UnitSearch
 @onready var unit_list: Tree = %Units
+@onready var units_add_btn: Button = %NewUnit
+@onready var unit_create_dialog: UnitCreateDialog = %UnitCreateDialog
 
 @onready var task_list: ItemList = %Tasks
 @onready var trigger_list: ItemList = %Triggers
@@ -136,6 +138,8 @@ func _ready():
 	ctx.unit_search = unit_search
 	ctx.unit_faction_friend = unit_faction_friend
 	ctx.unit_faction_enemy = unit_faction_enemy
+	ctx.unit_create_btn = units_add_btn
+	ctx.unit_create_dlg = unit_create_dialog
 
 	ctx.task_list = task_list
 	ctx.trigger_list = trigger_list

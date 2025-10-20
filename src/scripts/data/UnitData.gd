@@ -95,6 +95,9 @@ func serialize() -> Dictionary:
 		"title": title,
 		"icon_path":
 		icon.resource_path as Variant if icon and icon.resource_path != "" else null as Variant,
+		"enemy_icon_path":
+		enemy_icon.resource_path as Variant if enemy_icon and enemy_icon.resource_path != "" \
+			else null as Variant,
 		"role": role,
 		"allowed_slots": allowed_slots.duplicate(),
 		"cost": cost,
@@ -121,6 +124,7 @@ func serialize() -> Dictionary:
 		"editor": {"unit_category": unit_category.id},
 		"throughput": throughput.duplicate(),
 		"equipment_tags": equipment_tags.duplicate(),
+		"movement_profile": int(movement_profile),
 		"doctrine": doctrine,
 		# --- Ammo + Logistics persistence ---
 		"ammunition": ammunition.duplicate(),
@@ -155,8 +159,16 @@ static func deserialize(data: Variant) -> UnitData:
 		var tex := load(icon_path)
 		if tex is Texture2D:
 			u.icon = tex
+			
+	var enemy_icon_path = data.get("enemy_icon_path", null)
+	if enemy_icon_path != null and typeof(enemy_icon_path) == TYPE_STRING and enemy_icon_path != "":
+		var tex := load(enemy_icon_path)
+		if tex is Texture2D:
+			u.enemy_icon = tex
 
 	u.size = int(data.get("size", u.size)) as UnitSize
+	u.movement_profile = \
+		int(data.get("movement_profile", u.movement_profile)) as TerrainBrush.MoveProfile
 	u.strength = int(data.get("strength", u.strength))
 	u.equipment = data.get("equipment", u.equipment)
 	u.experience = float(data.get("experience", u.experience))

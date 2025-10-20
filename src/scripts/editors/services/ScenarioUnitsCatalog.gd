@@ -13,6 +13,7 @@ func setup(ctx: ScenarioEditorContext) -> void:
 	unit_categories = ContentDB.list_unit_categories()
 	_build_categories(ctx)
 	_setup_tree(ctx)
+	_setup_unit_create(ctx)
 	_refresh(ctx)
 
 
@@ -131,6 +132,61 @@ func _refresh(ctx: ScenarioEditorContext) -> void:
 		item.set_text(0, unit.title)
 		item.set_icon(0, ImageTexture.create_from_image(img))
 		item.set_metadata(0, unit)
+
+
+func _setup_unit_create(ctx: ScenarioEditorContext):
+	if not ctx.unit_create_btn.pressed.is_connected(func(): _on_create_pressed(ctx)):
+		ctx.unit_create_btn.pressed.connect(func(): _on_create_pressed(ctx))
+	
+	if not ctx.unit_create_dlg.unit_saved.is_connected(func(u, p): _on_unit_saved(ctx, u, p)):	
+		ctx.unit_create_dlg.unit_saved.connect(func(u, p): _on_unit_saved(ctx, u, p))
+
+
+func _on_create_pressed(ctx: ScenarioEditorContext) -> void:
+	var sel = _get_selected_unit(ctx)
+	if sel == null:
+		ctx.unit_create_dlg.show_dialog(true, null)
+	else:
+		ctx.unit_create_dlg.show_dialog(true, sel)
+	
+
+func _on_unit_saved(ctx: ScenarioEditorContext, unit: UnitData, _path: String) -> void:
+	ContentDB.save_unit(unit)
+	_refresh(ctx)
+
+
+## Get the UnitData from the current selection.
+func _get_selected_unit(ctx: ScenarioEditorContext) -> UnitData:
+	var it := ctx.unit_list.get_selected()
+	if it == null:
+		return
+	var payload: Variant = it.get_metadata(0)
+	if payload is UnitData:
+		return payload
+	
+	return null
+
+
+## Try to register the saved JSON with ContentDB (supports multiple API shapes).
+func _register_unit_to_contentdb(path: String) -> void:
+	if typeof(ContentDB) == TYPE_NIL:
+		return
+
+	var called := false
+	for m in [
+		"register_unit_from_json", "register_unit_json", "register_unit",
+		"reload_unit", "reload_units", "refresh_units", "scan_units"
+	]:
+		if ContentDB.has_method(m):
+			if m in ["register_unit_from_json", "register_unit_json", "register_unit", "reload_unit"]:
+				ContentDB.call(m, path)
+			else:
+				ContentDB.call(m)
+			called = true
+			break
+
+	if not called:
+		pass
 
 
 func _used_unit_ids(ctx: ScenarioEditorContext) -> Dictionary:
