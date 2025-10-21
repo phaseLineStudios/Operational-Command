@@ -416,7 +416,8 @@ func v2arr_deserialize(a: Variant) -> PackedVector2Array:
 func res_path_or_null(res: Variant) -> Variant:
 	if typeof(res) == TYPE_STRING:
 		var s := String(res)
-		@warning_ignore("incompatible_ternary") return s if s != "" else null
+		@warning_ignore("incompatible_ternary")
+		return s if s != "" else null
 	if res is Resource and String(res.resource_path) != "":
 		return res.resource_path
 	return null

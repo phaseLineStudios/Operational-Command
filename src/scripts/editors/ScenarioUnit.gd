@@ -50,22 +50,22 @@ var _move_last_eta_s := 0.0
 var _move_paused := false
 var _morale: float = 0.6
 var _morale_sys: MoraleSystem
+var _fuel: FuelSystem = null
+
 
 #initializing moraleSystem
 func _init() -> void:
 	_morale_sys = MoraleSystem.new(id, self)
 	_morale = _morale_sys.get_morale()
 
+
 func _on_morale_changed(unit_id: String, prev: float, cur: float, source: String) -> void:
 	print("[%s] Morale changed from %.2f → %.2f (source: %s)" % [unit_id, prev, cur, source])
 	_morale = _morale_sys.get_morale()
 
+
 func _on_morale_state_changed(unit_id: String, prev: int, cur: int) -> void:
 	print("[%s] Morale state changed: %s → %s" % [unit_id, prev, cur])
-
-## FuelSystem
-## FuelSystem provider used to scale speed at LOW/CRITICAL and 0 at EMPTY.
-var _fuel: FuelSystem = null
 
 
 ## Bind a FuelSystem instance at runtime.

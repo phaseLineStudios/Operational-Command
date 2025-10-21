@@ -35,7 +35,6 @@ func _ready() -> void:
 
 ## Load the new-structure brief (your schema).
 func _load_brief() -> void:
-
 	_brief = Game.current_scenario.briefing
 	if not _brief:
 		return

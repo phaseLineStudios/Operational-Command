@@ -1,5 +1,5 @@
-extends RefCounted
 class_name MoraleSystem
+extends RefCounted
 
 ##Morale system for units
 ##handles changes in morale and decay of morale over time
@@ -9,11 +9,12 @@ signal morale_state_changed(unit_id, prev, cur)
 
 enum MoraleState { STEADY, SHAKEN, BROKEN }
 
-var unit_id: String ##id of unit
-var morale: float = 0.6 ##pure value used to determine state
-var morale_state: int = MoraleState.STEADY ##state used for multiplier
-var owner: ScenarioUnit ##unit connected to the script
-var scenario: ScenarioData = Game.current_scenario ##points to current scenario to check weather
+var unit_id: String  ##id of unit
+var morale: float = 0.6  ##pure value used to determine state
+var morale_state: int = MoraleState.STEADY  ##state used for multiplier
+var owner: ScenarioUnit  ##unit connected to the script
+var scenario: ScenarioData = Game.current_scenario  ##points to current scenario to check weather
+
 
 ##sets value of id variables
 func _init(u_id: String = "", u_owner: ScenarioUnit = null) -> void:
@@ -21,9 +22,11 @@ func _init(u_id: String = "", u_owner: ScenarioUnit = null) -> void:
 	morale_state = get_morale_state(morale)
 	owner = u_owner
 
+
 ##returns the raw moralevalue
 func get_morale() -> float:
 	return morale
+
 
 ## changes moralevalue to a new value
 func set_morale(value: float, source: String = "direct") -> void:
@@ -38,16 +41,22 @@ func set_morale(value: float, source: String = "direct") -> void:
 	if prev_state != morale_state:
 		emit_signal("morale_state_changed", unit_id, prev_state, morale_state)
 
+
 ##changes morale value
 func apply_morale_delta(delta: float, source: String = "delta") -> void:
 	if delta != 0:
 		set_morale(morale + delta, source)
 
+
 ##returns moralestate based on morale value
 func get_morale_state(value: float = morale) -> int:
-	if value >= 0.6: return MoraleState.STEADY     #0
-	elif value >= 0.3: return MoraleState.SHAKEN   #1
-	else: return MoraleState.BROKEN                #2
+	if value >= 0.6:
+		return MoraleState.STEADY  #0
+	elif value >= 0.3:
+		return MoraleState.SHAKEN  #1
+	else:
+		return MoraleState.BROKEN  #2
+
 
 ##bool to see if morealstate is broken
 func is_broken() -> bool:
@@ -55,6 +64,7 @@ func is_broken() -> bool:
 		return true
 	else:
 		return false
+
 
 ##applies overtime moralechanges
 func tick(dt: float) -> void:
@@ -68,6 +78,7 @@ func tick(dt: float) -> void:
 		apply_morale_delta(-0.001 * dt, "dense_fog")
 	if scenario.wind_speed_m > 15.0:
 		apply_morale_delta(-0.001 * dt, "dense_fog")
+
 
 ##applies morale boost to nearby units
 func nearby_ally_morale_change(amount: float = 0.0, source: String = "nearby victory") -> void:
@@ -87,6 +98,7 @@ func nearby_ally_morale_change(amount: float = 0.0, source: String = "nearby vic
 	for ally in nearby:
 		ally.morale_system.apply_morale_delta(amount, source)
 
+
 ##returns morale multiplier based on moralestate
 func morale_effectiveness_mul() -> float:
 	var state = get_morale_state()
@@ -96,6 +108,7 @@ func morale_effectiveness_mul() -> float:
 		return 0.7
 	else:
 		return 1
+
 
 ##gains morale if no enemies nearby
 func safe_rest() -> void:
@@ -112,6 +125,6 @@ func safe_rest() -> void:
 			safe = false
 	if safe == true && owner.move_state() == ScenarioUnit.MoveState.IDLE:
 		if morale + 0.3 > 0.6:
-			set_morale(0.6,"safe rest")
+			set_morale(0.6, "safe rest")
 		else:
-			apply_morale_delta(0.3,"safe rest")
+			apply_morale_delta(0.3, "safe rest")
