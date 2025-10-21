@@ -38,9 +38,6 @@ jobs:
           PYTHONUNBUFFERED: "1"
         run: |
           python -m tools.generate_docs ./src --out ./docs/game --make-index --extra --keep-structure --split-functions
-
-      - name: Pull latest changes
-        run: git pull --rebase origin main
       
       - name: Commit & push if changed
         run: |
@@ -50,7 +47,20 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add docs/game
             git commit -m "docs: auto-generate game API [no bump]"
-            git push
+            git fetch origin main
+            git pull --rebase origin main || { git rebase --abort; exit 1; }
+            
+            tries=0
+            until git push origin "HEAD:main"; do
+              tries=$((tries+1))
+              if [ $tries -ge 3 ]; then
+                echo "Push failed after $tries attempts."
+                exit 1
+              fi
+              echo "Remote moved again; rebasing and retrying ($tries)…"
+              git fetch origin main
+              git pull --rebase origin main || { git rebase --abort; exit 1; }
+            done
           else
             echo "No documentation changes; skipping commit."
           fi
