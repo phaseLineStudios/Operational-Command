@@ -39,6 +39,9 @@ jobs:
         run: |
           python -m tools.generate_docs ./src --out ./docs/game --make-index --extra --keep-structure --split-functions
 
+      - name: Pull latest changes
+        run: git pull --rebase origin main
+      
       - name: Commit & push if changed
         run: |
           set -e
