@@ -1,16 +1,14 @@
 {
   "allowed_slots": [
-	"MECH",
-	"MANEUVER",
-	"RECON",
-    "SUPPORT"
+	"ENG",
+    "INF"
   ],
   "ammunition": {
 
   },
   "ammunition_critical_threshold": 0.1,
   "ammunition_low_threshold": 0.25,
-  "cost": 40,
+  "cost": 60,
   "doctrine": "nato_inf_1983",
   "editor": {
 	"unit_category": "us_army"
@@ -18,23 +16,23 @@
   "enemy_icon_path": "res://assets/textures/units/enemy_unknown_platoon.png",
   "equipment": {
 	"radios": {
-	  "AN/PRC-77": 6
+	  "AN/PRC-77": 2
 	},
 	"vehicles": {
-	  "M113A1": 6
+	  "5-ton truck": 2,
+	  "M113A1": 2
 	},
 	"weapons": {
-	  "M2HB": 6,
-	  "M60": 4,
-	  "M72 LAW": 12
+	  "Demo Charges": 24,
+	  "M60": 4
 	}
   },
   "equipment_tags": [],
   "experience": 0.0,
   "icon_path": "res://assets/textures/units/nato_unknown_platoon.png",
-  "id": "scout_plt_1a111_acr",
-  "movement_profile": 0,
-  "role": "RECON",
+  "id": "us_11acr_58engr_pl",
+  "movement_profile": 1,
+  "role": "ENG",
   "size": 2,
   "state": {
 	"cohesion": 0.0,
@@ -47,11 +45,11 @@
   },
   "stats": {
 	"attack": 20.0,
-	"defense": 15.0,
+	"defense": 20.0,
 	"morale": 1.0,
 	"range_m": 400.0,
-	"speed_kph": 60.0,
-	"spot_m": 1600.0
+	"speed_kph": 45.0,
+	"spot_m": 800.0
   },
   "strength": 28,
   "supply_transfer_radius_m": 30.0,
@@ -59,5 +57,5 @@
   "throughput": {
 
   },
-  "title": "Scout Platoon, 1/A/1-11 ACR"
+  "title": "58th Engr Co, 11th ACR"
 }

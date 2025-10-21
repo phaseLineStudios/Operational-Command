@@ -1,16 +1,13 @@
 {
   "allowed_slots": [
-	"MECH",
-	"MANEUVER",
-	"RECON",
-    "SUPPORT"
+    "ARMOR"
   ],
   "ammunition": {
 
   },
   "ammunition_critical_threshold": 0.1,
   "ammunition_low_threshold": 0.25,
-  "cost": 40,
+  "cost": 50,
   "doctrine": "nato_inf_1983",
   "editor": {
 	"unit_category": "us_army"
@@ -18,46 +15,46 @@
   "enemy_icon_path": "res://assets/textures/units/enemy_unknown_platoon.png",
   "equipment": {
 	"radios": {
-	  "AN/PRC-77": 6
+	  "AN/VRC-12": 4
 	},
 	"vehicles": {
-	  "M113A1": 6
+	  "M60A3": 3
 	},
 	"weapons": {
-	  "M2HB": 6,
-	  "M60": 4,
-	  "M72 LAW": 12
+	  "105mm Gun": 4,
+	  "M240": 4,
+	  "M85 .50": 4
 	}
   },
   "equipment_tags": [],
   "experience": 0.0,
   "icon_path": "res://assets/textures/units/nato_unknown_platoon.png",
-  "id": "scout_plt_1a111_acr",
+  "id": "us_11acr_a_trp_2plt_tank_m60a3",
   "movement_profile": 0,
-  "role": "RECON",
+  "role": "ARMOR",
   "size": 2,
   "state": {
 	"cohesion": 0.0,
 	"state_equipment": 0.0,
 	"state_injured": 0.0,
-	"state_strength": 28.0
+	"state_strength": 16.0
   },
   "state_ammunition": {
 
   },
   "stats": {
-	"attack": 20.0,
-	"defense": 15.0,
+	"attack": 70.0,
+	"defense": 60.0,
 	"morale": 1.0,
-	"range_m": 400.0,
-	"speed_kph": 60.0,
-	"spot_m": 1600.0
+	"range_m": 600.0,
+	"speed_kph": 48.0,
+	"spot_m": 1800.0
   },
-  "strength": 28,
+  "strength": 16,
   "supply_transfer_radius_m": 30.0,
   "supply_transfer_rate": 10.0,
   "throughput": {
 
   },
-  "title": "Scout Platoon, 1/A/1-11 ACR"
+  "title": "Tank Platoon — 2/A/1-11 ACR"
 }

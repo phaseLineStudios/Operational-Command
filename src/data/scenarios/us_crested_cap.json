@@ -1,192 +1,241 @@
 {
   "briefing": {
-	"admin_logi": "[b]Sustainment[/b]\nClass III/V 0730 (no live HE). Aid/medevac simulated via UMPIRE.\n\n[b]Calls:[/b]\n- Lane control = [b]RANGE[/b]\n- Medevac = [b]UMPIRE[/b]",
-	"execution": "[b]Commander’s Intent:[/b] Safe, by-the-book reps, clean radio work and zero vehicle/safety incidents.\n\n[b]Concept:[/b]\n- L1 (Comms/CP): Net check, graphics, TRPs.\n- L2 (Movement/Contact): React to ambush, report, smoke, bound.\n- L3 (Break Contact): Screen and disengage to next PL.\n- L4 (River-Crossing): Engineer drill—emplace/clear training bridge; traffic control.\n- AAR/Refit.\n\n[b]Tasks:[/b]\n- Scout Plt (1/A): Lead lanes, trigger contacts and report.\n- Tank Plt (2/A): Overwatch and base-of-fire.\n- AT/TOW Sec: Demonstrate engagement.\n- Mortar Sec: On-call smoke/illum (simulated) per FSO.\n- Engr Plt (58th Engr Co): Crossing site, demo procedures.",
-	"id": "crested_cap_checkride_brief",
-	"intel_board": {
-	  "board_texture_path": null,
-	  "items": []
-	},
-	"mission": {
-	  "objectives": [
-		{
-		  "id": "complete_all",
-		  "score": 100,
-		  "success": "Complete all training lanes.",
-		  "title": "Complete all training lanes"
-		},
-		{
-		  "id": "notional_casualties",
-		  "score": 100,
-		  "success": "Keep notional casualties under 10%. If notional casualties exceeds 10% complete a CAS request (simulated).",
-		  "title": "Keep notional casualties under 10%"
-		}
-	  ],
-	  "statement": "At 0900C 05 NOV 83, A Trp/1-11 ACR (-) conducts a four-lane evaluation at Wildflecken to rehearse comms discipline, movement under contact, break-contact with smoke, and river crossing in order to certify the troop GO for follow-on taskings."
-	},
-	"situation": {
-	  "enemy": "Mech platoon (OPFOR roleplayers) simulating NVA tactics. May inject recon probes, hasty ambush, and mortar smoke (simulated).",
-	  "friendly": "- A Troop, 1-11 ACR (-) with attached Engineer Platoon\n- Bundeswehr Observers\n- Range Control / UMPIRE",
-	  "start_time": "",
-	  "terrain": "Forrested ridges, open fields, shallow lake, shallow river crossing.",
-	  "weather": ""
-	},
-	"title": "FTX Crested Cap Checkride"
+    "admin_logi": "[b]Sustainment[/b]\nClass III/V 0730 (no live HE). Aid/medevac simulated via UMPIRE.\n\n[b]Calls:[/b]\n- Lane control = [b]RANGE[/b]\n- Medevac = [b]UMPIRE[/b]",
+    "execution": "[b]Commander’s Intent:[/b] Safe, by-the-book reps, clean radio work and zero vehicle/safety incidents.\n\n[b]Concept:[/b]\n- L1 (Comms/CP): Net check, graphics, TRPs.\n- L2 (Movement/Contact): React to ambush, report, smoke, bound.\n- L3 (Break Contact): Screen and disengage to next PL.\n- L4 (River-Crossing): Engineer drill—emplace/clear training bridge; traffic control.\n- AAR/Refit.\n\n[b]Tasks:[/b]\n- Scout Plt (1/A): Lead lanes, trigger contacts and report.\n- Tank Plt (2/A): Overwatch and base-of-fire.\n- AT/TOW Sec: Demonstrate engagement.\n- Mortar Sec: On-call smoke/illum (simulated) per FSO.\n- Engr Plt (58th Engr Co): Crossing site, demo procedures.",
+    "id": "crested_cap_checkride_brief",
+    "intel_board": {
+      "board_texture_path": null,
+      "items": []
+    },
+    "mission": {
+      "objectives": [
+        {
+          "id": "complete_all",
+          "score": 100,
+          "success": "Complete all training lanes.",
+          "title": "Complete all training lanes"
+        },
+        {
+          "id": "notional_casualties",
+          "score": 100,
+          "success": "Keep notional casualties under 10%. If notional casualties exceeds 10% complete a CAS request (simulated).",
+          "title": "Keep notional casualties under 10%"
+        }
+      ],
+      "statement": "At 0900C 05 NOV 83, A Trp/1-11 ACR (-) conducts a four-lane evaluation at Wildflecken to rehearse comms discipline, movement under contact, break-contact with smoke, and river crossing in order to certify the troop GO for follow-on taskings."
+    },
+    "situation": {
+      "enemy": "Mech platoon (OPFOR roleplayers) simulating NVA tactics. May inject recon probes, hasty ambush, and mortar smoke (simulated).",
+      "friendly": "- A Troop, 1-11 ACR (-) with attached Engineer Platoon\n- Bundeswehr Observers\n- Range Control / UMPIRE",
+      "start_time": "",
+      "terrain": "Forrested ridges, open fields, shallow lake, shallow river crossing.",
+      "weather": ""
+    },
+    "title": "FTX Crested Cap Checkride"
   },
   "content": {
-	"drawings": [],
-	"tasks": [],
-	"triggers": [],
-	"units": [
-	  {
-		"affiliation": 0,
-		"behaviour": 0,
-		"callsign": "RANGE",
-		"combat_mode": 0,
-		"id": "infantry_plt_1_1",
-		"playable": false,
-		"position": {
-		  "x": 2489.6591796875,
-		  "y": 1834.85302734375
-		},
-		"unit_id": "infantry_plt_1"
-	  },
-	  {
-		"affiliation": 0,
-		"behaviour": 0,
-		"callsign": "UMPIRE",
-		"combat_mode": 0,
-		"id": "infantry_plt_2_1",
-		"playable": false,
-		"position": {
-		  "x": 2618.93310546875,
-		  "y": 1735.966796875
-		},
-		"unit_id": "infantry_plt_2"
-	  }
-	]
+    "drawings": [],
+    "tasks": [
+      {
+        "id": "task_set_combat_mode_1",
+        "next_index": -1,
+        "params": {
+          "combat_mode": 2.0
+        },
+        "position_m": {
+          "x": 1902.3271484375,
+          "y": 1238.85595703125
+        },
+        "prev_index": -1,
+        "task_type": "set_combat_mode",
+        "unit_index": 2
+      }
+    ],
+    "triggers": [
+      {
+        "area_center_m": {
+          "x": 1840.80749511719,
+          "y": 1323.814453125
+        },
+        "condition_expr": "true",
+        "id": "TRG_1",
+        "on_activate_expr": "",
+        "on_deactivate_expr": "",
+        "presence": 1,
+        "require_duration_s": 0.0,
+        "shape": 0,
+        "size_m": {
+          "x": 400.0,
+          "y": 400.0
+        },
+        "synced_tasks": [],
+        "synced_units": [],
+        "title": "Ambush Trigger"
+      }
+    ],
+    "units": [
+      {
+        "affiliation": 0,
+        "behaviour": 0,
+        "callsign": "RANGE",
+        "combat_mode": 0,
+        "id": "infantry_plt_1_1",
+        "playable": false,
+        "position": {
+          "x": 2489.6591796875,
+          "y": 1834.85302734375
+        },
+        "unit_id": "infantry_plt_1"
+      },
+      {
+        "affiliation": 0,
+        "behaviour": 0,
+        "callsign": "UMPIRE",
+        "combat_mode": 0,
+        "id": "infantry_plt_2_1",
+        "playable": false,
+        "position": {
+          "x": 2618.93310546875,
+          "y": 1735.966796875
+        },
+        "unit_id": "infantry_plt_2"
+      },
+      {
+        "affiliation": 1,
+        "behaviour": 3,
+        "callsign": "VICTOR",
+        "combat_mode": 0,
+        "id": "frg_bw_opfor_1",
+        "playable": false,
+        "position": {
+          "x": 1903.29064941406,
+          "y": 1370.439453125
+        },
+        "unit_id": "frg_bw_opfor"
+      }
+    ]
   },
   "datetime": {
-	"day": 1,
-	"hour": 12,
-	"minute": 0,
-	"month": 1,
-	"year": 1983
+    "day": 1,
+    "hour": 12,
+    "minute": 0,
+    "month": 1,
+    "year": 1983
   },
   "description": "A routine lane evaluation at Wildflecken caps a week of Autumn Forge drills. Range Control wants clean radio work, safe bounds, and a pretty AAR for visiting brass. Your troop runs the lanes, pops smoke on cue, and rehearses river drills with engineers who’ve done this a hundred times. \n\nThe only tension is the weather and the stopwatch—until distant artillery thumps roll in from the border. Umpires shrug it off as another unit’s live-fire. Your RTO doesn’t like the pattern; neither do you.\n\n\"It’s just an exercise—until it isn’t.\"",
   "difficulty": 1,
   "id": "us_crested_cap",
   "map_position": {
-	"x": 0.0,
-	"y": 0.0
+    "x": 0.439999997615814,
+    "y": 0.540000021457672
   },
   "preview_path": "res://assets/textures/scenarios/nato_crested_cap.png",
   "scenario_order": 0,
   "terrain_path": "res://assets/terrains/wildflecken_ftx.tres",
   "title": "Crested Cap Checkride",
   "units": {
-	"unit_points": 500,
-	"unit_recruits_ids": [
-	  "scout_plt_1a111_acr",
-	  "us_11acr_58engr_pl",
-	  "us_11acr_a_trp_2plt_tank_m60a3",
-	  "us_11acr_a_trp_itv_sec",
-	  "us_11acr_a_trp_mortar_sec_m106",
+    "unit_points": 500,
+    "unit_recruits_ids": [
+      "scout_plt_1a111_acr",
+      "us_11acr_58engr_pl",
+      "us_11acr_a_trp_2plt_tank_m60a3",
+      "us_11acr_a_trp_itv_sec",
+      "us_11acr_a_trp_mortar_sec_m106",
       "us_11acr_field_trains_sec"
-	],
-	"unit_reserves": [],
-	"unit_slots": [
-	  {
-		"allowed_roles": [
-		  "INF",
-		  "MECH",
-		  "ARMOR",
-		  "RECON",
+    ],
+    "unit_reserves": [],
+    "unit_slots": [
+      {
+        "allowed_roles": [
+          "INF",
+          "MECH",
+          "ARMOR",
+          "RECON",
           "AT"
-		],
-		"callsign": "ALPHA",
-		"key": "SLOT_1",
-		"start_position": {
-		  "x": 504.539459228516,
-		  "y": 1718.78479003906
-		},
-		"title": "ALPHA"
-	  },
-	  {
-		"allowed_roles": [
-		  "INF",
-		  "MECH",
-		  "ARMOR",
-		  "RECON",
+        ],
+        "callsign": "ALPHA",
+        "key": "SLOT_1",
+        "start_position": {
+          "x": 504.539459228516,
+          "y": 1718.78479003906
+        },
+        "title": "ALPHA"
+      },
+      {
+        "allowed_roles": [
+          "INF",
+          "MECH",
+          "ARMOR",
+          "RECON",
           "AT"
-		],
-		"callsign": "BRAVO",
-		"key": "SLOT_2",
-		"start_position": {
-		  "x": 701.886596679688,
-		  "y": 1888.73376464844
-		},
-		"title": "BRAVO"
-	  },
-	  {
-		"allowed_roles": [
-		  "INF",
-		  "MECH",
-		  "ARMOR",
-		  "RECON",
+        ],
+        "callsign": "BRAVO",
+        "key": "SLOT_2",
+        "start_position": {
+          "x": 701.886596679688,
+          "y": 1888.73376464844
+        },
+        "title": "BRAVO"
+      },
+      {
+        "allowed_roles": [
+          "INF",
+          "MECH",
+          "ARMOR",
+          "RECON",
           "AT"
-		],
-		"callsign": "CHARLIE",
-		"key": "SLOT_3",
-		"start_position": {
-		  "x": 597.212585449219,
-		  "y": 1813.87329101563
-		},
-		"title": "CHARLIE"
-	  },
-	  {
-		"allowed_roles": [
-		  "FIRES",
+        ],
+        "callsign": "CHARLIE",
+        "key": "SLOT_3",
+        "start_position": {
+          "x": 597.212585449219,
+          "y": 1813.87329101563
+        },
+        "title": "CHARLIE"
+      },
+      {
+        "allowed_roles": [
+          "FIRES",
           "MORTAR"
-		],
-		"callsign": "DELTA",
-		"key": "SLOT_4",
-		"start_position": {
-		  "x": 412.263061523438,
-		  "y": 1858.07702636719
-		},
-		"title": "DELTA"
-	  },
-	  {
-		"allowed_roles": [
+        ],
+        "callsign": "DELTA",
+        "key": "SLOT_4",
+        "start_position": {
+          "x": 412.263061523438,
+          "y": 1858.07702636719
+        },
+        "title": "DELTA"
+      },
+      {
+        "allowed_roles": [
           "LOGI"
-		],
-		"callsign": "ECHO",
-		"key": "SLOT_5",
-		"start_position": {
-		  "x": 479.759887695313,
-		  "y": 1909.47131347656
-		},
-		"title": "ECHO"
-	  },
-	  {
-		"allowed_roles": [
+        ],
+        "callsign": "ECHO",
+        "key": "SLOT_5",
+        "start_position": {
+          "x": 479.759887695313,
+          "y": 1909.47131347656
+        },
+        "title": "ECHO"
+      },
+      {
+        "allowed_roles": [
           "ENG"
-		],
-		"callsign": "FOXTROT",
-		"key": "SLOT_6",
-		"start_position": {
-		  "x": 583.921997070313,
-		  "y": 1955.3232421875
-		},
-		"title": "FOXTROT"
-	  }
-	]
+        ],
+        "callsign": "FOXTROT",
+        "key": "SLOT_6",
+        "start_position": {
+          "x": 583.921997070313,
+          "y": 1955.3232421875
+        },
+        "title": "FOXTROT"
+      }
+    ]
   },
   "weather": {
-	"fog_m": 8000.0,
-	"rain": 0.0,
-	"wind_dir": 0.0,
-	"wind_speed_m": 1.0
+    "fog_m": 8000.0,
+    "rain": 0.0,
+    "wind_dir": 0.0,
+    "wind_speed_m": 1.0
   }
 }

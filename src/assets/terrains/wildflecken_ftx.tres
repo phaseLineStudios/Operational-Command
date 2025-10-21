@@ -1,13 +1,14 @@
-[gd_resource type="Resource" script_class="TerrainData" load_steps=10 format=4 uid="uid://dsuocbqd74dwg"]
+[gd_resource type="Resource" script_class="TerrainData" load_steps=11 format=4]
 
-[ext_resource type="Resource" uid="uid://dggrws8viqbb" path="res://assets/terrain_brushes/secondary_road.tres" id="1_j4m5e"]
-[ext_resource type="Resource" uid="uid://bwjs7oudbes28" path="res://assets/terrain_brushes/trail.tres" id="2_r5lyq"]
-[ext_resource type="Resource" uid="uid://dtyhwf518cnad" path="res://assets/terrain_brushes/building.tres" id="3_8dhcw"]
-[ext_resource type="Script" uid="uid://do8882r1q2sil" path="res://scripts/data/TerrainData.gd" id="4_ifce6"]
-[ext_resource type="Resource" uid="uid://od2fee3k2yin" path="res://assets/terrain_brushes/woodland.tres" id="5_us6i0"]
-[ext_resource type="Resource" uid="uid://dfjh5rfmu4e5j" path="res://assets/terrain_brushes/water.tres" id="6_axe0h"]
-[ext_resource type="Resource" uid="uid://clj5n1h3s6x5d" path="res://assets/terrain_brushes/populated_area.tres" id="7_bu4wh"]
-[ext_resource type="Resource" uid="uid://bu6r8ynmw878m" path="res://assets/terrain_brushes/brushland.tres" id="8_r5lyq"]
+[ext_resource type="Resource" path="res://assets/terrain_brushes/secondary_road.tres" id="1_j4m5e"]
+[ext_resource type="Resource" path="res://assets/terrain_brushes/trail.tres" id="2_r5lyq"]
+[ext_resource type="Resource" path="res://assets/terrain_brushes/building.tres" id="3_8dhcw"]
+[ext_resource type="Resource" path="res://assets/terrain_brushes/creek.tres" id="3_ifce6"]
+[ext_resource type="Script" path="res://scripts/data/TerrainData.gd" id="4_ifce6"]
+[ext_resource type="Resource" path="res://assets/terrain_brushes/woodland.tres" id="5_us6i0"]
+[ext_resource type="Resource" path="res://assets/terrain_brushes/water.tres" id="6_axe0h"]
+[ext_resource type="Resource" path="res://assets/terrain_brushes/populated_area.tres" id="7_bu4wh"]
+[ext_resource type="Resource" path="res://assets/terrain_brushes/brushland.tres" id="8_r5lyq"]
 
 [sub_resource type="Image" id="Image_v6wu1"]
 data = {
@@ -110,55 +111,91 @@ surfaces = [{
 "id": 1429056463,
 "points": PackedVector2Array(2032.5017, 703.5172, 2041.7803, 623.9874, 2045.7568, 564.3401, 2088.1726, 553.73615, 2179.6318, 572.2931, 2244.581, 637.24243, 2206.1418, 710.1447, 2131.914, 736.6546, 2066.9646, 735.3291),
 "type": "polygon"
+}, {
+"brush": ExtResource("7_bu4wh"),
+"closed": true,
+"id": 1843172430,
+"points": PackedVector2Array(2810.1392, 1731.4335, 2939.2744, 1630.2195, 2819.1138, 1477.152),
+"type": "polygon"
+}, {
+"brush": ExtResource("5_us6i0"),
+"closed": true,
+"id": 1843172431,
+"points": PackedVector2Array(2764.62, 1466.4617, 2804.236, 1419.956, 2898.9697, 1388.9524, 2962.6997, 1328.6672, 3017.8174, 1232.2112, 3007.483, 848.10913, 2928.251, 792.99133, 2793.9014, 806.77075, 2742.2285, 815.38293),
+"type": "polygon"
+}, {
+"brush": ExtResource("5_us6i0"),
+"closed": true,
+"id": 1843172432,
+"points": PackedVector2Array(2803.6553, 561.36475, 2864.1343, 532.6372, 2929.1494, 497.8617, 2974.5088, 464.5982, 3003.2363, 449.47845, 3013.82, -32.84234, 2767.3677, -20.746529),
+"type": "polygon"
+}, {
+"brush": ExtResource("5_us6i0"),
+"closed": true,
+"id": 1843172433,
+"points": PackedVector2Array(2655.6323, 1997.667, 2586.427, 1974.5984, 2625.6433, 1927.3083, 2686.7747, 1883.4783, 2768.6675, 1852.3359, 2852.867, 1817.7334, 2897.8503, 1778.5171, 2922.0723, 1718.5393, 2968.209, 1703.5448, 3001.6582, 1709.3119, 3013.1924, 2008.0476),
+"type": "polygon"
+}, {
+"brush": ExtResource("6_axe0h"),
+"closed": true,
+"id": 4010333736,
+"points": PackedVector2Array(1664.4622, 654.58325, 1672.1279, 619.32104, 1662.9291, 584.05884, 1678.2605, 510.46814, 1690.5256, 401.61533, 1673.6611, 329.55777, 1613.8687, 239.10257, 1607.7361, 162.44565, 1603.1367, 96.52066, 1603.1367, 58.1922, 1616.9349, -7.732788, 1665.9954, -12.332214, 1649.1309, 47.460205, 1642.9983, 79.65613, 1644.5315, 125.6503, 1641.4651, 199.241, 1656.7965, 248.30142, 1681.3268, 280.49734, 1708.9233, 326.49155, 1725.7878, 390.88333, 1719.6553, 462.94092, 1708.9233, 524.2665, 1701.2576, 600.92334, 1722.7214, 669.9147),
+"type": "polygon"
+}, {
+"brush": ExtResource("5_us6i0"),
+"closed": true,
+"id": 3681353742,
+"points": PackedVector2Array(1462.7052, 1807.7546, 1571.3076, 1798.8036, 1694.944, 1760.6217, 1747.6711, 1642.44, 1864.0349, 1698.8035, 1884.0349, 2031.5308, 1525.853, 2016.9854),
+"type": "polygon"
 }]
 lines = [{
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048016,
 "points": PackedVector2Array(0.70843506, 1316.197, 123.362915, 1292.9349, 262.93527, 1280.2466, 410.96652, 1273.9023, 514.5884, 1303.5087, 775.0389, 1386.631, 898.0158, 1423.7192, 1122.4973, 1441.2874, 1235.7141, 1454.9515, 1436.7716, 1402.2471, 1540.2283, 1312.4545, 1622.2129, 1265.6062, 1692.4854, 1259.75, 1756.9019, 1294.8864, 1827.1743, 1357.3508, 1901.351, 1474.4717, 1961.8633, 1564.2643, 1996.9998, 1716.5214, 1987.2395, 1849.2583, 1987.2395, 2003.4673),
-"width_px": 2.5
+"width_px": 2.0
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048017,
 "points": PackedVector2Array(755.53345, 1381.2737, 674.71985, 1282.3674, 626.4729, 1185.8735, 595.1123, 1019.42163, 588.27106, 846.8847, 541.31415, 703.7778, 409.3874, 632.2244, 246.15613, 583.0314, 147.77014, 578.55927, 65.03644, 596.44763),
-"width_px": 2.5
+"width_px": 2.0
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048018,
 "points": PackedVector2Array(65.849655, 596.34973, 40.773453, 596.907, 22.941483, 591.8917, -15.5086975, 574.05975),
-"width_px": 2.5
+"width_px": 2.0
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048019,
 "points": PackedVector2Array(589.51886, 850.6734, 628.39606, 824.16626, 725.5891, 820.63196, 828.08356, 847.13916, 928.81085, 834.7691, 1041.9082, 757.0147, 1119.6627, 675.726, 1211.5542, 499.01135, 1314.0488, 260.44672, 1342.3231, 149.11652, 1333.4874, 120.84216, 1314.0488, 81.964966, 1257.5001, 4.2105713, 1245.1301, -27.598083),
-"width_px": 2.5
+"width_px": 2.0
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048020,
 "points": PackedVector2Array(1332.006, 2.1611938, 1380.64, 47.934387, 1392.0833, 87.98596, 1400.6658, 150.9241, 1357.7534, 285.3829, 1332.006, 379.79013, 1269.0677, 531.4138, 1203.2688, 654.4293, 1137.4698, 771.72314, 1057.3667, 874.71277, 997.2894, 963.39844, 1237.5988, 974.8417, 1269.0677, 866.1304, 1329.1451, 743.11487, 1386.3616, 651.5685, 1497.9338, 594.3519, 1655.2792, 608.6561),
-"width_px": 2.5
+"width_px": 2.0
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048021,
 "points": PackedVector2Array(1226.1554, 457.03235, 1217.5729, 356.90353, 1217.5729, 228.16635, 1206.1296, 150.9241, 1134.609, 67.960175, 1097.4183, 30.76944),
-"width_px": 2.5
+"width_px": 2.0
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048022,
 "points": PackedVector2Array(1176.445, 116.05643, 1177.3076, 36.690643),
-"width_px": 2.5
+"width_px": 2.0
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048023,
 "points": PackedVector2Array(717.0031, -4.262512),
-"width_px": 2.5
+"width_px": 2.0
 }, {
 "brush": ExtResource("2_r5lyq"),
 "closed": false,
@@ -212,13 +249,13 @@ lines = [{
 "closed": false,
 "id": 706048033,
 "points": PackedVector2Array(1774.5544, -4.4628296, 1739.0278, 37.523132, 1761.6357, 134.41382, 1845.6077, 244.22327, 1936.0391, 551.0439, 1952.1875, 673.77203, 1932.8093, 825.56744, 1858.5264, 1035.4973, 1722.8794, 1209.9006, 1674.3506, 1260.6637),
-"width_px": 2.5
+"width_px": 2.0
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048034,
 "points": PackedVector2Array(1926.2323, 827.50946, 2153.8499, 790.13947, 2282.9465, 769.7558, 2435.8237, 712.00214, 2551.331, 661.0429, 2690.6194, 610.0838, 2817.4604, 592.06116),
-"width_px": 2.5
+"width_px": 2.0
 }, {
 "brush": ExtResource("2_r5lyq"),
 "closed": false,
@@ -248,37 +285,85 @@ lines = [{
 "closed": false,
 "id": 706048039,
 "points": PackedVector2Array(2336.3977, 1855.0255, 2762.378, 1537.9069, 2820.753, 1586.8157),
-"width_px": 2.5
+"width_px": 2.0
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048040,
 "points": PackedVector2Array(2803.3982, 1574.1941, 2378.9956, 1896.0458, 2337.9753, 1850.2924),
-"width_px": 2.5
+"width_px": 2.0
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048041,
 "points": PackedVector2Array(2377.418, 1892.8904, 2418.4382, 1943.377, 2820.753, 1637.3022),
-"width_px": 2.5
+"width_px": 2.0
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048042,
 "points": PackedVector2Array(2416.8606, 1943.377, 2467.3472, 1978.0864, 2820.753, 1701.9882),
-"width_px": 2.5
+"width_px": 2.0
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048043,
 "points": PackedVector2Array(2467.3472, 1978.0864, 2546.2324, 2017.529),
-"width_px": 2.5
+"width_px": 2.0
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048044,
 "points": PackedVector2Array(2336.1758, 1854.2676, 2295.6519, 1824.2499, 2232.6147, 1813.7437, 2171.0784, 1824.2499, 2108.041, 1860.2711, 1986.4694, 1894.7915),
-"width_px": 2.5
+"width_px": 2.0
+}, {
+"brush": ExtResource("1_j4m5e"),
+"closed": false,
+"id": 1109139983,
+"points": PackedVector2Array(2819.8845, 1586.5641, 2880.5276, 1654.443, 2819.54, 1701.9927),
+"width_px": 2.0
+}, {
+"brush": ExtResource("1_j4m5e"),
+"closed": false,
+"id": 1109139984,
+"points": PackedVector2Array(2820.005, 1637.5161, 2846.096, 1617.5972),
+"width_px": 2.0
+}, {
+"brush": ExtResource("2_r5lyq"),
+"closed": false,
+"id": 1109139985,
+"points": PackedVector2Array(2804.298, 1573.2295, 2842.4063, 1548.7313, 2875.0703, 1591.117),
+"width_px": 2.0
+}, {
+"brush": ExtResource("2_r5lyq"),
+"closed": false,
+"id": 1109139986,
+"points": PackedVector2Array(2762.058, 1538.3887, 2781.8945, 1519.968, 2787.008, 1495.6787, 2791.4824, 1458.6055, 2798.5134, 1420.8932, 2823.442, 1385.7377, 2869.464, 1304.56, 2870.7424, 1253.4248, 2898.2278, 1198.4542, 2928.9458, 1157.7483, 2966.1982, 1132.603, 3009.0383, 1116.7709),
+"width_px": 2.0
+}, {
+"brush": ExtResource("2_r5lyq"),
+"closed": false,
+"id": 1109139987,
+"points": PackedVector2Array(994.61194, 962.40625, 970.026, 1004.95886, 949.22253, 1026.7079, 919.90857, 1052.2394, 866.0087, 1096.6831, 845.2053, 1154.3655, 822.5106, 1226.2319, 800.76154, 1268.7844, 759.15466, 1313.2283, 748.7529, 1353.8895, 752.53534, 1378.4753),
+"width_px": 2.0
+}, {
+"brush": ExtResource("2_r5lyq"),
+"closed": false,
+"id": 1109139988,
+"points": PackedVector2Array(1236.5022, 974.98303, 1225.8785, 989.7383, 1203.4507, 1006.26404, 1179.8423, 1016.2976, 1129.6747, 1031.643, 1088.9503, 1037.545, 1062.9812, 1042.2667, 1032.2904, 1054.661, 983.3032, 1068.826, 936.67676, 1081.8105, 885.32874, 1100.6973, 866.4421, 1118.9937, 851.0967, 1136.7),
+"width_px": 2.0
+}, {
+"brush": ExtResource("3_ifce6"),
+"closed": false,
+"id": 3160368058,
+"points": PackedVector2Array(553.7218, -11.761353, 531.7127, 37.04132, 516.4021, 85.843994, 512.5744, 130.81902, 510.66058, 183.44934, 506.83295, 242.7781, 489.60846, 282.01163, 466.64246, 317.41748, 447.50418, 349.9526, 439.84888, 388.22922),
+"width_px": 2.0
+}, {
+"brush": ExtResource("3_ifce6"),
+"closed": false,
+"id": 3160368059,
+"points": PackedVector2Array(502.04834, 254.26108, 499.1776, 295.40842, 501.09143, 329.85736, 504.91913, 360.47867, 502.04834, 403.53986),
+"width_px": 2.0
 }]
 points = [{
 "brush": ExtResource("3_8dhcw"),
@@ -1018,4 +1103,149 @@ points = [{
 "pos": Vector2(2758.2212, 1739.7922),
 "rot": -37.0,
 "scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 2960527837,
+"pos": Vector2(2363.2913, 1520.7316),
+"rot": 0.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 3859997065,
+"pos": Vector2(2780.656, 1682.81),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 652668098,
+"pos": Vector2(2804.06, 1667.3049),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 267732643,
+"pos": Vector2(2816.347, 1654.7253),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 2959182333,
+"pos": Vector2(2835.9478, 1641.2682),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 1749045952,
+"pos": Vector2(2849.1123, 1636.0023),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 3009936044,
+"pos": Vector2(2858.7666, 1651.2148),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 3022521921,
+"pos": Vector2(2841.7988, 1669.0603),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 3034381914,
+"pos": Vector2(2826.001, 1680.4697),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 2097494921,
+"pos": Vector2(2808.4482, 1692.4641),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 1430706825,
+"pos": Vector2(2792.6506, 1700.9481),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 2596698497,
+"pos": Vector2(2774.8052, 1718.501),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 1330113968,
+"pos": Vector2(2777.1455, 1654.1403),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 582284436,
+"pos": Vector2(2807.5706, 1632.1992),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 2611384729,
+"pos": Vector2(2823.3682, 1621.6675),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 3747016734,
+"pos": Vector2(2816.347, 1598.5562),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 1050606742,
+"pos": Vector2(2802.3047, 1590.0721),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 832584044,
+"pos": Vector2(2782.7039, 1601.7742),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 1866969207,
+"pos": Vector2(2792.0654, 1643.6085),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 2235658876,
+"pos": Vector2(2837.7031, 1571.9342),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 3369647358,
+"pos": Vector2(2852.3306, 1589.1946),
+"rot": -37.0,
+"scale": 1.0
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 3953023159,
+"pos": Vector2(2888.314, 1619.0345),
+"rot": -37.0,
+"scale": 1.9
+}, {
+"brush": ExtResource("3_8dhcw"),
+"id": 1346537068,
+"pos": Vector2(2813.5002, 1527.6042),
+"rot": -37.0,
+"scale": 1.9
+}]
+labels = [{
+"id": 42789869,
+"pos": Vector2(2128.5068, 1213.8066),
+"rot": 0.0,
+"size": 19,
+"text": "Kleine Sinn"
 }]
