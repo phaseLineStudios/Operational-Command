@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://c6ekawk0y4tya"]
+
+[ext_resource type="Theme" uid="uid://dy2ly8e3tggi0" path="res://assets/themes/menu.theme" id="1_w482j"]
+[ext_resource type="Script" uid="uid://nobo2pvlx00b" path="res://scripts/ui/controls/OplMenuContainer.gd" id="2_3kwtk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m1w60"]
+content_margin_left = 25.0
+content_margin_top = 25.0
+content_margin_right = 25.0
+content_margin_bottom = 25.0
+bg_color = Color(0.067, 0.082, 0.098, 1)
+
+[node name="OplMenuContainer" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_w482j")
+theme_override_styles/panel = SubResource("StyleBoxFlat_m1w60")
+script = ExtResource("2_3kwtk")
+cell_size = Vector2(60, 60)
+noise_enabled = true
+noise_opacity = 0.02
+noise_grain = 1.0

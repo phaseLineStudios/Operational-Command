@@ -58,6 +58,7 @@ func select_save(save_id: StringName) -> void:
 ## Set current mission and emit [signal mission_selected].
 func select_scenario(scenario: ScenarioData) -> void:
 	current_scenario = scenario
+	LogService.trace("Set Scenario: %s" % current_scenario.id)
 	emit_signal("scenario_selected", scenario.id)
 
 

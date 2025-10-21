@@ -17,6 +17,7 @@ var _all_units: Array[UnitData] = []
 var _unit_by_id: Dictionary = {}
 var _selected_units: Array[UnitData] = []
 
+@onready var id_input: LineEdit = %Id
 @onready var title_input: LineEdit = %Title
 @onready var desc_input: TextEdit = %Description
 @onready var thumb_preview: TextureRect = %ThumbnailPreview
@@ -54,6 +55,7 @@ func _on_primary_pressed() -> void:
 				push_warning("No terrain selected")
 				return
 			var sd := ScenarioData.new()
+			sd.id = id_input.text
 			sd.title = title_input.text
 			sd.description = desc_input.text
 			sd.preview = thumbnail
@@ -64,6 +66,7 @@ func _on_primary_pressed() -> void:
 			if not working:
 				push_warning("No scenario to update")
 				return
+			working.id = id_input.text
 			working.title = title_input.text
 			working.description = desc_input.text
 			working.preview = thumbnail
@@ -139,6 +142,7 @@ func _reset_values() -> void:
 
 ## Preload fields from existing ScenarioData.
 func _load_from_data(d: ScenarioData) -> void:
+	id_input.text = d.id
 	title_input.text = d.title
 	desc_input.text = d.description
 	thumbnail = d.preview

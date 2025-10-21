@@ -170,7 +170,7 @@ func _on_save_pressed() -> void:
 		return _error(msg)
 	_collect_into_working()
 	hide()
-	emit_signal("unit_saved", _working, "" % _working.id)
+	emit_signal("unit_saved", _working, "")
 
 
 ## Emit cancel signal.

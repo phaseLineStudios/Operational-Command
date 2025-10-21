@@ -1,6 +1,70 @@
-[gd_scene load_steps=2 format=3 uid="uid://b450blou0jxup"]
+[gd_scene load_steps=10 format=3 uid="uid://b450blou0jxup"]
 
+[ext_resource type="Theme" uid="uid://dy2ly8e3tggi0" path="res://assets/themes/menu.theme" id="1_7x48x"]
 [ext_resource type="Script" uid="uid://ccx4nsxahdjds" path="res://scripts/ui/CampaignSelect.gd" id="1_kfgox"]
+[ext_resource type="Script" uid="uid://nobo2pvlx00b" path="res://scripts/ui/controls/OplMenuContainer.gd" id="3_oafh1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m1w60"]
+content_margin_left = 30.0
+content_margin_top = 30.0
+content_margin_right = 30.0
+content_margin_bottom = 30.0
+bg_color = Color(0.067, 0.082, 0.098, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fymsp"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.07450981, 0.09019608, 0.105882354, 0.49803922)
+border_color = Color(0.22352941, 0.25490198, 0.27058825, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oafh1"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.06666667, 0.08235294, 0.09803922, 0.49803922)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.22352941, 0.25490198, 0.27058825, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4j2fw"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.22352941, 0.25490198, 0.27058825, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oxcbj"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.07058824, 0.08627451, 0.101960786, 0.49803922)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.22352941, 0.25490198, 0.27058825, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_owva7"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.06666667, 0.08235294, 0.09803922, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
 
 [node name="CampaignSelect" type="Control"]
 layout_mode = 3
@@ -9,66 +73,98 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_7x48x")
 script = ExtResource("1_kfgox")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="Root" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m1w60")
+script = ExtResource("3_oafh1")
+noise_enabled = true
+noise_opacity = 0.02
+noise_grain = 1.0
+metadata/_custom_type_script = "uid://nobo2pvlx00b"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Root"]
 layout_mode = 2
 
-[node name="CampaignList" type="ItemList" parent="HBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(300, 0)
+[node name="Options" type="PanelContainer" parent="Root/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_fymsp")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="BackToMainMenu" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Back to Main Menu"
-
-[node name="DetailsRoot" type="VBoxContainer" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Panel" type="Panel" parent="HBoxContainer/DetailsRoot"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="CampaignDetails" type="BoxContainer" parent="HBoxContainer/DetailsRoot/Panel"]
-layout_mode = 0
-offset_top = 4.0
-offset_right = 847.0
-offset_bottom = 615.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-alignment = 1
-
-[node name="PlaceholderLabel" type="Label" parent="HBoxContainer/DetailsRoot/Panel/CampaignDetails"]
-layout_mode = 2
-text = "CAMPAIGN DETAILS"
-
-[node name="Options" type="HBoxContainer" parent="HBoxContainer/DetailsRoot"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Root/VBoxContainer/Options"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 alignment = 2
 
-[node name="ContinueLast" type="Button" parent="HBoxContainer/DetailsRoot/Options"]
+[node name="BackToMainMenu" type="Button" parent="Root/VBoxContainer/Options/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Back to Main Menu"
+
+[node name="Spacer" type="Control" parent="Root/VBoxContainer/Options/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ContinueLast" type="Button" parent="Root/VBoxContainer/Options/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Continue Last Save"
 
-[node name="SelectSave" type="Button" parent="HBoxContainer/DetailsRoot/Options"]
+[node name="SelectSave" type="Button" parent="Root/VBoxContainer/Options/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Select Save"
 
-[node name="NewSave" type="Button" parent="HBoxContainer/DetailsRoot/Options"]
+[node name="NewSave" type="Button" parent="Root/VBoxContainer/Options/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Create new save"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Root/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CampaignList" type="ItemList" parent="Root/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_oafh1")
+theme_override_styles/focus = SubResource("StyleBoxFlat_4j2fw")
+
+[node name="DetailsRoot" type="PanelContainer" parent="Root/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_oxcbj")
+
+[node name="CampaignDetails" type="BoxContainer" parent="Root/VBoxContainer/HBoxContainer/DetailsRoot"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+vertical = true
+
+[node name="PanelContainer" type="PanelContainer" parent="Root/VBoxContainer/HBoxContainer/DetailsRoot/CampaignDetails"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_owva7")
+
+[node name="CampaignPoster" type="TextureRect" parent="Root/VBoxContainer/HBoxContainer/DetailsRoot/CampaignDetails/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CampaignDescription" type="RichTextLabel" parent="Root/VBoxContainer/HBoxContainer/DetailsRoot/CampaignDetails"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+bbcode_enabled = true

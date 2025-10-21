@@ -1,13 +1,13 @@
-[gd_resource type="Resource" script_class="TerrainData" load_steps=10 format=4]
+[gd_resource type="Resource" script_class="TerrainData" load_steps=10 format=4 uid="uid://dsuocbqd74dwg"]
 
-[ext_resource type="Resource" path="res://assets/terrain_brushes/secondary_road.tres" id="1_j4m5e"]
-[ext_resource type="Resource" path="res://assets/terrain_brushes/trail.tres" id="2_r5lyq"]
-[ext_resource type="Resource" path="res://assets/terrain_brushes/building.tres" id="3_8dhcw"]
-[ext_resource type="Script" path="res://scripts/data/TerrainData.gd" id="4_ifce6"]
-[ext_resource type="Resource" path="res://assets/terrain_brushes/woodland.tres" id="5_us6i0"]
-[ext_resource type="Resource" path="res://assets/terrain_brushes/water.tres" id="6_axe0h"]
-[ext_resource type="Resource" path="res://assets/terrain_brushes/populated_area.tres" id="7_bu4wh"]
-[ext_resource type="Resource" path="res://assets/terrain_brushes/brushland.tres" id="8_r5lyq"]
+[ext_resource type="Resource" uid="uid://dggrws8viqbb" path="res://assets/terrain_brushes/secondary_road.tres" id="1_j4m5e"]
+[ext_resource type="Resource" uid="uid://bwjs7oudbes28" path="res://assets/terrain_brushes/trail.tres" id="2_r5lyq"]
+[ext_resource type="Resource" uid="uid://dtyhwf518cnad" path="res://assets/terrain_brushes/building.tres" id="3_8dhcw"]
+[ext_resource type="Script" uid="uid://do8882r1q2sil" path="res://scripts/data/TerrainData.gd" id="4_ifce6"]
+[ext_resource type="Resource" uid="uid://od2fee3k2yin" path="res://assets/terrain_brushes/woodland.tres" id="5_us6i0"]
+[ext_resource type="Resource" uid="uid://dfjh5rfmu4e5j" path="res://assets/terrain_brushes/water.tres" id="6_axe0h"]
+[ext_resource type="Resource" uid="uid://clj5n1h3s6x5d" path="res://assets/terrain_brushes/populated_area.tres" id="7_bu4wh"]
+[ext_resource type="Resource" uid="uid://bu6r8ynmw878m" path="res://assets/terrain_brushes/brushland.tres" id="8_r5lyq"]
 
 [sub_resource type="Image" id="Image_v6wu1"]
 data = {
@@ -116,49 +116,49 @@ lines = [{
 "closed": false,
 "id": 706048016,
 "points": PackedVector2Array(0.70843506, 1316.197, 123.362915, 1292.9349, 262.93527, 1280.2466, 410.96652, 1273.9023, 514.5884, 1303.5087, 775.0389, 1386.631, 898.0158, 1423.7192, 1122.4973, 1441.2874, 1235.7141, 1454.9515, 1436.7716, 1402.2471, 1540.2283, 1312.4545, 1622.2129, 1265.6062, 1692.4854, 1259.75, 1756.9019, 1294.8864, 1827.1743, 1357.3508, 1901.351, 1474.4717, 1961.8633, 1564.2643, 1996.9998, 1716.5214, 1987.2395, 1849.2583, 1987.2395, 2003.4673),
-"width_px": 4.5
+"width_px": 2.5
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048017,
 "points": PackedVector2Array(755.53345, 1381.2737, 674.71985, 1282.3674, 626.4729, 1185.8735, 595.1123, 1019.42163, 588.27106, 846.8847, 541.31415, 703.7778, 409.3874, 632.2244, 246.15613, 583.0314, 147.77014, 578.55927, 65.03644, 596.44763),
-"width_px": 4.5
+"width_px": 2.5
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048018,
 "points": PackedVector2Array(65.849655, 596.34973, 40.773453, 596.907, 22.941483, 591.8917, -15.5086975, 574.05975),
-"width_px": 4.5
+"width_px": 2.5
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048019,
 "points": PackedVector2Array(589.51886, 850.6734, 628.39606, 824.16626, 725.5891, 820.63196, 828.08356, 847.13916, 928.81085, 834.7691, 1041.9082, 757.0147, 1119.6627, 675.726, 1211.5542, 499.01135, 1314.0488, 260.44672, 1342.3231, 149.11652, 1333.4874, 120.84216, 1314.0488, 81.964966, 1257.5001, 4.2105713, 1245.1301, -27.598083),
-"width_px": 4.5
+"width_px": 2.5
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048020,
 "points": PackedVector2Array(1332.006, 2.1611938, 1380.64, 47.934387, 1392.0833, 87.98596, 1400.6658, 150.9241, 1357.7534, 285.3829, 1332.006, 379.79013, 1269.0677, 531.4138, 1203.2688, 654.4293, 1137.4698, 771.72314, 1057.3667, 874.71277, 997.2894, 963.39844, 1237.5988, 974.8417, 1269.0677, 866.1304, 1329.1451, 743.11487, 1386.3616, 651.5685, 1497.9338, 594.3519, 1655.2792, 608.6561),
-"width_px": 4.5
+"width_px": 2.5
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048021,
 "points": PackedVector2Array(1226.1554, 457.03235, 1217.5729, 356.90353, 1217.5729, 228.16635, 1206.1296, 150.9241, 1134.609, 67.960175, 1097.4183, 30.76944),
-"width_px": 4.5
+"width_px": 2.5
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048022,
 "points": PackedVector2Array(1176.445, 116.05643, 1177.3076, 36.690643),
-"width_px": 4.5
+"width_px": 2.5
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048023,
 "points": PackedVector2Array(717.0031, -4.262512),
-"width_px": 4.5
+"width_px": 2.5
 }, {
 "brush": ExtResource("2_r5lyq"),
 "closed": false,
@@ -212,13 +212,13 @@ lines = [{
 "closed": false,
 "id": 706048033,
 "points": PackedVector2Array(1774.5544, -4.4628296, 1739.0278, 37.523132, 1761.6357, 134.41382, 1845.6077, 244.22327, 1936.0391, 551.0439, 1952.1875, 673.77203, 1932.8093, 825.56744, 1858.5264, 1035.4973, 1722.8794, 1209.9006, 1674.3506, 1260.6637),
-"width_px": 5.5
+"width_px": 2.5
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048034,
 "points": PackedVector2Array(1926.2323, 827.50946, 2153.8499, 790.13947, 2282.9465, 769.7558, 2435.8237, 712.00214, 2551.331, 661.0429, 2690.6194, 610.0838, 2817.4604, 592.06116),
-"width_px": 5.5
+"width_px": 2.5
 }, {
 "brush": ExtResource("2_r5lyq"),
 "closed": false,
@@ -248,37 +248,37 @@ lines = [{
 "closed": false,
 "id": 706048039,
 "points": PackedVector2Array(2336.3977, 1855.0255, 2762.378, 1537.9069, 2820.753, 1586.8157),
-"width_px": 1.5
+"width_px": 2.5
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048040,
 "points": PackedVector2Array(2803.3982, 1574.1941, 2378.9956, 1896.0458, 2337.9753, 1850.2924),
-"width_px": 1.5
+"width_px": 2.5
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048041,
 "points": PackedVector2Array(2377.418, 1892.8904, 2418.4382, 1943.377, 2820.753, 1637.3022),
-"width_px": 1.5
+"width_px": 2.5
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048042,
 "points": PackedVector2Array(2416.8606, 1943.377, 2467.3472, 1978.0864, 2820.753, 1701.9882),
-"width_px": 1.5
+"width_px": 2.5
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048043,
 "points": PackedVector2Array(2467.3472, 1978.0864, 2546.2324, 2017.529),
-"width_px": 1.5
+"width_px": 2.5
 }, {
 "brush": ExtResource("1_j4m5e"),
 "closed": false,
 "id": 706048044,
 "points": PackedVector2Array(2336.1758, 1854.2676, 2295.6519, 1824.2499, 2232.6147, 1813.7437, 2171.0784, 1824.2499, 2108.041, 1860.2711, 1986.4694, 1894.7915),
-"width_px": 1.5
+"width_px": 2.5
 }]
 points = [{
 "brush": ExtResource("3_8dhcw"),

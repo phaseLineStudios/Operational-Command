@@ -1,0 +1,59 @@
+{
+  "allowed_slots": [
+	"MORTAR",
+    "FIRES"
+  ],
+  "ammunition": {
+
+  },
+  "ammunition_critical_threshold": 0.1,
+  "ammunition_low_threshold": 0.25,
+  "cost": 49,
+  "doctrine": "nato_inf_1983",
+  "editor": {
+	"unit_category": "us_army"
+  },
+  "enemy_icon_path": "res://assets/textures/units/enemy_unknown_platoon.png",
+  "equipment": {
+	"radios": {
+	  "AN/VRC-46": 2
+	},
+	"vehicles": {
+	  "M106": 2
+	},
+	"weapons": {
+	  "M30 4.2in Mortar": 2
+	}
+  },
+  "equipment_tags": [],
+  "experience": 0.0,
+  "icon_path": "res://assets/textures/units/nato_unknown_platoon.png",
+  "id": "us_11acr_a_trp_mortar_sec_m106",
+  "movement_profile": 0,
+  "role": "MORTAR",
+  "size": 1,
+  "state": {
+	"cohesion": 0.0,
+	"state_equipment": 0.0,
+	"state_injured": 0.0,
+	"state_strength": 10.0
+  },
+  "state_ammunition": {
+
+  },
+  "stats": {
+	"attack": 22.0,
+	"defense": 12.0,
+	"morale": 1.0,
+	"range_m": 498.0,
+	"speed_kph": 47.0,
+	"spot_m": 900.0
+  },
+  "strength": 10,
+  "supply_transfer_radius_m": 30.0,
+  "supply_transfer_rate": 10.0,
+  "throughput": {
+
+  },
+  "title": "Mortar Section - M106 4.2\" (A Trp/1-11 ACR)"
+}

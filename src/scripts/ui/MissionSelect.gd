@@ -35,17 +35,18 @@ var _campaign: CampaignData
 var _scenarios: Array[ScenarioData] = []
 var _card_pin_button: BaseButton
 
-@onready var _container: Panel = $"Container"
+@onready var _container: OplMenuContainer = $"Container"
 @onready var _btn_back: Button = $"BackToCampaign"
 @onready var _map_rect: TextureRect = $"Container/Map"
 @onready var _pins_layer: Control = $"Container/PinsLayer"
 
-@onready var _card: PanelContainer = $"Container/MissionCard"
-@onready var _card_title: Label = $"Container/MissionCard/VBoxContainer/Title"
-@onready var _card_desc: RichTextLabel = $"Container/MissionCard/VBoxContainer/HBoxContainer/Desc"
+@onready var _card: OplMenuContainer = %MissionCard
+@onready var _card_title: Label = %CardTitle
+@onready var _card_desc: RichTextLabel = %CardDesc
 @onready var _card_image: TextureRect = %CardImage
 @onready var _card_diff: Label = %CardDifficulty
 @onready var _card_start: Button = %CardStartMission
+@onready var _card_close: Button = %CardClose
 @onready var _click_catcher: Control = $"Container/ClickCatcher"
 
 
@@ -65,6 +66,8 @@ func _ready() -> void:
 		_map_rect.resized.connect(_update_pin_positions)
 	if not _card_start.pressed.is_connected(_on_start_pressed):
 		_card_start.pressed.connect(_on_start_pressed)
+	if not _card_close.pressed.is_connected(_close_card):
+		_card_close.pressed.connect(_close_card)
 
 
 ## Load current campaign + map.
@@ -76,10 +79,6 @@ func _load_campaign_and_map() -> void:
 
 	if _campaign.scenario_bg:
 		_map_rect.texture = _campaign.scenario_bg
-		var color := _campaign.scenario_bg.get_image().get_pixel(0, 0)
-		var sb := _container.get_theme_stylebox("panel")
-		sb.bg_color = color
-		_container.add_theme_stylebox_override("panel", sb)
 	else:
 		push_warning("MissionSelect: Failed to load map: %s" % _campaign.scenario_bg)
 
@@ -214,8 +213,8 @@ func _update_pin_positions() -> void:
 		var px := offset + Vector2(p.x * drawn_size.x, p.y * drawn_size.y) - Vector2(pin_size) * 0.5
 		(node as Control).position = px
 
-	if _card.visible and is_instance_valid(_card_pin_button):
-		_position_card_near_pin(_card_pin_button)
+	#if _card.visible and is_instance_valid(_card_pin_button):
+		#_position_card_near_pin(_card_pin_button)
 
 
 ## Open the mission card; create/remove image node depending on presence.
@@ -238,11 +237,11 @@ func _on_pin_pressed(mission: ScenarioData, pin_btn: BaseButton) -> void:
 	show_pin_labels = false
 	#_refresh_pin_labels()
 
-	_card.reset_size()
-	var min_size := _card.get_combined_minimum_size()
-	_card.size = min_size
+	#_card.reset_size()
+	#var min_size := _card.get_combined_minimum_size()
+	#_card.size = min_size
 
-	_position_card_near_pin(pin_btn)
+	#_position_card_near_pin(pin_btn)
 	_card.visible = true
 	_click_catcher.visible = true
 
@@ -307,12 +306,13 @@ func _position_card_near_pin(pin_btn: BaseButton) -> void:
 
 ## Prepare the card position.
 func _prepare_card_for_float() -> void:
-	_card.set_anchors_preset(Control.PRESET_TOP_LEFT, false)
-	_card.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-	_card.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	_card.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	_card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	_card.pivot_offset = Vector2.ZERO
+	#_card.set_anchors_preset(Control.PRESET_TOP_LEFT, false)
+	#_card.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	#_card.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	#_card.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	#_card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	#_card.pivot_offset = Vector2.ZERO
+	pass
 
 
 ## Hide card and clear selection.

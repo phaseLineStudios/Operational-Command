@@ -1,19 +1,35 @@
-[gd_scene load_steps=6 format=3 uid="uid://bogs2qcpwnuwd"]
+[gd_scene load_steps=10 format=3 uid="uid://bogs2qcpwnuwd"]
 
+[ext_resource type="Theme" uid="uid://dy2ly8e3tggi0" path="res://assets/themes/menu.theme" id="1_0p1xe"]
 [ext_resource type="Script" uid="uid://c5k2l7sek5n6j" path="res://scripts/ui/MissionSelect.gd" id="1_f8bqk"]
-[ext_resource type="Texture2D" uid="uid://iwgc27ircpxw" path="res://campaigns/campaign/west_ger_map.png" id="2_qrooi"]
+[ext_resource type="Script" uid="uid://nobo2pvlx00b" path="res://scripts/ui/controls/OplMenuContainer.gd" id="2_wh8vx"]
+[ext_resource type="Texture2D" uid="uid://drsxl5stl6jor" path="res://assets/textures/campaigns/nato_autumn_fire.png" id="3_0p1xe"]
 
-[sub_resource type="Theme" id="Theme_qrooi"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m1w60"]
+content_margin_left = 25.0
+content_margin_top = 25.0
+content_margin_right = 25.0
+content_margin_bottom = 25.0
+bg_color = Color(0.067, 0.082, 0.098, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wh8vx"]
-bg_color = Color(0, 0, 0, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0p1xe"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.067, 0.082, 0.098, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qrooi"]
-content_margin_left = 5.0
-content_margin_top = 5.0
-content_margin_right = 5.0
-content_margin_bottom = 5.0
-bg_color = Color(0, 0, 0, 0.819608)
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_2fh0n"]
+color = Color(0.22352941, 0.25490198, 0.27058825, 1)
+thickness = 2
+vertical = true
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_0p1xe"]
+color = Color(0.22352941, 0.25490198, 0.27058825, 1)
+thickness = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2fh0n"]
+bg_color = Color(0.06666667, 0.08235294, 0.09803922, 1)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
@@ -26,112 +42,170 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_0p1xe")
 script = ExtResource("1_f8bqk")
 show_pin_labels = false
 
-[node name="Container" type="Panel" parent="."]
+[node name="Container" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = SubResource("Theme_qrooi")
-theme_override_styles/panel = SubResource("StyleBoxFlat_wh8vx")
+theme_override_styles/panel = SubResource("StyleBoxFlat_m1w60")
+script = ExtResource("2_wh8vx")
+inner_padding = Vector4i(0, 0, 0, 0)
+noise_enabled = true
+noise_opacity = 0.02
+noise_grain = 1.0
+metadata/_custom_type_script = "uid://nobo2pvlx00b"
 
 [node name="Map" type="TextureRect" parent="Container"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 size_flags_horizontal = 3
-texture = ExtResource("2_qrooi")
+texture = ExtResource("3_0p1xe")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="PinsLayer" type="Control" parent="Container"]
 z_index = 2
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 1
 
 [node name="ClickCatcher" type="Control" parent="Container"]
 visible = false
 z_index = 5
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 mouse_filter = 1
 
-[node name="MissionCard" type="PanelContainer" parent="Container"]
-visible = false
-z_index = 10
-custom_minimum_size = Vector2(500, 300)
+[node name="BackToCampaign" type="Button" parent="."]
 layout_mode = 0
-offset_right = 425.0
-offset_bottom = 283.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_qrooi")
+offset_left = 30.0
+offset_top = 31.0
+offset_right = 252.0
+offset_bottom = 71.0
+text = "Back to Campaign Selection"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Container/MissionCard"]
-layout_mode = 2
+[node name="MissionCard" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+z_index = 3
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.296
+anchor_top = 0.284
+anchor_right = 0.70400006
+anchor_bottom = 0.716
+offset_left = 0.0079956055
+offset_top = -0.03201294
+offset_right = -0.008056641
+offset_bottom = 0.031982422
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_0p1xe")
+script = ExtResource("2_wh8vx")
+padding = Vector4i(0, 0, 0, 0)
+inner_padding = Vector4i(2, 2, 2, 2)
+grid_enabled = false
+noise_enabled = true
+noise_opacity = 0.02
+noise_grain = 1.0
+metadata/_custom_type_script = "uid://nobo2pvlx00b"
 
-[node name="Title" type="Label" parent="Container/MissionCard/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MissionCard"]
 layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MissionCard/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="TitleContainer" type="MarginContainer" parent="MissionCard/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="CardTitle" type="Label" parent="MissionCard/VBoxContainer/HBoxContainer/TitleContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851769, 0.851769, 0.8517687, 1)
 theme_override_font_sizes/font_size = 24
 text = "Placeholder Title"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Container/MissionCard/VBoxContainer"]
+[node name="Spacer" type="Control" parent="MissionCard/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VSeparator" type="VSeparator" parent="MissionCard/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_2fh0n")
+
+[node name="CardClose" type="Button" parent="MissionCard/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.49019608, 0.5058824, 0.5137255, 1)
+theme_override_colors/font_focus_color = Color(0.49019608, 0.5058824, 0.5137255, 1)
+theme_override_font_sizes/font_size = 26
+text = "×"
+flat = true
+
+[node name="HSeparator" type="HSeparator" parent="MissionCard/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_0p1xe")
+
+[node name="DetailsContainer" type="MarginContainer" parent="MissionCard/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MissionCard/VBoxContainer/DetailsContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Desc" type="RichTextLabel" parent="Container/MissionCard/VBoxContainer/HBoxContainer"]
+[node name="CardDesc" type="RichTextLabel" parent="MissionCard/VBoxContainer/DetailsContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/normal_font_size = 12
-theme_override_font_sizes/bold_font_size = 12
-theme_override_font_sizes/bold_italics_font_size = 12
-theme_override_font_sizes/italics_font_size = 12
-theme_override_font_sizes/mono_font_size = 12
+theme_override_colors/default_color = Color(0.49019608, 0.5058824, 0.5137255, 1)
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 14
+theme_override_font_sizes/bold_italics_font_size = 14
+theme_override_font_sizes/italics_font_size = 14
+theme_override_font_sizes/mono_font_size = 14
 bbcode_enabled = true
 text = "Placeholder Desc"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Container/MissionCard/VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MissionCard/VBoxContainer/DetailsContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 21
 
-[node name="CardImage" type="TextureRect" parent="Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="MissionCard/VBoxContainer/DetailsContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_2fh0n")
+
+[node name="CardImage" type="TextureRect" parent="MissionCard/VBoxContainer/DetailsContainer/HBoxContainer/VBoxContainer/PanelContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(210, 139.453)
 layout_mode = 2
+size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 5
 
-[node name="CardDifficulty" type="Label" parent="Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="CardDifficulty" type="Label" parent="MissionCard/VBoxContainer/DetailsContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
 text = "Difficulty: Normal"
 
-[node name="CardStartMission" type="Button" parent="Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="CardStartMission" type="Button" parent="MissionCard/VBoxContainer/DetailsContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Start Mission"
-
-[node name="BackToCampaign" type="Button" parent="."]
-layout_mode = 0
-offset_left = 6.0
-offset_top = 6.0
-offset_right = 228.0
-offset_bottom = 46.0
-text = "Back to Campaign Selection"

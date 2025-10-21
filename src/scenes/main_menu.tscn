@@ -1,7 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://dkugvwc2gd622"]
+[gd_scene load_steps=6 format=3 uid="uid://dkugvwc2gd622"]
 
+[ext_resource type="Theme" uid="uid://dy2ly8e3tggi0" path="res://assets/themes/menu.theme" id="1_bqqt6"]
 [ext_resource type="Script" uid="uid://caw3u0ea5whm4" path="res://scripts/ui/MainMenu.gd" id="1_l6cm7"]
-[ext_resource type="Script" uid="uid://dggjwpue6bj8k" path="res://scripts/utils/theme_generator.gd" id="2_ekxnf"]
+[ext_resource type="Texture2D" uid="uid://cil50orkcyav2" path="res://assets/textures/main_menu_bg.png" id="3_bqqt6"]
+[ext_resource type="Script" uid="uid://nobo2pvlx00b" path="res://scripts/ui/controls/OplMenuContainer.gd" id="3_wu84c"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m1w60"]
+content_margin_left = 30.0
+content_margin_top = 30.0
+content_margin_right = 30.0
+content_margin_bottom = 30.0
+bg_color = Color(0.067, 0.082, 0.098, 1)
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -12,62 +21,78 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = ExtResource("1_bqqt6")
 script = ExtResource("1_l6cm7")
 
-[node name="MenuContainer" type="VBoxContainer" parent="."]
+[node name="OplMenuContainer" type="PanelContainer" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -470.0
-offset_top = -103.0
-offset_right = 470.0
-offset_bottom = 103.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m1w60")
+script = ExtResource("3_wu84c")
+inner_padding = Vector4i(0, 0, 0, 0)
+noise_enabled = true
+noise_opacity = 0.02
+noise_grain = 1.0
+metadata/_custom_type_script = "uid://nobo2pvlx00b"
 
-[node name="CampaignButton" type="Button" parent="MenuContainer"]
+[node name="TextureRect" type="TextureRect" parent="OplMenuContainer"]
+layout_mode = 2
+texture = ExtResource("3_bqqt6")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.437
+anchor_bottom = 1.0
+offset_left = 50.0
+offset_right = 50.57599
+grow_vertical = 2
+pivot_offset = Vector2(0, 106)
+
+[node name="MenuContainer" type="VBoxContainer" parent="HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="CampaignButton" type="Button" parent="HBoxContainer/MenuContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "CAMPAIGN"
 
-[node name="ScenariosButton" type="Button" parent="MenuContainer"]
+[node name="ScenariosButton" type="Button" parent="HBoxContainer/MenuContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 disabled = true
 text = "SCENARIOS"
 
-[node name="MultiplayerButton" type="Button" parent="MenuContainer"]
+[node name="MultiplayerButton" type="Button" parent="HBoxContainer/MenuContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 disabled = true
 text = "MULTIPLAYER"
 
-[node name="EditorButton" type="Button" parent="MenuContainer"]
+[node name="EditorButton" type="Button" parent="HBoxContainer/MenuContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "EDITOR"
 
-[node name="SettingsButton" type="Button" parent="MenuContainer"]
+[node name="SettingsButton" type="Button" parent="HBoxContainer/MenuContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "SETTINGS"
 
-[node name="CloseButton" type="Button" parent="MenuContainer"]
+[node name="CloseButton" type="Button" parent="HBoxContainer/MenuContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "CLOSE GAME"
 
-[node name="ThemeGenerator" type="Control" parent="."]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("2_ekxnf")
-ui_font_path = "uid://b7vlkovyvotx8"
-condensed_font_path = "uid://d4inbl0dnmn0y"
-mono_font_path = "uid://do2h0cg7hkwgy"
-radius = 3
-shadow = 1
-pad = 6
+[node name="Spacer" type="Control" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
