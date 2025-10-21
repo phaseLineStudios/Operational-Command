@@ -1,5 +1,5 @@
-extends ScenarioToolBase
 class_name ScenarioTriggerTool
+extends ScenarioToolBase
 
 @export var icon_px := 40
 
@@ -7,19 +7,23 @@ var prototype: ScenarioTrigger
 var _hover_valid := false
 var _hover_map_pos := Vector2.ZERO
 
+
 func _on_activated() -> void:
 	emit_signal("request_redraw_overlay")
+
 
 func _on_deactivated():
 	if editor and editor.trigger_list:
 		editor.trigger_list.deselect_all()
 	emit_signal("request_redraw_overlay")
 
+
 func build_hint_ui(parent: Control) -> void:
 	_clear(parent)
 	parent.add_child(_label("LMB - Place"))
 	parent.add_child(VSeparator.new())
 	parent.add_child(_label("RMB/ESC - Cancel"))
+
 
 func _on_mouse_move(e: InputEventMouseMotion) -> bool:
 	if not editor or not editor.ctx or not editor.ctx.data or not editor.ctx.data.terrain:
@@ -29,6 +33,7 @@ func _on_mouse_move(e: InputEventMouseMotion) -> bool:
 	_hover_valid = editor.terrain_render.is_inside_map(_hover_map_pos)
 	emit_signal("request_redraw_overlay")
 	return true
+
 
 func _on_mouse_button(e: InputEventMouseButton) -> bool:
 	if not e.pressed:
@@ -55,12 +60,14 @@ func _on_mouse_button(e: InputEventMouseButton) -> bool:
 			return true
 	return false
 
+
 func _on_key(e: InputEventKey) -> bool:
 	if e.pressed and e.keycode == KEY_ESCAPE:
 		editor._clear_tool()
 		emit_signal("canceled")
 		return true
 	return false
+
 
 func draw_overlay(canvas: Control) -> void:
 	if not _hover_valid or not prototype:
@@ -90,10 +97,12 @@ func draw_overlay(canvas: Control) -> void:
 		canvas.draw_rect(rect, col, true)
 		canvas.draw_rect(rect, outline, false, 2.0)
 
+
 func _label(t: String) -> Label:
 	var l := Label.new()
 	l.text = t
 	return l
+
 
 func _clear(node: Control) -> void:
 	for c in node.get_children():

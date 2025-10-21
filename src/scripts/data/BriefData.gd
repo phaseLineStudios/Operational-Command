@@ -1,5 +1,5 @@
-extends Resource
 class_name BriefData
+extends Resource
 
 ## Unique identifier for this briefing
 @export var id: String
@@ -38,6 +38,7 @@ class_name BriefData
 ## Items pinned on the intel board (documents, images, etc.)
 @export var board_items: Array[BriefItemData]
 
+
 ## Serializes briefing data to JSON
 func serialize() -> Dictionary:
 	var items: Array = []
@@ -47,28 +48,32 @@ func serialize() -> Dictionary:
 	return {
 		"id": id,
 		"title": title,
-
-		"situation": {
+		"situation":
+		{
 			"enemy": frag_enemy,
 			"friendly": frag_friendly,
 			"terrain": frag_terrain,
 			"weather": frag_weather,
 			"start_time": frag_start_time
 		},
-
-		"mission": {
-			"statement": frag_mission,
-			"objectives": frag_objectives.duplicate()
-		},
-
+		"mission": {"statement": frag_mission, "objectives": frag_objectives.duplicate()},
 		"execution": frag_execution.duplicate(),
 		"admin_logi": frago_logi,
-
-		"intel_board": {
-			"board_texture_path": (board_texture.resource_path as Variant if board_texture and board_texture.resource_path != "" else null as Variant),
+		"intel_board":
+		{
+			"board_texture_path":
+			(
+				(
+					board_texture.resource_path as Variant
+					if board_texture and board_texture.resource_path != ""
+					else null
+				)
+				as Variant
+			),
 			"items": items
 		}
 	}
+
 
 ## Deserializes briefing data from JSON
 static func deserialize(data: Variant) -> BriefData:

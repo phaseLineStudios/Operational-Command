@@ -1,5 +1,5 @@
-extends Resource
 class_name CampaignData
+extends Resource
 
 ## Unique identifier for this campaign
 @export var id: String
@@ -20,6 +20,7 @@ class_name CampaignData
 ## Saved states of this campaign (future campaign save structure).
 @export var saves: Array = []
 
+
 ## Serialize campaign data to JSON
 func serialize() -> Dictionary:
 	var scenario_dicts: Array = []
@@ -30,12 +31,25 @@ func serialize() -> Dictionary:
 		"id": id,
 		"title": title,
 		"description": description,
-		"preview_path": (preview.resource_path as Variant if preview and preview.resource_path != "" else null as Variant),
-		"scenario_bg_path": (scenario_bg.resource_path as Variant if scenario_bg and scenario_bg.resource_path != "" else null as Variant),
+		"preview_path":
+		(
+			preview.resource_path as Variant if preview and preview.resource_path != "" else null
+			as Variant
+		),
+		"scenario_bg_path":
+		(
+			(
+				scenario_bg.resource_path as Variant
+				if scenario_bg and scenario_bg.resource_path != ""
+				else null
+			)
+			as Variant
+		),
 		"scenarios": scenario_dicts,
 		"order": order,
 		"saves": saves.duplicate()
 	}
+
 
 ## Deserialize Campaign data from JSON
 static func deserialize(data: Variant) -> CampaignData:

@@ -1,10 +1,17 @@
-extends Control
 class_name TerrainRender
+extends Control
 
 ## Renders map: grid, margins, contours, surfaces, features, labels
 
+## Emits when the map is resized
+signal map_resize
+
+## Grid cell size in meters
+const GRID_SIZE_M = 100
+
 ## Terrain Data
-@export var data: TerrainData : set = _set_data
+@export var data: TerrainData:
+	set = _set_data
 
 ## Visual Style
 @export_group("Terrain Base")
@@ -85,6 +92,9 @@ class_name TerrainRender
 ## Default profile to rebuild for when auto-building.
 @export var nav_default_profile: int = TerrainBrush.MoveProfile.FOOT
 
+var _base_sb: StyleBoxFlat
+var _debounce_timer: SceneTreeTimer
+
 @onready var margin: PanelContainer = %MapMargin
 @onready var base_layer: PanelContainer = %TerrainBase
 @onready var surface_layer: SurfaceLayer = %SurfaceLayer
@@ -96,27 +106,20 @@ class_name TerrainRender
 @onready var error_layer: CenterContainer = %ErrorLayer
 @onready var error_label: Label = %ErrorLayer/ErrorLabel
 
-## Emits when the map is resized
-signal map_resize()
-
-## Grid cell size in meters
-const GRID_SIZE_M = 100
-
-var _base_sb: StyleBoxFlat
-var _debounce_timer: SceneTreeTimer
 
 func _ready():
 	_apply_base_style_if_needed()
 	_draw_map_size()
 	base_layer.resized.connect(_on_base_layer_resize)
-	
+
 	if not data:
 		render_error("NO TERRAIN DATA")
-	
+
 	if data and path_grid:
-			path_grid.data = data
-			if nav_auto_build:
-				path_grid.rebuild(nav_default_profile)
+		path_grid.data = data
+		if nav_auto_build:
+			path_grid.rebuild(nav_default_profile)
+
 
 ## Build base style
 func _apply_base_style_if_needed() -> void:
@@ -126,6 +129,7 @@ func _apply_base_style_if_needed() -> void:
 	_base_sb.set_border_width_all(terrain_border_px)
 	_base_sb.border_color = terrain_border_color
 	base_layer.add_theme_stylebox_override("panel", _base_sb)
+
 
 ## Set new Terrain Data
 func _set_data(d: TerrainData):
@@ -143,6 +147,7 @@ func _set_data(d: TerrainData):
 	call_deferred("_push_data_to_layers")
 	call_deferred("_mark_all_dirty")
 
+
 ## Push exports to their respective layers
 func _push_data_to_layers() -> void:
 	if grid_layer:
@@ -152,29 +157,31 @@ func _push_data_to_layers() -> void:
 	if margin:
 		margin.set_data(data)
 		margin.apply_style(self)
-	
+
 	if contour_layer:
 		contour_layer.set_data(data)
 		contour_layer.apply_style(self)
-	
+
 	if surface_layer:
 		surface_layer.set_data(data)
-	
+
 	if line_layer:
 		line_layer.set_data(data)
-	
+
 	if point_layer:
 		point_layer.set_data(data)
-	
+
 	if label_layer:
 		label_layer.set_data(data)
 		label_layer.apply_style(self)
+
 
 ## Reconfigure if terrain data is changed
 func _on_data_changed() -> void:
 	_debounce_relayout_and_push()
 	if path_grid and nav_auto_build:
 		path_grid.rebuild(nav_default_profile)
+
 
 ## Show a render error
 func render_error(error: String = "") -> void:
@@ -183,37 +190,49 @@ func render_error(error: String = "") -> void:
 	error_layer.visible = true
 	error_label.text = error
 
+
 ## Hide the render error
 func clear_render_error() -> void:
 	if error_layer == null:
 		return
 	error_layer.visible = false
 
+
 ## Mark elements as dirty to redraw
 func _mark_all_dirty() -> void:
-	if grid_layer: grid_layer.mark_dirty()
-	if margin: margin.mark_dirty()
-	if contour_layer: contour_layer.mark_dirty()
-	if surface_layer: surface_layer.mark_dirty()
-	if line_layer: line_layer.mark_dirty()
-	if point_layer: point_layer.mark_dirty()
-	if label_layer: label_layer.mark_dirty()
+	if grid_layer:
+		grid_layer.mark_dirty()
+	if margin:
+		margin.mark_dirty()
+	if contour_layer:
+		contour_layer.mark_dirty()
+	if surface_layer:
+		surface_layer.mark_dirty()
+	if line_layer:
+		line_layer.mark_dirty()
+	if point_layer:
+		point_layer.mark_dirty()
+	if label_layer:
+		label_layer.mark_dirty()
 	queue_redraw()
+
 
 ## Debounce the relayout and push styles
 func _debounce_relayout_and_push() -> void:
 	if _debounce_timer:
 		return
 	_debounce_timer = get_tree().create_timer(0.03)
-	_debounce_timer.timeout.connect(func ():
-		_debounce_timer = null
-		_draw_map_size()
-		_push_data_to_layers()
+	_debounce_timer.timeout.connect(
+		func():
+			_debounce_timer = null
+			_draw_map_size()
+			_push_data_to_layers()
 	)
+
 
 ## Resize the map to fit the terrain data
 func _draw_map_size() -> void:
-	if data == null: 
+	if data == null:
 		return
 	if margin:
 		var base_size := data.get_size()
@@ -223,17 +242,19 @@ func _draw_map_size() -> void:
 		size = margin.size
 	queue_redraw()
 
+
 ## Emit a resize event for base layer
 func _on_base_layer_resize():
 	emit_signal("map_resize")
+
 
 ## Clamp a single point to the terrain (local map coordinates)
 func clamp_point_to_terrain(p: Vector2) -> Vector2:
 	var sz: Vector2 = get_terrain_size()
 	return Vector2(
-		clamp(p.x, 0.0, sz.x - terrain_border_px * 2),
-		clamp(p.y, 0.0, sz.y - terrain_border_px * 2)
+		clamp(p.x, 0.0, sz.x - terrain_border_px * 2), clamp(p.y, 0.0, sz.y - terrain_border_px * 2)
 	)
+
 
 ## Clamp an entire polygon (without mutating the source array)
 func clamp_shape_to_terrain(pts: PackedVector2Array) -> PackedVector2Array:
@@ -243,11 +264,13 @@ func clamp_shape_to_terrain(pts: PackedVector2Array) -> PackedVector2Array:
 		out[i] = clamp_point_to_terrain(pts[i])
 	return out
 
+
 ## Helper function to convert terrain position to map position
 func map_to_terrain(local_m: Vector2) -> Vector2:
 	var map_margins := Vector2(margin_left_px, margin_top_px)
 	var map_borders := Vector2(terrain_border_px, terrain_border_px)
 	return local_m - map_margins - map_borders
+
 
 ## helepr function to convert map position to terrain position
 func terrain_to_map(pos: Vector2) -> Vector2:
@@ -255,23 +278,28 @@ func terrain_to_map(pos: Vector2) -> Vector2:
 	var map_borders := Vector2(terrain_border_px, terrain_border_px)
 	return pos + map_margins + map_borders
 
+
 func to_local(pos: Vector2) -> Vector2:
 	return pos - global_position
+
 
 ## API to check if position is inside map
 func is_inside_map(pos: Vector2) -> bool:
 	return margin.get_global_rect().has_point(pos)
 
+
 ## API to check if position is inside terrain
 func is_inside_terrain(pos: Vector2) -> bool:
 	return base_layer.get_global_rect().has_point(pos)
 
+
 ## API to get grid number from terrain local position
 func pos_to_grid(pos: Vector2, total_digits: int = 6) -> String:
-	@warning_ignore("integer_division")
-	var per_axis := total_digits / 2
+	@warning_ignore("integer_division") var per_axis := total_digits / 2
 	if per_axis != 3 and per_axis != 4 and per_axis != 5:
-		push_warning("pos_to_grid: total_digits must be 6, 8, or 10; got %d. Using 6." % total_digits)
+		push_warning(
+			"pos_to_grid: total_digits must be 6, 8, or 10; got %d. Using 6." % total_digits
+		)
 		per_axis = 3
 
 	var cell_x := floori(pos.x / GRID_SIZE_M)
@@ -301,6 +329,7 @@ func pos_to_grid(pos: Vector2, total_digits: int = 6) -> String:
 	var n_str := str(north).pad_zeros(per_axis)
 	return e_str + n_str
 
+
 ## API to get terrain local position from grid number
 func grid_to_pos(grid: String) -> Vector2:
 	var digits := ""
@@ -312,8 +341,7 @@ func grid_to_pos(grid: String) -> Vector2:
 		push_warning("Grid label must have an even number of digits (6/8/10). Got: %s" % grid)
 		return Vector2i.ZERO
 
-	@warning_ignore("integer_division")
-	var half := digits.length() / 2
+	@warning_ignore("integer_division") var half := digits.length() / 2
 	if half < 3 or half > 5:
 		push_warning("Grid label must be 6, 8, or 10 digits (got %d)." % digits.length())
 		return Vector2i.ZERO
@@ -341,13 +369,16 @@ func grid_to_pos(grid: String) -> Vector2:
 
 	return Vector2i(x, y)
 
+
 ## API to get the map size
 func get_terrain_size() -> Vector2:
 	return base_layer.size
 
+
 ## API to get the map position
 func get_terrain_position() -> Vector2:
 	return base_layer.position
+
 
 ## API to get surface at map position
 func get_surface_at_terrain_position(terrain_pos: Vector2) -> Dictionary:
@@ -378,7 +409,7 @@ func get_surface_at_terrain_position(terrain_pos: Vector2) -> Dictionary:
 		if pts.size() < 3:
 			continue
 
-		if pts.size() >= 2 and pts[0].distance_squared_to(pts[pts.size()-1]) < 1e-10:
+		if pts.size() >= 2 and pts[0].distance_squared_to(pts[pts.size() - 1]) < 1e-10:
 			var tmp := PackedVector2Array(pts)
 			tmp.remove_at(tmp.size() - 1)
 			pts = tmp
@@ -393,11 +424,13 @@ func get_surface_at_terrain_position(terrain_pos: Vector2) -> Dictionary:
 
 	return best
 
+
 ## Request a path in terrain meters via attached PathGrid
 func nav_find_path_m(start_m: Vector2, goal_m: Vector2) -> PackedVector2Array:
 	if not path_grid:
 		return PackedVector2Array()
 	return path_grid.find_path_m(start_m, goal_m)
+
 
 ## Estimate travel time (seconds) along a path for a given base speed and profile
 func nav_estimate_time_s(path_m: PackedVector2Array, base_speed_mps: float, profile: int) -> float:

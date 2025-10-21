@@ -1,5 +1,5 @@
-extends TerrainToolBase
 class_name TerrainPolygonTool
+extends TerrainToolBase
 
 ## Elevation editing: raise/lower/smooth brush.
 
@@ -13,13 +13,15 @@ var _drag_idx: int = -1
 var _hover_idx: int = -1
 var _is_drag := false
 var _drag_before: Dictionary = {}
-var _pick_radius_px := 10.0 
+var _pick_radius_px := 10.0
 
 var _next_id: int = randi()
+
 
 func _init():
 	tool_icon = preload("res://assets/textures/ui/editors_polygon_tool.png")
 	tool_hint = "Polygon Tool"
+
 
 func _load_brushes() -> void:
 	brushes.clear()
@@ -29,12 +31,14 @@ func _load_brushes() -> void:
 			if f.ends_with(".tres") or f.ends_with(".res"):
 				var r := ResourceLoader.load("res://assets/terrain_brushes/%s" % f)
 				if r is TerrainBrush:
-					if r.feature_type != TerrainBrush.FeatureType.AREA: continue
+					if r.feature_type != TerrainBrush.FeatureType.AREA:
+						continue
 					brushes.append(r)
+
 
 func build_options_ui(p: Control) -> void:
 	_load_brushes()
-	
+
 	var vb := VBoxContainer.new()
 	vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	vb.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -54,18 +58,21 @@ func build_options_ui(p: Control) -> void:
 			continue
 		list.add_item(brush.legend_title)
 		map_index.append(brush_idx)
-		
-	list.item_selected.connect(func(i):
-		if i >= 0 and i < map_index.size():
-			active_brush = brushes[map_index[i]]
-			_rebuild_info_ui()
+
+	list.item_selected.connect(
+		func(i):
+			if i >= 0 and i < map_index.size():
+				active_brush = brushes[map_index[i]]
+				_rebuild_info_ui()
 	)
 
 	vb.add_child(list)
 
+
 func build_info_ui(parent: Control) -> void:
 	_info_ui_parent = parent
 	_rebuild_info_ui()
+
 
 func build_hint_ui(parent: Control) -> void:
 	parent.add_child(_label("LMB - New point"))
@@ -75,6 +82,7 @@ func build_hint_ui(parent: Control) -> void:
 	parent.add_child(_label("ESC - Cancel"))
 	parent.add_child(VSeparator.new())
 	parent.add_child(_label("Enter - Save"))
+
 
 func build_preview(overlay_parent: Node) -> Control:
 	_preview = HandlesOverlay.new()
@@ -91,11 +99,15 @@ func build_preview(overlay_parent: Node) -> Control:
 	overlay_parent.add_child(_preview)
 	return _preview
 
+
 func _place_preview(_local_px: Vector2) -> void:
-	if _preview: _preview.queue_redraw()
+	if _preview:
+		_preview.queue_redraw()
+
 
 func update_preview_at_overlay(_overlay: Control, _overlay_pos: Vector2):
 	pass
+
 
 func handle_view_input(event: InputEvent) -> bool:
 	if event is InputEventMouseMotion:
@@ -105,10 +117,10 @@ func handle_view_input(event: InputEvent) -> bool:
 		if _is_drag and _drag_idx >= 0 and _edit_idx >= 0:
 			if not render.is_inside_map(event.position):
 				return false
-				
+
 			if event.position.is_finite():
 				var local_terrain := editor.map_to_terrain(event.position)
-				
+
 				var pts := _current_points()
 				if _drag_idx >= 0 and _drag_idx < pts.size():
 					pts[_drag_idx] = local_terrain
@@ -120,7 +132,7 @@ func handle_view_input(event: InputEvent) -> bool:
 		if event.pressed:
 			if not render.is_inside_map(event.position):
 				return false
-			
+
 			if _edit_idx < 0:
 				_start_new_polygon()
 				_edit_idx = _find_edit_index_by_id()
@@ -134,7 +146,7 @@ func handle_view_input(event: InputEvent) -> bool:
 			else:
 				if not render.is_inside_map(event.position):
 					return false
-					
+
 				if event.position.is_finite():
 					var local_terrain := editor.map_to_terrain(event.position)
 
@@ -146,14 +158,16 @@ func handle_view_input(event: InputEvent) -> bool:
 							return true
 
 					var before: Dictionary = data.surfaces[idx].duplicate(true)
-					var pts := (before.get("points", PackedVector2Array()) as PackedVector2Array)
+					var pts := before.get("points", PackedVector2Array()) as PackedVector2Array
 					var pts_after := PackedVector2Array(pts)
 					pts_after.append(local_terrain)
 
 					var after := before.duplicate(true)
 					after["points"] = pts_after
 
-					editor.history.push_item_edit_by_id(data, "surfaces", before.get("id"), before, after, "Add polygon point")
+					editor.history.push_item_edit_by_id(
+						data, "surfaces", before.get("id"), before, after, "Add polygon point"
+					)
 					data.set_surface_points(before.id, pts_after)
 
 					_queue_preview_redraw()
@@ -163,7 +177,9 @@ func handle_view_input(event: InputEvent) -> bool:
 			if _drag_idx >= 0 and _edit_idx >= 0 and _drag_before.size() > 0:
 				var after: Dictionary = data.surfaces[_edit_idx].duplicate(true)
 				if after != _drag_before:
-					editor.history.push_item_edit_by_id(data, "surfaces", after.get("id"), _drag_before, after, "Move polygon point")
+					editor.history.push_item_edit_by_id(
+						data, "surfaces", after.get("id"), _drag_before, after, "Move polygon point"
+					)
 			_drag_idx = -1
 			_drag_before = {}
 			_queue_preview_redraw()
@@ -179,7 +195,14 @@ func handle_view_input(event: InputEvent) -> bool:
 						pts.remove_at(pts.size() - 1)
 						var after := before.duplicate(true)
 						after["points"] = pts
-						editor.history.push_item_edit_by_id(data, "surfaces", before.get("id"), before, after, "Remove polygon point")
+						editor.history.push_item_edit_by_id(
+							data,
+							"surfaces",
+							before.get("id"),
+							before,
+							after,
+							"Remove polygon point"
+						)
 						data.surfaces[_edit_idx] = after
 						data.set_surface_points(_edit_id, pts)
 						_queue_preview_redraw()
@@ -200,22 +223,24 @@ func handle_view_input(event: InputEvent) -> bool:
 					_cancel_edit_delete_polygon()
 					_queue_preview_redraw()
 				return true
-				
+
 	return false
+
 
 ## Rebuild the Info UI with info on the active brush
 func _rebuild_info_ui():
 	if not _info_ui_parent || not active_brush:
 		return
-	
+
 	_queue_free_children(_info_ui_parent)
 	var l = RichTextLabel.new()
 	l.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	l.bbcode_enabled = true
-	l.text = "
-	[b]Selected feature[/b] 
+	l.text = (
+		"""
+	[b]Selected feature[/b]
 	%s
-	
+
 	[b]Movement Cost[/b]
 	Foot: %d
 	Wheeled: %d
@@ -233,26 +258,29 @@ func _rebuild_info_ui():
 	[b]Special[/b]
 	Road Bias: %d
 	Bridge Capacity (t): %d
-	" % [
-		active_brush.legend_title,
-		active_brush.mv_foot,
-		active_brush.mv_wheeled,
-		active_brush.mv_tracked,
-		active_brush.mv_riverine,
-		active_brush.los_attenuation_per_m,
-		active_brush.spotting_penalty_m,
-		active_brush.cover_reduction,
-		active_brush.concealment,
-		active_brush.road_bias,
-		active_brush.bridge_capacity_tons
-	]
+	"""
+		% [
+			active_brush.legend_title,
+			active_brush.mv_foot,
+			active_brush.mv_wheeled,
+			active_brush.mv_tracked,
+			active_brush.mv_riverine,
+			active_brush.los_attenuation_per_m,
+			active_brush.spotting_penalty_m,
+			active_brush.cover_reduction,
+			active_brush.concealment,
+			active_brush.road_bias,
+			active_brush.bridge_capacity_tons
+		]
+	)
 	_info_ui_parent.add_child(l)
+
 
 ## retrieve current polygon points
 func _current_points() -> PackedVector2Array:
-	if data == null or _edit_idx < 0: 
+	if data == null or _edit_idx < 0:
 		return PackedVector2Array()
-	
+
 	var idx := _ensure_current_poly_idx()
 	if idx < 0:
 		_start_new_polygon()
@@ -261,9 +289,10 @@ func _current_points() -> PackedVector2Array:
 			return PackedVector2Array()
 	return data.surfaces[idx].get("points", PackedVector2Array())
 
+
 ## Helper function to find current polygon in Terrain Data
 func _find_edit_index_by_id() -> int:
-	if data == null or _edit_id < 0: 
+	if data == null or _edit_id < 0:
 		return -1
 	for i in data.surfaces.size():
 		var s = data.surfaces[i]
@@ -271,9 +300,10 @@ func _find_edit_index_by_id() -> int:
 			return i
 	return -1
 
+
 ## Start creating a new polygon
 func _start_new_polygon() -> void:
-	if data == null: 
+	if data == null:
 		return
 	if active_brush == null or active_brush.feature_type != TerrainBrush.FeatureType.AREA:
 		return
@@ -293,13 +323,14 @@ func _start_new_polygon() -> void:
 	_edit_idx = data.surfaces.size() - 1
 	_queue_preview_redraw()
 
+
 ## Delete polygon
 func _cancel_edit_delete_polygon() -> void:
-	if data == null or _edit_idx < 0: 
+	if data == null or _edit_idx < 0:
 		return
 	var d: Dictionary = data.surfaces[_edit_idx]
 	var id = d.get("id", null)
-	if id == null: 
+	if id == null:
 		return
 	var copy := d.duplicate(true)
 	editor.history.push_item_erase_by_id(data, "surfaces", id, copy, "Delete polygon", _edit_idx)
@@ -311,6 +342,7 @@ func _cancel_edit_delete_polygon() -> void:
 	_is_drag = false
 	_queue_preview_redraw()
 
+
 ## Stop editing and save polygon
 func _finish_edit_keep_polygon() -> void:
 	_edit_id = -1
@@ -320,13 +352,14 @@ func _finish_edit_keep_polygon() -> void:
 	_is_drag = false
 	_queue_preview_redraw()
 
+
 ## Function to pick a point at position
 func _pick_point(pos: Vector2) -> int:
 	var terrain_pos = editor.map_to_terrain(pos)
-	if _edit_idx < 0: 
+	if _edit_idx < 0:
 		return -1
 	var pts := _current_points()
-	if pts.is_empty(): 
+	if pts.is_empty():
 		return -1
 	var best := -1
 	var best_d2 := _pick_radius_px * _pick_radius_px
@@ -337,24 +370,29 @@ func _pick_point(pos: Vector2) -> int:
 			best_d2 = d2
 	return best
 
+
 ## Helper function to create a new label
 func _label(t: String) -> Label:
 	var l := Label.new()
 	l.text = t
 	return l
 
+
 ## Helper function to delete all children of a parent node
 func _queue_free_children(node: Control):
 	for n in node.get_children():
 		n.queue_free()
 
+
 ## Queue a redraw of the preview
 func _queue_preview_redraw() -> void:
-	if _preview: _preview.queue_redraw()
+	if _preview:
+		_preview.queue_redraw()
+
 
 ## Ensure _edit_idx points at the polygon with _edit_id, return index or -1
 func _ensure_current_poly_idx() -> int:
-	if data == null or _edit_id < 0: 
+	if data == null or _edit_id < 0:
 		return -1
 	if _edit_idx >= 0 and _edit_idx < data.surfaces.size():
 		var s: Dictionary = data.surfaces[_edit_idx]
@@ -363,8 +401,10 @@ func _ensure_current_poly_idx() -> int:
 	_edit_idx = _find_edit_index_by_id()
 	return _edit_idx
 
+
 ## Class to draw a point handle
-class HandlesOverlay extends Control:
+class HandlesOverlay:
+	extends Control
 	var tool: TerrainPolygonTool
 	var handle_r := 7.0
 
@@ -378,8 +418,8 @@ class HandlesOverlay extends Control:
 		for i in pts.size():
 			var p_map := tool.editor.terrain_to_map(pts[i])
 
-			draw_circle(p_map, handle_r + 2.0, Color(0,0,0,0.9))
-			draw_circle(p_map, handle_r, Color(1,1,1,0.95))
+			draw_circle(p_map, handle_r + 2.0, Color(0, 0, 0, 0.9))
+			draw_circle(p_map, handle_r, Color(1, 1, 1, 0.95))
 
 		if tool._hover_idx >= 0 and tool._hover_idx < pts.size():
 			var ph_map := tool.editor.terrain_to_map(pts[tool._hover_idx])

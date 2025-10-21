@@ -1,23 +1,25 @@
-extends Window
 class_name TaskConfigDialog
+extends Window
 ## Dynamic config dialog for TaskInstance/UnitTask.
 ##
 ## Generates fields from the task's exported properties.
 
 signal saved(instance: ScenarioTask)
 
+var editor: ScenarioEditor
+var instance: ScenarioTask
+var _before: ScenarioTask
+
 @onready var form: VBoxContainer = %Form
 @onready var save_btn: Button = %Save
 @onready var close_btn: Button = %Close
 
-var editor: ScenarioEditor
-var instance: ScenarioTask
-var _before: ScenarioTask
 
 func _ready() -> void:
 	save_btn.pressed.connect(_on_save)
 	close_btn.pressed.connect(func(): visible = false)
 	close_requested.connect(func(): visible = false)
+
 
 func show_for(_editor: ScenarioEditor, inst: ScenarioTask) -> void:
 	editor = _editor
@@ -25,6 +27,7 @@ func show_for(_editor: ScenarioEditor, inst: ScenarioTask) -> void:
 	_before = instance.duplicate(true)
 	_build_form()
 	visible = true
+
 
 func _build_form() -> void:
 	for c in form.get_children():
@@ -65,37 +68,45 @@ func _build_form() -> void:
 				w = sb
 			TYPE_INT:
 				var isb := SpinBox.new()
-				isb.allow_lesser = true; isb.allow_greater = true
+				isb.allow_lesser = true
+				isb.allow_greater = true
 				isb.value = int(params.get(n, t.get(n)))
 				isb.step = 1.0
 				if p.hint == PROPERTY_HINT_RANGE:
 					var p2: PackedStringArray = p.hint_string.split(",")
 					if p2.size() >= 2:
-						isb.min_value = int(p2[0]); isb.max_value = int(p2[1])
+						isb.min_value = int(p2[0])
+						isb.max_value = int(p2[1])
 				elif p.hint == PROPERTY_HINT_ENUM:
 					var ob := OptionButton.new()
 					var choices: PackedStringArray = p.hint_string.split(",")
 					var cur := int(params.get(n, t.get(n)))
 					for i in choices.size():
 						ob.add_item(choices[i], i)
-					ob.select(clamp(cur, 0, choices.size()-1))
+					ob.select(clamp(cur, 0, choices.size() - 1))
 					w = ob
-				if w == null: w = isb
+				if w == null:
+					w = isb
 			TYPE_STRING:
 				var le := LineEdit.new()
 				le.text = String(params.get(n, t.get(n)))
 				w = le
 			TYPE_VECTOR2:
 				var cx := HBoxContainer.new()
-				var sx := SpinBox.new(); var sy := SpinBox.new()
+				var sx := SpinBox.new()
+				var sy := SpinBox.new()
 				sx.value = (params.get(n, t.get(n)) as Vector2).x
 				sy.value = (params.get(n, t.get(n)) as Vector2).y
-				sx.step = 1.0; sy.step = 1.0
-				cx.add_child(Label.new()); cx.get_child(0).text = "X"
+				sx.step = 1.0
+				sy.step = 1.0
+				cx.add_child(Label.new())
+				cx.get_child(0).text = "X"
 				cx.add_child(sx)
-				cx.add_child(Label.new()); cx.get_child(2).text = "Y"
+				cx.add_child(Label.new())
+				cx.get_child(2).text = "Y"
 				cx.add_child(sy)
-				cx.set_meta("sx", sx); cx.set_meta("sy", sy)
+				cx.set_meta("sx", sx)
+				cx.set_meta("sy", sy)
 				w = cx
 			_:
 				var lbl := Label.new()
@@ -107,8 +118,10 @@ func _build_form() -> void:
 		row.add_child(w)
 		form.add_child(row)
 
+
 func _on_save() -> void:
-	if not instance or not instance.task: return
+	if not instance or not instance.task:
+		return
 
 	var params := {}
 	for row in form.get_children():
@@ -129,7 +142,9 @@ func _on_save() -> void:
 	after.params = params
 
 	if editor and editor.history:
-		editor.history.push_res_edit_by_id(editor.ctx.data, "tasks", "id", String(instance.id), _before, after, "Edit Task")
+		editor.history.push_res_edit_by_id(
+			editor.ctx.data, "tasks", "id", String(instance.id), _before, after, "Edit Task"
+		)
 	else:
 		instance.params = params
 

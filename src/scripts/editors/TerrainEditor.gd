@@ -1,8 +1,22 @@
-extends Control
 class_name TerrainEditor
+extends Control
 ## In-game terrain editor for custom terrains.
 ##
 ## Lets creators create terrains to use in scenarios.
+
+## Action on exit
+const _EXIT_DISCARD_ACTION := "discard"
+
+## Order of editor tools
+const TOOL_ORDER := [
+	"res://scripts/editors/tools/TerrainElevationTool.gd",
+	"res://scripts/editors/tools/TerrainPolygonTool.gd",
+	"res://scripts/editors/tools/TerrainLineTool.gd",
+	"res://scripts/editors/tools/TerrainPointTool.gd",
+	"res://scripts/editors/tools/TerrainLabelTool.gd"
+]
+
+const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 
 ## Initial Terrain Data
 @export var data: TerrainData
@@ -10,22 +24,6 @@ class_name TerrainEditor
 @export_group("Tools")
 ## Icon size for tool buttons
 @export var tool_icon_size: Vector2 = Vector2(25, 25)
-
-@onready var history := TerrainHistory.new()
-@onready var file_menu: MenuButton = %File
-@onready var edit_menu: MenuButton = %Edit
-@onready var tools_grid: GridContainer = %Tools
-@onready var terrain_render: TerrainRender = %World
-@onready var terrainview_container: SubViewportContainer = %TerrainView
-@onready var terrainview: SubViewport = %TerrainView/View
-@onready var brush_overlay: Control = %BrushOverlay
-@onready var terrain_settings_dialog: NewTerrainDialog = %TerrainSettingsDialog
-@onready var tools_options: VBoxContainer = %"Tool Options"
-@onready var tools_info: VBoxContainer = %"Tool Info"
-@onready var tools_hint: HBoxContainer = %"ToolHint"
-@onready var history_container: VBoxContainer = %History
-@onready var camera: TerrainCamera = %Camera
-@onready var mouse_position_l: Label = %MousePosition
 
 var brushes: Array[TerrainBrush] = []
 var features: Array[Variant] = []
@@ -42,19 +40,24 @@ var _pending_exit_kind: String = ""
 var _pending_quit_after_save: bool = false
 var _exit_dialog: ConfirmationDialog
 
-## Action on exit
-const _EXIT_DISCARD_ACTION := "discard"
+@onready var history := TerrainHistory.new()
+@onready var file_menu: MenuButton = %File
+@onready var edit_menu: MenuButton = %Edit
+@onready var tools_grid: GridContainer = %Tools
+@onready var terrain_render: TerrainRender = %World
+@onready var terrainview_container: SubViewportContainer = %TerrainView
+@onready var terrainview: SubViewport = %TerrainView/View
+@onready var brush_overlay: Control = %BrushOverlay
+@onready var terrain_settings_dialog: NewTerrainDialog = %TerrainSettingsDialog
+@onready var tools_options: VBoxContainer = %ToolOptions
+@onready var tools_info: VBoxContainer = %ToolInfo
+@onready var tools_hint: HBoxContainer = %"ToolHint"
+@onready var history_container: VBoxContainer = %History
+@onready var camera: TerrainCamera = %Camera
+@onready var mouse_position_l: Label = %MousePosition
+@onready var tab_container_2: TabContainer = %TabContainer2
+@onready var tab_container_3: TabContainer = %TabContainer3
 
-## Order of editor tools
-const TOOL_ORDER := [
-	"res://scripts/editors/tools/TerrainElevationTool.gd",
-	"res://scripts/editors/tools/TerrainPolygonTool.gd",
-	"res://scripts/editors/tools/TerrainLineTool.gd",
-	"res://scripts/editors/tools/TerrainPointTool.gd",
-	"res://scripts/editors/tools/TerrainLabelTool.gd"
-]
-
-const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 
 func _ready():
 	file_menu.get_popup().connect("id_pressed", _on_filemenu_pressed)
@@ -67,12 +70,16 @@ func _ready():
 	brush_overlay.gui_input.connect(_on_brush_overlay_gui_input)
 	terrain_render.data = data
 	_build_tool_buttons()
-	
+
 	history.history_changed.connect(_on_history_changed)
 	_on_history_changed([], [])
-	
+
 	get_tree().set_auto_accept_quit(false)
 	_build_exit_dialog()
+
+	tab_container_2.set_tab_title(0, "Tool Options")
+	tab_container_3.set_tab_title(0, "Tool Info")
+
 
 ## Catch resize and close notifications
 func _notification(what):
@@ -81,25 +88,37 @@ func _notification(what):
 	elif what == NOTIFICATION_WM_CLOSE_REQUEST:
 		_request_exit("app")
 
+
 ## On file menu pressed event
 func _on_filemenu_pressed(id: int):
 	match id:
-		0: _on_new_pressed()
-		1: _open()
-		2: _save()
-		3: _save_as()
-		4: _request_exit("menu")
-		
+		0:
+			_on_new_pressed()
+		1:
+			_open()
+		2:
+			_save()
+		3:
+			_save_as()
+		4:
+			_request_exit("menu")
+
+
 ## On edit menu pressed event
 func _on_editmenu_pressed(id: int):
 	match id:
-		0: terrain_settings_dialog.open_for_edit(data)
-		1: history.undo()
-		2: history.redo()
+		0:
+			terrain_settings_dialog.open_for_edit(data)
+		1:
+			history.undo()
+		2:
+			history.redo()
+
 
 ## On New Terrain Pressed event
 func _on_new_pressed():
 	terrain_settings_dialog.open_for_create("New Terrain", 2000, 2000, 100, 100, 113)
+
 
 ## Create new terrain data
 func _new_terrain(d: TerrainData):
@@ -111,14 +130,16 @@ func _new_terrain(d: TerrainData):
 	_saved_history_index = _current_history_index
 	_dirty = false
 
+
 ## Create new terrain data
 func _edit_terrain(_d: TerrainData):
 	terrain_render.data = data
-	
+
 	for tool: TerrainToolBase in tool_map.values():
 		tool.data = data
-	
+
 	_dirty = true
+
 
 ## Request to exit the editor
 func _request_exit(kind: String) -> void:
@@ -127,6 +148,7 @@ func _request_exit(kind: String) -> void:
 		_exit_dialog.popup_centered()
 	else:
 		_perform_pending_exit()
+
 
 ## Save then exit
 func _on_exit_save_confirmed() -> void:
@@ -138,6 +160,7 @@ func _on_exit_save_confirmed() -> void:
 		if not _pending_quit_after_save:
 			_perform_pending_exit()
 
+
 ## Exit application
 func _perform_pending_exit() -> void:
 	if _pending_exit_kind == "menu":
@@ -145,6 +168,7 @@ func _perform_pending_exit() -> void:
 	elif _pending_exit_kind == "app":
 		get_tree().quit()
 	_pending_exit_kind = ""
+
 
 ## Build the tool panel
 func _build_tool_buttons():
@@ -162,7 +186,7 @@ func _build_tool_buttons():
 		tool.on_options_changed.connect(_rebuild_options_panel)
 		tool.on_hints_changed.connect(_rebuild_tool_hint)
 		tool.on_need_info.connect(_rebuild_info_panel)
-		
+
 		var btn := TextureButton.new()
 		btn.ignore_texture_size = true
 		btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
@@ -174,47 +198,54 @@ func _build_tool_buttons():
 		btn.self_modulate = Color(1, 1, 1, 0.4)
 		btn.set_meta("hovered", false)
 		tools_grid.add_child(btn)
-		
-		btn.mouse_entered.connect(func ():
-			btn.set_meta("hovered", true)
-			_update_tool_button_tint(btn)
+
+		btn.mouse_entered.connect(
+			func():
+				btn.set_meta("hovered", true)
+				_update_tool_button_tint(btn)
 		)
-		btn.mouse_exited.connect(func ():
-			btn.set_meta("hovered", false)
-			_update_tool_button_tint(btn)
+		btn.mouse_exited.connect(
+			func():
+				btn.set_meta("hovered", false)
+				_update_tool_button_tint(btn)
 		)
-		btn.focus_entered.connect(func ():
-			btn.set_meta("hovered", true)
-			_update_tool_button_tint(btn)
+		btn.focus_entered.connect(
+			func():
+				btn.set_meta("hovered", true)
+				_update_tool_button_tint(btn)
 		)
-		btn.focus_exited.connect(func ():
-			btn.set_meta("hovered", false)
-			_update_tool_button_tint(btn)
+		btn.focus_exited.connect(
+			func():
+				btn.set_meta("hovered", false)
+				_update_tool_button_tint(btn)
 		)
-		btn.toggled.connect(func (pressed: bool):
-			_update_tool_button_tint(btn)
-			if pressed:
-				_select_tool(btn)
-			else:
-				_deselect_tool(btn)
+		btn.toggled.connect(
+			func(pressed: bool):
+				_update_tool_button_tint(btn)
+				if pressed:
+					_select_tool(btn)
+				else:
+					_deselect_tool(btn)
 		)
+
 
 ## Select the active tool
 func _select_tool(btn: TextureButton) -> void:
 	if active_tool:
 		active_tool.destroy_preview()
-		
+
 	for n in tools_grid.get_children():
 		if n is TextureButton:
 			n.button_pressed = (n == btn)
 			_update_tool_button_tint(n)
-	
+
 	active_tool = tool_map[btn]
 	_rebuild_options_panel()
 	_rebuild_info_panel()
 	_rebuild_tool_hint()
 	if active_tool:
 		active_tool.ensure_preview(brush_overlay)
+
 
 ## Deselect the active tool
 func _deselect_tool(_btn: TextureButton) -> void:
@@ -231,6 +262,7 @@ func _deselect_tool(_btn: TextureButton) -> void:
 	_rebuild_info_panel()
 	_rebuild_tool_hint()
 
+
 ## Update tool button tint
 func _update_tool_button_tint(btn: TextureButton) -> void:
 	var hovered := bool(btn.get_meta("hovered", false))
@@ -239,23 +271,27 @@ func _update_tool_button_tint(btn: TextureButton) -> void:
 	else:
 		btn.self_modulate = Color(1, 1, 1, 0.4)  # dimmed idle
 
+
 ## Rebuild the options panel for the selected tool
 func _rebuild_options_panel() -> void:
 	_queue_free_children(tools_options)
 	if active_tool:
 		active_tool.build_options_ui(tools_options)
 
+
 ## Builds the tool info panel
 func _rebuild_info_panel() -> void:
 	_queue_free_children(tools_info)
 	if active_tool:
 		active_tool.build_info_ui(tools_info)
-		
+
+
 ## Builds the tool info panel
 func _rebuild_tool_hint() -> void:
 	_queue_free_children(tools_hint)
 	if active_tool:
 		active_tool.build_hint_ui(tools_hint)
+
 
 ## Build exit dialog
 func _build_exit_dialog() -> void:
@@ -268,34 +304,37 @@ func _build_exit_dialog() -> void:
 	add_child(_exit_dialog)
 
 	_exit_dialog.confirmed.connect(_on_exit_save_confirmed)
-	_exit_dialog.custom_action.connect(func(action: String):
-		if action == _EXIT_DISCARD_ACTION:
-			_perform_pending_exit()
+	_exit_dialog.custom_action.connect(
+		func(action: String):
+			if action == _EXIT_DISCARD_ACTION:
+				_perform_pending_exit()
 	)
-	_exit_dialog.canceled.connect(func():
-		_pending_exit_kind = ""
-	)
+	_exit_dialog.canceled.connect(func(): _pending_exit_kind = "")
+
 
 ## Handle unhandled input
 func _unhandled_key_input(event):
 	if active_tool and active_tool.handle_view_input(event):
 		return
-		
+
 	if event is InputEventKey and event.pressed:
 		var ctrl: bool = event.ctrl_pressed or event.meta_pressed
 		if ctrl and event.keycode == KEY_Z:
-			history.undo();
+			history.undo()
 			accept_event()
 		elif ctrl and (event.keycode == KEY_Y or (event.shift_pressed and event.keycode == KEY_Z)):
-			history.redo(); 
+			history.redo()
 			accept_event()
 		elif ctrl and event.keycode == KEY_S:
-			if event.shift_pressed: _save_as()
-			else: _save()
+			if event.shift_pressed:
+				_save_as()
+			else:
+				_save()
 			accept_event()
 		elif ctrl and event.keycode == KEY_O:
 			_open()
 			accept_event()
+
 
 ## Input handler for terrainview Viewport
 func _on_brush_overlay_gui_input(event):
@@ -303,31 +342,35 @@ func _on_brush_overlay_gui_input(event):
 		var mp = map_to_terrain(event.position)
 		var grid := terrain_render.pos_to_grid(mp)
 		mouse_position_l.text = "(%d, %d | %s)" % [mp.x, mp.y, grid]
-	
+
 	if event is InputEventMouseMotion && active_tool:
 		active_tool.on_mouse_inside(_inside_brush_overlay)
 		if not _inside_brush_overlay:
 			return
-		
+
 		active_tool.update_preview_at_overlay(brush_overlay, event.position)
-		
+
 	if active_tool and active_tool.handle_view_input(event):
 		return
+
 
 ## Triggers when mouse enters brush overlay
 func _on_brush_overlay_mouse_enter():
 	_inside_brush_overlay = true
 
+
 ## Triggers when mouse exits brush overlay
 func _on_brush_overlay_mouse_exit():
 	_inside_brush_overlay = false
 
+
 ## Save terrain
 func _save():
-	if data == null: 
+	if data == null:
 		return
 	if _current_path == "":
-		_save_as(); return
+		_save_as()
+		return
 	var err := ResourceSaver.save(data, _current_path)
 	if err != OK:
 		push_error("Save failed: %s" % err)
@@ -338,9 +381,10 @@ func _save():
 			_pending_quit_after_save = false
 			_perform_pending_exit()
 
+
 ## Save terrain as
 func _save_as():
-	if data == null: 
+	if data == null:
 		return
 	var dlg := FileDialog.new()
 	dlg.file_mode = FileDialog.FILE_MODE_SAVE_FILE
@@ -349,20 +393,22 @@ func _save_as():
 	dlg.add_filter("*.res ; Binary Resource")
 	add_child(dlg)
 	dlg.popup_centered_ratio(0.5)
-	dlg.file_selected.connect(func(path):
-		var err := ResourceSaver.save(data, path)
-		if err == OK:
-			_current_path = path
-			_saved_history_index = _current_history_index
-			_dirty = false
-			if _pending_quit_after_save:
-				_pending_quit_after_save = false
-				_perform_pending_exit()
-		else:
-			push_error("Save As failed: %s" % err)
-		dlg.queue_free()
+	dlg.file_selected.connect(
+		func(path):
+			var err := ResourceSaver.save(data, path)
+			if err == OK:
+				_current_path = path
+				_saved_history_index = _current_history_index
+				_dirty = false
+				if _pending_quit_after_save:
+					_pending_quit_after_save = false
+					_perform_pending_exit()
+			else:
+				push_error("Save As failed: %s" % err)
+			dlg.queue_free()
 	)
 	dlg.canceled.connect(func(): dlg.queue_free())
+
 
 ## Open terrain
 func _open():
@@ -372,15 +418,17 @@ func _open():
 	dlg.add_filter("*.tres, *.res ; TerrainData")
 	add_child(dlg)
 	dlg.popup_centered_ratio(0.5)
-	dlg.file_selected.connect(func(path):
-		var res := ResourceLoader.load(path)
-		if res is TerrainData:
-			_new_terrain(res)
-		else:
-			push_error("Not a TerrainData: %s" % path)
-		dlg.queue_free()
+	dlg.file_selected.connect(
+		func(path):
+			var res := ResourceLoader.load(path)
+			if res is TerrainData:
+				_new_terrain(res)
+			else:
+				push_error("Not a TerrainData: %s" % path)
+			dlg.queue_free()
 	)
 	dlg.canceled.connect(func(): dlg.queue_free())
+
 
 ## Show UndoRedo history
 func _on_history_changed(past: Array, future: Array) -> void:
@@ -406,22 +454,26 @@ func _on_history_changed(past: Array, future: Array) -> void:
 		row2.add_child(arrow)
 		row2.add_child(txt2)
 		history_container.add_child(row2)
-		
+
 	_current_history_index = past.size()
 	_dirty = (_current_history_index != _saved_history_index)
+
 
 ## Helper function to delete all children of a parent node
 func _queue_free_children(node: Control):
 	for n in node.get_children():
 		n.queue_free()
 
+
 ## API to get screen position from world position
 func screen_to_world(pos: Vector2) -> Vector2:
 	return (pos - terrain_render.global_position) / camera.zoom + camera.position
 
+
 ## API to get world position from screen position
 func world_to_screen(pos: Vector2) -> Vector2:
 	return (pos - camera.position) * camera.zoom + terrain_render.global_position
+
 
 ## API to convert a screen-space point to terrain-local meters,
 func screen_to_map(pos: Vector2, keep_aspect: bool = true) -> Vector2:
@@ -449,6 +501,7 @@ func screen_to_map(pos: Vector2, keep_aspect: bool = true) -> Vector2:
 	var local_px := to_local_xform * sv_pos
 
 	return local_px
+
 
 ## API to convert terrain meters to a screen-space point
 func map_to_screen(local_m: Vector2, keep_aspect: bool = true) -> Vector2:
@@ -478,9 +531,11 @@ func map_to_screen(local_m: Vector2, keep_aspect: bool = true) -> Vector2:
 	var screen_pos := draw_pos + sv_pos * p_scale
 	return screen_pos
 
+
 ## Wrapper for map_to_terrain from terrain renderer
 func map_to_terrain(local_m: Vector2) -> Vector2:
 	return terrain_render.map_to_terrain(local_m)
+
 
 ## Wrapper for terrain_to_map from terrain renderer
 func terrain_to_map(pos: Vector2) -> Vector2:

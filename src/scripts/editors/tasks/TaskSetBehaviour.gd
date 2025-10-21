@@ -1,8 +1,9 @@
+class_name UnitTaskSetBehaviour
 extends UnitBaseTask
-class_name UnitTask_SetBehaviour
 ## Set unit behaviour.
 
-@export_enum("careless","safe","aware","combat","stealth") var behaviour: int = 1
+@export_enum("careless", "safe", "aware", "combat", "stealth") var behaviour: int = 1
+
 
 func _init() -> void:
 	type_id = &"set_behaviour"

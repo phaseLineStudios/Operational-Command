@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=44 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -6,6 +6,12 @@
 [ext_resource type="Script" uid="uid://0r8k717de5os" path="res://scripts/core/PlayerInteraction.gd" id="4_py2wd"]
 [ext_resource type="Script" uid="uid://6xtsg3rqhc8t" path="res://scripts/core/MapController.gd" id="5_lmes1"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="6_cx6my"]
+[ext_resource type="Script" uid="uid://c3rgrbya520ur" path="res://scripts/sim/systems/AmmoSystem.gd" id="7_ge8rp"]
+[ext_resource type="Resource" uid="uid://dv3cjce0fasfa" path="res://data/ammo/default_caps.tres" id="8_vxnyp"]
+[ext_resource type="Script" uid="uid://dy2uex65i3y4m" path="res://scripts/sim/CombatAdapter.gd" id="9_vxnyp"]
+[ext_resource type="Script" uid="uid://dq8m3cwvv276y" path="res://scripts/sim/Combat.gd" id="10_of8da"]
+[ext_resource type="Script" uid="uid://b1vs2cahgd48f" path="res://scripts/sim/SimWorld.gd" id="7_ge8rp"]
+[ext_resource type="PackedScene" uid="uid://7ta8ojkjg5rg" path="res://scenes/ui/pause_menu.tscn" id="7_uk27s"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
 size = Vector2(10, 30)
@@ -401,4 +407,22 @@ current = true
 
 [node name="RadioController" parent="." instance=ExtResource("1_p1n4g")]
 
+[node name="WorldController" type="Node" parent="."]
+script = ExtResource("7_ge8rp")
+
 [node name="UI" type="CanvasLayer" parent="."]
+
+[node name="AmmoSystem" type="Node" parent="."]
+script = ExtResource("7_ge8rp")
+ammo_profile = ExtResource("8_vxnyp")
+
+[node name="CombatAdapter" type="Node" parent="."]
+script = ExtResource("9_vxnyp")
+ammo_system_path = NodePath("../AmmoSystem")
+
+[node name="Combat" type="Node" parent="."]
+script = ExtResource("10_of8da")
+combat_adapter_path = NodePath("../CombatAdapter")
+[node name="PauseMenu" parent="UI" instance=ExtResource("7_uk27s")]
+unique_name_in_owner = true
+visible = false

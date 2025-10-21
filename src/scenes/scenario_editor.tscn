@@ -21,9 +21,12 @@ grow_vertical = 2
 script = ExtResource("1_wqbsy")
 
 [node name="Root" type="VBoxContainer" parent="."]
-layout_mode = 0
-offset_right = 1152.0
-offset_bottom = 648.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="TopBar" type="PanelContainer" parent="Root"]
 layout_mode = 2
@@ -102,11 +105,12 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="TabContainer1" type="TabContainer" parent="Root/HBox/LeftTray/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 current_tab = 0
 
-[node name="Scene Tree" type="Tree" parent="Root/HBox/LeftTray/VBox/TabContainer1"]
+[node name="SceneTree" type="Tree" parent="Root/HBox/LeftTray/VBox/TabContainer1"]
 unique_name_in_owner = true
 layout_mode = 2
 hide_root = true

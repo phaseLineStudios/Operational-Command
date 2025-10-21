@@ -1,5 +1,5 @@
-extends RefCounted
 class_name ScenarioEditorContext
+extends RefCounted
 
 signal overlay_redraw_requested
 @warning_ignore("unused_signal")
@@ -29,13 +29,16 @@ var trigger_list: ItemList
 # State shared across services
 var selected_pick: Dictionary = {}
 var current_tool: ScenarioToolBase
-var selected_unit_affiliation := ScenarioUnit.Affiliation.enemy
+var selected_unit_affiliation := ScenarioUnit.Affiliation.ENEMY
+
 
 func request_overlay_redraw() -> void:
 	overlay_redraw_requested.emit()
 
+
 func request_scene_tree_rebuild() -> void:
 	scene_tree_rebuild_requested.emit()
+
 
 func toast(msg: String) -> void:
 	toast_requested.emit(msg)
