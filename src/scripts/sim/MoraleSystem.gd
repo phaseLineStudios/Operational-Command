@@ -59,7 +59,7 @@ func is_broken() -> bool:
 ##applies overtime moralechanges
 func tick(dt: float) -> void:
 	#idle
-	if owner.move_state() == ScenarioUnit.MoveState.idle:
+	if owner.move_state() == ScenarioUnit.MoveState.IDLE:
 		apply_morale_delta(-0.001 * dt, "idle_decay")
 	safe_rest()
 	if scenario.rain > 10.0:
@@ -110,7 +110,7 @@ func safe_rest() -> void:
 		var dist = other.position_m.distance_to(owner.position_m)
 		if dist <= min_distance:
 			safe = false
-	if safe == true && owner.move_state() == ScenarioUnit.MoveState.idle:
+	if safe == true && owner.move_state() == ScenarioUnit.MoveState.IDLE:
 		if morale + 0.3 > 0.6:
 			set_morale(0.6,"safe rest")
 		else:

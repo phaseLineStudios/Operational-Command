@@ -149,7 +149,7 @@ func cancel_move() -> void:
 func tick(dt: float, grid: PathGrid) -> void:
 	if _morale_sys:
 		_morale_sys.tick(dt)
-	if _move_state != MoveState.moving or _move_paused or _move_path.is_empty():
+	if _move_state != MoveState.MOVING or _move_paused or _move_path.is_empty():
 		return
 
 	var cur := position_m

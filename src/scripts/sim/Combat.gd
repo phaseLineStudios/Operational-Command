@@ -217,7 +217,7 @@ func check_abort_condition(attacker: ScenarioUnit, defender: ScenarioUnit) -> vo
 		return
 	elif defender.unit.morale <= 0.2:
 		LogService.info(defender.unit.id + " is [b]surrendering[/b]", "Combat.gd:71")
-    defender._morale_sys.set_morale(0.0,"surrendered")
+	defender._morale_sys.set_morale(0.0,"surrendered")
 		attacker._morale_sys.apply_morale_delta(0.2, "enemy surrendered")
 		attacker._morale_sys.nearby_ally_morale_change(0.05)
 		unit_surrendered.emit()
@@ -225,7 +225,7 @@ func check_abort_condition(attacker: ScenarioUnit, defender: ScenarioUnit) -> vo
 		return
 	if called_retreat:
 		LogService.info(defender.unit.id + " is [b]retreating[/b]", "Combat.gd:78")
-    attacker._morale_sys.apply_morale_delta(0.1,"enemy retreating")
+	attacker._morale_sys.apply_morale_delta(0.1,"enemy retreating")
 		attacker.attacker._morale_sys.nearby_ally_morale_change(0.05)
 		unit_retreated.emit()
 		abort_condition = true
