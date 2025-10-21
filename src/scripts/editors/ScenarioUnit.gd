@@ -48,10 +48,24 @@ var _move_path: PackedVector2Array = []
 var _move_path_idx := 0
 var _move_last_eta_s := 0.0
 var _move_paused := false
-
-## FuelSystem
-## FuelSystem provider used to scale speed at LOW/CRITICAL and 0 at EMPTY.
+var _morale: float = 0.6
+var _morale_sys: MoraleSystem
 var _fuel: FuelSystem = null
+
+
+#initializing moraleSystem
+func _init() -> void:
+	_morale_sys = MoraleSystem.new(id, self)
+	_morale = _morale_sys.get_morale()
+
+
+func _on_morale_changed(unit_id: String, prev: float, cur: float, source: String) -> void:
+	print("[%s] Morale changed from %.2f → %.2f (source: %s)" % [unit_id, prev, cur, source])
+	_morale = _morale_sys.get_morale()
+
+
+func _on_morale_state_changed(unit_id: String, prev: int, cur: int) -> void:
+	print("[%s] Morale state changed: %s → %s" % [unit_id, prev, cur])
 
 
 ## Bind a FuelSystem instance at runtime.
@@ -133,6 +147,8 @@ func cancel_move() -> void:
 
 ## Advance movement by dt seconds on PathGrid (virtual position only).
 func tick(dt: float, grid: PathGrid) -> void:
+	if _morale_sys:
+		_morale_sys.tick(dt)
 	if _move_state != MoveState.MOVING or _move_paused or _move_path.is_empty():
 		return
 
