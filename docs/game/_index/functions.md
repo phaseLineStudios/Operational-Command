@@ -14,6 +14,7 @@
 - [MissionResolution::add_units_lost](../scripts/core/MissionResolution/functions/add_units_lost.md) — Record fully destroyed friendly unit(s) (e.g., wiped marker).
 - [AmmoProfile::apply_defaults_if_missing](../scripts/data/AmmoProfile/functions/apply_defaults_if_missing.md) — Fill in caps/state/thresholds if the UnitData is missing them.
 - [FuelProfile::apply_defaults_if_missing](../scripts/data/FuelProfile/functions/apply_defaults_if_missing.md) — Ensures that a given UnitFuelState has valid default values for all its fuel properties.
+- [MoraleSystem::apply_morale_delta](../scripts/sim/MoraleSystem/functions/apply_morale_delta.md) — changes morale value
 - [ContourLayer::apply_style](../scripts/terrain/ContourLayer/functions/apply_style.md) — Apply root style
 - [GridLayer::apply_style](../scripts/terrain/GridLayer/functions/apply_style.md) — Apply root style
 - [LabelLayer::apply_style](../scripts/terrain/LabelLayer/functions/apply_style.md) — Apply style fields from TerrainRender
@@ -151,6 +152,8 @@
 - [STTService::get_final_result](../scripts/radio/STTService/functions/get_final_result.md) — Returns the last final result from the recognizer (non-blocking).
 - [FuelSystem::get_fuel_state](../scripts/sim/systems/FuelSystem/functions/get_fuel_state.md)
 - [Persistence::get_last_save_id_for_campaign](../scripts/core/Persistence/functions/get_last_save_id_for_campaign.md) — Return last save ID for `campaign_id`, or empty.
+- [MoraleSystem::get_morale](../scripts/sim/MoraleSystem/functions/get_morale.md) — returns the raw moralevalue
+- [MoraleSystem::get_morale_state](../scripts/sim/MoraleSystem/functions/get_morale_state.md) — returns moralestate based on morale value
 - [ContentDB::get_object](../scripts/core/ContentDB/functions/get_object.md) — Read a single object by id.
 - [ContentDB::get_objects](../scripts/core/ContentDB/functions/get_objects.md) — Read multiple objects by ids (keeps order).
 - [NARules::get_parser_tables](../scripts/radio/NARules/functions/get_parser_tables.md) — Build and return the parser table
@@ -189,6 +192,7 @@
 - [ContentDB::ids_from_resources](../scripts/core/ContentDB/functions/ids_from_resources.md) — Serialize resources to IDs
 - [ContentDB::image_to_png_b64](../scripts/core/ContentDB/functions/image_to_png_b64.md) — Serialize a image to Base 64
 - [LogService::info](../scripts/core/LogService/functions/info.md) — Log INFO level rich message
+- [MoraleSystem::is_broken](../scripts/sim/MoraleSystem/functions/is_broken.md) — bool to see if morealstate is broken
 - [AmmoSystem::is_critical](../scripts/sim/systems/AmmoSystem/functions/is_critical.md) — True if current/cap <= critical threshold (and > 0).
 - [FuelSystem::is_critical](../scripts/sim/systems/FuelSystem/functions/is_critical.md)
 - [AmmoSystem::is_empty](../scripts/sim/systems/AmmoSystem/functions/is_empty.md) — True if current ammo is zero.
@@ -230,6 +234,7 @@
 - [PointLayer::mark_dirty](../scripts/terrain/PointLayer/functions/mark_dirty.md) — Marks the whole layer as dirty and queues a redraw (forces full rebuild)
 - [SurfaceLayer::mark_dirty](../scripts/terrain/SurfaceLayer/functions/mark_dirty.md) — Marks the whole layer as dirty and queues a redraw (forces full rebuild)
 - [PathGrid::mix](../scripts/terrain/PathGrid/functions/mix.md)
+- [MoraleSystem::morale_effectiveness_mul](../scripts/sim/MoraleSystem/functions/morale_effectiveness_mul.md) — returns morale multiplier based on moralestate
 - [ScenarioUnit::move_state](../scripts/editors/ScenarioUnit/functions/move_state.md) — Query helpers (for UI/AI).
 - [MovementAgent::move_to_m](../scripts/ai/MovementAgent/functions/move_to_m.md) — Command pathfind and start moving to a world-meter destination.
 - [TerrainBrush::movement_multiplier](../scripts/terrain/TerrainBrush/functions/movement_multiplier.md) — Returns the movement multiplier for a given profile.
@@ -238,6 +243,7 @@
 
 - [TerrainRender::nav_estimate_time_s](../scripts/terrain/TerrainRender/functions/nav_estimate_time_s.md) — Estimate travel time (seconds) along a path for a given base speed and profile
 - [TerrainRender::nav_find_path_m](../scripts/terrain/TerrainRender/functions/nav_find_path_m.md) — Request a path in terrain meters via attached PathGrid
+- [MoraleSystem::nearby_ally_morale_change](../scripts/sim/MoraleSystem/functions/nearby_ally_morale_change.md) — applies morale boost to nearby units
 
 ## O
 
@@ -296,6 +302,7 @@
 ## S
 
 - [ContentDB::safe_dup](../scripts/core/ContentDB/functions/safe_dup.md) — Safely duplicate a dictionary or array
+- [MoraleSystem::safe_rest](../scripts/sim/MoraleSystem/functions/safe_rest.md) — gains morale if no enemies nearby
 - [ScenarioPersistenceService::save_to_path](../scripts/editors/services/ScenarioPersistenceService/functions/save_to_path.md)
 - [TerrainEditor::screen_to_map](../scripts/editors/TerrainEditor/functions/screen_to_map.md) — API to convert a screen-space point to terrain-local meters,
 - [MapController::screen_to_map_and_terrain](../scripts/core/MapController/functions/screen_to_map_and_terrain.md) — Helper: from screen pos to map pixels & terrain meters.
@@ -337,6 +344,7 @@
 - [TerrainData::set_line_points](../scripts/data/TerrainData/functions/set_line_points.md) — Update line points by id (fast path while drawing).
 - [TerrainData::set_line_style](../scripts/data/TerrainData/functions/set_line_style.md) — Update line style.
 - [Debrief::set_mission_name](../scripts/ui/Debrief/functions/set_mission_name.md) — Sets the mission name and refreshes the title label.
+- [MoraleSystem::set_morale](../scripts/sim/MoraleSystem/functions/set_morale.md) — changes moralevalue to a new value
 - [MissionResolution::set_objective_state](../scripts/core/MissionResolution/functions/set_objective_state.md) — Update an objective state.
 - [Debrief::set_objectives_results](../scripts/ui/Debrief/functions/set_objectives_results.md) — Populates the objectives list with checkmarks and crosses.
 - [Debrief::set_outcome](../scripts/ui/Debrief/functions/set_outcome.md) — Sets the outcome label text and refreshes the title label.
@@ -381,6 +389,7 @@
 - [AmmoSystem::tick](../scripts/sim/systems/AmmoSystem/functions/tick.md) — Start links for needy units and transfer rounds along active links.
 - [FuelSystem::tick](../scripts/sim/systems/FuelSystem/functions/tick.md)
 - [MissionResolution::tick](../scripts/core/MissionResolution/functions/tick.md) — Advance internal timer.
+- [MoraleSystem::tick](../scripts/sim/MoraleSystem/functions/tick.md) — applies overtime moralechanges
 - [ScenarioUnit::tick](../scripts/editors/ScenarioUnit/functions/tick.md) — Advance movement by dt seconds on PathGrid (virtual position only).
 - [TerrainRender::to_local](../scripts/terrain/TerrainRender/functions/to_local.md)
 - [MissionResolution::to_summary_payload](../scripts/core/MissionResolution/functions/to_summary_payload.md) — Debrief/persistence payload; stable contract for other screens.
@@ -681,6 +690,8 @@ MIN_COMMEND_PANEL_HEIGHT.
 - [DebugOverlay::_icon_for_unit](../scripts/test/DebugOverlay/functions/_icon_for_unit.md)
 - [PathGrid::_in_bounds](../scripts/terrain/PathGrid/functions/_in_bounds.md)
 - [DebugMetricsDisplay::_init](../scripts/ui/DebugMetricsDisplay/functions/_init.md)
+- [MoraleSystem::_init](../scripts/sim/MoraleSystem/functions/_init.md) — sets value of id variables
+- [ScenarioUnit::_init](../scripts/editors/ScenarioUnit/functions/_init.md)
 - [TerrainData::_init](../scripts/data/TerrainData/functions/_init.md)
 - [TerrainElevationTool::_init](../scripts/editors/tools/TerrainElevationTool/functions/_init.md)
 - [TerrainLabelTool::_init](../scripts/editors/tools/TerrainLabelTool/functions/_init.md)
@@ -831,6 +842,8 @@ MIN_COMMEND_PANEL_HEIGHT.
 - [LineLayer::_on_lines_changed](../scripts/terrain/LineLayer/functions/_on_lines_changed.md) — Handles TerrainData line mutations and marks affected lines dirty
 - [DebugMenu::_on_load_pressed](../scripts/ui/DebugMenu/functions/_on_load_pressed.md) — Load scene
 - [PauseMenu::_on_main_menu_pressed](../scripts/ui/PauseMenu/functions/_on_main_menu_pressed.md) — Called on main menu pressed.
+- [ScenarioUnit::_on_morale_changed](../scripts/editors/ScenarioUnit/functions/_on_morale_changed.md)
+- [ScenarioUnit::_on_morale_state_changed](../scripts/editors/ScenarioUnit/functions/_on_morale_state_changed.md)
 - [ScenarioToolBase::_on_mouse_button](../scripts/editors/tools/ScenarioToolBase/functions/_on_mouse_button.md)
 - [ScenarioTriggerTool::_on_mouse_button](../scripts/editors/tools/ScenarioTriggerTool/functions/_on_mouse_button.md)
 - [TaskPlaceTool::_on_mouse_button](../scripts/editors/tools/TaskPlaceTool/functions/_on_mouse_button.md)

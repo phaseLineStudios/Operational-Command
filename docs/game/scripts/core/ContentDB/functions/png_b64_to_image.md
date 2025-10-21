@@ -1,6 +1,6 @@
 # ContentDB::png_b64_to_image Function Reference
 
-*Defined at:* `scripts/core/ContentDB.gd` (lines 443–451)</br>
+*Defined at:* `scripts/core/ContentDB.gd` (lines 444–452)</br>
 *Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**
