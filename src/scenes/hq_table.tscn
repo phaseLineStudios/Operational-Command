@@ -375,12 +375,6 @@ shape = SubResource("BoxShape3D_ge0qv")
 mesh = SubResource("BoxMesh_ge8rp")
 skeleton = NodePath("../..")
 
-[node name="UI" type="CanvasLayer" parent="."]
-
-[node name="PauseMenu" parent="UI" instance=ExtResource("7_uk27s")]
-unique_name_in_owner = true
-visible = false
-
 [node name="Controllers" type="Node" parent="."]
 
 [node name="ObjectController" type="Node" parent="Controllers"]
@@ -510,3 +504,16 @@ script = ExtResource("13_qgda6")
 script = ExtResource("14_415kk")
 los_node_path = NodePath("..")
 terrain_renderer_path = NodePath("../../MapController/TerrainViewport/TerrainRender")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PauseMenu" parent="UI" instance=ExtResource("7_uk27s")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1

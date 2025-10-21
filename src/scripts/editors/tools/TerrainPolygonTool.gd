@@ -115,7 +115,7 @@ func handle_view_input(event: InputEvent) -> bool:
 			_hover_idx = _pick_point(event.position)
 			_queue_preview_redraw()
 		if _is_drag and _drag_idx >= 0 and _edit_idx >= 0:
-			if not render.is_inside_map(editor.map_to_terrain(event.position)):
+			if not render.is_inside_map(event.position):
 				return false
 
 			if event.position.is_finite():

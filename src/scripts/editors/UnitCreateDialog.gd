@@ -144,6 +144,7 @@ func _collect_into_working() -> void:
 	_working.role = _role.text.strip_edges()
 	_working.cost = int(_cost.value)
 	_working.strength = int(_strength.value)
+	_working.state_strength = int(_strength.value)
 	_working.attack = float(_attack.value)
 	_working.defense = float(_defense.value)
 	_working.spot_m = float(_spot_m.value)

@@ -22,7 +22,8 @@ extends Node
 ## - Connect to `OrdersParser.parse_error`
 ## - Try to locate `AmmoSystem` and `FuelSystem` instances in the scene by group lookup.
 func _ready() -> void:
-	radio_controller.parser.parse_error.connect(_on_parse_error)
+	if radio_controller.parser != null:
+		radio_controller.parser.parse_error.connect(_on_parse_error)
 
 	var ammo := get_tree().get_first_node_in_group("AmmoSystem") as AmmoSystem
 	if ammo:

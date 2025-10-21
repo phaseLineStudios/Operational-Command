@@ -285,12 +285,12 @@ func to_local(pos: Vector2) -> Vector2:
 
 ## API to check if position is inside map
 func is_inside_map(pos: Vector2) -> bool:
-	return margin.get_global_rect().has_point(pos)
+	return margin.get_rect().has_point(pos)
 
 
 ## API to check if position is inside terrain
 func is_inside_terrain(pos: Vector2) -> bool:
-	return base_layer.get_global_rect().has_point(pos)
+	return base_layer.get_rect().has_point(pos)
 
 
 ## API to get grid number from terrain local position

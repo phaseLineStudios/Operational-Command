@@ -29,12 +29,12 @@ var _editor_wrapper: VBoxContainer
 var _submenu_holder: VBoxContainer
 
 @onready var menu_hbox: VBoxContainer = %MenuContainer
-@onready var btn_campaign: Button = %CampaignButton
-@onready var btn_scenarios: Button = %ScenariosButton
-@onready var btn_multiplayer: Button = %MultiplayerButton
-@onready var btn_editor: Button = %EditorButton
-@onready var btn_settings: Button = %SettingsButton
-@onready var btn_quit: Button = %CloseButton
+@onready var btn_campaign: OplButton = %CampaignButton
+@onready var btn_scenarios: OplButton = %ScenariosButton
+@onready var btn_multiplayer: OplButton = %MultiplayerButton
+@onready var btn_editor: OplButton = %EditorButton
+@onready var btn_settings: OplButton = %SettingsButton
+@onready var btn_quit: OplButton = %CloseButton
 
 
 func _ready() -> void:

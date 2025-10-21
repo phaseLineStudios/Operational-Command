@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="TerrainBrush" load_steps=2 format=3 uid="uid://c55ex4jt08py7"]
+
+[ext_resource type="Script" uid="uid://c8tm5edxa6cdw" path="res://scripts/terrain/TerrainBrush.gd" id="1_7qnkw"]
+
+[resource]
+script = ExtResource("1_7qnkw")
+legend_title = "Creek"
+stroke_color = Color(0.192157, 0.486275, 0.847059, 1)
+stroke_width_px = 1.5
+fill_color = Color(0.615686, 0.752941, 0.839216, 1)
+mv_tracked = 0.0
+mv_wheeled = 0.0
+mv_foot = 0.0
+mv_riverine = 0.8
+metadata/_custom_type_script = "uid://c8tm5edxa6cdw"

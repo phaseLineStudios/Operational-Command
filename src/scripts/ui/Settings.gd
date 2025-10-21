@@ -12,7 +12,7 @@ enum WindowMode { WINDOWED, FULLSCREEN }
 const CONFIG_PATH := "user://settings.cfg"
 
 ## Exposed buses. Missing buses are ignored.
-@export var audio_buses: Array[String] = ["Master", "Music", "SFX", "UI", "Radio", "Capture"]
+@export var audio_buses: Array[String] = ["Master", "Music", "SFX", "UI", "Radio"]
 ## Actions to rebind (must exist in InputMap).
 @export var actions_to_rebind: Array[String] = ["ptt"]
 ## Resolution list.

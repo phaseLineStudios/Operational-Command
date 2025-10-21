@@ -19,10 +19,10 @@ var _selected_campaign: CampaignData
 
 @onready var list_campaigns: ItemList = %CampaignList
 @onready var details_root: PanelContainer = %DetailsRoot
-@onready var btn_continue_last: Button = %ContinueLast
-@onready var btn_select_save: Button = %SelectSave
-@onready var btn_new_save: Button = %NewSave
-@onready var btn_back: Button = %BackToMainMenu
+@onready var btn_continue_last: OplButton = %ContinueLast
+@onready var btn_select_save: OplButton = %SelectSave
+@onready var btn_new_save: OplButton = %NewSave
+@onready var btn_back: OplButton = %BackToMainMenu
 @onready var campaign_poster: TextureRect = %CampaignPoster
 @onready var campaign_desc: RichTextLabel = %CampaignDescription
 

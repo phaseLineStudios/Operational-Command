@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://b450blou0jxup"]
+[gd_scene load_steps=11 format=3 uid="uid://b450blou0jxup"]
 
 [ext_resource type="Theme" uid="uid://dy2ly8e3tggi0" path="res://assets/themes/menu.theme" id="1_7x48x"]
 [ext_resource type="Script" uid="uid://ccx4nsxahdjds" path="res://scripts/ui/CampaignSelect.gd" id="1_kfgox"]
 [ext_resource type="Script" uid="uid://nobo2pvlx00b" path="res://scripts/ui/controls/OplMenuContainer.gd" id="3_oafh1"]
+[ext_resource type="Script" uid="uid://boc05sevt2wad" path="res://scripts/ui/controls/OplButton.gd" id="4_oxcbj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m1w60"]
 content_margin_left = 30.0
@@ -85,6 +86,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_m1w60")
 script = ExtResource("3_oafh1")
+grid_enabled = null
 noise_enabled = true
 noise_opacity = 0.02
 noise_grain = 1.0
@@ -106,6 +108,8 @@ alignment = 2
 unique_name_in_owner = true
 layout_mode = 2
 text = "Back to Main Menu"
+script = ExtResource("4_oxcbj")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
 
 [node name="Spacer" type="Control" parent="Root/VBoxContainer/Options/HBoxContainer"]
 layout_mode = 2
@@ -115,16 +119,22 @@ size_flags_horizontal = 3
 unique_name_in_owner = true
 layout_mode = 2
 text = "Continue Last Save"
+script = ExtResource("4_oxcbj")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
 
 [node name="SelectSave" type="Button" parent="Root/VBoxContainer/Options/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Select Save"
+script = ExtResource("4_oxcbj")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
 
 [node name="NewSave" type="Button" parent="Root/VBoxContainer/Options/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Create new save"
+script = ExtResource("4_oxcbj")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Root/VBoxContainer"]
 layout_mode = 2
