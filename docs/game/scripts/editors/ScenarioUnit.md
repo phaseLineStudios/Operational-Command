@@ -17,7 +17,9 @@ Start movement; will plan if needed or if dest is provided.
 
 ## Public Member Functions
 
-- [`func is_dead() -> bool`](ScenarioUnit/functions/is_dead.md) — Check if unit is dead.
+- [`func _init() -> void`](ScenarioUnit/functions/_init.md)
+- [`func _on_morale_changed(unit_id: String, prev: float, cur: float, source: String) -> void`](ScenarioUnit/functions/_on_morale_changed.md)
+- [`func _on_morale_state_changed(unit_id: String, prev: int, cur: int) -> void`](ScenarioUnit/functions/_on_morale_state_changed.md)
 - [`func bind_fuel_system(fs: FuelSystem) -> void`](ScenarioUnit/functions/bind_fuel_system.md) — Bind a FuelSystem instance at runtime.
 - [`func plan_move(grid: PathGrid, dest_m: Vector2) -> bool`](ScenarioUnit/functions/plan_move.md) — Plan a path from current position to dest_m using PathGrid.
 - [`func pause_move() -> void`](ScenarioUnit/functions/pause_move.md) — Pause.
@@ -44,12 +46,12 @@ Start movement; will plan if needed or if dest is provided.
 - `Affiliation affiliation` — Unit Affiliation
 - `CombatMode combat_mode` — Unit Combat Mode
 - `Behaviour behaviour` — Unit Behaviour
-- `bool playable` — Is unit playable.
 - `MoveState _move_state`
 - `Vector2 _move_dest_m`
 - `PackedVector2Array _move_path`
-- `FuelSystem _fuel` — FuelSystem
-FuelSystem provider used to scale speed at LOW/CRITICAL and 0 at EMPTY.
+- `float _morale`
+- `MoraleSystem _morale_sys`
+- `FuelSystem _fuel`
 
 ## Signals
 
@@ -70,14 +72,23 @@ FuelSystem provider used to scale speed at LOW/CRITICAL and 0 at EMPTY.
 
 ## Member Function Documentation
 
-### is_dead
+### _init
 
 ```gdscript
-func is_dead() -> bool
+func _init() -> void
 ```
 
-Check if unit is dead.
-[return] True if unit is destroyed.
+### _on_morale_changed
+
+```gdscript
+func _on_morale_changed(unit_id: String, prev: float, cur: float, source: String) -> void
+```
+
+### _on_morale_state_changed
+
+```gdscript
+func _on_morale_state_changed(unit_id: String, prev: int, cur: int) -> void
+```
 
 ### bind_fuel_system
 
@@ -274,16 +285,6 @@ Decorators: `@export`
 
 Unit Behaviour
 
-### playable
-
-```gdscript
-var playable: bool
-```
-
-Decorators: `@export`
-
-Is unit playable.
-
 ### _move_state
 
 ```gdscript
@@ -302,14 +303,23 @@ var _move_dest_m: Vector2
 var _move_path: PackedVector2Array
 ```
 
+### _morale
+
+```gdscript
+var _morale: float
+```
+
+### _morale_sys
+
+```gdscript
+var _morale_sys: MoraleSystem
+```
+
 ### _fuel
 
 ```gdscript
 var _fuel: FuelSystem
 ```
-
-FuelSystem
-FuelSystem provider used to scale speed at LOW/CRITICAL and 0 at EMPTY.
 
 ## Signal Documentation
 

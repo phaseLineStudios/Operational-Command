@@ -1,6 +1,6 @@
 # ScenarioUnit::_speed_here_mps Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 214–237)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 218–241)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**
@@ -19,17 +19,17 @@ _speed_here_mps also includes speed penalties for low fuel
 ```gdscript
 func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 	if grid == null or grid._astar == null:
-		var speed := _kph_to_mps(unit.speed_kph)
+		var v := _kph_to_mps(unit.speed_kph)
 		if _fuel != null:
-			speed *= _fuel.speed_mult(id)
-		return speed
+			v *= _fuel.speed_mult(id)
+		return v
 
 	var c := grid.world_to_cell(p_m)
 	if not grid._in_bounds(c):
-		var speed := _kph_to_mps(unit.speed_kph)
+		var v := _kph_to_mps(unit.speed_kph)
 		if _fuel != null:
-			speed *= _fuel.speed_mult(id)
-		return speed
+			v *= _fuel.speed_mult(id)
+		return v
 
 	if grid._astar.is_in_boundsv(c) and grid._astar.is_point_solid(c):
 		return 0.0

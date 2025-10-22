@@ -1,6 +1,6 @@
 # TerrainRender::pos_to_grid Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 297–332)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 297–333)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**
@@ -17,7 +17,8 @@ API to get grid number from terrain local position
 
 ```gdscript
 func pos_to_grid(pos: Vector2, total_digits: int = 6) -> String:
-	@warning_ignore("integer_division") var per_axis := total_digits / 2
+	@warning_ignore("integer_division")
+	var per_axis := total_digits / 2
 	if per_axis != 3 and per_axis != 4 and per_axis != 5:
 		push_warning(
 			"pos_to_grid: total_digits must be 6, 8, or 10; got %d. Using 6." % total_digits

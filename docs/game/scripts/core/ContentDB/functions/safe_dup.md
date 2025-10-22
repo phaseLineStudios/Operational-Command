@@ -1,6 +1,6 @@
 # ContentDB::safe_dup Function Reference
 
-*Defined at:* `scripts/core/ContentDB.gd` (lines 477–484)</br>
+*Defined at:* `scripts/core/ContentDB.gd` (lines 478–485)</br>
 *Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**
