@@ -38,7 +38,7 @@
     "tasks": [
       {
         "id": "task_set_combat_mode_1",
-        "next_index": -1,
+        "next_index": 1,
         "params": {
           "combat_mode": 2.0
         },
@@ -48,6 +48,20 @@
         },
         "prev_index": -1,
         "task_type": "set_combat_mode",
+        "unit_index": 2
+      },
+      {
+        "id": "task_move_1",
+        "next_index": -1,
+        "params": {
+
+        },
+        "position_m": {
+          "x": 1874.48559570313,
+          "y": 1323.6005859375
+        },
+        "prev_index": 0,
+        "task_type": "move",
         "unit_index": 2
       }
     ],
@@ -68,7 +82,9 @@
           "x": 400.0,
           "y": 400.0
         },
-        "synced_tasks": [],
+        "synced_tasks": [
+          0
+        ],
         "synced_units": [],
         "title": "Ambush Trigger"
       }
@@ -108,8 +124,8 @@
         "id": "frg_bw_opfor_1",
         "playable": false,
         "position": {
-          "x": 1903.29064941406,
-          "y": 1370.439453125
+          "x": 1982.32421875,
+          "y": 1297.12573242188
         },
         "unit_id": "frg_bw_opfor"
       }

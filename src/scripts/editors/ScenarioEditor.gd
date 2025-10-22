@@ -388,8 +388,8 @@ func _on_overlay_gui_input(event: InputEvent) -> void:
 			if event.button_index == MOUSE_BUTTON_LEFT:
 				if draglink.linking:
 					var dst := terrain_overlay.get_pick_at(event.position)
-					draglink.end_link(ctx)
 					ScenarioTriggersService.new().try_sync_link(ctx, draglink.link_src_pick, dst)
+					draglink.end_link(ctx)
 					return
 				if draglink.dragging:
 					draglink.end_drag(ctx, true)
@@ -413,6 +413,7 @@ func _on_overlay_gui_input(event: InputEvent) -> void:
 					not src.is_empty()
 					and StringName(src.get("type", "")) in [&"unit", &"task", &"trigger"]
 				):
+					LogService.trace("BeginDrag: \n%s" % JSON.stringify(src), "ScenarioEditor.gd:416")
 					draglink.begin_link(ctx, src, event.position)
 					return
 			if event.double_click:
@@ -423,6 +424,7 @@ func _on_overlay_gui_input(event: InputEvent) -> void:
 				selection.clear_selection(ctx)
 			else:
 				selection.set_selection(ctx, pick)
+				LogService.trace("BeginDrag: \n%s" % JSON.stringify(pick), "ScenarioEditor.gd:427")
 				draglink.begin_drag(ctx, pick, event.position)
 			return
 

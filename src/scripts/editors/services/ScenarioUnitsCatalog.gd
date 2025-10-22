@@ -167,36 +167,6 @@ func _get_selected_unit(ctx: ScenarioEditorContext) -> UnitData:
 	return null
 
 
-## Try to register the saved JSON with ContentDB (supports multiple API shapes).
-func _register_unit_to_contentdb(path: String) -> void:
-	if typeof(ContentDB) == TYPE_NIL:
-		return
-
-	var called := false
-	for m in [
-		"register_unit_from_json",
-		"register_unit_json",
-		"register_unit",
-		"reload_unit",
-		"reload_units",
-		"refresh_units",
-		"scan_units"
-	]:
-		if ContentDB.has_method(m):
-			if (
-				m
-				in ["register_unit_from_json", "register_unit_json", "register_unit", "reload_unit"]
-			):
-				ContentDB.call(m, path)
-			else:
-				ContentDB.call(m)
-			called = true
-			break
-
-	if not called:
-		pass
-
-
 func _used_unit_ids(ctx: ScenarioEditorContext) -> Dictionary:
 	var used := {}
 	if ctx.data and ctx.data.units:
