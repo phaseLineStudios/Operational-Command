@@ -9,9 +9,8 @@
 config_version=5
 
 [application]
-
+config/version="0.1.78"
 config/name="Operational Command"
-config/version="0.1.75"
 run/main_scene="uid://dkugvwc2gd622"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="uid://dlsstpfgchh2t"

@@ -71,6 +71,7 @@
 - [MarginLayer](../scripts/terrain/MarginLayer.md) — 6 funcs · 20 vars · 0 signals — *inherits* `PanelContainer`
 - [MissionResolution](../scripts/core/MissionResolution.md) — 11 funcs · 8 vars · 3 signals — *inherits* `Node`
 - [MissionSelect](../scripts/ui/MissionSelect.md) — 16 funcs · 16 vars · 0 signals — *inherits* `Control`
+- [MoraleSystem](../scripts/sim/MoraleSystem.md) — 10 funcs · 5 vars · 2 signals — *inherits* `RefCounted`
 - [MovementAgent](../scripts/ai/MovementAgent.md) — 16 funcs · 10 vars · 4 signals — *inherits* `Node2D`
 
 ## N
@@ -116,7 +117,7 @@
 - [ScenarioTrigger](../scripts/editors/triggers/ScenarioTrigger.md) — 2 funcs · 15 vars · 0 signals — *inherits* `Resource`
 - [ScenarioTriggersService](../scripts/editors/services/ScenarioTriggersService.md) — 5 funcs · 0 vars · 0 signals — *inherits* `RefCounted`
 - [ScenarioTriggerTool](../scripts/editors/tools/ScenarioTriggerTool.md) — 9 funcs · 1 vars · 0 signals — *inherits* `ScenarioToolBase`
-- [ScenarioUnit](../scripts/editors/ScenarioUnit.md) — 16 funcs · 11 vars · 7 signals — *inherits* `Resource`
+- [ScenarioUnit](../scripts/editors/ScenarioUnit.md) — 19 funcs · 13 vars · 7 signals — *inherits* `Resource`
 - [ScenarioUnitsCatalog](../scripts/editors/services/ScenarioUnitsCatalog.md) — 7 funcs · 3 vars · 0 signals — *inherits* `RefCounted`
 - [ScenarioWeatherDialog](../scripts/editors/ScenarioWeatherDialog.md) — 4 funcs · 7 vars · 0 signals — *inherits* `Window`
 - [Settings](../scripts/ui/Settings.md) — 18 funcs · 18 vars · 1 signals — *inherits* `Control`

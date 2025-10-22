@@ -1,6 +1,6 @@
 # CombatController::_gate_and_consume Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 252–280)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 258–286)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**

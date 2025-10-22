@@ -1,6 +1,6 @@
 # OrdersParser::_read_number Function Reference
 
-*Defined at:* `scripts/radio/OrdersParser.gd` (lines 212–277)</br>
+*Defined at:* `scripts/radio/OrdersParser.gd` (lines 212–278)</br>
 *Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**
@@ -23,7 +23,8 @@ func _read_number(tokens: PackedStringArray, idx: int, number_words: Dictionary)
 		return nil
 
 	if _is_int_literal(tokens[idx]):
-		@warning_ignore("confusable_local_declaration") var j := idx
+		@warning_ignore("confusable_local_declaration")
+		var j := idx
 		var digits := ""
 		while j < tokens.size() and _is_int_literal(tokens[j]):
 			digits += tokens[j]  # concat tokens

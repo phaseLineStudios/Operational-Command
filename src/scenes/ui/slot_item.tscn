@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://dvyattx2k3rxj"]
 
 [ext_resource type="Script" uid="uid://cvi1gs1ld0p43" path="res://scripts/ui/helpers/SlotItem.gd" id="1_hm8yw"]
-[ext_resource type="Texture2D" uid="uid://dycem6t75tfbd" path="res://assets/textures/units/nato_unknown_platoon.png" id="2_3q1nv"]
+[ext_resource type="Texture2D" uid="uid://dq0u0qi5gbp2a" path="res://assets/textures/units/nato_unknown_platoon.png" id="2_3q1nv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3q1nv"]
 content_margin_left = 5.0
@@ -105,6 +105,7 @@ layout_mode = 2
 [node name="Icon" type="TextureRect" parent="Row"]
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
+texture = ExtResource("2_3q1nv")
 expand_mode = 2
 
 [node name="Spacer" type="Control" parent="Row"]
