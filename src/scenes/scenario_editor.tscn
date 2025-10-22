@@ -174,10 +174,11 @@ layout_mode = 2
 [node name="TabContainer3" type="TabContainer" parent="Root/HBox/RightTray/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 0
+current_tab = 3
 clip_tabs = false
 
 [node name="Units" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -259,13 +260,131 @@ size_flags_vertical = 3
 
 [node name="Draw" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 
-[node name="Label" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+[node name="Toolbar" type="HBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
 layout_mode = 2
-text = "NOT YET IMPLEMENTED"
+
+[node name="BtnFreehand" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/Toolbar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "FreeHand"
+
+[node name="BtnStamp" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/Toolbar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Stamp"
+
+[node name="HSeparator" type="HSeparator" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+layout_mode = 2
+
+[node name="STLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Symbols"
+
+[node name="STList" type="ItemList" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+same_column_width = true
+
+[node name="LoadTexture" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Load Symbol"
+
+[node name="STSeperator" type="HSeparator" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="FHSettings" type="GridContainer" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+columns = 2
+
+[node name="ColorLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/FHSettings"]
+layout_mode = 2
+text = "Color"
+
+[node name="FHColor" type="ColorPickerButton" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/FHSettings"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WidthLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/FHSettings"]
+layout_mode = 2
+text = "Width"
+
+[node name="FHWidth" type="SpinBox" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/FHSettings"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 32.0
+value = 3.0
+
+[node name="OpacityLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/FHSettings"]
+layout_mode = 2
+text = "Opacity"
+
+[node name="FHOpacity" type="HSlider" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/FHSettings"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 2
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="STSettings" type="GridContainer" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+columns = 2
+
+[node name="ScaleLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+layout_mode = 2
+text = "Scale"
+
+[node name="STScale" type="SpinBox" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.1
+max_value = 10.0
+step = 0.1
+value = 1.0
+
+[node name="RotationLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+layout_mode = 2
+text = "Rotation"
+
+[node name="STRotation" type="SpinBox" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = -180.0
+max_value = 180.0
+
+[node name="OpacityLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+layout_mode = 2
+text = "Opacity"
+
+[node name="STOpacity" type="HSlider" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+value = 1.0
 
 [node name="BottomBar" type="PanelContainer" parent="Root"]
 layout_mode = 2

@@ -97,6 +97,11 @@ func serialize() -> Dictionary:
 	for task in tasks:
 		if task is ScenarioTask:
 			placed_tasks.append(task.serialize())
+	
+	var placed_drawings: Array = []
+	for d in drawings:
+		if d is ScenarioDrawing:
+			placed_drawings.append(d.serialize())
 
 	return {
 		"id": id,
@@ -123,7 +128,7 @@ func serialize() -> Dictionary:
 			"units": placed_units,
 			"triggers": placed_triggers,
 			"tasks": placed_tasks,
-			"drawings": drawings
+			"drawings": placed_drawings
 		}
 	}
 
@@ -200,7 +205,14 @@ static func deserialize(json: Variant) -> ScenarioData:
 				scenario_tasks.append(ScenarioTask.deserialize(task))
 			s.tasks = scenario_tasks
 
-		s.drawings = content.get("drawings", s.drawings)
+		var placed_drawings: Array = content.get("drawings", [])
+		if typeof(placed_drawings) == TYPE_ARRAY:
+			var out: Array = []
+			for raw in placed_drawings:
+				var d := ScenarioDrawing.deserialize(raw)
+				if d != null:
+					out.append(d)
+			s.drawings = out
 
 	if typeof(s.preview_path) == TYPE_STRING and s.preview_path != "":
 		var tex := load(s.preview_path)

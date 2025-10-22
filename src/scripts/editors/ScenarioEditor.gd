@@ -82,6 +82,10 @@ var tree_service := ScenarioSceneTreeService.new()
 var selection := ScenarioSelectionService.new()
 var draglink := ScenarioDragLinkService.new()
 
+var _draw_textures: Array[Texture2D] = []
+var _draw_tex_paths: Array[String] = []
+var _freehand_defaults := {"color": Color(0.9,0.9,0.2,1), "width_px": 3.0, "opacity": 1.0}
+var _stamp_defaults := {"scale": 1.0, "rotation_deg": 0.0, "opacity": 1.0}
 var _open_dlg: FileDialog
 var _save_dlg: FileDialog
 var _current_path := ""
@@ -110,6 +114,21 @@ var _dirty := false
 
 @onready var task_list: ItemList = %Tasks
 @onready var trigger_list: ItemList = %Triggers
+
+@onready var draw_toolbar_freehand: Button = %BtnFreehand
+@onready var draw_toolbar_stamp: Button = %BtnStamp
+@onready var fh_settings: GridContainer = %FHSettings
+@onready var fh_color: ColorPickerButton = %FHColor
+@onready var fh_width: SpinBox = %FHWidth
+@onready var fh_opacity: HSlider = %FHOpacity
+@onready var st_settings: GridContainer = %STSettings
+@onready var st_seperator: HSeparator = %STSeperator
+@onready var st_scale: SpinBox = %STScale
+@onready var st_rotation: SpinBox = %STRotation
+@onready var st_opacity: HSlider = %STOpacity
+@onready var st_label: Label = %STLabel
+@onready var st_list: ItemList = %STList
+@onready var st_load_btn: Button = %LoadTexture
 
 @onready var _slot_cfg: SlotConfigDialog = %SlotConfigDialog
 @onready var _unit_cfg: UnitConfigDialog = %UnitConfigDialog
@@ -178,6 +197,21 @@ func _ready():
 
 	# fix tab container name
 	_tab_container1.set_tab_title(0, "Scene Tree")
+	
+	draw_toolbar_freehand.pressed.connect(_on_draw_click_freehand)
+	draw_toolbar_stamp.pressed.connect(_on_draw_click_stamp)
+
+	fh_color.color_changed.connect(func(_c): _sync_freehand_opts())
+	fh_width.value_changed.connect(func(_v): _sync_freehand_opts())
+	fh_opacity.value_changed.connect(func(_v): _sync_freehand_opts())
+
+	st_scale.value_changed.connect(func(_v): _sync_stamp_opts())
+	st_rotation.value_changed.connect(func(_v): _sync_stamp_opts())
+	st_opacity.value_changed.connect(func(_v): _sync_stamp_opts())
+	st_list.item_selected.connect(_on_stamp_selected)
+	st_load_btn.pressed.connect(_on_stamp_load_clicked)
+
+	_build_stamp_pool()
 
 
 ## Create and configure FileDialog instances
@@ -631,6 +665,141 @@ func _delete_trigger(trigger_index: int) -> void:
 	selection.clear_selection(ctx)
 	ctx.request_overlay_redraw()
 	_rebuild_scene_tree()
+
+
+## Populate STList from terrain brush textures.
+func _build_stamp_pool() -> void:
+	_draw_textures.clear()
+	_draw_tex_paths.clear()
+	st_list.clear()
+
+	var dir := DirAccess.open("res://assets/terrain_brushes")
+	if dir:
+		dir.list_dir_begin()
+		while true:
+			var f := dir.get_next()
+			if f == "":
+				break
+			if dir.current_is_dir():
+				continue
+			if f.to_lower().ends_with(".png") or f.to_lower().ends_with(".webp") or f.to_lower().ends_with(".jpg"):
+				var p := "res://assets/terrain_brushes/%s" % f
+				var t: Texture2D = load(p)
+				if t:
+					var idx := st_list.add_item(f.get_basename())
+					var icon_img := t.get_image()
+					icon_img.resize(32, 32, Image.INTERPOLATE_LANCZOS)
+					st_list.set_item_icon(idx, ImageTexture.create_from_image(icon_img))
+					st_list.set_item_metadata(idx, {"path": p})
+					_draw_textures.append(t)
+					_draw_tex_paths.append(p)
+		dir.list_dir_end()
+
+## Start freehand tool with current UI values.
+func _on_draw_click_freehand() -> void:
+	fh_settings.visible = true
+	st_settings.visible = false
+	st_label.visible = false
+	st_seperator.visible = false
+	st_list.visible = false
+	st_load_btn.visible = false
+	draw_toolbar_stamp.set_pressed_no_signal(false)
+	var tool := DrawFreehandTool.new()
+	tool.color = fh_color.color
+	tool.width_px = fh_width.value
+	tool.opacity = fh_opacity.value
+	_set_tool(tool)
+
+## Start stamp tool with current UI + selected texture.
+func _on_draw_click_stamp() -> void:
+	fh_settings.visible = false
+	st_settings.visible = true
+	st_seperator.visible = true
+	st_label.visible = true
+	st_load_btn.visible = true
+	st_list.visible = true
+	draw_toolbar_freehand.set_pressed_no_signal(false)
+	var sel := st_list.get_selected_items()
+	if sel.is_empty():
+		ctx.toast("Pick a texture first.")
+		return
+	var idx := sel[0]
+	var tool := DrawTextureTool.new()
+	tool.texture_path = String(st_list.get_item_metadata(idx).get("path", ""))
+	tool.texture = load(tool.texture_path)
+	tool.scale = st_scale.value
+	tool.rotation_deg = st_rotation.value
+	tool.opacity = st_opacity.value
+	_set_tool(tool)
+
+## Update active freehand tool when UI changes.
+func _sync_freehand_opts() -> void:
+	_freehand_defaults.color = fh_color.color
+	_freehand_defaults.width_px = fh_width.value
+	_freehand_defaults.opacity = fh_opacity.value
+	if ctx.current_tool and ctx.current_tool is DrawFreehandTool:
+		ctx.current_tool.color = fh_color.color
+		ctx.current_tool.width_px = fh_width.value
+		ctx.current_tool.opacity = fh_opacity.value
+		ctx.request_overlay_redraw()
+
+## Update active stamp tool when UI changes.
+func _sync_stamp_opts() -> void:
+	_stamp_defaults.scale = st_scale.value
+	_stamp_defaults.rotation_deg = st_rotation.value
+	_stamp_defaults.opacity = st_opacity.value
+	if ctx.current_tool and ctx.current_tool is DrawTextureTool:
+		ctx.current_tool.scale = st_scale.value
+		ctx.current_tool.rotation_deg = st_rotation.value
+		ctx.current_tool.opacity = st_opacity.value
+		ctx.request_overlay_redraw()
+
+## Handle stamp selection change.
+## @param idx Item index.
+func _on_stamp_selected(idx: int) -> void:
+	if ctx.current_tool and ctx.current_tool is DrawTextureTool:
+		var p := String(st_list.get_item_metadata(idx).get("path", ""))
+		ctx.current_tool.texture_path = p
+		ctx.current_tool.texture = load(p)
+		ctx.request_overlay_redraw()
+
+## Load a texture from disk into pool.
+func _on_stamp_load_clicked() -> void:
+	var fd := FileDialog.new()
+	fd.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	fd.access = FileDialog.ACCESS_RESOURCES
+	fd.filters = PackedStringArray(["*.png,*.webp,*.jpg ; Images"])
+	fd.title = "Select Texture"
+	add_child(fd)
+	fd.file_selected.connect(func(p: String):
+		var t: Texture2D = load(p)
+		if t:
+			var idx := st_list.add_item(p.get_file())
+			var icon_img := t.get_image()
+			icon_img.resize(32, 32, Image.INTERPOLATE_LANCZOS)
+			st_list.set_item_icon(idx, ImageTexture.create_from_image(icon_img))
+			st_list.set_item_metadata(idx, {"path": p})
+		fd.queue_free()
+	)
+	fd.popup_centered_ratio(0.6)
+
+## Generate unique drawing id.
+## @param kind "stroke" | "stamp".
+## @return id string.
+func _next_drawing_id(kind: String) -> String:
+	var base := "draw_%s_" % kind
+	var n := 1
+	if ctx.data and ctx.data.drawings:
+		for d in ctx.data.drawings:
+			if d is Resource and d.has_method("get"):
+				var did := String(d.id)
+				if did.begins_with(base):
+					var tail := did.trim_prefix(base)
+					var num := int(tail)
+					if num >= n:
+						n = num + 1
+	return "%s%03d" % [base, n]
+
 
 
 ## File menu actions (New/Open/Save/Save As/Back)

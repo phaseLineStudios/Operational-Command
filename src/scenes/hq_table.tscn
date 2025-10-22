@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
 [ext_resource type="Script" uid="uid://d0ojagsd85iyf" path="res://scripts/ui/HQTable.gd" id="1_qgda6"]
+[ext_resource type="PackedScene" uid="uid://xp0rbo1drhvx" path="res://assets/models/Timer.glb" id="2_2llyq"]
 [ext_resource type="Script" uid="uid://dn828tsljtrki" path="res://scripts/core/Camera.gd" id="3_3f477"]
 [ext_resource type="Script" uid="uid://0r8k717de5os" path="res://scripts/core/PlayerInteraction.gd" id="4_py2wd"]
 [ext_resource type="Script" uid="uid://6xtsg3rqhc8t" path="res://scripts/core/MapController.gd" id="5_lmes1"]
@@ -53,9 +54,6 @@ size = Vector3(0.273, 0.1, 0.273)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lmes1"]
 albedo_color = Color(0.295867, 0.295866, 0.295866, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_3f477"]
-size = Vector3(0.15, 0.075, 0.1)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_cx6my"]
 rough = true
@@ -193,6 +191,9 @@ size = Vector3(1.37492, 1.76648, 2.76892)
 
 [node name="StaticObjects" type="Node" parent="."]
 
+[node name="Timer" parent="StaticObjects" instance=ExtResource("2_2llyq")]
+transform = Transform3D(0.31243446, 0, -0.9499393, 0, 1, 0, 0.9499393, 0, 0.31243446, -0.3772638, 0.7311746, -0.22486593)
+
 [node name="Map" type="MeshInstance3D" parent="StaticObjects"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.731, 0.068)
@@ -203,12 +204,6 @@ skeleton = NodePath("../../Table/Mesh")
 transform = Transform3D(0.894638, 0, -0.446791, 0, 1, 0, 0.446791, 0, 0.894638, 0.384348, 0.781427, -0.278661)
 mesh = SubResource("BoxMesh_py2wd")
 skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_lmes1")
-
-[node name="Timer" type="MeshInstance3D" parent="StaticObjects"]
-transform = Transform3D(0.778561, 0, 0.627569, 0, 1, 0, -0.627569, 0, 0.778561, -0.383399, 0.771598, -0.261362)
-mesh = SubResource("BoxMesh_3f477")
-skeleton = NodePath("../../Table/Mesh")
 surface_material_override/0 = SubResource("StandardMaterial3D_lmes1")
 
 [node name="Lamp" type="MeshInstance3D" parent="StaticObjects"]
@@ -381,7 +376,7 @@ skeleton = NodePath("../..")
 script = ExtResource("4_py2wd")
 
 [node name="InteractionBounds" type="MeshInstance3D" parent="Controllers/ObjectController"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7911129, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7437553, 0)
 mesh = SubResource("PlaneMesh_ge8rp")
 
 [node name="MapController" type="Node" parent="Controllers"]
@@ -505,15 +500,8 @@ script = ExtResource("14_415kk")
 los_node_path = NodePath("..")
 terrain_renderer_path = NodePath("../../MapController/TerrainViewport/TerrainRender")
 
-[node name="UI" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="UI" type="CanvasLayer" parent="."]
 
 [node name="PauseMenu" parent="UI" instance=ExtResource("7_uk27s")]
 unique_name_in_owner = true
 visible = false
-layout_mode = 1

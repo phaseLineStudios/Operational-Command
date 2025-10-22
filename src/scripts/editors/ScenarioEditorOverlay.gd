@@ -45,6 +45,7 @@ const MI_DELETE := 1099
 ## Arrow head length (pixels) for link arrows
 @export var arrow_head_len_px: float = 10.0
 
+var _tex_cache: Dictionary = {}
 var _icon_cache := {}
 var _ctx: PopupMenu
 var _last_pick: Dictionary = {}
@@ -69,6 +70,7 @@ func _ready() -> void:
 
 ## Main overlay draw: links first, then glyphs, then active tool
 func _draw() -> void:
+	_draw_drawings()
 	_draw_task_links()
 	_draw_sync_links()
 	_draw_units()
@@ -440,6 +442,48 @@ func _is_highlighted(t: StringName, idx: int) -> bool:
 	)
 
 
+## Draw scenario drawings (strokes and stamps).
+func _draw_drawings() -> void:
+	if not editor or not editor.ctx or not editor.ctx.data:
+		return
+	var arr: Array = editor.ctx.data.drawings
+	if arr == null or arr.is_empty():
+		return
+	var sorted := arr.duplicate()
+	sorted.sort_custom(func(a, b):
+		var la: int = (a.layer if a is Resource and a.has_method("get") else int(a.get("layer", 0)))
+		var lb: int = (b.layer if b is Resource and b.has_method("get") else int(b.get("layer", 0)))
+		return la < lb
+	)
+
+	for it in sorted:
+		if it == null:
+			continue
+		if it is ScenarioDrawingStroke:
+			if not it.visible or it.points_m.is_empty():
+				continue
+			var col: Color = it.color
+			col.a *= it.opacity
+			var last_px := Vector2.INF
+			for p_m in it.points_m:
+				var p_px := editor.terrain_render.terrain_to_map(p_m)
+				if last_px.is_finite():
+					draw_line(last_px, p_px, col, it.width_px, true)
+				last_px = p_px
+		elif it is ScenarioDrawingStamp:
+			if not it.visible:
+				continue
+			var tex := _get_tex(it.texture_path)
+			if tex:
+				var pos_px := editor.terrain_render.terrain_to_map(it.position_m)
+				var sz: Vector2 = tex.get_size() * it.scale
+				var tint: Color = it.modulate
+				tint.a *= it.opacity
+				draw_set_transform(pos_px, deg_to_rad(it.rotation_deg))
+				draw_texture_rect(tex, Rect2(-sz * 0.5, sz), false, tint)
+				draw_set_transform(Vector2(0, 0))
+
+
 ## Draw a texture centered, with hover scale/opacity feedback
 func _draw_icon_with_hover(tex: Texture2D, center: Vector2, hovered: bool) -> void:
 	var icon_size: Vector2 = tex.get_size()
@@ -631,6 +675,20 @@ func _scaled_cached(key: String, base: Texture2D, px: int) -> Texture2D:
 	var tex := ImageTexture.create_from_image(img)
 	_icon_cache[key] = tex
 	return tex
+
+
+## Load or fetch cached texture.
+## [param path] res:// path.
+## [return] Texture2D or null.
+func _get_tex(path: String) -> Texture2D:
+	if path == "":
+		return null
+	if _tex_cache.has(path) and is_instance_valid(_tex_cache[path]):
+		return _tex_cache[path]
+	var t: Texture2D = load(path)
+	if t:
+		_tex_cache[path] = t
+	return t
 
 
 ## Return approximate visual radius for a glyph kind/index
