@@ -92,8 +92,14 @@ const GRID_SIZE_M = 100
 ## Default profile to rebuild for when auto-building.
 @export var nav_default_profile: int = TerrainBrush.MoveProfile.FOOT
 
+@export_group("Performance")
+## Cell size (m) for surface spatial index grid.
+@export var surface_index_cell_m: int = 200
+
 var _base_sb: StyleBoxFlat
 var _debounce_timer: SceneTreeTimer
+var _surface_index: Dictionary = {}
+var _surface_meta: Array = []
 
 @onready var margin: PanelContainer = %MapMargin
 @onready var base_layer: PanelContainer = %TerrainBase
@@ -227,6 +233,7 @@ func _debounce_relayout_and_push() -> void:
 			_debounce_timer = null
 			_draw_map_size()
 			_push_data_to_layers()
+			_rebuild_surface_spatial_index()
 	)
 
 
@@ -246,6 +253,65 @@ func _draw_map_size() -> void:
 ## Emit a resize event for base layer
 func _on_base_layer_resize():
 	emit_signal("map_resize")
+
+
+## Build a spatial hash for polygon AREA surfaces.
+func _rebuild_surface_spatial_index() -> void:
+	_surface_index.clear()
+	_surface_meta.clear()
+	if data == null or data.surfaces == null:
+		return
+
+	var surfaces: Array = data.surfaces
+	for i in surfaces.size():
+		var s: Dictionary = surfaces[i]
+		if typeof(s) != TYPE_DICTIONARY:
+			continue
+		if s.get("type", "") != "polygon":
+			continue
+
+		var brush: TerrainBrush = s.get("brush", null)
+		if brush == null or brush.feature_type != TerrainBrush.FeatureType.AREA:
+			continue
+
+		var pts: PackedVector2Array = s.get("points", PackedVector2Array())
+		if pts.size() < 3:
+			continue
+
+		# Strip closing duplicate if present (prevents per-query copying).
+		if pts.size() >= 2 and pts[0].distance_squared_to(pts[pts.size() - 1]) < 1e-10:
+			var tmp := PackedVector2Array(pts)
+			tmp.remove_at(tmp.size() - 1)
+			pts = tmp
+			if pts.size() < 3:
+				continue
+
+		# Compute AABB once.
+		var bbox := Rect2(pts[0], Vector2.ZERO)
+		for p in pts:
+			bbox = bbox.expand(p)
+
+		# Store meta and bin into grid cells.
+		var meta_idx := _surface_meta.size()
+		_surface_meta.append({
+			"pts": pts,
+			"bbox": bbox,
+			"z": float(brush.z_index),
+			"data_idx": i,
+		})
+
+		var cs := float(surface_index_cell_m)
+		var min_cx := int(floor(bbox.position.x / cs))
+		var min_cy := int(floor(bbox.position.y / cs))
+		var max_cx := int(floor((bbox.position.x + bbox.size.x) / cs))
+		var max_cy := int(floor((bbox.position.y + bbox.size.y) / cs))
+
+		for cx in range(min_cx, max_cx + 1):
+			for cy in range(min_cy, max_cy + 1):
+				var key := Vector2i(cx, cy)
+				var bucket: PackedInt32Array = _surface_index.get(key, PackedInt32Array())
+				bucket.append(meta_idx)
+				_surface_index[key] = bucket
 
 
 ## Clamp a single point to the terrain (local map coordinates)
@@ -386,7 +452,8 @@ func get_terrain_position() -> Vector2:
 	return base_layer.position
 
 
-## API to get surface at map position
+## Surface under a terrain-local position.
+## Returns the topmost polygon AREA surface dict or {}.
 func get_surface_at_terrain_position(terrain_pos: Vector2) -> Dictionary:
 	if data == null or data.surfaces == null:
 		return {}
@@ -395,12 +462,33 @@ func get_surface_at_terrain_position(terrain_pos: Vector2) -> Dictionary:
 	if not base_rect.has_point(terrain_pos):
 		return {}
 
-	var best := {}
 	var best_z := -INF
-	var best_idx := -1
+	var best_data_idx := -1
 
-	for i in data.surfaces.size():
-		var s = data.surfaces[i]
+	if not _surface_index.is_empty() and not _surface_meta.is_empty():
+		var cs := float(surface_index_cell_m)
+		var cell := Vector2i(int(floor(terrain_pos.x / cs)), int(floor(terrain_pos.y / cs)))
+		var candidates: PackedInt32Array = _surface_index.get(cell, PackedInt32Array())
+
+		for mi in candidates:
+			var m: Dictionary = _surface_meta[mi]
+			var bbox: Rect2 = m.bbox
+			if not bbox.has_point(terrain_pos):
+				continue
+			var pts: PackedVector2Array = m.pts
+			if Geometry2D.is_point_in_polygon(terrain_pos, pts):
+				var z: int = m.z
+				var d_idx: int = m.data_idx
+				if (z > best_z) or (is_equal_approx(z, best_z) and d_idx > best_data_idx):
+					best_z = z
+					best_data_idx = d_idx
+
+		if best_data_idx != -1:
+			return data.surfaces[best_data_idx]
+
+	var surfaces: Array = data.surfaces
+	for i in surfaces.size():
+		var s: Dictionary = surfaces[i]
 		if typeof(s) != TYPE_DICTIONARY:
 			continue
 		if s.get("type", "") != "polygon":
@@ -409,7 +497,6 @@ func get_surface_at_terrain_position(terrain_pos: Vector2) -> Dictionary:
 		var brush: TerrainBrush = s.get("brush", null)
 		if brush == null or brush.feature_type != TerrainBrush.FeatureType.AREA:
 			continue
-		var z := brush.z_index
 
 		var pts: PackedVector2Array = s.get("points", PackedVector2Array())
 		if pts.size() < 3:
@@ -422,13 +509,19 @@ func get_surface_at_terrain_position(terrain_pos: Vector2) -> Dictionary:
 			if pts.size() < 3:
 				continue
 
-		if Geometry2D.is_point_in_polygon(terrain_pos, pts):
-			if (z > best_z) or (z == best_z and i > best_idx):
-				best = s
-				best_z = z
-				best_idx = i
+		var bbox := Rect2(pts[0], Vector2.ZERO)
+		for p in pts:
+			bbox = bbox.expand(p)
+		if not bbox.has_point(terrain_pos):
+			continue
 
-	return best
+		if Geometry2D.is_point_in_polygon(terrain_pos, pts):
+			var z := float(brush.z_index)
+			if (z > best_z) or (is_equal_approx(z, best_z) and i > best_data_idx):
+				best_z = z
+				best_data_idx = i
+
+	return ({} if best_data_idx == -1 else data.surfaces[best_data_idx])
 
 
 ## Request a path in terrain meters via attached PathGrid

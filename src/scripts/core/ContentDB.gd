@@ -163,10 +163,10 @@ func get_scenario(id: String) -> ScenarioData:
 
 
 ## Get multiple scenarios by IDs
-func get_scenarios(ids: Array) -> Array[CampaignData]:
-	var out: Array[CampaignData] = []
+func get_scenarios(ids: Array) -> Array[ScenarioData]:
+	var out: Array[ScenarioData] = []
 	for raw in ids:
-		var s := get_campaign(String(raw))
+		var s := get_scenario(String(raw))
 		if s:
 			out.append(s)
 	return out
@@ -181,6 +181,45 @@ func list_scenarios() -> Array[ScenarioData]:
 	var out: Array[ScenarioData] = []
 	for item in camps:
 		var res := ScenarioData.deserialize(item)
+		if res != null:
+			out.append(res)
+	return out
+
+
+## Terrain helpers.
+## Get Terrain by ID.
+## [param id] Terrain ID.
+## [return] Associated Terrain Data.
+func get_terrain(id: String) -> TerrainData:
+	var d := get_object("terrains", id)
+	if d.is_empty():
+		push_warning("Terrain not found: %s" % id)
+		return null
+	return TerrainData.deserialize(d)
+
+
+## Get multiple terrains by IDs.
+## [param ids] Array of ids to fetch.
+## [return] Array of associated Terrain Data.
+func get_terrains(ids: Array) -> Array[TerrainData]:
+	var out: Array[TerrainData] = []
+	for raw in ids:
+		var s := get_terrain(String(raw))
+		if s:
+			out.append(s)
+	return out
+
+
+## list all terrains.
+## [return] Array of all terrains.
+func list_terrains() -> Array[TerrainData]:
+	var terrs := get_all_objects("terrains")
+	if terrs.is_empty():
+		return []
+
+	var out: Array[TerrainData] = []
+	for item in terrs:
+		var res := TerrainData.deserialize(item)
 		if res != null:
 			out.append(res)
 	return out
@@ -496,6 +535,13 @@ func resources_from_ids(ids: Array, loader: Callable) -> Array:
 		if res != null:
 			out.append(res)
 	return out
+
+
+## Generate ID from string
+## [param string] String to generate ID from.
+func id_from_string(string: String) -> String:
+	var cleaned := string.to_lower().replace(" ", "_")
+	return cleaned
 
 
 ## Safely duplicate a dictionary or array

@@ -119,7 +119,9 @@ static func weather_severity_from_scenario(s: ScenarioData) -> float:
 
 ## LOS test + integral attenuation via TerrainRender surfaces if available.
 static func _compute_los_and_atten(
-	a: Vector2, d: Vector2, renderer: TerrainRender, terrain: TerrainData, cfg: TerrainEffectsConfig
+	a: Vector2, d: Vector2, renderer: TerrainRender, terrain: TerrainData, 
+	cfg: TerrainEffectsConfig, los_max_range_m: float = 0.0, 
+	max_samples: int = 256
 ) -> Dictionary:
 	if a == d:
 		return {"blocked": false, "atten_integral": 0.0}
@@ -128,32 +130,66 @@ static func _compute_los_and_atten(
 	if terr == null and renderer != null and "data" in renderer:
 		terr = renderer.data
 
+	var max_r: float = 0.0
+	if cfg != null:
+		max_r = float(los_max_range_m)
+	if max_r > 0.0 and a.distance_squared_to(d) > max_r * max_r:
+		return {"blocked": false, "atten_integral": 0.0}
+
 	var ha := _get_h(terr, a) + cfg.los_attacker_eye_h_m
 	var hd := _get_h(terr, d) + cfg.los_target_h_m
-	var dist := a.distance_to(d)
+	var delta := d - a
+	var dist := delta.length()
 	var step_m: float = max(cfg.los_raycast_step_m, 1.0)
-	var steps := int(max(1.0, ceil(dist / step_m)))
-	var dir := (d - a) / float(steps)
+
+	var steps := int(ceil(dist / step_m))
+	if max_samples > 0:
+		steps = min(steps, max_samples)
+	steps = max(1, steps)
+
+	var inv_steps := 1.0 / float(steps)
+	var step_vec := delta * inv_steps
+	var step_len := dist * inv_steps
+	var dh := hd - ha
 
 	var atten := 0.0
 	var blocked := false
+
+	var last_per_m := -1.0
+	var last_surface_id := -1
+
 	for i in range(1, steps):
-		var p := a + dir * float(i)
-		var t := float(i) / float(steps)
-		var h_line: float = lerp(ha, hd, t)
+		var t := float(i) * inv_steps
+		var p := a + step_vec * float(i)
+
+		var h_line := ha + dh * t
 		var h_terrain := _get_h(terr, p)
 		if h_terrain > h_line:
 			blocked = true
 			break
-		var br := _brush_fields(renderer, terr, p)
-		var per_m: float = max(br.los_attenuation_per_m, 0.0)
-		atten += per_m * min(step_m, dist)
+
+		var per_m := 0.0
+		if renderer != null:
+			var s := renderer.get_surface_at_terrain_position(p)
+			if typeof(s) == TYPE_DICTIONARY and s.has("brush"):
+				var sid := int(s.get("_id", -1))
+				if sid == last_surface_id and last_per_m >= 0.0:
+					per_m = last_per_m
+				else:
+					var b: TerrainBrush = s.get("brush")
+					if b != null:
+						per_m = _try_field(b, "los_attenuation_per_m")
+						last_per_m = per_m
+						last_surface_id = sid
+		if per_m > 0.0:
+			atten += per_m * step_len
+
 	return {"blocked": blocked, "atten_integral": atten}
 
 
 ## Brush field adapter for either TerrainRender or TerrainData (area features only).
 static func _brush_fields(renderer: TerrainRender, _terrain: TerrainData, p: Vector2) -> Dictionary:
-	if renderer != null and renderer.has_method("get_surface_at_terrain_position"):
+	if renderer != null:
 		var s := renderer.get_surface_at_terrain_position(p)
 		if typeof(s) == TYPE_DICTIONARY and s.has("brush"):
 			var b: TerrainBrush = s.get("brush")

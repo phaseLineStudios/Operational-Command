@@ -147,17 +147,17 @@
   },
   "preview_path": "res://assets/textures/scenarios/nato_crested_cap.png",
   "scenario_order": 0,
-  "terrain_path": "res://assets/terrains/wildflecken_ftx.tres",
+  "terrain_id": "wildflecken_training_area",
   "title": "Crested Cap Checkride",
   "units": {
     "unit_points": 500,
     "unit_recruits_ids": [
       "scout_plt_1a111_acr",
-      "us_11acr_58engr_pl",
       "us_11acr_a_trp_2plt_tank_m60a3",
       "us_11acr_a_trp_itv_sec",
       "us_11acr_a_trp_mortar_sec_m106",
-      "us_11acr_field_trains_sec"
+      "us_11acr_field_trains_sec",
+      "us_11acr_58engr_pl"
     ],
     "unit_reserves": [],
     "unit_slots": [

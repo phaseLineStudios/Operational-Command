@@ -103,7 +103,7 @@ func serialize() -> Dictionary:
 		"title": title,
 		"description": description,
 		"preview_path": preview_path,
-		"terrain_path": ContentDB.res_path_or_null(terrain),
+		"terrain_id": terrain.terrain_id,
 		"briefing": briefing.serialize() as Variant if briefing else null as Variant,
 		"difficulty": int(difficulty),
 		"map_position": _vec2_to_dict(map_position),
@@ -139,11 +139,9 @@ static func deserialize(json: Variant) -> ScenarioData:
 	s.description = json.get("description", s.description)
 	s.preview_path = json.get("preview_path", s.preview_path)
 
-	var terr_path: Variant = json.get("terrain_path", null)
-	if typeof(terr_path) == TYPE_STRING and terr_path != "":
-		var terr: Variant = ContentDB.load_res(String(terr_path))
-		if terr is TerrainData:
-			s.terrain = terr
+	var terr_id: Variant = json.get("terrain_id", null)
+	if typeof(terr_id) == TYPE_STRING and terr_id != "":
+		s.terrain = ContentDB.get_terrain(terr_id)
 
 	var brief_val: Variant = json.get("briefing", null)
 	if brief_val != null:

@@ -13,8 +13,13 @@ signal points_changed(kind: String, ids: PackedInt32Array)
 ## Emits when labels mutate. kind: "reset|added|removed|move|style|meta".
 signal labels_changed(kind: String, ids: PackedInt32Array)
 
+## unique terrain identifier
+@export var terrain_id: String
 ## Name of the terrain.
-@export var name: String
+@export var name: String:
+	set(val):
+		name = val
+		terrain_id = ContentDB.id_from_string(val)
 ## Width of the map in meters.
 @export var width_m: int = 2000:
 	set = _set_width
@@ -549,6 +554,7 @@ func serialize() -> Dictionary:
 		)
 
 	return {
+		"id": terrain_id,
 		"name": name,
 		"width_m": width_m,
 		"height_m": height_m,
@@ -569,6 +575,7 @@ static func deserialize(d: Variant) -> TerrainData:
 	var t := TerrainData.new()
 
 	t.name = d.get("name", t.name)
+	t.terrain_id = d.get("id", t.terrain_id)
 	t.width_m = int(d.get("width_m", t.width_m))
 	t.height_m = int(d.get("height_m", t.height_m))
 	t.elevation_resolution_m = int(d.get("elevation_resolution_m", t.elevation_resolution_m))
