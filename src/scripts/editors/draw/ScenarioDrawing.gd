@@ -3,17 +3,13 @@ extends Resource
 ## Base class for scenario drawings (stroke or stamp).
 ## @experimental
 
-## Drawing kind.
 enum Kind { STROKE, STAMP }
 
-## Unique id for history ops.
 @export var id: String = ""
-
-## Visible toggle.
 @export var visible: bool = true
-
-## Layer sorting (small number draws first).
 @export var layer: int = 0
+## Creation order for stable z-sort within a layer.
+@export var order: int = 0
 
 ## Serialize to JSON-friendly Dictionary.
 ## [return] Dictionary with common fields.
@@ -21,7 +17,8 @@ func serialize_base() -> Dictionary:
 	return {
 		"id": id,
 		"visible": visible,
-		"layer": layer
+		"layer": layer,
+		"order": order,
 	}
 
 ## Apply common fields from Dictionary.
@@ -29,7 +26,8 @@ func serialize_base() -> Dictionary:
 func deserialize_base(d: Dictionary) -> void:
 	id = d.get("id", id)
 	visible = d.get("visible", visible)
-	layer = int(d.get("layer", layer))
+	layer = int(d.layer)
+	order = int(d.order)
 
 ## Factory from Dictionary.
 ## [param d] Serialized object.

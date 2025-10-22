@@ -123,6 +123,7 @@ var _dirty := false
 @onready var fh_opacity: HSlider = %FHOpacity
 @onready var st_settings: GridContainer = %STSettings
 @onready var st_seperator: HSeparator = %STSeperator
+@onready var st_color: ColorPickerButton = %STColor
 @onready var st_scale: SpinBox = %STScale
 @onready var st_rotation: SpinBox = %STRotation
 @onready var st_opacity: HSlider = %STOpacity
@@ -206,6 +207,7 @@ func _ready():
 	fh_opacity.value_changed.connect(func(_v): _sync_freehand_opts())
 
 	st_scale.value_changed.connect(func(_v): _sync_stamp_opts())
+	st_color.color_changed.connect(func(_c): _sync_stamp_opts())
 	st_rotation.value_changed.connect(func(_v): _sync_stamp_opts())
 	st_opacity.value_changed.connect(func(_v): _sync_stamp_opts())
 	st_list.item_selected.connect(_on_stamp_selected)
@@ -673,7 +675,7 @@ func _build_stamp_pool() -> void:
 	_draw_tex_paths.clear()
 	st_list.clear()
 
-	var dir := DirAccess.open("res://assets/terrain_brushes")
+	var dir := DirAccess.open("res://assets/textures/stamps")
 	if dir:
 		dir.list_dir_begin()
 		while true:
@@ -683,7 +685,7 @@ func _build_stamp_pool() -> void:
 			if dir.current_is_dir():
 				continue
 			if f.to_lower().ends_with(".png") or f.to_lower().ends_with(".webp") or f.to_lower().ends_with(".jpg"):
-				var p := "res://assets/terrain_brushes/%s" % f
+				var p := "res://assets/textures/stamps/%s" % f
 				var t: Texture2D = load(p)
 				if t:
 					var idx := st_list.add_item(f.get_basename())
@@ -727,6 +729,7 @@ func _on_draw_click_stamp() -> void:
 	var tool := DrawTextureTool.new()
 	tool.texture_path = String(st_list.get_item_metadata(idx).get("path", ""))
 	tool.texture = load(tool.texture_path)
+	tool.color = st_color.color
 	tool.scale = st_scale.value
 	tool.rotation_deg = st_rotation.value
 	tool.opacity = st_opacity.value
@@ -745,10 +748,12 @@ func _sync_freehand_opts() -> void:
 
 ## Update active stamp tool when UI changes.
 func _sync_stamp_opts() -> void:
+	_stamp_defaults.color = st_color.color
 	_stamp_defaults.scale = st_scale.value
 	_stamp_defaults.rotation_deg = st_rotation.value
 	_stamp_defaults.opacity = st_opacity.value
 	if ctx.current_tool and ctx.current_tool is DrawTextureTool:
+		ctx.current_tool.color = st_color.color
 		ctx.current_tool.scale = st_scale.value
 		ctx.current_tool.rotation_deg = st_rotation.value
 		ctx.current_tool.opacity = st_opacity.value
@@ -968,6 +973,7 @@ func _on_history_changed(past: Array, future: Array) -> void:
 		row2.add_child(txt2)
 		history_list.add_child(row2)
 	units._refresh(ctx)
+	ctx.request_overlay_redraw()
 
 
 ## Generate next unique slot key (SLOT_n)

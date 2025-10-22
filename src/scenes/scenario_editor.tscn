@@ -285,6 +285,7 @@ layout_mode = 2
 
 [node name="STLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 text = "Symbols"
 
@@ -351,6 +352,14 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 columns = 2
+
+[node name="ColorLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+layout_mode = 2
+text = "Color"
+
+[node name="STColor" type="ColorPickerButton" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="ScaleLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
 layout_mode = 2

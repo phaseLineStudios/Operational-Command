@@ -45,7 +45,7 @@ func _on_mouse_move(e: InputEventMouseMotion) -> bool:
 ## [param e] InputEventMouseButton.
 ## [return] true if consumed.
 func _on_mouse_button(e: InputEventMouseButton) -> bool:
-	if not e:
+	if not e or editor.ctx.data == null:
 		return false
 	if e.button_index == MOUSE_BUTTON_LEFT and e.pressed:
 		_dragging = true
@@ -60,7 +60,6 @@ func _on_mouse_button(e: InputEventMouseButton) -> bool:
 		_dragging = false
 		_commit_if_valid()
 		request_redraw_overlay.emit()
-		# keep tool active for next stroke
 		return true
 	return false
 
@@ -88,7 +87,7 @@ func draw_overlay(canvas: Control) -> void:
 
 ## Commit current stroke.
 func _commit_if_valid() -> void:
-	if _points_m.size() < 2:
+	if _points_m.size() < 2 or editor.ctx.data == null:
 		return
 	var st := ScenarioDrawingStroke.new()
 	st.id = editor._next_drawing_id("stroke")
@@ -96,6 +95,7 @@ func _commit_if_valid() -> void:
 	st.width_px = width_px
 	st.opacity = opacity
 	st.points_m = _points_m.duplicate()
+	st.order = Time.get_ticks_usec()
 	if editor.ctx.data.drawings == null:
 		editor.ctx.data.drawings = []
 	editor.history.push_res_insert(editor.ctx.data, "drawings", "id", st, "Draw Stroke")

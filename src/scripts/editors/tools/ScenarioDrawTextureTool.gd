@@ -7,6 +7,8 @@ extends ScenarioToolBase
 @export var texture: Texture2D
 ## Texture path used for persistence.
 var texture_path: String = ""
+## Stamp Color.
+@export var color: Color = Color(0, 0, 0)
 ## Uniform scale.
 @export_range(0.05, 10.0, 0.01) var scale: float = 1.0
 ## Rotation in degrees.
@@ -71,7 +73,7 @@ func draw_overlay(canvas: Control) -> void:
 	var pos_px := editor.ctx.terrain_render.terrain_to_map(_hover_m)
 	var sz := texture.get_size() * scale
 	var col := Color(1, 1, 1, opacity)
-	col *= Color.WHITE if texture.get_image().get_used_rect().size == Vector2i.ZERO else Color.WHITE
+	col *= color
 	canvas.draw_set_transform(pos_px, deg_to_rad(rotation_deg))
 	var rect := Rect2(-sz * 0.5, sz)
 	canvas.draw_texture_rect(texture, rect, false, col)
@@ -82,11 +84,12 @@ func _place() -> void:
 	var st := ScenarioDrawingStamp.new()
 	st.id = editor._next_drawing_id("stamp")
 	st.texture_path = texture_path
-	st.modulate = Color(1, 1, 1, 1)
+	st.modulate = color
 	st.opacity = opacity
 	st.position_m = _hover_m
 	st.scale = scale
 	st.rotation_deg = rotation_deg
+	st.order = Time.get_ticks_usec()
 	if editor.ctx.data.drawings == null:
 		editor.ctx.data.drawings = []
 	editor.history.push_res_insert(editor.ctx.data, "drawings", "id", st, "Place Stamp")
