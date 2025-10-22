@@ -21,18 +21,18 @@ var _campaign: CampaignData
 var _scenarios: Array[ScenarioData] = []
 var _card_pin_button: BaseButton
 
-@onready var _container: OplMenuContainer = $"Container"
-@onready var _btn_back: OplButton = $"BackToCampaign"
+@onready var _container: OCMenuContainer = $"Container"
+@onready var _btn_back: OCMenuButton = $"BackToCampaign"
 @onready var _map_rect: TextureRect = $"Container/Map"
 @onready var _pins_layer: Control = $"Container/PinsLayer"
 
-@onready var _card: OplMenuContainer = %MissionCard
+@onready var _card: OCMenuContainer = %MissionCard
 @onready var _card_title: Label = %CardTitle
 @onready var _card_desc: RichTextLabel = %CardDesc
 @onready var _card_image: TextureRect = %CardImage
 @onready var _card_diff: Label = %CardDifficulty
-@onready var _card_start: OplButton = %CardStartMission
-@onready var _card_close: OplButton = %CardClose
+@onready var _card_start: OCMenuButton = %CardStartMission
+@onready var _card_close: OCMenuButton = %CardClose
 @onready var _click_catcher: Control = $"Container/ClickCatcher"
 
 

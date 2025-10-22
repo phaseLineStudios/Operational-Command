@@ -2,8 +2,8 @@
 
 [ext_resource type="Theme" uid="uid://dy2ly8e3tggi0" path="res://assets/themes/menu.theme" id="1_7x48x"]
 [ext_resource type="Script" uid="uid://ccx4nsxahdjds" path="res://scripts/ui/CampaignSelect.gd" id="1_kfgox"]
-[ext_resource type="Script" uid="uid://nobo2pvlx00b" path="res://scripts/ui/controls/OplMenuContainer.gd" id="3_oafh1"]
-[ext_resource type="Script" uid="uid://boc05sevt2wad" path="res://scripts/ui/controls/OplButton.gd" id="4_oxcbj"]
+[ext_resource type="Script" uid="uid://nobo2pvlx00b" path="res://scripts/ui/controls/OcMenuContainer.gd" id="3_oafh1"]
+[ext_resource type="Script" uid="uid://boc05sevt2wad" path="res://scripts/ui/controls/OcMenuButton.gd" id="4_oxcbj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m1w60"]
 content_margin_left = 30.0
@@ -86,7 +86,6 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_m1w60")
 script = ExtResource("3_oafh1")
-grid_enabled = null
 noise_enabled = true
 noise_opacity = 0.02
 noise_grain = 1.0

@@ -2,9 +2,9 @@
 
 [ext_resource type="Theme" uid="uid://dy2ly8e3tggi0" path="res://assets/themes/menu.theme" id="1_0p1xe"]
 [ext_resource type="Script" uid="uid://c5k2l7sek5n6j" path="res://scripts/ui/MissionSelect.gd" id="1_f8bqk"]
-[ext_resource type="Script" uid="uid://nobo2pvlx00b" path="res://scripts/ui/controls/OplMenuContainer.gd" id="2_wh8vx"]
+[ext_resource type="Script" uid="uid://nobo2pvlx00b" path="res://scripts/ui/controls/OcMenuContainer.gd" id="2_wh8vx"]
 [ext_resource type="Texture2D" uid="uid://drsxl5stl6jor" path="res://assets/textures/campaigns/nato_autumn_fire.png" id="3_0p1xe"]
-[ext_resource type="Script" uid="uid://boc05sevt2wad" path="res://scripts/ui/controls/OplButton.gd" id="5_2fh0n"]
+[ext_resource type="Script" uid="uid://boc05sevt2wad" path="res://scripts/ui/controls/OcMenuButton.gd" id="5_2fh0n"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m1w60"]
 content_margin_left = 25.0

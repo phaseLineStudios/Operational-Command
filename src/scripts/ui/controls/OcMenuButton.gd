@@ -1,5 +1,5 @@
 @tool
-class_name OplButton
+class_name OCMenuButton
 extends Button
 
 @export_group("Noise Overlay")

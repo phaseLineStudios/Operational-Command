@@ -1,5 +1,5 @@
 @tool
-class_name OplMenuContainer
+class_name OCMenuContainer
 extends PanelContainer
 
 ## Draws a padded container for menues that continues the general style.
