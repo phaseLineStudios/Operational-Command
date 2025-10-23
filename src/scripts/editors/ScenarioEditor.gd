@@ -905,8 +905,10 @@ func _confirm_discard() -> bool:
 	acc.dialog_text = "You have unsaved changes. Discard and continue?"
 	add_child(acc)
 	var accepted := false
-	@warning_ignore("confusable_capture_reassignment") acc.canceled.connect(func(): accepted = false)
-	@warning_ignore("confusable_capture_reassignment") acc.confirmed.connect(func(): accepted = true)
+	@warning_ignore("confusable_capture_reassignment") 
+	acc.canceled.connect(func(): accepted = false)
+	@warning_ignore("confusable_capture_reassignment") 
+	acc.confirmed.connect(func(): accepted = true)
 	acc.popup_centered()
 	await acc.confirmed
 	acc.queue_free()
