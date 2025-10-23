@@ -42,12 +42,6 @@ jobs:
         run: |
           python tools/gdtoolkit_run.py --format-only --check --line-length 100 --color=always ./src/
 
-      # Get gdformat diff
-      - name: gdformat --diff
-        continue-on-error: true
-        run: |
-          gdformat --diff --line-length 100 ./src/
-
   lint:
     name: Lint
     runs-on: ubuntu-latest
