@@ -3,6 +3,7 @@ External assets and libraries not authored in this repo.
 
 ## Subfolders
 - `vosk/` — STT models
+- `piper/` — Piper binary and voice models
 
 ## Policy
 - Prefer MIT/BSD/Apache; include LICENSE files when distributing.
