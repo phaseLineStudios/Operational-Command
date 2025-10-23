@@ -14,6 +14,8 @@ var _api := TriggerAPI.new()
 var _snap_by_id: Dictionary = {}
 var _id_by_callsign: Dictionary = {}
 var _player_ids := {}
+var _radio: Radio = null
+var _last_radio_text: String = ""
 
 
 ## Wire API.
@@ -36,12 +38,29 @@ func bind_scenario(scenario: ScenarioData) -> void:
 	_scenario = scenario
 
 
+## Bind radio to listen for raw commands.
+## Connects to [signal Radio.radio_raw_command] to capture voice input before parsing.
+## Makes raw text available to triggers via [method TriggerAPI.last_radio_command].
+## [br][br]
+## [b]Called automatically by SimWorld.bind_radio().[/b]
+## [param radio] Radio node emitting [signal Radio.radio_raw_command] signal.
+func bind_radio(radio: Radio) -> void:
+	if _radio and _radio.radio_raw_command.is_connected(_on_radio_raw):
+		_radio.radio_raw_command.disconnect(_on_radio_raw)
+	_radio = radio
+	if _radio and not _radio.radio_raw_command.is_connected(_on_radio_raw):
+		_radio.radio_raw_command.connect(_on_radio_raw)
+
+
 ## Deterministic evaluation entry point.
 ## [param dt] delta time from last tick.
 func tick(dt: float) -> void:
 	_refresh_unit_indices()
 	for t in _scenario.triggers:
 		_evaluate_trigger(t, dt)
+	# Clear radio command after all triggers evaluated
+	_last_radio_text = ""
+	_api._set_last_radio_command("")
 
 
 ## Refresh unit indices.
@@ -232,3 +251,27 @@ func units_in_area(
 			_:
 				pass
 	return out
+
+
+## Handle raw radio command from Radio node.
+func _on_radio_raw(text: String) -> void:
+	_last_radio_text = text
+	_api._set_last_radio_command(text)
+
+
+## Manually activate a trigger by ID.
+## Forces a trigger to become active and run its on_activate expression.
+## Used by custom voice commands to fire specific triggers.
+## [param trigger_id] ID of the trigger to activate.
+## [return] True if trigger was found and activated.
+func activate_trigger(trigger_id: String) -> bool:
+	if not _scenario:
+		return false
+	for t in _scenario.triggers:
+		if t.id == trigger_id and not t._active:
+			t._active = true
+			var ctx := _make_ctx(t, false)
+			_vm.run(t.on_activate_expr, ctx)
+			LogService.trace("Manually activated trigger: %s" % trigger_id, "TriggerEngine.gd")
+			return true
+	return false

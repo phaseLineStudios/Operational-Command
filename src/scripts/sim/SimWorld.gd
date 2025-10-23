@@ -127,6 +127,9 @@ func init_world(scenario: ScenarioData) -> void:
 	_router.bind_units(_units_by_id, _units_by_callsign)
 	_register_logistics_units()
 
+	# Initialize custom commands for this mission
+	_init_custom_commands(scenario)
+
 	_transition(State.INIT, State.RUNNING)
 
 
@@ -344,6 +347,13 @@ func bind_radio(radio: Radio, parser: Node) -> void:
 	):
 		parser.parse_error.connect(func(msg): emit_signal("radio_message", "error", msg))
 
+	# Bind radio to trigger engine for raw command matching
+	if trigger_engine and radio:
+		trigger_engine.bind_radio(radio)
+		# Also listen for custom commands with trigger IDs
+		if not radio.radio_raw_command.is_connected(_on_radio_command_for_triggers):
+			radio.radio_raw_command.connect(_on_radio_command_for_triggers)
+
 
 ## Pause simulation.
 func pause() -> void:
@@ -459,6 +469,75 @@ func get_unit_debug_path(uid: String) -> PackedVector2Array:
 ## Current XZ position to 3D vector for systems needing 3D.
 func _v3_from_m(p_m: Vector2) -> Vector3:
 	return Vector3(p_m.x, 0.0, p_m.y)
+
+
+## Initialize custom commands from scenario into parser and STT grammar.
+## Registers each [CustomCommand] in [member ScenarioData.custom_commands] with:
+## [br]1. [OrdersParser] via [method OrdersParser.register_custom_command]
+## [br]2. [NARules] via [method NARules.set_mission_overrides] for STT grammar
+## [br][br]
+## [b]Called automatically by [method init_world] during mission initialization.[/b]
+## [br][br]
+## Custom commands can either:
+## [br]- Generate CUSTOM orders that route through [OrdersRouter] ([member CustomCommand.route_as_order])
+## [br]- Activate triggers directly via [member CustomCommand.trigger_id]
+## [br]- Both
+## [param scenario] Scenario with [member ScenarioData.custom_commands] array.
+func _init_custom_commands(scenario: ScenarioData) -> void:
+	if scenario.custom_commands.is_empty():
+		return
+
+	# Get parser reference (via router's export or find in tree)
+	var parser: OrdersParser = null
+	if _router.get_parent():
+		for child in _router.get_parent().get_children():
+			if child is OrdersParser:
+				parser = child
+				break
+
+	# Collect all custom keywords and extra grammar
+	var custom_actions: Dictionary = {}
+	var extra_words: Array[String] = []
+
+	for cmd in scenario.custom_commands:
+		if cmd is CustomCommand and cmd.keyword != "":
+			# Register with parser if available
+			if parser:
+				var metadata := {"trigger_id": cmd.trigger_id, "route_as_order": cmd.route_as_order}
+				parser.register_custom_command(cmd.keyword, metadata)
+
+			# Collect for NARules grammar
+			extra_words.append(cmd.keyword)
+			extra_words.append_array(cmd.additional_grammar)
+
+			# If route_as_order, add to action_synonyms
+			if cmd.route_as_order:
+				custom_actions[cmd.keyword.to_lower()] = OrdersParser.OrderType.CUSTOM
+
+	# Set mission overrides in NARules for STT grammar
+	if not custom_actions.is_empty() or not extra_words.is_empty():
+		NARules.set_mission_overrides(custom_actions, extra_words)
+
+		# Update STT recognizer with new grammar (includes custom command keywords and additional_grammar)
+		STTService.update_wordlist()
+
+		LogService.info("Initialized %d custom commands for mission" % scenario.custom_commands.size(), "SimWorld.gd")
+
+
+## Handle radio commands and auto-activate triggers for matching custom commands.
+## Connected to [signal Radio.radio_raw_command] in [method bind_radio].
+## [param text] Raw text from STT.
+func _on_radio_command_for_triggers(text: String) -> void:
+	if not _scenario:
+		return
+	var normalized := text.strip_edges().to_lower()
+	for cmd in _scenario.custom_commands:
+		if cmd is CustomCommand and cmd.keyword != "" and cmd.trigger_id != "":
+			if normalized == cmd.keyword.to_lower():
+				if trigger_engine:
+					trigger_engine.activate_trigger(cmd.trigger_id)
+					LogService.trace("Custom command '%s' activated trigger '%s'" % [cmd.keyword, cmd.trigger_id], "SimWorld.gd")
+				break
 
 
 ## Register all units with logistics systems and bind hooks.

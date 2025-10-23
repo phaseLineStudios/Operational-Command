@@ -5,6 +5,7 @@ extends RefCounted
 
 var sim: SimWorld
 var engine: TriggerEngine
+var _last_radio_command: String = ""
 
 
 ## Return mission time in seconds.
@@ -84,3 +85,25 @@ func units_in_area(
 	if engine:
 		return engine.units_in_area(affiliation, center_m, size_m, shape)
 	return []
+
+
+## Get the last radio command heard this tick (cleared after tick).
+## Useful for trigger conditions to match custom voice commands.
+## [br][br]
+## [b]Usage in trigger condition_expr:[/b]
+## [codeblock]
+## last_radio_command().contains("fire mission")
+## last_radio_command() == "thunder actual"
+## [/codeblock]
+## [br]
+## [b]Note:[/b] Command is automatically cleared after each tick, so triggers
+## only fire once per voice command.
+## [return] Last radio command text (lowercase, normalized).
+func last_radio_command() -> String:
+	return _last_radio_command
+
+
+## Internal: Set the last radio command (called by TriggerEngine).
+## [param cmd] Raw command text from Radio.
+func _set_last_radio_command(cmd: String) -> void:
+	_last_radio_command = cmd.to_lower().strip_edges()

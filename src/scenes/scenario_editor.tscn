@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://c5vv37x66vtg7"]
+[gd_scene load_steps=14 format=3 uid="uid://c5vv37x66vtg7"]
 
 [ext_resource type="Script" uid="uid://cilbctp6dmcm" path="res://scripts/editors/ScenarioEditor.gd" id="1_wqbsy"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="2_gsqds"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://c7ms1i2uof7kp" path="res://scenes/ui/unit_create_dialog.tscn" id="12_dnx60"]
 [ext_resource type="PackedScene" uid="uid://blt6fcbjfelax" path="res://scenes/ui/unit_config_dialog.tscn" id="13_dnx60"]
 [ext_resource type="PackedScene" uid="uid://cdabq224o47g4" path="res://scenes/ui/trigger_config_dialog.tscn" id="17_72fj5"]
+[ext_resource type="PackedScene" path="res://scenes/ui/custom_command_config_dialog.tscn" id="18_custom"]
 
 [node name="ScenarioEditor" type="Control"]
 layout_mode = 3
@@ -133,7 +134,7 @@ mouse_target = true
 
 [node name="View" type="SubViewport" parent="Root/HBox/TerrainView"]
 handle_input_locally = false
-size = Vector2i(614, 586)
+size = Vector2i(508, 586)
 render_target_update_mode = 4
 
 [node name="World" parent="Root/HBox/TerrainView/View" instance=ExtResource("2_gsqds")]
@@ -174,10 +175,11 @@ layout_mode = 2
 [node name="TabContainer3" type="TabContainer" parent="Root/HBox/RightTray/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 0
+current_tab = 3
 clip_tabs = false
 
 [node name="Units" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -257,11 +259,45 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
+[node name="Commands" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
+layout_mode = 2
+metadata/_tab_index = 3
+
+[node name="Label" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Commands"]
+layout_mode = 2
+text = "Custom Voice Commands"
+
+[node name="Commands" type="ItemList" parent="Root/HBox/RightTray/VBox/TabContainer3/Commands"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Buttons" type="HBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3/Commands"]
+layout_mode = 2
+
+[node name="NewCommand" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Commands/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "+ New"
+
+[node name="EditCommand" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Commands/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Edit"
+
+[node name="DeleteCommand" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Commands/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Delete"
+
 [node name="Draw" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-metadata/_tab_index = 3
+metadata/_tab_index = 4
 
 [node name="Toolbar" type="HBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
 layout_mode = 2
@@ -436,6 +472,10 @@ unique_name_in_owner = true
 visible = false
 
 [node name="TriggerConfigDialog" parent="." instance=ExtResource("17_72fj5")]
+unique_name_in_owner = true
+visible = false
+
+[node name="CustomCommandConfigDialog" parent="." instance=ExtResource("18_custom")]
 unique_name_in_owner = true
 visible = false
 

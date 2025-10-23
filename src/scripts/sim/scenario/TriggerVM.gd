@@ -52,7 +52,7 @@ func run(expr_src: String, ctx: Dictionary) -> void:
 		return
 	for line in _split_lines(src):
 		var compiled := _compile(line, ctx)
-		if compiled == null:
+		if compiled == null or compiled.is_empty():
 			continue
 		var inputs := _values_for(compiled.names, ctx)
 		compiled.expr.execute(inputs, _api, false, false)

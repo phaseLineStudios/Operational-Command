@@ -10,6 +10,7 @@ var _before: ScenarioTrigger
 
 @onready var save_btn: Button = %Save
 @onready var close_btn: Button = %Close
+@onready var trig_id: LineEdit = %Id
 @onready var trig_title: LineEdit = %Title
 @onready var trig_shape: OptionButton = %Shape
 @onready var trig_size_x: SpinBox = %SizeX
@@ -35,7 +36,8 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 
 	var trig: ScenarioTrigger = editor.ctx.data.triggers[trigger_index]
 	_before = trig.duplicate(true)
-
+	
+	trig_id.text = trig.id
 	trig_title.text = trig.title
 	trig_presence.clear()
 	for i in ScenarioTrigger.PresenceMode.size():
@@ -61,6 +63,7 @@ func _on_save() -> void:
 	var live: ScenarioTrigger = editor.ctx.data.triggers[trigger_index]
 
 	var after := live.duplicate(true)
+	after.id = trig_id.text
 	after.title = trig_title.text
 	after.area_shape = trig_shape.get_selected_id() as ScenarioTrigger.AreaShape
 	after.area_size_m = Vector2(trig_size_x.value, trig_size_y.value)
@@ -76,6 +79,7 @@ func _on_save() -> void:
 			editor.ctx.data, "triggers", "id", String(live.id), _before, after, desc
 		)
 	else:
+		live.id = after.id
 		live.title = after.title
 		live.area_shape = after.area_shape
 		live.area_size_m = after.area_size_m

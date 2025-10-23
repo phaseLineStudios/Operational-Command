@@ -10,6 +10,10 @@ extends Node
 signal order_applied(order: Dictionary)
 ## Emitted when an order cannot be applied.
 signal order_failed(order: Dictionary, reason: String)
+## Emitted when a CUSTOM order is received (for mission-specific handling).
+## [br]Order dictionary contains: [code]custom_keyword[/code], [code]custom_full_text[/code], [code]custom_metadata[/code].
+## [br]Connect to this signal to handle mission-specific voice commands that route as orders.
+signal custom_order_received(order: Dictionary)
 
 ## Map OrdersParser.OrderType enum indices to string tokens.
 const _TYPE_NAMES := {
@@ -21,7 +25,8 @@ const _TYPE_NAMES := {
 	5: "FIRE",
 	6: "REPORT",
 	7: "CANCEL",
-	8: "UNKNOWN"
+	8: "CUSTOM",
+	9: "UNKNOWN"
 }
 
 ## Movement adapter used to plan and start moves.
@@ -75,6 +80,8 @@ func apply(order: Dictionary) -> bool:
 			return _apply_fire(unit, order)
 		"REPORT":
 			return _apply_report(unit, order)
+		"CUSTOM":
+			return _apply_custom(unit, order)
 		_:
 			emit_signal("order_failed", order, "unsupported_type")
 			return false
@@ -190,6 +197,23 @@ func _apply_fire(unit: ScenarioUnit, order: Dictionary) -> bool:
 ## [param order] Order dictionary.
 ## [return] Always `true`.
 func _apply_report(_unit: ScenarioUnit, order: Dictionary) -> bool:
+	emit_signal("order_applied", order)
+	return true
+
+
+## CUSTOM: Emit signal for mission-specific handling. Does not apply standard routing.
+## Emits [signal custom_order_received] with full order dictionary for external handling.
+## [br][br]
+## [b]Order dictionary contains:[/b]
+## [br]- [code]custom_keyword: String[/code]
+## [br]- [code]custom_full_text: String[/code]
+## [br]- [code]custom_metadata: Dictionary[/code]
+## [br]- [code]raw: PackedStringArray[/code]
+## [param _unit] Subject unit (unused, but kept for consistency).
+## [param order] Custom order dictionary with custom_keyword and custom_metadata.
+## [return] Always returns [code]true[/code] (order is "accepted" but deferred to signal handlers).
+func _apply_custom(_unit: ScenarioUnit, order: Dictionary) -> bool:
+	emit_signal("custom_order_received", order)
 	emit_signal("order_applied", order)
 	return true
 

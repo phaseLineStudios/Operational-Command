@@ -34,6 +34,20 @@
     "title": "FTX Crested Cap Checkride"
   },
   "content": {
+    "custom_commands": [
+      {
+        "additional_grammar": [
+          "radio",
+          "check",
+          "comms",
+          "communications",
+          "nominal"
+        ],
+        "keyword": "Radio Check",
+        "route_as_order": false,
+        "trigger_id": "radio_check_trigger"
+      }
+    ],
     "drawings": [],
     "tasks": [
       {
@@ -87,6 +101,26 @@
         ],
         "synced_units": [],
         "title": "Ambush Trigger"
+      },
+      {
+        "area_center_m": {
+          "x": 2151.64282226563,
+          "y": 244.619415283203
+        },
+        "condition_expr": "last_radio_command().to_lower().contains(\"radio check\")",
+        "id": "radio_check_trigger",
+        "on_activate_expr": "print(\"Radio Check received\")",
+        "on_deactivate_expr": "",
+        "presence": 0,
+        "require_duration_s": 0.0,
+        "shape": 0,
+        "size_m": {
+          "x": 50.0,
+          "y": 50.0
+        },
+        "synced_tasks": [],
+        "synced_units": [],
+        "title": "Radio Check Response"
       }
     ],
     "units": [

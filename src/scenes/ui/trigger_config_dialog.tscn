@@ -26,6 +26,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="IdLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+text = "Unique Trigger ID"
+
+[node name="Id" type="LineEdit" parent="Root/ScrollContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Required"
+
 [node name="TitleLabel" type="Label" parent="Root/ScrollContainer/VBox"]
 layout_mode = 2
 text = "Trigger Name"

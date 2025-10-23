@@ -114,6 +114,10 @@ var _dirty := false
 
 @onready var task_list: ItemList = %Tasks
 @onready var trigger_list: ItemList = %Triggers
+@onready var command_list: ItemList = %Commands
+@onready var new_command_btn: Button = %NewCommand
+@onready var edit_command_btn: Button = %EditCommand
+@onready var delete_command_btn: Button = %DeleteCommand
 
 @onready var draw_toolbar_freehand: Button = %BtnFreehand
 @onready var draw_toolbar_stamp: Button = %BtnStamp
@@ -135,6 +139,7 @@ var _dirty := false
 @onready var _unit_cfg: UnitConfigDialog = %UnitConfigDialog
 @onready var _task_cfg: TaskConfigDialog = %TaskConfigDialog
 @onready var _trigger_cfg: TriggerConfigDialog = %TriggerConfigDialog
+@onready var _command_cfg: CustomCommandConfigDialog = %CustomCommandConfigDialog
 
 @onready var _tab_container1: TabContainer = %TabContainer1
 
@@ -212,6 +217,13 @@ func _ready():
 	st_opacity.value_changed.connect(func(_v): _sync_stamp_opts())
 	st_list.item_selected.connect(_on_stamp_selected)
 	st_load_btn.pressed.connect(_on_stamp_load_clicked)
+
+	# Custom command list signals
+	command_list.item_activated.connect(func(idx: int): _open_command_config(idx))
+	new_command_btn.pressed.connect(_on_new_command)
+	edit_command_btn.pressed.connect(_on_edit_command)
+	delete_command_btn.pressed.connect(_on_delete_command)
+	_command_cfg.saved.connect(func(_idx: int, _cmd: CustomCommand): _rebuild_command_list())
 
 	_build_stamp_pool()
 
@@ -297,6 +309,13 @@ func _open_trigger_config(index: int) -> void:
 	if index < 0 or index >= ctx.data.triggers.size():
 		return
 	_trigger_cfg.show_for(self, index)
+
+
+## Open custom command configuration dialog for a command index
+func _open_command_config(index: int) -> void:
+	if index < 0 or index >= ctx.data.custom_commands.size():
+		return
+	_command_cfg.show_for(self, index)
 
 
 ## Begin Task placement tool with a given task prototype
@@ -669,6 +688,21 @@ func _delete_trigger(trigger_index: int) -> void:
 	_rebuild_scene_tree()
 
 
+## Delete a custom command; push history and refresh
+func _delete_command(command_index: int) -> void:
+	if not ctx.data or not ctx.data.custom_commands:
+		return
+	if command_index < 0 or command_index >= ctx.data.custom_commands.size():
+		return
+	var before := ctx.data.custom_commands.duplicate(true)
+	var after := ctx.data.custom_commands.duplicate(true)
+	after.remove_at(command_index)
+	history.push_array_replace(
+		ctx.data, "custom_commands", before, after, "Delete Custom Command"
+	)
+	_rebuild_command_list()
+
+
 ## Populate STList from terrain brush textures.
 func _build_stamp_pool() -> void:
 	_draw_textures.clear()
@@ -940,6 +974,7 @@ func _on_data_changed() -> void:
 		mouse_position_label.text = ""
 	ctx.request_overlay_redraw()
 	_rebuild_scene_tree()
+	_rebuild_command_list()
 	_on_history_changed([], [])
 	units._refresh(ctx)
 
@@ -1124,3 +1159,52 @@ func _snapshot_arrays() -> Dictionary:
 func _queue_free_children(node: Control):
 	for n in node.get_children():
 		n.queue_free()
+
+
+## Rebuild the custom commands list from scenario data
+func _rebuild_command_list() -> void:
+	command_list.clear()
+	if not ctx.data:
+		return
+	for cmd in ctx.data.custom_commands:
+		if cmd is CustomCommand:
+			var text := cmd.keyword if cmd.keyword != "" else "(empty)"
+			command_list.add_item(text)
+
+
+## Create a new custom command
+func _on_new_command() -> void:
+	if not ctx.data:
+		return
+	var cmd := CustomCommand.new()
+	cmd.keyword = "new_command"
+
+	if history:
+		var before := ctx.data.custom_commands.duplicate(true)
+		var after := before.duplicate(true)
+		after.append(cmd)
+		history.push_array_replace(ctx.data, "custom_commands", before, after, "Add Custom Command")
+	else:
+		ctx.data.custom_commands.append(cmd)
+
+	_rebuild_command_list()
+	# Select and open the new command
+	var idx := ctx.data.custom_commands.size() - 1
+	command_list.select(idx)
+	_open_command_config(idx)
+
+
+## Edit the selected custom command
+func _on_edit_command() -> void:
+	var selected := command_list.get_selected_items()
+	if selected.is_empty():
+		return
+	_open_command_config(selected[0])
+
+
+## Delete the selected custom command
+func _on_delete_command() -> void:
+	var selected := command_list.get_selected_items()
+	if selected.is_empty():
+		return
+	_delete_command(selected[0])

@@ -4,10 +4,33 @@ extends Node
 ## Provides tables and pattern helpers for validating and assisting the
 ## construction of voice commands.
 
+var _mission_overrides: Dictionary = {}
+
+
+## Set mission-specific overrides for custom actions and extra words.
+## Merges custom action keywords into [code]action_synonyms[/code] table and adds
+## extra words to Vosk grammar for better STT recognition.
+## [br][br]
+## [b]Called automatically by SimWorld._init_custom_commands() during mission init.[/b]
+## [param custom_actions] Dictionary mapping keyword -> OrderType (or any int). Added to action_synonyms.
+## [param extra_words] Array of additional words to recognize in STT (keywords + additional_grammar).
+func set_mission_overrides(custom_actions: Dictionary = {}, extra_words: Array[String] = []) -> void:
+	_mission_overrides = {
+		"custom_actions": custom_actions,
+		"extra_words": extra_words
+	}
+	LogService.info("Mission overrides set: %d actions, %d words" % [custom_actions.size(), extra_words.size()], "NARules.gd")
+
+
+## Clear mission overrides (call when leaving a mission).
+## Should be called on mission end to reset grammar to defaults.
+func clear_mission_overrides() -> void:
+	_mission_overrides.clear()
+
 
 ## Build and return the parser table
 func get_parser_tables() -> Dictionary:
-	return {
+	var base_tables := {
 		"callsigns":
 		{
 			"alpha": "ALPHA",
@@ -167,6 +190,14 @@ func get_parser_tables() -> Dictionary:
 		}
 	}
 
+	# Merge mission overrides if present
+	if _mission_overrides.has("custom_actions"):
+		var custom_actions: Dictionary = _mission_overrides["custom_actions"]
+		for key in custom_actions.keys():
+			base_tables["action_synonyms"][key] = custom_actions[key]
+
+	return base_tables
+
 
 ## Build a deduped list of grammar words (and phrases) with mission overrides.
 func build_vosk_word_array(
@@ -206,6 +237,18 @@ func build_vosk_word_array(
 		for tok in phrase.split(" ", false):
 			if tok != "":
 				words.append(tok)
+
+	# Add mission-specific extra words
+	if _mission_overrides.has("extra_words"):
+		var extra: Array = _mission_overrides["extra_words"]
+		for w in extra:
+			var word := str(w).strip_edges().to_lower()
+			if word != "":
+				words.append(word)
+				# Also add individual tokens if it's a phrase
+				for tok in word.split(" ", false):
+					if tok != "":
+						words.append(tok)
 
 	words.append("[unk]")
 

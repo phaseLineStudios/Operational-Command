@@ -72,6 +72,8 @@ enum ScenarioDifficulty { EASY, NORMAL, HARD }
 @export var tasks: Array[ScenarioTask] = []
 ## Drawings or map overlays associated with the scenario
 @export var drawings: Array = []
+## Custom voice commands for this mission
+@export var custom_commands: Array[CustomCommand] = []
 
 var preview: Texture2D
 
@@ -103,6 +105,11 @@ func serialize() -> Dictionary:
 		if d is ScenarioDrawing:
 			placed_drawings.append(d.serialize())
 
+	var placed_custom_commands: Array = []
+	for cmd in custom_commands:
+		if cmd is CustomCommand:
+			placed_custom_commands.append(cmd.serialize())
+
 	return {
 		"id": id,
 		"title": title,
@@ -128,7 +135,8 @@ func serialize() -> Dictionary:
 			"units": placed_units,
 			"triggers": placed_triggers,
 			"tasks": placed_tasks,
-			"drawings": placed_drawings
+			"drawings": placed_drawings,
+			"custom_commands": placed_custom_commands
 		}
 	}
 
@@ -213,6 +221,15 @@ static func deserialize(json: Variant) -> ScenarioData:
 				if d != null:
 					out.append(d)
 			s.drawings = out
+
+		var placed_custom_commands: Array = content.get("custom_commands", [])
+		if typeof(placed_custom_commands) == TYPE_ARRAY:
+			var cmds: Array[CustomCommand] = []
+			for raw in placed_custom_commands:
+				var cmd := CustomCommand.deserialize(raw)
+				if cmd != null:
+					cmds.append(cmd)
+			s.custom_commands = cmds
 
 	if typeof(s.preview_path) == TYPE_STRING and s.preview_path != "":
 		var tex := load(s.preview_path)

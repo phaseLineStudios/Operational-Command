@@ -12,7 +12,8 @@ signal parsed(orders: Array)
 signal parse_error(msg: String)
 
 ## High-level order categories.
-enum OrderType { MOVE, HOLD, ATTACK, DEFEND, RECON, FIRE, REPORT, CANCEL, UNKNOWN }
+## [br]CUSTOM is used for mission-specific commands registered via [method register_custom_command].
+enum OrderType { MOVE, HOLD, ATTACK, DEFEND, RECON, FIRE, REPORT, CANCEL, CUSTOM, UNKNOWN }
 
 ## Minimal schema returned per order.
 const ORDER_KEYS := {
@@ -26,10 +27,31 @@ const ORDER_KEYS := {
 }
 
 var _tables: Dictionary
+var _custom_commands: Dictionary = {}
 
 
 func _ready() -> void:
 	_tables = NARules.get_parser_tables()
+
+
+## Register a custom command keyword for this mission.
+## When the keyword is detected in voice input, generates a CUSTOM order instead of standard parsing.
+## [br][br]
+## [b]Called automatically by SimWorld._init_custom_commands() during mission init.[/b]
+## [br][br]
+## The generated order dictionary will contain:
+## [br]- [code]type: OrderType.CUSTOM[/code]
+## [br]- [code]custom_keyword: String[/code] - The matched keyword
+## [br]- [code]custom_full_text: String[/code] - Full radio text
+## [br]- [code]custom_metadata: Dictionary[/code] - Metadata passed here
+## [br]- [code]raw: PackedStringArray[/code] - Tokenized input
+## [param keyword] The keyword/phrase to match (e.g., "fire mission"). Case-insensitive substring match.
+## [param metadata] Optional metadata dict to attach to the CUSTOM order (e.g., trigger_id, route_as_order).
+func register_custom_command(keyword: String, metadata: Dictionary = {}) -> void:
+	var normalized := keyword.to_lower().strip_edges()
+	if normalized != "":
+		_custom_commands[normalized] = metadata
+		LogService.info("Registered custom command: %s" % keyword, "OrdersParser.gd")
 
 
 ## Parse a full STT sentence into one or more structured orders.
@@ -38,6 +60,17 @@ func parse(text: String) -> Array:
 	if tokens.is_empty():
 		emit_signal("parse_error", "No tokens.")
 		return []
+
+	# First check for custom commands (full text match)
+	var normalized_text := text.to_lower().strip_edges()
+	for keyword in _custom_commands.keys():
+		if normalized_text.contains(keyword):
+			var custom_order := _build_custom_order(keyword, normalized_text, tokens)
+			emit_signal("parsed", [custom_order])
+			LogService.info("Custom Order: %s" % keyword, "OrdersParser.gd")
+			return [custom_order]
+
+	# Fall back to standard order parsing
 	var orders := _extract_orders(tokens)
 	if orders.is_empty():
 		emit_signal("parse_error", "No orders found.")
@@ -329,6 +362,23 @@ func order_to_string(o: Dictionary) -> String:
 	return s.strip_edges()
 
 
+## Build a CUSTOM order from a matched keyword.
+func _build_custom_order(keyword: String, full_text: String, tokens: PackedStringArray) -> Dictionary:
+	var metadata: Dictionary = _custom_commands.get(keyword, {})
+	return {
+		"callsign": "",
+		"type": OrderType.CUSTOM,
+		"direction": "",
+		"quantity": 0,
+		"zone": "",
+		"target_callsign": "",
+		"raw": tokens.duplicate(),
+		"custom_keyword": keyword,
+		"custom_full_text": full_text,
+		"custom_metadata": metadata
+	}
+
+
 ## String name for OrderType.
 func _order_type_to_string(t: int) -> String:
 	match t:
@@ -348,5 +398,7 @@ func _order_type_to_string(t: int) -> String:
 			return "REPORT"
 		OrderType.CANCEL:
 			return "CANCEL"
+		OrderType.CUSTOM:
+			return "CUSTOM"
 		_:
 			return "UNKNOWN"
