@@ -9,6 +9,7 @@
 config_version=5
 
 [application]
+
 config/name="Operational Command"
 config/version="0.1.79"
 run/main_scene="uid://dkugvwc2gd622"
