@@ -84,7 +84,7 @@ var draglink := ScenarioDragLinkService.new()
 
 var _draw_textures: Array[Texture2D] = []
 var _draw_tex_paths: Array[String] = []
-var _freehand_defaults := {"color": Color(0.9,0.9,0.2,1), "width_px": 3.0, "opacity": 1.0}
+var _freehand_defaults := {"color": Color(0.9, 0.9, 0.2, 1), "width_px": 3.0, "opacity": 1.0}
 var _stamp_defaults := {"scale": 1.0, "rotation_deg": 0.0, "opacity": 1.0}
 var _open_dlg: FileDialog
 var _save_dlg: FileDialog
@@ -203,7 +203,7 @@ func _ready():
 
 	# fix tab container name
 	_tab_container1.set_tab_title(0, "Scene Tree")
-	
+
 	draw_toolbar_freehand.pressed.connect(_on_draw_click_freehand)
 	draw_toolbar_stamp.pressed.connect(_on_draw_click_stamp)
 
@@ -468,7 +468,9 @@ func _on_overlay_gui_input(event: InputEvent) -> void:
 					not src.is_empty()
 					and StringName(src.get("type", "")) in [&"unit", &"task", &"trigger"]
 				):
-					LogService.trace("BeginDrag: \n%s" % JSON.stringify(src), "ScenarioEditor.gd:416")
+					LogService.trace(
+						"BeginDrag: \n%s" % JSON.stringify(src), "ScenarioEditor.gd:416"
+					)
 					draglink.begin_link(ctx, src, event.position)
 					return
 			if event.double_click:
@@ -697,9 +699,7 @@ func _delete_command(command_index: int) -> void:
 	var before := ctx.data.custom_commands.duplicate(true)
 	var after := ctx.data.custom_commands.duplicate(true)
 	after.remove_at(command_index)
-	history.push_array_replace(
-		ctx.data, "custom_commands", before, after, "Delete Custom Command"
-	)
+	history.push_array_replace(ctx.data, "custom_commands", before, after, "Delete Custom Command")
 	_rebuild_command_list()
 
 
@@ -718,7 +718,11 @@ func _build_stamp_pool() -> void:
 				break
 			if dir.current_is_dir():
 				continue
-			if f.to_lower().ends_with(".png") or f.to_lower().ends_with(".webp") or f.to_lower().ends_with(".jpg"):
+			if (
+				f.to_lower().ends_with(".png")
+				or f.to_lower().ends_with(".webp")
+				or f.to_lower().ends_with(".jpg")
+			):
 				var p := "res://assets/textures/stamps/%s" % f
 				var t: Texture2D = load(p)
 				if t:
@@ -730,6 +734,7 @@ func _build_stamp_pool() -> void:
 					_draw_textures.append(t)
 					_draw_tex_paths.append(p)
 		dir.list_dir_end()
+
 
 ## Start freehand tool with current UI values.
 func _on_draw_click_freehand() -> void:
@@ -745,6 +750,7 @@ func _on_draw_click_freehand() -> void:
 	tool.width_px = fh_width.value
 	tool.opacity = fh_opacity.value
 	_set_tool(tool)
+
 
 ## Start stamp tool with current UI + selected texture.
 func _on_draw_click_stamp() -> void:
@@ -769,6 +775,7 @@ func _on_draw_click_stamp() -> void:
 	tool.opacity = st_opacity.value
 	_set_tool(tool)
 
+
 ## Update active freehand tool when UI changes.
 func _sync_freehand_opts() -> void:
 	_freehand_defaults.color = fh_color.color
@@ -779,6 +786,7 @@ func _sync_freehand_opts() -> void:
 		ctx.current_tool.width_px = fh_width.value
 		ctx.current_tool.opacity = fh_opacity.value
 		ctx.request_overlay_redraw()
+
 
 ## Update active stamp tool when UI changes.
 func _sync_stamp_opts() -> void:
@@ -793,6 +801,7 @@ func _sync_stamp_opts() -> void:
 		ctx.current_tool.opacity = st_opacity.value
 		ctx.request_overlay_redraw()
 
+
 ## Handle stamp selection change.
 ## @param idx Item index.
 func _on_stamp_selected(idx: int) -> void:
@@ -802,6 +811,7 @@ func _on_stamp_selected(idx: int) -> void:
 		ctx.current_tool.texture = load(p)
 		ctx.request_overlay_redraw()
 
+
 ## Load a texture from disk into pool.
 func _on_stamp_load_clicked() -> void:
 	var fd := FileDialog.new()
@@ -810,17 +820,19 @@ func _on_stamp_load_clicked() -> void:
 	fd.filters = PackedStringArray(["*.png,*.webp,*.jpg ; Images"])
 	fd.title = "Select Texture"
 	add_child(fd)
-	fd.file_selected.connect(func(p: String):
-		var t: Texture2D = load(p)
-		if t:
-			var idx := st_list.add_item(p.get_file())
-			var icon_img := t.get_image()
-			icon_img.resize(32, 32, Image.INTERPOLATE_LANCZOS)
-			st_list.set_item_icon(idx, ImageTexture.create_from_image(icon_img))
-			st_list.set_item_metadata(idx, {"path": p})
-		fd.queue_free()
+	fd.file_selected.connect(
+		func(p: String):
+			var t: Texture2D = load(p)
+			if t:
+				var idx := st_list.add_item(p.get_file())
+				var icon_img := t.get_image()
+				icon_img.resize(32, 32, Image.INTERPOLATE_LANCZOS)
+				st_list.set_item_icon(idx, ImageTexture.create_from_image(icon_img))
+				st_list.set_item_metadata(idx, {"path": p})
+			fd.queue_free()
 	)
 	fd.popup_centered_ratio(0.6)
+
 
 ## Generate unique drawing id.
 ## @param kind "stroke" | "stamp".
@@ -838,7 +850,6 @@ func _next_drawing_id(kind: String) -> String:
 					if num >= n:
 						n = num + 1
 	return "%s%03d" % [base, n]
-
 
 
 ## File menu actions (New/Open/Save/Save As/Back)
@@ -1121,8 +1132,10 @@ func _confirm_discard() -> bool:
 	acc.dialog_text = "You have unsaved changes. Discard and continue?"
 	add_child(acc)
 	var accepted := false
-	@warning_ignore("confusable_capture_reassignment") acc.canceled.connect(func(): accepted = false)
-	@warning_ignore("confusable_capture_reassignment") acc.confirmed.connect(func(): accepted = true)
+	@warning_ignore("confusable_capture_reassignment")
+	acc.canceled.connect(func(): accepted = false)
+	@warning_ignore("confusable_capture_reassignment")
+	acc.confirmed.connect(func(): accepted = true)
 	acc.popup_centered()
 	await acc.confirmed
 	acc.queue_free()

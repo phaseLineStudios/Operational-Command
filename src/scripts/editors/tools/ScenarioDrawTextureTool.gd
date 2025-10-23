@@ -19,14 +19,17 @@ var texture_path: String = ""
 var _hover_m := Vector2.ZERO
 var _has_hover := false
 
+
 ## Activate tool.
 func _on_activated() -> void:
 	request_redraw_overlay.emit()
+
 
 ## Deactivate tool.
 func _on_deactivated() -> void:
 	_has_hover = false
 	request_redraw_overlay.emit()
+
 
 ## Handle mouse move.
 ## [param e] InputEventMouseMotion.
@@ -39,6 +42,7 @@ func _on_mouse_move(e: InputEventMouseMotion) -> bool:
 	request_redraw_overlay.emit()
 	return true
 
+
 ## Handle mouse button.
 ## [param e] InputEventMouseButton.
 ## [return] true if consumed.
@@ -50,20 +54,24 @@ func _on_mouse_button(e: InputEventMouseButton) -> bool:
 		return true
 	return false
 
+
 ## Handle key/wheel: Q/E rotate, MouseWheel scale, R reset.
 ## [param e] InputEventKey|InputEventMouseButton.
 ## [return] true if consumed.
 func _on_key(e: InputEventKey) -> bool:
 	if e.pressed:
 		match e.keycode:
-			KEY_Q: rotation_deg -= 5.0
-			KEY_E: rotation_deg += 5.0
+			KEY_Q:
+				rotation_deg -= 5.0
+			KEY_E:
+				rotation_deg += 5.0
 			KEY_R:
 				rotation_deg = 0.0
 				scale = 1.0
 		request_redraw_overlay.emit()
 		return true
 	return false
+
 
 ## Draw overlay preview.
 ## [param canvas] Overlay control.
@@ -78,6 +86,7 @@ func draw_overlay(canvas: Control) -> void:
 	var rect := Rect2(-sz * 0.5, sz)
 	canvas.draw_texture_rect(texture, rect, false, col)
 	canvas.draw_set_transform(Vector2(0, 0))
+
 
 ## Commit a stamp.
 func _place() -> void:

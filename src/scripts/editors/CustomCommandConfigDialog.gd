@@ -44,7 +44,11 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 
 
 func _on_save() -> void:
-	if editor == null or command_index < 0 or command_index >= editor.ctx.data.custom_commands.size():
+	if (
+		editor == null
+		or command_index < 0
+		or command_index >= editor.ctx.data.custom_commands.size()
+	):
 		return
 	var live: CustomCommand = editor.ctx.data.custom_commands[command_index]
 

@@ -250,7 +250,8 @@ func _read_number(tokens: PackedStringArray, idx: int, number_words: Dictionary)
 		return nil
 
 	if _is_int_literal(tokens[idx]):
-		@warning_ignore("confusable_local_declaration") var j := idx
+		@warning_ignore("confusable_local_declaration")
+		var j := idx
 		var digits := ""
 		while j < tokens.size() and _is_int_literal(tokens[j]):
 			digits += tokens[j]  # concat tokens
@@ -363,7 +364,9 @@ func order_to_string(o: Dictionary) -> String:
 
 
 ## Build a CUSTOM order from a matched keyword.
-func _build_custom_order(keyword: String, full_text: String, tokens: PackedStringArray) -> Dictionary:
+func _build_custom_order(
+	keyword: String, full_text: String, tokens: PackedStringArray
+) -> Dictionary:
 	var metadata: Dictionary = _custom_commands.get(keyword, {})
 	return {
 		"callsign": "",

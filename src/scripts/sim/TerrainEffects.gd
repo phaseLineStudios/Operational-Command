@@ -119,8 +119,12 @@ static func weather_severity_from_scenario(s: ScenarioData) -> float:
 
 ## LOS test + integral attenuation via TerrainRender surfaces if available.
 static func _compute_los_and_atten(
-	a: Vector2, d: Vector2, renderer: TerrainRender, terrain: TerrainData, 
-	cfg: TerrainEffectsConfig, los_max_range_m: float = 0.0, 
+	a: Vector2,
+	d: Vector2,
+	renderer: TerrainRender,
+	terrain: TerrainData,
+	cfg: TerrainEffectsConfig,
+	los_max_range_m: float = 0.0,
 	max_samples: int = 256
 ) -> Dictionary:
 	if a == d:

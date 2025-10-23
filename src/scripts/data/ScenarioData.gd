@@ -99,7 +99,7 @@ func serialize() -> Dictionary:
 	for task in tasks:
 		if task is ScenarioTask:
 			placed_tasks.append(task.serialize())
-	
+
 	var placed_drawings: Array = []
 	for d in drawings:
 		if d is ScenarioDrawing:

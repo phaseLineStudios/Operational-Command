@@ -16,15 +16,18 @@ var _dragging := false
 var _points_m: PackedVector2Array = []
 var _last_m := Vector2.INF
 
+
 ## Activate tool.
 func _on_activated() -> void:
 	request_redraw_overlay.emit()
+
 
 ## Deactivate tool.
 func _on_deactivated() -> void:
 	_dragging = false
 	_points_m.clear()
 	request_redraw_overlay.emit()
+
 
 ## Handle mouse move.
 ## [param e] InputEventMouseMotion.
@@ -40,6 +43,7 @@ func _on_mouse_move(e: InputEventMouseMotion) -> bool:
 			request_redraw_overlay.emit()
 		return true
 	return false
+
 
 ## Handle mouse button.
 ## [param e] InputEventMouseButton.
@@ -63,6 +67,7 @@ func _on_mouse_button(e: InputEventMouseButton) -> bool:
 		return true
 	return false
 
+
 ## Handle key events. ESC cancels.
 ## [param e] InputEventKey.
 ## [return] true if consumed.
@@ -71,6 +76,7 @@ func _on_key(e: InputEventKey) -> bool:
 		emit_signal("canceled")
 		return true
 	return false
+
 
 ## Draw overlay preview.
 ## [param canvas] Overlay control.
@@ -84,6 +90,7 @@ func draw_overlay(canvas: Control) -> void:
 	col.a *= opacity
 	for i in range(1, pts_px.size()):
 		canvas.draw_line(pts_px[i - 1], pts_px[i], col, width_px, true)
+
 
 ## Commit current stroke.
 func _commit_if_valid() -> void:

@@ -538,8 +538,13 @@ func _init_custom_commands(scenario: ScenarioData) -> void:
 	# Includes: base grammar, custom commands, callsigns, and terrain labels
 	STTService.update_wordlist(callsigns, labels)
 
-	LogService.info("Updated STT grammar: %d custom commands, %d callsigns, %d labels" %
-		[scenario.custom_commands.size(), callsigns.size(), labels.size()], "SimWorld.gd")
+	LogService.info(
+		(
+			"Updated STT grammar: %d custom commands, %d callsigns, %d labels"
+			% [scenario.custom_commands.size(), callsigns.size(), labels.size()]
+		),
+		"SimWorld.gd"
+	)
 
 
 ## Handle radio commands and auto-activate triggers for matching custom commands.
@@ -554,7 +559,13 @@ func _on_radio_command_for_triggers(text: String) -> void:
 			if normalized == cmd.keyword.to_lower():
 				if trigger_engine:
 					trigger_engine.activate_trigger(cmd.trigger_id)
-					LogService.trace("Custom command '%s' activated trigger '%s'" % [cmd.keyword, cmd.trigger_id], "SimWorld.gd")
+					LogService.trace(
+						(
+							"Custom command '%s' activated trigger '%s'"
+							% [cmd.keyword, cmd.trigger_id]
+						),
+						"SimWorld.gd"
+					)
 				break
 
 

@@ -11,6 +11,7 @@ enum Kind { STROKE, STAMP }
 ## Creation order for stable z-sort within a layer.
 @export var order: int = 0
 
+
 ## Serialize to JSON-friendly Dictionary.
 ## [return] Dictionary with common fields.
 func serialize_base() -> Dictionary:
@@ -21,6 +22,7 @@ func serialize_base() -> Dictionary:
 		"order": order,
 	}
 
+
 ## Apply common fields from Dictionary.
 ## [param d] Source dictionary.
 func deserialize_base(d: Dictionary) -> void:
@@ -28,6 +30,7 @@ func deserialize_base(d: Dictionary) -> void:
 	visible = d.get("visible", visible)
 	layer = int(d.layer)
 	order = int(d.order)
+
 
 ## Factory from Dictionary.
 ## [param d] Serialized object.

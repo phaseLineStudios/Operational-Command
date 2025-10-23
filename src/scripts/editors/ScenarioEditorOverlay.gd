@@ -450,14 +450,15 @@ func _draw_drawings() -> void:
 	if arr == null or arr.is_empty():
 		return
 	var sorted := arr.duplicate()
-	sorted.sort_custom(func(a, b):
-		var la: int= (a.layer if a is Resource else int(a.get("layer")))
-		var lb: int= (b.layer if b is Resource else int(b.get("layer")))
-		if la != lb:
-			return la < lb
-		var oa: int= (a.order if a is Resource else int(a.get("order")))
-		var ob: int= (b.order if b is Resource else int(b.get("order")))
-		return oa < ob
+	sorted.sort_custom(
+		func(a, b):
+			var la: int = a.layer if a is Resource else int(a.get("layer"))
+			var lb: int = b.layer if b is Resource else int(b.get("layer"))
+			if la != lb:
+				return la < lb
+			var oa: int = a.order if a is Resource else int(a.get("order"))
+			var ob: int = b.order if b is Resource else int(b.get("order"))
+			return oa < ob
 	)
 
 	for it in sorted:

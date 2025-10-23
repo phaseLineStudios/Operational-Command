@@ -14,12 +14,14 @@ var _mission_overrides: Dictionary = {}
 ## [b]Called automatically by SimWorld._init_custom_commands() during mission init.[/b]
 ## [param custom_actions] Dictionary mapping keyword -> OrderType (or any int). Added to action_synonyms.
 ## [param extra_words] Array of additional words to recognize in STT (keywords + additional_grammar).
-func set_mission_overrides(custom_actions: Dictionary = {}, extra_words: Array[String] = []) -> void:
-	_mission_overrides = {
-		"custom_actions": custom_actions,
-		"extra_words": extra_words
-	}
-	LogService.info("Mission overrides set: %d actions, %d words" % [custom_actions.size(), extra_words.size()], "NARules.gd")
+func set_mission_overrides(
+	custom_actions: Dictionary = {}, extra_words: Array[String] = []
+) -> void:
+	_mission_overrides = {"custom_actions": custom_actions, "extra_words": extra_words}
+	LogService.info(
+		"Mission overrides set: %d actions, %d words" % [custom_actions.size(), extra_words.size()],
+		"NARules.gd"
+	)
 
 
 ## Clear mission overrides (call when leaving a mission).

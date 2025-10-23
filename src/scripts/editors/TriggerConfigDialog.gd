@@ -36,7 +36,7 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 
 	var trig: ScenarioTrigger = editor.ctx.data.triggers[trigger_index]
 	_before = trig.duplicate(true)
-	
+
 	trig_id.text = trig.id
 	trig_title.text = trig.title
 	trig_presence.clear()

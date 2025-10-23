@@ -15,20 +15,27 @@ extends ScenarioDrawing
 ## Rotation in degrees (clockwise).
 @export_range(-360.0, 360.0, 0.1) var rotation_deg: float = 0.0
 
+
 ## Serialize stamp.
 ## [return] Dictionary.
 func serialize() -> Dictionary:
 	var out := serialize_base()
-	out.merge({
-		"type": "stamp",
-		"texture_path": texture_path,
-		"modulate": modulate.to_html(true),
-		"opacity": opacity,
-		"position_m": ContentDB.v2(position_m),
-		"scale": scale,
-		"rotation_deg": rotation_deg,
-	})
+	(
+		out
+		. merge(
+			{
+				"type": "stamp",
+				"texture_path": texture_path,
+				"modulate": modulate.to_html(true),
+				"opacity": opacity,
+				"position_m": ContentDB.v2(position_m),
+				"scale": scale,
+				"rotation_deg": rotation_deg,
+			}
+		)
+	)
 	return out
+
 
 ## Deserialize stamp.
 ## [param d] Dictionary.

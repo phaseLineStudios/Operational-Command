@@ -11,6 +11,7 @@ extends ScenarioDrawing
 ## World points (meters).
 @export var points_m: PackedVector2Array = []
 
+
 ## Serialize stroke.
 ## [return] Dictionary.
 func serialize() -> Dictionary:
@@ -18,14 +19,20 @@ func serialize() -> Dictionary:
 	for p in points_m:
 		pts.append(ContentDB.v2(p))
 	var out := serialize_base()
-	out.merge({
-		"type": "stroke",
-		"color": color.to_html(true),
-		"width_px": width_px,
-		"opacity": opacity,
-		"points": pts,
-	})
+	(
+		out
+		. merge(
+			{
+				"type": "stroke",
+				"color": color.to_html(true),
+				"width_px": width_px,
+				"opacity": opacity,
+				"points": pts,
+			}
+		)
+	)
 	return out
+
 
 ## Deserialize stroke.
 ## [param d] Dictionary.

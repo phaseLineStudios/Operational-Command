@@ -293,12 +293,17 @@ func _rebuild_surface_spatial_index() -> void:
 
 		# Store meta and bin into grid cells.
 		var meta_idx := _surface_meta.size()
-		_surface_meta.append({
-			"pts": pts,
-			"bbox": bbox,
-			"z": float(brush.z_index),
-			"data_idx": i,
-		})
+		(
+			_surface_meta
+			. append(
+				{
+					"pts": pts,
+					"bbox": bbox,
+					"z": float(brush.z_index),
+					"data_idx": i,
+				}
+			)
+		)
 
 		var cs := float(surface_index_cell_m)
 		var min_cx := int(floor(bbox.position.x / cs))
@@ -361,7 +366,8 @@ func is_inside_terrain(pos: Vector2) -> bool:
 
 ## API to get grid number from terrain local position
 func pos_to_grid(pos: Vector2, total_digits: int = 6) -> String:
-	@warning_ignore("integer_division") var per_axis := total_digits / 2
+	@warning_ignore("integer_division")
+	var per_axis := total_digits / 2
 	if per_axis != 3 and per_axis != 4 and per_axis != 5:
 		push_warning(
 			"pos_to_grid: total_digits must be 6, 8, or 10; got %d. Using 6." % total_digits
@@ -410,7 +416,8 @@ func grid_to_pos(grid: String) -> Vector2:
 		)
 		return Vector2i.ZERO
 
-	@warning_ignore("integer_division") var half := digits.length() / 2
+	@warning_ignore("integer_division")
+	var half := digits.length() / 2
 	if half < 3 or half > 5:
 		LogService.warning(
 			"Grid label must be 6, 8, or 10 digits (got %d)." % digits.length(),
@@ -521,7 +528,7 @@ func get_surface_at_terrain_position(terrain_pos: Vector2) -> Dictionary:
 				best_z = z
 				best_data_idx = i
 
-	return ({} if best_data_idx == -1 else data.surfaces[best_data_idx])
+	return {} if best_data_idx == -1 else data.surfaces[best_data_idx]
 
 
 ## Request a path in terrain meters via attached PathGrid

@@ -41,7 +41,7 @@ func _ready():
 	terrain_btn.pressed.connect(_on_terrain_select)
 	thumb_btn.pressed.connect(_on_thumbnail_select)
 	thumb_clear.pressed.connect(_on_thumbnail_clear)
-	
+
 	unit_add.pressed.connect(_on_unit_add_pressed)
 	unit_remove.pressed.connect(_on_unit_remove_pressed)
 	_load_units_pool()
@@ -60,7 +60,7 @@ func _on_primary_pressed() -> void:
 			sd.description = desc_input.text
 			sd.preview = thumbnail
 			sd.terrain = terrain
-			sd.unit_recruits = _selected_units.duplicate() 
+			sd.unit_recruits = _selected_units.duplicate()
 			emit_signal("request_create", sd)
 		DialogMode.EDIT:
 			if not working:
@@ -71,7 +71,7 @@ func _on_primary_pressed() -> void:
 			working.description = desc_input.text
 			working.preview = thumbnail
 			working.terrain = terrain
-			working.unit_recruits = _selected_units.duplicate() 
+			working.unit_recruits = _selected_units.duplicate()
 			emit_signal("request_update", working)
 	show_dialog(false)
 
@@ -213,6 +213,7 @@ func _load_units_pool() -> void:
 			_all_units.append(u)
 			_unit_by_id[String(u.id)] = u
 
+
 ## Refresh both ItemLists from state.
 func _refresh_unit_lists() -> void:
 	if not is_instance_valid(unit_pool) or not is_instance_valid(unit_selected):
@@ -248,9 +249,11 @@ func _refresh_unit_lists() -> void:
 			img.resize(24, 24, Image.INTERPOLATE_LANCZOS)
 			unit_selected.set_item_icon(idx, ImageTexture.create_from_image(img))
 
+
 ## Compose a display line.
 static func _unit_line(u: UnitData) -> String:
 	return u.title
+
 
 ## Add by ItemList selection (pool -> selected).
 func _on_unit_add_pressed() -> void:
@@ -264,6 +267,7 @@ func _on_unit_add_pressed() -> void:
 			ids.append(String(md["id"]))
 	_add_units_by_ids(ids)
 
+
 ## Remove by ItemList selection (selected -> pool).
 func _on_unit_remove_pressed() -> void:
 	var items := unit_selected.get_selected_items()
@@ -276,6 +280,7 @@ func _on_unit_remove_pressed() -> void:
 			ids.append(String(md["id"]))
 	_remove_units_by_ids(ids)
 
+
 ## Drag & drop callback from UnitDDItemList.
 ## [param from_kind] UnitDDItemList.Kind
 ## [param to_kind] UnitDDItemList.Kind
@@ -284,10 +289,11 @@ func _on_unit_dropped(from_kind: int, to_kind: int, unit_id: String) -> void:
 		return
 	if from_kind == to_kind:
 		return
-	if to_kind == 1: # SELECTED
+	if to_kind == 1:  # SELECTED
 		_add_units_by_ids([unit_id])
-	else: # POOL
+	else:  # POOL
 		_remove_units_by_ids([unit_id])
+
 
 ## Append units by ids (dedup).
 func _add_units_by_ids(ids: Array[String]) -> void:
@@ -306,6 +312,7 @@ func _add_units_by_ids(ids: Array[String]) -> void:
 			need_refresh = true
 	if need_refresh:
 		_refresh_unit_lists()
+
 
 ## Remove units by ids.
 func _remove_units_by_ids(ids: Array[String]) -> void:

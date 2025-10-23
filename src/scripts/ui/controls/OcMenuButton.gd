@@ -4,34 +4,39 @@ extends Button
 
 @export_group("Noise Overlay")
 ## Enable/disable noise overlay
-@export_custom(PROPERTY_HINT_GROUP_ENABLE, "Enable/Disable noise overlay") \
+@export_custom(PROPERTY_HINT_GROUP_ENABLE, "Enable/Disable noise overlay")
 var noise_enabled: bool = true:
-	get: return _noise_enabled
+	get:
+		return _noise_enabled
 	set(value):
 		_noise_enabled = value
-		if is_inside_tree(): 
+		if is_inside_tree():
 			queue_redraw()
 
 @export var noise_opacity: float = 0.02:
-	get: return _noise_opacity
+	get:
+		return _noise_opacity
 	set(value):
 		_noise_opacity = clampf(value, 0.0, 1.0)
-		if is_inside_tree(): 
+		if is_inside_tree():
 			queue_redraw()
 
 @export var noise_grain: float = 1.0:
-	get: return _noise_grain
+	get:
+		return _noise_grain
 	set(value):
 		_noise_grain = max(1.0, value)
-		if is_inside_tree(): 
+		if is_inside_tree():
 			queue_redraw()
 
 @export var noise_seed: int = 0:
-	get: return _noise_seed
+	get:
+		return _noise_seed
 	set(value):
 		_noise_seed = value
 		_rebuild_noise_tex()
-		if is_inside_tree(): queue_redraw()
+		if is_inside_tree():
+			queue_redraw()
 
 var _noise_tex: ImageTexture
 var _noise_enabled := true
@@ -39,12 +44,15 @@ var _noise_opacity := 0.02
 var _noise_grain := 1.0
 var _noise_seed := 0
 
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		queue_redraw()
 
-func _draw(): 
+
+func _draw():
 	_draw_noise_overlay()
+
 
 func _rebuild_noise_tex():
 	if _noise_tex != null:
@@ -61,6 +69,7 @@ func _rebuild_noise_tex():
 			img.set_pixelv(Vector2i(x, y), Color8(v, 0, 0, 255))
 
 	_noise_tex = ImageTexture.create_from_image(img)
+
 
 func _draw_noise_overlay():
 	if not noise_enabled:

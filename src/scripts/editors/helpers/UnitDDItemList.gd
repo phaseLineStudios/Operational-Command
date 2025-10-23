@@ -14,9 +14,11 @@ enum Kind { POOL, SELECTED }
 
 var _dlg: Node
 
+
 func _ready() -> void:
 	if dialog_path != NodePath():
 		_dlg = get_node_or_null(dialog_path)
+
 
 ## Return drag payload when user drags a selected row.
 func _get_drag_data(_at_position: Vector2) -> Variant:
@@ -34,9 +36,11 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 
 	return {"type": "unit", "id": String(md["id"]), "from": int(kind)}
 
+
 ## Accept drops that are unit payloads.
 func _can_drop_data(_pos: Vector2, data: Variant) -> bool:
 	return typeof(data) == TYPE_DICTIONARY and data.get("type", "") == "unit"
+
 
 ## Notify dialog to move the unit.
 func _drop_data(_pos: Vector2, data: Variant) -> void:
