@@ -11,7 +11,6 @@ extends Node3D
 @onready var sim: SimWorld = %WorldController
 @onready var map: MapController = %MapController
 @onready var debug_overlay: Control = %DebugOverlay
-@onready var wordlist: SpeechWordlistUpdater = %WordListUpdater
 @onready var trigger_engine: TriggerEngine = %TriggerEngine
 
 
@@ -25,7 +24,6 @@ func _ready() -> void:
 	trigger_engine.bind_scenario(scenario)
 	sim.bind_radio(%RadioController, %OrdersParser)
 	sim.init_resolution(scenario.briefing.frag_objectives)
-	wordlist.bind_recognizer(STTService.get_recognizer())
 
 
 ## Build the list of playable units from scenario slots and current loadout.

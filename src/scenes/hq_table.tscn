@@ -1,4 +1,4 @@
-[gd_scene load_steps=59 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=58 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -16,7 +16,6 @@
 [ext_resource type="Script" uid="uid://dy2uex65i3y4m" path="res://scripts/sim/adapters/CombatAdapter.gd" id="9_vxnyp"]
 [ext_resource type="Script" uid="uid://dq8m3cwvv276y" path="res://scripts/sim/Combat.gd" id="10_of8da"]
 [ext_resource type="Script" uid="uid://ckdlg61462pgb" path="res://scripts/sim/OrdersRouter.gd" id="11_tixey"]
-[ext_resource type="Script" uid="uid://bct80my556v84" path="res://scripts/radio/WordListUpdater.gd" id="12_4otl8"]
 [ext_resource type="Script" uid="uid://c3rgrbya520ur" path="res://scripts/sim/systems/AmmoSystem.gd" id="12_lrkar"]
 [ext_resource type="Script" uid="uid://c5dqpttm5xyed" path="res://scripts/sim/LOS.gd" id="13_qgda6"]
 [ext_resource type="Script" uid="uid://cw4tt3twmh4gk" path="res://scripts/sim/adapters/LOSAdapter.gd" id="14_415kk"]
@@ -446,12 +445,6 @@ los_adapter = NodePath("../../LOSController/LOSAdapter")
 combat_controller = NodePath("../../CombatController")
 terrain_renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
 metadata/_custom_type_script = "uid://ckdlg61462pgb"
-
-[node name="WordListUpdater" type="Node" parent="Controllers/RadioController" node_paths=PackedStringArray("sim", "terrain_renderer")]
-unique_name_in_owner = true
-script = ExtResource("12_4otl8")
-sim = NodePath("../../WorldController")
-terrain_renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
 
 [node name="WorldController" type="Node" parent="Controllers" node_paths=PackedStringArray("los_adapter", "movement_adapter", "combat_controller", "trigger_engine", "_router")]
 unique_name_in_owner = true

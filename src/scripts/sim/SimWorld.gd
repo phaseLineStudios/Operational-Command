@@ -471,22 +471,21 @@ func _v3_from_m(p_m: Vector2) -> Vector3:
 	return Vector3(p_m.x, 0.0, p_m.y)
 
 
-## Initialize custom commands from scenario into parser and STT grammar.
-## Registers each [CustomCommand] in [member ScenarioData.custom_commands] with:
-## [br]1. [OrdersParser] via [method OrdersParser.register_custom_command]
-## [br]2. [NARules] via [method NARules.set_mission_overrides] for STT grammar
+## Initialize mission-specific voice grammar with STT and OrdersParser.
+## [br][br]
+## Collects and registers:
+## [br]1. Custom commands from [member ScenarioData.custom_commands]
+## [br]2. Unit callsigns from scenario units
+## [br]3. Terrain labels from [member TerrainData.labels]
+## [br][br]
+## Updates:
+## [br]- [OrdersParser] via [method OrdersParser.register_custom_command]
+## [br]- [NARules] via [method NARules.set_mission_overrides]
+## [br]- [STTService] via [method STTService.update_wordlist] with all collected words
 ## [br][br]
 ## [b]Called automatically by [method init_world] during mission initialization.[/b]
-## [br][br]
-## Custom commands can either:
-## [br]- Generate CUSTOM orders that route through [OrdersRouter] ([member CustomCommand.route_as_order])
-## [br]- Activate triggers directly via [member CustomCommand.trigger_id]
-## [br]- Both
-## [param scenario] Scenario with [member ScenarioData.custom_commands] array.
+## [param scenario] Scenario with units, terrain, and custom commands.
 func _init_custom_commands(scenario: ScenarioData) -> void:
-	if scenario.custom_commands.is_empty():
-		return
-
 	# Get parser reference (via router's export or find in tree)
 	var parser: OrdersParser = null
 	if _router.get_parent():
@@ -495,7 +494,7 @@ func _init_custom_commands(scenario: ScenarioData) -> void:
 				parser = child
 				break
 
-	# Collect all custom keywords and extra grammar
+	# Collect custom command keywords and extra grammar
 	var custom_actions: Dictionary = {}
 	var extra_words: Array[String] = []
 
@@ -518,10 +517,29 @@ func _init_custom_commands(scenario: ScenarioData) -> void:
 	if not custom_actions.is_empty() or not extra_words.is_empty():
 		NARules.set_mission_overrides(custom_actions, extra_words)
 
-		# Update STT recognizer with new grammar (includes custom command keywords and additional_grammar)
-		STTService.update_wordlist()
+	# Collect unit callsigns
+	var callsigns: Array[String] = []
+	for su in scenario.units:
+		if su != null and su.callsign != "":
+			callsigns.append(su.callsign)
+	for su in scenario.playable_units:
+		if su != null and su.callsign != "":
+			callsigns.append(su.callsign)
 
-		LogService.info("Initialized %d custom commands for mission" % scenario.custom_commands.size(), "SimWorld.gd")
+	# Collect terrain labels
+	var labels: Array[String] = []
+	if scenario.terrain and scenario.terrain.labels:
+		for label in scenario.terrain.labels:
+			var txt := str(label.get("text", "")).strip_edges()
+			if txt != "":
+				labels.append(txt)
+
+	# Update STT recognizer with complete mission grammar
+	# Includes: base grammar, custom commands, callsigns, and terrain labels
+	STTService.update_wordlist(callsigns, labels)
+
+	LogService.info("Updated STT grammar: %d custom commands, %d callsigns, %d labels" %
+		[scenario.custom_commands.size(), callsigns.size(), labels.size()], "SimWorld.gd")
 
 
 ## Handle radio commands and auto-activate triggers for matching custom commands.
