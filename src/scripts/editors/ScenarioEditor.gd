@@ -121,6 +121,7 @@ var _dirty := false
 
 @onready var draw_toolbar_freehand: Button = %BtnFreehand
 @onready var draw_toolbar_stamp: Button = %BtnStamp
+@onready var draw_toolbar_eraser: Button = %BtnEraser
 @onready var fh_settings: GridContainer = %FHSettings
 @onready var fh_color: ColorPickerButton = %FHColor
 @onready var fh_width: SpinBox = %FHWidth
@@ -206,6 +207,7 @@ func _ready():
 
 	draw_toolbar_freehand.pressed.connect(_on_draw_click_freehand)
 	draw_toolbar_stamp.pressed.connect(_on_draw_click_stamp)
+	draw_toolbar_eraser.pressed.connect(_on_draw_click_eraser)
 
 	fh_color.color_changed.connect(func(_c): _sync_freehand_opts())
 	fh_width.value_changed.connect(func(_v): _sync_freehand_opts())
@@ -414,6 +416,10 @@ func _set_tool(tool: ScenarioToolBase) -> void:
 func _clear_tool() -> void:
 	LogService.trace("clear tool", "ScenarioEditor.gd:280")
 	_set_tool(null)
+	# Clear all draw tool button states
+	draw_toolbar_freehand.set_pressed_no_signal(false)
+	draw_toolbar_stamp.set_pressed_no_signal(false)
+	draw_toolbar_eraser.set_pressed_no_signal(false)
 
 
 ## Remove all hint widgets from the hint bar
@@ -738,13 +744,25 @@ func _build_stamp_pool() -> void:
 
 ## Start freehand tool with current UI values.
 func _on_draw_click_freehand() -> void:
+	# If button is being toggled off, clear the tool
+	if not draw_toolbar_freehand.button_pressed:
+		_clear_tool()
+		fh_settings.visible = false
+		return
+
+	# Deactivate other tool buttons
+	draw_toolbar_stamp.set_pressed_no_signal(false)
+	draw_toolbar_eraser.set_pressed_no_signal(false)
+
+	# Show freehand settings, hide others
 	fh_settings.visible = true
 	st_settings.visible = false
 	st_label.visible = false
 	st_seperator.visible = false
 	st_list.visible = false
 	st_load_btn.visible = false
-	draw_toolbar_stamp.set_pressed_no_signal(false)
+
+	# Create and activate freehand tool
 	var tool := DrawFreehandTool.new()
 	tool.color = fh_color.color
 	tool.width_px = fh_width.value
@@ -754,25 +772,63 @@ func _on_draw_click_freehand() -> void:
 
 ## Start stamp tool with current UI + selected texture.
 func _on_draw_click_stamp() -> void:
+	# If button is being toggled off, clear the tool
+	if not draw_toolbar_stamp.button_pressed:
+		_clear_tool()
+		st_settings.visible = false
+		st_label.visible = false
+		st_seperator.visible = false
+		st_list.visible = false
+		st_load_btn.visible = false
+		return
+
+	# Deactivate other tool buttons
+	draw_toolbar_freehand.set_pressed_no_signal(false)
+	draw_toolbar_eraser.set_pressed_no_signal(false)
+
+	# Show stamp settings, hide others
 	fh_settings.visible = false
 	st_settings.visible = true
 	st_seperator.visible = true
 	st_label.visible = true
 	st_load_btn.visible = true
 	st_list.visible = true
-	draw_toolbar_freehand.set_pressed_no_signal(false)
+
+	# Try to activate tool if texture is selected, otherwise just show UI
 	var sel := st_list.get_selected_items()
-	if sel.is_empty():
-		ctx.toast("Pick a texture first.")
+	if not sel.is_empty():
+		var idx := sel[0]
+		var tool := DrawTextureTool.new()
+		tool.texture_path = String(st_list.get_item_metadata(idx).get("path", ""))
+		tool.texture = load(tool.texture_path)
+		tool.color = st_color.color
+		tool.scale = st_scale.value
+		tool.rotation_deg = st_rotation.value
+		tool.opacity = st_opacity.value
+		_set_tool(tool)
+
+
+## Start eraser tool.
+func _on_draw_click_eraser() -> void:
+	# If button is being toggled off, clear the tool
+	if not draw_toolbar_eraser.button_pressed:
+		_clear_tool()
 		return
-	var idx := sel[0]
-	var tool := DrawTextureTool.new()
-	tool.texture_path = String(st_list.get_item_metadata(idx).get("path", ""))
-	tool.texture = load(tool.texture_path)
-	tool.color = st_color.color
-	tool.scale = st_scale.value
-	tool.rotation_deg = st_rotation.value
-	tool.opacity = st_opacity.value
+
+	# Deactivate other tool buttons
+	draw_toolbar_freehand.set_pressed_no_signal(false)
+	draw_toolbar_stamp.set_pressed_no_signal(false)
+
+	# Hide all settings
+	fh_settings.visible = false
+	st_settings.visible = false
+	st_label.visible = false
+	st_seperator.visible = false
+	st_list.visible = false
+	st_load_btn.visible = false
+
+	# Create and activate eraser tool
+	var tool := DrawEraserTool.new()
 	_set_tool(tool)
 
 
@@ -805,11 +861,22 @@ func _sync_stamp_opts() -> void:
 ## Handle stamp selection change.
 ## @param idx Item index.
 func _on_stamp_selected(idx: int) -> void:
+	# If tool is already active, just update the texture
 	if ctx.current_tool and ctx.current_tool is DrawTextureTool:
 		var p := String(st_list.get_item_metadata(idx).get("path", ""))
 		ctx.current_tool.texture_path = p
 		ctx.current_tool.texture = load(p)
 		ctx.request_overlay_redraw()
+	# If stamp button is pressed but tool not active, activate it now
+	elif draw_toolbar_stamp.button_pressed:
+		var tool := DrawTextureTool.new()
+		tool.texture_path = String(st_list.get_item_metadata(idx).get("path", ""))
+		tool.texture = load(tool.texture_path)
+		tool.color = st_color.color
+		tool.scale = st_scale.value
+		tool.rotation_deg = st_rotation.value
+		tool.opacity = st_opacity.value
+		_set_tool(tool)
 
 
 ## Load a texture from disk into pool.

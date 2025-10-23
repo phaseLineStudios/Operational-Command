@@ -106,4 +106,5 @@ func _commit_if_valid() -> void:
 	if editor.ctx.data.drawings == null:
 		editor.ctx.data.drawings = []
 	editor.history.push_res_insert(editor.ctx.data, "drawings", "id", st, "Draw Stroke")
+	_points_m.clear()  # Clear preview points after commit so undo works correctly
 	editor.ctx.request_overlay_redraw()
