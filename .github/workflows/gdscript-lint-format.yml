@@ -35,18 +35,18 @@ jobs:
 
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
-      
-      # Get gdformat diff
-      - name: gdformat --diff
-        continue-on-error: true
-        run: |
-          gdformat --diff --line-length 100 ./src/
 
       - name: gdformat --check
         env:
           PYTHONUNBUFFERED: "1"
         run: |
           python tools/gdtoolkit_run.py --format-only --check --line-length 100 --color=always ./src/
+
+      # Get gdformat diff
+      - name: gdformat --diff
+        continue-on-error: true
+        run: |
+          gdformat --diff --line-length 100 ./src/
 
   lint:
     name: Lint
