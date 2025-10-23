@@ -19,7 +19,7 @@ if __package__ in (None, ""):
 from tools import scene_linter
 
 PKG = "gdtoolkit"   # package name
-SPEC = "==4.*"      # version specifier
+SPEC = "==4.5.0"      # version specifier
 
 # Error patterns from godot
 ERROR_PATTERNS = (
@@ -241,7 +241,8 @@ def _run_format(color: bool, paths: list[str], check: bool, line_length: int) ->
     cmd = ["gdformat"]
     if check:
         cmd.append("--check")
-    cmd += ["--diff", "--line-length", str(line_length), *paths]
+        cmd.append("--diff")
+    cmd += ["--line-length", str(line_length), *paths]
     return _run(color, "gdformat", cmd)
 
 def _run_lint(color: bool, paths: list[str]) -> int:

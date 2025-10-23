@@ -217,7 +217,7 @@ func _read_number(tokens: PackedStringArray, idx: int, number_words: Dictionary)
 		return nil
 
 	if _is_int_literal(tokens[idx]):
-		@warning_ignore("confusable_local_declaration") 
+		@warning_ignore("confusable_local_declaration")
 		var j := idx
 		var digits := ""
 		while j < tokens.size() and _is_int_literal(tokens[j]):
