@@ -15,6 +15,8 @@ signal scenario_selected(mission_id: StringName)
 signal scenario_loadout_selected(loadout: Dictionary)
 
 @export var debug_display_scene: PackedScene = preload("res://scenes/system/debug_display.tscn")
+## Personnel replacements available for pre-mission reinforcement
+@export var campaign_replacement_pool: int = 0
 var debug_display: CanvasLayer
 
 var current_campaign: CampaignData
@@ -22,9 +24,6 @@ var current_save_id: StringName = &""
 var current_scenario: ScenarioData
 var current_scenario_loadout: Dictionary = {}
 var current_scenario_summary: Dictionary = {}
-
-## Personnel replacements available for pre-mission reinforcement
-@export var campaign_replacement_pool: int = 0
 
 @onready var resolution: MissionResolution = MissionResolution.new()
 
