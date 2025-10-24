@@ -7,7 +7,7 @@ extends Control
 
 signal unit_strength_changed(unit_id: String, current: int, status: String)
 
-@onready var _list: ItemList = %UnitList
+@onready var _list_box: VBoxContainer = %UnitListBox
 @onready var _panel: ReinforcementPanel = %ReinforcementPanel
 @onready var _btn_refresh: Button = $"Root/Left/Buttons/RefreshBtn"
 
@@ -25,14 +25,23 @@ func _ready() -> void:
 func _refresh_from_game() -> void:
 	_units = _collect_units_from_game()
 	_uid_to_index.clear()
-	_list.clear()
-	for i in _units.size():
-		var u := _units[i]
-		_uid_to_index[u.id] = i
-		var cur: int = int(round(u.state_strength))
-		var cap: int = int(max(1, u.strength))
-		var pct := int(round((float(cur) / float(cap)) * 100.0)) if cap > 0 else 0
-		_list.add_item("%s  (%d/%d, %d%%)" % [u.title, cur, cap, pct])
+	# rebuild list with badges
+	for c in _list_box.get_children():
+		c.queue_free()
+
+	for u in _units:
+		var row := HBoxContainer.new()
+		_list_box.add_child(row)
+
+		var title := Label.new()
+		title.text = u.title
+		row.add_child(title)
+
+		var badge := UnitStrengthBadge.new()
+		badge.set_unit(u, _panel.understrength_threshold)
+		row.add_child(badge)
+
+	# keep panel updated
 	_panel.set_units(_units)
 	_panel.set_pool(_get_pool())
 
