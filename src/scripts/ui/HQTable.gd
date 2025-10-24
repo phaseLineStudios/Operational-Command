@@ -15,13 +15,19 @@ extends Node3D
 @onready var camera: Camera3D = %CameraController/CameraBounds/Camera
 @onready var radio_subtitles: Control = %RadioSubtitles
 @onready var radio: Radio = %RadioController
+@onready var loading_screen: Control = %LoadingScreen
 
 
 ## Initialize mission systems and bind services.
 func _ready() -> void:
+	# Show loading screen and wait one frame for it to render
+	loading_screen.show_loading(Game.current_scenario, "Initializing mission...")
+	await get_tree().process_frame
+
 	var scenario = Game.current_scenario
 	var playable_units := generate_playable_units(scenario.unit_slots)
 	scenario.playable_units = playable_units
+
 	map.init_terrain(scenario)
 	trigger_engine.bind_scenario(scenario)
 	sim.init_world(scenario)
@@ -36,6 +42,9 @@ func _ready() -> void:
 
 	# Pass terrain labels and unit callsigns to subtitle system
 	_update_subtitle_suggestions(scenario)
+
+	# All initialization complete - hide loading screen
+	loading_screen.hide_loading()
 
 
 ## Build the list of playable units from scenario slots and current loadout.

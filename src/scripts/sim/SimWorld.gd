@@ -460,10 +460,10 @@ func _snapshot_unit(su: ScenarioUnit) -> Dictionary:
 func _transition(prev: State, next: State) -> void:
 	_state = next
 	emit_signal("mission_state_changed", prev, next)
-	LogService.info("mission_state_changed: %s" % {
-		"prev": State.keys()[prev],
-		"next": State.keys()[next]
-	}, "SimWorld.gd:285")
+	LogService.info(
+		"mission_state_changed: %s" % {"prev": State.keys()[prev], "next": State.keys()[next]},
+		"SimWorld.gd:285"
+	)
 
 
 ## Planned path for a unit (for debug).
