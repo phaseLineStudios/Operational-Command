@@ -450,7 +450,7 @@ func _read_number_sequence(tokens: Array, idx: int, number_words: Dictionary) ->
 	var vals: Array = []
 	var j := idx
 	while j < tokens.size():
-		var t: String= tokens[j]
+		var t: String = tokens[j]
 		if not number_words.has(t):
 			break
 		vals.append(int(number_words[t]))

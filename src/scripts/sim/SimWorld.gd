@@ -131,7 +131,8 @@ func init_world(scenario: ScenarioData) -> void:
 	# Initialize custom commands for this mission
 	_init_custom_commands(scenario)
 
-	_transition(State.INIT, State.RUNNING)
+	# Start paused so player can review before beginning
+	_transition(State.INIT, State.PAUSED)
 
 
 ## Initialize mission resolution and connect state changes.
@@ -459,7 +460,10 @@ func _snapshot_unit(su: ScenarioUnit) -> Dictionary:
 func _transition(prev: State, next: State) -> void:
 	_state = next
 	emit_signal("mission_state_changed", prev, next)
-	LogService.info("mission_state_changed: %s" % {"prev": prev, "next": next}, "SimWorld.gd:285")
+	LogService.info("mission_state_changed: %s" % {
+		"prev": State.keys()[prev],
+		"next": State.keys()[next]
+	}, "SimWorld.gd:285")
 
 
 ## Planned path for a unit (for debug).
