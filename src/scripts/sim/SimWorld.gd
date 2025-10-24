@@ -77,3 +77,34 @@ func filter_spawnable(units: Array) -> Array:
 		if su is ScenarioUnit and su.unit and should_spawn_unit(su.unit):
 			out.append(su)
 	return out
+
+## Spawn ScenarioUnits into the sim; skips wiped-out and forwards strength_factor.
+func spawn_scenario_units(scenario) -> void:
+	if scenario == null:
+		return
+
+	# Use instance methods here (not SimWorld.*)
+	var spawn_list: Array = filter_spawnable(scenario.units)
+
+	for su in spawn_list:
+		if su == null or su.unit == null or su.packed_scene == null:
+			continue
+
+		var u: UnitData = su.unit
+		var f: float = compute_strength_factor(u)  # 0..1, 0 if wiped out
+
+		var inst: Node = su.packed_scene.instantiate()
+		add_child(inst)
+
+		# Forward strength into the instance
+		if inst.has_method("apply_strength_factor"):
+			inst.apply_strength_factor(f)
+		elif inst.has_variable("strength_factor"):
+			inst.strength_factor = f
+
+		# (Optional) scale counts if your unit scene supports it
+		if inst.has_variable("base_count") and inst.has_variable("count"):
+			if f <= 0.0:
+				inst.count = 0
+			else:
+				inst.count = max(1, int(round(inst.base_count * f)))

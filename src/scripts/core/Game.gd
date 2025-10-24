@@ -77,6 +77,10 @@ func start_scenario(prim: Array[StringName]) -> void:
 		return
 	resolution.start(prim, current_scenario.id)
 
+	# Try to find the SimWorld in the current scene tree and spawn
+	var sim := get_tree().get_root().find_child("SimWorld", true, false)
+	if sim and sim.has_method("spawn_scenario_units"):
+		sim.spawn_scenario_units(current_scenario)
 
 ## Call from mission tick.
 func update_loop(dt: float) -> void:
@@ -107,6 +111,23 @@ func record_unit_lost(count: int = 1) -> void:
 ## End mission and navigate to debrief
 func end_scenario_and_go_to_debrief() -> void:
 	current_scenario_summary = resolution.finalize(false)
+
+	# If you have a per-unit losses map, apply it now
+	var losses: Dictionary = {}
+	# Preferred: pull from your sim/resolution if you track it
+	# e.g. losses = resolution.get_losses_by_unit_id()  # { "ALPHA": 3, ... }
+	# Or if finalize() summary contains it, use that:
+	if current_scenario_summary.has("losses_by_unit"):
+		losses = current_scenario_summary["losses_by_unit"]
+
+	if not losses.is_empty():
+		# Apply to campaign units so UnitMgmt reflects new strengths
+		resolution.apply_casualties_to_units(Game.current_scenario.units, losses)
+
+	# Persist (added later)
+	if has_method("save_campaign_state"):
+		save_campaign_state()
+
 	goto_scene("res://scenes/debrief.tscn")
 
 
@@ -133,3 +154,7 @@ func get_current_units() -> Array:
 				if u:
 					out.append(u)
 	return out
+
+func save_campaign_state() -> void:
+	# TODO: implement persistence
+	pass
