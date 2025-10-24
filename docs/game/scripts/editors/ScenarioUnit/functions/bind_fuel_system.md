@@ -1,6 +1,6 @@
 # ScenarioUnit::bind_fuel_system Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 58–61)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 72–75)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**

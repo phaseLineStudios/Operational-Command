@@ -2,3 +2,7 @@
 	path = dependencies/vosk_gd/godot-cpp
 	url = https://github.com/godotengine/godot-cpp
 	branch = 4.4
+[submodule "dependencies/piper_gd/godot-cpp"]
+	path = dependencies/piper_gd/godot-cpp
+	url = https://github.com/godotengine/godot-cpp
+	branch = 4.5

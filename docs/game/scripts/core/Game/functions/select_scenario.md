@@ -23,4 +23,4 @@ func select_scenario(scenario: ScenarioData) -> void:
 
 ## References
 
-- [`signal mission_selected`](..\..\Game.md)
+- [`signal mission_selected`](../../Game.md)

@@ -1,6 +1,6 @@
 # ScenarioUnit::cancel_move Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 127–133)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 141–147)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**

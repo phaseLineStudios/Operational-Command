@@ -1,0 +1,23 @@
+[configuration]
+entry_symbol = "piper_gd_library_init"
+compatibility_minimum = 4.4
+
+[libraries]
+macos.editor = "res://addons/piper_gd/piper_gd.macos.editor.framework"
+macos.debug = "res://addons/piper_gd/piper_gd.macos.template_debug.framework"
+macos.release = "res://addons/piper_gd/piper_gd.macos.template_release.framework"
+windows.editor.x86_32 = "res://addons/piper_gd/piper_gd.windows.editor.x86_32.dll"
+windows.debug.x86_32 = "res://addons/piper_gd/piper_gd.windows.template_debug.x86_32.dll"
+windows.release.x86_32 = "res://addons/piper_gd/piper_gd.windows.template_release.x86_32.dll"
+windows.editor.x86_64 = "res://addons/piper_gd/piper_gd.windows.editor.x86_64.dll"
+windows.debug.x86_64 = "res://addons/piper_gd/piper_gd.windows.template_debug.x86_64.dll"
+windows.release.x86_64 = "res://addons/piper_gd/piper_gd.windows.template_release.x86_64.dll"
+linux.editor.x86_64 = "res://addons/piper_gd/piper_gd.linux.editor.x86_64.so"
+linux.debug.x86_64 = "res://addons/piper_gd/piper_gd.linux.template_debug.x86_64.so"
+linux.release.x86_64 = "res://addons/piper_gd/piper_gd.linux.template_release.x86_64.so"
+linux.editor.arm64 = "res://addons/piper_gd/piper_gd.linux.editor.arm64.so"
+linux.debug.arm64 = "res://addons/piper_gd/piper_gd.linux.template_debug.arm64.so"
+linux.release.arm64 = "res://addons/piper_gd/piper_gd.linux.template_release.arm64.so"
+linux.editor.rv64 = "res://addons/piper_gd/piper_gd.linux.editor.rv64.so"
+linux.debug.rv64 = "res://addons/piper_gd/piper_gd.linux.template_debug.rv64.so"
+linux.release.rv64 = "res://addons/piper_gd/piper_gd.linux.template_release.rv64.so"

@@ -1,6 +1,6 @@
 # ScenarioUnit::tick Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 135–171)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 149–187)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**
@@ -17,6 +17,8 @@ Advance movement by dt seconds on PathGrid (virtual position only).
 
 ```gdscript
 func tick(dt: float, grid: PathGrid) -> void:
+	if _morale_sys:
+		_morale_sys.tick(dt)
 	if _move_state != MoveState.MOVING or _move_paused or _move_path.is_empty():
 		return
 

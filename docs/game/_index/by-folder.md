@@ -43,7 +43,7 @@
 - [ScenarioEditorOverlay](../scripts/editors/ScenarioEditorOverlay.md) — 36 funcs · 21 vars · 0 signals · 0 consts · 0 enums — *inherits* `Control`
 - [ScenarioHistory](../scripts/editors/ScenarioHistory.md) — 11 funcs · 6 vars · 1 signals · 0 consts · 0 enums — *inherits* `Node`
 - [ScenarioTask](../scripts/editors/ScenarioTask.md) — 4 funcs · 7 vars · 0 signals · 0 consts · 0 enums — *inherits* `Resource`
-- [ScenarioUnit](../scripts/editors/ScenarioUnit.md) — 16 funcs · 11 vars · 7 signals · 0 consts · 4 enums — *inherits* `Resource`
+- [ScenarioUnit](../scripts/editors/ScenarioUnit.md) — 19 funcs · 13 vars · 7 signals · 0 consts · 4 enums — *inherits* `Resource`
 - [ScenarioWeatherDialog](../scripts/editors/ScenarioWeatherDialog.md) — 4 funcs · 7 vars · 0 signals · 0 consts · 0 enums — *inherits* `Window`
 - [SlotConfigDialog](../scripts/editors/SlotConfigDialog.md) — 7 funcs · 10 vars · 0 signals · 0 consts · 0 enums — *inherits* `Window`
 - [TaskConfigDialog](../scripts/editors/TaskConfigDialog.md) — 4 funcs · 6 vars · 1 signals · 0 consts · 0 enums — *inherits* `Window`
@@ -66,6 +66,7 @@
 - [CombatAdapter](../scripts/sim/CombatAdapter.md) — 4 funcs · 2 vars · 1 signals · 0 consts · 0 enums — *inherits* `Node`
 - [CombatController](../scripts/sim/CombatController.md) — 10 funcs · 17 vars · 5 signals · 0 consts · 0 enums — *inherits* `Node`
 - [LOS](../scripts/sim/LOS.md) — 0 funcs · 2 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
+- [MoraleSystem](../scripts/sim/MoraleSystem.md) — 10 funcs · 5 vars · 2 signals · 0 consts · 1 enums — *inherits* `RefCounted`
 - [SimWorld](../scripts/sim/SimWorld.md) — 3 funcs · 3 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 - [TerrainEffects](../scripts/sim/TerrainEffects.md) — 7 funcs · 13 vars · 0 signals · 0 consts · 0 enums — *inherits* `RefCounted`
 - [TerrainEffectsConfig](../scripts/sim/TerrainEffectsConfig.md) — 0 funcs · 13 vars · 0 signals · 0 consts · 0 enums — *inherits* `Resource`
