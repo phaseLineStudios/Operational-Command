@@ -82,6 +82,7 @@ func start_scenario(prim: Array[StringName]) -> void:
 	if sim and sim.has_method("spawn_scenario_units"):
 		sim.spawn_scenario_units(current_scenario)
 
+
 ## Call from mission tick.
 func update_loop(dt: float) -> void:
 	if is_instance_valid(resolution):
@@ -154,6 +155,7 @@ func get_current_units() -> Array:
 				if u:
 					out.append(u)
 	return out
+
 
 func save_campaign_state() -> void:
 	# TODO: implement persistence

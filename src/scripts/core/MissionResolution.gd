@@ -37,6 +37,7 @@ var _is_final: bool = false
 
 var _losses_by_unit: Dictionary = {}  # { id: lost }
 
+
 ## Initialize for a mission.
 func start(prim: Array[StringName], scenario: StringName = &"") -> void:
 	_reset()
@@ -187,6 +188,7 @@ func _score_breakdown() -> Dictionary:
 		int(floor((_elapsed_s / 60.0) * score_time_penalty_per_min)),
 	}
 
+
 ## Apply per-unit casualties to UnitData.state_strength.
 ## `losses` is { unit_id: lost_personnel }.
 ## This mutates the UnitData instances passed in.
@@ -203,9 +205,9 @@ func apply_casualties_to_units(units: Array, losses: Dictionary) -> void:
 		if target == null:
 			continue
 		var before := int(round(target.state_strength))
-		var after : float = max(0, before - max(0, loss))
+		var after: float = max(0, before - max(0, loss))
 		target.state_strength = float(after)
-		
-		
+
+
 func add_unit_losses(uid: String, lost: int) -> void:
 	_losses_by_unit[uid] = max(0, int(_losses_by_unit.get(uid, 0)) + max(0, lost))

@@ -21,6 +21,7 @@ var _rows: Dictionary[String, RowWidgets] = {}
 @onready var _btn_commit: Button = %CommitBtn
 @onready var _btn_reset: Button = %ResetBtn
 
+
 class RowWidgets:
 	var box: HBoxContainer
 	var title: Label
@@ -33,12 +34,25 @@ class RowWidgets:
 	var base_title: String
 
 	func _init(
-		b: HBoxContainer, t: Label, badge_n: UnitStrengthBadge,
-		m: Button, v: Label, p: Button, s: HSlider, ml: Label
+		b: HBoxContainer,
+		t: Label,
+		badge_n: UnitStrengthBadge,
+		m: Button,
+		v: Label,
+		p: Button,
+		s: HSlider,
+		ml: Label
 	) -> void:
-		box = b; title = t; badge = badge_n; minus = m
-		value = v; plus = p; slider = s; max_lbl = ml
+		box = b
+		title = t
+		badge = badge_n
+		minus = m
+		value = v
+		plus = p
+		slider = s
+		max_lbl = ml
 		base_title = ""
+
 
 func _ready() -> void:
 	if _btn_commit:
@@ -47,6 +61,7 @@ func _ready() -> void:
 		_btn_reset.pressed.connect(reset_pending)
 	_update_pool_labels()
 	_update_commit_enabled()
+
 
 ## Provide the list of units to display. Rebuild rows and clear any plan.
 func set_units(units: Array[UnitData]) -> void:
@@ -61,6 +76,7 @@ func set_units(units: Array[UnitData]) -> void:
 	_update_pool_labels()
 	_update_commit_enabled()
 
+
 ## Set available replacements in the pool and refresh UI.
 func set_pool(amount: int) -> void:
 	_pool_total = max(0, amount)
@@ -70,6 +86,7 @@ func set_pool(amount: int) -> void:
 		call_deferred("_update_pool_labels")
 	_update_all_rows_state()
 	_update_commit_enabled()
+
 
 ## Clear the pending plan back to zero for all units.
 func reset_pending() -> void:
@@ -81,6 +98,7 @@ func reset_pending() -> void:
 	_update_pool_labels()
 	_update_commit_enabled()
 
+
 ## Emit the current plan to the owner. Does not mutate UnitData here.
 func commit() -> void:
 	var plan: Dictionary[String, int] = _pending.duplicate(true)
@@ -90,6 +108,7 @@ func commit() -> void:
 		if u == null or u.state_strength <= 0.0 or int(plan[uid]) <= 0:
 			plan.erase(uid)
 	emit_signal("reinforcement_committed", plan)
+
 
 ## Create row widgets for current units.
 func _build_rows() -> void:
@@ -105,13 +124,17 @@ func _build_rows() -> void:
 
 		var title := Label.new()
 		title.custom_minimum_size = Vector2(row_label_min_w, 0.0)
-		var base_title := (u.title if u.title != "" else uid)
+		var base_title := u.title if u.title != "" else uid
 		title.text = base_title
 		row.add_child(title)
 
 		var badge := UnitStrengthBadge.new()
 		badge.custom_minimum_size = Vector2(60, 0)
-		var thr := (u.understrength_threshold if u.understrength_threshold > 0.0 else understrength_threshold)
+		var thr := (
+			u.understrength_threshold
+			if u.understrength_threshold > 0.0
+			else understrength_threshold
+		)
 		badge.set_unit(u, thr)
 		row.add_child(badge)
 
@@ -119,7 +142,8 @@ func _build_rows() -> void:
 		spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(spacer)
 
-		var minus := Button.new(); minus.text = "-"
+		var minus := Button.new()
+		minus.text = "-"
 		row.add_child(minus)
 
 		var val := Label.new()
@@ -128,7 +152,8 @@ func _build_rows() -> void:
 		val.text = str(int(_pending.get(uid, 0)))
 		row.add_child(val)
 
-		var plus := Button.new(); plus.text = "+"
+		var plus := Button.new()
+		plus.text = "+"
 		row.add_child(plus)
 
 		var slider := HSlider.new()
@@ -153,11 +178,13 @@ func _build_rows() -> void:
 
 	_update_all_rows_state()
 
+
 ## Enable/disable row interactivity.
 func _disable_row(w: RowWidgets, disabled: bool) -> void:
 	w.minus.disabled = disabled
 	w.plus.disabled = disabled
 	w.slider.editable = not disabled
+
 
 ## Refresh values, slider ranges, title/colour, and badge for all rows.
 func _update_all_rows_state() -> void:
@@ -189,10 +216,15 @@ func _update_all_rows_state() -> void:
 				w.title.remove_theme_color_override("font_color")
 
 		# Badge reflects current state
-		var thr := (u.understrength_threshold if u.understrength_threshold > 0.0 else understrength_threshold)
+		var thr := (
+			u.understrength_threshold
+			if u.understrength_threshold > 0.0
+			else understrength_threshold
+		)
 		w.badge.set_unit(u, thr)
 
 	_update_pool_labels()
+
 
 ## Update the pool label.
 func _update_pool_labels() -> void:
@@ -200,10 +232,12 @@ func _update_pool_labels() -> void:
 	if _lbl_pool:
 		_lbl_pool.text = t
 
+
 ## Enable Commit button only when there is any planned change.
 func _update_commit_enabled() -> void:
 	if _btn_commit:
 		_btn_commit.disabled = (_pending_sum() <= 0)
+
 
 ## Sum of all pending allocations.
 func _pending_sum() -> int:
@@ -212,10 +246,12 @@ func _pending_sum() -> int:
 		t += int(v)
 	return t
 
+
 ## Change planned amount by a delta.
 func _nudge(uid: String, delta: int) -> void:
 	var target: int = int(_pending.get(uid, 0)) + delta
 	_set_amount(uid, target)
+
 
 ## Set planned amount for a unit (clamped to capacity and pool).
 func _set_amount(uid: String, target: int) -> void:
@@ -235,9 +271,11 @@ func _set_amount(uid: String, target: int) -> void:
 	_update_all_rows_state()
 	_update_commit_enabled()
 
+
 ## Emit preview signal.
 func _emit_preview(uid: String, amt: int) -> void:
 	emit_signal("reinforcement_preview_changed", uid, amt)
+
 
 ## Find a UnitData by id.
 func _find_unit(uid: String) -> UnitData:
@@ -245,6 +283,7 @@ func _find_unit(uid: String) -> UnitData:
 		if u != null and u.id == uid:
 			return u
 	return null
+
 
 ## Clear all children from a container.
 func _clear_children(n: Node) -> void:

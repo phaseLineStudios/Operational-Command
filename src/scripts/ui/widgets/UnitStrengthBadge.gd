@@ -7,6 +7,7 @@ extends HBoxContainer
 var _percent_lbl: Label = null
 var _status_rect: ColorRect = null
 
+
 ## Create child UI nodes if needed. Safe to call before _ready().
 func _ensure_ui() -> void:
 	if _status_rect == null:
@@ -20,9 +21,11 @@ func _ensure_ui() -> void:
 		add_child(_percent_lbl)
 	add_theme_constant_override("separation", 4)
 
+
 ## Called when the node enters the scene tree.
 func _ready() -> void:
 	_ensure_ui()
+
 
 ## Update the badge from a UnitData. Creates UI if called before _ready().
 func set_unit(u: UnitData, threshold: float = -1.0) -> void:

@@ -10,14 +10,15 @@ extends Node2D
 const PANEL_SCENE: PackedScene = preload("res://scenes/ui/unit_mgmt/reinforcement_panel.tscn")
 
 const START_POOL := 10
-const AUTO_APPLY := false          # auto-apply the sample plan at startup
-const RUN_SPAWN_TEST := true       # exercise SimWorld.spawn_scenario_units()
-const RUN_CASUALTY_TEST := true    # exercise MissionResolution.apply_casualties_to_units()
+const AUTO_APPLY := false  # auto-apply the sample plan at startup
+const RUN_SPAWN_TEST := true  # exercise SimWorld.spawn_scenario_units()
+const RUN_CASUALTY_TEST := true  # exercise MissionResolution.apply_casualties_to_units()
 
 var _units: Array[UnitData] = []
 var _panel: ReinforcementPanel
 var _pool: int = START_POOL
 var _baseline_strengths: Dictionary = {}  # { unit_id: int }
+
 
 func _ready() -> void:
 	# Demo units + capture baseline strengths
@@ -61,7 +62,7 @@ func _ready() -> void:
 
 	# OPTIONAL: prove flow by auto-applying a plan
 	if AUTO_APPLY:
-		var plan: Dictionary = { "ALPHA": 3, "BRAVO": 9, "CHARLIE": 5 }
+		var plan: Dictionary = {"ALPHA": 3, "BRAVO": 9, "CHARLIE": 5}
 		_on_committed(plan)
 
 	# --- Extra tests ---
@@ -70,6 +71,7 @@ func _ready() -> void:
 
 	if RUN_CASUALTY_TEST:
 		_test_casualties()
+
 
 ## Apply plan and keep Game + panel pools synchronized
 func _on_committed(plan: Dictionary) -> void:
@@ -101,13 +103,14 @@ func _on_committed(plan: Dictionary) -> void:
 			g.campaign_replacement_pool = remaining
 
 	_pool = remaining
-	_panel.set_units(_units)   # refresh rows/badges/missing caps
+	_panel.set_units(_units)  # refresh rows/badges/missing caps
 	_panel.set_pool(_pool)
 	_panel.reset_pending()
 
 	print("Remaining pool:", _pool)
 	for u: UnitData in _units:
 		print(u.id, ": ", int(round(u.state_strength)), "/", int(u.strength))
+
 
 ## Restore baseline strengths and pool (test-only behavior for the Reset button)
 func _reset_to_baseline() -> void:
@@ -131,9 +134,11 @@ func _reset_to_baseline() -> void:
 
 	print("Reset to baseline — Pool:", _pool)
 
+
 # ------------------------
 # Spawn hook test section
 # ------------------------
+
 
 ## Make a tiny runtime PackedScene whose instance accepts a strength factor
 func _make_unit_prefab() -> PackedScene:
@@ -163,6 +168,7 @@ func apply_strength_factor(f: float) -> void:
 	ps.pack(holder)
 	return ps
 
+
 ## Build a mock scenario compatible with SimWorld.spawn_scenario_units()
 func _make_mock_scenario() -> Node:
 	# Give it a REAL 'units' member (typed) so 'scenario.units' or get('units') works
@@ -188,6 +194,7 @@ func _make_mock_scenario() -> Node:
 		scn.set("units", list)
 	return scn
 
+
 ## Make a mock "ScenarioUnit" object (extends Object) with .unit and .packed_scene
 func _make_mock_scenario_unit(u: UnitData) -> Object:
 	var sc: GDScript = GDScript.new()
@@ -199,6 +206,7 @@ func _make_mock_scenario_unit(u: UnitData) -> Object:
 	inst.unit = u
 	inst.packed_scene = _make_unit_prefab()
 	return inst
+
 
 ## Exercise SimWorld.spawn_scenario_units(): wiped-out filtered, factor forwarded
 func _test_spawn() -> void:
@@ -241,9 +249,11 @@ func _test_spawn() -> void:
 
 			prints("[spawned]", c.name, "factor=", f, "count=", cnt)
 
+
 # ---------------------------
 # Casualty hook test section
 # ---------------------------
+
 
 ## Prove that apply_casualties_to_units mutates state_strength in place
 func _test_casualties() -> void:
@@ -262,25 +272,37 @@ func _test_casualties() -> void:
 	for u: UnitData in _units:
 		prints("[after casualties]", u.id, int(round(u.state_strength)), "/", int(u.strength))
 
+
 # ------------------------
 # Demo data + utilities
 # ------------------------
 
+
 ## Demo units (with per-unit threshold to validate badge/status)
 func _make_demo_units() -> Array[UnitData]:
 	var a: UnitData = UnitData.new()
-	a.id = "ALPHA"; a.title = "Alpha"; a.strength = 30; a.state_strength = 20.0
+	a.id = "ALPHA"
+	a.title = "Alpha"
+	a.strength = 30
+	a.state_strength = 20.0
 	a.understrength_threshold = 0.8
 
 	var b: UnitData = UnitData.new()
-	b.id = "BRAVO"; b.title = "Bravo"; b.strength = 30; b.state_strength = 0.0   # wiped out
+	b.id = "BRAVO"
+	b.title = "Bravo"
+	b.strength = 30
+	b.state_strength = 0.0  # wiped out
 	b.understrength_threshold = 0.6
 
 	var c: UnitData = UnitData.new()
-	c.id = "CHARLIE"; c.title = "Charlie"; c.strength = 30; c.state_strength = 28.0
+	c.id = "CHARLIE"
+	c.title = "Charlie"
+	c.strength = 30
+	c.state_strength = 28.0
 	c.understrength_threshold = 0.9
 
 	return [a, b, c]
+
 
 ## Lookup by id
 func _find(uid: String) -> UnitData:
