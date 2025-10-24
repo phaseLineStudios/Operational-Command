@@ -168,7 +168,6 @@ func _suggest_for_move(state: Dictionary, last_token: String) -> Array[String]:
 	var suggestions: Array[String] = []
 	var tables := _tables
 	var directions: Dictionary = tables.get("directions", {})
-	var qty_labels: Dictionary = tables.get("quantity_labels", {})
 
 	# Check what the last token was
 	var last_is_direction := directions.has(last_token)
@@ -231,7 +230,7 @@ func _suggest_for_defend_recon(state: Dictionary, last_token: String) -> Array[S
 
 
 ## Suggestions for REPORT command
-func _suggest_for_report(state: Dictionary, last_token: String) -> Array[String]:
+func _suggest_for_report(_state: Dictionary, _last_token: String) -> Array[String]:
 	var suggestions: Array[String] = []
 	# Suggest report types
 	suggestions.append_array(["Status", "Contact", "Position", "Ammunition", "Casualties"])
@@ -438,8 +437,9 @@ func _read_number_sequence(tokens: Array, idx: int, number_words: Dictionary) ->
 		return nil
 
 	# Check if it's already a digit literal
+	var j: int
 	if _is_all_digits(tokens[idx]):
-		var j := idx
+		j = idx
 		var digits := ""
 		while j < tokens.size() and _is_all_digits(tokens[j]):
 			digits += tokens[j]
@@ -448,7 +448,7 @@ func _read_number_sequence(tokens: Array, idx: int, number_words: Dictionary) ->
 
 	# Collect consecutive number words
 	var vals: Array = []
-	var j := idx
+	j = idx
 	while j < tokens.size():
 		var t: String = tokens[j]
 		if not number_words.has(t):

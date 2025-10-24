@@ -101,28 +101,54 @@ suffix = "s"
 layout_mode = 2
 text = "Condition"
 
-[node name="Condition" type="TextEdit" parent="Root/ScrollContainer/VBox"]
+[node name="Condition" type="CodeEdit" parent="Root/ScrollContainer/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
+symbol_lookup_on_click = true
+symbol_tooltip_on_hover = true
+gutters_draw_line_numbers = true
+code_completion_enabled = true
+indent_size = 2
+indent_automatic = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
 
 [node name="OnActivateLabel" type="Label" parent="Root/ScrollContainer/VBox"]
 layout_mode = 2
 text = "On Activate"
 
-[node name="OnActivate" type="TextEdit" parent="Root/ScrollContainer/VBox"]
+[node name="OnActivate" type="CodeEdit" parent="Root/ScrollContainer/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
+symbol_lookup_on_click = true
+symbol_tooltip_on_hover = true
+gutters_draw_line_numbers = true
+code_completion_enabled = true
+indent_size = 2
+indent_use_spaces = true
+indent_automatic = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
 
 [node name="OnDeactivateLabel" type="Label" parent="Root/ScrollContainer/VBox"]
 layout_mode = 2
 text = "On Deactivate"
 
-[node name="OnDeactivate" type="TextEdit" parent="Root/ScrollContainer/VBox"]
+[node name="OnDeactivate" type="CodeEdit" parent="Root/ScrollContainer/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
+symbol_lookup_on_click = true
+symbol_tooltip_on_hover = true
+gutters_draw_line_numbers = true
+code_completion_enabled = true
+indent_size = 2
+indent_use_spaces = true
+indent_automatic = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
 
 [node name="ActionRow" type="HBoxContainer" parent="Root"]
 layout_mode = 2

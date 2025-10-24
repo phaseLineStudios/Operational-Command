@@ -114,9 +114,9 @@
 	"x": 0.46,
 	"y": 0.55
   },
-  "preview_path": "res://campaigns/previews/wg_border_probe.png",
+  "preview_path": "res://assets/textures/scenarios/nato_border_probe.png",
   "scenario_order": 0,
-  "terrain_path": "res://campaigns/terrains/fulda_gap.tres",
+  "terrain_path": "res://data/terrains/fulda_gap.json",
   "title": "Border Probe",
   "units": {
 	"unit_points": 1250,

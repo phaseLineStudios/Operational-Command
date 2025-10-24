@@ -54,6 +54,13 @@ func bind_radio(radio: Radio) -> void:
 		_radio.radio_raw_command.connect(_on_radio_raw)
 
 
+## Bind mission dialog UI for trigger scripts.
+## Makes dialog available via [method TriggerAPI.show_dialog].
+## [param dialog] MissionDialog node for displaying trigger messages.
+func bind_dialog(dialog: Control) -> void:
+	_api._mission_dialog = dialog
+
+
 ## Deterministic evaluation entry point.
 ## [param dt] delta time from last tick.
 func tick(dt: float) -> void:

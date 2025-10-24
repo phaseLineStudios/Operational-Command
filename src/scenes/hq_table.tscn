@@ -1,4 +1,4 @@
-[gd_scene load_steps=65 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=66 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -29,6 +29,7 @@
 [ext_resource type="Texture2D" uid="uid://c5ch0odwq6o64" path="res://assets/textures/ui/button_skip.png" id="26_4ip4k"]
 [ext_resource type="PackedScene" uid="uid://0v7ebxx3jxi2" path="res://scenes/ui/radio_subtitles.tscn" id="27_subtitles"]
 [ext_resource type="PackedScene" uid="uid://b7u4ajeh13tpn" path="res://scenes/ui/loading_screen.tscn" id="28_loading"]
+[ext_resource type="PackedScene" path="res://scenes/ui/mission_dialog.tscn" id="29_dialog"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
 size = Vector2(10, 30)
@@ -520,6 +521,9 @@ unique_name_in_owner = true
 max_suggestions = 10
 
 [node name="LoadingScreen" parent="UI" instance=ExtResource("28_loading")]
+unique_name_in_owner = true
+
+[node name="MissionDialog" parent="UI" instance=ExtResource("29_dialog")]
 unique_name_in_owner = true
 
 [node name="PauseMenu" parent="UI" instance=ExtResource("7_uk27s")]

@@ -16,6 +16,7 @@ extends Node3D
 @onready var radio_subtitles: Control = %RadioSubtitles
 @onready var radio: Radio = %RadioController
 @onready var loading_screen: Control = %LoadingScreen
+@onready var mission_dialog: Control = %MissionDialog
 
 
 ## Initialize mission systems and bind services.
@@ -30,6 +31,7 @@ func _ready() -> void:
 
 	map.init_terrain(scenario)
 	trigger_engine.bind_scenario(scenario)
+	trigger_engine.bind_dialog(mission_dialog)
 	sim.init_world(scenario)
 	sim.bind_radio(%RadioController, %OrdersParser)
 	sim.init_resolution(scenario.briefing.frag_objectives)

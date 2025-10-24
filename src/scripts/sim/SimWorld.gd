@@ -386,6 +386,12 @@ func complete(_failed: bool) -> void:
 		_transition(_state, State.COMPLETED)
 
 
+## Get current simulation state.
+## [return] Current State enum value.
+func get_state() -> State:
+	return _state
+
+
 ## Current tick index.
 ## [return] Tick number.
 func get_tick() -> int:

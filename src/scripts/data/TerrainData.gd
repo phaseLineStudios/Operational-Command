@@ -1,3 +1,4 @@
+@tool
 class_name TerrainData
 extends Resource
 ## Terrain model: size, elevation, surfaces, features, labels.

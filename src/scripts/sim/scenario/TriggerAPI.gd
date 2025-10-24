@@ -6,6 +6,7 @@ extends RefCounted
 var sim: SimWorld
 var engine: TriggerEngine
 var _last_radio_command: String = ""
+var _mission_dialog: Control = null
 
 
 ## Return mission time in seconds.
@@ -146,3 +147,21 @@ func has_global(key: String) -> bool:
 	if engine:
 		return engine.has_global(key)
 	return false
+
+
+## Show a mission dialog with text and an OK button.
+## Optionally pauses the simulation until the player dismisses the dialog.
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Show dialog without pausing
+## show_dialog("Enemy reinforcements spotted!")
+##
+## # Show dialog and pause game
+## show_dialog("Mission briefing: Secure the village.", true)
+## [/codeblock]
+## [param text] Dialog text to display (supports BBCode formatting)
+## [param pause_game] If true, pauses simulation until dialog is dismissed
+func show_dialog(text: String, pause_game: bool = false) -> void:
+	if _mission_dialog and _mission_dialog.has_method("show_dialog"):
+		_mission_dialog.show_dialog(text, pause_game, sim)
