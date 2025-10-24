@@ -128,7 +128,8 @@ func _status_string(u: UnitData) -> String:
 		return "WIPED_OUT"
 	var cap: float = float(max(1, u.strength))
 	var pct: float = clamp(u.state_strength / cap, 0.0, 1.0)
-	if pct < _panel.understrength_threshold:
+	var thr: float = (u.understrength_threshold if u.understrength_threshold > 0.0 else _panel.understrength_threshold)
+	if pct < thr:
 		return "UNDERSTRENGTH"
 	return "ACTIVE"
 

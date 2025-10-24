@@ -111,7 +111,8 @@ func _build_rows() -> void:
 
 		var badge := UnitStrengthBadge.new()
 		badge.custom_minimum_size = Vector2(60, 0)
-		badge.set_unit(u, understrength_threshold)
+		var thr := (u.understrength_threshold if u.understrength_threshold > 0.0 else understrength_threshold)
+		badge.set_unit(u, thr)
 		row.add_child(badge)
 
 		var spacer := Control.new()
@@ -188,7 +189,8 @@ func _update_all_rows_state() -> void:
 				w.title.remove_theme_color_override("font_color")
 
 		# Badge reflects current state
-		w.badge.set_unit(u, understrength_threshold)
+		var thr := (u.understrength_threshold if u.understrength_threshold > 0.0 else understrength_threshold)
+		w.badge.set_unit(u, thr)
 
 	_update_pool_labels()
 
