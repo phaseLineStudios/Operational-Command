@@ -1,9 +1,10 @@
-[gd_scene load_steps=58 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=63 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
 [ext_resource type="Script" uid="uid://d0ojagsd85iyf" path="res://scripts/ui/HQTable.gd" id="1_qgda6"]
 [ext_resource type="PackedScene" uid="uid://xp0rbo1drhvx" path="res://assets/models/Timer.glb" id="2_2llyq"]
+[ext_resource type="Script" uid="uid://4htsynbphlw0" path="res://scripts/core/TimerController.gd" id="3_2llyq"]
 [ext_resource type="Script" uid="uid://dn828tsljtrki" path="res://scripts/core/Camera.gd" id="3_3f477"]
 [ext_resource type="Script" uid="uid://0r8k717de5os" path="res://scripts/core/PlayerInteraction.gd" id="4_py2wd"]
 [ext_resource type="Script" uid="uid://6xtsg3rqhc8t" path="res://scripts/core/MapController.gd" id="5_lmes1"]
@@ -22,6 +23,10 @@
 [ext_resource type="Script" uid="uid://brp222cgifhj0" path="res://scripts/sim/systems/FuelSystem.gd" id="14_hvywg"]
 [ext_resource type="Script" uid="uid://bxi60at4j0nrr" path="res://scripts/sim/scenario/TriggerEngine.gd" id="16_rdwew"]
 [ext_resource type="Script" uid="uid://dnnu3w3b3j5rk" path="res://scripts/data/FuelProfile.gd" id="16_yatot"]
+[ext_resource type="FontFile" uid="uid://cxbhb0lo85wr0" path="res://assets/fonts/dseg7/DSEG7Classic-Bold.ttf" id="23_nfu8j"]
+[ext_resource type="Texture2D" uid="uid://cww2l5lebx4nn" path="res://assets/textures/ui/button_pause.png" id="24_l12u7"]
+[ext_resource type="Texture2D" uid="uid://g1tchqqnd2wx" path="res://assets/textures/ui/button_play.png" id="25_k8ks5"]
+[ext_resource type="Texture2D" uid="uid://c5ch0odwq6o64" path="res://assets/textures/ui/button_skip.png" id="26_4ip4k"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
 size = Vector2(10, 30)
@@ -492,6 +497,19 @@ script = ExtResource("13_qgda6")
 script = ExtResource("14_415kk")
 los_node_path = NodePath("..")
 terrain_renderer_path = NodePath("../../MapController/TerrainViewport/TerrainRender")
+
+[node name="TimerController" type="Node" parent="Controllers" node_paths=PackedStringArray("timer", "sim_world", "camera")]
+script = ExtResource("3_2llyq")
+timer = NodePath("../../StaticObjects/Timer")
+sim_world = NodePath("../WorldController")
+camera = NodePath("../CameraController/CameraBounds/Camera")
+press_depth = 0.005
+collision_box_position = Vector3(0, 0.06, 0)
+lcd_font = ExtResource("23_nfu8j")
+lcd_letter_spacing = 2
+pause_icon = ExtResource("24_l12u7")
+play_icon = ExtResource("25_k8ks5")
+fastforward_icon = ExtResource("26_4ip4k")
 
 [node name="UI" type="CanvasLayer" parent="."]
 

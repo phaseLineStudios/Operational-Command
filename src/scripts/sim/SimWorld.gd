@@ -48,6 +48,7 @@ enum State { INIT, RUNNING, PAUSED, COMPLETED }
 var _state: State = State.INIT
 var _dt_accum := 0.0
 var _tick_dt := 0.2
+var _time_scale := 1.0  # Simulation time scale multiplier
 var _tick_idx := 0
 var _rng := RandomNumberGenerator.new()
 var _orders: OrdersQueue = OrdersQueue.new()
@@ -159,7 +160,7 @@ func _on_objective_updated(_id: String, _obj_state: int) -> void:
 func _process(dt: float) -> void:
 	if _state != State.RUNNING:
 		return
-	_dt_accum += dt
+	_dt_accum += dt * _time_scale
 	while _dt_accum >= _tick_dt:
 		_step_tick(_tick_dt)
 		_dt_accum -= _tick_dt
@@ -365,6 +366,11 @@ func pause() -> void:
 func resume() -> void:
 	if _state == State.PAUSED:
 		_transition(_state, State.RUNNING)
+
+
+## Set simulation time scale (1.0 = normal, 2.0 = 2x speed).
+func set_time_scale(scale: float) -> void:
+	_time_scale = max(0.0, scale)
 
 
 ## Step one tick while paused.

@@ -12,6 +12,7 @@ extends Node3D
 @onready var map: MapController = %MapController
 @onready var debug_overlay: Control = %DebugOverlay
 @onready var trigger_engine: TriggerEngine = %TriggerEngine
+@onready var camera: Camera3D = %CameraController/CameraBounds/Camera
 
 
 ## Initialize mission systems and bind services.
