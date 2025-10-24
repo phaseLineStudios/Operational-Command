@@ -7,12 +7,14 @@ extends Control
 
 signal unit_strength_changed(unit_id: String, current: int, status: String)
 
+# --- regular vars first (to satisfy gdlint class-definitions-order) ---
+var _units: Array[UnitData] = []
+var _uid_to_index: Dictionary = {}  ## unit_id -> array index (kept for future lookups)
+
+# --- onready vars after regular vars ---
 @onready var _list_box: VBoxContainer = %UnitListBox
 @onready var _panel: ReinforcementPanel = %ReinforcementPanel
 @onready var _btn_refresh: Button = $"Root/Left/Buttons/RefreshBtn"
-
-var _units: Array[UnitData] = []
-var _uid_to_index: Dictionary = {}  ## unit_id -> array index
 
 
 ## Scene is ready: wire signals and populate UI from Game.
@@ -27,11 +29,16 @@ func _ready() -> void:
 func _refresh_from_game() -> void:
 	_units = _collect_units_from_game()
 	_uid_to_index.clear()
-	# rebuild list with badges
+
+	# Rebuild list with title + strength badge per row
 	for c in _list_box.get_children():
 		c.queue_free()
 
-	for u in _units:
+	var idx := 0
+	for u: UnitData in _units:
+		_uid_to_index[u.id] = idx
+		idx += 1
+
 		var row := HBoxContainer.new()
 		_list_box.add_child(row)
 
@@ -39,11 +46,12 @@ func _refresh_from_game() -> void:
 		title.text = u.title
 		row.add_child(title)
 
-		var badge := UnitStrengthBadge.new()
+		var badge: UnitStrengthBadge = UnitStrengthBadge.new()
+		# Pass per-unit threshold if set; fall back to panel default inside the badge
 		badge.set_unit(u, _panel.understrength_threshold)
 		row.add_child(badge)
 
-	# keep panel updated
+	# Keep panel updated
 	_panel.set_units(_units)
 	_panel.set_pool(_get_pool())
 
@@ -51,22 +59,24 @@ func _refresh_from_game() -> void:
 ## Return a flat array of UnitData from the current scenario or recruits.
 func _collect_units_from_game() -> Array[UnitData]:
 	var out: Array[UnitData] = []
-	if Engine.has_singleton("Game"):
-		pass
-	# Autoload singleton
-	var g := get_tree().get_root().get_node_or_null("/root/Game")
+
+	# Prefer the autoload (works whether you reference 'Game' or via tree)
+	var g: Node = get_tree().get_root().get_node_or_null("/root/Game")
 	if g and g.has_method("get_current_units"):
-		var tmp = g.call("get_current_units")
+		var tmp: Array = g.call("get_current_units")
 		for su in tmp:
 			if su is ScenarioUnit and su.unit:
 				out.append(su.unit)
 			elif su is UnitData:
 				out.append(su)
-	elif Game and Game.current_scenario:
-		# Fallback to scenario units list
+		return out
+
+	# Fallback: read directly from Game.current_scenario if present
+	if Game and Game.current_scenario:
 		for su in Game.current_scenario.units:
 			if su and su.unit:
 				out.append(su.unit)
+
 	return out
 
 
@@ -87,8 +97,10 @@ func _set_pool(v: int) -> void:
 		Game.campaign_replacement_pool = v
 
 
-## Live preview hook from panel.
-func _on_preview_changed(unit_id: String, amt: int) -> void:
+## Live preview hook from panel (visual-only here).
+func _on_preview_changed(_unit_id: String, _amt: int) -> void:
+	# This screen doesn't need a live preview side-effect;
+	# values are applied on commit. Arguments prefixed with '_' to satisfy gdlint.
 	pass
 
 
@@ -96,13 +108,14 @@ func _on_preview_changed(unit_id: String, amt: int) -> void:
 ## clamp to capacity and pool, then signal status changes.
 func _on_committed(plan: Dictionary) -> void:
 	var remaining: int = _get_pool()
+
 	for uid in plan.keys():
 		var add := int(plan[uid])
-		var u := _find_unit(uid)
+		var u: UnitData = _find_unit(uid)
 		if u == null:
 			continue
 
-		# Authoritative gate: skip wiped-out here
+		# Authoritative gate: skip wiped-out units here
 		if not _can_reinforce(u):
 			continue
 
@@ -117,8 +130,9 @@ func _on_committed(plan: Dictionary) -> void:
 		remaining -= give
 		emit_signal("unit_strength_changed", uid, int(round(u.state_strength)), _status_string(u))
 
+	# Persist pool and refresh UI
 	_set_pool(remaining)
-	_panel.set_pool(remaining)  # keep UI in sync immediately
+	_panel.set_pool(remaining)
 	_refresh_from_game()
 
 
@@ -134,6 +148,7 @@ func _find_unit(uid: String) -> UnitData:
 func _status_string(u: UnitData) -> String:
 	if u.state_strength <= 0.0:
 		return "WIPED_OUT"
+
 	var cap: float = float(max(1, u.strength))
 	var pct: float = clamp(u.state_strength / cap, 0.0, 1.0)
 	var thr: float = (
@@ -141,12 +156,12 @@ func _status_string(u: UnitData) -> String:
 		if u.understrength_threshold > 0.0
 		else _panel.understrength_threshold
 	)
+
 	if pct < thr:
 		return "UNDERSTRENGTH"
 	return "ACTIVE"
 
 
-## test if a unit can be reinforced
-## this screen cannot reinforce wiped-out units
+## Test if a unit can be reinforced (this screen cannot reinforce wiped-out units).
 func _can_reinforce(u: UnitData) -> bool:
 	return u != null and u.state_strength > 0.0
