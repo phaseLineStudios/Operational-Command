@@ -1,26 +1,32 @@
 class_name ReinforcementTest
 extends Node2D
-## Test harness that starts the pool at 10 and keeps it in sync with the panel + Game.
-## Uses the exact preload path you requested and wires Reset to restore a baseline.
+## Test harness that:
+## - Starts the pool at 10 (and syncs with Game if present)
+## - Wires Reset to restore a baseline
+## - Optionally auto-applies a sample plan
+## - Tests SimWorld spawning (filters wiped-out, applies strength factor)
+## - Tests casualty application at debrief time (via MissionResolution helper)
 
 const PANEL_SCENE: PackedScene = preload("res://scenes/ui/unit_mgmt/reinforcement_panel.tscn")
 
 const START_POOL := 10
-const AUTO_APPLY := false  # set true to auto-apply the sample plan at startup
+const AUTO_APPLY := false          # auto-apply the sample plan at startup
+const RUN_SPAWN_TEST := true       # exercise SimWorld.spawn_scenario_units()
+const RUN_CASUALTY_TEST := true    # exercise MissionResolution.apply_casualties_to_units()
 
 var _units: Array[UnitData] = []
 var _panel: ReinforcementPanel
 var _pool: int = START_POOL
-var _baseline_strengths := {}  # { unit_id: int }
+var _baseline_strengths: Dictionary = {}  # { unit_id: int }
 
 func _ready() -> void:
 	# Demo units + capture baseline strengths
 	_units = _make_demo_units()
-	for u in _units:
+	for u: UnitData in _units:
 		_baseline_strengths[u.id] = int(round(u.state_strength))
 
 	# Seed Game's pool first (if autoload exists)
-	var g := get_tree().get_root().get_node_or_null("/root/Game")
+	var g: Node = get_tree().get_root().get_node_or_null("/root/Game")
 	if g:
 		if g.has_method("set_replacement_pool"):
 			g.set_replacement_pool(START_POOL)
@@ -33,7 +39,7 @@ func _ready() -> void:
 	await get_tree().process_frame
 
 	# Hook Reset button to restore baseline (test-only convenience)
-	var reset_btn := _panel.get_node_or_null("Root/Footer/ResetBtn") as Button
+	var reset_btn: Button = _panel.get_node_or_null("Root/Footer/ResetBtn") as Button
 	if reset_btn:
 		reset_btn.pressed.connect(_reset_to_baseline)
 
@@ -51,16 +57,25 @@ func _ready() -> void:
 	_panel.set_pool(_pool)
 	_panel.reinforcement_committed.connect(_on_committed)
 
+	print("Startup pool:", _pool)  # should be 10
+
 	# OPTIONAL: prove flow by auto-applying a plan
 	if AUTO_APPLY:
-		var plan := { "ALPHA": 3, "BRAVO": 9, "CHARLIE": 5 }
+		var plan: Dictionary = { "ALPHA": 3, "BRAVO": 9, "CHARLIE": 5 }
 		_on_committed(plan)
+
+	# --- Extra tests ---
+	if RUN_SPAWN_TEST:
+		_test_spawn()
+
+	if RUN_CASUALTY_TEST:
+		_test_casualties()
 
 ## Apply plan and keep Game + panel pools synchronized
 func _on_committed(plan: Dictionary) -> void:
 	var remaining: int = _pool
 	for uid in plan.keys():
-		var u := _find(uid)
+		var u: UnitData = _find(uid)
 		if u == null:
 			continue
 		# Business rule (mirrors UnitMgmt): don't reinforce wiped-out units
@@ -78,7 +93,7 @@ func _on_committed(plan: Dictionary) -> void:
 		remaining -= applied
 
 	# Persist remaining to Game (if present) and mirror to panel
-	var g := get_tree().get_root().get_node_or_null("/root/Game")
+	var g: Node = get_tree().get_root().get_node_or_null("/root/Game")
 	if g:
 		if g.has_method("set_replacement_pool"):
 			g.set_replacement_pool(remaining)
@@ -91,19 +106,19 @@ func _on_committed(plan: Dictionary) -> void:
 	_panel.reset_pending()
 
 	print("Remaining pool:", _pool)
-	for u in _units:
+	for u: UnitData in _units:
 		print(u.id, ": ", int(round(u.state_strength)), "/", int(u.strength))
 
 ## Restore baseline strengths and pool (test-only behavior for the Reset button)
 func _reset_to_baseline() -> void:
-	for u in _units:
-		var base := int(_baseline_strengths.get(u.id, int(round(u.state_strength))))
+	for u: UnitData in _units:
+		var base: int = int(_baseline_strengths.get(u.id, int(round(u.state_strength))))
 		u.state_strength = float(base)
 
 	_pool = START_POOL
 
 	# Keep Game in sync if present
-	var g := get_tree().get_root().get_node_or_null("/root/Game")
+	var g: Node = get_tree().get_root().get_node_or_null("/root/Game")
 	if g:
 		if g.has_method("set_replacement_pool"):
 			g.set_replacement_pool(_pool)
@@ -116,22 +131,160 @@ func _reset_to_baseline() -> void:
 
 	print("Reset to baseline — Pool:", _pool)
 
-## Demo units
+# ------------------------
+# Spawn hook test section
+# ------------------------
+
+## Make a tiny runtime PackedScene whose instance accepts a strength factor
+func _make_unit_prefab() -> PackedScene:
+	var holder: Node = Node.new()
+
+	# Attach a tiny runtime script to expose properties + method
+	var gs: GDScript = GDScript.new()
+	gs.source_code = """
+extends Node
+var strength_factor: float = 1.0
+var base_count: int = 10
+var count: int = 10
+func apply_strength_factor(f: float) -> void:
+	strength_factor = f
+	if f <= 0.0:
+		count = 0
+	else:
+		count = max(1, int(round(base_count * f)))
+"""
+	var ok: int = gs.reload()
+	if ok != OK:
+		push_warning("Failed to compile runtime prefab script; spawn test may be limited.")
+	else:
+		holder.set_script(gs)
+
+	var ps: PackedScene = PackedScene.new()
+	ps.pack(holder)
+	return ps
+
+## Build a mock scenario compatible with SimWorld.spawn_scenario_units()
+func _make_mock_scenario() -> Node:
+	# Give it a REAL 'units' member (typed) so 'scenario.units' or get('units') works
+	var sc_script: GDScript = GDScript.new()
+	sc_script.source_code = "extends Node\nvar units: Array = []\n"
+	var rc: int = sc_script.reload()
+
+	var scn: Node = Node.new()
+	if rc == OK:
+		scn.set_script(sc_script)
+	else:
+		push_warning("Scenario script failed to compile; using set('units').")
+
+	var list: Array = []
+	for u: UnitData in _units:
+		var su: Object = _make_mock_scenario_unit(u)
+		list.append(su)
+
+	# Assign either via typed member or fallback set()
+	if scn.get_script() != null:
+		scn.units = list
+	else:
+		scn.set("units", list)
+	return scn
+
+## Make a mock "ScenarioUnit" object (extends Object) with .unit and .packed_scene
+func _make_mock_scenario_unit(u: UnitData) -> Object:
+	var sc: GDScript = GDScript.new()
+	sc.source_code = "extends Object\nvar unit\nvar packed_scene\n"
+	var rc: int = sc.reload()
+	if rc != OK:
+		push_error("Failed to compile ScenarioUnit mock.")
+	var inst: Object = sc.new()
+	inst.unit = u
+	inst.packed_scene = _make_unit_prefab()
+	return inst
+
+## Exercise SimWorld.spawn_scenario_units(): wiped-out filtered, factor forwarded
+func _test_spawn() -> void:
+	print("-- Spawn Test --")
+	# Instance a SimWorld node with the real script
+	var sim: Node = Node.new()
+	sim.name = "SimWorld"
+	sim.set_script(load("res://scripts/sim/SimWorld.gd"))
+	add_child(sim)
+	await get_tree().process_frame
+
+	# Make a scenario and spawn
+	var scenario: Node = _make_mock_scenario()
+	sim.call("spawn_scenario_units", scenario)
+
+	# Inspect spawned children
+	if sim.get_child_count() == 0:
+		print("Spawn result: no children (likely only wiped-out units or spawn blocked)")
+	else:
+		for c in sim.get_children():
+			var f: float = 0.0
+
+			# Explicitly typed temporaries to avoid Variant inference warnings
+			var raw_sf: Variant = null
+			if c.has_method("get"):
+				raw_sf = c.get("strength_factor")
+			if typeof(raw_sf) == TYPE_FLOAT:
+				f = raw_sf as float
+			elif typeof(raw_sf) == TYPE_INT:
+				f = float(raw_sf)
+
+			var cnt: int = 0
+			var raw_cnt: Variant = null
+			if c.has_method("get"):
+				raw_cnt = c.get("count")
+			if typeof(raw_cnt) == TYPE_INT:
+				cnt = raw_cnt as int
+			elif typeof(raw_cnt) == TYPE_FLOAT:
+				cnt = int(raw_cnt)
+
+			prints("[spawned]", c.name, "factor=", f, "count=", cnt)
+
+# ---------------------------
+# Casualty hook test section
+# ---------------------------
+
+## Prove that apply_casualties_to_units mutates state_strength in place
+func _test_casualties() -> void:
+	print("-- Casualty Test --")
+	# Use the real MissionResolution class (must have class_name MissionResolution)
+	var res: MissionResolution = MissionResolution.new()
+
+	# Sample losses: try to remove 3 from ALPHA, 2 from CHARLIE
+	var losses: Dictionary = {
+		"ALPHA": 3,
+		"CHARLIE": 2,
+		# BRAVO stays 0 unless reinforced first
+	}
+	res.apply_casualties_to_units(_units, losses)
+
+	for u: UnitData in _units:
+		prints("[after casualties]", u.id, int(round(u.state_strength)), "/", int(u.strength))
+
+# ------------------------
+# Demo data + utilities
+# ------------------------
+
+## Demo units (with per-unit threshold to validate badge/status)
 func _make_demo_units() -> Array[UnitData]:
-	var a := UnitData.new()
+	var a: UnitData = UnitData.new()
 	a.id = "ALPHA"; a.title = "Alpha"; a.strength = 30; a.state_strength = 20.0
+	a.understrength_threshold = 0.8
 
-	var b := UnitData.new()
+	var b: UnitData = UnitData.new()
 	b.id = "BRAVO"; b.title = "Bravo"; b.strength = 30; b.state_strength = 0.0   # wiped out
+	b.understrength_threshold = 0.6
 
-	var c := UnitData.new()
+	var c: UnitData = UnitData.new()
 	c.id = "CHARLIE"; c.title = "Charlie"; c.strength = 30; c.state_strength = 28.0
+	c.understrength_threshold = 0.9
 
 	return [a, b, c]
 
 ## Lookup by id
 func _find(uid: String) -> UnitData:
-	for u in _units:
+	for u: UnitData in _units:
 		if u.id == uid:
 			return u
 	return null

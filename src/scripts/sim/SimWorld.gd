@@ -79,12 +79,23 @@ func filter_spawnable(units: Array) -> Array:
 	return out
 
 ## Spawn ScenarioUnits into the sim; skips wiped-out and forwards strength_factor.
-func spawn_scenario_units(scenario) -> void:
+func spawn_scenario_units(scenario: Variant) -> void:
 	if scenario == null:
 		return
 
-	# Use instance methods here (not SimWorld.*)
-	var spawn_list: Array = filter_spawnable(scenario.units)
+	# Safely pull the 'units' list no matter what object we were handed.
+	var units_any: Variant = null
+	if scenario is Object and (scenario as Object).has_method("get"):
+		units_any = (scenario as Object).get("units")
+
+	if units_any == null or typeof(units_any) != TYPE_ARRAY:
+		push_warning("SimWorld.spawn_scenario_units(): scenario has no 'units' Array; aborting.")
+		return
+
+	var units_arr: Array = units_any as Array
+
+	# Filter out wiped-out before spawning
+	var spawn_list: Array = filter_spawnable(units_arr)
 
 	for su in spawn_list:
 		if su == null or su.unit == null or su.packed_scene == null:
@@ -99,12 +110,13 @@ func spawn_scenario_units(scenario) -> void:
 		# Forward strength into the instance
 		if inst.has_method("apply_strength_factor"):
 			inst.apply_strength_factor(f)
-		elif inst.has_variable("strength_factor"):
-			inst.strength_factor = f
+		elif inst.has_method("set"):
+			inst.set("strength_factor", f)
 
-		# (Optional) scale counts if your unit scene supports it
-		if inst.has_variable("base_count") and inst.has_variable("count"):
-			if f <= 0.0:
-				inst.count = 0
-			else:
-				inst.count = max(1, int(round(inst.base_count * f)))
+		# Optional: scale a 'count' if your unit prefab exposes it
+		if inst.has_method("get") and inst.has_method("set"):
+			var has_base := inst.get("base_count") != null
+			var has_count := true  # we'll just set it even if it didn't exist yet
+			if has_base and has_count:
+				var base := int(inst.get("base_count"))
+				inst.set("count", 0 if f <= 0.0 else max(1, int(round(base * f))))
