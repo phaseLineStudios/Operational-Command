@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=64 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -27,6 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://cww2l5lebx4nn" path="res://assets/textures/ui/button_pause.png" id="24_l12u7"]
 [ext_resource type="Texture2D" uid="uid://g1tchqqnd2wx" path="res://assets/textures/ui/button_play.png" id="25_k8ks5"]
 [ext_resource type="Texture2D" uid="uid://c5ch0odwq6o64" path="res://assets/textures/ui/button_skip.png" id="26_4ip4k"]
+[ext_resource type="PackedScene" uid="uid://0v7ebxx3jxi2" path="res://scenes/ui/radio_subtitles.tscn" id="27_subtitles"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
 size = Vector2(10, 30)
@@ -516,3 +517,7 @@ fastforward_icon = ExtResource("26_4ip4k")
 [node name="PauseMenu" parent="UI" instance=ExtResource("7_uk27s")]
 unique_name_in_owner = true
 visible = false
+
+[node name="RadioSubtitles" parent="UI" instance=ExtResource("27_subtitles")]
+unique_name_in_owner = true
+max_suggestions = 10

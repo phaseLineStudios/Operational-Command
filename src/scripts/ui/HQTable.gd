@@ -13,6 +13,8 @@ extends Node3D
 @onready var debug_overlay: Control = %DebugOverlay
 @onready var trigger_engine: TriggerEngine = %TriggerEngine
 @onready var camera: Camera3D = %CameraController/CameraBounds/Camera
+@onready var radio_subtitles: Control = %RadioSubtitles
+@onready var radio: Radio = %RadioController
 
 
 ## Initialize mission systems and bind services.
@@ -21,10 +23,19 @@ func _ready() -> void:
 	var playable_units := generate_playable_units(scenario.unit_slots)
 	scenario.playable_units = playable_units
 	map.init_terrain(scenario)
-	sim.init_world(scenario)
 	trigger_engine.bind_scenario(scenario)
+	sim.init_world(scenario)
 	sim.bind_radio(%RadioController, %OrdersParser)
 	sim.init_resolution(scenario.briefing.frag_objectives)
+
+	# Connect radio signals to subtitle display
+	radio.radio_on.connect(_on_radio_on)
+	radio.radio_off.connect(_on_radio_off)
+	radio.radio_partial.connect(_on_radio_partial)
+	radio.radio_result.connect(_on_radio_result)
+
+	# Pass terrain labels and unit callsigns to subtitle system
+	_update_subtitle_suggestions(scenario)
 
 
 ## Build the list of playable units from scenario slots and current loadout.
@@ -58,3 +69,48 @@ func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]:
 
 	LogService.trace("Generated playable units: %s" % str(callsigns), "HQTable.gd:42")
 	return units
+
+
+## Handle radio PTT pressed
+func _on_radio_on() -> void:
+	radio_subtitles.show_partial("")
+
+
+## Handle radio PTT released
+func _on_radio_off() -> void:
+	pass  # Wait for result to show final text
+
+
+## Handle partial speech recognition
+func _on_radio_partial(text: String) -> void:
+	radio_subtitles.show_partial(text)
+
+
+## Handle final speech recognition result
+func _on_radio_result(text: String) -> void:
+	radio_subtitles.show_result(text)
+
+
+## Update subtitle suggestions with terrain labels and unit callsigns
+func _update_subtitle_suggestions(scenario: ScenarioData) -> void:
+	# Extract terrain labels
+	var labels: Array[String] = []
+	if scenario.terrain and scenario.terrain.labels:
+		for label_data in scenario.terrain.labels:
+			var label_text := str(label_data.get("text", ""))
+			if label_text != "":
+				labels.append(label_text)
+
+	# Extract all unit callsigns (playable, AI, and enemy)
+	var callsigns: Array[String] = []
+	var all_units := []
+	all_units.append_array(scenario.playable_units)
+	all_units.append_array(scenario.units)
+
+	for unit in all_units:
+		if unit and unit.callsign != "":
+			callsigns.append(unit.callsign)
+
+	# Pass to subtitle system
+	radio_subtitles.set_terrain_labels(labels)
+	radio_subtitles.set_unit_callsigns(callsigns)
