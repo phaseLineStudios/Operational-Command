@@ -1,7 +1,6 @@
-[gd_scene load_steps=19 format=3 uid="uid://rbcwabwc1v0o"]
+[gd_scene load_steps=18 format=3 uid="uid://rbcwabwc1v0o"]
 
 [ext_resource type="Script" uid="uid://bcbx6qa1jofhc" path="res://scripts/terrain/TerrainRender.gd" id="1_kobl6"]
-[ext_resource type="Resource" uid="uid://bt5fxbp2mxljn" path="res://campaigns/terrains/fulda_gap.tres" id="2_dy2sp"]
 [ext_resource type="Script" uid="uid://cxbielgj0k7ei" path="res://scripts/terrain/GridLayer.gd" id="2_llqno"]
 [ext_resource type="Script" uid="uid://dlu6lynrhk1n0" path="res://scripts/terrain/MapMargin.gd" id="3_ceejx"]
 [ext_resource type="Script" uid="uid://cg0secq4wft8v" path="res://scripts/terrain/SurfaceLayer.gd" id="3_utooi"]
@@ -43,7 +42,6 @@ offset_right = 1152.0
 offset_bottom = 648.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_ceejx")
 script = ExtResource("1_kobl6")
-data = ExtResource("2_dy2sp")
 base_color = Color(0.993332, 0.99162, 0.98202, 1)
 terrain_border_color = Color(0.27451, 0.219608, 0.219608, 1)
 terrain_border_px = 2
