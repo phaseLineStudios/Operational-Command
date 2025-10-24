@@ -394,7 +394,7 @@ func _setup_lcd_display() -> void:
 	# Create label for time display (left side)
 	_lcd_label = Label.new()
 
-	# Use LabelSettings for better control
+	# Use LabelSettings for better controld
 	var label_settings := LabelSettings.new()
 	label_settings.font = lcd_font
 	label_settings.font_size = lcd_font_size

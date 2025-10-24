@@ -107,3 +107,42 @@ func last_radio_command() -> String:
 ## [param cmd] Raw command text from Radio.
 func _set_last_radio_command(cmd: String) -> void:
 	_last_radio_command = cmd.to_lower().strip_edges()
+
+
+## Get a global variable shared across all triggers.
+## Global variables persist across ticks and are visible to all triggers.
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # In trigger A:
+## set_global("mission_phase", 2)
+##
+## # In trigger B (can read what A wrote):
+## if get_global("mission_phase", 0) >= 2:
+##     radio("Phase 2 started")
+## [/codeblock]
+## [param key] Variable name.
+## [param default] Default value if variable doesn't exist.
+## [return] Variable value or default.
+func get_global(key: String, default: Variant = null) -> Variant:
+	if engine:
+		return engine.get_global(key, default)
+	return default
+
+
+## Set a global variable shared across all triggers.
+## Global variables persist across ticks and are visible to all triggers.
+## [param key] Variable name.
+## [param value] Value to store.
+func set_global(key: String, value: Variant) -> void:
+	if engine:
+		engine.set_global(key, value)
+
+
+## Check if a global variable exists.
+## [param key] Variable name.
+## [return] True if variable exists.
+func has_global(key: String) -> bool:
+	if engine:
+		return engine.has_global(key)
+	return false

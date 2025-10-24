@@ -16,6 +16,8 @@ var _id_by_callsign: Dictionary = {}
 var _player_ids := {}
 var _radio: Radio = null
 var _last_radio_text: String = ""
+## Shared global variables accessible across all triggers
+var _globals: Dictionary = {}
 
 
 ## Wire API.
@@ -135,7 +137,7 @@ func _check_presence(t: ScenarioTrigger) -> bool:
 ## [return] trigger context.
 func _make_ctx(t: ScenarioTrigger, presence_ok: bool) -> Dictionary:
 	var counts := _counts_in_area(t.area_center_m, t.area_size_m, t.area_shape)
-	return {
+	var ctx := {
 		"trigger_id": t.id,
 		"title": t.title,
 		"center": t.area_center_m,
@@ -145,6 +147,11 @@ func _make_ctx(t: ScenarioTrigger, presence_ok: bool) -> Dictionary:
 		"count_enemy": counts.enemy,
 		"count_player": counts.player,
 	}
+	# Include all global variables in context for easy access
+	for key in _globals.keys():
+		if not ctx.has(key):  # Don't override built-in context vars
+			ctx[key] = _globals[key]
+	return ctx
 
 
 ## Count of units in area.
@@ -275,3 +282,30 @@ func activate_trigger(trigger_id: String) -> bool:
 			LogService.trace("Manually activated trigger: %s" % trigger_id, "TriggerEngine.gd")
 			return true
 	return false
+
+
+## Get a global variable value shared across all triggers.
+## [param key] Variable name.
+## [param default] Default value if variable doesn't exist.
+## [return] Variable value or default.
+func get_global(key: String, default: Variant = null) -> Variant:
+	return _globals.get(key, default)
+
+
+## Set a global variable value shared across all triggers.
+## [param key] Variable name.
+## [param value] Value to store.
+func set_global(key: String, value: Variant) -> void:
+	_globals[key] = value
+
+
+## Check if a global variable exists.
+## [param key] Variable name.
+## [return] True if variable exists.
+func has_global(key: String) -> bool:
+	return _globals.has(key)
+
+
+## Clear all global variables.
+func clear_globals() -> void:
+	_globals.clear()
