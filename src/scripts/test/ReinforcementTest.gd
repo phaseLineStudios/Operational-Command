@@ -48,12 +48,24 @@ func _ready() -> void:
 	else:
 		_pool = START_POOL
 
-	# Configure panel and connect signals
+	# Configure panel (initial view)
 	_panel.set_units(_units)
 	_panel.set_pool(_pool)
 	_panel.reset_pending()
 
-	# --- CAPTURE BASELINE AFTER INITIALIZATION ---
+	# ---- run optional tests BEFORE capturing the baseline ----
+	if RUN_SPAWN_TEST:
+		_test_spawn()
+
+	if RUN_CASUALTY_TEST:
+		_test_casualties()
+
+	# Ensure panel reflects any mutations from tests, then snapshot
+	_panel.set_units(_units)
+	_panel.set_pool(_pool)
+	_panel.reset_pending()
+
+	# --- CAPTURE BASELINE AFTER INITIALIZATION + TESTS ---
 	_capture_baseline()
 
 	# Wire Reset to restore that baseline
@@ -71,11 +83,6 @@ func _ready() -> void:
 		var plan: Dictionary = {"ALPHA": 3, "BRAVO": 9, "CHARLIE": 5}
 		_on_committed(plan)
 
-	if RUN_SPAWN_TEST:
-		_test_spawn()
-
-	if RUN_CASUALTY_TEST:
-		_test_casualties()
 
 # ---- Reinforcement flow ----
 
