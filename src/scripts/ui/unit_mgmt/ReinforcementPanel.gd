@@ -289,3 +289,9 @@ func _find_unit(uid: String) -> UnitData:
 func _clear_children(n: Node) -> void:
 	for c in n.get_children():
 		c.queue_free()
+		
+## Public: re-read UnitData and refresh all UI from the current state.
+func refresh_from_units() -> void:
+	_update_all_rows_state()
+	_update_pool_labels()
+	_update_commit_enabled()
