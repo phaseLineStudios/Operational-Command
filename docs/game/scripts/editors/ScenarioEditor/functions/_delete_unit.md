@@ -1,6 +1,6 @@
 # ScenarioEditor::_delete_unit Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 458–531)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 464–537)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # ScenarioEditor::_open_unit_config Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 237–242)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 241–246)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

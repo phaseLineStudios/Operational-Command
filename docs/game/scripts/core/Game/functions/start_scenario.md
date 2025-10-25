@@ -6,7 +6,7 @@
 **Signature**
 
 ```gdscript
-func start_scenario(prim: Array[StringName]) -> void
+func start_scenario(prim: Array[String]) -> void
 ```
 
 ## Description
@@ -16,7 +16,7 @@ Start mission
 ## Source
 
 ```gdscript
-func start_scenario(prim: Array[StringName]) -> void:
+func start_scenario(prim: Array[String]) -> void:
 	if current_scenario == null:
 		push_error("No scenario loaded. Cannot start scenario")
 		return

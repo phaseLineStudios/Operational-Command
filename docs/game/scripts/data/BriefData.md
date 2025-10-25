@@ -27,7 +27,7 @@ extends Resource
 - `String frag_start_time` — Start time / H-Hour context fragment
 - `String frag_mission` — Mission statement fragment (task & purpose)
 - `Array[ScenarioObjectiveData] frag_objectives` — Objectives list
-- `Array[String] frag_execution` — Execution guidance (e.g., scheme of maneuver)
+- `String frag_execution` — Execution guidance (e.g., scheme of maneuver)
 - `String frago_logi` — Administration & logistics fragment
 - `Texture2D board_texture` — Background texture for the intel/briefing board
 - `Array[BriefItemData] board_items` — Items pinned on the intel board (documents, images, etc.)
@@ -145,7 +145,7 @@ Objectives list
 ### frag_execution
 
 ```gdscript
-var frag_execution: Array[String]
+var frag_execution: String
 ```
 
 Decorators: `@export`

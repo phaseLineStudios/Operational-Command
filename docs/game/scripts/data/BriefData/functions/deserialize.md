@@ -1,6 +1,6 @@
 # BriefData::deserialize Function Reference
 
-*Defined at:* `scripts/data/BriefData.gd` (lines 79–129)</br>
+*Defined at:* `scripts/data/BriefData.gd` (lines 83–131)</br>
 *Belongs to:* [BriefData](../../BriefData.md)
 
 **Signature**
@@ -36,14 +36,12 @@ static func deserialize(data: Variant) -> BriefData:
 	var mis: Dictionary = data.get("mission", {})
 	if typeof(mis) == TYPE_DICTIONARY:
 		b.frag_mission = mis.get("statement", b.frag_mission)
-		b.frag_objectives = mis.get("objectives", b.frag_objectives)
+		var objs = mis.get("objectives", b.frag_objectives)
+		b.frag_objectives = []
+		for obj in objs:
+			b.frag_objectives.append(ScenarioObjectiveData.deserialize(obj))
 
-	var exe: Dictionary = data.get("execution", b.frag_execution)
-	if typeof(exe) == TYPE_ARRAY:
-		var tmp: Array[String] = []
-		for e in exe:
-			tmp.append(str(e))
-		b.frag_execution = tmp
+	b.frag_execution = data.get("execution", b.frag_execution)
 
 	b.frago_logi = data.get("admin_logi", b.frago_logi)
 

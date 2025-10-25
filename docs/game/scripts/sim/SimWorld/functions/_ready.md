@@ -1,6 +1,6 @@
 # SimWorld::_ready Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 23–46)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 67–101)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -11,31 +11,42 @@ func _ready() -> void
 
 ## Description
 
-Create and configure AmmoSystem; optionally hook up RadioFeedback.
+Initializes tick timing/RNG and wires router signals. Starts processing.
 
 ## Source
 
 ```gdscript
 func _ready() -> void:
-	add_child(_ammo)
-	_ammo.ammo_profile = preload("res://data/ammo/default_caps.tres")
+	_tick_dt = 1.0 / max(tick_hz, 0.001)
+	if rng_seed == 0:
+		_rng.randomize()
+	else:
+		_rng.seed = rng_seed
 
-	add_child(_adapter)
-	_adapter.add_to_group("CombatAdapter")
-	_adapter.ammo_system_path = _ammo.get_path()
-	# Register units once roster is ready (left commented for now; call from roster code):
-	# for u in _current_units:
-	#	_ammo.register_unit(u)
-	#	su.bind_fuel_system(_fuel)
+	_router.order_applied.connect(_on_order_applied)
+	_router.order_failed.connect(_on_order_failed)
 
-	# Fuel System
-	add_child(_fuel)
+	if ammo_system:
+		ammo_system.ammo_low.connect(
+			func(uid): emit_signal("radio_message", "warn", "%s low ammo." % uid)
+		)
+		ammo_system.ammo_critical.connect(
+			func(uid): emit_signal("radio_message", "warn", "%s critical ammo." % uid)
+		)
+		ammo_system.ammo_empty.connect(
+			func(uid): emit_signal("radio_message", "error", "%s winchester (out of ammo)." % uid)
+		)
 
-	# Optional radio hookup (if a RadioFeedback node exists in the scene).
-	var radio := get_tree().get_first_node_in_group("RadioFeedback") as RadioFeedback
-	if radio:
-		radio.bind_ammo(_ammo)
-		radio.bind_fuel(_fuel)
+	if fuel_system:
+		fuel_system.fuel_low.connect(
+			func(uid): emit_signal("radio_message", "warn", "%s fuel low." % uid)
+		)
+		fuel_system.fuel_critical.connect(
+			func(uid): emit_signal("radio_message", "warn", "%s fuel critical." % uid)
+		)
+		fuel_system.fuel_empty.connect(
+			func(uid): emit_signal("radio_message", "error", "%s immobilized: fuel out." % uid)
+		)
 
-	Game.start_scenario([])
+	set_process(true)
 ```

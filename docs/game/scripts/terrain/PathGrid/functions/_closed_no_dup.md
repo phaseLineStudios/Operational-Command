@@ -1,6 +1,6 @@
 # PathGrid::_closed_no_dup Function Reference
 
-*Defined at:* `scripts/terrain/PathGrid.gd` (lines 870–876)</br>
+*Defined at:* `scripts/terrain/PathGrid.gd` (lines 888–894)</br>
 *Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**

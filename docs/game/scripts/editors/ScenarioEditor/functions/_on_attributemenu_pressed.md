@@ -1,6 +1,6 @@
 # ScenarioEditor::_on_attributemenu_pressed Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 640–656)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 646–672)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
@@ -24,11 +24,21 @@ func _on_attributemenu_pressed(id: int):
 			else:
 				new_scenario_dialog.show_dialog(true)
 		1:
-			var acc := AcceptDialog.new()
-			acc.title = "Briefing"
-			acc.dialog_text = "Briefing tool not yet implemented."
-			add_child(acc)
-			acc.popup_centered()
+			if ctx.data == null:
+				var acc := AcceptDialog.new()
+				acc.title = "Briefing"
+				acc.dialog_text = "Create a scenario first."
+				add_child(acc)
+				acc.popup_centered()
+				return
+			brief_dialog.show_dialog(true, ctx.data.briefing)
 		2:
-			%WeatherDialog.show_dialog(true)
+			if ctx.data == null:
+				var acc := AcceptDialog.new()
+				acc.title = "Weather"
+				acc.dialog_text = "Create a scenario first."
+				add_child(acc)
+				acc.popup_centered()
+				return
+			weather_dialog.show_dialog(true)
 ```

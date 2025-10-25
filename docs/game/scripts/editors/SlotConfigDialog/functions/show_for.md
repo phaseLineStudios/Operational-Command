@@ -1,6 +1,6 @@
 # SlotConfigDialog::show_for Function Reference
 
-*Defined at:* `scripts/editors/SlotConfigDialog.gd` (lines 26–38)</br>
+*Defined at:* `scripts/editors/SlotConfigDialog.gd` (lines 27–40)</br>
 *Belongs to:* [SlotConfigDialog](../../SlotConfigDialog.md)
 
 **Signature**
@@ -24,6 +24,7 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 
 	key_input.text = String(s.key)
 	title_input.text = s.title
+	callsign_input.text = s.callsign
 	_roles = s.allowed_roles
 	_refresh_role_list()
 	visible = true

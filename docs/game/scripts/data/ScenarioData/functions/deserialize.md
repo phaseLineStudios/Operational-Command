@@ -1,6 +1,6 @@
 # ScenarioData::deserialize Function Reference
 
-*Defined at:* `scripts/data/ScenarioData.gd` (lines 130–214)</br>
+*Defined at:* `scripts/data/ScenarioData.gd` (lines 132–214)</br>
 *Belongs to:* [ScenarioData](../../ScenarioData.md)
 
 **Signature**
@@ -32,11 +32,9 @@ static func deserialize(json: Variant) -> ScenarioData:
 		if terr is TerrainData:
 			s.terrain = terr
 
-	var brief_id := str(json.get("briefing_id", ""))
-	if brief_id != "":
-		var brief: BriefData = ContentDB.get_briefing(brief_id)
-		if brief is BriefData:
-			s.briefing = brief
+	var brief_val: Variant = json.get("briefing", null)
+	if brief_val != null:
+		s.briefing = BriefData.deserialize(brief_val)
 
 	@warning_ignore("int_as_enum_without_cast")
 	s.difficulty = _difficulty_from(json.get("difficulty", s.difficulty))

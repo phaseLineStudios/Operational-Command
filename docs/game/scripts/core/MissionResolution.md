@@ -17,9 +17,9 @@ Scoring weights
 
 ## Public Member Functions
 
-- [`func start(prim: Array[StringName], scenario: StringName = &"") -> void`](MissionResolution/functions/start.md) — Initialize for a mission.
+- [`func start(prim: Array[String], scenario: String = "") -> void`](MissionResolution/functions/start.md) — Initialize for a mission.
 - [`func tick(dt: float) -> void`](MissionResolution/functions/tick.md) — Advance internal timer.
-- [`func set_objective_state(id: StringName, state: ObjectiveState) -> void`](MissionResolution/functions/set_objective_state.md) — Update an objective state.
+- [`func set_objective_state(id: String, state: ObjectiveState) -> void`](MissionResolution/functions/set_objective_state.md) — Update an objective state.
 - [`func add_casualties(friendly: int = 0, enemy: int = 0) -> void`](MissionResolution/functions/add_casualties.md) — Record casualties (aggregated).
 - [`func add_units_lost(count: int = 1) -> void`](MissionResolution/functions/add_units_lost.md) — Record fully destroyed friendly unit(s) (e.g., wiped marker).
 - [`func evaluate_outcome() -> MissionOutcome`](MissionResolution/functions/evaluate_outcome.md) — Compute current best-guess outcome (not final).
@@ -31,8 +31,8 @@ Scoring weights
 
 ## Public Attributes
 
-- `StringName scenario_id`
-- `Array[StringName] primary_objectives`
+- `String scenario_id`
+- `Array[String] primary_objectives`
 - `Dictionary _objective_states`
 - `int _units_lost`
 - `float _elapsed_s`
@@ -42,7 +42,7 @@ Scoring weights
 
 ## Signals
 
-- `signal objective_updated(objective_id: StringName, state: ObjectiveState)` — Tracks mission progress and computes a placeholder outcome + score. **Experimental**
+- `signal objective_updated(objective_id: String, state: ObjectiveState)` — Tracks mission progress and computes a placeholder outcome + score. **Experimental**
 - `signal score_changed(total: int)`
 - `signal mission_finalized(outcome: MissionOutcome, summary: Dictionary)`
 
@@ -56,7 +56,7 @@ Scoring weights
 ### start
 
 ```gdscript
-func start(prim: Array[StringName], scenario: StringName = &"") -> void
+func start(prim: Array[String], scenario: String = "") -> void
 ```
 
 Initialize for a mission.
@@ -72,7 +72,7 @@ Advance internal timer. Call from mission loop.
 ### set_objective_state
 
 ```gdscript
-func set_objective_state(id: StringName, state: ObjectiveState) -> void
+func set_objective_state(id: String, state: ObjectiveState) -> void
 ```
 
 Update an objective state.
@@ -142,13 +142,13 @@ func _score_breakdown() -> Dictionary
 ### scenario_id
 
 ```gdscript
-var scenario_id: StringName
+var scenario_id: String
 ```
 
 ### primary_objectives
 
 ```gdscript
-var primary_objectives: Array[StringName]
+var primary_objectives: Array[String]
 ```
 
 ### _objective_states
@@ -192,7 +192,7 @@ var _is_final: bool
 ### objective_updated
 
 ```gdscript
-signal objective_updated(objective_id: StringName, state: ObjectiveState)
+signal objective_updated(objective_id: String, state: ObjectiveState)
 ```
 
 > **Experimental**

@@ -162,6 +162,19 @@ func push_entity_move(
 	_record_commit(desc)
 
 
+## Set a property on a Resource with undo/redo (emits changed).
+func push_prop_set(
+	target: Object, prop: String, before: Variant, after: Variant, desc: String
+) -> void:
+	_ur.create_action(desc)
+	_ur.add_do_property(target, prop, after)
+	_ur.add_undo_property(target, prop, before)
+	_ur.add_do_method(Callable(self, "_emit_changed").bind(target))
+	_ur.add_undo_method(Callable(self, "_emit_changed").bind(target))
+	_ur.commit_action()
+	_record_commit(desc)
+
+
 func _apply_array(data: Resource, array_name: String, value: Array) -> void:
 	var current: Array = data.get(array_name)
 

@@ -18,6 +18,8 @@ Handles map interaction and applies terrain renderer as a texture
 ## Public Member Functions
 
 - [`func _ready() -> void`](MapController/functions/_ready.md)
+- [`func init_terrain(scenario: ScenarioData) -> void`](MapController/functions/init_terrain.md) — Initilizes terrain for scenario
+- [`func prebuild_force_profiles() -> void`](MapController/functions/prebuild_force_profiles.md) — Prebuild movement profiles
 - [`func _process(_dt: float) -> void`](MapController/functions/_process.md)
 - [`func _unhandled_input(event: InputEvent) -> void`](MapController/functions/_unhandled_input.md) — Handle *unhandled* input and emit when it hits the map.
 - [`func _apply_viewport_texture() -> void`](MapController/functions/_apply_viewport_texture.md) — Assign the terrain viewport as the map texture
@@ -39,6 +41,7 @@ Handles map interaction and applies terrain renderer as a texture
 - `StandardMaterial3D _mat`
 - `PlaneMesh _plane`
 - `Camera3D _camera`
+- `ScenarioData _scenario`
 - `SubViewport terrain_viewport`
 - `TerrainRender renderer`
 - `MeshInstance3D map`
@@ -57,6 +60,22 @@ Handles map interaction and applies terrain renderer as a texture
 ```gdscript
 func _ready() -> void
 ```
+
+### init_terrain
+
+```gdscript
+func init_terrain(scenario: ScenarioData) -> void
+```
+
+Initilizes terrain for scenario
+
+### prebuild_force_profiles
+
+```gdscript
+func prebuild_force_profiles() -> void
+```
+
+Prebuild movement profiles
 
 ### _process
 
@@ -196,6 +215,12 @@ var _plane: PlaneMesh
 
 ```gdscript
 var _camera: Camera3D
+```
+
+### _scenario
+
+```gdscript
+var _scenario: ScenarioData
 ```
 
 ### terrain_viewport

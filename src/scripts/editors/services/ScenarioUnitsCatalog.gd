@@ -63,7 +63,6 @@ func _on_tree_item(ctx: ScenarioEditorContext) -> void:
 		return
 	var payload: Variant = it.get_metadata(0)
 	if payload is UnitData or payload is UnitSlotData:
-		# delegate to the editor: start tool
 		ctx.selection_changed.emit({"type": &"palette", "payload": payload})
 
 

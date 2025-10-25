@@ -1,6 +1,6 @@
 # AmmoProfile::apply_defaults_if_missing Function Reference
 
-*Defined at:* `scripts/data/AmmoProfile.gd` (lines 16–25)</br>
+*Defined at:* `scripts/data/AmmoProfile.gd` (lines 16–27)</br>
 *Belongs to:* [AmmoProfile](../../AmmoProfile.md)
 
 **Signature**

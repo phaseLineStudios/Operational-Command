@@ -1,0 +1,80 @@
+[gd_scene load_steps=2 format=3 uid="uid://ccroftleapws8"]
+
+[ext_resource type="Script" uid="uid://bfjacndpokixn" path="res://scripts/editors/ObjectiveDialog.gd" id="1_hu5bc"]
+
+[node name="ObjectiveDialog" type="Window"]
+oversampling_override = 1.0
+title = "Add Objective"
+position = Vector2i(0, 36)
+size = Vector2i(420, 320)
+script = ExtResource("1_hu5bc")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Root" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="IdLabel" type="Label" parent="ScrollContainer/Root"]
+layout_mode = 2
+text = "Unique Objective ID"
+
+[node name="Id" type="LineEdit" parent="ScrollContainer/Root"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "required"
+
+[node name="TitleLabel" type="Label" parent="ScrollContainer/Root"]
+layout_mode = 2
+text = "Title"
+
+[node name="Title" type="LineEdit" parent="ScrollContainer/Root"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SuccessLabel" type="Label" parent="ScrollContainer/Root"]
+layout_mode = 2
+text = "Success (what must happen?)"
+
+[node name="Success" type="TextEdit" parent="ScrollContainer/Root"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+
+[node name="ScoreLabel" type="Label" parent="ScrollContainer/Root"]
+layout_mode = 2
+text = "Score"
+
+[node name="Score" type="SpinBox" parent="ScrollContainer/Root"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 10000.0
+step = 10.0
+value = 100.0
+
+[node name="Spacer" type="Control" parent="ScrollContainer/Root"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActionsRow" type="HBoxContainer" parent="ScrollContainer/Root"]
+layout_mode = 2
+
+[node name="Cancel" type="Button" parent="ScrollContainer/Root/ActionsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Cancel"
+
+[node name="Spacer" type="Control" parent="ScrollContainer/Root/ActionsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Save" type="Button" parent="ScrollContainer/Root/ActionsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Save"

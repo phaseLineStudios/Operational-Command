@@ -64,6 +64,8 @@ enum ScenarioDifficulty { EASY, NORMAL, HARD }
 @export_group("Content")
 ## List of units placed in this scenario
 @export var units: Array[ScenarioUnit] = []
+## List of playable units. Populated on game start
+@export var playable_units: Array[ScenarioUnit] = []
 ## Triggers that define scripted events and conditions
 @export var triggers: Array[ScenarioTrigger] = []
 ## Tasks or objectives for the AI to complete
@@ -102,7 +104,7 @@ func serialize() -> Dictionary:
 		"description": description,
 		"preview_path": preview_path,
 		"terrain_path": ContentDB.res_path_or_null(terrain),
-		"briefing_id": briefing.id as Variant if briefing else null as Variant,
+		"briefing": briefing.serialize() as Variant if briefing else null as Variant,
 		"difficulty": int(difficulty),
 		"map_position": _vec2_to_dict(map_position),
 		"scenario_order": scenario_order,
@@ -143,11 +145,9 @@ static func deserialize(json: Variant) -> ScenarioData:
 		if terr is TerrainData:
 			s.terrain = terr
 
-	var brief_id := str(json.get("briefing_id", ""))
-	if brief_id != "":
-		var brief: BriefData = ContentDB.get_briefing(brief_id)
-		if brief is BriefData:
-			s.briefing = brief
+	var brief_val: Variant = json.get("briefing", null)
+	if brief_val != null:
+		s.briefing = BriefData.deserialize(brief_val)
 
 	@warning_ignore("int_as_enum_without_cast")
 	s.difficulty = _difficulty_from(json.get("difficulty", s.difficulty))

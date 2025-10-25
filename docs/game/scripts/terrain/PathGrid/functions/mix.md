@@ -1,6 +1,6 @@
 # PathGrid::mix Function Reference
 
-*Defined at:* `scripts/terrain/PathGrid.gd` (lines 900–901)</br>
+*Defined at:* `scripts/terrain/PathGrid.gd` (lines 918–919)</br>
 *Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**

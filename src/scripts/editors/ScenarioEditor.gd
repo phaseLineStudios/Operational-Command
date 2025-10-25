@@ -93,6 +93,7 @@ var _dirty := false
 @onready var terrain_render: TerrainRender = %World
 @onready var new_scenario_dialog: NewScenarioDialog = %NewScenarioDialog
 @onready var weather_dialog: ScenarioWeatherDialog = %WeatherDialog
+@onready var brief_dialog: BriefingDialog = %BriefingDialog
 @onready var terrain_overlay: ScenarioEditorOverlay = %Overlay
 @onready var tool_hint: HBoxContainer = %ToolHint
 @onready var mouse_position_label: Label = %MousePosition
@@ -149,6 +150,9 @@ func _ready():
 
 	new_scenario_dialog.request_create.connect(_on_new_scenario)
 	new_scenario_dialog.request_update.connect(_on_update_scenario)
+
+	brief_dialog.editor = self
+	brief_dialog.request_update.connect(_on_briefing_update)
 
 	terrain_overlay.gui_input.connect(_on_overlay_gui_input)
 	weather_dialog.editor = self
@@ -301,9 +305,11 @@ func _place_slot_from_tool(slot_def: UnitSlotData, pos_m: Vector2) -> void:
 	if ctx.data == null:
 		push_warning("No active scenario")
 		return
+	var callsign := _generate_callsign(ScenarioUnit.Affiliation.FRIEND)
 	var inst := UnitSlotData.new()
 	inst.key = _next_slot_key()
-	inst.title = _generate_callsign(ScenarioUnit.Affiliation.FRIEND)
+	inst.title = callsign
+	inst.callsign = callsign
 	inst.allowed_roles = slot_def.allowed_roles.duplicate()
 	inst.start_position = pos_m
 	if ctx.data.unit_slots == null:
@@ -645,13 +651,23 @@ func _on_attributemenu_pressed(id: int):
 			else:
 				new_scenario_dialog.show_dialog(true)
 		1:
-			var acc := AcceptDialog.new()
-			acc.title = "Briefing"
-			acc.dialog_text = "Briefing tool not yet implemented."
-			add_child(acc)
-			acc.popup_centered()
+			if ctx.data == null:
+				var acc := AcceptDialog.new()
+				acc.title = "Briefing"
+				acc.dialog_text = "Create a scenario first."
+				add_child(acc)
+				acc.popup_centered()
+				return
+			brief_dialog.show_dialog(true, ctx.data.briefing)
 		2:
-			%WeatherDialog.show_dialog(true)
+			if ctx.data == null:
+				var acc := AcceptDialog.new()
+				acc.title = "Weather"
+				acc.dialog_text = "Create a scenario first."
+				add_child(acc)
+				acc.popup_centered()
+				return
+			weather_dialog.show_dialog(true)
 
 
 ## Save to current path or fallback to Save As
@@ -721,6 +737,17 @@ func _on_new_scenario(d: ScenarioData) -> void:
 
 ## Apply edits to current scenario data from dialog
 func _on_update_scenario(_d: ScenarioData) -> void:
+	_on_data_changed()
+
+
+## Apply briefing change via history (undoable).
+func _on_briefing_update(new_brief: BriefData) -> void:
+	if ctx.data == null:
+		return
+	var before := ctx.data.briefing
+	var label := "Create Briefing" if before == null else "Update Briefing"
+	history.push_prop_set(ctx.data, "briefing", before, new_brief, label)
+	_dirty = true
 	_on_data_changed()
 
 

@@ -1,6 +1,6 @@
 # ScenarioEditor::_init_file_dialogs Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 176–193)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 180–197)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

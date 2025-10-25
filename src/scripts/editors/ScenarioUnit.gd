@@ -41,6 +41,8 @@ const ARRIVE_EPSILON := 1.0
 @export var combat_mode: CombatMode = CombatMode.OPEN_FIRE
 ## Unit Behaviour
 @export var behaviour: Behaviour = Behaviour.SAFE
+## Is unit playable.
+@export var playable: bool = false
 
 var _move_state: MoveState = MoveState.IDLE
 var _move_dest_m: Vector2 = Vector2.ZERO
@@ -51,6 +53,12 @@ var _move_paused := false
 var _morale: float = 0.6
 var _morale_sys: MoraleSystem
 var _fuel: FuelSystem = null
+
+
+## Check if unit is dead.
+## [return] True if unit is destroyed.
+func is_dead() -> bool:
+	return float(unit.state_strength / unit.strength) <= 0.0
 
 
 #initializing moraleSystem
@@ -77,12 +85,15 @@ func bind_fuel_system(fs: FuelSystem) -> void:
 func plan_move(grid: PathGrid, dest_m: Vector2) -> bool:
 	if grid == null:
 		emit_signal("move_blocked", "no_grid")
+		LogService.warning("move blocked: no_grid", "ScenarioUnit.gd:66")
 		return false
 	if unit == null:
 		emit_signal("move_blocked", "no_unit")
+		LogService.warning("move blocked: no_unit", "ScenarioUnit.gd:69")
 		return false
 	if unit.speed_kph <= 0.0:
 		emit_signal("move_blocked", "no_speed")
+		LogService.warning("move blocked: no_speed", "ScenarioUnit.gd:74")
 		return false
 	if position_m.distance_to(dest_m) <= ARRIVE_EPSILON:
 		_move_dest_m = dest_m
@@ -99,6 +110,7 @@ func plan_move(grid: PathGrid, dest_m: Vector2) -> bool:
 		_move_path = []
 		_move_path_idx = 0
 		emit_signal("move_blocked", "no_path")
+		LogService.warning("move blocked: no_path", "ScenarioUnit.gd:91")
 		return false
 	_move_path = p
 	_move_path_idx = 0
@@ -217,17 +229,17 @@ func path_index() -> int:
 ## _speed_here_mps also includes speed penalties for low fuel
 func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 	if grid == null or grid._astar == null:
-		var v := _kph_to_mps(unit.speed_kph)
+		var speed := _kph_to_mps(unit.speed_kph)
 		if _fuel != null:
-			v *= _fuel.speed_mult(id)
-		return v
+			speed *= _fuel.speed_mult(id)
+		return speed
 
 	var c := grid.world_to_cell(p_m)
 	if not grid._in_bounds(c):
-		var v := _kph_to_mps(unit.speed_kph)
+		var speed := _kph_to_mps(unit.speed_kph)
 		if _fuel != null:
-			v *= _fuel.speed_mult(id)
-		return v
+			speed *= _fuel.speed_mult(id)
+		return speed
 
 	if grid._astar.is_in_boundsv(c) and grid._astar.is_point_solid(c):
 		return 0.0
@@ -270,7 +282,8 @@ func serialize() -> Dictionary:
 		"position": ContentDB.v2(position_m),
 		"affiliation": int(affiliation),
 		"combat_mode": int(combat_mode),
-		"behaviour": int(behaviour)
+		"behaviour": int(behaviour),
+		"playable": playable
 	}
 
 
@@ -284,4 +297,5 @@ static func deserialize(d: Dictionary) -> ScenarioUnit:
 	u.affiliation = int(d.get("affiliation")) as Affiliation
 	u.combat_mode = int(d.get("combat_mode")) as CombatMode
 	u.behaviour = int(d.get("behaviour")) as Behaviour
+	u.playable = d.get("playable", u.playable)
 	return u

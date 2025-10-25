@@ -1,6 +1,6 @@
 # UnitSlotData::deserialize Function Reference
 
-*Defined at:* `scripts/data/UnitSlotData.gd` (lines 25–41)</br>
+*Defined at:* `scripts/data/UnitSlotData.gd` (lines 28–45)</br>
 *Belongs to:* [UnitSlotData](../../UnitSlotData.md)
 
 **Signature**
@@ -23,6 +23,7 @@ static func deserialize(data: Variant) -> UnitSlotData:
 	var inst := UnitSlotData.new()
 	inst.key = data.get("key", inst.key)
 	inst.title = data.get("title", inst.title)
+	inst.callsign = data.get("callsign", inst.callsign)
 	inst.start_position = ContentDB.v2_from(data.get("start_position", inst.start_position))
 
 	var roles = data.get("allowed_roles", inst.allowed_roles)

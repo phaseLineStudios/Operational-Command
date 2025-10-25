@@ -1,6 +1,6 @@
 # RadioFeedback::_ready Function Reference
 
-*Defined at:* `scripts/radio/RadioFeedback.gd` (lines 23–34)</br>
+*Defined at:* `scripts/radio/RadioFeedback.gd` (lines 24–35)</br>
 *Belongs to:* [RadioFeedback](../../RadioFeedback.md)
 
 **Signature**
@@ -19,7 +19,7 @@ Ready-time setup:
 
 ```gdscript
 func _ready() -> void:
-	OrdersParser.parse_error.connect(_on_parse_error)
+	radio_controller.parser.parse_error.connect(_on_parse_error)
 
 	var ammo := get_tree().get_first_node_in_group("AmmoSystem") as AmmoSystem
 	if ammo:

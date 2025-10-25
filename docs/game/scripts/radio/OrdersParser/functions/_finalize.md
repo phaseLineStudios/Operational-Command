@@ -1,6 +1,6 @@
 # OrdersParser::_finalize Function Reference
 
-*Defined at:* `scripts/radio/OrdersParser.gd` (lines 168–183)</br>
+*Defined at:* `scripts/radio/OrdersParser.gd` (lines 169–184)</br>
 *Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**
@@ -22,12 +22,12 @@ func _finalize(cur: Dictionary) -> Dictionary:
 	if cur.type == OrderType.CANCEL and cur.callsign == "":
 		return {}
 	return {
-		"callsign": String(cur.callsign),
+		"callsign": str(cur.callsign),
 		"type": int(cur.type),
-		"direction": String(cur.direction),
+		"direction": str(cur.direction),
 		"quantity": int(cur.quantity),
-		"zone": String(cur.zone),
-		"target_callsign": String(cur.target_callsign),
+		"zone": str(cur.zone),
+		"target_callsign": str(cur.target_callsign),
 		"raw": (cur.raw as PackedStringArray).duplicate()
 	}
 ```

@@ -70,7 +70,7 @@ func set_scenario_loadout(loadout: Dictionary) -> void:
 
 
 ## Start mission
-func start_scenario(prim: Array[StringName]) -> void:
+func start_scenario(prim: Array[String]) -> void:
 	if current_scenario == null:
 		push_error("No scenario loaded. Cannot start scenario")
 		return

@@ -33,6 +33,7 @@ vosk_gd. Emits transcription results for parsing into orders.
 - [`func _extract_final_text(raw: String) -> String`](STTService/functions/_extract_final_text.md) — Extract final text from Vosk's result(), which may be JSON or plain text.
 - [`func _build_full_sentence() -> String`](STTService/functions/_build_full_sentence.md) — Build the visible sentence from committed + segment with single spacing.
 - [`func _join_non_empty(a: String, b: String) -> String`](STTService/functions/_join_non_empty.md) — Join a and b with a single space if both are non-empty.
+- [`func get_recognizer() -> Vosk`](STTService/functions/get_recognizer.md) — Return a reference to the current recognizer.
 
 ## Public Attributes
 
@@ -148,6 +149,14 @@ func _join_non_empty(a: String, b: String) -> String
 ```
 
 Join a and b with a single space if both are non-empty.
+
+### get_recognizer
+
+```gdscript
+func get_recognizer() -> Vosk
+```
+
+Return a reference to the current recognizer.
 
 ## Member Data Documentation
 

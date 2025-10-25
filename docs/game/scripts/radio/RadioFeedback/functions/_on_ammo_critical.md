@@ -1,6 +1,6 @@
 # RadioFeedback::_on_ammo_critical Function Reference
 
-*Defined at:* `scripts/radio/RadioFeedback.gd` (lines 70–73)</br>
+*Defined at:* `scripts/radio/RadioFeedback.gd` (lines 71–74)</br>
 *Belongs to:* [RadioFeedback](../../RadioFeedback.md)
 
 **Signature**

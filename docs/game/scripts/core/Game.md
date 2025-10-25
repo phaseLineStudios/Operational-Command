@@ -28,7 +28,7 @@ tactical map → debrief → unit management.
 - [`func select_save(save_id: StringName) -> void`](Game/functions/select_save.md) — Set current save and emit `signal save_selected`.
 - [`func select_scenario(scenario: ScenarioData) -> void`](Game/functions/select_scenario.md) — Set current mission and emit `signal mission_selected`.
 - [`func set_scenario_loadout(loadout: Dictionary) -> void`](Game/functions/set_scenario_loadout.md) — Set current mission loadout and emit `signal mission_loadout_selected`
-- [`func start_scenario(prim: Array[StringName]) -> void`](Game/functions/start_scenario.md) — Start mission
+- [`func start_scenario(prim: Array[String]) -> void`](Game/functions/start_scenario.md) — Start mission
 - [`func update_loop(dt: float) -> void`](Game/functions/update_loop.md) — Call from mission tick.
 - [`func complete_objective(id: StringName) -> void`](Game/functions/complete_objective.md) — Complete objective
 - [`func fail_objective(id: StringName) -> void`](Game/functions/fail_objective.md) — Fail objective
@@ -111,7 +111,7 @@ Set current mission loadout and emit `signal mission_loadout_selected`
 ### start_scenario
 
 ```gdscript
-func start_scenario(prim: Array[StringName]) -> void
+func start_scenario(prim: Array[String]) -> void
 ```
 
 Start mission

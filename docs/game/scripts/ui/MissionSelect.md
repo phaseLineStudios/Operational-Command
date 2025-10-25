@@ -53,6 +53,7 @@ Extra padding inside the label panel (px).
 - [`func _on_backdrop_gui_input(event: InputEvent) -> void`](MissionSelect/functions/_on_backdrop_gui_input.md) — Decide if an overlay click should close the card.
 - [`func _point_over_any_pin(view_pt: Vector2) -> bool`](MissionSelect/functions/_point_over_any_pin.md) — True if the viewport point lies over any mission pin.
 - [`func _position_card_near_pin(pin_btn: BaseButton) -> void`](MissionSelect/functions/_position_card_near_pin.md) — Place the card near a pin and keep it on-screen.
+- [`func _prepare_card_for_float() -> void`](MissionSelect/functions/_prepare_card_for_float.md) — Prepare the card position.
 - [`func _close_card() -> void`](MissionSelect/functions/_close_card.md) — Hide card and clear selection.
 - [`func _clear_children(node: Node) -> void`](MissionSelect/functions/_clear_children.md) — Remove all children from a node.
 
@@ -67,7 +68,7 @@ Extra padding inside the label panel (px).
 - `Button _btn_back`
 - `TextureRect _map_rect`
 - `Control _pins_layer`
-- `Panel _card`
+- `PanelContainer _card`
 - `Label _card_title`
 - `RichTextLabel _card_desc`
 - `TextureRect _card_image`
@@ -189,6 +190,14 @@ func _position_card_near_pin(pin_btn: BaseButton) -> void
 
 Place the card near a pin and keep it on-screen.
 
+### _prepare_card_for_float
+
+```gdscript
+func _prepare_card_for_float() -> void
+```
+
+Prepare the card position.
+
 ### _close_card
 
 ```gdscript
@@ -268,7 +277,7 @@ var _pins_layer: Control
 ### _card
 
 ```gdscript
-var _card: Panel
+var _card: PanelContainer
 ```
 
 ### _card_title

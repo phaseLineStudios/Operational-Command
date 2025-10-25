@@ -1,6 +1,6 @@
 # PathGrid::_emit_build_failed Function Reference
 
-*Defined at:* `scripts/terrain/PathGrid.gd` (lines 866–869)</br>
+*Defined at:* `scripts/terrain/PathGrid.gd` (lines 884–887)</br>
 *Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**

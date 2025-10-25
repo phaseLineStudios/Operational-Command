@@ -1,6 +1,6 @@
 # RadioFeedback::bind_ammo Function Reference
 
-*Defined at:* `scripts/radio/RadioFeedback.gd` (lines 37–46)</br>
+*Defined at:* `scripts/radio/RadioFeedback.gd` (lines 38–47)</br>
 *Belongs to:* [RadioFeedback](../../RadioFeedback.md)
 
 **Signature**

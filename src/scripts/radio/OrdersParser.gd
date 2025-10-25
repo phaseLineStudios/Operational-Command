@@ -1,3 +1,4 @@
+class_name OrdersParser
 extends Node
 ## Converts radio transcripts into structured orders.
 ##
@@ -73,7 +74,7 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 
 		# Callsign.
 		if callsigns.has(t):
-			var cs := String(callsigns[t])
+			var cs := str(callsigns[t])
 			if cur.callsign == "":
 				cur.callsign = cs
 			else:
@@ -101,14 +102,14 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 
 		# Direction.
 		if directions.has(t):
-			cur.direction = String(directions[t])
+			cur.direction = str(directions[t])
 			i += 1
 			continue
 
 		if qty_labels.has(t):
 			var num_after := _read_number(tokens, i + 1, number_words)
 			if num_after.consumed > 0:
-				cur.zone = String(qty_labels[t])
+				cur.zone = str(qty_labels[t])
 				cur.quantity = num_after.value
 				i += 1 + num_after.consumed
 				continue
@@ -122,7 +123,7 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 			if i < tokens.size():
 				var lbl := tokens[i]
 				if qty_labels.has(lbl):
-					cur.zone = String(qty_labels[lbl])
+					cur.zone = str(qty_labels[lbl])
 					i += 1
 			cur.quantity = num_here.value
 			continue
@@ -171,12 +172,12 @@ func _finalize(cur: Dictionary) -> Dictionary:
 	if cur.type == OrderType.CANCEL and cur.callsign == "":
 		return {}
 	return {
-		"callsign": String(cur.callsign),
+		"callsign": str(cur.callsign),
 		"type": int(cur.type),
-		"direction": String(cur.direction),
+		"direction": str(cur.direction),
 		"quantity": int(cur.quantity),
-		"zone": String(cur.zone),
-		"target_callsign": String(cur.target_callsign),
+		"zone": str(cur.zone),
+		"target_callsign": str(cur.target_callsign),
 		"raw": (cur.raw as PackedStringArray).duplicate()
 	}
 
@@ -311,19 +312,19 @@ func order_to_string(o: Dictionary) -> String:
 	if o.is_empty():
 		return "<invalid>"
 	var s := ""
-	s += "%s: " % String(o.get("callsign", ""))
+	s += "%s: " % str(o.get("callsign", ""))
 	s += _order_type_to_string(int(o.get("type", OrderType.UNKNOWN)))
-	var dir := String(o.get("direction", ""))
+	var dir := str(o.get("direction", ""))
 	if dir != "":
 		s += " " + dir
 	var qty := int(o.get("quantity", 0))
 	if qty > 0:
-		var z := String(o.get("zone", ""))
+		var z := str(o.get("zone", ""))
 		if z != "":
 			s += " %d %s" % [qty, z]
 		else:
 			s += " %d" % qty
-	var tgt := String(o.get("target_callsign", ""))
+	var tgt := str(o.get("target_callsign", ""))
 	if tgt != "":
 		s += " -> %s" % tgt
 	return s.strip_edges()

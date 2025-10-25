@@ -53,6 +53,7 @@ If present in a scene, call `bind_fuel(...)` or let `_ready()` auto-bind by grou
 ## Public Attributes
 
 - `AudioStreamPlayer2D error_player` — UI audio for parse errors (must exist in the scene tree at %ErrorSound).
+- `Radio radio_controller`
 
 ## Member Function Documentation
 
@@ -199,3 +200,9 @@ var error_player: AudioStreamPlayer2D
 Decorators: `@onready`
 
 UI audio for parse errors (must exist in the scene tree at %ErrorSound).
+
+### radio_controller
+
+```gdscript
+var radio_controller: Radio
+```

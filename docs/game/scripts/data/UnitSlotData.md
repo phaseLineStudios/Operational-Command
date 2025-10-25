@@ -20,6 +20,7 @@ extends Resource
 
 - `String key` — A unique key identifying this slot.
 - `String title` — A human-readable title for the slot.
+- `String callsign` — Ingame Callsign
 - `Array[String] allowed_roles` — A list of allowed roles
 - `Vector2 start_position` — Unit starting position
 
@@ -62,6 +63,16 @@ var title: String
 Decorators: `@export`
 
 A human-readable title for the slot.
+
+### callsign
+
+```gdscript
+var callsign: String
+```
+
+Decorators: `@export`
+
+Ingame Callsign
 
 ### allowed_roles
 

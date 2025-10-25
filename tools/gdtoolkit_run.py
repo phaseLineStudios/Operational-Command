@@ -241,6 +241,7 @@ def _run_format(color: bool, paths: list[str], check: bool, line_length: int) ->
     cmd = ["gdformat"]
     if check:
         cmd.append("--check")
+        cmd.append("--diff")
     cmd += ["--line-length", str(line_length), *paths]
     return _run(color, "gdformat", cmd)
 

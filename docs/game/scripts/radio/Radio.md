@@ -24,6 +24,10 @@ Turn on/off the radio stream
 - [`func _stop_tx() -> void`](Radio/functions/_stop_tx.md) — Manually disable the radio / STT.
 - [`func _exit_tree() -> void`](Radio/functions/_exit_tree.md) — Ensure we stop capture when the radio node leaves.
 
+## Public Attributes
+
+- `OrdersParser parser`
+
 ## Signals
 
 - `signal radio_on` — Simulated field radio: PTT state, audio FX, and routing to STT.
@@ -81,6 +85,14 @@ func _exit_tree() -> void
 ```
 
 Ensure we stop capture when the radio node leaves.
+
+## Member Data Documentation
+
+### parser
+
+```gdscript
+var parser: OrdersParser
+```
 
 ## Signal Documentation
 

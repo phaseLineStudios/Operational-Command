@@ -1,15 +1,27 @@
-[gd_scene load_steps=46 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=59 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
+[ext_resource type="Script" uid="uid://d0ojagsd85iyf" path="res://scripts/ui/HQTable.gd" id="1_qgda6"]
 [ext_resource type="Script" uid="uid://dn828tsljtrki" path="res://scripts/core/Camera.gd" id="3_3f477"]
 [ext_resource type="Script" uid="uid://0r8k717de5os" path="res://scripts/core/PlayerInteraction.gd" id="4_py2wd"]
 [ext_resource type="Script" uid="uid://6xtsg3rqhc8t" path="res://scripts/core/MapController.gd" id="5_lmes1"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="6_cx6my"]
 [ext_resource type="Script" uid="uid://b1vs2cahgd48f" path="res://scripts/sim/SimWorld.gd" id="7_ge8rp"]
+[ext_resource type="Script" uid="uid://b5eh10v1g6c4v" path="res://scripts/sim/SimDebugOverlay.gd" id="7_tixey"]
 [ext_resource type="PackedScene" uid="uid://7ta8ojkjg5rg" path="res://scenes/ui/pause_menu.tscn" id="7_uk27s"]
-[ext_resource type="Script" uid="uid://dy2uex65i3y4m" path="res://scripts/sim/CombatAdapter.gd" id="9_vxnyp"]
+[ext_resource type="Script" uid="uid://bxw82utaedlvn" path="res://scripts/radio/OrdersParser.gd" id="9_415kk"]
+[ext_resource type="Script" uid="uid://be785qai04d2g" path="res://scripts/sim/adapters/MovementAdapter.gd" id="9_fera7"]
+[ext_resource type="Script" uid="uid://dy2uex65i3y4m" path="res://scripts/sim/adapters/CombatAdapter.gd" id="9_vxnyp"]
 [ext_resource type="Script" uid="uid://dq8m3cwvv276y" path="res://scripts/sim/Combat.gd" id="10_of8da"]
+[ext_resource type="Script" uid="uid://ckdlg61462pgb" path="res://scripts/sim/OrdersRouter.gd" id="11_tixey"]
+[ext_resource type="Script" uid="uid://bct80my556v84" path="res://scripts/radio/WordListUpdater.gd" id="12_4otl8"]
+[ext_resource type="Script" uid="uid://c3rgrbya520ur" path="res://scripts/sim/systems/AmmoSystem.gd" id="12_lrkar"]
+[ext_resource type="Script" uid="uid://c5dqpttm5xyed" path="res://scripts/sim/LOS.gd" id="13_qgda6"]
+[ext_resource type="Script" uid="uid://cw4tt3twmh4gk" path="res://scripts/sim/adapters/LOSAdapter.gd" id="14_415kk"]
+[ext_resource type="Script" uid="uid://brp222cgifhj0" path="res://scripts/sim/systems/FuelSystem.gd" id="14_hvywg"]
+[ext_resource type="Script" uid="uid://bxi60at4j0nrr" path="res://scripts/sim/scenario/TriggerEngine.gd" id="16_rdwew"]
+[ext_resource type="Script" uid="uid://dnnu3w3b3j5rk" path="res://scripts/data/FuelProfile.gd" id="16_yatot"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
 size = Vector2(10, 30)
@@ -134,7 +146,13 @@ albedo_color = Color(0, 0, 1, 0.47843137)
 material = SubResource("StandardMaterial3D_cx6my")
 size = Vector2(0.75, 0.35)
 
+[sub_resource type="Resource" id="Resource_2llyq"]
+script = ExtResource("16_yatot")
+metadata/_custom_type_script = "uid://dnnu3w3b3j5rk"
+
 [node name="HQTable" type="Node3D"]
+script = ExtResource("1_qgda6")
+debug = true
 
 [node name="Ground" type="StaticBody3D" parent="."]
 
@@ -357,36 +375,57 @@ shape = SubResource("BoxShape3D_ge0qv")
 mesh = SubResource("BoxMesh_ge8rp")
 skeleton = NodePath("../..")
 
-[node name="ObjectController" type="Node" parent="."]
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="PauseMenu" parent="UI" instance=ExtResource("7_uk27s")]
+unique_name_in_owner = true
+visible = false
+
+[node name="Controllers" type="Node" parent="."]
+
+[node name="ObjectController" type="Node" parent="Controllers"]
 script = ExtResource("4_py2wd")
 
-[node name="InteractionBounds" type="MeshInstance3D" parent="ObjectController"]
+[node name="InteractionBounds" type="MeshInstance3D" parent="Controllers/ObjectController"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7911129, 0)
 mesh = SubResource("PlaneMesh_ge8rp")
 
-[node name="MapController" type="Node" parent="."]
+[node name="MapController" type="Node" parent="Controllers"]
+unique_name_in_owner = true
 script = ExtResource("5_lmes1")
 
-[node name="TerrainViewport" type="SubViewport" parent="MapController"]
+[node name="TerrainViewport" type="SubViewport" parent="Controllers/MapController"]
 unique_name_in_owner = true
 handle_input_locally = false
 render_target_update_mode = 4
 
-[node name="TerrainRender" parent="MapController/TerrainViewport" instance=ExtResource("6_cx6my")]
+[node name="TerrainRender" parent="Controllers/MapController/TerrainViewport" instance=ExtResource("6_cx6my")]
 unique_name_in_owner = true
 
-[node name="GridUI" type="PanelContainer" parent="MapController"]
+[node name="DebugOverlay" type="Control" parent="Controllers/MapController/TerrainViewport/TerrainRender" node_paths=PackedStringArray("terrain_renderer", "_sim", "_orders", "_fuel")]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("7_tixey")
+debug_enabled = true
+terrain_renderer = NodePath("..")
+_sim = NodePath("../../../../WorldController")
+_orders = NodePath("../../../../RadioController/OrdersRouter")
+_fuel = NodePath("../../../../WorldController/FuelSystem")
+icon_size_px = 92
+font_size = 42
+
+[node name="GridUI" type="PanelContainer" parent="Controllers/MapController"]
 editor_description = "Temporary UI"
 visible = false
 offset_right = 64.0
 offset_bottom = 27.0
 
-[node name="Label" type="Label" parent="MapController/GridUI"]
+[node name="Label" type="Label" parent="Controllers/MapController/GridUI"]
 layout_mode = 2
 text = "139280"
 horizontal_alignment = 1
 
-[node name="CameraController" type="Node" parent="."]
+[node name="CameraController" type="Node" parent="Controllers"]
 unique_name_in_owner = true
 script = ExtResource("3_3f477")
 move_speed = Vector2(1, 0.6)
@@ -395,32 +434,79 @@ z_tilt_min_deg = -85.0
 z_tilt_max_deg = -36.0
 tilt_smooth = 15.0
 
-[node name="CameraBounds" type="MeshInstance3D" parent="CameraController"]
+[node name="CameraBounds" type="MeshInstance3D" parent="Controllers/CameraController"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0213583, 0.2977755)
 mesh = SubResource("PlaneMesh_uk27s")
 
-[node name="Camera" type="Camera3D" parent="CameraController/CameraBounds"]
+[node name="Camera" type="Camera3D" parent="Controllers/CameraController/CameraBounds"]
 transform = Transform3D(1, 0, 0, 0, 0.809017, 0.58778524, 0, -0.58778524, 0.809017, 0, 0, 0.20071936)
 current = true
 
-[node name="RadioController" parent="." instance=ExtResource("1_p1n4g")]
-
-[node name="WorldController" type="Node" parent="."]
-script = ExtResource("7_ge8rp")
-
-[node name="UI" type="CanvasLayer" parent="."]
-
-[node name="PauseMenu" parent="UI" instance=ExtResource("7_uk27s")]
+[node name="RadioController" parent="Controllers" node_paths=PackedStringArray("parser") instance=ExtResource("1_p1n4g")]
 unique_name_in_owner = true
-visible = false
+parser = NodePath("OrdersParser")
 
-[node name="AmmoSystem" type="Node" parent="."]
+[node name="OrdersParser" type="Node" parent="Controllers/RadioController"]
+unique_name_in_owner = true
+script = ExtResource("9_415kk")
+
+[node name="OrdersRouter" type="Node" parent="Controllers/RadioController" node_paths=PackedStringArray("movement_adapter", "los_adapter", "combat_controller", "terrain_renderer")]
+script = ExtResource("11_tixey")
+movement_adapter = NodePath("../../WorldController/MovementAdapter")
+los_adapter = NodePath("../../LOSController/LOSAdapter")
+combat_controller = NodePath("../../CombatController")
+terrain_renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
+metadata/_custom_type_script = "uid://ckdlg61462pgb"
+
+[node name="WordListUpdater" type="Node" parent="Controllers/RadioController" node_paths=PackedStringArray("sim", "terrain_renderer")]
+unique_name_in_owner = true
+script = ExtResource("12_4otl8")
+sim = NodePath("../../WorldController")
+terrain_renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
+
+[node name="WorldController" type="Node" parent="Controllers" node_paths=PackedStringArray("los_adapter", "movement_adapter", "combat_controller", "trigger_engine", "_router")]
+unique_name_in_owner = true
 script = ExtResource("7_ge8rp")
+los_adapter = NodePath("../LOSController/LOSAdapter")
+movement_adapter = NodePath("MovementAdapter")
+combat_controller = NodePath("../CombatController")
+trigger_engine = NodePath("TriggerEngine")
+_router = NodePath("../RadioController/OrdersRouter")
 
-[node name="CombatAdapter" type="Node" parent="."]
+[node name="MovementAdapter" type="Node" parent="Controllers/WorldController" node_paths=PackedStringArray("renderer")]
+unique_name_in_owner = true
+script = ExtResource("9_fera7")
+renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
+
+[node name="FuelSystem" type="Node" parent="Controllers/WorldController"]
+script = ExtResource("14_hvywg")
+fuel_profile = SubResource("Resource_2llyq")
+metadata/_custom_type_script = "uid://brp222cgifhj0"
+
+[node name="TriggerEngine" type="Node" parent="Controllers/WorldController" node_paths=PackedStringArray("_sim")]
+unique_name_in_owner = true
+script = ExtResource("16_rdwew")
+_sim = NodePath("..")
+metadata/_custom_type_script = "uid://bxi60at4j0nrr"
+
+[node name="CombatController" type="Node" parent="Controllers" node_paths=PackedStringArray("terrain_renderer", "combat_adapter")]
+script = ExtResource("10_of8da")
+terrain_renderer = NodePath("../MapController/TerrainViewport/TerrainRender")
+combat_adapter = NodePath("CombatAdapter")
+
+[node name="CombatAdapter" type="Node" parent="Controllers/CombatController"]
 script = ExtResource("9_vxnyp")
 ammo_system_path = NodePath("../AmmoSystem")
+metadata/_custom_type_script = "uid://dy2uex65i3y4m"
 
-[node name="Combat" type="Node" parent="."]
-script = ExtResource("10_of8da")
-combat_adapter_path = NodePath("../CombatAdapter")
+[node name="AmmoSystem" type="Node" parent="Controllers/CombatController"]
+script = ExtResource("12_lrkar")
+metadata/_custom_type_script = "uid://c3rgrbya520ur"
+
+[node name="LOSController" type="Node" parent="Controllers"]
+script = ExtResource("13_qgda6")
+
+[node name="LOSAdapter" type="Node" parent="Controllers/LOSController"]
+script = ExtResource("14_415kk")
+los_node_path = NodePath("..")
+terrain_renderer_path = NodePath("../../MapController/TerrainViewport/TerrainRender")

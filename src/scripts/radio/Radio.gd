@@ -10,6 +10,8 @@ signal radio_off
 signal radio_partial(text: String)
 signal radio_result(text: String)
 
+@export var parser: OrdersParser
+
 ## Turn on/off the radio stream
 var _tx := false
 
@@ -39,7 +41,6 @@ func _unhandled_input(event: InputEvent) -> void:
 ## TODO Remove this
 func _on_result(t):
 	LogService.trace("Heard: %s" % t, "Radio.gd:39")
-	OrdersParser.parse(t)
 	emit_signal("radio_result", t)
 
 

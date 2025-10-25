@@ -18,6 +18,7 @@ var _start_world_max: Vector2
 var _mat: StandardMaterial3D
 var _plane: PlaneMesh
 var _camera: Camera3D
+var _scenario: ScenarioData
 
 @onready var terrain_viewport: SubViewport = %TerrainViewport
 @onready var renderer: TerrainRender = %TerrainRender
@@ -50,11 +51,36 @@ func _ready() -> void:
 		if not renderer.is_connected("resized", Callable(self, "_on_renderer_map_resize")):
 			renderer.connect("resized", Callable(self, "_on_renderer_map_resize"))
 
-		if Game.current_scenario != null and Game.current_scenario.terrain != null:
-			renderer.data = Game.current_scenario.terrain
-
 	_update_viewport_to_renderer()
 	_update_mesh_fit()
+
+
+## Initilizes terrain for scenario
+func init_terrain(scenario: ScenarioData) -> void:
+	_scenario = scenario
+	if _scenario.terrain != null:
+		renderer.data = _scenario.terrain
+
+	prebuild_force_profiles()
+
+
+## Prebuild movement profiles
+func prebuild_force_profiles() -> void:
+	if renderer == null:
+		return
+
+	var scen := Game.current_scenario
+	if scen == null:
+		return
+
+	var all_units: Array[ScenarioUnit] = []
+	all_units.append_array(scen.units)
+	all_units.append_array(scen.playable_units)
+	var wanted := {}
+	for su in all_units:
+		wanted[su.unit.movement_profile] = true
+	for p in wanted.keys():
+		renderer.path_grid.rebuild(p)
 
 
 func _process(_dt: float) -> void:

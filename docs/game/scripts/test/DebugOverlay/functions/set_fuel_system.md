@@ -1,6 +1,6 @@
 # DebugOverlay::set_fuel_system Function Reference
 
-*Defined at:* `scripts/test/DebugOverlay.gd` (lines 45–49)</br>
+*Defined at:* `scripts/test/DebugOverlay.gd` (lines 42–46)</br>
 *Belongs to:* [DebugOverlay](../../DebugOverlay.md)
 
 **Signature**

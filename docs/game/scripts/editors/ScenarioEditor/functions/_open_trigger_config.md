@@ -1,6 +1,6 @@
 # ScenarioEditor::_open_trigger_config Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 252–257)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 256–261)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

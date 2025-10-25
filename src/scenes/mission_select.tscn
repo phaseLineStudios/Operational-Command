@@ -1,10 +1,18 @@
 [gd_scene load_steps=4 format=3 uid="uid://bogs2qcpwnuwd"]
 
 [ext_resource type="Script" uid="uid://c5k2l7sek5n6j" path="res://scripts/ui/MissionSelect.gd" id="1_f8bqk"]
-[ext_resource type="Texture2D" uid="uid://cyghtxj5e6i0f" path="res://campaigns/campaign/west_ger_map.png" id="2_qrooi"]
+[ext_resource type="Texture2D" uid="uid://c72j7v2a2c4jp" path="res://campaigns/maps/west_ger_map.png" id="2_qrooi"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qrooi"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
 bg_color = Color(0, 0, 0, 0.819608)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
 
 [node name="MissionSelect" type="Control"]
 layout_mode = 3
@@ -57,21 +65,17 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 
-[node name="MissionCard" type="Panel" parent="Container"]
+[node name="MissionCard" type="PanelContainer" parent="Container"]
 visible = false
 z_index = 10
-custom_minimum_size = Vector2(360, 0)
+custom_minimum_size = Vector2(420, 0)
 layout_mode = 0
-offset_left = 226.0
-offset_top = 190.0
-offset_right = 651.0
-offset_bottom = 465.0
+offset_right = 425.0
+offset_bottom = 283.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_qrooi")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Container/MissionCard"]
-layout_mode = 0
-offset_right = 424.0
-offset_bottom = 275.0
+layout_mode = 2
 
 [node name="Title" type="Label" parent="Container/MissionCard/VBoxContainer"]
 layout_mode = 2
@@ -84,9 +88,13 @@ layout_mode = 2
 [node name="Desc" type="RichTextLabel" parent="Container/MissionCard/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 12
+theme_override_font_sizes/bold_font_size = 12
+theme_override_font_sizes/bold_italics_font_size = 12
+theme_override_font_sizes/italics_font_size = 12
+theme_override_font_sizes/mono_font_size = 12
 bbcode_enabled = true
 text = "Placeholder Desc"
-fit_content = true
 scroll_active = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Container/MissionCard/VBoxContainer/HBoxContainer"]
@@ -104,6 +112,7 @@ stretch_mode = 5
 [node name="CardDifficulty" type="Label" parent="Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 12
 text = "Difficulty: Normal"
 
 [node name="CardStartMission" type="Button" parent="Container/MissionCard/VBoxContainer/HBoxContainer/VBoxContainer"]

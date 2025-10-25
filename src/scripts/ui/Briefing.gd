@@ -46,8 +46,9 @@ func _load_brief() -> void:
 func _build_board() -> void:
 	if not _brief:
 		return
-	var tex: Texture2D = _brief.board_texture
-	_whiteboard.texture = tex
+	if _brief.board_texture != null:
+		var tex: Texture2D = _brief.board_texture
+		_whiteboard.texture = tex
 
 # TODO Create logic to display briefing items
 # TODO Create logic to inspect briefing items

@@ -1,6 +1,6 @@
 # PathGrid::debug_draw_overlay Function Reference
 
-*Defined at:* `scripts/terrain/PathGrid.gd` (lines 775–840)</br>
+*Defined at:* `scripts/terrain/PathGrid.gd` (lines 793–858)</br>
 *Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**

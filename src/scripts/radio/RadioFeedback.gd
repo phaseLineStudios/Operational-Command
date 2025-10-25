@@ -15,13 +15,14 @@ extends Node
 
 ## UI audio for parse errors (must exist in the scene tree at %ErrorSound).
 @onready var error_player: AudioStreamPlayer2D = %ErrorSound
+@onready var radio_controller: Radio = $".."
 
 
 ## Ready-time setup:
 ## - Connect to `OrdersParser.parse_error`
 ## - Try to locate `AmmoSystem` and `FuelSystem` instances in the scene by group lookup.
 func _ready() -> void:
-	OrdersParser.parse_error.connect(_on_parse_error)
+	radio_controller.parser.parse_error.connect(_on_parse_error)
 
 	var ammo := get_tree().get_first_node_in_group("AmmoSystem") as AmmoSystem
 	if ammo:

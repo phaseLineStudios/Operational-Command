@@ -11,14 +11,15 @@
 		"attack": 25,
 		"defense": 15,
 		"spot_m": 800,
-		"range_m": 500,
+		"range_m": 300,
 		"morale": 0.7,
 		"speed_kph": 50
 	},
 	"state": {
-		"personnel_ratio": 0.85,
-		"equipment_ratio": 0.90,
-		"cohesion": 0.70
+		"state_strength": 15.0,
+		"state_injured": 0.0,
+		"state_equipment": 1.0,
+		"cohesion": 1.0
 	},
 	"editor": {
 		"unit_category": "us_army"

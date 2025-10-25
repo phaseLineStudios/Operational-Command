@@ -1,6 +1,6 @@
 # Radio::_start_tx Function Reference
 
-*Defined at:* `scripts/radio/Radio.gd` (lines 47–55)</br>
+*Defined at:* `scripts/radio/Radio.gd` (lines 48–56)</br>
 *Belongs to:* [Radio](../../Radio.md)
 
 **Signature**

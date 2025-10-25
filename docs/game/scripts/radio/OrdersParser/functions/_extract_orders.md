@@ -1,6 +1,6 @@
 # OrdersParser::_extract_orders Function Reference
 
-*Defined at:* `scripts/radio/OrdersParser.gd` (lines 53–153)</br>
+*Defined at:* `scripts/radio/OrdersParser.gd` (lines 54–154)</br>
 *Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**
@@ -39,7 +39,7 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 
 		# Callsign.
 		if callsigns.has(t):
-			var cs := String(callsigns[t])
+			var cs := str(callsigns[t])
 			if cur.callsign == "":
 				cur.callsign = cs
 			else:
@@ -67,14 +67,14 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 
 		# Direction.
 		if directions.has(t):
-			cur.direction = String(directions[t])
+			cur.direction = str(directions[t])
 			i += 1
 			continue
 
 		if qty_labels.has(t):
 			var num_after := _read_number(tokens, i + 1, number_words)
 			if num_after.consumed > 0:
-				cur.zone = String(qty_labels[t])
+				cur.zone = str(qty_labels[t])
 				cur.quantity = num_after.value
 				i += 1 + num_after.consumed
 				continue
@@ -88,7 +88,7 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 			if i < tokens.size():
 				var lbl := tokens[i]
 				if qty_labels.has(lbl):
-					cur.zone = String(qty_labels[lbl])
+					cur.zone = str(qty_labels[lbl])
 					i += 1
 			cur.quantity = num_here.value
 			continue

@@ -71,6 +71,9 @@ Estimate travel time (seconds) along path for unit base speed and profile
 - [`func _cell_center_m(c: Vector2i) -> Vector2`](PathGrid/functions/_cell_center_m.md)
 - [`func _in_bounds(c: Vector2i) -> bool`](PathGrid/functions/_in_bounds.md)
 - [`func _elev_m_at(p_m: Vector2) -> float`](PathGrid/functions/_elev_m_at.md)
+- [`func use_profile(profile: int) -> void`](PathGrid/functions/use_profile.md)
+- [`func ensure_profile(profile: int) -> bool`](PathGrid/functions/ensure_profile.md)
+- [`func has_profile(profile: int) -> bool`](PathGrid/functions/has_profile.md)
 - [`func debug_cell_from_world(p_m: Vector2) -> Vector2i`](PathGrid/functions/debug_cell_from_world.md) — Return grid cell for world meters.
 - [`func debug_world_from_cell(c: Vector2i) -> Vector2`](PathGrid/functions/debug_world_from_cell.md) — Return cell center in meters.
 - [`func debug_weight_at_cell(c: Vector2i) -> float`](PathGrid/functions/debug_weight_at_cell.md) — Weight at cell (or INF if OOB/solid).
@@ -293,6 +296,24 @@ func _in_bounds(c: Vector2i) -> bool
 
 ```gdscript
 func _elev_m_at(p_m: Vector2) -> float
+```
+
+### use_profile
+
+```gdscript
+func use_profile(profile: int) -> void
+```
+
+### ensure_profile
+
+```gdscript
+func ensure_profile(profile: int) -> bool
+```
+
+### has_profile
+
+```gdscript
+func has_profile(profile: int) -> bool
 ```
 
 ### debug_cell_from_world

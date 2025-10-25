@@ -6,7 +6,7 @@
 **Signature**
 
 ```gdscript
-func start(prim: Array[StringName], scenario: StringName = &"") -> void
+func start(prim: Array[String], scenario: String = "") -> void
 ```
 
 ## Description
@@ -16,9 +16,9 @@ Initialize for a mission.
 ## Source
 
 ```gdscript
-func start(prim: Array[StringName], scenario: StringName = &"") -> void:
+func start(prim: Array[String], scenario: String = "") -> void:
 	_reset()
-	scenario_id = scenario if scenario != &"" else scenario_id
+	scenario_id = scenario if scenario != "" else scenario_id
 	primary_objectives = prim
 	for id in prim:
 		_objective_states[id] = ObjectiveState.PENDING

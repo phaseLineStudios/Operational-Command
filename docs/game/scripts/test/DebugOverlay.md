@@ -21,9 +21,10 @@ Toggles
 
 Style
 
+Set up overlay with renderer and the two scenario units [attacker, defender].
+
 ## Public Member Functions
 
-- [`func setup_overlay(renderer: TerrainRender, units: Array) -> void`](DebugOverlay/functions/setup_overlay.md) — Set up overlay with renderer and the two scenario units [attacker, defender].
 - [`func set_fuel_system(fs: FuelSystem) -> void`](DebugOverlay/functions/set_fuel_system.md) — Optionally bind FuelSystem explicitly if you do not use the group.
 - [`func update_debug(d: Dictionary) -> void`](DebugOverlay/functions/update_debug.md)
 - [`func _draw() -> void`](DebugOverlay/functions/_draw.md)
@@ -42,14 +43,6 @@ Style
 - `FuelSystem _fuel`
 
 ## Member Function Documentation
-
-### setup_overlay
-
-```gdscript
-func setup_overlay(renderer: TerrainRender, units: Array) -> void
-```
-
-Set up overlay with renderer and the two scenario units [attacker, defender].
 
 ### set_fuel_system
 

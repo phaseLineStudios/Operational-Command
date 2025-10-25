@@ -1,6 +1,6 @@
 # BriefData::serialize Function Reference
 
-*Defined at:* `scripts/data/BriefData.gd` (lines 43–77)</br>
+*Defined at:* `scripts/data/BriefData.gd` (lines 43–81)</br>
 *Belongs to:* [BriefData](../../BriefData.md)
 
 **Signature**
@@ -21,6 +21,10 @@ func serialize() -> Dictionary:
 	for it in board_items:
 		items.append(it.serialize())
 
+	var objs: Array = []
+	for obj in frag_objectives:
+		objs.append(obj.serialize())
+
 	return {
 		"id": id,
 		"title": title,
@@ -32,8 +36,8 @@ func serialize() -> Dictionary:
 			"weather": frag_weather,
 			"start_time": frag_start_time
 		},
-		"mission": {"statement": frag_mission, "objectives": frag_objectives.duplicate()},
-		"execution": frag_execution.duplicate(),
+		"mission": {"statement": frag_mission, "objectives": objs},
+		"execution": frag_execution,
 		"admin_logi": frago_logi,
 		"intel_board":
 		{

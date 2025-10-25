@@ -1,6 +1,6 @@
 # PathGrid::debug_line_dist_cell Function Reference
 
-*Defined at:* `scripts/terrain/PathGrid.gd` (lines 761–773)</br>
+*Defined at:* `scripts/terrain/PathGrid.gd` (lines 779–791)</br>
 *Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**

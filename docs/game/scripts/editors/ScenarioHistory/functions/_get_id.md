@@ -1,6 +1,6 @@
 # ScenarioHistory::_get_id Function Reference
 
-*Defined at:* `scripts/editors/ScenarioHistory.gd` (lines 220–229)</br>
+*Defined at:* `scripts/editors/ScenarioHistory.gd` (lines 233–242)</br>
 *Belongs to:* [ScenarioHistory](../../ScenarioHistory.md)
 
 **Signature**

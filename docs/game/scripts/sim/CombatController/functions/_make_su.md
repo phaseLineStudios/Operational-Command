@@ -1,6 +1,6 @@
 # CombatController::_make_su Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 83–100)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 76–93)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**

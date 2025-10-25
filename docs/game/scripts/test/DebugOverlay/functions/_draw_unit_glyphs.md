@@ -1,6 +1,6 @@
 # DebugOverlay::_draw_unit_glyphs Function Reference
 
-*Defined at:* `scripts/test/DebugOverlay.gd` (lines 82–148)</br>
+*Defined at:* `scripts/test/DebugOverlay.gd` (lines 79–145)</br>
 *Belongs to:* [DebugOverlay](../../DebugOverlay.md)
 
 **Signature**

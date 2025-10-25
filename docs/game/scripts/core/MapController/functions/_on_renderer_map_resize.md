@@ -1,6 +1,6 @@
 # MapController::_on_renderer_map_resize Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 128–131)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 154–157)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

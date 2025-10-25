@@ -1,6 +1,6 @@
 # SlotConfigDialog::_on_save Function Reference
 
-*Defined at:* `scripts/editors/SlotConfigDialog.gd` (lines 40–64)</br>
+*Defined at:* `scripts/editors/SlotConfigDialog.gd` (lines 42–68)</br>
 *Belongs to:* [SlotConfigDialog](../../SlotConfigDialog.md)
 
 **Signature**
@@ -24,6 +24,7 @@ func _on_save() -> void:
 	var after := live.duplicate(true)
 	after.key = key_input.text
 	after.title = title_input.text
+	after.callsign = callsign_input.text
 	after.allowed_roles = _roles
 
 	if editor.history:
@@ -34,6 +35,7 @@ func _on_save() -> void:
 	else:
 		live.key = after.key
 		live.title = after.title
+		live.callsign = after.callsign
 		live.allowed_roles = after.allowed_roles
 
 	visible = false

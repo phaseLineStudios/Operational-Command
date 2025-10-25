@@ -725,6 +725,24 @@ func _elev_m_at(p_m: Vector2) -> float:
 	return data.get_elev_px(px) + float(data.base_elevation_m)
 
 
+func use_profile(profile: int) -> void:
+	var key := _astar_key(profile)
+	if _astar_cache.has(key):
+		_astar = _astar_cache[key]
+
+
+func ensure_profile(profile: int) -> bool:
+	if has_profile(profile):
+		use_profile(profile)
+		return true
+	rebuild(profile)
+	return false
+
+
+func has_profile(profile: int) -> bool:
+	return _astar_cache.has(_astar_key(profile))
+
+
 ## Return grid cell for world meters.
 func debug_cell_from_world(p_m: Vector2) -> Vector2i:
 	return _to_cell(p_m)

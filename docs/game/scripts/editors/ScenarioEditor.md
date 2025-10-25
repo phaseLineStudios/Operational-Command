@@ -51,6 +51,7 @@ Path to return to main menu scene
 - [`func _on_save_file_selected(path: String) -> void`](ScenarioEditor/functions/_on_save_file_selected.md) — Handle file selection to save a scenario
 - [`func _on_new_scenario(d: ScenarioData) -> void`](ScenarioEditor/functions/_on_new_scenario.md) — Apply brand-new scenario data from dialog
 - [`func _on_update_scenario(_d: ScenarioData) -> void`](ScenarioEditor/functions/_on_update_scenario.md) — Apply edits to current scenario data from dialog
+- [`func _on_briefing_update(new_brief: BriefData) -> void`](ScenarioEditor/functions/_on_briefing_update.md) — Apply briefing change via history (undoable).
 - [`func _on_data_changed() -> void`](ScenarioEditor/functions/_on_data_changed.md) — Refresh UI/overlay/tree after data changes
 - [`func _update_title() -> void`](ScenarioEditor/functions/_update_title.md) — Update window title label from scenario title
 - [`func _on_history_changed(past: Array, future: Array) -> void`](ScenarioEditor/functions/_on_history_changed.md) — Rebuild history side panel from UndoRedo stacks
@@ -77,6 +78,7 @@ Path to return to main menu scene
 - `TerrainRender terrain_render`
 - `NewScenarioDialog new_scenario_dialog`
 - `ScenarioWeatherDialog weather_dialog`
+- `BriefingDialog brief_dialog`
 - `ScenarioEditorOverlay terrain_overlay`
 - `HBoxContainer tool_hint`
 - `Label mouse_position_label`
@@ -374,6 +376,14 @@ func _on_update_scenario(_d: ScenarioData) -> void
 
 Apply edits to current scenario data from dialog
 
+### _on_briefing_update
+
+```gdscript
+func _on_briefing_update(new_brief: BriefData) -> void
+```
+
+Apply briefing change via history (undoable).
+
 ### _on_data_changed
 
 ```gdscript
@@ -546,6 +556,12 @@ var new_scenario_dialog: NewScenarioDialog
 
 ```gdscript
 var weather_dialog: ScenarioWeatherDialog
+```
+
+### brief_dialog
+
+```gdscript
+var brief_dialog: BriefingDialog
 ```
 
 ### terrain_overlay

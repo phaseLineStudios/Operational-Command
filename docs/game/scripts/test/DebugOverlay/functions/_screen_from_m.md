@@ -1,6 +1,6 @@
 # DebugOverlay::_screen_from_m Function Reference
 
-*Defined at:* `scripts/test/DebugOverlay.gd` (lines 292–294)</br>
+*Defined at:* `scripts/test/DebugOverlay.gd` (lines 289–291)</br>
 *Belongs to:* [DebugOverlay](../../DebugOverlay.md)
 
 **Signature**

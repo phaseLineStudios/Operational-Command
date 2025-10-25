@@ -22,6 +22,8 @@ Used by AmmoSystem when newly-registered units are missing values.
 ## Public Member Functions
 
 - [`func apply_defaults_if_missing(u: UnitData) -> void`](AmmoProfile/functions/apply_defaults_if_missing.md) — Fill in caps/state/thresholds if the UnitData is missing them.
+- [`func serialize() -> Dictionary`](AmmoProfile/functions/serialize.md) — Serialize into JSON
+- [`func deserialize(data: Variant) -> AmmoProfile`](AmmoProfile/functions/deserialize.md) — Deserialize from JSON
 
 ## Public Attributes
 
@@ -38,6 +40,22 @@ func apply_defaults_if_missing(u: UnitData) -> void
 ```
 
 Fill in caps/state/thresholds if the UnitData is missing them.
+
+### serialize
+
+```gdscript
+func serialize() -> Dictionary
+```
+
+Serialize into JSON
+
+### deserialize
+
+```gdscript
+func deserialize(data: Variant) -> AmmoProfile
+```
+
+Deserialize from JSON
 
 ## Member Data Documentation
 

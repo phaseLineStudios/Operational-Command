@@ -1,6 +1,6 @@
 # PathGrid::debug_is_solid_cell Function Reference
 
-*Defined at:* `scripts/terrain/PathGrid.gd` (lines 748–751)</br>
+*Defined at:* `scripts/terrain/PathGrid.gd` (lines 766–769)</br>
 *Belongs to:* [PathGrid](../../PathGrid.md)
 
 **Signature**

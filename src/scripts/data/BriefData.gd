@@ -26,7 +26,7 @@ extends Resource
 
 @export_category("WARNO - Execution")
 ## Execution guidance (e.g., scheme of maneuver)
-@export var frag_execution: Array[String]
+@export var frag_execution: String
 
 @export_category("WARNO - Admin & Logi")
 ## Administration & logistics fragment
@@ -45,6 +45,10 @@ func serialize() -> Dictionary:
 	for it in board_items:
 		items.append(it.serialize())
 
+	var objs: Array = []
+	for obj in frag_objectives:
+		objs.append(obj.serialize())
+
 	return {
 		"id": id,
 		"title": title,
@@ -56,8 +60,8 @@ func serialize() -> Dictionary:
 			"weather": frag_weather,
 			"start_time": frag_start_time
 		},
-		"mission": {"statement": frag_mission, "objectives": frag_objectives.duplicate()},
-		"execution": frag_execution.duplicate(),
+		"mission": {"statement": frag_mission, "objectives": objs},
+		"execution": frag_execution,
 		"admin_logi": frago_logi,
 		"intel_board":
 		{
@@ -96,14 +100,12 @@ static func deserialize(data: Variant) -> BriefData:
 	var mis: Dictionary = data.get("mission", {})
 	if typeof(mis) == TYPE_DICTIONARY:
 		b.frag_mission = mis.get("statement", b.frag_mission)
-		b.frag_objectives = mis.get("objectives", b.frag_objectives)
+		var objs = mis.get("objectives", b.frag_objectives)
+		b.frag_objectives = []
+		for obj in objs:
+			b.frag_objectives.append(ScenarioObjectiveData.deserialize(obj))
 
-	var exe: Dictionary = data.get("execution", b.frag_execution)
-	if typeof(exe) == TYPE_ARRAY:
-		var tmp: Array[String] = []
-		for e in exe:
-			tmp.append(str(e))
-		b.frag_execution = tmp
+	b.frag_execution = data.get("execution", b.frag_execution)
 
 	b.frago_logi = data.get("admin_logi", b.frago_logi)
 

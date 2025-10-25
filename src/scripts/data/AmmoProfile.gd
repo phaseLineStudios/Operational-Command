@@ -23,3 +23,27 @@ func apply_defaults_if_missing(u: UnitData) -> void:
 		u.ammunition_low_threshold = default_low_threshold
 	if u.ammunition_critical_threshold <= 0.0:
 		u.ammunition_critical_threshold = default_critical_threshold
+
+
+## Serialize into JSON
+func serialize() -> Dictionary:
+	return {
+		"default_caps": default_caps,
+		"default_low_threshold": default_low_threshold,
+		"default_critical_threshold": default_critical_threshold
+	}
+
+
+## Deserialize from JSON
+static func deserialize(data: Variant) -> AmmoProfile:
+	if typeof(data) != TYPE_DICTIONARY:
+		return null
+
+	var o := AmmoProfile.new()
+	o.default_caps = data.get("default_caps", o.default_caps)
+	o.default_low_threshold = float(data.get("default_low_threshold", o.default_low_threshold))
+	o.default_critical_threshold = float(
+		data.get("default_critical_threshold", o.default_critical_threshold)
+	)
+
+	return o

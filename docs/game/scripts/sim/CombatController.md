@@ -31,11 +31,12 @@ Debug - build and emit a snapshot (for overlays/logging)
 - [`func _ready() -> void`](CombatController/functions/_ready.md) — Init
 - [`func _make_su(u: UnitData, cs: String, pos: Variant) -> ScenarioUnit`](CombatController/functions/_make_su.md) — Minimal factory for a ScenarioUnit used by this controller (test harness)
 - [`func combat_loop(attacker: ScenarioUnit, defender: ScenarioUnit) -> void`](CombatController/functions/combat_loop.md) — Loop triggered every turn to simulate unit behavior in combat
-- [`func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> void`](CombatController/functions/calculate_damage.md) — Combat damage calculation with terrain/environment multipliers + ammo
+- [`func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float`](CombatController/functions/calculate_damage.md) — Combat damage calculation with terrain/environment multipliers + ammo
 - [`func check_abort_condition(attacker: ScenarioUnit, defender: ScenarioUnit) -> void`](CombatController/functions/check_abort_condition.md) — Check the various conditions for if the combat is finished
 - [`func print_unit_status(attacker: UnitData, defender: UnitData) -> void`](CombatController/functions/print_unit_status.md) — check unit mid combat status for testing of combat status
 - [`func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> Dictionary`](CombatController/functions/_gate_and_consume.md) — Gate a fire attempt by ammunition and consume rounds when allowed.
 - [`func _apply_casualties(u: UnitData, raw_losses: int) -> int`](CombatController/functions/_apply_casualties.md) — Apply casualties to runtime state.
+- [`func _within_engagement_envelope(attacker: ScenarioUnit, dist_m: float) -> bool`](CombatController/functions/_within_engagement_envelope.md) — True if attacker is permitted to fire at defender at distance 'dist_m'.
 - [`func _set_debug_rate() -> void`](CombatController/functions/_set_debug_rate.md) — Adjust debug timer
 - [`func set_debug_enabled(v: bool) -> void`](CombatController/functions/set_debug_enabled.md) — Toggle debug at runtime
 
@@ -43,14 +44,13 @@ Debug - build and emit a snapshot (for overlays/logging)
 
 - `ScenarioData scenario` — Current Scenario reference
 - `TerrainRender terrain_renderer` — Terrain renderer reference
+- `CombatAdapter combat_adapter` — Adapter used to gate fire and apply ammo penalties.
 - `TerrainEffectsConfig terrain_config` — TerrainEffectConfig reference
 - `Control debug_overlay` — Optional Control that implements `update_debug(data: Dictionary)`
-- `NodePath combat_adapter_path` — Ammo
 - `UnitData imported_attacker` — imported units manually for testing purposes
 - `UnitData imported_defender`
 - `ScenarioUnit attacker_su`
 - `ScenarioUnit defender_su`
-- `CombatAdapter _adapter`
 - `Dictionary _rof_cooldown` — Per-unit ROF cooldown (seconds since epoch when the next shot is allowed)
 - `ScenarioUnit _cur_att`
 - `ScenarioUnit _cur_def`
@@ -96,7 +96,7 @@ Loop triggered every turn to simulate unit behavior in combat
 ### calculate_damage
 
 ```gdscript
-func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> void
+func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float
 ```
 
 Combat damage calculation with terrain/environment multipliers + ammo
@@ -144,6 +144,14 @@ func _apply_casualties(u: UnitData, raw_losses: int) -> int
 
 Apply casualties to runtime state. Returns actual KIA + WIA applied
 
+### _within_engagement_envelope
+
+```gdscript
+func _within_engagement_envelope(attacker: ScenarioUnit, dist_m: float) -> bool
+```
+
+True if attacker is permitted to fire at defender at distance 'dist_m'.
+
 ### _set_debug_rate
 
 ```gdscript
@@ -182,6 +190,16 @@ Decorators: `@export`
 
 Terrain renderer reference
 
+### combat_adapter
+
+```gdscript
+var combat_adapter: CombatAdapter
+```
+
+Decorators: `@export`
+
+Adapter used to gate fire and apply ammo penalties. Prefer assigning directly.
+
 ### terrain_config
 
 ```gdscript
@@ -201,16 +219,6 @@ var debug_overlay: Control
 Decorators: `@export`
 
 Optional Control that implements `update_debug(data: Dictionary)`
-
-### combat_adapter_path
-
-```gdscript
-var combat_adapter_path: NodePath
-```
-
-Decorators: `@export`
-
-Ammo
 
 ### imported_attacker
 
@@ -236,12 +244,6 @@ var attacker_su: ScenarioUnit
 
 ```gdscript
 var defender_su: ScenarioUnit
-```
-
-### _adapter
-
-```gdscript
-var _adapter: CombatAdapter
 ```
 
 ### _rof_cooldown
