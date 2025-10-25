@@ -23,6 +23,11 @@ func rebuild(ctx: ScenarioEditorContext) -> void:
 			var s_item := tree.create_item(slots)
 			s_item.set_text(0, slot.title)
 			s_item.set_metadata(0, {"type": &"slot", "index": i})
+			var icon := load("res://assets/textures/units/slot_icon.png") as Texture2D
+			var img := icon.get_image()
+			img.resize(24, 24, Image.INTERPOLATE_LANCZOS)
+			s_item.set_icon(0, ImageTexture.create_from_image(img))
+			
 
 	var units := tree.create_item(root)
 	units.set_text(0, "Units")
