@@ -11,7 +11,8 @@ signal parsed(orders: Array)
 signal parse_error(msg: String)
 
 ## High-level order categories.
-enum OrderType { MOVE, HOLD, ATTACK, DEFEND, RECON, FIRE, REPORT, CANCEL, UNKNOWN }
+enum OrderType { MOVE, HOLD, ATTACK, DEFEND, 
+	RECON, FIRE, REPORT, CANCEL, UNKNOWN }
 
 ## Minimal schema returned per order.
 const ORDER_KEYS := {
