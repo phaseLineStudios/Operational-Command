@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bi05cq3mfa5s"]
+
+[ext_resource type="Script" uid="uid://c1da0buwjyg7g" path="res://scripts/ui/widgets/UnitStrengthBadge.gd" id="1"]
+
+[node name="UnitStrengthBadge" type="HBoxContainer"]
+script = ExtResource("1")

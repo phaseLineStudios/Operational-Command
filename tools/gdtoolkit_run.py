@@ -19,7 +19,7 @@ if __package__ in (None, ""):
 from tools import scene_linter
 
 PKG = "gdtoolkit"   # package name
-SPEC = "==4.*"      # version specifier
+SPEC = "==4.5.0"      # version specifier
 
 # Error patterns from godot
 ERROR_PATTERNS = (
