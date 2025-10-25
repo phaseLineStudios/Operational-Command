@@ -1,4 +1,7 @@
-[gd_scene format=3 uid="uid://cy2yngdu86acx"]
+[gd_scene load_steps=3 format=3 uid="uid://cy2yngdu86acx"]
+
+[ext_resource type="Script" uid="uid://buuunkc6q2xpe" path="res://scripts/ui/UnitMgmt.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://bsrv17xsoawvy" path="res://scenes/ui/unit_mgmt/reinforcement_panel.tscn" id="2"]
 
 [node name="UnitMgmt" type="Control"]
 layout_mode = 3
@@ -7,3 +10,41 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Root" type="HSplitContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+split_offset = 280
+
+[node name="Left" type="VBoxContainer" parent="Root"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Root/Left"]
+layout_mode = 2
+text = "Units"
+
+[node name="UnitListBox" type="VBoxContainer" parent="Root/Left"]
+layout_mode = 2
+
+[node name="Buttons" type="HBoxContainer" parent="Root/Left"]
+layout_mode = 2
+
+[node name="RefreshBtn" type="Button" parent="Root/Left/Buttons"]
+layout_mode = 2
+text = "Refresh"
+
+[node name="Right" type="VBoxContainer" parent="Root"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ReinforcementPanel" parent="Root/Right" instance=ExtResource("2")]
+unique_name_in_owner = true
+layout_mode = 2

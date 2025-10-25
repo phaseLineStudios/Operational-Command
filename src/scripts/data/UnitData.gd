@@ -51,6 +51,8 @@ enum UnitSize { TEAM, SQUAD, PLATOON, COMPANY, BATTALION }
 @export var state_strength: float
 ## Current injured
 @export var state_injured: float
+## per-unit understrength threshold
+@export var understrength_threshold: float = 0.8
 ## Current remaining equipment
 @export var state_equipment: float
 ## Current cohesion level (0.0–1.0).
