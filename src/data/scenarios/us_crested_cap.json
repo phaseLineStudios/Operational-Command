@@ -10,16 +10,34 @@
     "mission": {
       "objectives": [
         {
-          "id": "complete_all",
-          "score": 100,
-          "success": "Complete all training lanes.",
-          "title": "Complete all training lanes"
-        },
-        {
           "id": "notional_casualties",
           "score": 100,
           "success": "Keep notional casualties under 10%. If notional casualties exceeds 10% complete a CAS request (simulated).",
           "title": "Keep notional casualties under 10%"
+        },
+        {
+          "id": "lane_1_comms",
+          "score": 20,
+          "success": "Perform a radio check and receive a reply.",
+          "title": "Lane 1: Perform Radio Check"
+        },
+        {
+          "id": "unit_markers",
+          "score": 20,
+          "success": "Ask for a position report and place unit markers for each unit.",
+          "title": "Lane 1: Place unit markers"
+        },
+        {
+          "id": "set_time",
+          "score": 20,
+          "success": "Start timer",
+          "title": "Lane 1: Start timer"
+        },
+        {
+          "id": "draw_plan",
+          "score": 40,
+          "success": "Draw movement plan for Training Lane 2.",
+          "title": "Lane 1: Draw movement plan"
         }
       ],
       "statement": "At 0900C 05 NOV 83, A Trp/1-11 ACR (-) conducts a four-lane evaluation at Wildflecken to rehearse comms discipline, movement under contact, break-contact with smoke, and river crossing in order to certify the troop GO for follow-on taskings."
@@ -104,23 +122,43 @@
       },
       {
         "area_center_m": {
-          "x": 2151.64282226563,
-          "y": 244.619415283203
+          "x": 2149.96508789063,
+          "y": 150.800048828125
         },
         "condition_expr": "last_radio_command().to_lower().contains(\"radio check\")",
         "id": "radio_check_trigger",
-        "on_activate_expr": "print(\"Radio Check received\")",
+        "on_activate_expr": "print(\"Radio Check received\")\nradio(\"This is Alpha. I Read you five by five.\")\nset_objective(\"lane_1_comms\", 1)",
         "on_deactivate_expr": "",
         "presence": 0,
         "require_duration_s": 0.0,
         "shape": 0,
         "size_m": {
-          "x": 50.0,
-          "y": 50.0
+          "x": 100.0,
+          "y": 100.0
         },
         "synced_tasks": [],
         "synced_units": [],
         "title": "Radio Check Response"
+      },
+      {
+        "area_center_m": {
+          "x": 1950.98364257813,
+          "y": 151.383926391602
+        },
+        "condition_expr": "true",
+        "id": "mission_init",
+        "on_activate_expr": "show_dialog(\"Welcome to Field Training Exercise (FTX) Crested Cap Checkride. This exercise will train you on basic leadership skills and radio etiquette.\")",
+        "on_deactivate_expr": "",
+        "presence": 0,
+        "require_duration_s": 0.0,
+        "shape": 0,
+        "size_m": {
+          "x": 100.0,
+          "y": 100.0
+        },
+        "synced_tasks": [],
+        "synced_units": [],
+        "title": "Mission Init"
       }
     ],
     "units": [

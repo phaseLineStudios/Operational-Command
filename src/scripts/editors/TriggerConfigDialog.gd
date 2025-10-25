@@ -73,7 +73,7 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 	trig_on_activate.text = trig.on_activate_expr
 	trig_on_deactivate.text = trig.on_deactivate_expr
 
-	visible = true
+	popup_centered_ratio(0.35)
 
 
 func _on_save() -> void:

@@ -39,7 +39,7 @@ A routine lane evaluation at Wildflecken caps a week of Autumn Forge drills. Ran
 - `phase 3` **River-crossing drill** - Call artillery smoke; engineers lay/clear a training bridge.
 
 **Objectives:**
-1. Complete all four training lanes.
+1. Complete all three training lanes.
 2. Keep notional casualties under 10%; complete a CAS request (simulated).
 
 **Failure:** Overrun time, missed lane, or comms checklist not completed

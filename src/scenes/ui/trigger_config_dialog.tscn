@@ -120,7 +120,7 @@ text = "On Activate"
 
 [node name="OnActivate" type="CodeEdit" parent="Root/ScrollContainer/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 120)
+custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 symbol_lookup_on_click = true
 symbol_tooltip_on_hover = true
@@ -138,7 +138,7 @@ text = "On Deactivate"
 
 [node name="OnDeactivate" type="CodeEdit" parent="Root/ScrollContainer/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 120)
+custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 symbol_lookup_on_click = true
 symbol_tooltip_on_hover = true
