@@ -22,6 +22,7 @@ var _pool: int = START_POOL
 var _baseline_strengths: Dictionary = {}  # { unit_id: int }
 var _baseline_pool: int = START_POOL
 
+
 func _ready() -> void:
 	# Demo units
 	_units = _make_demo_units()
@@ -86,6 +87,7 @@ func _ready() -> void:
 
 # ---- Reinforcement flow ----
 
+
 ## Apply plan and keep Game + panel pools synchronized
 func _on_committed(plan: Dictionary) -> void:
 	var remaining: int = _pool
@@ -124,13 +126,16 @@ func _on_committed(plan: Dictionary) -> void:
 	for u: UnitData in _units:
 		print(u.id, ": ", int(round(u.state_strength)), "/", int(u.strength))
 
+
 # ---- Baseline snapshot & Reset ----
+
 
 func _capture_baseline() -> void:
 	_baseline_strengths.clear()
 	for u: UnitData in _units:
 		_baseline_strengths[u.id] = int(round(u.state_strength))
 	_baseline_pool = _pool
+
 
 ## Restore baseline strengths and pool (test-only behavior for the Reset button)
 func _reset_to_baseline() -> void:
@@ -153,7 +158,9 @@ func _reset_to_baseline() -> void:
 	_panel.reset_pending()
 	print("Reset to initial baseline — Pool:", _pool)
 
+
 # ---- Optional test helpers (unchanged from your version) ----
+
 
 ## Make a tiny runtime PackedScene whose instance accepts a strength factor
 func _make_unit_prefab() -> PackedScene:
