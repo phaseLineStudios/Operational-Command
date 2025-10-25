@@ -1,8 +1,8 @@
-# File: res://scripts/editors/UnitDDItemList.gd
 class_name UnitDDItemList
 extends ItemList
 ## Drag & drop enabled ItemList for moving UnitData between pool and selected.
-## Expects the parent dialog to implement `_on_unit_dropped(from_kind:int, to_kind:int, unit_id:String)`.
+## Expects the parent dialog to implement
+## `_on_unit_dropped(from_kind:int, to_kind:int, unit_id:String)`.
 
 ## List kind.
 enum Kind { POOL, SELECTED }

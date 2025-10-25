@@ -4,7 +4,9 @@ extends Node2D
 ## Wires TerrainRender, PathGrid, and a MovementAgent, then handles click-to-move.
 
 ## Terrain to load
-@export var terrain: TerrainData = preload("res://campaigns/terrains/fulda_gap.tres")
+@export_file("*.json") var terrain_path: String = "res://data/terrains/fulda_gap.json"
+
+var terrain: TerrainData
 
 @onready var renderer: TerrainRender = %TerrainRender
 @onready var camera: Camera2D = %TerrainCamera
@@ -13,9 +15,15 @@ extends Node2D
 
 
 func _ready() -> void:
-	if renderer == null or renderer.data == null:
-		push_warning("Setup: TerrainRender or TerrainData missing.")
+	if terrain_path == "":
+		push_warning("Setup: Terrain path missing")
 		return
+	if renderer == null:
+		push_warning("Setup: TerrainRender missing.")
+		return
+
+	terrain = TerrainData.deserialize(terrain_path)
+	renderer.data = terrain
 	if renderer.path_grid == null:
 		push_warning("Setup: Assign PathGrid to TerrainRender.path_grid in the Inspector.")
 		return

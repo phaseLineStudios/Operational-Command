@@ -6,7 +6,7 @@
 auto_translate_mode = 1
 oversampling_override = 1.0
 title = "Trigger"
-position = Vector2i(325, 37)
+position = Vector2i(325, 36)
 size = Vector2i(500, 600)
 script = ExtResource("1_5rotb")
 

@@ -35,7 +35,8 @@ func _ready() -> void:
 
 
 ## Register a custom command keyword for this mission.
-## When the keyword is detected in voice input, generates a CUSTOM order instead of standard parsing.
+## When the keyword is detected in voice input, generates a
+## CUSTOM order instead of standard parsing.
 ## [br][br]
 ## [b]Called automatically by SimWorld._init_custom_commands() during mission init.[/b]
 ## [br][br]
@@ -45,8 +46,10 @@ func _ready() -> void:
 ## [br]- [code]custom_full_text: String[/code] - Full radio text
 ## [br]- [code]custom_metadata: Dictionary[/code] - Metadata passed here
 ## [br]- [code]raw: PackedStringArray[/code] - Tokenized input
-## [param keyword] The keyword/phrase to match (e.g., "fire mission"). Case-insensitive substring match.
-## [param metadata] Optional metadata dict to attach to the CUSTOM order (e.g., trigger_id, route_as_order).
+## [param keyword] The keyword/phrase to match (e.g., "fire mission").
+## Case-insensitive substring match.
+## [param metadata] Optional metadata dict to attach to the CUSTOM order
+## (e.g., trigger_id, route_as_order).
 func register_custom_command(keyword: String, metadata: Dictionary = {}) -> void:
 	var normalized := keyword.to_lower().strip_edges()
 	if normalized != "":

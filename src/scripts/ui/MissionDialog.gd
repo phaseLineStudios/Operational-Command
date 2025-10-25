@@ -6,12 +6,12 @@ extends Control
 
 signal dialog_closed
 
-@onready var _text_label: RichTextLabel = %DialogText
-@onready var _ok_button: Button = %OkButton
-
 var _sim: SimWorld = null
 var _was_paused: bool = false
 var _should_unpause: bool = false
+
+@onready var _text_label: RichTextLabel = %DialogText
+@onready var _ok_button: Button = %OkButton
 
 
 func _ready() -> void:

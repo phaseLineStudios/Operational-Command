@@ -5,8 +5,6 @@ extends ScenarioToolBase
 
 ## Active texture.
 @export var texture: Texture2D
-## Texture path used for persistence.
-var texture_path: String = ""
 ## Stamp Color.
 @export var color: Color = Color(0, 0, 0)
 ## Uniform scale.
@@ -16,6 +14,7 @@ var texture_path: String = ""
 ## Opacity [0..1].
 @export_range(0.0, 1.0, 0.01) var opacity: float = 1.0
 
+var texture_path: String = ""
 var _hover_m := Vector2.ZERO
 var _has_hover := false
 

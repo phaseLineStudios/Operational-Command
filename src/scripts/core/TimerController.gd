@@ -5,6 +5,9 @@ extends Node
 ## Detects clicks on three buttons (pause, 1x speed, 2x speed) and animates
 ## them while controlling the Engine.time_scale.
 
+## Time scale state.
+enum TimeState { PAUSED, SPEED_1X, SPEED_2X }
+
 ## Reference to the Timer object.
 @export var timer: Node3D
 ## Reference to the SimWorld for pause/resume control.
@@ -56,8 +59,6 @@ extends Node
 @export var fastforward_icon: Texture2D
 ## Icon size on display.
 @export var icon_size: Vector2 = Vector2(32, 32)
-
-enum TimeState { PAUSED, SPEED_1X, SPEED_2X }
 
 var _current_state := TimeState.PAUSED
 var _skeleton: Skeleton3D

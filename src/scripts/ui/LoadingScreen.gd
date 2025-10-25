@@ -4,12 +4,12 @@ extends Control
 ## Displays a loading indicator and message while the simulation is in INIT state.
 ## Automatically hides when the simulation transitions to any other state.
 
+var _scenario: ScenarioData = Game.current_scenario
+
 @onready var _card_title: Label = %CardTitle
 @onready var _card_desc: RichTextLabel = %CardDesc
 @onready var _card_image: TextureRect = %CardImage
 @onready var _label: Label = %LoadingLabel
-
-var _scenario: ScenarioData = Game.current_scenario
 
 
 func _ready() -> void:

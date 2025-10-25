@@ -11,7 +11,8 @@ signal order_applied(order: Dictionary)
 ## Emitted when an order cannot be applied.
 signal order_failed(order: Dictionary, reason: String)
 ## Emitted when a CUSTOM order is received (for mission-specific handling).
-## [br]Order dictionary contains: [code]custom_keyword[/code], [code]custom_full_text[/code], [code]custom_metadata[/code].
+## [br]Order dictionary contains: [code]custom_keyword[/code], [code]custom_full_text[/code],
+## [code]custom_metadata[/code].
 ## [br]Connect to this signal to handle mission-specific voice commands that route as orders.
 signal custom_order_received(order: Dictionary)
 

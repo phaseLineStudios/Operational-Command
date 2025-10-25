@@ -2,11 +2,17 @@ class_name TriggerConfigDialog
 extends Window
 ## Config dialog for ScenarioTrigger.
 
+## Emitted when config is saved.
 signal saved(index: int, trigger: ScenarioTrigger)
+
+const CODE_AUTOCOMPLETE := preload("res://scripts/ui/CodeEditAutocomplete.gd")
 
 var editor: ScenarioEditor
 var trigger_index := -1
 var _before: ScenarioTrigger
+var _autocomplete_condition: CodeEditAutocomplete
+var _autocomplete_activate: CodeEditAutocomplete
+var _autocomplete_deactivate: CodeEditAutocomplete
 
 @onready var save_btn: Button = %Save
 @onready var close_btn: Button = %Close
@@ -17,15 +23,28 @@ var _before: ScenarioTrigger
 @onready var trig_size_y: SpinBox = %SizeY
 @onready var trig_duration: SpinBox = %Duration
 @onready var trig_presence: OptionButton = %Presence
-@onready var trig_condition: TextEdit = %Condition
-@onready var trig_on_activate: TextEdit = %OnActivate
-@onready var trig_on_deactivate: TextEdit = %OnDeactivate
+@onready var trig_condition: CodeEdit = %Condition
+@onready var trig_on_activate: CodeEdit = %OnActivate
+@onready var trig_on_deactivate: CodeEdit = %OnDeactivate
 
 
 func _ready() -> void:
 	save_btn.pressed.connect(_on_save)
 	close_btn.pressed.connect(func(): visible = false)
 	close_requested.connect(func(): visible = false)
+
+	# Setup autocomplete for all code editors
+	_setup_autocomplete()
+
+
+func _exit_tree() -> void:
+	# Cleanup autocomplete helpers
+	if _autocomplete_condition:
+		_autocomplete_condition.detach()
+	if _autocomplete_activate:
+		_autocomplete_activate.detach()
+	if _autocomplete_deactivate:
+		_autocomplete_deactivate.detach()
 
 
 func show_for(_editor: ScenarioEditor, index: int) -> void:
@@ -92,3 +111,127 @@ func _on_save() -> void:
 	emit_signal("saved", trigger_index, after)
 	visible = false
 	editor.ctx.request_overlay_redraw()
+
+
+## Setup autocomplete for all code editors with TriggerAPI methods.
+func _setup_autocomplete() -> void:
+	# Define TriggerAPI methods for autocomplete
+	var trigger_api_methods := {
+		"time_s":
+		{
+			"return_type": "float",
+			"description": "Return mission time in seconds.",
+			"params": [],
+		},
+		"radio":
+		{
+			"return_type": "void",
+			"description": "Send a radio/log message (levels: info|warn|error).",
+			"params": ["msg: String", 'level: String = "info"'],
+		},
+		"complete_objective":
+		{
+			"return_type": "void",
+			"description": "Set objective state to completed.",
+			"params": ["id: StringName"],
+		},
+		"fail_objective":
+		{
+			"return_type": "void",
+			"description": "Set objective state to failed.",
+			"params": ["id: StringName"],
+		},
+		"set_objective":
+		{
+			"return_type": "void",
+			"description": "Set objective state to a specific value.",
+			"params": ["id: StringName", "state: int"],
+		},
+		"objective_state":
+		{
+			"return_type": "int",
+			"description": "Get current objective state.",
+			"params": ["id: StringName"],
+		},
+		"unit":
+		{
+			"return_type": "Dictionary",
+			"description":
+			(
+				"Get minimal snapshot of a unit by id or callsign. "
+				+ "Returns {id, callsign, pos_m: Vector2, aff: int} or {}."
+			),
+			"params": ["id_or_callsign: String"],
+		},
+		"count_in_area":
+		{
+			"return_type": "int",
+			"description":
+			'Count units in an area by affiliation: "friend"|"enemy"|"player"|"any".',
+			"params":
+			[
+				"affiliation: String",
+				"center_m: Vector2",
+				"size_m: Vector2",
+				'shape: String = "rect"'
+			],
+		},
+		"units_in_area":
+		{
+			"return_type": "Array",
+			"description": "Return an Array of unit snapshots in an area.",
+			"params":
+			[
+				"affiliation: String",
+				"center_m: Vector2",
+				"size_m: Vector2",
+				'shape: String = "rect"'
+			],
+		},
+		"last_radio_command":
+		{
+			"return_type": "String",
+			"description": "Get the last radio command heard this tick (cleared after tick).",
+			"params": [],
+		},
+		"get_global":
+		{
+			"return_type": "Variant",
+			"description": "Get a global variable shared across all triggers.",
+			"params": ["key: String", "default: Variant = null"],
+		},
+		"set_global":
+		{
+			"return_type": "void",
+			"description": "Set a global variable shared across all triggers.",
+			"params": ["key: String", "value: Variant"],
+		},
+		"has_global":
+		{
+			"return_type": "bool",
+			"description": "Check if a global variable exists.",
+			"params": ["key: String"],
+		},
+		"show_dialog":
+		{
+			"return_type": "void",
+			"description":
+			"Show a mission dialog with text and an OK button. Optionally pauses the simulation.",
+			"params": ["text: String", "pause_game: bool = false"],
+		},
+	}
+
+	# Create and setup autocomplete for condition
+	_autocomplete_condition = CODE_AUTOCOMPLETE.new()
+	_autocomplete_condition.add_methods(trigger_api_methods)
+	_autocomplete_condition.attach(trig_condition)
+
+	# Create and setup autocomplete for on_activate
+	_autocomplete_activate = CODE_AUTOCOMPLETE.new()
+	_autocomplete_activate.add_methods(trigger_api_methods)
+	_autocomplete_activate.attach(trig_on_activate)
+
+	# Create and setup autocomplete for on_deactivate
+	_autocomplete_deactivate = CODE_AUTOCOMPLETE.new()
+	_autocomplete_deactivate.add_methods(trigger_api_methods)
+	_autocomplete_deactivate.attach(trig_on_deactivate)

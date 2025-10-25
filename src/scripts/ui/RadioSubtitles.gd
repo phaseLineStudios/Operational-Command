@@ -9,15 +9,15 @@ extends Control
 ## Maximum number of suggestions to show
 @export var max_suggestions: int = 8
 
-@onready var _subtitle_label: Label = %SubtitleLabel
-@onready var _suggestions_container: HBoxContainer = %SuggestionsContainer
-
 var _tables: Dictionary = {}
 var _hide_timer: Timer = null
 var _current_text: String = ""
 var _is_transmitting: bool = false
 var _terrain_labels: Array[String] = []
 var _unit_callsigns: Array[String] = []
+
+@onready var _subtitle_label: Label = %SubtitleLabel
+@onready var _suggestions_container: HBoxContainer = %SuggestionsContainer
 
 
 func _ready() -> void:

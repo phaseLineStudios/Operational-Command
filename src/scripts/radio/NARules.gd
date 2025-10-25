@@ -12,8 +12,9 @@ var _mission_overrides: Dictionary = {}
 ## extra words to Vosk grammar for better STT recognition.
 ## [br][br]
 ## [b]Called automatically by SimWorld._init_custom_commands() during mission init.[/b]
-## [param custom_actions] Dictionary mapping keyword -> OrderType (or any int). Added to action_synonyms.
-## [param extra_words] Array of additional words to recognize in STT (keywords + additional_grammar).
+## [param custom_actions] Dictionary mapping keyword -> OrderType (or any int).
+## Added to action_synonyms. [param extra_words] Array of additional words to recognize in STT
+## (keywords + additional_grammar).
 func set_mission_overrides(
 	custom_actions: Dictionary = {}, extra_words: Array[String] = []
 ) -> void:
