@@ -17,6 +17,7 @@ extends Node3D
 @onready var radio: Radio = %RadioController
 @onready var loading_screen: Control = %LoadingScreen
 @onready var mission_dialog: Control = %MissionDialog
+@onready var drawing_controller: DrawingController = %DrawingController
 
 
 ## Initialize mission systems and bind services.
@@ -36,6 +37,9 @@ func _ready() -> void:
 	sim.bind_radio(%RadioController, %OrdersParser)
 	sim.init_resolution(scenario.briefing.frag_objectives)
 
+	# Initialize drawing controller
+	_init_drawing_controller()
+
 	# Connect radio signals to subtitle display
 	radio.radio_on.connect(_on_radio_on)
 	radio.radio_off.connect(_on_radio_off)
@@ -47,6 +51,22 @@ func _ready() -> void:
 
 	# All initialization complete - hide loading screen
 	loading_screen.hide_loading()
+
+
+## Initialize the drawing controller and bind to trigger API
+func _init_drawing_controller() -> void:
+	if drawing_controller:
+		# Set the map mesh reference
+		drawing_controller.map_mesh = %Map
+
+	if trigger_engine and trigger_engine._api:
+		trigger_engine._api.drawing_controller = drawing_controller
+
+
+## Clean up when exiting (clears session drawings)
+func _exit_tree() -> void:
+	if drawing_controller:
+		drawing_controller.clear_all()
 
 
 ## Build the list of playable units from scenario slots and current loadout.

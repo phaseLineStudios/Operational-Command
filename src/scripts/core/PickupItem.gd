@@ -7,6 +7,10 @@ extends RigidBody3D
 @export var pick_toggle: bool = false
 ## Should the mouse be hidden when object is held
 @export var hide_mouse: bool = false
+## Use a fixed anchor point instead of click position (in local space)
+@export var use_fixed_anchor: bool = false
+## Fixed anchor point in local coordinates (e.g., Vector3(0, -0.05, 0) for pen tip)
+@export var anchor_offset: Vector3 = Vector3.ZERO
 
 @export_group("Drop logic")
 ## Snap back to origin position on drop
@@ -30,6 +34,18 @@ var _pre_pick_freeze := false
 var _inspecting := false
 var _inspect_camera: Camera3D
 var _pre_inspect_transform: Transform3D
+
+
+## Get the grab offset for this item.
+## If use_fixed_anchor is true, returns anchor_offset.
+## Otherwise, returns the offset based on where the item was clicked.
+## [param hit_position] World position where the item was clicked.
+## [return] Local offset for grabbing.
+func get_grab_offset(hit_position: Vector3) -> Vector3:
+	if use_fixed_anchor:
+		return anchor_offset
+	else:
+		return to_local(hit_position)
 
 
 func _ready():

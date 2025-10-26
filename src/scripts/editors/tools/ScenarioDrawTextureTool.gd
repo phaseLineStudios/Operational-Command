@@ -90,7 +90,7 @@ func draw_overlay(canvas: Control) -> void:
 ## Commit a stamp.
 func _place() -> void:
 	var st := ScenarioDrawingStamp.new()
-	st.id = editor._next_drawing_id("stamp")
+	st.id = editor.draw_tools.next_drawing_id("stamp")
 	st.texture_path = texture_path
 	st.modulate = color
 	st.opacity = opacity

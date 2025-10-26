@@ -5,6 +5,8 @@ extends RefCounted
 
 var sim: SimWorld
 var engine: TriggerEngine
+var drawing_controller = null  # DrawingController reference
+
 var _last_radio_command: String = ""
 var _mission_dialog: Control = null
 
@@ -13,6 +15,46 @@ var _mission_dialog: Control = null
 ## [return] Mission time in seconds.
 func time_s() -> float:
 	return sim.get_mission_time_s() if sim else 0.0
+
+
+## Check if simulation is paused.
+## [return] True if simulation is paused.
+func is_paused() -> bool:
+	if sim:
+		return sim.get_state() == SimWorld.State.PAUSED
+	return false
+
+
+## Check if simulation is running.
+## [return] True if simulation is running.
+func is_running() -> bool:
+	if sim:
+		return sim.get_state() == SimWorld.State.RUNNING
+	return false
+
+
+## Get current time scale (1.0 = normal, 2.0 = 2x speed).
+## [return] Current time scale multiplier.
+func time_scale() -> float:
+	return sim.get_time_scale() if sim else 1.0
+
+
+## Get simulation state as string ("INIT", "RUNNING", "PAUSED", "COMPLETED").
+## [return] Current simulation state name.
+func sim_state() -> String:
+	if not sim:
+		return "INIT"
+	match sim.get_state():
+		SimWorld.State.INIT:
+			return "INIT"
+		SimWorld.State.RUNNING:
+			return "RUNNING"
+		SimWorld.State.PAUSED:
+			return "PAUSED"
+		SimWorld.State.COMPLETED:
+			return "COMPLETED"
+		_:
+			return "UNKNOWN"
 
 
 ## Send a radio/log message (levels: info|warn|error).
@@ -165,3 +207,39 @@ func has_global(key: String) -> bool:
 func show_dialog(text: String, pause_game: bool = false) -> void:
 	if _mission_dialog and _mission_dialog.has_method("show_dialog"):
 		_mission_dialog.show_dialog(text, pause_game, sim)
+
+
+## Check if the player has drawn anything on the map.
+## Returns true if any pen strokes have been made with the drawing tools.
+## [br][br]
+## [b]Usage in trigger condition:[/b]
+## [codeblock]
+## # Trigger activates when player has drawn on the map
+## has_drawn()
+##
+## # Combined with other conditions
+## has_drawn() and time_s() > 60
+## [/codeblock]
+## [return] True if player has made any drawings.
+func has_drawn() -> bool:
+	if drawing_controller and drawing_controller.has_method("has_drawing"):
+		return drawing_controller.has_drawing()
+	return false
+
+
+## Get the number of drawing strokes the player has made.
+## Each continuous pen stroke counts as one stroke.
+## [br][br]
+## [b]Usage in trigger condition:[/b]
+## [codeblock]
+## # Trigger when player has drawn at least 3 strokes
+## get_drawing_count() >= 3
+##
+## # Combined with location check
+## get_drawing_count() > 0 and count_in_area("friend", Vector2(500, 500), Vector2(100, 100)) > 0
+## [/codeblock]
+## [return] Number of strokes drawn.
+func get_drawing_count() -> int:
+	if drawing_controller and drawing_controller.has_method("get_stroke_count"):
+		return drawing_controller.get_stroke_count()
+	return 0

@@ -97,7 +97,7 @@ func _commit_if_valid() -> void:
 	if _points_m.size() < 2 or editor.ctx.data == null:
 		return
 	var st := ScenarioDrawingStroke.new()
-	st.id = editor._next_drawing_id("stroke")
+	st.id = editor.draw_tools.next_drawing_id("stroke")
 	st.color = color
 	st.width_px = width_px
 	st.opacity = opacity

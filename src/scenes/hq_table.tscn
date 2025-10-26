@@ -1,4 +1,4 @@
-[gd_scene load_steps=66 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=67 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -27,9 +27,10 @@
 [ext_resource type="Texture2D" uid="uid://cww2l5lebx4nn" path="res://assets/textures/ui/button_pause.png" id="24_l12u7"]
 [ext_resource type="Texture2D" uid="uid://g1tchqqnd2wx" path="res://assets/textures/ui/button_play.png" id="25_k8ks5"]
 [ext_resource type="Texture2D" uid="uid://c5ch0odwq6o64" path="res://assets/textures/ui/button_skip.png" id="26_4ip4k"]
+[ext_resource type="Script" uid="uid://7o20krixdmt5" path="res://scripts/core/DrawingController.gd" id="27_cdjkm"]
 [ext_resource type="PackedScene" uid="uid://0v7ebxx3jxi2" path="res://scenes/ui/radio_subtitles.tscn" id="27_subtitles"]
 [ext_resource type="PackedScene" uid="uid://b7u4ajeh13tpn" path="res://scenes/ui/loading_screen.tscn" id="28_loading"]
-[ext_resource type="PackedScene" path="res://scenes/ui/mission_dialog.tscn" id="29_dialog"]
+[ext_resource type="PackedScene" uid="uid://db2miy3a6hjke" path="res://scenes/ui/mission_dialog.tscn" id="29_dialog"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
 size = Vector2(10, 30)
@@ -314,6 +315,7 @@ continuous_cd = true
 script = ExtResource("1_oof4l")
 pick_toggle = true
 hide_mouse = true
+use_fixed_anchor = true
 snap_to_origin_position = true
 snap_to_origin_rotation = true
 
@@ -333,6 +335,7 @@ continuous_cd = true
 script = ExtResource("1_oof4l")
 pick_toggle = true
 hide_mouse = true
+use_fixed_anchor = true
 snap_to_origin_position = true
 snap_to_origin_rotation = true
 
@@ -352,6 +355,7 @@ continuous_cd = true
 script = ExtResource("1_oof4l")
 pick_toggle = true
 hide_mouse = true
+use_fixed_anchor = true
 snap_to_origin_position = true
 snap_to_origin_rotation = true
 
@@ -369,6 +373,10 @@ collision_mask = 3
 physics_material_override = SubResource("PhysicsMaterial_cx6my")
 continuous_cd = true
 script = ExtResource("1_oof4l")
+pick_toggle = true
+hide_mouse = true
+snap_to_origin_position = true
+snap_to_origin_rotation = true
 
 [node name="Collision" type="CollisionShape3D" parent="PhysicsObjects/Eraser"]
 shape = SubResource("BoxShape3D_ge0qv")
@@ -380,6 +388,7 @@ skeleton = NodePath("../..")
 [node name="Controllers" type="Node" parent="."]
 
 [node name="ObjectController" type="Node" parent="Controllers"]
+unique_name_in_owner = true
 script = ExtResource("4_py2wd")
 
 [node name="InteractionBounds" type="MeshInstance3D" parent="Controllers/ObjectController"]
@@ -513,6 +522,10 @@ lcd_letter_spacing = 2
 pause_icon = ExtResource("24_l12u7")
 play_icon = ExtResource("25_k8ks5")
 fastforward_icon = ExtResource("26_4ip4k")
+
+[node name="DrawingController" type="Node" parent="Controllers"]
+unique_name_in_owner = true
+script = ExtResource("27_cdjkm")
 
 [node name="UI" type="CanvasLayer" parent="."]
 

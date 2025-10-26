@@ -32,7 +32,7 @@ LogService="*res://scripts/core/LogService.gd"
 
 [debug]
 
-settings/stdout/log_level=3
+settings/stdout/log_level=4
 
 [input]
 

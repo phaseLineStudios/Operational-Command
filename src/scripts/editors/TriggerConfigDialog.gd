@@ -123,6 +123,30 @@ func _setup_autocomplete() -> void:
 			"description": "Return mission time in seconds.",
 			"params": [],
 		},
+		"is_paused":
+		{
+			"return_type": "bool",
+			"description": "Check if simulation is paused.",
+			"params": [],
+		},
+		"is_running":
+		{
+			"return_type": "bool",
+			"description": "Check if simulation is running.",
+			"params": [],
+		},
+		"time_scale":
+		{
+			"return_type": "float",
+			"description": "Get current time scale (1.0 = normal, 2.0 = 2x speed).",
+			"params": [],
+		},
+		"sim_state":
+		{
+			"return_type": "String",
+			"description": 'Get simulation state ("INIT", "RUNNING", "PAUSED", "COMPLETED").',
+			"params": [],
+		},
 		"radio":
 		{
 			"return_type": "void",

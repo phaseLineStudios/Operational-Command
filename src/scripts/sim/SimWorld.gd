@@ -376,6 +376,12 @@ func set_time_scale(scale: float) -> void:
 	_time_scale = max(0.0, scale)
 
 
+## Get current simulation time scale (1.0 = normal, 2.0 = 2x speed, 0.0 = paused).
+## [return] Current time scale multiplier.
+func get_time_scale() -> float:
+	return _time_scale
+
+
 ## Step one tick while paused.
 func step() -> void:
 	if _state == State.PAUSED:
