@@ -13,6 +13,8 @@ extends ScenarioToolBase
 @export_range(-360.0, 360.0, 0.1) var rotation_deg: float = 0.0
 ## Opacity [0..1].
 @export_range(0.0, 1.0, 0.01) var opacity: float = 1.0
+## Optional text label shown to the right of the stamp.
+@export var label: String = ""
 
 var texture_path: String = ""
 var _hover_m := Vector2.ZERO
@@ -78,7 +80,7 @@ func draw_overlay(canvas: Control) -> void:
 	if not texture or not _has_hover:
 		return
 	var pos_px := editor.ctx.terrain_render.terrain_to_map(_hover_m)
-	var sz := texture.get_size() * scale
+	var sz := texture.get_size() * scale * 0.1
 	var col := Color(1, 1, 1, opacity)
 	col *= color
 	canvas.draw_set_transform(pos_px, deg_to_rad(rotation_deg))
@@ -95,8 +97,9 @@ func _place() -> void:
 	st.modulate = color
 	st.opacity = opacity
 	st.position_m = _hover_m
-	st.scale = scale
+	st.scale = scale * 0.1
 	st.rotation_deg = rotation_deg
+	st.label = label
 	st.order = Time.get_ticks_usec()
 	if editor.ctx.data.drawings == null:
 		editor.ctx.data.drawings = []

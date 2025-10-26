@@ -66,7 +66,76 @@
         "trigger_id": "radio_check_trigger"
       }
     ],
-    "drawings": [],
+    "drawings": [
+      {
+        "id": "draw_stamp_001",
+        "label": "wp 1",
+        "layer": 0,
+        "modulate": "000000ff",
+        "opacity": 1.0,
+        "order": 50299603,
+        "position_m": {
+          "x": 1240.46655273438,
+          "y": 1451.82299804688
+        },
+        "rotation_deg": 0.0,
+        "scale": 0.1,
+        "texture_path": "res://assets/textures/stamps/stamp_wp.png",
+        "type": "stamp",
+        "visible": true
+      },
+      {
+        "id": "draw_stamp_002",
+        "label": "wp 2",
+        "layer": 0,
+        "modulate": "000000ff",
+        "opacity": 1.0,
+        "order": 55950200,
+        "position_m": {
+          "x": 1677.47680664063,
+          "y": 1253.505859375
+        },
+        "rotation_deg": 0.0,
+        "scale": 0.1,
+        "texture_path": "res://assets/textures/stamps/stamp_wp.png",
+        "type": "stamp",
+        "visible": true
+      },
+      {
+        "id": "draw_stamp_003",
+        "label": "wp 3",
+        "layer": 0,
+        "modulate": "000000ff",
+        "opacity": 1.0,
+        "order": 61070009,
+        "position_m": {
+          "x": 1992.17163085938,
+          "y": 1890.02099609375
+        },
+        "rotation_deg": 0.0,
+        "scale": 0.1,
+        "texture_path": "res://assets/textures/stamps/stamp_wp.png",
+        "type": "stamp",
+        "visible": true
+      },
+      {
+        "id": "draw_stamp_004",
+        "label": "",
+        "layer": 0,
+        "modulate": "000000ff",
+        "opacity": 1.0,
+        "order": 97520126,
+        "position_m": {
+          "x": 2322.455078125,
+          "y": 1845.99536132813
+        },
+        "rotation_deg": 0.0,
+        "scale": 0.1,
+        "texture_path": "res://assets/textures/stamps/stamp_obj.png",
+        "type": "stamp",
+        "visible": true
+      }
+    ],
     "tasks": [
       {
         "id": "task_set_combat_mode_1",
@@ -159,6 +228,46 @@
         "synced_tasks": [],
         "synced_units": [],
         "title": "Mission Init"
+      },
+      {
+        "area_center_m": {
+          "x": 2550.61181640625,
+          "y": 149.870330810547
+        },
+        "condition_expr": "has_drawn()",
+        "id": "drawing_check_trigger",
+        "on_activate_expr": "set_objective(\"draw_plan\", 1)",
+        "on_deactivate_expr": "",
+        "presence": 0,
+        "require_duration_s": 0.0,
+        "shape": 0,
+        "size_m": {
+          "x": 100.0,
+          "y": 100.0
+        },
+        "synced_tasks": [],
+        "synced_units": [],
+        "title": "Drawing Check"
+      },
+      {
+        "area_center_m": {
+          "x": 2350.65112304688,
+          "y": 149.921401977539
+        },
+        "condition_expr": "time_scale() == \"RUNNING\"",
+        "id": "timer_check_trigger",
+        "on_activate_expr": "set_objective(\"set_time\", 1)",
+        "on_deactivate_expr": "",
+        "presence": 0,
+        "require_duration_s": 0.0,
+        "shape": 0,
+        "size_m": {
+          "x": 100.0,
+          "y": 100.0
+        },
+        "synced_tasks": [],
+        "synced_units": [],
+        "title": "Timer Check"
       }
     ],
     "units": [

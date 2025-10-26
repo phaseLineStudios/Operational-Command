@@ -14,6 +14,8 @@ extends ScenarioDrawing
 @export_range(0.05, 10.0, 0.01) var scale: float = 1.0
 ## Rotation in degrees (clockwise).
 @export_range(-360.0, 360.0, 0.1) var rotation_deg: float = 0.0
+## Optional text label shown to the right of the stamp.
+@export var label: String = ""
 
 
 ## Serialize stamp.
@@ -31,6 +33,7 @@ func serialize() -> Dictionary:
 				"position_m": ContentDB.v2(position_m),
 				"scale": scale,
 				"rotation_deg": rotation_deg,
+				"label": label,
 			}
 		)
 	)
@@ -49,4 +52,5 @@ static func deserialize(d: Dictionary) -> ScenarioDrawingStamp:
 	s.position_m = ContentDB.v2_from(d.get("position_m"))
 	s.scale = float(d.get("scale", s.scale))
 	s.rotation_deg = float(d.get("rotation_deg", s.rotation_deg))
+	s.label = String(d.get("label", ""))
 	return s

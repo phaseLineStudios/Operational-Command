@@ -123,11 +123,22 @@ func _is_near_stroke(stroke: ScenarioDrawingStroke, _pos_m: Vector2, pos_px: Vec
 ## [param pos_m] Click position in terrain space.
 ## [param pos_px] Click position in screen space.
 ## [return] true if near the stamp.
-func _is_near_stamp(stamp: ScenarioDrawingStamp, pos_m: Vector2, _pos_px: Vector2) -> bool:
-	var dist := pos_m.distance_to(stamp.position_m)
-	# Simple radius check - could be improved with actual stamp bounds
-	var threshold_m: float = stamp.size_m.length() * 0.5
-	return dist <= threshold_m
+func _is_near_stamp(stamp: ScenarioDrawingStamp, _pos_m: Vector2, pos_px: Vector2) -> bool:
+	# Load texture and calculate size
+	var tex: Texture2D = load(stamp.texture_path) if stamp.texture_path != "" else null
+	if not tex:
+		# Fallback to simple distance check if texture can't be loaded
+		var dist_m := _pos_m.distance_to(stamp.position_m)
+		return dist_m <= 10.0  # 10 meter default threshold
+
+	# Calculate stamp bounds in pixel space
+	var stamp_pos_px := editor.ctx.terrain_render.terrain_to_map(stamp.position_m)
+	var stamp_size_px: Vector2 = tex.get_size() * stamp.scale
+	var half_size := stamp_size_px * 0.5
+
+	# Check if click is within stamp bounds (simple bounding box check)
+	var offset := pos_px - stamp_pos_px
+	return abs(offset.x) <= half_size.x and abs(offset.y) <= half_size.y
 
 
 ## Calculate distance from point to line segment.

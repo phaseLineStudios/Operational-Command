@@ -62,6 +62,7 @@ var menus := ScenarioEditorMenus.new()
 @onready var st_scale: SpinBox = %STScale
 @onready var st_rotation: SpinBox = %STRotation
 @onready var st_opacity: HSlider = %STOpacity
+@onready var st_label_text: LineEdit = %STLabelText
 @onready var st_label: Label = %STLabel
 @onready var st_list: ItemList = %STList
 @onready var st_load_btn: Button = %LoadTexture
@@ -153,6 +154,7 @@ func _ready():
 	st_color.color_changed.connect(func(_c): draw_tools.sync_stamp_opts())
 	st_rotation.value_changed.connect(func(_v): draw_tools.sync_stamp_opts())
 	st_opacity.value_changed.connect(func(_v): draw_tools.sync_stamp_opts())
+	st_label_text.text_changed.connect(func(_t): draw_tools.sync_stamp_opts())
 	st_list.item_selected.connect(draw_tools.on_stamp_selected)
 	st_load_btn.pressed.connect(draw_tools.on_stamp_load_clicked)
 

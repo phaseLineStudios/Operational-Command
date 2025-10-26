@@ -488,6 +488,10 @@ func _draw_drawings() -> void:
 				draw_texture_rect(tex, Rect2(-sz * 0.5, sz), false, tint)
 				draw_set_transform(Vector2(0, 0))
 
+				# Draw label to the right of the stamp if present
+				if it.label != null and it.label != "":
+					_draw_stamp_label(it.label, pos_px, sz.x * 0.5, tint)
+
 
 ## Draw a texture centered, with hover scale/opacity feedback
 func _draw_icon_with_hover(tex: Texture2D, center: Vector2, hovered: bool) -> void:
@@ -520,6 +524,23 @@ func _draw_title(text: String, center: Vector2) -> void:
 		fs,
 		Color(1, 1, 1, 0.96)
 	)
+
+
+## Draw label text to the right of a stamp
+## [param text] Label text.
+## [param center] Stamp center position in pixels.
+## [param stamp_half_width] Half width of the stamp texture.
+## [param color] Color to draw the label in.
+func _draw_stamp_label(
+	text: String, center: Vector2, stamp_half_width: float, color: Color
+) -> void:
+	var font := get_theme_default_font()
+	var fs := get_theme_default_font_size()
+	if font == null:
+		return
+	# Position text to the right of the stamp with small padding
+	var text_pos := Vector2(center.x + stamp_half_width + 8, center.y + fs * 0.35)
+	draw_string(font, text_pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, color)
 
 
 ## Delegate task glyph drawing to the task resource

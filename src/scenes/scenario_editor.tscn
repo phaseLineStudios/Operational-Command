@@ -438,6 +438,16 @@ max_value = 1.0
 step = 0.05
 value = 1.0
 
+[node name="LabelTextLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+layout_mode = 2
+text = "Label"
+
+[node name="STLabelText" type="LineEdit" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Optional label text"
+
 [node name="BottomBar" type="PanelContainer" parent="Root"]
 layout_mode = 2
 
