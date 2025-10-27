@@ -1,0 +1,58 @@
+{
+  "allowed_slots": [
+    "INF"
+  ],
+  "ammunition": {
+
+  },
+  "ammunition_critical_threshold": 0.1,
+  "ammunition_low_threshold": 0.25,
+  "cost": 50,
+  "doctrine": "nato_inf_1983",
+  "editor": {
+    "unit_category": "frg_bw"
+  },
+  "enemy_icon_path": "res://assets/textures/units/enemy_unknown_platoon.png",
+  "equipment": {
+    "radios": {
+
+    },
+    "vehicles": {
+
+    },
+    "weapons": {
+
+    }
+  },
+  "equipment_tags": [],
+  "experience": 0.0,
+  "icon_path": "res://assets/textures/units/nato_unknown_platoon.png",
+  "id": "frg_opfor_2_bundeswehr",
+  "movement_profile": 2,
+  "role": "INF",
+  "size": 2,
+  "state": {
+    "cohesion": 0.0,
+    "state_equipment": 0.0,
+    "state_injured": 0.0,
+    "state_strength": 28.0
+  },
+  "state_ammunition": {
+
+  },
+  "stats": {
+    "attack": 25.0,
+    "defense": 15.0,
+    "morale": 1.0,
+    "range_m": 500.0,
+    "speed_kph": 50.0,
+    "spot_m": 800.0
+  },
+  "strength": 28,
+  "supply_transfer_radius_m": 30.0,
+  "supply_transfer_rate": 10.0,
+  "throughput": {
+
+  },
+  "title": "OPFOR 2 Bundeswehr"
+}

@@ -87,6 +87,11 @@ func complete_objective(id: StringName) -> void:
 	resolution.set_objective_state(id, MissionResolution.ObjectiveState.SUCCESS)
 
 
+## Set objective state wrapper
+func set_objective_state(id: StringName, state: MissionResolution.ObjectiveState) -> void:
+	resolution.set_objective_state(id, state)
+
+
 ## Fail objective
 func fail_objective(id: StringName) -> void:
 	resolution.set_objective_state(id, MissionResolution.ObjectiveState.FAILED)

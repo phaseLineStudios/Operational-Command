@@ -3,6 +3,21 @@
 class_name MilSymbol
 extends RefCounted
 
+enum UnitAffiliation { FRIEND, ENEMY, NEUTRAL, UNKNOWN }
+enum UnitType {
+	INFANTRY,
+	MECHANIZED,
+	MOTORIZED,
+	ARMOR,
+	ANTI_TANK,
+	ANTI_AIR,
+	ARTILLERY,
+	RECON,
+	ENGINEER,
+	HQ
+}
+enum UnitSize { TEAM, SQUAD, SECTION, PLATOON, COMPANY, BATTALION, DIVISION }
+
 ## Configuration
 var config: MilSymbolConfig
 
@@ -18,7 +33,24 @@ func _init(p_config: MilSymbolConfig = null) -> void:
 		config = MilSymbolConfig.create_default()
 
 
-## Generate a symbol texture
+## Generate a symbol texture using enums (primary API)
+## Returns an ImageTexture of the rendered symbol
+func generate(
+	affiliation: UnitAffiliation,
+	unit_type: UnitType,
+	unit_size: UnitSize = UnitSize.PLATOON,
+	callsign: String = ""
+) -> ImageTexture:
+	var internal_affiliation := _affiliation_to_internal(affiliation)
+	var icon_type := _unit_type_to_icon(unit_type)
+	var size_text := _unit_size_to_text(unit_size)
+
+	return await generate_texture(
+		internal_affiliation, MilSymbolGeometry.Domain.GROUND, icon_type, size_text, callsign
+	)
+
+
+## Generate a symbol texture (internal - uses internal enum types)
 ## Returns an ImageTexture of the rendered symbol
 func generate_texture(
 	affiliation: MilSymbolConfig.Affiliation,
@@ -76,17 +108,15 @@ func generate_from_code(
 	return await generate_texture(affiliation, domain, icon_type, unit_size, designation)
 
 
-## Generate a symbol texture from unit data
+## Generate a symbol texture from unit data (same as generate() - kept for compatibility)
 ## More convenient for game integration
 func generate_from_unit(
-	unit_affiliation: String, unit_type: String, unit_size: String = "", designation: String = ""
+	unit_affiliation: UnitAffiliation,
+	unit_type: UnitType,
+	unit_size: UnitSize = UnitSize.COMPANY,
+	designation: String = ""
 ) -> ImageTexture:
-	var affiliation := _parse_affiliation(unit_affiliation)
-	var icon_type := MilSymbolIcons.parse_unit_type(unit_type)
-
-	return await generate_texture(
-		affiliation, MilSymbolGeometry.Domain.GROUND, icon_type, unit_size, designation
-	)
+	return await generate(unit_affiliation, unit_type, unit_size, designation)
 
 
 ## Synchronously generate a symbol texture (blocking)
@@ -204,21 +234,82 @@ func _parse_icon_type(code: String) -> MilSymbolIcons.IconType:
 	return MilSymbolIcons.parse_unit_type(code)
 
 
+## Convert UnitAffiliation enum to internal Affiliation enum
+func _affiliation_to_internal(affiliation: UnitAffiliation) -> MilSymbolConfig.Affiliation:
+	match affiliation:
+		UnitAffiliation.FRIEND:
+			return MilSymbolConfig.Affiliation.FRIEND
+		UnitAffiliation.ENEMY:
+			return MilSymbolConfig.Affiliation.HOSTILE
+		UnitAffiliation.NEUTRAL:
+			return MilSymbolConfig.Affiliation.NEUTRAL
+		UnitAffiliation.UNKNOWN:
+			return MilSymbolConfig.Affiliation.UNKNOWN
+		_:
+			return MilSymbolConfig.Affiliation.FRIEND
+
+
+## Convert UnitType enum to IconType enum
+func _unit_type_to_icon(unit_type: UnitType) -> MilSymbolIcons.IconType:
+	match unit_type:
+		UnitType.INFANTRY:
+			return MilSymbolIcons.IconType.INFANTRY
+		UnitType.MECHANIZED:
+			return MilSymbolIcons.IconType.MECHANIZED
+		UnitType.MOTORIZED:
+			return MilSymbolIcons.IconType.MECHANIZED  # Use mechanized icon
+		UnitType.ARMOR:
+			return MilSymbolIcons.IconType.ARMOR
+		UnitType.ANTI_TANK:
+			return MilSymbolIcons.IconType.ANTI_TANK
+		UnitType.ANTI_AIR:
+			return MilSymbolIcons.IconType.ANTI_AIR
+		UnitType.ARTILLERY:
+			return MilSymbolIcons.IconType.ARTILLERY
+		UnitType.RECON:
+			return MilSymbolIcons.IconType.RECON
+		UnitType.ENGINEER:
+			return MilSymbolIcons.IconType.ENGINEER
+		UnitType.HQ:
+			return MilSymbolIcons.IconType.HEADQUARTERS
+		_:
+			return MilSymbolIcons.IconType.NONE
+
+
+## Convert UnitSize enum to NATO size indicator text
+func _unit_size_to_text(unit_size: UnitSize) -> String:
+	match unit_size:
+		UnitSize.TEAM:
+			return "ø"
+		UnitSize.SQUAD:
+			return "•"
+		UnitSize.SECTION:
+			return "••"
+		UnitSize.PLATOON:
+			return "•••"
+		UnitSize.COMPANY:
+			return "I"
+		UnitSize.BATTALION:
+			return "II"
+		UnitSize.DIVISION:
+			return "XX"
+		_:
+			return ""
+
+
 ## Static convenience method: create and generate in one call
 static func create_symbol(
-	affiliation: String,
-	unit_type: String,
+	affiliation: UnitAffiliation,
+	unit_type: UnitType,
 	size: MilSymbolConfig.Size = MilSymbolConfig.Size.MEDIUM,
-	unit_size: String = "",
+	unit_size: UnitSize = UnitSize.COMPANY,
 	designation: String = ""
 ) -> ImageTexture:
 	var cfg := MilSymbolConfig.create_default()
 	cfg.size = size
 
 	var generator := MilSymbol.new(cfg)
-	var texture := await generator.generate_from_unit(
-		affiliation, unit_type, unit_size, designation
-	)
+	var texture := await generator.generate(affiliation, unit_type, unit_size, designation)
 
 	generator.cleanup()
 	return texture
@@ -227,19 +318,17 @@ static func create_symbol(
 ## Static convenience method for creating frame-only symbols (no fill)
 ## One-liner for quick frame-only symbol generation
 static func create_frame_symbol(
-	affiliation: String,
-	unit_type: String,
+	affiliation: UnitAffiliation,
+	unit_type: UnitType,
 	size: MilSymbolConfig.Size = MilSymbolConfig.Size.MEDIUM,
-	unit_size: String = "",
+	unit_size: UnitSize = UnitSize.COMPANY,
 	designation: String = ""
 ) -> ImageTexture:
 	var cfg := MilSymbolConfig.create_frame_only()
 	cfg.size = size
 
 	var generator := MilSymbol.new(cfg)
-	var texture := await generator.generate_from_unit(
-		affiliation, unit_type, unit_size, designation
-	)
+	var texture := await generator.generate(affiliation, unit_type, unit_size, designation)
 
 	generator.cleanup()
 	return texture

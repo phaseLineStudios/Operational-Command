@@ -18,6 +18,7 @@ extends Node3D
 @onready var loading_screen: Control = %LoadingScreen
 @onready var mission_dialog: Control = %MissionDialog
 @onready var drawing_controller: DrawingController = %DrawingController
+@onready var counter_controller: unitCounterController = %UnitCounterController
 
 
 ## Initialize mission systems and bind services.
@@ -40,6 +41,9 @@ func _ready() -> void:
 	# Initialize drawing controller
 	_init_drawing_controller()
 
+	# Initialize counter controller
+	_init_counter_controller()
+
 	# Connect radio signals to subtitle display
 	radio.radio_on.connect(_on_radio_on)
 	radio.radio_off.connect(_on_radio_off)
@@ -51,6 +55,8 @@ func _ready() -> void:
 
 	# All initialization complete - hide loading screen
 	loading_screen.hide_loading()
+	
+	_create_initial_unit_counters(playable_units)
 
 
 ## Initialize the drawing controller and bind to trigger API
@@ -61,6 +67,12 @@ func _init_drawing_controller() -> void:
 
 	if trigger_engine and trigger_engine._api:
 		trigger_engine._api.drawing_controller = drawing_controller
+
+
+## Initialize the counter controller and bind to trigger API
+func _init_counter_controller() -> void:
+	if trigger_engine and trigger_engine._api:
+		trigger_engine._api._counter_controller = counter_controller
 
 
 ## Clean up when exiting (clears session drawings)
@@ -124,7 +136,6 @@ func _on_radio_result(text: String) -> void:
 
 ## Update subtitle suggestions with terrain labels and unit callsigns
 func _update_subtitle_suggestions(scenario: ScenarioData) -> void:
-	# Extract terrain labels
 	var labels: Array[String] = []
 	if scenario.terrain and scenario.terrain.labels:
 		for label_data in scenario.terrain.labels:
@@ -132,7 +143,6 @@ func _update_subtitle_suggestions(scenario: ScenarioData) -> void:
 			if label_text != "":
 				labels.append(label_text)
 
-	# Extract all unit callsigns (playable, AI, and enemy)
 	var callsigns: Array[String] = []
 	var all_units := []
 	all_units.append_array(scenario.playable_units)
@@ -142,6 +152,20 @@ func _update_subtitle_suggestions(scenario: ScenarioData) -> void:
 		if unit and unit.callsign != "":
 			callsigns.append(unit.callsign)
 
-	# Pass to subtitle system
 	radio_subtitles.set_terrain_labels(labels)
 	radio_subtitles.set_unit_callsigns(callsigns)
+
+func _create_initial_unit_counters(playable_units: Array[ScenarioUnit]) -> void:
+	var z_shift := 0.0
+	for unit in playable_units:
+		var counter := preload("res://scenes/system/unit_counter.tscn").instantiate()
+		%PhysicsObjects.add_child(counter)
+		
+		counter.affiliation = UnitCounter.CounterAffiliation.PLAYER
+		counter.callsign = unit.callsign
+		counter.symbol_type = "INFANTRY"
+		counter.symbol_size = "PLATOON"
+		
+		var world_pos: Vector3 = %CounterSpawnLocation.global_position + Vector3(0, 0, z_shift)
+		counter.global_position = world_pos
+		z_shift += 0.05

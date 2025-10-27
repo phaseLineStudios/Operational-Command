@@ -9,6 +9,7 @@ var drawing_controller = null  # DrawingController reference
 
 var _last_radio_command: String = ""
 var _mission_dialog: Control = null
+var _counter_controller = null  # UnitCounterController reference
 
 
 ## Return mission time in seconds.
@@ -242,4 +243,39 @@ func has_drawn() -> bool:
 func get_drawing_count() -> int:
 	if drawing_controller and drawing_controller.has_method("get_stroke_count"):
 		return drawing_controller.get_stroke_count()
+	return 0
+
+
+## Check if the player has created any unit counters.
+## Returns true if at least one counter has been spawned.
+## [br][br]
+## [b]Usage in trigger condition:[/b]
+## [codeblock]
+## # Trigger activates when player has created a counter
+## has_created_counter()
+##
+## # Combined with other conditions
+## has_created_counter() and time_s() > 30
+## [/codeblock]
+## [return] True if player has created at least one counter.
+func has_created_counter() -> bool:
+	if _counter_controller and _counter_controller.has_method("get_counter_count"):
+		return _counter_controller.get_counter_count() > 0
+	return false
+
+
+## Get the number of unit counters the player has created.
+## [br][br]
+## [b]Usage in trigger condition:[/b]
+## [codeblock]
+## # Trigger when player has created at least 3 counters
+## get_counter_count() >= 3
+##
+## # Combined with other conditions
+## get_counter_count() > 0 and time_s() > 60
+## [/codeblock]
+## [return] Number of counters created.
+func get_counter_count() -> int:
+	if _counter_controller and _counter_controller.has_method("get_counter_count"):
+		return _counter_controller.get_counter_count()
 	return 0

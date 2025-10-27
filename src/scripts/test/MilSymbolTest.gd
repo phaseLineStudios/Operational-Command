@@ -8,15 +8,60 @@ const SYMBOL_SPACING: int = 150
 
 ## Test data for symbols to generate
 var test_symbols: Array[Dictionary] = [
-	{"affiliation": "FRIEND", "type": "INFANTRY", "size": "II", "designation": "A/1-5"},
-	{"affiliation": "FRIEND", "type": "ARMOR", "size": "III", "designation": "1-67"},
-	{"affiliation": "HOSTILE", "type": "MECHANIZED", "size": "II", "designation": "2BTN"},
-	{"affiliation": "HOSTILE", "type": "ARTILLERY", "size": "III", "designation": "251"},
-	{"affiliation": "NEUTRAL", "type": "RECON", "size": "I", "designation": "RECON"},
-	{"affiliation": "UNKNOWN", "type": "ENGINEER", "size": "II", "designation": "ENG"},
-	{"affiliation": "FRIEND", "type": "ANTI_TANK", "size": "I", "designation": "AT"},
-	{"affiliation": "FRIEND", "type": "ANTI_AIR", "size": "I", "designation": "AA"},
-	{"affiliation": "FRIEND", "type": "HEADQUARTERS", "size": "", "designation": "HQ"}
+	{
+		"affiliation": MilSymbol.UnitAffiliation.FRIEND,
+		"type": MilSymbol.UnitType.INFANTRY,
+		"size": MilSymbol.UnitSize.COMPANY,
+		"designation": "A/1-5"
+	},
+	{
+		"affiliation": MilSymbol.UnitAffiliation.FRIEND,
+		"type": MilSymbol.UnitType.ARMOR,
+		"size": MilSymbol.UnitSize.BATTALION,
+		"designation": "1-67"
+	},
+	{
+		"affiliation": MilSymbol.UnitAffiliation.ENEMY,
+		"type": MilSymbol.UnitType.MECHANIZED,
+		"size": MilSymbol.UnitSize.COMPANY,
+		"designation": "2BTN"
+	},
+	{
+		"affiliation": MilSymbol.UnitAffiliation.ENEMY,
+		"type": MilSymbol.UnitType.ARTILLERY,
+		"size": MilSymbol.UnitSize.BATTALION,
+		"designation": "251"
+	},
+	{
+		"affiliation": MilSymbol.UnitAffiliation.NEUTRAL,
+		"type": MilSymbol.UnitType.RECON,
+		"size": MilSymbol.UnitSize.PLATOON,
+		"designation": "RECON"
+	},
+	{
+		"affiliation": MilSymbol.UnitAffiliation.UNKNOWN,
+		"type": MilSymbol.UnitType.ENGINEER,
+		"size": MilSymbol.UnitSize.COMPANY,
+		"designation": "ENG"
+	},
+	{
+		"affiliation": MilSymbol.UnitAffiliation.FRIEND,
+		"type": MilSymbol.UnitType.ANTI_TANK,
+		"size": MilSymbol.UnitSize.PLATOON,
+		"designation": "AT"
+	},
+	{
+		"affiliation": MilSymbol.UnitAffiliation.FRIEND,
+		"type": MilSymbol.UnitType.ANTI_AIR,
+		"size": MilSymbol.UnitSize.PLATOON,
+		"designation": "AA"
+	},
+	{
+		"affiliation": MilSymbol.UnitAffiliation.FRIEND,
+		"type": MilSymbol.UnitType.HQ,
+		"size": MilSymbol.UnitSize.COMPANY,
+		"designation": "HQ"
+	}
 ]
 
 
@@ -42,12 +87,12 @@ func _generate_symbols() -> void:
 	var col := 0
 
 	for symbol_data in test_symbols:
-		# Generate the symbol texture
-		var texture := await generator.generate_from_unit(
-			symbol_data.get("affiliation", "FRIEND"),
-			symbol_data.get("type", "INFANTRY"),
-			symbol_data.get("size", ""),
-			symbol_data.get("designation", "")
+		# Generate the symbol texture using enums
+		var texture := await generator.generate(
+			symbol_data["affiliation"],
+			symbol_data["type"],
+			symbol_data["size"],
+			symbol_data["designation"]
 		)
 
 		# Create a Sprite2D to display it
@@ -58,7 +103,9 @@ func _generate_symbols() -> void:
 
 		# Add label below
 		var label := Label.new()
-		label.text = "%s\n%s" % [symbol_data.get("affiliation", ""), symbol_data.get("type", "")]
+		var aff_name: String = MilSymbol.UnitAffiliation.keys()[symbol_data["affiliation"]]
+		var type_name: String = MilSymbol.UnitType.keys()[symbol_data["type"]]
+		label.text = "%s\n%s" % [aff_name, type_name]
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.position = sprite.position + Vector2(-50, 80)
 		label.size = Vector2(100, 50)
@@ -116,7 +163,11 @@ func _example_code_generation() -> void:
 ## Example: Using the static convenience method
 func _example_static_method() -> void:
 	var texture := await MilSymbol.create_symbol(
-		"FRIEND", "ARMOR", MilSymbolConfig.Size.MEDIUM, "III", "1-67"
+		MilSymbol.UnitAffiliation.FRIEND,
+		MilSymbol.UnitType.ARMOR,
+		MilSymbolConfig.Size.MEDIUM,
+		MilSymbol.UnitSize.BATTALION,
+		"1-67"
 	)
 
 	var sprite := Sprite2D.new()
@@ -128,7 +179,11 @@ func _example_static_method() -> void:
 func _example_frame_only() -> void:
 	# Method 1: Use the static convenience method
 	var texture1 := await MilSymbol.create_frame_symbol(
-		"HOSTILE", "MECHANIZED", MilSymbolConfig.Size.MEDIUM, "III", "251"
+		MilSymbol.UnitAffiliation.ENEMY,
+		MilSymbol.UnitType.MECHANIZED,
+		MilSymbolConfig.Size.MEDIUM,
+		MilSymbol.UnitSize.BATTALION,
+		"251"
 	)
 
 	var sprite1 := Sprite2D.new()
@@ -142,7 +197,12 @@ func _example_frame_only() -> void:
 	config.stroke_width = 5.0  # Thicker outline for visibility
 
 	var generator := MilSymbol.new(config)
-	var texture2 := await generator.generate_from_unit("FRIEND", "ARMOR", "II", "A-67")
+	var texture2 := await generator.generate(
+		MilSymbol.UnitAffiliation.FRIEND,
+		MilSymbol.UnitType.ARMOR,
+		MilSymbol.UnitSize.COMPANY,
+		"A-67"
+	)
 
 	var sprite2 := Sprite2D.new()
 	sprite2.texture = texture2

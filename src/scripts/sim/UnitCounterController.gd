@@ -1,0 +1,84 @@
+# unit_counter_controller.gd
+class_name unitCounterController
+extends Node
+## Opens CounterConfigDialog when the user clicks the 3D drawer and spawns counters.
+## @tutorial https://docs.godotengine.org/en/4.4/classes/class_collisionobject3d.html
+
+const UNIT_COUNTER_SCENE := preload("res://scenes/system/unit_counter.tscn")
+
+## The 3D drawer object (must have a CollisionShape3D).
+@export var drawer: StaticBody3D
+## The UI dialog to show when clicked.
+@export var counter_dialog: CounterConfigDialog
+
+## Track the number of counters created
+var _counter_count: int = 0
+
+
+func _ready() -> void:
+	## Ensure the drawer can receive ray-pick input, then wire its input signal.
+	if drawer:
+		# Required for 3D picking; also ensure the drawer is on some collision layer.
+		drawer.input_ray_pickable = true
+		# Connect the physics input signal emitted when this body is clicked/hovered.
+		drawer.input_event.connect(_on_drawer_input_event)
+	else:
+		push_warning("unitCounterController: 'drawer' is not assigned.")
+
+	if counter_dialog:
+		counter_dialog.counter_create_requested.connect(_on_counter_create_requested)
+	else:
+		push_warning("unitCounterController: 'counter_dialog' is not assigned.")
+
+
+## Handles click on the drawer and pops the dialog.
+## [param _cam] Unused camera reference.
+## [param event] The input event to check for mouse clicks.
+## [param _pos] Unused hit position.
+## [param _norm] Unused hit normal.
+## [param _shape_idx] Unused shape index.
+func _on_drawer_input_event(_cam, event: InputEvent, _pos, _norm, _shape_idx) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		if counter_dialog:
+			counter_dialog.popup_centered()
+			counter_dialog.grab_focus()
+		else:
+			push_warning("unitCounterController: 'counter_dialog' is not assigned.")
+
+
+## Spawns a unit counter with the requested parameters.
+## [param p_affiliation] The unit's affiliation (friend, enemy, etc.)
+## [param p_type] The unit type (infantry, armor, etc.)
+## [param p_size] The unit size/echelon (company, battalion, etc.)
+## [param p_callsign] The unit's callsign identifier
+func _on_counter_create_requested(
+	p_affiliation: MilSymbol.UnitAffiliation,
+	p_type: MilSymbol.UnitType,
+	p_size: MilSymbol.UnitSize,
+	p_callsign: String
+) -> void:
+	var counter: UnitCounter = UNIT_COUNTER_SCENE.instantiate()
+
+	# Setup the counter with the requested parameters BEFORE adding to tree
+	# (this is required so _ready() uses the correct values)
+	counter.setup(p_affiliation, p_type, p_size, p_callsign)
+
+	# Add to tree (this triggers _ready() which generates the face)
+	%PhysicsObjects.add_child(counter)
+
+	# Set spawn position
+	var spawn_location: Marker3D = %CounterSpawnLocation
+	if spawn_location:
+		counter.global_position = spawn_location.global_position + Vector3(0.2, 0, 0)
+	else:
+		push_warning("unitCounterController: CounterSpawnLocation marker not found.")
+
+	# Increment counter for trigger detection
+	_counter_count += 1
+
+
+## Get the total number of counters created by the player.
+## Used by TriggerAPI to detect counter creation.
+## [return] Number of counters created.
+func get_counter_count() -> int:
+	return _counter_count

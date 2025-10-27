@@ -1,0 +1,78 @@
+[gd_scene load_steps=10 format=3 uid="uid://cn714is872li1"]
+
+[ext_resource type="Script" uid="uid://bafg88okhycov" path="res://scripts/sim/UnitCounter.gd" id="1_ui5uw"]
+[ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="2_ctqra"]
+[ext_resource type="PackedScene" uid="uid://sj327vdlfslu" path="res://assets/models/UnitCounter.glb" id="3_g3m4p"]
+[ext_resource type="Texture2D" uid="uid://dycem6t75tfbd" path="res://assets/textures/units/nato_unknown_platoon.png" id="4_g3m4p"]
+[ext_resource type="FontFile" uid="uid://cas3deagteblp" path="res://assets/fonts/ibm_plex_mono/IBMPlexMono-Medium.ttf" id="5_lxj0r"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_g3m4p"]
+rough = true
+absorbent = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lxj0r"]
+size = Vector3(0.02, 0.002, 0.02)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uqaln"]
+bg_color = Color(0.64705884, 0.7176471, 0.7647059, 1)
+
+[sub_resource type="FontVariation" id="FontVariation_uqaln"]
+base_font = ExtResource("5_lxj0r")
+variation_embolden = 0.5
+spacing_glyph = 7
+
+[node name="UnitCounter" type="Node3D"]
+script = ExtResource("1_ui5uw")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+collision_layer = 2
+collision_mask = 3
+physics_material_override = SubResource("PhysicsMaterial_g3m4p")
+continuous_cd = true
+script = ExtResource("2_ctqra")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+shape = SubResource("BoxShape3D_lxj0r")
+
+[node name="Mesh" parent="RigidBody3D" instance=ExtResource("3_g3m4p")]
+unique_name_in_owner = true
+transform = Transform3D(-2.6226834e-08, 0, -0.6, 0, 0.6, 0, 0.6, 0, -2.6226834e-08, 0, 0, 0)
+
+[node name="FaceRenderer" type="SubViewport" parent="."]
+unique_name_in_owner = true
+disable_3d = true
+transparent_bg = true
+msaa_2d = 3
+screen_space_aa = 2
+size = Vector2i(2048, 2048)
+render_target_update_mode = 4
+
+[node name="Background" type="PanelContainer" parent="FaceRenderer"]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uqaln")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FaceRenderer/Background"]
+layout_mode = 2
+alignment = 1
+
+[node name="Symbol" type="TextureRect" parent="FaceRenderer/Background/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(1024, 1024)
+layout_mode = 2
+texture = ExtResource("4_g3m4p")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Callsign" type="Label" parent="FaceRenderer/Background/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("FontVariation_uqaln")
+theme_override_font_sizes/font_size = 400
+text = "ALPHA"
+horizontal_alignment = 1

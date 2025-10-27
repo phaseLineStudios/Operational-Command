@@ -1,4 +1,4 @@
-[gd_scene load_steps=69 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=71 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -30,7 +30,9 @@
 [ext_resource type="Script" uid="uid://7o20krixdmt5" path="res://scripts/core/DrawingController.gd" id="27_cdjkm"]
 [ext_resource type="PackedScene" uid="uid://0v7ebxx3jxi2" path="res://scenes/ui/radio_subtitles.tscn" id="27_subtitles"]
 [ext_resource type="PackedScene" uid="uid://b7u4ajeh13tpn" path="res://scenes/ui/loading_screen.tscn" id="28_loading"]
+[ext_resource type="Script" uid="uid://cldkj080ext62" path="res://scripts/sim/UnitCounterController.gd" id="28_wrosp"]
 [ext_resource type="PackedScene" uid="uid://db2miy3a6hjke" path="res://scenes/ui/mission_dialog.tscn" id="29_dialog"]
+[ext_resource type="PackedScene" uid="uid://bnexhgtx3llph" path="res://scenes/ui/counter_config_dialog.tscn" id="33_bsy1h"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
 size = Vector2(10, 30)
@@ -238,6 +240,7 @@ skeleton = NodePath("../../Table/Mesh")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.24826, 0)
 
 [node name="PhysicsObjects" type="Node" parent="."]
+unique_name_in_owner = true
 
 [node name="IntelDoc" type="RigidBody3D" parent="PhysicsObjects"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.383427, 0.735465, -0.0676914)
@@ -401,6 +404,10 @@ shape = SubResource("BoxShape3D_ge0qv")
 mesh = SubResource("BoxMesh_ge8rp")
 skeleton = NodePath("../..")
 
+[node name="CounterSpawnLocation" type="Marker3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2887795, 0.7449176, -0.14969571)
+
 [node name="Controllers" type="Node" parent="."]
 
 [node name="ObjectController" type="Node" parent="Controllers"]
@@ -543,10 +550,17 @@ fastforward_icon = ExtResource("26_4ip4k")
 unique_name_in_owner = true
 script = ExtResource("27_cdjkm")
 
+[node name="UnitCounterController" type="Node" parent="Controllers" node_paths=PackedStringArray("drawer", "counter_dialog")]
+unique_name_in_owner = true
+script = ExtResource("28_wrosp")
+drawer = NodePath("../../StaticObjects/UnitCounterDrawer")
+counter_dialog = NodePath("../../UI/CounterConfigDialog")
+
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="RadioSubtitles" parent="UI" instance=ExtResource("27_subtitles")]
 unique_name_in_owner = true
+visible = false
 max_suggestions = 10
 
 [node name="LoadingScreen" parent="UI" instance=ExtResource("28_loading")]
@@ -554,7 +568,11 @@ unique_name_in_owner = true
 
 [node name="MissionDialog" parent="UI" instance=ExtResource("29_dialog")]
 unique_name_in_owner = true
+visible = false
 
 [node name="PauseMenu" parent="UI" instance=ExtResource("7_uk27s")]
 unique_name_in_owner = true
+visible = false
+
+[node name="CounterConfigDialog" parent="UI" instance=ExtResource("33_bsy1h")]
 visible = false
