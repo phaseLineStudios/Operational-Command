@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cb4l4q07drac4"]
+
+[ext_resource type="Script" uid="uid://cmlst3ss4owwh" path="res://scripts/test/MilSymbolTest.gd" id="1_u0iq3"]
+
+[node name="MilSymbolTest" type="Node2D"]
+script = ExtResource("1_u0iq3")

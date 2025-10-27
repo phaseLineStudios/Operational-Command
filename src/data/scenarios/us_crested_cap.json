@@ -1,438 +1,438 @@
 {
   "briefing": {
-    "admin_logi": "[b]Sustainment[/b]\nClass III/V 0730 (no live HE). Aid/medevac simulated via UMPIRE.\n\n[b]Calls:[/b]\n- Lane control = [b]RANGE[/b]\n- Medevac = [b]UMPIRE[/b]",
-    "execution": "[b]Commander’s Intent:[/b] Safe, by-the-book reps, clean radio work and zero vehicle/safety incidents.\n\n[b]Concept:[/b]\n- L1 (Comms/CP): Net check, graphics, TRPs.\n- L2 (Movement/Contact): React to ambush, report, smoke, bound.\n- L3 (Break Contact): Screen and disengage to next PL.\n- L4 (River-Crossing): Engineer drill—emplace/clear training bridge; traffic control.\n- AAR/Refit.\n\n[b]Tasks:[/b]\n- Scout Plt (1/A): Lead lanes, trigger contacts and report.\n- Tank Plt (2/A): Overwatch and base-of-fire.\n- AT/TOW Sec: Demonstrate engagement.\n- Mortar Sec: On-call smoke/illum (simulated) per FSO.\n- Engr Plt (58th Engr Co): Crossing site, demo procedures.",
-    "id": "crested_cap_checkride_brief",
-    "intel_board": {
-      "board_texture_path": null,
-      "items": []
-    },
-    "mission": {
-      "objectives": [
-        {
-          "id": "notional_casualties",
-          "score": 100,
-          "success": "Keep notional casualties under 10%. If notional casualties exceeds 10% complete a CAS request (simulated).",
-          "title": "Keep notional casualties under 10%"
-        },
-        {
-          "id": "lane_1_comms",
-          "score": 20,
-          "success": "Perform a radio check and receive a reply.",
-          "title": "Lane 1: Perform Radio Check"
-        },
-        {
-          "id": "unit_markers",
-          "score": 20,
-          "success": "Ask for a position report and place unit markers for each unit.",
-          "title": "Lane 1: Place unit markers"
-        },
-        {
-          "id": "set_time",
-          "score": 20,
-          "success": "Start timer",
-          "title": "Lane 1: Start timer"
-        },
-        {
-          "id": "draw_plan",
-          "score": 40,
-          "success": "Draw movement plan for Training Lane 2.",
-          "title": "Lane 1: Draw movement plan"
-        }
-      ],
-      "statement": "At 0900C 05 NOV 83, A Trp/1-11 ACR (-) conducts a four-lane evaluation at Wildflecken to rehearse comms discipline, movement under contact, break-contact with smoke, and river crossing in order to certify the troop GO for follow-on taskings."
-    },
-    "situation": {
-      "enemy": "Mech platoon (OPFOR roleplayers) simulating NVA tactics. May inject recon probes, hasty ambush, and mortar smoke (simulated).",
-      "friendly": "- A Troop, 1-11 ACR (-) with attached Engineer Platoon\n- Bundeswehr Observers\n- Range Control / UMPIRE",
-      "start_time": "",
-      "terrain": "Forrested ridges, open fields, shallow lake, shallow river crossing.",
-      "weather": ""
-    },
-    "title": "FTX Crested Cap Checkride"
+	"admin_logi": "[b]Sustainment[/b]\nClass III/V 0730 (no live HE). Aid/medevac simulated via UMPIRE.\n\n[b]Calls:[/b]\n- Lane control = [b]RANGE[/b]\n- Medevac = [b]UMPIRE[/b]",
+	"execution": "[b]Commander’s Intent:[/b] Safe, by-the-book reps, clean radio work and zero vehicle/safety incidents.\n\n[b]Concept:[/b]\n- L1 (Comms/CP): Net check, graphics, TRPs.\n- L2 (Movement/Contact): React to ambush, report, smoke, bound.\n- L3 (Break Contact): Screen and disengage to next PL.\n- L4 (River-Crossing): Engineer drill—emplace/clear training bridge; traffic control.\n- AAR/Refit.\n\n[b]Tasks:[/b]\n- Scout Plt (1/A): Lead lanes, trigger contacts and report.\n- Tank Plt (2/A): Overwatch and base-of-fire.\n- AT/TOW Sec: Demonstrate engagement.\n- Mortar Sec: On-call smoke/illum (simulated) per FSO.\n- Engr Plt (58th Engr Co): Crossing site, demo procedures.",
+	"id": "crested_cap_checkride_brief",
+	"intel_board": {
+	  "board_texture_path": null,
+	  "items": []
+	},
+	"mission": {
+	  "objectives": [
+		{
+		  "id": "notional_casualties",
+		  "score": 100,
+		  "success": "Keep notional casualties under 10%. If notional casualties exceeds 10% complete a CAS request (simulated).",
+		  "title": "Keep notional casualties under 10%"
+		},
+		{
+		  "id": "lane_1_comms",
+		  "score": 20,
+		  "success": "Perform a radio check and receive a reply.",
+		  "title": "Lane 1: Perform Radio Check"
+		},
+		{
+		  "id": "unit_markers",
+		  "score": 20,
+		  "success": "Ask for a position report and place unit markers for each unit.",
+		  "title": "Lane 1: Place unit markers"
+		},
+		{
+		  "id": "set_time",
+		  "score": 20,
+		  "success": "Start timer",
+		  "title": "Lane 1: Start timer"
+		},
+		{
+		  "id": "draw_plan",
+		  "score": 40,
+		  "success": "Draw movement plan for Training Lane 2.",
+		  "title": "Lane 1: Draw movement plan"
+		}
+	  ],
+	  "statement": "At 0900C 05 NOV 83, A Trp/1-11 ACR (-) conducts a four-lane evaluation at Wildflecken to rehearse comms discipline, movement under contact, break-contact with smoke, and river crossing in order to certify the troop GO for follow-on taskings."
+	},
+	"situation": {
+	  "enemy": "Mech platoon (OPFOR roleplayers) simulating NVA tactics. May inject recon probes, hasty ambush, and mortar smoke (simulated).",
+	  "friendly": "- A Troop, 1-11 ACR (-) with attached Engineer Platoon\n- Bundeswehr Observers\n- Range Control / UMPIRE",
+	  "start_time": "",
+	  "terrain": "Forrested ridges, open fields, shallow lake, shallow river crossing.",
+	  "weather": ""
+	},
+	"title": "FTX Crested Cap Checkride"
   },
   "content": {
-    "custom_commands": [
-      {
-        "additional_grammar": [
-          "radio",
-          "check",
-          "comms",
-          "communications",
+	"custom_commands": [
+	  {
+		"additional_grammar": [
+		  "radio",
+		  "check",
+		  "comms",
+		  "communications",
           "nominal"
-        ],
-        "keyword": "Radio Check",
-        "route_as_order": false,
-        "trigger_id": "radio_check_trigger"
-      }
-    ],
-    "drawings": [
-      {
-        "id": "draw_stamp_001",
-        "label": "wp 1",
-        "layer": 0,
-        "modulate": "000000ff",
-        "opacity": 1.0,
-        "order": 50299603,
-        "position_m": {
-          "x": 1240.46655273438,
-          "y": 1451.82299804688
-        },
-        "rotation_deg": 0.0,
-        "scale": 0.1,
-        "texture_path": "res://assets/textures/stamps/stamp_wp.png",
-        "type": "stamp",
-        "visible": true
-      },
-      {
-        "id": "draw_stamp_002",
-        "label": "wp 2",
-        "layer": 0,
-        "modulate": "000000ff",
-        "opacity": 1.0,
-        "order": 55950200,
-        "position_m": {
-          "x": 1677.47680664063,
-          "y": 1253.505859375
-        },
-        "rotation_deg": 0.0,
-        "scale": 0.1,
-        "texture_path": "res://assets/textures/stamps/stamp_wp.png",
-        "type": "stamp",
-        "visible": true
-      },
-      {
-        "id": "draw_stamp_003",
-        "label": "wp 3",
-        "layer": 0,
-        "modulate": "000000ff",
-        "opacity": 1.0,
-        "order": 61070009,
-        "position_m": {
-          "x": 1992.17163085938,
-          "y": 1890.02099609375
-        },
-        "rotation_deg": 0.0,
-        "scale": 0.1,
-        "texture_path": "res://assets/textures/stamps/stamp_wp.png",
-        "type": "stamp",
-        "visible": true
-      },
-      {
-        "id": "draw_stamp_004",
-        "label": "",
-        "layer": 0,
-        "modulate": "000000ff",
-        "opacity": 1.0,
-        "order": 97520126,
-        "position_m": {
-          "x": 2322.455078125,
-          "y": 1845.99536132813
-        },
-        "rotation_deg": 0.0,
-        "scale": 0.1,
-        "texture_path": "res://assets/textures/stamps/stamp_obj.png",
-        "type": "stamp",
-        "visible": true
-      }
-    ],
-    "tasks": [
-      {
-        "id": "task_set_combat_mode_1",
-        "next_index": 1,
-        "params": {
-          "combat_mode": 2.0
-        },
-        "position_m": {
-          "x": 1902.3271484375,
-          "y": 1238.85595703125
-        },
-        "prev_index": -1,
-        "task_type": "set_combat_mode",
-        "unit_index": 2
-      },
-      {
-        "id": "task_move_1",
-        "next_index": -1,
-        "params": {
+		],
+		"keyword": "Radio Check",
+		"route_as_order": false,
+		"trigger_id": "radio_check_trigger"
+	  }
+	],
+	"drawings": [
+	  {
+		"id": "draw_stamp_001",
+		"label": "wp 1",
+		"layer": 0,
+		"modulate": "000000ff",
+		"opacity": 1.0,
+		"order": 50299603,
+		"position_m": {
+		  "x": 1240.46655273438,
+		  "y": 1451.82299804688
+		},
+		"rotation_deg": 0.0,
+		"scale": 0.1,
+		"texture_path": "res://assets/textures/stamps/stamp_wp.png",
+		"type": "stamp",
+		"visible": true
+	  },
+	  {
+		"id": "draw_stamp_002",
+		"label": "wp 2",
+		"layer": 0,
+		"modulate": "000000ff",
+		"opacity": 1.0,
+		"order": 55950200,
+		"position_m": {
+		  "x": 1677.47680664063,
+		  "y": 1253.505859375
+		},
+		"rotation_deg": 0.0,
+		"scale": 0.1,
+		"texture_path": "res://assets/textures/stamps/stamp_wp.png",
+		"type": "stamp",
+		"visible": true
+	  },
+	  {
+		"id": "draw_stamp_003",
+		"label": "wp 3",
+		"layer": 0,
+		"modulate": "000000ff",
+		"opacity": 1.0,
+		"order": 61070009,
+		"position_m": {
+		  "x": 1992.17163085938,
+		  "y": 1890.02099609375
+		},
+		"rotation_deg": 0.0,
+		"scale": 0.1,
+		"texture_path": "res://assets/textures/stamps/stamp_wp.png",
+		"type": "stamp",
+		"visible": true
+	  },
+	  {
+		"id": "draw_stamp_004",
+		"label": "",
+		"layer": 0,
+		"modulate": "000000ff",
+		"opacity": 1.0,
+		"order": 97520126,
+		"position_m": {
+		  "x": 2322.455078125,
+		  "y": 1845.99536132813
+		},
+		"rotation_deg": 0.0,
+		"scale": 0.1,
+		"texture_path": "res://assets/textures/stamps/stamp_obj.png",
+		"type": "stamp",
+		"visible": true
+	  }
+	],
+	"tasks": [
+	  {
+		"id": "task_set_combat_mode_1",
+		"next_index": 1,
+		"params": {
+		  "combat_mode": 2.0
+		},
+		"position_m": {
+		  "x": 1902.3271484375,
+		  "y": 1238.85595703125
+		},
+		"prev_index": -1,
+		"task_type": "set_combat_mode",
+		"unit_index": 2
+	  },
+	  {
+		"id": "task_move_1",
+		"next_index": -1,
+		"params": {
 
-        },
-        "position_m": {
-          "x": 1874.48559570313,
-          "y": 1323.6005859375
-        },
-        "prev_index": 0,
-        "task_type": "move",
-        "unit_index": 2
-      }
-    ],
-    "triggers": [
-      {
-        "area_center_m": {
-          "x": 1840.80749511719,
-          "y": 1323.814453125
-        },
-        "condition_expr": "true",
-        "id": "TRG_1",
-        "on_activate_expr": "",
-        "on_deactivate_expr": "",
-        "presence": 1,
-        "require_duration_s": 0.0,
-        "shape": 0,
-        "size_m": {
-          "x": 400.0,
-          "y": 400.0
-        },
-        "synced_tasks": [
-          0
-        ],
-        "synced_units": [],
-        "title": "Ambush Trigger"
-      },
-      {
-        "area_center_m": {
-          "x": 2149.96508789063,
-          "y": 150.800048828125
-        },
-        "condition_expr": "last_radio_command().to_lower().contains(\"radio check\")",
-        "id": "radio_check_trigger",
-        "on_activate_expr": "print(\"Radio Check received\")\nradio(\"This is Alpha. I Read you five by five.\")\nset_objective(\"lane_1_comms\", 1)",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Radio Check Response"
-      },
-      {
-        "area_center_m": {
-          "x": 1950.98364257813,
-          "y": 151.383926391602
-        },
-        "condition_expr": "true",
-        "id": "mission_init",
-        "on_activate_expr": "show_dialog(\"Welcome to Field Training Exercise (FTX) Crested Cap Checkride. This exercise will train you on basic leadership skills and radio etiquette.\")",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Mission Init"
-      },
-      {
-        "area_center_m": {
-          "x": 2550.61181640625,
-          "y": 149.870330810547
-        },
-        "condition_expr": "has_drawn()",
-        "id": "drawing_check_trigger",
-        "on_activate_expr": "set_objective(\"draw_plan\", 1)",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Drawing Check"
-      },
-      {
-        "area_center_m": {
-          "x": 2350.65112304688,
-          "y": 149.921401977539
-        },
-        "condition_expr": "time_scale() == \"RUNNING\"",
-        "id": "timer_check_trigger",
-        "on_activate_expr": "set_objective(\"set_time\", 1)",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Timer Check"
-      }
-    ],
-    "units": [
-      {
-        "affiliation": 0,
-        "behaviour": 0,
-        "callsign": "RANGE",
-        "combat_mode": 0,
-        "id": "infantry_plt_1_1",
-        "playable": false,
-        "position": {
-          "x": 2489.6591796875,
-          "y": 1834.85302734375
-        },
-        "unit_id": "infantry_plt_1"
-      },
-      {
-        "affiliation": 0,
-        "behaviour": 0,
-        "callsign": "UMPIRE",
-        "combat_mode": 0,
-        "id": "infantry_plt_2_1",
-        "playable": false,
-        "position": {
-          "x": 2618.93310546875,
-          "y": 1735.966796875
-        },
-        "unit_id": "infantry_plt_2"
-      },
-      {
-        "affiliation": 1,
-        "behaviour": 3,
-        "callsign": "VICTOR",
-        "combat_mode": 0,
-        "id": "frg_bw_opfor_1",
-        "playable": false,
-        "position": {
-          "x": 1982.32421875,
-          "y": 1297.12573242188
-        },
-        "unit_id": "frg_bw_opfor"
-      }
-    ]
+		},
+		"position_m": {
+		  "x": 1874.48559570313,
+		  "y": 1323.6005859375
+		},
+		"prev_index": 0,
+		"task_type": "move",
+		"unit_index": 2
+	  }
+	],
+	"triggers": [
+	  {
+		"area_center_m": {
+		  "x": 1840.80749511719,
+		  "y": 1323.814453125
+		},
+		"condition_expr": "true",
+		"id": "TRG_1",
+		"on_activate_expr": "",
+		"on_deactivate_expr": "",
+		"presence": 1,
+		"require_duration_s": 0.0,
+		"shape": 0,
+		"size_m": {
+		  "x": 400.0,
+		  "y": 400.0
+		},
+		"synced_tasks": [
+		  0
+		],
+		"synced_units": [],
+		"title": "Ambush Trigger"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2149.96508789063,
+		  "y": 150.800048828125
+		},
+		"condition_expr": "last_radio_command().to_lower().contains(\"radio check\")",
+		"id": "radio_check_trigger",
+		"on_activate_expr": "print(\"Radio Check received\")\nradio(\"This is Alpha. I Read you five by five.\")\nset_objective(\"lane_1_comms\", 1)",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Radio Check Response"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 1950.98364257813,
+		  "y": 151.383926391602
+		},
+		"condition_expr": "true",
+		"id": "mission_init",
+		"on_activate_expr": "show_dialog(\"Welcome to Field Training Exercise (FTX) Crested Cap Checkride. This exercise will train you on basic leadership skills and radio etiquette.\")",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Mission Init"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2550.61181640625,
+		  "y": 149.870330810547
+		},
+		"condition_expr": "has_drawn()",
+		"id": "drawing_check_trigger",
+		"on_activate_expr": "set_objective(\"draw_plan\", 1)",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Drawing Check"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2350.65112304688,
+		  "y": 149.921401977539
+		},
+		"condition_expr": "time_scale() == \"RUNNING\"",
+		"id": "timer_check_trigger",
+		"on_activate_expr": "set_objective(\"set_time\", 1)",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Timer Check"
+	  }
+	],
+	"units": [
+	  {
+		"affiliation": 0,
+		"behaviour": 0,
+		"callsign": "RANGE",
+		"combat_mode": 0,
+		"id": "infantry_plt_1_1",
+		"playable": false,
+		"position": {
+		  "x": 2489.6591796875,
+		  "y": 1834.85302734375
+		},
+		"unit_id": "infantry_plt_1"
+	  },
+	  {
+		"affiliation": 0,
+		"behaviour": 0,
+		"callsign": "UMPIRE",
+		"combat_mode": 0,
+		"id": "infantry_plt_2_1",
+		"playable": false,
+		"position": {
+		  "x": 2618.93310546875,
+		  "y": 1735.966796875
+		},
+		"unit_id": "infantry_plt_2"
+	  },
+	  {
+		"affiliation": 1,
+		"behaviour": 3,
+		"callsign": "VICTOR",
+		"combat_mode": 0,
+		"id": "frg_bw_opfor_1",
+		"playable": false,
+		"position": {
+		  "x": 1982.32421875,
+		  "y": 1297.12573242188
+		},
+		"unit_id": "frg_bw_opfor"
+	  }
+	]
   },
   "datetime": {
-    "day": 1,
-    "hour": 12,
-    "minute": 0,
-    "month": 1,
-    "year": 1983
+	"day": 1,
+	"hour": 12,
+	"minute": 0,
+	"month": 1,
+	"year": 1983
   },
   "description": "A routine lane evaluation at Wildflecken caps a week of Autumn Forge drills. Range Control wants clean radio work, safe bounds, and a pretty AAR for visiting brass. Your troop runs the lanes, pops smoke on cue, and rehearses river drills with engineers who’ve done this a hundred times. \n\nThe only tension is the weather and the stopwatch—until distant artillery thumps roll in from the border. Umpires shrug it off as another unit’s live-fire. Your RTO doesn’t like the pattern; neither do you.\n\n\"It’s just an exercise—until it isn’t.\"",
   "difficulty": 1,
   "id": "us_crested_cap",
   "map_position": {
-    "x": 0.439999997615814,
-    "y": 0.540000021457672
+	"x": 0.439999997615814,
+	"y": 0.540000021457672
   },
   "preview_path": "res://assets/textures/scenarios/nato_crested_cap.png",
   "scenario_order": 0,
   "terrain_id": "wildflecken_training_area",
   "title": "Crested Cap Checkride",
   "units": {
-    "unit_points": 500,
-    "unit_recruits_ids": [
-      "scout_plt_1a111_acr",
-      "us_11acr_a_trp_2plt_tank_m60a3",
-      "us_11acr_a_trp_itv_sec",
-      "us_11acr_a_trp_mortar_sec_m106",
-      "us_11acr_field_trains_sec",
+	"unit_points": 500,
+	"unit_recruits_ids": [
+	  "scout_plt_1a111_acr",
+	  "us_11acr_a_trp_2plt_tank_m60a3",
+	  "us_11acr_a_trp_itv_sec",
+	  "us_11acr_a_trp_mortar_sec_m106",
+	  "us_11acr_field_trains_sec",
       "us_11acr_58engr_pl"
-    ],
-    "unit_reserves": [],
-    "unit_slots": [
-      {
-        "allowed_roles": [
-          "INF",
-          "MECH",
-          "ARMOR",
-          "RECON",
+	],
+	"unit_reserves": [],
+	"unit_slots": [
+	  {
+		"allowed_roles": [
+		  "INF",
+		  "MECH",
+		  "ARMOR",
+		  "RECON",
           "AT"
-        ],
-        "callsign": "ALPHA",
-        "key": "SLOT_1",
-        "start_position": {
-          "x": 504.539459228516,
-          "y": 1718.78479003906
-        },
-        "title": "ALPHA"
-      },
-      {
-        "allowed_roles": [
-          "INF",
-          "MECH",
-          "ARMOR",
-          "RECON",
+		],
+		"callsign": "ALPHA",
+		"key": "SLOT_1",
+		"start_position": {
+		  "x": 504.539459228516,
+		  "y": 1718.78479003906
+		},
+		"title": "ALPHA"
+	  },
+	  {
+		"allowed_roles": [
+		  "INF",
+		  "MECH",
+		  "ARMOR",
+		  "RECON",
           "AT"
-        ],
-        "callsign": "BRAVO",
-        "key": "SLOT_2",
-        "start_position": {
-          "x": 701.886596679688,
-          "y": 1888.73376464844
-        },
-        "title": "BRAVO"
-      },
-      {
-        "allowed_roles": [
-          "INF",
-          "MECH",
-          "ARMOR",
-          "RECON",
+		],
+		"callsign": "BRAVO",
+		"key": "SLOT_2",
+		"start_position": {
+		  "x": 701.886596679688,
+		  "y": 1888.73376464844
+		},
+		"title": "BRAVO"
+	  },
+	  {
+		"allowed_roles": [
+		  "INF",
+		  "MECH",
+		  "ARMOR",
+		  "RECON",
           "AT"
-        ],
-        "callsign": "CHARLIE",
-        "key": "SLOT_3",
-        "start_position": {
-          "x": 597.212585449219,
-          "y": 1813.87329101563
-        },
-        "title": "CHARLIE"
-      },
-      {
-        "allowed_roles": [
-          "FIRES",
+		],
+		"callsign": "CHARLIE",
+		"key": "SLOT_3",
+		"start_position": {
+		  "x": 597.212585449219,
+		  "y": 1813.87329101563
+		},
+		"title": "CHARLIE"
+	  },
+	  {
+		"allowed_roles": [
+		  "FIRES",
           "MORTAR"
-        ],
-        "callsign": "DELTA",
-        "key": "SLOT_4",
-        "start_position": {
-          "x": 412.263061523438,
-          "y": 1858.07702636719
-        },
-        "title": "DELTA"
-      },
-      {
-        "allowed_roles": [
+		],
+		"callsign": "DELTA",
+		"key": "SLOT_4",
+		"start_position": {
+		  "x": 412.263061523438,
+		  "y": 1858.07702636719
+		},
+		"title": "DELTA"
+	  },
+	  {
+		"allowed_roles": [
           "LOGI"
-        ],
-        "callsign": "ECHO",
-        "key": "SLOT_5",
-        "start_position": {
-          "x": 479.759887695313,
-          "y": 1909.47131347656
-        },
-        "title": "ECHO"
-      },
-      {
-        "allowed_roles": [
+		],
+		"callsign": "ECHO",
+		"key": "SLOT_5",
+		"start_position": {
+		  "x": 479.759887695313,
+		  "y": 1909.47131347656
+		},
+		"title": "ECHO"
+	  },
+	  {
+		"allowed_roles": [
           "ENG"
-        ],
-        "callsign": "FOXTROT",
-        "key": "SLOT_6",
-        "start_position": {
-          "x": 583.921997070313,
-          "y": 1955.3232421875
-        },
-        "title": "FOXTROT"
-      }
-    ]
+		],
+		"callsign": "FOXTROT",
+		"key": "SLOT_6",
+		"start_position": {
+		  "x": 583.921997070313,
+		  "y": 1955.3232421875
+		},
+		"title": "FOXTROT"
+	  }
+	]
   },
   "weather": {
-    "fog_m": 8000.0,
-    "rain": 0.0,
-    "wind_dir": 0.0,
-    "wind_speed_m": 1.0
+	"fog_m": 8000.0,
+	"rain": 0.0,
+	"wind_dir": 0.0,
+	"wind_speed_m": 1.0
   }
 }

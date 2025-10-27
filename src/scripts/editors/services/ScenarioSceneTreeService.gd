@@ -27,7 +27,6 @@ func rebuild(ctx: ScenarioEditorContext) -> void:
 			var img := icon.get_image()
 			img.resize(24, 24, Image.INTERPOLATE_LANCZOS)
 			s_item.set_icon(0, ImageTexture.create_from_image(img))
-			
 
 	var units := tree.create_item(root)
 	units.set_text(0, "Units")

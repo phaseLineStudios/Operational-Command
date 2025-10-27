@@ -1,4 +1,4 @@
-[gd_scene load_steps=67 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=69 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -49,6 +49,12 @@ size = Vector3(1, 0.75, 0.7)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3f477"]
 albedo_color = Color(0.375626, 0.28718, 0.13782, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cdjkm"]
+size = Vector3(0.2, 0.12, 0.12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wrosp"]
+size = Vector3(0.2, 0.12, 0.12)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ge8rp"]
 shading_mode = 0
@@ -201,6 +207,16 @@ size = Vector3(1.37492, 1.76648, 2.76892)
 
 [node name="Timer" parent="StaticObjects" instance=ExtResource("2_2llyq")]
 transform = Transform3D(0.31243446, 0, -0.9499393, 0, 1, 0, 0.9499393, 0, 0.31243446, -0.3772638, 0.7311746, -0.22486593)
+
+[node name="UnitCounterDrawer" type="StaticBody3D" parent="StaticObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.024217911, 0.8045154, -0.31927103)
+
+[node name="Collision" type="CollisionShape3D" parent="StaticObjects/UnitCounterDrawer"]
+shape = SubResource("BoxShape3D_cdjkm")
+
+[node name="Mesh" type="MeshInstance3D" parent="StaticObjects/UnitCounterDrawer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.031823426)
+mesh = SubResource("BoxMesh_wrosp")
 
 [node name="Map" type="MeshInstance3D" parent="StaticObjects"]
 unique_name_in_owner = true

@@ -61,7 +61,8 @@ func debug(msg: String, src := ""):
 	emit_signal("line", fmt_msg, LogLevel.DEBUG)
 	if _project_level >= LogLevel.DEBUG:
 		print_rich(fmt_msg)
-		
+
+
 ## Log TRACE level rich message
 func trace(msg: String, src := ""):
 	var fmt_msg := _fmt_msg(msg, LogLevel.TRACE, src)

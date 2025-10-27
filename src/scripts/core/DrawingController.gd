@@ -5,18 +5,12 @@ extends Node
 ## Tracks which drawing tool is held and renders lines when the player
 ## holds left click. Drawings are session-only and cleared on mission end.
 
-signal drawing_started()
-signal drawing_updated()
-signal drawing_cleared()
+signal drawing_started
+signal drawing_updated
+signal drawing_cleared
 
 ## Drawing tool types
-enum Tool {
-	NONE,
-	PEN_BLACK,
-	PEN_BLUE,
-	PEN_RED,
-	ERASER
-}
+enum Tool { NONE, PEN_BLACK, PEN_BLUE, PEN_RED, ERASER }
 
 ## Line width for drawing in world units
 @export var line_width: float = 0.001
@@ -86,7 +80,10 @@ func _process(_delta: float) -> void:
 
 	if world_pos != null:
 		# Only add point if it's far enough from the last point
-		if _current_stroke.is_empty() or _last_point.distance_to(world_pos) > point_distance_threshold:
+		if (
+			_current_stroke.is_empty()
+			or _last_point.distance_to(world_pos) > point_distance_threshold
+		):
 			_current_stroke.append(world_pos)
 			_last_point = world_pos
 
@@ -142,10 +139,7 @@ func _start_drawing() -> void:
 func _end_drawing() -> void:
 	if _is_drawing and not _current_stroke.is_empty():
 		if _current_tool != Tool.ERASER:
-			_strokes.append({
-				"tool": _current_tool,
-				"points": _current_stroke.duplicate()
-			})
+			_strokes.append({"tool": _current_tool, "points": _current_stroke.duplicate()})
 
 	_current_stroke.clear()
 	_is_drawing = false
@@ -170,10 +164,7 @@ func _erase_at_point(erase_point: Vector3) -> void:
 			var segments := _split_into_segments(surviving_points, stroke_points)
 			for segment in segments:
 				if segment.size() >= 2:
-					new_strokes.append({
-						"tool": tool,
-						"points": segment
-					})
+					new_strokes.append({"tool": tool, "points": segment})
 
 	_strokes = new_strokes
 
@@ -197,7 +188,7 @@ func _split_into_segments(surviving_points: Array[Vector3], original_points: Arr
 		current_segment.append(original_points[idx])
 
 		# Check if next index is not consecutive (gap detected)
-		var is_last := (i == surviving_indices.size() - 1)
+		var is_last := i == surviving_indices.size() - 1
 		var has_gap := not is_last and (surviving_indices[i + 1] != idx + 1)
 
 		if is_last or has_gap:
@@ -281,7 +272,6 @@ func _draw_stroke(surface_tool: SurfaceTool, points: Array, tool: Tool, _is_prev
 		surface_tool.add_vertex(v3)
 		surface_tool.set_color(color)
 		surface_tool.add_vertex(v4)
-
 
 
 func _get_tool_color(tool: Tool) -> Color:
