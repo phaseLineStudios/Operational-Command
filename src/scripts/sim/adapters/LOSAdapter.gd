@@ -36,20 +36,10 @@ func _ready() -> void:
 ## [return] True if LOS is clear and within range, otherwise false.
 func has_los(a: ScenarioUnit, b: ScenarioUnit) -> bool:
 	if a == null or b == null or _los == null or _renderer == null:
-		LogService.warning(
-			"LOS check failed: missing components (a=%s, b=%s, _los=%s, _renderer=%s)" % [
-				a != null,
-				b != null,
-				_los != null,
-				_renderer != null
-			],
-			"LOSAdapter.gd:has_los"
-		)
 		return false
 
 	# Check if terrain data is loaded
 	if _renderer.data == null:
-		LogService.warning("LOS check: terrain data not loaded!", "LOSAdapter.gd:has_los")
 		# Without terrain, we can't block LOS, so just use range check
 		var range_m := a.position_m.distance_to(b.position_m)
 		var max_spot_range := a.unit.spot_m if (a.unit and a.unit.spot_m > 0) else 2000.0
@@ -81,32 +71,6 @@ func has_los(a: ScenarioUnit, b: ScenarioUnit) -> bool:
 	const ATTEN_BLOCK_THRESHOLD := 5.0
 	if atten_integral >= ATTEN_BLOCK_THRESHOLD:
 		blocked = true
-
-	# Debug log for contact reports
-	if not blocked and a.playable:
-		LogService.trace(
-			"LOS established: %s -> %s (range: %.0fm, spot: %.0fm, atten: %.2f, blocked: %s)" % [
-				a.callsign,
-				b.callsign,
-				range_m,
-				max_spot_range,
-				atten_integral,
-				blocked
-			],
-			"LOSAdapter.gd:has_los"
-		)
-	elif blocked and a.playable:
-		var reason := "terrain" if res.get("blocked", false) else "vegetation"
-		LogService.trace(
-			"LOS blocked by %s: %s -> %s (range: %.0fm, atten: %.2f)" % [
-				reason,
-				a.callsign,
-				b.callsign,
-				range_m,
-				atten_integral
-			],
-			"LOSAdapter.gd:has_los"
-		)
 
 	return not blocked
 
