@@ -133,6 +133,25 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 				cur = _new_order_builder()
 				cur.callsign = prev_subject
 			cur.type = ot
+
+			# Detect report type if this is a REPORT order
+			if ot == OrderType.REPORT:
+				# Default to status
+				cur.report_type = "status"
+				# Look at next token to determine report type
+				if i + 1 < tokens.size():
+					var next := tokens[i + 1]
+					if next in ["status"]:
+						cur.report_type = "status"
+						i += 1  # Skip the report type token
+					elif next == "position":
+						cur.report_type = "position"
+						i += 1  # Skip the report type token
+					elif next in ["contact", "contacts"]:
+						cur.report_type = "contact"
+						i += 1  # Skip the report type token
+				# "sitrep" keyword defaults to status (already set)
+
 			i += 1
 			continue
 
@@ -197,6 +216,7 @@ func _new_order_builder() -> Dictionary:
 		"quantity": 0,
 		"zone": "",
 		"target_callsign": "",
+		"report_type": "",  # For REPORT orders: status, position, contact
 		"raw": PackedStringArray()
 	}
 
@@ -214,6 +234,7 @@ func _finalize(cur: Dictionary) -> Dictionary:
 		"quantity": int(cur.quantity),
 		"zone": str(cur.zone),
 		"target_callsign": str(cur.target_callsign),
+		"report_type": str(cur.report_type),
 		"raw": (cur.raw as PackedStringArray).duplicate()
 	}
 

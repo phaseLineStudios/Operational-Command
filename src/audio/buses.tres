@@ -1,4 +1,33 @@
-[gd_resource type="AudioBusLayout" load_steps=2 format=3 uid="uid://hr6ifjohxknp"]
+[gd_resource type="AudioBusLayout" load_steps=7 format=3 uid="uid://hr6ifjohxknp"]
+
+[sub_resource type="AudioEffectHighPassFilter" id="AudioEffectHighPassFilter_radio"]
+resource_name = "HighPassFilter"
+cutoff_hz = 300.0
+resonance = 0.5
+
+[sub_resource type="AudioEffectLowPassFilter" id="AudioEffectLowPassFilter_dgw8p"]
+resource_name = "LowPassFilter"
+cutoff_hz = 2800.0
+resonance = 0.7
+
+[sub_resource type="AudioEffectDistortion" id="AudioEffectDistortion_radio"]
+resource_name = "RadioDistortion"
+mode = 2
+pre_gain = 4.0
+drive = 0.15
+post_gain = 0.0
+
+[sub_resource type="AudioEffectCompressor" id="AudioEffectCompressor_dgw8p"]
+resource_name = "Compressor"
+threshold = -15.0
+ratio = 8.0
+gain = 3.0
+attack_us = 100.0
+release_ms = 150.0
+
+[sub_resource type="AudioEffectPitchShift" id="AudioEffectPitchShift_radio"]
+resource_name = "PitchShift"
+pitch_scale = 0.98
 
 [sub_resource type="AudioEffectCapture" id="AudioEffectCapture_dgw8p"]
 resource_name = "Capture"
@@ -26,8 +55,18 @@ bus/4/name = &"Radio"
 bus/4/solo = false
 bus/4/mute = false
 bus/4/bypass_fx = false
-bus/4/volume_db = 0.0
+bus/4/volume_db = -2.5124817
 bus/4/send = &"Master"
+bus/4/effect/0/effect = SubResource("AudioEffectHighPassFilter_radio")
+bus/4/effect/0/enabled = true
+bus/4/effect/1/effect = SubResource("AudioEffectLowPassFilter_dgw8p")
+bus/4/effect/1/enabled = true
+bus/4/effect/2/effect = SubResource("AudioEffectDistortion_radio")
+bus/4/effect/2/enabled = true
+bus/4/effect/3/effect = SubResource("AudioEffectCompressor_dgw8p")
+bus/4/effect/3/enabled = true
+bus/4/effect/4/effect = SubResource("AudioEffectPitchShift_radio")
+bus/4/effect/4/enabled = true
 bus/5/name = &"Capture"
 bus/5/solo = false
 bus/5/mute = true

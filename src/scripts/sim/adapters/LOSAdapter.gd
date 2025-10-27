@@ -30,16 +30,85 @@ func _ready() -> void:
 
 
 ## Returns true if there is an unobstructed LOS from [param a] to [param b].
+## Checks both terrain blocking AND maximum spotting range.
 ## [param a] Attacking/observing unit.
 ## [param b] Defending/observed unit.
-## [return] True if LOS is clear, otherwise false.
+## [return] True if LOS is clear and within range, otherwise false.
 func has_los(a: ScenarioUnit, b: ScenarioUnit) -> bool:
 	if a == null or b == null or _los == null or _renderer == null:
+		LogService.warning(
+			"LOS check failed: missing components (a=%s, b=%s, _los=%s, _renderer=%s)" % [
+				a != null,
+				b != null,
+				_los != null,
+				_renderer != null
+			],
+			"LOSAdapter.gd:has_los"
+		)
 		return false
+
+	# Check if terrain data is loaded
+	if _renderer.data == null:
+		LogService.warning("LOS check: terrain data not loaded!", "LOSAdapter.gd:has_los")
+		# Without terrain, we can't block LOS, so just use range check
+		var range_m := a.position_m.distance_to(b.position_m)
+		var max_spot_range := a.unit.spot_m if (a.unit and a.unit.spot_m > 0) else 2000.0
+		return range_m <= max_spot_range
+
+	# Check maximum spotting range
+	var range_m := a.position_m.distance_to(b.position_m)
+	var max_spot_range := 0.0
+	if a.unit and a.unit.spot_m > 0:
+		max_spot_range = a.unit.spot_m
+	else:
+		# Default spotting range if not specified
+		max_spot_range = 2000.0
+
+	# Out of spotting range
+	if range_m > max_spot_range:
+		return false
+
+	# Check terrain blocking
 	var res: Dictionary = _los.trace_los(
 		a.position_m, b.position_m, _renderer, _renderer.data, effects_config
 	)
-	return not bool(res.get("blocked", false))
+	var blocked: bool = res.get("blocked", false)
+	var atten_integral: float = res.get("atten_integral", 0.0)
+
+	# Dense vegetation (forests, etc.) can also block LOS via attenuation
+	# If attenuation integral is high enough, treat as blocked
+	# exp(-5.0) ≈ 0.0067 = ~0.7% spotting chance = effectively blocked
+	const ATTEN_BLOCK_THRESHOLD := 5.0
+	if atten_integral >= ATTEN_BLOCK_THRESHOLD:
+		blocked = true
+
+	# Debug log for contact reports
+	if not blocked and a.playable:
+		LogService.trace(
+			"LOS established: %s -> %s (range: %.0fm, spot: %.0fm, atten: %.2f, blocked: %s)" % [
+				a.callsign,
+				b.callsign,
+				range_m,
+				max_spot_range,
+				atten_integral,
+				blocked
+			],
+			"LOSAdapter.gd:has_los"
+		)
+	elif blocked and a.playable:
+		var reason := "terrain" if res.get("blocked", false) else "vegetation"
+		LogService.trace(
+			"LOS blocked by %s: %s -> %s (range: %.0fm, atten: %.2f)" % [
+				reason,
+				a.callsign,
+				b.callsign,
+				range_m,
+				atten_integral
+			],
+			"LOSAdapter.gd:has_los"
+		)
+
+	return not blocked
 
 
 ## Computes a spotting multiplier (0..1) at [param range_m] from [param pos_d].

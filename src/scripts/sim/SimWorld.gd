@@ -62,6 +62,7 @@ var _replay: Array[Dictionary] = []
 var _last_contacts: PackedStringArray = []
 var _contact_pairs: Array = []
 var _mission_complete_accum := 0.0
+var _unit_positions: Dictionary = {}  # Track positions for LOS optimization
 
 
 ## Initializes tick timing/RNG and wires router signals. Starts processing.
@@ -108,6 +109,7 @@ func init_world(scenario: ScenarioData) -> void:
 	_units_by_callsign.clear()
 	_friendlies.clear()
 	_enemies.clear()
+	_unit_positions.clear()
 
 	var all: Array = []
 	all.append_array(scenario.units)
@@ -213,21 +215,66 @@ func _update_movement(dt: float) -> void:
 
 
 ## Computes LOS contact pairs once per tick and emits contact events.
+## Optimized to only check LOS between units when at least one has moved.
 func _update_los() -> void:
 	if los_adapter == null:
 		return
-	var pairs := los_adapter.contacts_between(_friendlies, _enemies)
-	_last_contacts.clear()
-	_contact_pairs.clear()
-	for p in pairs:
-		var a: ScenarioUnit = p.attacker
-		var d: ScenarioUnit = p.defender
-		if a.is_dead() or d.is_dead():
+
+	# Determine which units have moved since last tick
+	var moved_units: Dictionary = {}
+	for unit in _friendlies + _enemies:
+		if unit.is_dead():
 			continue
-		var key := "%s|%s" % [a.id, d.id]
-		_last_contacts.append(key)
-		_contact_pairs.append({"attacker": a.id, "defender": d.id})
-		emit_signal("contact_reported", a.id, d.id)
+		var current_pos := unit.position_m
+		var last_pos: Variant = _unit_positions.get(unit.id)
+
+		# Check if position changed (or first time seeing this unit)
+		if last_pos == null or current_pos.distance_to(last_pos) > 0.01:
+			moved_units[unit.id] = true
+			_unit_positions[unit.id] = current_pos
+
+	# Build new contact pairs - only check LOS if at least one unit moved
+	var new_contacts: PackedStringArray = []
+	var old_contacts_dict: Dictionary = {}
+
+	# Convert old contacts to dictionary for fast lookup
+	for contact in _last_contacts:
+		old_contacts_dict[contact] = true
+
+	# Check all friend-enemy pairs
+	for f in _friendlies:
+		if f.is_dead():
+			continue
+		for e in _enemies:
+			if e.is_dead():
+				continue
+
+			var key := "%s|%s" % [f.id, e.id]
+			var f_moved := moved_units.has(f.id)
+			var e_moved := moved_units.has(e.id)
+
+			# If neither moved, keep existing contact state
+			if not f_moved and not e_moved:
+				if old_contacts_dict.has(key):
+					new_contacts.append(key)
+				continue
+
+			# At least one moved - check LOS
+			if los_adapter.has_los(f, e):
+				new_contacts.append(key)
+
+	# Update contacts and emit new ones
+	var prev_contacts := _last_contacts
+	_last_contacts = new_contacts
+	_contact_pairs.clear()
+
+	for key in _last_contacts:
+		var parts := key.split("|")
+		_contact_pairs.append({"attacker": parts[0], "defender": parts[1]})
+
+		# Emit signal only for new contacts
+		if not old_contacts_dict.has(key):
+			emit_signal("contact_reported", parts[0], parts[1])
 
 
 ## Resolves combat for current contact pairs (range/logic inside controller).
@@ -275,6 +322,20 @@ func _update_logistics(dt: float) -> void:
 ## Pairs in contact this tick: Array of { attacker: String, defender: String }.
 func get_current_contacts() -> Array:
 	return _contact_pairs.duplicate()
+
+
+## Get enemy units that a specific unit can see (has LOS to).
+## [param unit_id] Unit ID to get contacts for.
+## [return] Array of ScenarioUnit enemies in LOS.
+func get_contacts_for_unit(unit_id: String) -> Array:
+	var contacts: Array = []
+	for pair in _contact_pairs:
+		if pair.get("attacker", "") == unit_id:
+			var enemy_id := str(pair.get("defender", ""))
+			var enemy: ScenarioUnit = _units_by_id.get(enemy_id)
+			if enemy != null:
+				contacts.append(enemy)
+	return contacts
 
 
 ## Updates morale (placeholder).

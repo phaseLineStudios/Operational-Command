@@ -85,7 +85,7 @@ func get_parser_tables() -> Dictionary:
 			"suppress": OrdersParser.OrderType.FIRE,
 			"shell": OrdersParser.OrderType.FIRE,
 			"report": OrdersParser.OrderType.REPORT,
-			"status": OrdersParser.OrderType.REPORT,
+			"sitrep": OrdersParser.OrderType.REPORT,
 			"cancel": OrdersParser.OrderType.CANCEL,
 			"abort": OrdersParser.OrderType.CANCEL
 		},
@@ -211,6 +211,8 @@ func build_vosk_word_array(
 
 	words.append_array(tables["action_synonyms"].keys())
 	words.append_array(["now", "immediately"])
+	# Add report type keywords (not in action_synonyms but needed for parsing)
+	words.append_array(["status", "position", "contact", "contacts"])
 
 	var calls: Array = (
 		callsigns_override if callsigns_override.size() > 0 else tables["callsigns"].keys()

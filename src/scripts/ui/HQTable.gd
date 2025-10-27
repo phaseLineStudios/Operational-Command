@@ -19,6 +19,8 @@ extends Node3D
 @onready var mission_dialog: Control = %MissionDialog
 @onready var drawing_controller: DrawingController = %DrawingController
 @onready var counter_controller: unitCounterController = %UnitCounterController
+@onready var unit_voices: UnitVoiceResponses = %UnitVoiceResponses
+@onready var tts_player: AudioStreamPlayer = %TTSPlayer
 
 
 ## Initialize mission systems and bind services.
@@ -44,6 +46,9 @@ func _ready() -> void:
 	# Initialize counter controller
 	_init_counter_controller()
 
+	# Initialize TTS and unit voice responses
+	_init_tts_system()
+
 	# Connect radio signals to subtitle display
 	radio.radio_on.connect(_on_radio_on)
 	radio.radio_off.connect(_on_radio_off)
@@ -55,7 +60,7 @@ func _ready() -> void:
 
 	# All initialization complete - hide loading screen
 	loading_screen.hide_loading()
-	
+
 	_create_initial_unit_counters(playable_units)
 
 
@@ -73,6 +78,51 @@ func _init_drawing_controller() -> void:
 func _init_counter_controller() -> void:
 	if trigger_engine and trigger_engine._api:
 		trigger_engine._api._counter_controller = counter_controller
+
+
+## Initialize TTS service and wire up unit voice responses
+func _init_tts_system() -> void:
+	# Register the audio player with TTSService
+	if TTSService and tts_player:
+		TTSService.register_player(tts_player)
+		LogService.trace("TTS player registered in HQTable.", "HQTable.gd:_init_tts_system")
+
+	# Initialize UnitVoiceResponses with unit index, SimWorld, and terrain renderer
+	if unit_voices and sim and map:
+		unit_voices.init(sim._units_by_id, sim, map.renderer)
+		LogService.trace("Unit voice responses initialized.", "HQTable.gd:_init_tts_system")
+
+	# Wire up OrdersRouter to UnitVoiceResponses
+	var orders_router := get_node_or_null("%RadioController/OrdersRouter")
+	if orders_router and unit_voices:
+		# Check if already connected to avoid duplicate connections
+		if not orders_router.order_applied.is_connected(unit_voices._on_order_applied):
+			orders_router.order_applied.connect(unit_voices._on_order_applied)
+			LogService.trace(
+				"Unit voice responses connected to OrdersRouter.", "HQTable.gd:_init_tts_system"
+			)
+		else:
+			LogService.warning(
+				"OrdersRouter already connected to UnitVoiceResponses!", "HQTable.gd:_init_tts_system"
+			)
+
+	# Wire up SimWorld radio_message signal to TTS for trigger API radio() calls
+	if sim and TTSService:
+		if not sim.radio_message.is_connected(_on_radio_message):
+			sim.radio_message.connect(_on_radio_message)
+			LogService.trace("SimWorld radio_message connected to TTS.", "HQTable.gd:_init_tts_system")
+
+
+## Handle radio messages from SimWorld (trigger API, ammo/fuel warnings, etc.)
+func _on_radio_message(_level: String, text: String) -> void:
+	# Skip "Order applied" and "Order failed" messages
+	# These are already handled by UnitVoiceResponses
+	if text.begins_with("Order applied") or text.begins_with("Order failed"):
+		return
+
+	# Speak the message via TTS
+	if TTSService and TTSService.is_ready():
+		TTSService.say(text)
 
 
 ## Clean up when exiting (clears session drawings)
@@ -155,17 +205,18 @@ func _update_subtitle_suggestions(scenario: ScenarioData) -> void:
 	radio_subtitles.set_terrain_labels(labels)
 	radio_subtitles.set_unit_callsigns(callsigns)
 
+
 func _create_initial_unit_counters(playable_units: Array[ScenarioUnit]) -> void:
 	var z_shift := 0.0
 	for unit in playable_units:
 		var counter := preload("res://scenes/system/unit_counter.tscn").instantiate()
 		%PhysicsObjects.add_child(counter)
-		
+
 		counter.affiliation = UnitCounter.CounterAffiliation.PLAYER
 		counter.callsign = unit.callsign
 		counter.symbol_type = "INFANTRY"
 		counter.symbol_size = "PLATOON"
-		
+
 		var world_pos: Vector3 = %CounterSpawnLocation.global_position + Vector3(0, 0, z_shift)
 		counter.global_position = world_pos
 		z_shift += 0.05
