@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://o3h5jon6ffip"]
 
 [ext_resource type="Script" uid="uid://bbr2ohjdpwwns" path="res://scripts/ui/Briefing.gd" id="1_opxbr"]
-[ext_resource type="Texture2D" uid="uid://dntvximcm6324" path="res://assets/textures/ui/whiteboard.png" id="2_siir0"]
+[ext_resource type="Texture2D" uid="uid://b3hiyehqbaw5g" path="res://assets/textures/ui/whiteboard.png" id="2_siir0"]
 
 [node name="Briefing" type="Control"]
 layout_mode = 3
@@ -11,7 +11,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_opxbr")
-default_whiteboard = ExtResource("2_siir0")
 
 [node name="Root" type="VBoxContainer" parent="."]
 layout_mode = 1

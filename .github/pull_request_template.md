@@ -7,6 +7,6 @@
 ## Checklist before requesting a review
 - [ ] I have performed a self-review of my code.
 - [ ] I have tested my code.
-- [ ] I have documented my code and re-generated docs with `make docs`.
+- [ ] I have documented my code in accordance with [gdscript_documentation_comments](https://docs.godotengine.org/en/4.5/tutorials/scripting/gdscript/gdscript_documentation_comments.html).
 - [ ] I have requested a review in discord.
 - [ ] I have moved the related issues to the review section in the [SCRUM Board](https://github.com/orgs/operationalCommandTeam/projects/1).

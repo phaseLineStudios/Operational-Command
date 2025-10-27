@@ -214,17 +214,23 @@ func check_abort_condition(attacker: ScenarioUnit, defender: ScenarioUnit) -> vo
 	if defender.unit.strength / defender.unit.state_strength <= 0.5:
 		LogService.info(defender.unit.id + " is [b]destroyed[/b]", "Combat.gd:62")
 		if attacker.unit.morale <= 0.8:
-			attacker.unit.morale += 0.2
+			attacker._morale_sys.apply_morale_delta(0.2, "enemy surrendered")
+			attacker._morale_sys.nearby_ally_morale_change(0.05)
 		unit_destroyed.emit()
 		abort_condition = true
 		return
 	elif defender.unit.morale <= 0.2:
 		LogService.info(defender.unit.id + " is [b]surrendering[/b]", "Combat.gd:71")
+		defender._morale_sys.set_morale(0.0, "surrendered")
+		attacker._morale_sys.apply_morale_delta(0.2, "enemy surrendered")
+		attacker._morale_sys.nearby_ally_morale_change(0.05)
 		unit_surrendered.emit()
 		abort_condition = true
 		return
 	if called_retreat:
 		LogService.info(defender.unit.id + " is [b]retreating[/b]", "Combat.gd:78")
+		attacker._morale_sys.apply_morale_delta(0.1, "enemy retreating")
+		attacker.attacker._morale_sys.nearby_ally_morale_change(0.05)
 		unit_retreated.emit()
 		abort_condition = true
 
@@ -295,6 +301,11 @@ func _apply_casualties(u: UnitData, raw_losses: int) -> int:
 	var before := int(round(u.state_strength))
 	var loss: int = clamp(raw_losses, 0, before)
 	u.state_strength = float(before - loss)
+
+	# Record for debrief summary (does NOT re-apply at debrief unless change policy)
+	var game := get_tree().get_root().get_node_or_null("/root/Game")
+	if game and game.has_node("resolution"):
+		game.resolution.add_unit_losses(u.id, loss)
 
 	var wia_ratio := 0.6
 	u.state_injured = max(0.0, u.state_injured + float(round(loss * wia_ratio)))

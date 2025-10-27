@@ -459,6 +459,152 @@ func _on_history_changed(past: Array, future: Array) -> void:
 	ctx.request_overlay_redraw()
 
 
+## Generate next unique slot key (SLOT_n)
+func _next_slot_key() -> String:
+	var n := 1
+	if ctx.data and ctx.data.unit_slots:
+		n = ctx.data.unit_slots.size() + 1
+	return "SLOT_%d" % n
+
+
+## Generate next unique trigger id (TRG_n)
+func _generate_trigger_id() -> String:
+	var used := {}
+	if ctx.data and ctx.data.triggers:
+		for t in ctx.data.triggers:
+			if t and t.id is String and (t.id as String).begins_with("TRG_"):
+				var s := (t.id as String).substr(4)
+				if s.is_valid_int():
+					used[int(s)] = true
+	var n := 1
+	while used.has(n):
+		n += 1
+	return "TRG_%d" % n
+
+
+## Compute next available callsign for given affiliation
+func _generate_callsign(affiliation: ScenarioUnit.Affiliation) -> String:
+	var pool := _get_callsign_pool(affiliation)
+	if pool.is_empty():
+		return "UNIT"
+	var used := _collect_used_callsigns(affiliation)
+	var cls_wrap := 0
+	var idx := 0
+	while true:
+		var base := pool[idx]
+		var candidate := base if (cls_wrap == 0) else "%s-%d" % [base, cls_wrap]
+		if not used.has(candidate):
+			return candidate
+		idx += 1
+		if idx >= pool.size():
+			idx = 0
+			cls_wrap += 1
+	return "UNIT"
+
+
+## Get callsign pool for faction (uses defaults if scenario lacks overrides)
+func _get_callsign_pool(affiliation: ScenarioUnit.Affiliation) -> Array[String]:
+	var pool: Array[String]
+	if affiliation == ScenarioUnit.Affiliation.FRIEND:
+		if data and data.friendly_callsigns and data.friendly_callsigns.size() > 0:
+			pool = data.friendly_callsigns
+		else:
+			pool = DEFAULT_FRIENDLY_CALLSIGNS
+	else:
+		if data and data.enemy_callsigns and data.enemy_callsigns.size() > 0:
+			pool = data.enemy_callsigns
+		else:
+			pool = DEFAULT_ENEMY_CALLSIGNS
+	var out: Array[String] = []
+	for v in pool:
+		out.append(str(v))
+	return out
+
+
+## Build set of already-used callsigns for uniqueness checks
+func _collect_used_callsigns(affiliation: ScenarioUnit.Affiliation) -> Dictionary:
+	var used := {}
+	if ctx.data == null:
+		return used
+	if ctx.data.units:
+		for su in ctx.data.units:
+			if su and su.affiliation == affiliation:
+				var cs := String(su.callsign).strip_edges()
+				if not cs.is_empty():
+					used[cs] = true
+	if ctx.data.unit_slots and affiliation == ScenarioUnit.Affiliation.FRIEND:
+		for s in ctx.data.unit_slots:
+			if s:
+				var title := String(s.title).strip_edges()
+				if not title.is_empty():
+					used[title] = true
+	return used
+
+
+## Generate unique unit instance id based on UnitData.id
+func _generate_unit_instance_id_for(u: UnitData) -> String:
+	var base := String(u.id)
+	if base.is_empty():
+		base = "unit"
+	var used := {}
+	if ctx.data and ctx.data.units:
+		var prefix := base + "_"
+		for su in ctx.data.units:
+			if su and su.unit and String(su.unit.id) == base and su.id is String:
+				var sid: String = su.id
+				if sid.begins_with(prefix):
+					var suffix := sid.substr(prefix.length())
+					if suffix.is_valid_int():
+						used[int(suffix)] = true
+	var n := 1
+	while used.has(n):
+		n += 1
+	return "%s_%d" % [base, n]
+
+
+## Confirm discarding unsaved changes; returns true if accepted
+func _confirm_discard() -> bool:
+	var acc := ConfirmationDialog.new()
+	acc.title = "Unsaved changes"
+	acc.dialog_text = "You have unsaved changes. Discard and continue?"
+	add_child(acc)
+	var accepted := false
+	@warning_ignore("confusable_capture_reassignment")
+	acc.canceled.connect(func(): accepted = false)
+	@warning_ignore("confusable_capture_reassignment")
+	acc.confirmed.connect(func(): accepted = true)
+	acc.popup_centered()
+	await acc.confirmed
+	acc.queue_free()
+	return accepted
+
+
+## Show a non-blocking info toast/dialog with a message
+func _show_info(msg: String) -> void:
+	var d := AcceptDialog.new()
+	d.title = "Info"
+	d.dialog_text = msg
+	add_child(d)
+
+
+## Deep-copy key arrays for history operations
+func _snapshot_arrays() -> Dictionary:
+	return {
+		"units":
+		ScenarioHistory._deep_copy_array_res(ctx.data.units if ctx.data and ctx.data.units else []),
+		"unit_slots":
+		ScenarioHistory._deep_copy_array_res(
+			ctx.data.unit_slots if ctx.data and ctx.data.unit_slots else []
+		),
+		"tasks":
+		ScenarioHistory._deep_copy_array_res(ctx.data.tasks if ctx.data and ctx.data.tasks else []),
+		"triggers":
+		ScenarioHistory._deep_copy_array_res(
+			ctx.data.triggers if ctx.data and ctx.data.triggers else []
+		),
+	}
+
+
 ## Utility: queue_free all children of a UI container
 func _queue_free_children(node: Control):
 	for n in node.get_children():

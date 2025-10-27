@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://sfmt46l71mce"]
 
-[ext_resource type="Texture2D" uid="uid://dycem6t75tfbd" path="res://assets/textures/units/nato_unknown_platoon.png" id="1_7d2gs"]
+[ext_resource type="Texture2D" uid="uid://dxdarddiiqvql" path="res://assets/textures/units/nato_unknown_platoon.png" id="1_7d2gs"]
 [ext_resource type="Script" uid="uid://bkgxa073c4p1f" path="res://scripts/ui/helpers/UnitCard.gd" id="1_b6iiq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7d2gs"]
