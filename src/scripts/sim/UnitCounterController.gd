@@ -1,8 +1,7 @@
-# unit_counter_controller.gd
-class_name unitCounterController
+class_name UnitCounterController
 extends Node
+
 ## Opens CounterConfigDialog when the user clicks the 3D drawer and spawns counters.
-## @tutorial https://docs.godotengine.org/en/4.4/classes/class_collisionobject3d.html
 
 const UNIT_COUNTER_SCENE := preload("res://scenes/system/unit_counter.tscn")
 

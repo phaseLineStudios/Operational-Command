@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cy2yngdu86acx"]
 
-[ext_resource type="Script" uid="uid://buuunkc6q2xpe" path="res://scripts/ui/UnitMgmt.gd" id="1"]
+[ext_resource type="Script" uid="uid://cbctkhlimiq0x" path="res://scripts/ui/UnitMgmt.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://bsrv17xsoawvy" path="res://scenes/ui/unit_mgmt/reinforcement_panel.tscn" id="2"]
 
 [node name="UnitMgmt" type="Control"]

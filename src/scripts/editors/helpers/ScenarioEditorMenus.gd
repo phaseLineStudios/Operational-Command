@@ -5,11 +5,11 @@ extends RefCounted
 ## Handles menu button actions (File, Attributes) and opening configuration dialogs
 ## for slots, units, tasks, triggers, and custom commands.
 
-## Reference to parent ScenarioEditor
-var editor: ScenarioEditor
-
 ## Path to return to main menu scene
 const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
+
+## Reference to parent ScenarioEditor
+var editor: ScenarioEditor
 
 
 ## Initialize with parent editor reference.

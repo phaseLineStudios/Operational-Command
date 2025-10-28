@@ -5,9 +5,6 @@ extends RefCounted
 ## Handles generation of slot keys, trigger IDs, callsigns (with NATO defaults),
 ## and unit instance IDs while ensuring uniqueness.
 
-## Reference to parent ScenarioEditor
-var editor: ScenarioEditor
-
 ## Default NATO-style callsigns for friendly units
 const DEFAULT_FRIENDLY_CALLSIGNS: Array[String] = [
 	"ALPHA",
@@ -71,6 +68,9 @@ const DEFAULT_ENEMY_CALLSIGNS: Array[String] = [
 	"FALKO",
 	"LEONID"
 ]
+
+## Reference to parent ScenarioEditor
+var editor: ScenarioEditor
 
 
 ## Initialize with parent editor reference.

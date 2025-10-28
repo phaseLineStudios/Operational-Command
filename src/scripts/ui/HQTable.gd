@@ -19,7 +19,7 @@ extends Node3D
 @onready var loading_screen: Control = %LoadingScreen
 @onready var mission_dialog: Control = %MissionDialog
 @onready var drawing_controller: DrawingController = %DrawingController
-@onready var counter_controller: unitCounterController = %UnitCounterController
+@onready var counter_controller: UnitCounterController = %UnitCounterController
 @onready var unit_voices: UnitVoiceResponses = %UnitVoiceResponses
 @onready var tts_player: AudioStreamPlayer = %TTSPlayer
 

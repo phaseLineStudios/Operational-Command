@@ -1,10 +1,10 @@
-## Base geometry definitions for military symbol frames
-## Defines the frame shapes for different affiliations and domains
 class_name MilSymbolGeometry
 extends RefCounted
+## Base geometry definitions for military symbol frames
+## Defines the frame shapes for different affiliations and domains
 
 ## Domain types (determines base shape)
-enum Domain { GROUND, AIR, SEA, SPACE, SUBSURFACE }  ## Land forces  ## Air forces  ## Naval forces  ## Space forces  ## Submarine forces
+enum Domain { GROUND, AIR, SEA, SPACE, SUBSURFACE }
 
 
 ## Get frame points for ground units based on affiliation
