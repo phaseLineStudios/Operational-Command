@@ -34,15 +34,13 @@ A routine lane evaluation at Wildflecken caps a week of Autumn Forge drills. Ran
 - `1x` Bundeswehr OPFOR Mechanized Platoon
 
 **Scene Direction:**
-- `Phase 1` **Comms & Tools** - radio check, set clock, place unit markers, draw phase lines.
-- `phase 2` **Movement lanes** - Bound to Phase Line RHÖN; Trigger an "ambush lane", practice combat: report -> engage -> break contact.
-- `phase 3` **River-crossing drill** - Call artillery smoke; engineers lay/clear a training bridge.
+- `Lane 1` **Comms & Tools** - radio check, set clock, place unit markers, draw movement plan.
+- `Lane 2` **Movement lanes** - Move to objective; Trigger an "ambush lane", practice combat: report -> engage -> break contact.
+- `Lane 3` **River-crossing drill** - Call artillery smoke; engineers lay/clear a training bridge.
 
 **Objectives:**
 1. Complete all three training lanes.
 2. Keep notional casualties under 10%; complete a CAS request (simulated).
-
-**Failure:** Overrun time, missed lane, or comms checklist not completed
 
 ## 2. Border Probe
 Pre-dawn fog hugs the hedgerows when OP Alpha goes dark. Reports of armor tracks on wet asphalt, then a clipped scream over the net. Your maps still say “training,” but the border no longer cares. Recon pushes through culverts and woodlines; the first tanks show as blacker shapes in a black morning. You’re outnumbered, not outplayed. Delay them, break their tempo, and keep MSR FOX shut. By the time the sun burns through, the world has a new date to remember.

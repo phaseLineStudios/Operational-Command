@@ -16,6 +16,7 @@ enum CounterAffiliation { PLAYER, FRIEND, ENEMY, NEUTRAL, UNKNOWN }
 @onready var face_symbol: TextureRect = %Symbol
 @onready var face_callsign: Label = %Callsign
 
+
 ## Setup the counter with parameters (call before adding to scene tree)
 func setup(
 	p_affiliation: MilSymbol.UnitAffiliation,
@@ -35,6 +36,7 @@ func _ready() -> void:
 	var face := await _generate_face(color)
 	_ensure_mesh_materials(color, face)
 
+
 func _ensure_mesh_materials(color: Color, face: Texture2D) -> void:
 	var body_mat := StandardMaterial3D.new()
 	body_mat.albedo_color = color
@@ -45,6 +47,7 @@ func _ensure_mesh_materials(color: Color, face: Texture2D) -> void:
 	# Use nearest neighbor filtering to keep text sharp
 	face_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
 	mesh.set_surface_override_material(1, face_mat)
+
 
 func _generate_face(color: Color) -> Texture2D:
 	# Create frame-only symbol (white lines) using enum-based API
@@ -102,6 +105,7 @@ func _mil_affiliation_to_counter(aff: MilSymbol.UnitAffiliation) -> CounterAffil
 			return CounterAffiliation.UNKNOWN
 		_:
 			return CounterAffiliation.UNKNOWN
+
 
 func _get_base_color() -> Color:
 	match affiliation:

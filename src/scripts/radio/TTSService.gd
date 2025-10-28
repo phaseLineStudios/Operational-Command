@@ -29,22 +29,48 @@ var _sample_rate := 22050
 
 var _gen := AudioStreamGenerator.new()
 var _playback: AudioStreamGeneratorPlayback = null
+var _is_initializing: bool = false
+var _initialization_complete: bool = false
 
 
 func _ready() -> void:
+	# Defer TTS initialization to avoid blocking game startup
+	_is_initializing = true
+	call_deferred("_initialize_async")
+
+
+## Initialize TTS asynchronously to avoid blocking startup.
+func _initialize_async() -> void:
+	# Wait one frame to ensure UI has rendered
+	await get_tree().process_frame
+
 	_piper_path = _get_platform_binary()
 	if _piper_path == "":
-		LogService.warning("Could not find piper binary.", "TTSService.gd:_ready")
+		LogService.warning("Could not find piper binary.", "TTSService.gd:_initialize_async")
+		_is_initializing = false
 		return
+
+	LogService.info("Starting TTS initialization...", "TTSService.gd:_initialize_async")
+
 	if not set_voice(model):
+		_is_initializing = false
 		return
-	say("check")
+
+	_initialization_complete = true
+	_is_initializing = false
+	LogService.info("TTS Service initialized successfully.", "TTSService.gd:_initialize_async")
 
 
 ## Check if TTS Service is ready.
 ## [return] True if the Piper streaming process is running.
 func is_ready() -> bool:
-	return _tts.is_stream_running()
+	return _initialization_complete and _tts.is_stream_running()
+
+
+## Check if TTS is currently initializing.
+## [return] True if initialization is in progress.
+func is_initializing() -> bool:
+	return _is_initializing
 
 
 ## Return the current AudioStreamGenerator.

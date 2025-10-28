@@ -4,19 +4,10 @@ class_name MilSymbolConfig
 extends Resource
 
 ## Size categories for symbols
-enum Size {
-	SMALL = 64,  ## 64x64 pixels
-	MEDIUM = 128,  ## 128x128 pixels (default)
-	LARGE = 256  ## 256x256 pixels
-}
+enum Size { SMALL = 64, MEDIUM = 128, LARGE = 256 }  ## 64x64 pixels  ## 128x128 pixels (default)  ## 256x256 pixels
 
 ## Affiliation types
-enum Affiliation {
-	FRIEND,  ## Friendly forces (rectangle/circle)
-	HOSTILE,  ## Enemy forces (diamond)
-	NEUTRAL,  ## Neutral forces (square)
-	UNKNOWN  ## Unknown forces (clover)
-}
+enum Affiliation { FRIEND, HOSTILE, NEUTRAL, UNKNOWN }  ## Friendly forces (rectangle/circle)  ## Enemy forces (diamond)  ## Neutral forces (square)  ## Unknown forces (clover)
 
 ## Base size for drawing coordinates (symbols are drawn in a 200x200 space)
 const BASE_SIZE: float = 200.0

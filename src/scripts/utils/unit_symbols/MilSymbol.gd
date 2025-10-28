@@ -5,16 +5,7 @@ extends RefCounted
 
 enum UnitAffiliation { FRIEND, ENEMY, NEUTRAL, UNKNOWN }
 enum UnitType {
-	INFANTRY,
-	MECHANIZED,
-	MOTORIZED,
-	ARMOR,
-	ANTI_TANK,
-	ANTI_AIR,
-	ARTILLERY,
-	RECON,
-	ENGINEER,
-	HQ
+	INFANTRY, MECHANIZED, MOTORIZED, ARMOR, ANTI_TANK, ANTI_AIR, ARTILLERY, RECON, ENGINEER, HQ
 }
 enum UnitSize { TEAM, SQUAD, SECTION, PLATOON, COMPANY, BATTALION, DIVISION }
 
@@ -63,8 +54,8 @@ func generate_texture(
 	_ensure_viewport()
 
 	# If we just created the viewport, wait for deferred add_child to complete
+	var tree := Engine.get_main_loop() as SceneTree
 	if viewport_created:
-		var tree := Engine.get_main_loop() as SceneTree
 		if tree:
 			await tree.process_frame  # Wait for deferred add_child
 
@@ -78,7 +69,7 @@ func generate_texture(
 	_renderer.queue_redraw()
 
 	# Wait for rendering using the main SceneTree
-	var tree := Engine.get_main_loop() as SceneTree
+	tree = Engine.get_main_loop() as SceneTree
 	if tree:
 		await tree.process_frame
 		await tree.process_frame  # Extra frame to ensure render is complete

@@ -4,13 +4,7 @@ class_name MilSymbolGeometry
 extends RefCounted
 
 ## Domain types (determines base shape)
-enum Domain {
-	GROUND,  ## Land forces
-	AIR,  ## Air forces
-	SEA,  ## Naval forces
-	SPACE,  ## Space forces
-	SUBSURFACE  ## Submarine forces
-}
+enum Domain { GROUND, AIR, SEA, SPACE, SUBSURFACE }  ## Land forces  ## Air forces  ## Naval forces  ## Space forces  ## Submarine forces
 
 
 ## Get frame points for ground units based on affiliation

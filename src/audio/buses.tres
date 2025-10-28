@@ -3,7 +3,6 @@
 [sub_resource type="AudioEffectHighPassFilter" id="AudioEffectHighPassFilter_radio"]
 resource_name = "HighPassFilter"
 cutoff_hz = 300.0
-resonance = 0.5
 
 [sub_resource type="AudioEffectLowPassFilter" id="AudioEffectLowPassFilter_dgw8p"]
 resource_name = "LowPassFilter"
@@ -15,7 +14,6 @@ resource_name = "RadioDistortion"
 mode = 2
 pre_gain = 4.0
 drive = 0.15
-post_gain = 0.0
 
 [sub_resource type="AudioEffectCompressor" id="AudioEffectCompressor_dgw8p"]
 resource_name = "Compressor"

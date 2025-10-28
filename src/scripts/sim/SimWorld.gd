@@ -263,8 +263,6 @@ func _update_los() -> void:
 			if los_adapter.has_los(f, e):
 				new_contacts.append(key)
 
-	# Update contacts and emit new ones
-	var prev_contacts := _last_contacts
 	_last_contacts = new_contacts
 	_contact_pairs.clear()
 

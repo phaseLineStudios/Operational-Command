@@ -39,20 +39,10 @@ func has_los(a: ScenarioUnit, b: ScenarioUnit) -> bool:
 		return false
 
 	# Check if terrain data is loaded
-	if _renderer.data == null:
-		# Without terrain, we can't block LOS, so just use range check
-		var range_m := a.position_m.distance_to(b.position_m)
-		var max_spot_range := a.unit.spot_m if (a.unit and a.unit.spot_m > 0) else 2000.0
-		return range_m <= max_spot_range
-
-	# Check maximum spotting range
 	var range_m := a.position_m.distance_to(b.position_m)
-	var max_spot_range := 0.0
-	if a.unit and a.unit.spot_m > 0:
-		max_spot_range = a.unit.spot_m
-	else:
-		# Default spotting range if not specified
-		max_spot_range = 2000.0
+	var max_spot_range := a.unit.spot_m if (a.unit and a.unit.spot_m > 0) else 2000.0
+	if _renderer.data == null:
+		return range_m <= max_spot_range
 
 	# Out of spotting range
 	if range_m > max_spot_range:

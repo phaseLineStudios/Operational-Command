@@ -33,7 +33,7 @@
 [ext_resource type="Script" uid="uid://cldkj080ext62" path="res://scripts/sim/UnitCounterController.gd" id="28_wrosp"]
 [ext_resource type="PackedScene" uid="uid://db2miy3a6hjke" path="res://scenes/ui/mission_dialog.tscn" id="29_dialog"]
 [ext_resource type="Script" uid="uid://bnus1tqft6rms" path="res://scripts/radio/UnitVoiceResponses.gd" id="30_voices"]
-[ext_resource type="Script" path="res://scripts/audio/RadioSignalModulator.gd" id="31_modulator"]
+[ext_resource type="Script" uid="uid://d1c2ojsjf1fws" path="res://scripts/audio/RadioSignalModulator.gd" id="31_modulator"]
 [ext_resource type="PackedScene" uid="uid://bnexhgtx3llph" path="res://scenes/ui/counter_config_dialog.tscn" id="33_bsy1h"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
@@ -562,7 +562,7 @@ counter_dialog = NodePath("../../UI/CounterConfigDialog")
 unique_name_in_owner = true
 script = ExtResource("30_voices")
 
-[node name="TTSPlayer" type="AudioStreamPlayer" parent="Controllers"]
+[node name="TTSPlayer" type="AudioStreamPlayer" parent="Controllers/UnitVoiceResponses"]
 unique_name_in_owner = true
 bus = &"Radio"
 

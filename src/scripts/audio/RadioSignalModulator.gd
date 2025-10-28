@@ -71,7 +71,9 @@ func _process(delta: float) -> void:
 	)
 	if distortion_effect:
 		# Weaker signal = more distortion
-		var drive: float = lerp(BASE_DISTORTION_DRIVE * 3.0, BASE_DISTORTION_DRIVE, _signal_strength)
+		var drive: float = lerp(
+			BASE_DISTORTION_DRIVE * 3.0, BASE_DISTORTION_DRIVE, _signal_strength
+		)
 		distortion_effect.drive = drive
 
 	# Modulate overall bus volume (signal fading)

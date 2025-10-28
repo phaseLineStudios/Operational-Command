@@ -49,9 +49,9 @@ func _populate_types() -> void:
 
 func _populate_sizes() -> void:
 	unit_size.clear()
-	for size in MilSymbol.UnitSize.keys():
-		unit_size.add_item(size)
-	unit_size.selected = 4  # Default to COMPANY
+	for size_label in MilSymbol.UnitSize.keys():
+		unit_size.add_item(size_label)
+	unit_size.selected = 3
 
 
 func _on_create_pressed() -> void:

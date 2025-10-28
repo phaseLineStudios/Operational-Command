@@ -302,10 +302,15 @@ func _generate_contact_report(unit: ScenarioUnit, callsign: String) -> String:
 			parts.append(". ".join(contact_parts))
 
 	if contacts.size() > max_contacts:
-		parts.append("plus %d additional contact%s" % [
-			contacts.size() - max_contacts,
-			"s" if contacts.size() - max_contacts > 1 else ""
-		])
+		parts.append(
+			(
+				"plus %d additional contact%s"
+				% [
+					contacts.size() - max_contacts,
+					"s" if contacts.size() - max_contacts > 1 else ""
+				]
+			)
+		)
 
 	return ". ".join(parts) + "."
 
@@ -315,7 +320,7 @@ func _generate_contact_report(unit: ScenarioUnit, callsign: String) -> String:
 ## [return] Grid coordinate string (e.g. "123456") or empty if unavailable.
 func _get_grid_position(pos_m: Vector2) -> String:
 	if terrain_render:
-		var grid_str: = " ".join(terrain_render.pos_to_grid(pos_m).split(""))
+		var grid_str := " ".join(terrain_render.pos_to_grid(pos_m).split(""))
 		return grid_str
 	return ""
 

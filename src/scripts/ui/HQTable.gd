@@ -10,6 +10,7 @@ extends Node3D
 
 @onready var sim: SimWorld = %WorldController
 @onready var map: MapController = %MapController
+@onready var renderer: TerrainRender = %TerrainRender
 @onready var debug_overlay: Control = %DebugOverlay
 @onready var trigger_engine: TriggerEngine = %TriggerEngine
 @onready var camera: Camera3D = %CameraController/CameraBounds/Camera
@@ -42,6 +43,10 @@ func _ready() -> void:
 
 	# Initialize drawing controller
 	_init_drawing_controller()
+
+	# Load scenario drawings
+	if drawing_controller and map:
+		drawing_controller.load_scenario_drawings(scenario, renderer)
 
 	# Initialize counter controller
 	_init_counter_controller()
@@ -103,14 +108,17 @@ func _init_tts_system() -> void:
 			)
 		else:
 			LogService.warning(
-				"OrdersRouter already connected to UnitVoiceResponses!", "HQTable.gd:_init_tts_system"
+				"OrdersRouter already connected to UnitVoiceResponses!",
+				"HQTable.gd:_init_tts_system"
 			)
 
 	# Wire up SimWorld radio_message signal to TTS for trigger API radio() calls
 	if sim and TTSService:
 		if not sim.radio_message.is_connected(_on_radio_message):
 			sim.radio_message.connect(_on_radio_message)
-			LogService.trace("SimWorld radio_message connected to TTS.", "HQTable.gd:_init_tts_system")
+			LogService.trace(
+				"SimWorld radio_message connected to TTS.", "HQTable.gd:_init_tts_system"
+			)
 
 
 ## Handle radio messages from SimWorld (trigger API, ammo/fuel warnings, etc.)
