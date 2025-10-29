@@ -1,3 +1,4 @@
+@tool
 class_name UnitCounter
 extends Node3D
 
@@ -42,10 +43,9 @@ func _ensure_mesh_materials(color: Color, face: Texture2D) -> void:
 	body_mat.albedo_color = color
 	mesh.set_surface_override_material(0, body_mat)
 
-	var face_mat := StandardMaterial3D.new()
+	var face_mat: StandardMaterial3D = \
+			load("res://assets/materials/UnitCounterFace.material").duplicate()
 	face_mat.albedo_texture = face
-	# Use nearest neighbor filtering to keep text sharp
-	face_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
 	mesh.set_surface_override_material(1, face_mat)
 
 
@@ -62,7 +62,7 @@ func _generate_face(color: Color) -> Texture2D:
 
 	# Setup the face elements
 	face_symbol.texture = unit_symbol
-	face_symbol.modulate = Color(0.0, 0.0, 0.0)  # Black symbol on colored background
+	face_symbol.modulate = Color(0.0, 0.0, 0.0)
 	face_callsign.text = callsign
 
 	# Set background color (duplicate to avoid sharing between counters)
@@ -72,9 +72,12 @@ func _generate_face(color: Color) -> Texture2D:
 
 	# Wait for viewport to render
 	await get_tree().process_frame
-	await get_tree().process_frame  # Extra frame for stability
+	await get_tree().process_frame
+	
+	var img := face_renderer.get_texture().get_image()
+	img.generate_mipmaps()
 
-	return face_renderer.get_texture()
+	return ImageTexture.create_from_image(img)
 
 
 ## Convert CounterAffiliation to MilSymbol.UnitAffiliation

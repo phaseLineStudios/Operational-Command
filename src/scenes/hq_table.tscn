@@ -62,6 +62,7 @@ size = Vector3(0.2, 0.12, 0.12)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ge8rp"]
 shading_mode = 0
+texture_filter = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_p1n4g"]
 material = SubResource("StandardMaterial3D_ge8rp")
@@ -436,7 +437,6 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("7_tixey")
-debug_enabled = true
 terrain_renderer = NodePath("..")
 _sim = NodePath("../../../../WorldController")
 _orders = NodePath("../../../../RadioController/OrdersRouter")
