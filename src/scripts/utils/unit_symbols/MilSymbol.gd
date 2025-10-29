@@ -3,7 +3,9 @@
 class_name MilSymbol
 extends RefCounted
 
+## Unit affiliation.
 enum UnitAffiliation { FRIEND, ENEMY, NEUTRAL, UNKNOWN }
+## Unit Type (Main Icon)
 enum UnitType {
 	INFANTRY,
 	MECHANIZED,
@@ -19,6 +21,7 @@ enum UnitType {
 	HQ,
 	NONE
 }
+## Unit Size/Echelon.
 enum UnitSize { 
 	TEAM, 
 	SQUAD, 
@@ -31,8 +34,16 @@ enum UnitSize {
 	DIVISION,
 	CORPS,
 	ARMY,
-	NONE 
+	NONE
 }
+## Unit Modifier (top)
+enum Modifier1 { NONE, HQ, BRIDGE, EOD }
+## Unit Modifier (bottom)
+enum Modifier2 { NONE, SUPPLY, AIR_DEFENCE, DEMOLITION, AIRBORNE, AMPHIBIOUS, RIVERINE, TRACKED }
+## Unit Status
+enum UnitStatus { PRESENT, PLANNED }
+## Unit Reinforced or Reduced
+enum UnitReinforcedReduced { NONE, REINFORCED, REDUCED, REINFORCED_AND_REDUCED }
 
 ## Configuration
 var config: MilSymbolConfig

@@ -85,6 +85,7 @@ text = "Modifier 1"
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Unit Modifier (top)"
+disabled = true
 
 [node name="Modifier2Label" type="Label" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -94,6 +95,7 @@ text = "Modifier 2"
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Unit Modifier (Bottom)"
+disabled = true
 
 [node name="DesignationLabel" type="Label" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -113,6 +115,7 @@ text = "Status"
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Unit status"
+disabled = true
 
 [node name="ReinforcedReducedLabel" type="Label" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -122,6 +125,7 @@ text = "Reinforced/Reduced"
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Unit reinforced or reduced"
+disabled = true
 
 [node name="FrameLabel" type="Label" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
