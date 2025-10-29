@@ -195,11 +195,10 @@ func _load_ammo_from_working() -> void:
 		var sp := _ammo_spinners[i]
 		var v := 0
 
-		# Prefer string keys, but also accept enum-indexed keys for legacy data.
 		if ammo_dict.has(key_name):
 			v = int(ammo_dict[key_name])
 		else:
-			var idx := int(UnitData.AmmoTypes[key_name]) # enum value for this name
+			var idx := int(UnitData.AmmoTypes[key_name])
 			if ammo_dict.has(idx):
 				v = int(ammo_dict[idx])
 
@@ -236,13 +235,12 @@ func _collect_into_working() -> void:
 		_working.unit_category = cat_meta["res"]
 
 
-## Collect ammo amounts from SpinBoxes into _working.ammo (omit zeros).
+## Collect ammo amounts from SpinBoxes into _working.ammo.
 func _collect_ammo_into_working() -> void:
 	var out := {}
 	for i in _ammo_spinners.size():
 		var val := int(_ammo_spinners[i].value)
-		if val != 0:
-			out[_ammo_keys[i]] = val
+		out[_ammo_keys[i]] = val
 	_working.ammunition = out
 
 

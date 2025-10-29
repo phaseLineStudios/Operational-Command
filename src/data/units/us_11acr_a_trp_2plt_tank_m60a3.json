@@ -3,7 +3,19 @@
     "ARMOR"
   ],
   "ammunition": {
-
+    "ARTILLERY_AP": 0,
+    "ARTILLERY_ILLUM": 0,
+    "ARTILLERY_SMOKE": 0,
+    "ATGM": 0,
+    "AT_ROCKET": 0,
+    "AUTOCANNON": 0,
+    "ENGINEER_MUN": 0,
+    "HEAVY_WEAPONS": 0,
+    "MORTAR_AP": 0,
+    "MORTAR_ILLUM": 0,
+    "MORTAR_SMOKE": 0,
+    "SMALL_ARMS": 0,
+    "TANK_GUN": 0
   },
   "ammunition_critical_threshold": 0.1,
   "ammunition_low_threshold": 0.25,
