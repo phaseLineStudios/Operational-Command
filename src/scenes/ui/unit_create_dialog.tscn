@@ -1,8 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://c7ms1i2uof7kp"]
+[gd_scene load_steps=2 format=3 uid="uid://c7ms1i2uof7kp"]
 
 [ext_resource type="Script" uid="uid://bkrpswa310obj" path="res://scripts/editors/UnitCreateDialog.gd" id="1_wa3bu"]
-[ext_resource type="Texture2D" uid="uid://dycem6t75tfbd" path="res://assets/textures/units/nato_unknown_platoon.png" id="2_r3ntf"]
-[ext_resource type="Texture2D" uid="uid://duydpdbvvvc0k" path="res://assets/textures/units/enemy_unknown_platoon.png" id="3_u28gm"]
 
 [node name="UnitCreateDialog" type="Window"]
 auto_translate_mode = 1
@@ -58,16 +56,35 @@ layout_mode = 2
 
 [node name="IconContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer"]
 layout_mode = 2
-folded = true
 title = "Icon"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/IconContainer"]
-visible = false
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="SizeLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Unit Size"
+
+[node name="UnitSize" type="OptionButton" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TypeLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Unit Type"
+
+[node name="UnitType" type="OptionButton" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="IconLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer"]
 layout_mode = 2
-text = "Icon"
+text = "Icons"
 
 [node name="IconHBox" type="HBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer"]
 layout_mode = 2
@@ -77,35 +94,22 @@ alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
-texture = ExtResource("2_r3ntf")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="PickIcon" type="Button" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Pick Icon"
-
-[node name="EnemyIconLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer"]
-layout_mode = 2
-text = "Enemy Icon"
-
-[node name="EnemyIconHBox" type="HBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer"]
-layout_mode = 2
-alignment = 1
-
-[node name="EnemyIconPreview" type="TextureRect" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer/EnemyIconHBox"]
+[node name="EnemyIconPreview" type="TextureRect" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer/IconHBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
-texture = ExtResource("3_u28gm")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="EnemyPickIcon" type="Button" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer"]
+[node name="NeutralIconPreview" type="TextureRect" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer/IconHBox"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
-text = "Pick Icon"
+expand_mode = 1
+stretch_mode = 5
 
 [node name="RoleContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer"]
 layout_mode = 2
@@ -176,14 +180,6 @@ title = "Unit Meta"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer"]
 visible = false
-layout_mode = 2
-
-[node name="SizeLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer"]
-layout_mode = 2
-text = "Size"
-
-[node name="Size" type="OptionButton" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer"]
-unique_name_in_owner = true
 layout_mode = 2
 
 [node name="StrengthLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer"]

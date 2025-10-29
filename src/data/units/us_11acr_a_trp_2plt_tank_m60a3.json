@@ -12,7 +12,6 @@
   "editor": {
     "unit_category": "us_army"
   },
-  "enemy_icon_path": "res://assets/textures/units/enemy_unknown_platoon.png",
   "equipment": {
     "radios": {
       "AN/VRC-12": {
@@ -47,11 +46,10 @@
   },
   "equipment_tags": [],
   "experience": 0.0,
-  "icon_path": "res://assets/textures/units/nato_unknown_platoon.png",
   "id": "us_11acr_a_trp_2plt_tank_m60a3",
   "movement_profile": 0,
   "role": "ARMOR",
-  "size": 2,
+  "size": 3,
   "state": {
     "cohesion": 0.0,
     "state_equipment": 0.0,
@@ -75,5 +73,6 @@
   "throughput": {
 
   },
-  "title": "Tank Platoon — 2/A/1-11 ACR"
+  "title": "Tank Platoon — 2/A/1-11 ACR",
+  "type": 3
 }

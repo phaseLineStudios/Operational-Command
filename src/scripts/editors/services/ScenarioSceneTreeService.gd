@@ -38,16 +38,18 @@ func rebuild(ctx: ScenarioEditorContext) -> void:
 			var u_item := tree.create_item(units)
 			u_item.set_text(0, su.callsign)
 			u_item.set_metadata(0, {"type": &"unit", "index": ui})
-			var icon := (
-				su.unit.icon
-				if su.affiliation == ScenarioUnit.Affiliation.FRIEND
-				else su.unit.enemy_icon
+			su.unit.icons_ready.connect(func(): 
+				var icon := (
+					su.unit.icon
+					if su.affiliation == ScenarioUnit.Affiliation.FRIEND
+					else su.unit.enemy_icon
+				)
+				if icon:
+					var img := icon.get_image()
+					if not img.is_empty():
+						img.resize(24, 24, Image.INTERPOLATE_LANCZOS)
+						u_item.set_icon(0, ImageTexture.create_from_image(img))
 			)
-			if icon:
-				var img := icon.get_image()
-				if not img.is_empty():
-					img.resize(16, 16, Image.INTERPOLATE_LANCZOS)
-					u_item.set_icon(0, ImageTexture.create_from_image(img))
 
 			var ordered := tasks.collect_unit_chain(ctx.data, ui)
 			for idx in ordered.size():

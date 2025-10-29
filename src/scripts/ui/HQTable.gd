@@ -218,12 +218,12 @@ func _create_initial_unit_counters(playable_units: Array[ScenarioUnit]) -> void:
 	var z_shift := 0.0
 	for unit in playable_units:
 		var counter := preload("res://scenes/system/unit_counter.tscn").instantiate()
-		%PhysicsObjects.add_child(counter)
-
 		counter.affiliation = UnitCounter.CounterAffiliation.PLAYER
 		counter.callsign = unit.callsign
-		counter.symbol_type = "INFANTRY"
-		counter.symbol_size = "PLATOON"
+		counter.symbol_type = unit.unit.type
+		counter.symbol_size = unit.unit.size
+		
+		%PhysicsObjects.add_child(counter)
 
 		var world_pos: Vector3 = %CounterSpawnLocation.global_position + Vector3(0, 0, z_shift)
 		counter.global_position = world_pos

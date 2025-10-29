@@ -31,8 +31,13 @@ var _ammo_keys: Array[String] = []
 @onready var _morale: SpinBox = %Morale
 @onready var _speed_kph: SpinBox = %Speed
 
+@onready var icon_fr_preview: TextureRect = %IconPreview
+@onready var icon_eny_preview: TextureRect = %EnemyIconPreview
+@onready var icon_neu_preview: TextureRect = %NeutralIconPreview
+
 @onready var _category_ob: OptionButton = %Category
-@onready var _size_ob: OptionButton = %Size
+@onready var _size_ob: OptionButton = %UnitSize
+@onready var _type_ob: OptionButton = %UnitType
 @onready var _move_ob: OptionButton = %MoveProfile
 
 @onready var _slot_input: LineEdit = %SlotInput
@@ -59,6 +64,7 @@ var _ammo_keys: Array[String] = []
 
 
 func _ready() -> void:
+	_populate_type()
 	_populate_size()
 	_populate_move_profile()
 	_populate_categories()
@@ -84,6 +90,9 @@ func _ready() -> void:
 	_save_btn.pressed.connect(_on_save_pressed)
 	_cancel_btn.pressed.connect(_on_cancel_pressed)
 	close_requested.connect(_on_cancel_pressed)
+	
+	_size_ob.item_selected.connect(_generate_preview_icons)
+	_type_ob.item_selected.connect(_generate_preview_icons)
 
 
 ## Open dialog (CREATE if unit == null).
@@ -109,7 +118,7 @@ func _load_from_working() -> void:
 		if _working.allowed_slots.is_empty():
 			_working.allowed_slots = ["INF"]
 		if _working.size == null:
-			_working.size = UnitData.UnitSize.PLATOON
+			_working.size = MilSymbol.UnitSize.PLATOON
 		if _working.morale == 0.0:
 			_working.morale = 0.9
 		if _working.movement_profile == null:
@@ -128,6 +137,7 @@ func _load_from_working() -> void:
 	_speed_kph.value = _working.speed_kph
 
 	_select_size(_working.size)
+	_select_type(_working.type)
 	_select_move_profile(_working.movement_profile)
 	_select_category(_working.unit_category)
 
@@ -211,7 +221,8 @@ func _collect_into_working() -> void:
 	_working.morale = clamp(float(_morale.value), 0.0, 1.0)
 	_working.speed_kph = float(_speed_kph.value)
 
-	_working.size = int(_size_ob.get_selected_id()) as UnitData.UnitSize
+	_working.type = int(_type_ob.get_selected_id()) as MilSymbol.UnitType
+	_working.size = int(_size_ob.get_selected_id()) as MilSymbol.UnitSize
 	_working.movement_profile = int(_move_ob.get_selected_id()) as TerrainBrush.MoveProfile
 
 	_working.allowed_slots = _slots.duplicate()
@@ -253,6 +264,32 @@ func _on_cancel_pressed() -> void:
 	emit_signal("canceled")
 
 
+func _generate_preview_icons(_idx: int) -> void:
+	var fr_icon := await MilSymbol.create_symbol(
+		MilSymbol.UnitAffiliation.FRIEND,
+		_type_ob.selected,
+		MilSymbolConfig.Size.MEDIUM,
+		_size_ob.selected
+	)
+	
+	var eny_icon := await MilSymbol.create_symbol(
+		MilSymbol.UnitAffiliation.ENEMY,
+		_type_ob.selected,
+		MilSymbolConfig.Size.MEDIUM,
+		_size_ob.selected
+	)
+	var neu_icon := await MilSymbol.create_symbol(
+		MilSymbol.UnitAffiliation.NEUTRAL,
+		_type_ob.selected,
+		MilSymbolConfig.Size.MEDIUM,
+		_size_ob.selected
+	)
+	
+	icon_fr_preview.texture = fr_icon
+	icon_eny_preview.texture = eny_icon
+	icon_neu_preview.texture = neu_icon
+
+
 ## Validate fields
 func _validate() -> String:
 	if _id.text.strip_edges() == "":
@@ -268,11 +305,18 @@ func _validate() -> String:
 	return ""
 
 
+func _populate_type() -> void:
+	_type_ob.clear()
+	for type in MilSymbol.UnitType.keys():
+		_type_ob.add_item(type)
+
+
 ## populate size optionbutton.
 func _populate_size() -> void:
 	_size_ob.clear()
-	for echelon in UnitData.UnitSize.keys():
+	for echelon in MilSymbol.UnitSize.keys():
 		_size_ob.add_item(echelon)
+	_select_size(MilSymbol.UnitSize.PLATOON)
 
 
 ## Populate move profile option button.
@@ -326,6 +370,16 @@ func _select_size(v: int) -> void:
 	for i in _size_ob.item_count:
 		if _size_ob.get_item_id(i) == int(v):
 			_size_ob.select(i)
+			_generate_preview_icons(-1)
+			return
+
+
+## Select unit type.
+func _select_type(v: int) -> void:
+	for i in _type_ob.item_count:
+		if _type_ob.get_item_id(i) == int(v):
+			_type_ob.select(i)
+			_generate_preview_icons(-1)
 			return
 
 
@@ -544,7 +598,8 @@ func _reset_ui() -> void:
 	for sp in _ammo_spinners:
 		if sp:
 			sp.value = 0
-	_select_size(UnitData.UnitSize.PLATOON)
+	_select_size(MilSymbol.UnitSize.PLATOON)
+	_select_type(MilSymbol.UnitType.INFANTRY)
 	_select_move_profile(_default_move_profile())
 	
 	_equip_ammo_container.visible = false

@@ -15,7 +15,6 @@
   "editor": {
     "unit_category": "us_army"
   },
-  "enemy_icon_path": "res://assets/textures/units/enemy_unknown_platoon.png",
   "equipment": {
     "radios": {
       "AN/PRC-77": {
@@ -46,11 +45,10 @@
   },
   "equipment_tags": [],
   "experience": 0.0,
-  "icon_path": "res://assets/textures/units/nato_unknown_platoon.png",
   "id": "scout_plt_1a111_acr",
   "movement_profile": 0,
   "role": "RECON",
-  "size": 2,
+  "size": 3,
   "state": {
     "cohesion": 0.0,
     "state_equipment": 0.0,
@@ -74,5 +72,6 @@
   "throughput": {
 
   },
-  "title": "Scout Platoon, 1/A/1-11 ACR"
+  "title": "Scout Platoon, 1/A/1-11 ACR",
+  "type": 7
 }

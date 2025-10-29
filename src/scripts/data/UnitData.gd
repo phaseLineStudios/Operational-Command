@@ -2,8 +2,8 @@
 class_name UnitData
 extends Resource
 
-## Enumeration of unit sizes
-enum UnitSize { TEAM, SQUAD, PLATOON, COMPANY, BATTALION }
+## Emitted when icons were (re)generated successfully.
+signal icons_ready
 
 ## Equipment categories
 enum EquipCategory { VEHICLES, WEAPONS, RADIOS }
@@ -43,9 +43,9 @@ enum AmmoTypes {
 ## Human-readable title of the unit
 @export var title: String
 ## Unit icon texture
-@export var icon: Texture2D = preload("res://assets/textures/units/nato_unknown_platoon.png")
+@export var icon: Texture2D = null
 ## Enemy unit icon texture
-@export var enemy_icon: Texture2D = preload("res://assets/textures/units/enemy_unknown_platoon.png")
+@export var enemy_icon: Texture2D = null
 ## role for this unit
 @export var role: String = "INF"
 ## Allowed slot codes where this unit can be deployed
@@ -57,7 +57,19 @@ enum AmmoTypes {
 
 @export_category("Meta")
 ## Organizational size of the unit
-@export var size: UnitSize = UnitSize.PLATOON
+@export var size: MilSymbol.UnitSize = MilSymbol.UnitSize.PLATOON: 
+	set(value):
+		if size == value: return
+		size = value
+		_queue_icon_update()
+	get: return size
+## Organizational size of the unit
+@export var type: MilSymbol.UnitType = MilSymbol.UnitType.INFANTRY: 
+	set(value):
+		if type == value: return
+		type = value
+		_queue_icon_update()
+	get: return type
 ## Number of personnel in the unit at full strength
 @export var strength: int = 36
 ## Dictionary of equipment definitions
@@ -122,27 +134,58 @@ enum AmmoTypes {
 ## Transfer radius in meters within which resupply is possible.
 @export var supply_transfer_radius_m: float = 30.0
 
+var _icon_rev: int = 0
+
+func _init() -> void:
+	call_deferred("_queue_icon_update")
+
+
+## Schedule an async icon refresh (debounced to next idle message).
+func _queue_icon_update() -> void:
+	_icon_rev += 1
+	var my_rev := _icon_rev
+	call_deferred("_update_icons_async", my_rev)
+
+
+## Build both friend/enemy icons asynchronously. Drops stale results.
+## [param rev] Internal version token to ignore out-of-date completions.
+func _update_icons_async(rev: int) -> void:
+	# In editor, make sure a frame passes so resources/servers are ready.
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree:
+		await tree.process_frame
+
+	var task_friend = await MilSymbol.create_symbol(
+		MilSymbol.UnitAffiliation.FRIEND, type, MilSymbolConfig.Size.MEDIUM, size
+	)
+	var task_enemy = await MilSymbol.create_symbol(
+		MilSymbol.UnitAffiliation.ENEMY, type, MilSymbolConfig.Size.MEDIUM, size
+	)
+
+	var friend_tex: ImageTexture = task_friend
+	var enemy_tex: ImageTexture = task_enemy
+
+	if rev != _icon_rev:
+		return
+
+	icon = friend_tex
+	enemy_icon = enemy_tex
+
+	# Notify editor/consumers.
+	emit_changed()
+	emit_signal("icons_ready")
+
 
 ## Serialize this unit to JSON
 func serialize() -> Dictionary:
 	return {
 		"id": id,
 		"title": title,
-		"icon_path":
-		icon.resource_path as Variant if icon and icon.resource_path != "" else null as Variant,
-		"enemy_icon_path":
-		(
-			(
-				enemy_icon.resource_path as Variant
-				if enemy_icon and enemy_icon.resource_path != ""
-				else null
-			)
-			as Variant
-		),
 		"role": role,
 		"allowed_slots": allowed_slots.duplicate(),
 		"cost": cost,
 		"size": int(size),
+		"type": int(type),
 		"strength": strength,
 		"equipment": equipment.duplicate(),
 		"experience": experience,
@@ -195,19 +238,9 @@ static func deserialize(data: Variant) -> UnitData:
 			tmp_slots.append(str(s))
 		u.allowed_slots = tmp_slots
 
-	var icon_path = data.get("icon_path", null)
-	if icon_path != null and typeof(icon_path) == TYPE_STRING and icon_path != "":
-		var tex := load(icon_path)
-		if tex is Texture2D:
-			u.icon = tex
 
-	var enemy_icon_path = data.get("enemy_icon_path", null)
-	if enemy_icon_path != null and typeof(enemy_icon_path) == TYPE_STRING and enemy_icon_path != "":
-		var tex := load(enemy_icon_path)
-		if tex is Texture2D:
-			u.enemy_icon = tex
-
-	u.size = int(data.get("size", u.size)) as UnitSize
+	u.size = int(data.get("size", u.size)) as MilSymbol.UnitSize
+	u.type = int(data.get("type", u.type)) as MilSymbol.UnitType
 	u.movement_profile = (
 		int(data.get("movement_profile", u.movement_profile)) as TerrainBrush.MoveProfile
 	)

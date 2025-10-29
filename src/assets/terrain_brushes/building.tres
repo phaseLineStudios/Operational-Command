@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="TerrainBrush" load_steps=3 format=3 uid="uid://dtyhwf518cnad"]
 
 [ext_resource type="Script" uid="uid://c8tm5edxa6cdw" path="res://scripts/terrain/TerrainBrush.gd" id="1_1ulw3"]
-[ext_resource type="Texture2D" uid="uid://ekpsq2w5u723" path="res://assets/terrain_brushes/symbol_building.png" id="2_08rsi"]
+[ext_resource type="Texture2D" uid="uid://pxk6scqxev2u" path="res://assets/terrain_brushes/symbol_building.png" id="2_08rsi"]
 
 [resource]
 script = ExtResource("1_1ulw3")

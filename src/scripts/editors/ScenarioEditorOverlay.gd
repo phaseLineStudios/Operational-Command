@@ -17,7 +17,7 @@ const MI_DELETE := 1099
 ## Owning editor reference (provides ctx, data, and services)
 @export var editor: ScenarioEditor
 ## Pixel size of unit icons on the overlay
-@export var unit_icon_px: int = 48
+@export var unit_icon_px: int = 72
 ## Pixel size of player slot icons on the overlay
 @export var slot_icon_px: int = 48
 ## Pixel size of outer task glyphs on the overlay
@@ -57,6 +57,8 @@ var _link_preview_active := false
 var _link_preview_src: Dictionary = {}
 var _link_preview_pos := Vector2.ZERO
 
+var _unit_signal_handles: Dictionary = {}
+
 
 ## Initialize popup menu and mouse handling
 func _ready() -> void:
@@ -66,6 +68,7 @@ func _ready() -> void:
 	_ctx = PopupMenu.new()
 	add_child(_ctx)
 	_ctx.id_pressed.connect(_on_ctx_pressed)
+	call_deferred("refresh_icon_bindings")
 
 
 ## Main overlay draw: links first, then glyphs, then active tool
@@ -206,6 +209,7 @@ func _draw_units() -> void:
 		var su: ScenarioUnit = editor.ctx.data.units[i]
 		if su == null or su.unit == null:
 			continue
+		_ensure_bound_for_unit(su.unit)
 		var tex := _get_scaled_icon_unit(su)
 		if tex == null:
 			continue
@@ -703,6 +707,29 @@ func _scaled_cached(key: String, base: Texture2D, px: int) -> Texture2D:
 	return tex
 
 
+## UnitData finished generating icons; drop scaled cache and redraw.
+## [param u] UnitData whose icons changed.
+func _on_unit_icons_ready(u: UnitData) -> void:
+	_invalidate_unit_icon_cache(u)
+	queue_redraw()
+
+## Generic change fallback (covers editor-time tweaks).
+func _on_unit_changed(u: UnitData) -> void:
+	_invalidate_unit_icon_cache(u)
+	queue_redraw()
+
+## Remove all scaled entries for this unit (both affiliations/sizes).
+func _invalidate_unit_icon_cache(u: UnitData) -> void:
+	var id_str := String(u.id if u and u.id != "" else "unknown")
+	var prefix := "UNIT:%s:" % id_str
+	var to_erase: Array = []
+	for k in _icon_cache.keys():
+		if String(k).begins_with(prefix):
+			to_erase.append(k)
+	for k in to_erase:
+		_icon_cache.erase(k)
+
+
 ## Load or fetch cached texture.
 ## [param path] res:// path.
 ## [return] Texture2D or null.
@@ -734,6 +761,43 @@ func _glyph_radius(kind: StringName, idx: int) -> float:
 			)
 		_:
 			return 0.0
+
+
+## (Re)bind overlay to all units in the current ctx.
+func refresh_icon_bindings() -> void:
+	_clear_unit_icon_bindings()
+	_bind_unit_icon_signals()
+
+
+## Connect to UnitData signals so we refresh when icons complete.
+func _bind_unit_icon_signals() -> void:
+	if not editor or not editor.ctx or not editor.ctx.data or editor.ctx.data.units == null:
+		return
+	for su: ScenarioUnit in editor.ctx.data.units:
+		if su == null or su.unit == null:
+			continue
+		_ensure_bound_for_unit(su.unit)
+
+
+## Ensure we are bound for this UnitData (idempotent).
+func _ensure_bound_for_unit(u: UnitData) -> void:
+	if _unit_signal_handles.has(u):
+		return
+	var c_icons := Callable(self, "_on_unit_icons_ready").bind(u)
+	var c_changed := Callable(self, "_on_unit_changed").bind(u)
+	u.icons_ready.connect(c_icons)
+	u.changed.connect(c_changed)
+	_unit_signal_handles[u] = {"icons": c_icons, "changed": c_changed}
+
+
+## Disconnect everything we previously bound.
+func _clear_unit_icon_bindings() -> void:
+	for u in _unit_signal_handles.keys():
+		if is_instance_valid(u):
+			var h: Variant = _unit_signal_handles[u]
+			if u.is_connected("icons_ready", h.icons): u.icons_ready.disconnect(h.icons)
+			if u.is_connected("changed", h.changed):   u.changed.disconnect(h.changed)
+	_unit_signal_handles.clear()
 
 
 ## Shorten a segment at both ends by given trims (pixels)

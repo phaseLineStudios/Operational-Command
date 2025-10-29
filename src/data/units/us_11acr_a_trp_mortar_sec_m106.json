@@ -13,7 +13,6 @@
   "editor": {
     "unit_category": "us_army"
   },
-  "enemy_icon_path": "res://assets/textures/units/enemy_unknown_platoon.png",
   "equipment": {
     "radios": {
       "AN/VRC-46": {
@@ -40,11 +39,10 @@
   },
   "equipment_tags": [],
   "experience": 0.0,
-  "icon_path": "res://assets/textures/units/nato_unknown_platoon.png",
   "id": "us_11acr_a_trp_mortar_sec_m106",
   "movement_profile": 0,
   "role": "MORTAR",
-  "size": 1,
+  "size": 2,
   "state": {
     "cohesion": 0.0,
     "state_equipment": 0.0,
@@ -68,5 +66,6 @@
   "throughput": {
 
   },
-  "title": "Mortar Section - M106 4.2\" (A Trp/1-11 ACR)"
+  "title": "Mortar Section - M106 4.2\" (A Trp/1-11 ACR)",
+  "type": 6
 }
