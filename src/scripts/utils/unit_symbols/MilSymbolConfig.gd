@@ -36,7 +36,7 @@ const BASE_SIZE: float = 200.0
 @export var show_icon: bool = true
 
 ## Font for text fields
-@export var font_size: int = 32
+@export var font_size: int = 48
 
 ## Colors for different affiliations (filled mode)
 var fill_colors: Dictionary = {

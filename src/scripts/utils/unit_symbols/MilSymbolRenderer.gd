@@ -351,7 +351,7 @@ func _draw_icon_text(text: String, pos: Vector2, size: int, color: Color) -> voi
 ## Draw size/echelon indicator above the frame
 func _draw_size_indicator() -> void:
 	var bounds := MilSymbolGeometry.get_frame_bounds(domain, affiliation)
-	var pos := Vector2(bounds.position.x + bounds.size.x / 2, bounds.position.y - 10)
+	var pos := Vector2(bounds.position.x, bounds.position.y - 10)
 
 	var font_size := int(config.font_size * 0.8)
 	draw_string(
@@ -359,7 +359,7 @@ func _draw_size_indicator() -> void:
 		pos,
 		unit_size_text,
 		HORIZONTAL_ALIGNMENT_CENTER,
-		-1,
+		bounds.size.x,
 		font_size,
 		config.text_color
 	)
