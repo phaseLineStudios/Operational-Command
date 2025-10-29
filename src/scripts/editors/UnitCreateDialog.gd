@@ -9,8 +9,6 @@ signal canceled
 
 ## Dialog mode.
 enum DialogMode { CREATE, EDIT }
-## Equipment category.
-enum EquipCategory { VEHICLES, WEAPONS, RADIOS }
 
 var _mode: DialogMode = DialogMode.CREATE
 var _working: UnitData
@@ -18,6 +16,8 @@ var _slots: Array[String] = []
 var _equip := {}
 var _thru := {}
 var _cat_items: Array = []
+var _ammo_spinners: Array[SpinBox] = []
+var _ammo_keys: Array[String] = []
 
 @onready var _id: LineEdit = %Id
 @onready var _title: LineEdit = %Title
@@ -42,8 +42,11 @@ var _cat_items: Array = []
 @onready var _equip_cat: OptionButton = %EquipmentCategory
 @onready var _equip_key: LineEdit = %EquipmentType
 @onready var _equip_val: SpinBox = %EquipmentAmount
+@onready var _equip_ammo_container: HBoxContainer = %EquipmentAmmoContainer
+@onready var _equip_ammo: OptionButton = %EquipmentAmmo
 @onready var _equip_add: Button = %EquipmentAdd
 @onready var _equip_list: VBoxContainer = %EquipmentList
+@onready var _ammo_container: GridContainer = %AmmoContainer
 
 @onready var _th_key: LineEdit = %ThroughputType
 @onready var _th_val: SpinBox = %ThroughputAmount
@@ -59,9 +62,20 @@ func _ready() -> void:
 	_populate_size()
 	_populate_move_profile()
 	_populate_categories()
+	_populate_ammo()
 
-	for cat in EquipCategory.keys():
+	for cat in UnitData.EquipCategory.keys():
 		_equip_cat.add_item(cat)
+	
+	for ammo in UnitData.AmmoTypes.keys():
+		_equip_ammo.add_item(ammo)
+	
+	_equip_cat.item_selected.connect(func(idx: int):
+		if idx == UnitData.EquipCategory.WEAPONS:
+			_equip_ammo_container.visible = true
+		else:
+			_equip_ammo_container.visible = false
+	)
 
 	_slot_add.pressed.connect(_on_add_slot)
 	_equip_add.pressed.connect(_on_add_equip)
@@ -80,6 +94,7 @@ func show_dialog(state: bool, unit: UnitData = null) -> void:
 		hide()
 		_reset_ui()
 		return
+	_reset_ui()
 	_mode = DialogMode.EDIT if unit != null else DialogMode.CREATE
 	_working = (unit.duplicate(true) as UnitData) if unit != null else UnitData.new()
 	_load_from_working()
@@ -122,19 +137,63 @@ func _load_from_working() -> void:
 	_slots = _working.allowed_slots.duplicate()
 
 	_reset_equip()
-	for c in _working.equipment.keys():
-		if typeof(_working.equipment[c]) == TYPE_DICTIONARY:
-			for k in _working.equipment[c].keys():
-				_add_kv_row(_equip_list, String(k), _working.equipment[k], _on_delete_equip_row, c)
-				_equip[c][k] = _working.equipment[k]
-		else:
-			_add_kv_row(_equip_list, String(c), _working.equipment[c], _on_delete_equip_row)
-			_equip[c] = _working.equipment[c]
+	var eq := _working.equipment if (typeof(_working.equipment) == TYPE_DICTIONARY) else {}
+	for raw_cat in eq.keys():
+		var cat := String(raw_cat).to_lower()
+		if not _equip.has(cat):
+			_equip[cat] = {}
+		var cat_dict: Variant = eq[raw_cat]
+		if typeof(cat_dict) != TYPE_DICTIONARY:
+			continue
+
+		for k in cat_dict.keys():
+			var entry: Variant = cat_dict[k]
+			var count := 0
+			var ammo := -1
+
+			if typeof(entry) == TYPE_DICTIONARY:
+				if entry.has("type"):
+					count = int(entry["type"])
+				elif entry.has("count"):
+					count = int(entry["count"])
+				else:
+					count = int(entry)
+				if entry.has("ammo"):
+					ammo = int(entry["ammo"])
+			else:
+				count = int(entry)
+
+			_add_kv_row(_equip_list, String(k), count, _on_delete_equip_row, cat, ammo)
+			_equip[cat][String(k)] = {"type": count, "ammo": ammo}
 
 	_thru.clear()
 	for k in _working.throughput.keys():
 		_add_kv_row(_th_list, String(k), _working.throughput[k], _on_delete_throughput_row)
 		_thru[k] = _working.throughput[k]
+	
+	_load_ammo_from_working()
+
+
+## Load ammo amounts from _working.ammo into the SpinBoxes.
+func _load_ammo_from_working() -> void:
+	var ammo_dict: Variant = _working.get("ammo")
+	if typeof(ammo_dict) != TYPE_DICTIONARY:
+		ammo_dict = {}
+
+	for i in _ammo_spinners.size():
+		var key_name := _ammo_keys[i]
+		var sp := _ammo_spinners[i]
+		var v := 0
+
+		# Prefer string keys, but also accept enum-indexed keys for legacy data.
+		if ammo_dict.has(key_name):
+			v = int(ammo_dict[key_name])
+		else:
+			var idx := int(UnitData.AmmoTypes[key_name]) # enum value for this name
+			if ammo_dict.has(idx):
+				v = int(ammo_dict[idx])
+
+		sp.value = v
 
 
 ## Apply UI -> working data.
@@ -158,10 +217,22 @@ func _collect_into_working() -> void:
 	_working.allowed_slots = _slots.duplicate()
 	_working.equipment = _equip.duplicate()
 	_working.throughput = _thru.duplicate()
+	
+	_collect_ammo_into_working()
 
 	var cat_meta = _category_ob.get_item_metadata(_category_ob.get_selected())
 	if typeof(cat_meta) == TYPE_DICTIONARY and cat_meta.has("res"):
 		_working.unit_category = cat_meta["res"]
+
+
+## Collect ammo amounts from SpinBoxes into _working.ammo (omit zeros).
+func _collect_ammo_into_working() -> void:
+	var out := {}
+	for i in _ammo_spinners.size():
+		var val := int(_ammo_spinners[i].value)
+		if val != 0:
+			out[_ammo_keys[i]] = val
+	_working.ammunition = out
 
 
 ## Emit save signal.
@@ -171,12 +242,14 @@ func _on_save_pressed() -> void:
 		return _error(msg)
 	_collect_into_working()
 	hide()
+	_reset_ui()
 	emit_signal("unit_saved", _working, "")
 
 
 ## Emit cancel signal.
 func _on_cancel_pressed() -> void:
 	hide()
+	_reset_ui()
 	emit_signal("canceled")
 
 
@@ -222,6 +295,30 @@ func _populate_categories() -> void:
 		_category_ob.add_item(cat_title, idx)
 		_category_ob.set_item_metadata(idx, {"id": id, "res": c})
 	_cat_items = cats
+
+
+## Populate Ammo 
+func _populate_ammo() -> void:
+	for c in _ammo_container.get_children():
+		c.queue_free()
+
+	_ammo_spinners.clear()
+	_ammo_keys.clear()
+
+	for ammo_name in UnitData.AmmoTypes.keys():
+		var lbl := Label.new()
+		lbl.text = ammo_name
+
+		var amt := SpinBox.new()
+		amt.max_value = 20_000
+		amt.value = 0
+		amt.suffix = "rnds"
+
+		_ammo_container.add_child(lbl)
+		_ammo_container.add_child(amt)
+
+		_ammo_keys.append(ammo_name)
+		_ammo_spinners.append(amt)
 
 
 ## Select unit size.
@@ -289,24 +386,31 @@ func _add_slot_row(s: String) -> void:
 
 ## Add equipment to list.
 func _on_add_equip() -> void:
-	var c := _equip_cat.selected as EquipCategory
-	var c_str := EquipCategory.keys()[c] as String
+	var c := _equip_cat.selected as UnitData.EquipCategory
+	var c_str := UnitData.EquipCategory.keys()[c] as String
 	var k := _equip_key.text.strip_edges()
 	var v := int(_equip_val.value)
+	var a: int = -1
+	if c == UnitData.EquipCategory.WEAPONS:
+		a = _equip_ammo.selected as UnitData.AmmoTypes
 	if k == "":
 		return
-	if _equip.has(k):
-		_replace_kv_row(_equip_list, k, v, c_str.to_lower())
+	if _equip[c_str.to_lower()].has(k):
+		_replace_kv_row(_equip_list, k, v, c_str.to_lower(), a)
 	else:
-		_add_kv_row(_equip_list, k, v, _on_delete_equip_row, c_str.to_lower())
-	_equip[c_str.to_lower()][k] = v
+		_add_kv_row(_equip_list, k, v, _on_delete_equip_row, c_str.to_lower(), a)
+	_equip[c_str.to_lower()][k] = {"type": v, "ammo": a}
 	_equip_key.text = ""
 	_equip_val.value = 0
 
 
 ## Delete equipment from list
 func _on_delete_equip_row(key: String, row: HBoxContainer) -> void:
-	_equip.erase(key)
+	var cat := String(row.get_meta("cat", ""))
+	if cat != "" and _equip.has(cat):
+		_equip[cat].erase(key)
+	else:
+		_equip.erase(key)
 	row.queue_free()
 
 
@@ -337,8 +441,9 @@ func _on_delete_throughput_row(key: String, row: HBoxContainer) -> void:
 ## [param val] Value of key.
 ## [param on_delete] On delete callback.
 ## [param cat] optional category.
-func _add_kv_row(
-	container: VBoxContainer, key: String, val: Variant, on_delete: Callable, cat: String = ""
+## [param ammo] optional Ammo Category.
+func _add_kv_row(container: VBoxContainer, key: String, val: Variant, on_delete: Callable, 
+	cat: String = "", ammo = -1
 ) -> void:
 	var row := HBoxContainer.new()
 	row.custom_minimum_size.y = 26
@@ -352,6 +457,10 @@ func _add_kv_row(
 	var k_lbl := Label.new()
 	k_lbl.text = key
 	k_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var a_lbl := Label.new()
+	a_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	if ammo != -1:
+		a_lbl.text = UnitData.AmmoTypes.keys()[ammo]
 	var v_lbl := Label.new()
 	v_lbl.text = _val_to_text(val)
 	v_lbl.custom_minimum_size.x = 120
@@ -366,6 +475,7 @@ func _add_kv_row(
 		row.set_meta("cat", cat)
 		row.add_child(c_lbl)
 	row.add_child(k_lbl)
+	row.add_child(a_lbl)
 	row.add_child(v_lbl)
 	row.add_child(del)
 	container.add_child(row)
@@ -376,16 +486,33 @@ func _add_kv_row(
 ## [param key] Key to add.
 ## [param val] Value of key.
 ## [param cat] optional category.
-func _replace_kv_row(container: VBoxContainer, key: String, val: Variant, cat: String = "") -> void:
+## [param ammo] optional Ammo Category.
+func _replace_kv_row(container: VBoxContainer, key: String, val: Variant, cat: String = "", ammo = -1) -> void:
 	for child in container.get_children():
 		if child is HBoxContainer:
-			if child.get_meta("key") == key and cat == "":
+			if child.get_meta("key") == key and cat == "" and ammo == -1:
 				var v_lbl := child.get_child(1)
 				if v_lbl is Label:
 					v_lbl.text = _val_to_text(val)
 				return
-			elif child.get_meta("key") == key and child.get_meta("cat") == cat:
+			elif child.get_meta("key") == key and cat == "" and ammo > -1:
+				var a_lbl := child.get_child(1)
+				if a_lbl is Label:
+					a_lbl.text = UnitData.AmmoTypes.keys()[ammo]
 				var v_lbl := child.get_child(2)
+				if v_lbl is Label:
+					v_lbl.text = _val_to_text(val)
+				return
+			elif child.get_meta("key") == key and child.get_meta("cat") == cat and ammo == -1:
+				var v_lbl := child.get_child(2)
+				if v_lbl is Label:
+					v_lbl.text = _val_to_text(val)
+				return
+			elif child.get_meta("key") == key and child.get_meta("cat") == cat and ammo > -1:
+				var a_lbl := child.get_child(2)
+				if a_lbl is Label:
+					a_lbl.text = UnitData.AmmoTypes.keys()[ammo]
+				var v_lbl := child.get_child(3)
 				if v_lbl is Label:
 					v_lbl.text = _val_to_text(val)
 				return
@@ -393,11 +520,13 @@ func _replace_kv_row(container: VBoxContainer, key: String, val: Variant, cat: S
 
 ## Reset UI elements
 func _reset_ui() -> void:
-	for le in [_id, _title, _role, _slot_input, _equip_key, _equip_val, _th_key]:
+	for le in [_id, _title, _role, _slot_input, _equip_key, _th_key]:
 		if le:
 			le.text = ""
+
 	for sb in [
-		_cost, _strength, _attack, _defense, _spot_m, _range_m, _morale, _speed_kph, _th_val
+		_cost, _strength, _attack, _defense, _spot_m, _range_m, _morale, 
+		_speed_kph, _equip_val, _th_val
 	]:
 		if sb:
 			sb.value = 0
@@ -412,14 +541,19 @@ func _reset_ui() -> void:
 		c.queue_free()
 	if _category_ob.item_count > 0:
 		_category_ob.select(-1)
+	for sp in _ammo_spinners:
+		if sp:
+			sp.value = 0
 	_select_size(UnitData.UnitSize.PLATOON)
 	_select_move_profile(_default_move_profile())
+	
+	_equip_ammo_container.visible = false
 
 
 ## Reset equipment dictionary.
 func _reset_equip() -> void:
 	_equip.clear()
-	for cat in EquipCategory.keys():
+	for cat in UnitData.EquipCategory.keys():
 		_equip[cat.to_lower()] = {}
 
 

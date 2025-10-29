@@ -277,9 +277,11 @@ suffix = "kph"
 
 [node name="EquipmentContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer"]
 layout_mode = 2
+folded = true
 title = "Equipment"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer"]
+visible = false
 layout_mode = 2
 
 [node name="EquipmentLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer"]
@@ -305,6 +307,7 @@ theme_override_constants/separation = 20
 
 [node name="EquipmentCategory" type="OptionButton" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/EquipmentHbox"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 
 [node name="TypeLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/EquipmentHbox"]
@@ -313,59 +316,58 @@ text = "Type"
 
 [node name="EquipmentType" type="LineEdit" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/EquipmentHbox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Type"
 
-[node name="AmountLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/EquipmentHbox"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="AmountLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Amount"
 
-[node name="EquipmentAmount" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/EquipmentHbox"]
+[node name="EquipmentAmount" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 max_value = 10000.0
 value = 10.0
 
-[node name="EquipmentAdd" type="Button" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/EquipmentHbox"]
+[node name="EquipmentAmmoContainer" type="HBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/HBoxContainer/EquipmentAmmoContainer"]
+layout_mode = 2
+text = "Ammo"
+
+[node name="EquipmentAmmo" type="OptionButton" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/HBoxContainer/EquipmentAmmoContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EquipmentAdd" type="Button" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Add"
+
+[node name="HSeparator" type="HSeparator" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer"]
+layout_mode = 2
 
 [node name="AmmoLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer"]
 layout_mode = 2
 text = "Ammunition"
 
-[node name="SmallArmsHbox" type="HBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/SmallArmsHbox"]
-layout_mode = 2
-text = "Small Arms"
-
-[node name="AmmoSmallArms" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/SmallArmsHbox"]
+[node name="AmmoContainer" type="GridContainer" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
-max_value = 10000.0
-value = 100.0
-suffix = "rnds"
-
-[node name="AntiTankHbox" type="HBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/AntiTankHbox"]
-layout_mode = 2
-text = "Anti-Tank"
-
-[node name="AmmoAntiTank" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/AntiTankHbox"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
-layout_mode = 2
-max_value = 10000.0
-value = 10.0
-suffix = "rnds"
+columns = 4
 
 [node name="SupplyContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer"]
 layout_mode = 2

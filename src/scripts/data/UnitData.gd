@@ -5,6 +5,39 @@ extends Resource
 ## Enumeration of unit sizes
 enum UnitSize { TEAM, SQUAD, PLATOON, COMPANY, BATTALION }
 
+## Equipment categories
+enum EquipCategory { VEHICLES, WEAPONS, RADIOS }
+
+## Weapon Equipment Ammunition types
+enum AmmoTypes {
+	## Handheld weapons (5.56, 7.62, 9mm etc.)
+	SMALL_ARMS, 
+	## Heavy crew-served or non-manportable weapons (.50)
+	HEAVY_WEAPONS,
+	## 20-40mm (IFVs, AAA Guns)
+	AUTOCANNON,
+	## 90-125mm MBT main gun ammo
+	TANK_GUN,
+	## HEAT weapons (M72, RPG-7, etc.)
+	AT_ROCKET,
+	## Guided Anti-Tank Missiles (TOW, MILAN, Konkurs, etc.)
+	ATGM,
+	## 60/81/120 mm mortar (Anti-Personnel)
+	MORTAR_AP,
+	## 60/81/120 mm mortar (Smoke)
+	MORTAR_SMOKE,
+	## 60/81/120 mm mortar (Flare)
+	MORTAR_ILLUM,
+	## 105/122/152/155 mm tube artillery (Anti-Personnel)
+	ARTILLERY_AP,
+	## 105/122/152/155 mm tube artillery (Smoke)
+	ARTILLERY_SMOKE,
+	## 105/122/152/155 mm tube artillery (Flare)
+	ARTILLERY_ILLUM,
+	## Engineer Munitions: Mines, demolition charges, etc.
+	ENGINEER_MUN
+}
+
 ## Unique identifier for the unit
 @export var id: String
 ## Human-readable title of the unit
