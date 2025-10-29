@@ -1,6 +1,6 @@
 {
   "allowed_slots": [
-	"INF",
+    "INF",
     "AT"
   ],
   "ammunition": {
@@ -11,20 +11,32 @@
   "cost": 80,
   "doctrine": "nato_inf_1983",
   "editor": {
-	"unit_category": "us_army"
+    "unit_category": "us_army"
   },
   "enemy_icon_path": "res://assets/textures/units/enemy_unknown_platoon.png",
   "equipment": {
-	"radios": {
-	  "AN/VRC-46": 2
-	},
-	"vehicles": {
-	  "M901 ITV": 2
-	},
-	"weapons": {
-	  "BGM-71 TOW": 16,
-	  "M60": 2
-	}
+    "radios": {
+      "AN/VRC-46": {
+        "ammo": -1,
+        "type": 2
+      }
+    },
+    "vehicles": {
+      "M901 ITV": {
+        "ammo": -1,
+        "type": 2
+      }
+    },
+    "weapons": {
+      "BGM-71 TOW": {
+        "ammo": 5,
+        "type": 16
+      },
+      "M60": {
+        "ammo": 0,
+        "type": 2
+      }
+    }
   },
   "equipment_tags": [],
   "experience": 0.0,
@@ -34,21 +46,21 @@
   "role": "AT",
   "size": 1,
   "state": {
-	"cohesion": 0.0,
-	"state_equipment": 0.0,
-	"state_injured": 0.0,
-	"state_strength": 8.0
+    "cohesion": 0.0,
+    "state_equipment": 0.0,
+    "state_injured": 0.0,
+    "state_strength": 8.0
   },
   "state_ammunition": {
 
   },
   "stats": {
-	"attack": 55.0,
-	"defense": 12.0,
-	"morale": 1.0,
-	"range_m": 700.0,
-	"speed_kph": 50.0,
-	"spot_m": 1200.0
+    "attack": 55.0,
+    "defense": 12.0,
+    "morale": 1.0,
+    "range_m": 700.0,
+    "speed_kph": 50.0,
+    "spot_m": 1200.0
   },
   "strength": 8,
   "supply_transfer_radius_m": 30.0,

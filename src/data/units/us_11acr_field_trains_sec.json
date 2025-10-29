@@ -10,20 +10,32 @@
   "cost": 40,
   "doctrine": "nato_inf_1983",
   "editor": {
-	"unit_category": "us_army"
+    "unit_category": "us_army"
   },
   "enemy_icon_path": "res://assets/textures/units/enemy_unknown_platoon.png",
   "equipment": {
-	"radios": {
-	  "AN/VRC-46": 1
-	},
-	"vehicles": {
-	  "Cargo Truck": 2,
-	  "Fuel Truck": 2
-	},
-	"weapons": {
-	  "M16A1": 10
-	}
+    "radios": {
+      "AN/VRC-46": {
+        "ammo": -1,
+        "type": 1
+      }
+    },
+    "vehicles": {
+      "Cargo Truck": {
+        "ammo": -1,
+        "type": 2
+      },
+      "Fuel Truck": {
+        "ammo": -1,
+        "type": 2
+      }
+    },
+    "weapons": {
+      "M16A1": {
+        "ammo": 0,
+        "type": 10
+      }
+    }
   },
   "equipment_tags": [],
   "experience": 0.0,
@@ -33,28 +45,28 @@
   "role": "LOGI",
   "size": 1,
   "state": {
-	"cohesion": 0.0,
-	"state_equipment": 0.0,
-	"state_injured": 0.0,
-	"state_strength": 10.0
+    "cohesion": 0.0,
+    "state_equipment": 0.0,
+    "state_injured": 0.0,
+    "state_strength": 10.0
   },
   "state_ammunition": {
 
   },
   "stats": {
-	"attack": 6.0,
-	"defense": 12.0,
-	"morale": 1.0,
-	"range_m": 300.0,
-	"speed_kph": 49.0,
-	"spot_m": 600.0
+    "attack": 6.0,
+    "defense": 12.0,
+    "morale": 1.0,
+    "range_m": 300.0,
+    "speed_kph": 49.0,
+    "spot_m": 600.0
   },
   "strength": 10,
   "supply_transfer_radius_m": 30.0,
   "supply_transfer_rate": 10.0,
   "throughput": {
-	"ammo": 200.0,
-	"fuel": 200.0
+    "ammo": 200.0,
+    "fuel": 200.0
   },
   "title": "Field Trains Section - RSS, 11th ACR"
 }

@@ -21,7 +21,18 @@
 
     },
     "weapons": {
-
+      "G3": {
+        "ammo": 0,
+        "type": 25
+      },
+      "MG3": {
+        "ammo": 0,
+        "type": 6
+      },
+      "Panzerfaust 3": {
+        "ammo": 4,
+        "type": 6
+      }
     }
   },
   "equipment_tags": [],
@@ -54,5 +65,5 @@
   "throughput": {
 
   },
-  "title": "OPFOR 2 Bundeswehr"
+  "title": "Bundeswehr OPFOR-2"
 }

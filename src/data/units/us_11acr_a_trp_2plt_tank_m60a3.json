@@ -10,21 +10,40 @@
   "cost": 50,
   "doctrine": "nato_inf_1983",
   "editor": {
-	"unit_category": "us_army"
+    "unit_category": "us_army"
   },
   "enemy_icon_path": "res://assets/textures/units/enemy_unknown_platoon.png",
   "equipment": {
-	"radios": {
-	  "AN/VRC-12": 4
-	},
-	"vehicles": {
-	  "M60A3": 3
-	},
-	"weapons": {
-	  "105mm Gun": 4,
-	  "M240": 4,
-	  "M85 .50": 4
-	}
+    "radios": {
+      "AN/VRC-12": {
+        "ammo": -1,
+        "type": 4
+      }
+    },
+    "vehicles": {
+      "M60A3": {
+        "ammo": -1,
+        "type": 3
+      }
+    },
+    "weapons": {
+      "105mm Gun": {
+        "ammo": -1,
+        "type": 4
+      },
+      "105mm Main Gun": {
+        "ammo": 3,
+        "type": 4
+      },
+      "M240": {
+        "ammo": 0,
+        "type": 4
+      },
+      "M85 .50": {
+        "ammo": 1,
+        "type": 4
+      }
+    }
   },
   "equipment_tags": [],
   "experience": 0.0,
@@ -34,21 +53,21 @@
   "role": "ARMOR",
   "size": 2,
   "state": {
-	"cohesion": 0.0,
-	"state_equipment": 0.0,
-	"state_injured": 0.0,
-	"state_strength": 16.0
+    "cohesion": 0.0,
+    "state_equipment": 0.0,
+    "state_injured": 0.0,
+    "state_strength": 16.0
   },
   "state_ammunition": {
 
   },
   "stats": {
-	"attack": 70.0,
-	"defense": 60.0,
-	"morale": 1.0,
-	"range_m": 600.0,
-	"speed_kph": 48.0,
-	"spot_m": 1800.0
+    "attack": 70.0,
+    "defense": 60.0,
+    "morale": 1.0,
+    "range_m": 600.0,
+    "speed_kph": 48.0,
+    "spot_m": 1800.0
   },
   "strength": 16,
   "supply_transfer_radius_m": 30.0,

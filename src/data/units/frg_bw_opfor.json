@@ -10,21 +10,30 @@
   "cost": 50,
   "doctrine": "nato_inf_1983",
   "editor": {
-	"unit_category": "frg_bw"
+    "unit_category": "frg_bw"
   },
   "enemy_icon_path": "res://assets/textures/units/enemy_unknown_platoon.png",
   "equipment": {
-	"radios": {
+    "radios": {
 
-	},
-	"vehicles": {
+    },
+    "vehicles": {
 
-	},
-	"weapons": {
-	  "G3": 25,
-	  "MG3": 6,
-	  "Panzerfaust 3": 6
-	}
+    },
+    "weapons": {
+      "G3": {
+        "ammo": 0,
+        "type": 25
+      },
+      "MG3": {
+        "ammo": 0,
+        "type": 6
+      },
+      "Panzerfaust 3": {
+        "ammo": 4,
+        "type": 6
+      }
+    }
   },
   "equipment_tags": [],
   "experience": 0.0,
@@ -34,21 +43,21 @@
   "role": "INF",
   "size": 2,
   "state": {
-	"cohesion": 0.0,
-	"state_equipment": 0.0,
-	"state_injured": 0.0,
-	"state_strength": 31.0
+    "cohesion": 0.0,
+    "state_equipment": 0.0,
+    "state_injured": 0.0,
+    "state_strength": 31.0
   },
   "state_ammunition": {
 
   },
   "stats": {
-	"attack": 25.0,
-	"defense": 15.0,
-	"morale": 1.0,
-	"range_m": 500.0,
-	"speed_kph": 20.0,
-	"spot_m": 800.0
+    "attack": 25.0,
+    "defense": 15.0,
+    "morale": 1.0,
+    "range_m": 500.0,
+    "speed_kph": 20.0,
+    "spot_m": 800.0
   },
   "strength": 31,
   "supply_transfer_radius_m": 30.0,
