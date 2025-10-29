@@ -222,7 +222,7 @@ func _create_initial_unit_counters(playable_units: Array[ScenarioUnit]) -> void:
 		counter.callsign = unit.callsign
 		counter.symbol_type = unit.unit.type
 		counter.symbol_size = unit.unit.size
-		
+
 		%PhysicsObjects.add_child(counter)
 
 		var world_pos: Vector3 = %CounterSpawnLocation.global_position + Vector3(0, 0, z_shift)

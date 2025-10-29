@@ -66,7 +66,7 @@ func setup(u: UnitData) -> void:
 	if tex == null and fallback_default_icon:
 		tex = fallback_default_icon
 	_icon.texture = tex
-	
+
 	u.icons_ready.connect(func(): _icon.texture = u.icon)
 
 	_update_style()

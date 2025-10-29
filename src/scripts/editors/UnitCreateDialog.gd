@@ -31,9 +31,9 @@ var _ammo_keys: Array[String] = []
 @onready var _morale: SpinBox = %Morale
 @onready var _speed_kph: SpinBox = %Speed
 
-@onready var icon_fr_preview: TextureRect = %IconPreview
-@onready var icon_eny_preview: TextureRect = %EnemyIconPreview
-@onready var icon_neu_preview: TextureRect = %NeutralIconPreview
+@onready var _icon_fr_preview: TextureRect = %IconPreview
+@onready var _icon_eny_preview: TextureRect = %EnemyIconPreview
+@onready var _icon_neu_preview: TextureRect = %NeutralIconPreview
 
 @onready var _category_ob: OptionButton = %Category
 @onready var _size_ob: OptionButton = %UnitSize
@@ -72,15 +72,16 @@ func _ready() -> void:
 
 	for cat in UnitData.EquipCategory.keys():
 		_equip_cat.add_item(cat)
-	
+
 	for ammo in UnitData.AmmoTypes.keys():
 		_equip_ammo.add_item(ammo)
-	
-	_equip_cat.item_selected.connect(func(idx: int):
-		if idx == UnitData.EquipCategory.WEAPONS:
-			_equip_ammo_container.visible = true
-		else:
-			_equip_ammo_container.visible = false
+
+	_equip_cat.item_selected.connect(
+		func(idx: int):
+			if idx == UnitData.EquipCategory.WEAPONS:
+				_equip_ammo_container.visible = true
+			else:
+				_equip_ammo_container.visible = false
 	)
 
 	_slot_add.pressed.connect(_on_add_slot)
@@ -90,7 +91,7 @@ func _ready() -> void:
 	_save_btn.pressed.connect(_on_save_pressed)
 	_cancel_btn.pressed.connect(_on_cancel_pressed)
 	close_requested.connect(_on_cancel_pressed)
-	
+
 	_size_ob.item_selected.connect(_generate_preview_icons)
 	_type_ob.item_selected.connect(_generate_preview_icons)
 
@@ -180,7 +181,7 @@ func _load_from_working() -> void:
 	for k in _working.throughput.keys():
 		_add_kv_row(_th_list, String(k), _working.throughput[k], _on_delete_throughput_row)
 		_thru[k] = _working.throughput[k]
-	
+
 	_load_ammo_from_working()
 
 
@@ -227,7 +228,7 @@ func _collect_into_working() -> void:
 	_working.allowed_slots = _slots.duplicate()
 	_working.equipment = _equip.duplicate()
 	_working.throughput = _thru.duplicate()
-	
+
 	_collect_ammo_into_working()
 
 	var cat_meta = _category_ob.get_item_metadata(_category_ob.get_selected())
@@ -269,7 +270,7 @@ func _generate_preview_icons(_idx: int) -> void:
 		MilSymbolConfig.Size.MEDIUM,
 		_size_ob.selected
 	)
-	
+
 	var eny_icon := await MilSymbol.create_symbol(
 		MilSymbol.UnitAffiliation.ENEMY,
 		_type_ob.selected,
@@ -282,10 +283,10 @@ func _generate_preview_icons(_idx: int) -> void:
 		MilSymbolConfig.Size.MEDIUM,
 		_size_ob.selected
 	)
-	
-	icon_fr_preview.texture = fr_icon
-	icon_eny_preview.texture = eny_icon
-	icon_neu_preview.texture = neu_icon
+
+	_icon_fr_preview.texture = fr_icon
+	_icon_eny_preview.texture = eny_icon
+	_icon_neu_preview.texture = neu_icon
 
 
 ## Validate fields
@@ -339,7 +340,7 @@ func _populate_categories() -> void:
 	_cat_items = cats
 
 
-## Populate Ammo 
+## Populate Ammo
 func _populate_ammo() -> void:
 	for c in _ammo_container.get_children():
 		c.queue_free()
@@ -494,8 +495,13 @@ func _on_delete_throughput_row(key: String, row: HBoxContainer) -> void:
 ## [param on_delete] On delete callback.
 ## [param cat] optional category.
 ## [param ammo] optional Ammo Category.
-func _add_kv_row(container: VBoxContainer, key: String, val: Variant, on_delete: Callable, 
-	cat: String = "", ammo = -1
+func _add_kv_row(
+	container: VBoxContainer,
+	key: String,
+	val: Variant,
+	on_delete: Callable,
+	cat: String = "",
+	ammo = -1
 ) -> void:
 	var row := HBoxContainer.new()
 	row.custom_minimum_size.y = 26
@@ -539,7 +545,9 @@ func _add_kv_row(container: VBoxContainer, key: String, val: Variant, on_delete:
 ## [param val] Value of key.
 ## [param cat] optional category.
 ## [param ammo] optional Ammo Category.
-func _replace_kv_row(container: VBoxContainer, key: String, val: Variant, cat: String = "", ammo = -1) -> void:
+func _replace_kv_row(
+	container: VBoxContainer, key: String, val: Variant, cat: String = "", ammo = -1
+) -> void:
 	for child in container.get_children():
 		if child is HBoxContainer:
 			if child.get_meta("key") == key and cat == "" and ammo == -1:
@@ -577,8 +585,16 @@ func _reset_ui() -> void:
 			le.text = ""
 
 	for sb in [
-		_cost, _strength, _attack, _defense, _spot_m, _range_m, _morale, 
-		_speed_kph, _equip_val, _th_val
+		_cost,
+		_strength,
+		_attack,
+		_defense,
+		_spot_m,
+		_range_m,
+		_morale,
+		_speed_kph,
+		_equip_val,
+		_th_val
 	]:
 		if sb:
 			sb.value = 0
@@ -599,7 +615,7 @@ func _reset_ui() -> void:
 	_select_size(MilSymbol.UnitSize.PLATOON)
 	_select_type(MilSymbol.UnitType.INFANTRY)
 	_select_move_profile(_default_move_profile())
-	
+
 	_equip_ammo_container.visible = false
 
 

@@ -11,7 +11,7 @@ enum EquipCategory { VEHICLES, WEAPONS, RADIOS }
 ## Weapon Equipment Ammunition types
 enum AmmoTypes {
 	## Handheld weapons (5.56, 7.62, 9mm etc.)
-	SMALL_ARMS, 
+	SMALL_ARMS,
 	## Heavy crew-served or non-manportable weapons (.50)
 	HEAVY_WEAPONS,
 	## 20-40mm (IFVs, AAA Guns)
@@ -57,19 +57,23 @@ enum AmmoTypes {
 
 @export_category("Meta")
 ## Organizational size of the unit
-@export var size: MilSymbol.UnitSize = MilSymbol.UnitSize.PLATOON: 
+@export var size: MilSymbol.UnitSize = MilSymbol.UnitSize.PLATOON:
 	set(value):
-		if size == value: return
+		if size == value:
+			return
 		size = value
 		_queue_icon_update()
-	get: return size
+	get:
+		return size
 ## Organizational size of the unit
-@export var type: MilSymbol.UnitType = MilSymbol.UnitType.INFANTRY: 
+@export var type: MilSymbol.UnitType = MilSymbol.UnitType.INFANTRY:
 	set(value):
-		if type == value: return
+		if type == value:
+			return
 		type = value
 		_queue_icon_update()
-	get: return type
+	get:
+		return type
 ## Number of personnel in the unit at full strength
 @export var strength: int = 36
 ## Dictionary of equipment definitions
@@ -135,6 +139,7 @@ enum AmmoTypes {
 @export var supply_transfer_radius_m: float = 30.0
 
 var _icon_rev: int = 0
+
 
 func _init() -> void:
 	call_deferred("_queue_icon_update")
@@ -237,7 +242,6 @@ static func deserialize(data: Variant) -> UnitData:
 		for s in slots:
 			tmp_slots.append(str(s))
 		u.allowed_slots = tmp_slots
-
 
 	u.size = int(data.get("size", u.size)) as MilSymbol.UnitSize
 	u.type = int(data.get("type", u.type)) as MilSymbol.UnitType

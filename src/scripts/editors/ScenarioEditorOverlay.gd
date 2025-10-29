@@ -713,10 +713,12 @@ func _on_unit_icons_ready(u: UnitData) -> void:
 	_invalidate_unit_icon_cache(u)
 	queue_redraw()
 
+
 ## Generic change fallback (covers editor-time tweaks).
 func _on_unit_changed(u: UnitData) -> void:
 	_invalidate_unit_icon_cache(u)
 	queue_redraw()
+
 
 ## Remove all scaled entries for this unit (both affiliations/sizes).
 func _invalidate_unit_icon_cache(u: UnitData) -> void:
@@ -795,8 +797,10 @@ func _clear_unit_icon_bindings() -> void:
 	for u in _unit_signal_handles.keys():
 		if is_instance_valid(u):
 			var h: Variant = _unit_signal_handles[u]
-			if u.is_connected("icons_ready", h.icons): u.icons_ready.disconnect(h.icons)
-			if u.is_connected("changed", h.changed):   u.changed.disconnect(h.changed)
+			if u.is_connected("icons_ready", h.icons):
+				u.icons_ready.disconnect(h.icons)
+			if u.is_connected("changed", h.changed):
+				u.changed.disconnect(h.changed)
 	_unit_signal_handles.clear()
 
 
