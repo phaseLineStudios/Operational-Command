@@ -6,9 +6,6 @@ extends Resource
 ## Size categories for symbols
 enum Size { SMALL = 64, MEDIUM = 128, LARGE = 256 }
 
-## Affiliation types
-enum Affiliation { FRIEND, HOSTILE, NEUTRAL, UNKNOWN }
-
 ## Base size for drawing coordinates (symbols are drawn in a 200x200 space)
 const BASE_SIZE: float = 200.0
 
@@ -40,18 +37,18 @@ var font_size: int = 48
 
 ## Colors for different affiliations (filled mode)
 var fill_colors: Dictionary = {
-	Affiliation.FRIEND: Color(0.5, 0.8, 1.0, 1.0),  ## Light blue
-	Affiliation.HOSTILE: Color(1.0, 0.5, 0.5, 1.0),  ## Light red
-	Affiliation.NEUTRAL: Color(0.5, 1.0, 0.5, 1.0),  ## Light green
-	Affiliation.UNKNOWN: Color(1.0, 1.0, 0.5, 1.0)  ## Light yellow
+	MilSymbol.UnitAffiliation.FRIEND: Color(0.5, 0.8, 1.0, 1.0),  ## Light blue
+	MilSymbol.UnitAffiliation.ENEMY: Color(1.0, 0.5, 0.5, 1.0),  ## Light red
+	MilSymbol.UnitAffiliation.NEUTRAL: Color(0.5, 1.0, 0.5, 1.0),  ## Light green
+	MilSymbol.UnitAffiliation.UNKNOWN: Color(1.0, 1.0, 0.5, 1.0)  ## Light yellow
 }
 
 ## Colors for frame outlines
 @export var frame_colors: Dictionary = {
-	Affiliation.FRIEND: Color(0.0, 0.6, 1.0, 1.0),  ## Blue
-	Affiliation.HOSTILE: Color(1.0, 0.0, 0.0, 1.0),  ## Red
-	Affiliation.NEUTRAL: Color(0.0, 0.8, 0.0, 1.0),  ## Green
-	Affiliation.UNKNOWN: Color(1.0, 1.0, 0.0, 1.0)  ## Yellow
+	MilSymbol.UnitAffiliation.FRIEND: Color(0.0, 0.6, 1.0, 1.0),  ## Blue
+	MilSymbol.UnitAffiliation.ENEMY: Color(1.0, 0.0, 0.0, 1.0),  ## Red
+	MilSymbol.UnitAffiliation.NEUTRAL: Color(0.0, 0.8, 0.0, 1.0),  ## Green
+	MilSymbol.UnitAffiliation.UNKNOWN: Color(1.0, 1.0, 0.0, 1.0)  ## Yellow
 }
 
 ## Color for icons
@@ -66,13 +63,13 @@ func get_pixel_size() -> int:
 	return size as int
 
 
-## Get fill color for affiliation
-func get_fill_color(affiliation: Affiliation) -> Color:
+## Get fill color for MilSymbol.UnitAffiliation
+func get_fill_color(affiliation: MilSymbol.UnitAffiliation) -> Color:
 	return fill_colors.get(affiliation, Color.WHITE)
 
 
-## Get frame color for affiliation
-func get_frame_color(affiliation: Affiliation) -> Color:
+## Get frame color for MilSymbol.UnitAffiliation
+func get_frame_color(affiliation: MilSymbol.UnitAffiliation) -> Color:
 	return frame_colors.get(affiliation, Color.BLACK)
 
 
@@ -89,10 +86,10 @@ static func create_frame_only() -> MilSymbolConfig:
 	config.filled = false
 
 	# Set all frame colors to white for easy modulation
-	config.frame_colors[Affiliation.FRIEND] = Color.WHITE
-	config.frame_colors[Affiliation.HOSTILE] = Color.WHITE
-	config.frame_colors[Affiliation.NEUTRAL] = Color.WHITE
-	config.frame_colors[Affiliation.UNKNOWN] = Color.WHITE
+	config.frame_colors[MilSymbol.UnitAffiliation.FRIEND] = Color.WHITE
+	config.frame_colors[MilSymbol.UnitAffiliation.ENEMY] = Color.WHITE
+	config.frame_colors[MilSymbol.UnitAffiliation.NEUTRAL] = Color.WHITE
+	config.frame_colors[MilSymbol.UnitAffiliation.UNKNOWN] = Color.WHITE
 
 	# Set icon and text colors to white as well
 	config.icon_color = Color.WHITE

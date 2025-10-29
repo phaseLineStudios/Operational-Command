@@ -3,52 +3,34 @@
 class_name MilSymbolIcons
 extends RefCounted
 
-## Unit type icons (simplified)
-enum IconType {
-	NONE,
-	INFANTRY,
-	ARMOR,
-	MOTORIZED,
-	MECHANIZED,
-	ARTILLERY,
-	RECON,
-	ENGINEER,
-	ANTI_TANK,
-	ANTI_AIR,
-	SUPPLY,
-	HEADQUARTERS,
-	MEDICAL,
-	COMMAND_POST
-}
-
 
 ## Get drawing instructions for an icon type
 ## Returns a dictionary with drawing commands
 ## Icons are based on MIL-STD-2525 standard, coordinates in 200x200 space
-static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliation) -> Dictionary:
+static func get_icon(icon_type: MilSymbol.UnitType, affiliation: MilSymbol.UnitAffiliation) -> Dictionary:
 	match icon_type:
-		IconType.INFANTRY:
+		MilSymbol.UnitType.INFANTRY:
 			# Crossed diagonal lines corner to corner (varies by affiliation)
 			match affiliation:
-				MilSymbolConfig.Affiliation.FRIEND:
+				MilSymbol.UnitAffiliation.FRIEND:
 					return {
 						"type": "lines",
 						"paths":
 						[[Vector2(25, 50), Vector2(175, 150)], [Vector2(25, 150), Vector2(175, 50)]]
 					}
-				MilSymbolConfig.Affiliation.HOSTILE:
+				MilSymbol.UnitAffiliation.ENEMY:
 					return {
 						"type": "lines",
 						"paths":
 						[[Vector2(64, 64), Vector2(136, 136)], [Vector2(64, 136), Vector2(136, 64)]]
 					}
-				MilSymbolConfig.Affiliation.NEUTRAL:
+				MilSymbol.UnitAffiliation.NEUTRAL:
 					return {
 						"type": "lines",
 						"paths":
 						[[Vector2(45, 45), Vector2(155, 155)], [Vector2(45, 155), Vector2(155, 45)]]
 					}
-				MilSymbolConfig.Affiliation.UNKNOWN:
+				MilSymbol.UnitAffiliation.UNKNOWN:
 					return {
 						"type": "lines",
 						"paths":
@@ -56,7 +38,7 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 					}
 				_:
 					return {}
-		IconType.ARMOR:
+		MilSymbol.UnitType.ARMOR:
 			# Oval track outline (MIL-STD-2525: oval shape)
 			return {
 				"type": "shapes",
@@ -69,9 +51,9 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 					}
 				],
 			}
-		IconType.MOTORIZED:
+		MilSymbol.UnitType.MOTORIZED:
 			match affiliation:
-				MilSymbolConfig.Affiliation.FRIEND:
+				MilSymbol.UnitAffiliation.FRIEND:
 					return {
 						"type": "lines",
 						"paths":
@@ -81,7 +63,7 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 							[Vector2(100, 50), Vector2(100, 150)]
 						]
 					}
-				MilSymbolConfig.Affiliation.HOSTILE:
+				MilSymbol.UnitAffiliation.ENEMY:
 					return {
 						"type": "lines",
 						"paths":
@@ -101,9 +83,9 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 							[Vector2(100, 45), Vector2(100, 155)]
 						]
 					}
-		IconType.MECHANIZED:
+		MilSymbol.UnitType.MECHANIZED:
 			match affiliation:
-				MilSymbolConfig.Affiliation.FRIEND:
+				MilSymbol.UnitAffiliation.FRIEND:
 					return {
 						"type": "mixed",
 						"shapes": [
@@ -119,7 +101,7 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 							[Vector2(25, 150), Vector2(175, 50)]
 						]
 					}
-				MilSymbolConfig.Affiliation.HOSTILE:
+				MilSymbol.UnitAffiliation.ENEMY:
 					return {
 						"type": "mixed",
 						"shapes": [
@@ -151,23 +133,23 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 							[Vector2(155, 45), Vector2(45, 155)]
 						]
 					}
-		IconType.ARTILLERY:
+		MilSymbol.UnitType.ARTILLERY:
 			# Filled circle (MIL-STD-2525 standard)
 			return {"type": "circle", "center": Vector2(100, 100), "radius": 15, "filled": true}
-		IconType.RECON:
+		MilSymbol.UnitType.RECON:
 			# Single diagonal line (MIL-STD-2525)
 			match affiliation:
-				MilSymbolConfig.Affiliation.FRIEND:
+				MilSymbol.UnitAffiliation.FRIEND:
 					return {"type": "lines", "paths": [[Vector2(25, 150), Vector2(175, 50)]]}
-				MilSymbolConfig.Affiliation.HOSTILE:
+				MilSymbol.UnitAffiliation.ENEMY:
 					return {"type": "lines", "paths": [[Vector2(64, 136), Vector2(136, 64)]]}
-				MilSymbolConfig.Affiliation.NEUTRAL:
+				MilSymbol.UnitAffiliation.NEUTRAL:
 					return {"type": "lines", "paths": [[Vector2(45, 155), Vector2(155, 45)]]}
-				MilSymbolConfig.Affiliation.UNKNOWN:
+				MilSymbol.UnitAffiliation.UNKNOWN:
 					return {"type": "lines", "paths": [[Vector2(50, 135), Vector2(150, 65)]]}
 				_:
 					return {}
-		IconType.ENGINEER:
+		MilSymbol.UnitType.ENGINEER:
 			# Box with vertical center line (MIL-STD-2525)
 			return {
 				"type": "lines",
@@ -177,11 +159,11 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 					[Vector2(100, 83), Vector2(100, 110)]
 				]
 			}
-		IconType.ANTI_TANK:
+		MilSymbol.UnitType.ANTI_TANK:
 			# Two lines from bottom corners meeting at top center (MIL-STD-2525: antitank symbol)
 			# Forms a "V" or chevron shape pointing upward
 			match affiliation:
-				MilSymbolConfig.Affiliation.FRIEND:
+				MilSymbol.UnitAffiliation.FRIEND:
 					return {
 						"type": "lines",
 						"paths":
@@ -190,7 +172,7 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 							[Vector2(175, 150), Vector2(100, 52)]  # Right line
 						]
 					}
-				MilSymbolConfig.Affiliation.HOSTILE:
+				MilSymbol.UnitAffiliation.ENEMY:
 					return {
 						"type": "lines",
 						"paths":
@@ -199,7 +181,7 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 							[Vector2(140, 132), Vector2(100, 30)]  # Right line
 						]
 					}
-				MilSymbolConfig.Affiliation.NEUTRAL:
+				MilSymbol.UnitAffiliation.NEUTRAL:
 					return {
 						"type": "lines",
 						"paths":
@@ -208,7 +190,7 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 							[Vector2(155, 150), Vector2(100, 47)]  # Right line
 						]
 					}
-				MilSymbolConfig.Affiliation.UNKNOWN:
+				MilSymbol.UnitAffiliation.UNKNOWN:
 					return {
 						"type": "lines",
 						"paths":
@@ -219,7 +201,7 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 					}
 				_:
 					return {}
-		IconType.ANTI_AIR:
+		MilSymbol.UnitType.ANTI_AIR:
 			# Three vertical lines (MIL-STD-2525: Air Defense Gun Unit)
 			return {
 				"type": "lines",
@@ -230,31 +212,31 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 					[Vector2(108, 90), Vector2(108, 110)]
 				]
 			}
-		IconType.HEADQUARTERS:
+		MilSymbol.UnitType.HQ:
 			# Horizontal line through center (MIL-STD-2525)
 			match affiliation:
-				MilSymbolConfig.Affiliation.FRIEND:
+				MilSymbol.UnitAffiliation.FRIEND:
 					return {"type": "lines", "paths": [[Vector2(25, 80), Vector2(175, 80)]]}
-				MilSymbolConfig.Affiliation.HOSTILE:
+				MilSymbol.UnitAffiliation.ENEMY:
 					return {"type": "lines", "paths": [[Vector2(50, 80), Vector2(150, 80)]]}
-				MilSymbolConfig.Affiliation.NEUTRAL:
+				MilSymbol.UnitAffiliation.NEUTRAL:
 					return {"type": "lines", "paths": [[Vector2(45, 80), Vector2(155, 80)]]}
 				_:
 					return {"type": "lines", "paths": [[Vector2(35, 80), Vector2(165, 80)]]}
-		IconType.SUPPLY:
+		MilSymbol.UnitType.SUPPLY:
 			# Horizontal line through center (MIL-STD-2525)
 			match affiliation:
-				MilSymbolConfig.Affiliation.FRIEND:
+				MilSymbol.UnitAffiliation.FRIEND:
 					return {"type": "lines", "paths": [[Vector2(25, 120), Vector2(175, 120)]]}
-				MilSymbolConfig.Affiliation.HOSTILE:
+				MilSymbol.UnitAffiliation.ENEMY:
 					return {"type": "lines", "paths": [[Vector2(50, 120), Vector2(150, 120)]]}
-				MilSymbolConfig.Affiliation.NEUTRAL:
+				MilSymbol.UnitAffiliation.NEUTRAL:
 					return {"type": "lines", "paths": [[Vector2(45, 120), Vector2(155, 120)]]}
 				_:
 					return {"type": "lines", "paths": [[Vector2(35, 120), Vector2(165, 120)]]}
-		IconType.MEDICAL:
+		MilSymbol.UnitType.MEDICAL:
 			match affiliation:
-				MilSymbolConfig.Affiliation.FRIEND:
+				MilSymbol.UnitAffiliation.FRIEND:
 					return {
 						"type": "lines",
 						"paths":
@@ -263,7 +245,7 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 							[Vector2(100, 50), Vector2(100, 150)]
 						]
 					}
-				MilSymbolConfig.Affiliation.HOSTILE:
+				MilSymbol.UnitAffiliation.ENEMY:
 					return {
 						"type": "lines",
 						"paths":
@@ -281,42 +263,38 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 							[Vector2(100, 45), Vector2(100, 155)]
 						]
 					}
-		IconType.COMMAND_POST:
-			return {"type": "text", "text": "CP", "position": Vector2(100, 100), "size": 32}
 		_:
 			return {}
 
 
-## Parse a simple unit type string to IconType
-static func parse_unit_type(unit_type: String) -> IconType:
+## Parse a simple unit type string to MilSymbol.UnitType
+static func parse_unit_type(unit_type: String) -> MilSymbol.UnitType:
 	var lower_type := unit_type.to_lower()
 
 	# Check compound types first (anti-tank, anti-air) before simple types (tank, air)
 	if "anti-tank" in lower_type or "anti_tank" in lower_type or "at" == lower_type:
-		return IconType.ANTI_TANK
+		return MilSymbol.UnitType.ANTI_TANK
 	elif "anti-air" in lower_type or "anti_air" in lower_type or "aa" in lower_type:
-		return IconType.ANTI_AIR
+		return MilSymbol.UnitType.ANTI_AIR
 	elif "infantry" in lower_type or "inf" in lower_type:
-		return IconType.INFANTRY
+		return MilSymbol.UnitType.INFANTRY
 	elif "armor" in lower_type or "tank" in lower_type:
-		return IconType.ARMOR
+		return MilSymbol.UnitType.ARMOR
 	elif "mech" in lower_type:
-		return IconType.MECHANIZED
+		return MilSymbol.UnitType.MECHANIZED
 	elif "motor" in lower_type:
-		return IconType.MOTORIZED
+		return MilSymbol.UnitType.MOTORIZED
 	elif "artillery" in lower_type or "arty" in lower_type:
-		return IconType.ARTILLERY
+		return MilSymbol.UnitType.ARTILLERY
 	elif "recon" in lower_type or "scout" in lower_type:
-		return IconType.RECON
+		return MilSymbol.UnitType.RECON
 	elif "engineer" in lower_type or "eng" in lower_type:
-		return IconType.ENGINEER
+		return MilSymbol.UnitType.ENGINEER
 	elif "sup" in lower_type or "supply" in lower_type:
-		return IconType.SUPPLY
+		return MilSymbol.UnitType.SUPPLY
 	elif "med" in lower_type or "medical" in lower_type:
-		return IconType.MEDICAL
+		return MilSymbol.UnitType.MEDICAL
 	elif "hq" in lower_type or "headquarters" in lower_type:
-		return IconType.HEADQUARTERS
-	elif "cp" in lower_type or "command" in lower_type:
-		return IconType.COMMAND_POST
+		return MilSymbol.UnitType.HQ
 
-	return IconType.NONE
+	return MilSymbol.UnitType.NONE

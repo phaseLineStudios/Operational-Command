@@ -111,7 +111,7 @@ func _generate_symbols() -> void:
 		)
 	else:
 		var frame_colors := MilSymbolConfig.get_frame_colors()
-		fr_preview.modulate = frame_colors[MilSymbolConfig.Affiliation.FRIEND]
+		fr_preview.modulate = frame_colors[MilSymbol.UnitAffiliation.FRIEND]
 		fr_preview.texture = await MilSymbol.create_frame_symbol(
 			MilSymbol.UnitAffiliation.FRIEND,
 			u_type.selected,
@@ -119,7 +119,7 @@ func _generate_symbols() -> void:
 			u_size.selected,
 			u_designation.text
 		)
-		eny_preview.modulate = frame_colors[MilSymbolConfig.Affiliation.HOSTILE]
+		eny_preview.modulate = frame_colors[MilSymbol.UnitAffiliation.ENEMY]
 		eny_preview.texture = await MilSymbol.create_frame_symbol(
 			MilSymbol.UnitAffiliation.ENEMY,
 			u_type.selected,
@@ -127,7 +127,7 @@ func _generate_symbols() -> void:
 			u_size.selected,
 			u_designation.text
 		)
-		neu_preview.modulate = frame_colors[MilSymbolConfig.Affiliation.NEUTRAL]
+		neu_preview.modulate = frame_colors[MilSymbol.UnitAffiliation.NEUTRAL]
 		neu_preview.texture = await MilSymbol.create_frame_symbol(
 			MilSymbol.UnitAffiliation.NEUTRAL,
 			u_type.selected,
@@ -135,7 +135,7 @@ func _generate_symbols() -> void:
 			u_size.selected,
 			u_designation.text
 		)
-		unk_preview.modulate = frame_colors[MilSymbolConfig.Affiliation.UNKNOWN]
+		unk_preview.modulate = frame_colors[MilSymbol.UnitAffiliation.UNKNOWN]
 		unk_preview.texture = await MilSymbol.create_frame_symbol(
 			MilSymbol.UnitAffiliation.UNKNOWN,
 			u_type.selected,

@@ -57,21 +57,19 @@ func generate(
 	unit_size: UnitSize = UnitSize.PLATOON,
 	callsign: String = ""
 ) -> ImageTexture:
-	var internal_affiliation := _affiliation_to_internal(affiliation)
-	var icon_type := _unit_type_to_icon(unit_type)
 	var size_text := _unit_size_to_text(unit_size)
 
 	return await generate_texture(
-		internal_affiliation, MilSymbolGeometry.Domain.GROUND, icon_type, size_text, callsign
+		affiliation, MilSymbolGeometry.Domain.GROUND, unit_type, size_text, callsign
 	)
 
 
 ## Generate a symbol texture (internal - uses internal enum types)
 ## Returns an ImageTexture of the rendered symbol
 func generate_texture(
-	affiliation: MilSymbolConfig.Affiliation,
+	affiliation: UnitAffiliation,
 	domain: MilSymbolGeometry.Domain = MilSymbolGeometry.Domain.GROUND,
-	icon_type: MilSymbolIcons.IconType = MilSymbolIcons.IconType.NONE,
+	icon_type: UnitType = UnitType.NONE,
 	unit_size: String = "",
 	designation: String = ""
 ) -> ImageTexture:
@@ -141,9 +139,9 @@ func generate_from_unit(
 ## Synchronously generate a symbol texture (blocking)
 ## Use this carefully as it requires a SceneTree context
 func generate_texture_sync(
-	affiliation: MilSymbolConfig.Affiliation,
+	affiliation: UnitAffiliation,
 	domain: MilSymbolGeometry.Domain = MilSymbolGeometry.Domain.GROUND,
-	icon_type: MilSymbolIcons.IconType = MilSymbolIcons.IconType.NONE,
+	icon_type: UnitType = UnitType.NONE,
 	unit_size: String = "",
 	designation: String = ""
 ) -> ImageTexture:
@@ -217,18 +215,23 @@ func _ensure_viewport() -> void:
 
 
 ## Parse affiliation from string
-func _parse_affiliation(code: String) -> MilSymbolConfig.Affiliation:
+func _parse_affiliation(code: String) -> UnitAffiliation:
 	match code.to_upper():
 		"F", "FRIEND", "FRIENDLY", "BLUE":
-			return MilSymbolConfig.Affiliation.FRIEND
+			return UnitAffiliation.FRIEND
 		"H", "HOSTILE", "ENEMY", "RED":
-			return MilSymbolConfig.Affiliation.HOSTILE
+			return UnitAffiliation.ENEMY
 		"N", "NEUTRAL", "GREEN":
-			return MilSymbolConfig.Affiliation.NEUTRAL
+			return UnitAffiliation.NEUTRAL
 		"U", "UNKNOWN", "YELLOW":
-			return MilSymbolConfig.Affiliation.UNKNOWN
+			return UnitAffiliation.UNKNOWN
 		_:
-			return MilSymbolConfig.Affiliation.FRIEND
+			return UnitAffiliation.FRIEND
+
+
+## Parse icon type from string
+func _parse_icon_type(code: String) -> UnitType:
+	return MilSymbolIcons.parse_unit_type(code)
 
 
 ## Parse domain from string
@@ -246,59 +249,6 @@ func _parse_domain(code: String) -> MilSymbolGeometry.Domain:
 			return MilSymbolGeometry.Domain.SUBSURFACE
 		_:
 			return MilSymbolGeometry.Domain.GROUND
-
-
-## Parse icon type from string
-func _parse_icon_type(code: String) -> MilSymbolIcons.IconType:
-	return MilSymbolIcons.parse_unit_type(code)
-
-
-## Convert UnitAffiliation enum to internal Affiliation enum
-func _affiliation_to_internal(affiliation: UnitAffiliation) -> MilSymbolConfig.Affiliation:
-	match affiliation:
-		UnitAffiliation.FRIEND:
-			return MilSymbolConfig.Affiliation.FRIEND
-		UnitAffiliation.ENEMY:
-			return MilSymbolConfig.Affiliation.HOSTILE
-		UnitAffiliation.NEUTRAL:
-			return MilSymbolConfig.Affiliation.NEUTRAL
-		UnitAffiliation.UNKNOWN:
-			return MilSymbolConfig.Affiliation.UNKNOWN
-		_:
-			return MilSymbolConfig.Affiliation.FRIEND
-
-
-## Convert UnitType enum to IconType enum
-func _unit_type_to_icon(unit_type: UnitType) -> MilSymbolIcons.IconType:
-	match unit_type:
-		UnitType.NONE:
-			return MilSymbolIcons.IconType.NONE
-		UnitType.INFANTRY:
-			return MilSymbolIcons.IconType.INFANTRY
-		UnitType.MECHANIZED:
-			return MilSymbolIcons.IconType.MECHANIZED
-		UnitType.MOTORIZED:
-			return MilSymbolIcons.IconType.MOTORIZED
-		UnitType.ARMOR:
-			return MilSymbolIcons.IconType.ARMOR
-		UnitType.ANTI_TANK:
-			return MilSymbolIcons.IconType.ANTI_TANK
-		UnitType.ANTI_AIR:
-			return MilSymbolIcons.IconType.ANTI_AIR
-		UnitType.ARTILLERY:
-			return MilSymbolIcons.IconType.ARTILLERY
-		UnitType.RECON:
-			return MilSymbolIcons.IconType.RECON
-		UnitType.ENGINEER:
-			return MilSymbolIcons.IconType.ENGINEER
-		UnitType.MEDICAL:
-			return MilSymbolIcons.IconType.MEDICAL
-		UnitType.SUPPLY:
-			return MilSymbolIcons.IconType.SUPPLY
-		UnitType.HQ:
-			return MilSymbolIcons.IconType.HEADQUARTERS
-		_:
-			return MilSymbolIcons.IconType.NONE
 
 
 ## Convert UnitSize enum to NATO size indicator text

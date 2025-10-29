@@ -7,9 +7,9 @@ extends Node2D
 var config: MilSymbolConfig
 
 ## Symbol properties
-var affiliation: MilSymbolConfig.Affiliation = MilSymbolConfig.Affiliation.FRIEND
+var affiliation: MilSymbol.UnitAffiliation = MilSymbol.UnitAffiliation.FRIEND
 var domain: MilSymbolGeometry.Domain = MilSymbolGeometry.Domain.GROUND
-var icon_type: MilSymbolIcons.IconType = MilSymbolIcons.IconType.INFANTRY
+var icon_type: MilSymbol.UnitType = MilSymbol.UnitType.INFANTRY
 
 ## Text modifiers
 var unit_size_text: String = ""  # e.g., "II" for company
@@ -27,9 +27,9 @@ func _ready() -> void:
 
 ## Set the symbol to render
 func setup_symbol(
-	p_affiliation: MilSymbolConfig.Affiliation,
+	p_affiliation: MilSymbol.UnitAffiliation,
 	p_domain: MilSymbolGeometry.Domain,
-	p_icon_type: MilSymbolIcons.IconType,
+	p_icon_type: MilSymbol.UnitType,
 	p_config: MilSymbolConfig = null
 ) -> void:
 	affiliation = p_affiliation

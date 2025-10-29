@@ -9,30 +9,30 @@ enum Domain { GROUND, AIR, SEA, SPACE, SUBSURFACE }
 
 ## Get frame points for ground units based on affiliation
 ## Returns an array of Vector2 points in 200x200 coordinate space
-static func get_ground_frame(affiliation: MilSymbolConfig.Affiliation) -> Array[Vector2]:
+static func get_ground_frame(affiliation: MilSymbol.UnitAffiliation) -> Array[Vector2]:
 	match affiliation:
-		MilSymbolConfig.Affiliation.FRIEND:
+		MilSymbol.UnitAffiliation.FRIEND:
 			# Rectangle
 			return [Vector2(25, 50), Vector2(175, 50), Vector2(175, 150), Vector2(25, 150)]
-		MilSymbolConfig.Affiliation.HOSTILE:
+		MilSymbol.UnitAffiliation.ENEMY:
 			# Diamond
 			return [Vector2(100, 28), Vector2(172, 100), Vector2(100, 172), Vector2(28, 100)]
-		MilSymbolConfig.Affiliation.NEUTRAL:
+		MilSymbol.UnitAffiliation.NEUTRAL:
 			# Square
 			return [Vector2(45, 45), Vector2(155, 45), Vector2(155, 155), Vector2(45, 155)]
-		MilSymbolConfig.Affiliation.UNKNOWN:
+		MilSymbol.UnitAffiliation.UNKNOWN:
 			# Clover (approximated with circle for simplicity)
 			return []  # Will use draw_circle instead
 	return []
 
 
 ## Get frame points for air units based on affiliation
-static func get_air_frame(affiliation: MilSymbolConfig.Affiliation) -> Array[Vector2]:
+static func get_air_frame(affiliation: MilSymbol.UnitAffiliation) -> Array[Vector2]:
 	match affiliation:
-		MilSymbolConfig.Affiliation.FRIEND:
+		MilSymbol.UnitAffiliation.FRIEND:
 			# Curved arc (approximated with segments)
 			return _create_arc_points(Vector2(100, 100), 60.0, 180.0, 0.0, 32)
-		MilSymbolConfig.Affiliation.HOSTILE:
+		MilSymbol.UnitAffiliation.ENEMY:
 			# Chevron
 			return [
 				Vector2(45, 150),
@@ -41,57 +41,57 @@ static func get_air_frame(affiliation: MilSymbolConfig.Affiliation) -> Array[Vec
 				Vector2(155, 70),
 				Vector2(155, 150)
 			]
-		MilSymbolConfig.Affiliation.NEUTRAL:
+		MilSymbol.UnitAffiliation.NEUTRAL:
 			# Flat top rectangle
 			return [Vector2(45, 150), Vector2(45, 30), Vector2(155, 30), Vector2(155, 150)]
-		MilSymbolConfig.Affiliation.UNKNOWN:
+		MilSymbol.UnitAffiliation.UNKNOWN:
 			# Rounded clover
 			return []
 	return []
 
 
 ## Get frame points for sea units based on affiliation
-static func get_sea_frame(affiliation: MilSymbolConfig.Affiliation) -> Array[Vector2]:
+static func get_sea_frame(affiliation: MilSymbol.UnitAffiliation) -> Array[Vector2]:
 	match affiliation:
-		MilSymbolConfig.Affiliation.FRIEND:
+		MilSymbol.UnitAffiliation.FRIEND:
 			# Circle (will use draw_circle)
 			return []
-		MilSymbolConfig.Affiliation.HOSTILE:
+		MilSymbol.UnitAffiliation.ENEMY:
 			# Diamond
-			return get_ground_frame(MilSymbolConfig.Affiliation.HOSTILE)
-		MilSymbolConfig.Affiliation.NEUTRAL:
+			return get_ground_frame(MilSymbol.UnitAffiliation.ENEMY)
+		MilSymbol.UnitAffiliation.NEUTRAL:
 			# Square
-			return get_ground_frame(MilSymbolConfig.Affiliation.NEUTRAL)
-		MilSymbolConfig.Affiliation.UNKNOWN:
+			return get_ground_frame(MilSymbol.UnitAffiliation.NEUTRAL)
+		MilSymbol.UnitAffiliation.UNKNOWN:
 			# Clover
 			return []
 	return []
 
 
 ## Get bounding box for a frame (in 200x200 coordinate space)
-static func get_frame_bounds(domain: Domain, affiliation: MilSymbolConfig.Affiliation) -> Rect2:
+static func get_frame_bounds(domain: Domain, affiliation: MilSymbol.UnitAffiliation) -> Rect2:
 	match domain:
 		Domain.GROUND:
 			match affiliation:
-				MilSymbolConfig.Affiliation.FRIEND:
+				MilSymbol.UnitAffiliation.FRIEND:
 					return Rect2(25, 50, 150, 100)
-				MilSymbolConfig.Affiliation.HOSTILE:
+				MilSymbol.UnitAffiliation.ENEMY:
 					return Rect2(28, 28, 144, 144)
-				MilSymbolConfig.Affiliation.NEUTRAL:
+				MilSymbol.UnitAffiliation.NEUTRAL:
 					return Rect2(45, 45, 110, 110)
-				MilSymbolConfig.Affiliation.UNKNOWN:
+				MilSymbol.UnitAffiliation.UNKNOWN:
 					return Rect2(30, 30, 140, 140)
 		Domain.AIR:
 			match affiliation:
-				MilSymbolConfig.Affiliation.FRIEND:
+				MilSymbol.UnitAffiliation.FRIEND:
 					return Rect2(45, 30, 110, 120)
-				MilSymbolConfig.Affiliation.HOSTILE:
+				MilSymbol.UnitAffiliation.ENEMY:
 					return Rect2(45, 20, 110, 130)
 				_:
 					return Rect2(45, 30, 110, 120)
 		Domain.SEA:
 			match affiliation:
-				MilSymbolConfig.Affiliation.FRIEND:
+				MilSymbol.UnitAffiliation.FRIEND:
 					return Rect2(40, 40, 120, 120)
 				_:
 					return Rect2(45, 45, 110, 110)
@@ -101,19 +101,19 @@ static func get_frame_bounds(domain: Domain, affiliation: MilSymbolConfig.Affili
 
 
 ## Check if frame should use circle drawing
-static func is_circle_frame(domain: Domain, affiliation: MilSymbolConfig.Affiliation) -> bool:
-	if domain == Domain.SEA and affiliation == MilSymbolConfig.Affiliation.FRIEND:
+static func is_circle_frame(domain: Domain, affiliation: MilSymbol.UnitAffiliation) -> bool:
+	if domain == Domain.SEA and affiliation == MilSymbol.UnitAffiliation.FRIEND:
 		return true
-	if affiliation == MilSymbolConfig.Affiliation.UNKNOWN:
+	if affiliation == MilSymbol.UnitAffiliation.UNKNOWN:
 		return true  # Simplified clover as circle
 	return false
 
 
 ## Get circle parameters [center_x, center_y, radius]
-static func get_circle_params(domain: Domain, affiliation: MilSymbolConfig.Affiliation) -> Array:
-	if domain == Domain.SEA and affiliation == MilSymbolConfig.Affiliation.FRIEND:
+static func get_circle_params(domain: Domain, affiliation: MilSymbol.UnitAffiliation) -> Array:
+	if domain == Domain.SEA and affiliation == MilSymbol.UnitAffiliation.FRIEND:
 		return [Vector2(100, 100), 60.0]
-	if affiliation == MilSymbolConfig.Affiliation.UNKNOWN:
+	if affiliation == MilSymbol.UnitAffiliation.UNKNOWN:
 		return [Vector2(100, 100), 70.0]
 	return [Vector2(100, 100), 50.0]
 
