@@ -36,7 +36,7 @@ const BASE_SIZE: float = 200.0
 @export var show_icon: bool = true
 
 ## Font for text fields
-@export var font_size: int = 48
+var font_size: int = 48
 
 ## Colors for different affiliations (filled mode)
 var fill_colors: Dictionary = {
@@ -47,7 +47,7 @@ var fill_colors: Dictionary = {
 }
 
 ## Colors for frame outlines
-var frame_colors: Dictionary = {
+@export var frame_colors: Dictionary = {
 	Affiliation.FRIEND: Color(0.0, 0.6, 1.0, 1.0),  ## Blue
 	Affiliation.HOSTILE: Color(1.0, 0.0, 0.0, 1.0),  ## Red
 	Affiliation.NEUTRAL: Color(0.0, 0.8, 0.0, 1.0),  ## Green
@@ -99,3 +99,11 @@ static func create_frame_only() -> MilSymbolConfig:
 	config.text_color = Color.WHITE
 
 	return config
+
+static func get_frame_colors() -> Dictionary:
+	var config := MilSymbolConfig.new()
+	return config.frame_colors
+	
+static func get_fill_colors() -> Dictionary:
+	var config := MilSymbolConfig.new()
+	return config.fill_colors

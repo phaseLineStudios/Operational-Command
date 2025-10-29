@@ -285,10 +285,15 @@ func _draw_icon_shapes(shapes: Array, color: Color) -> void:
 					draw_arc(center, radius, 0, TAU, 32, color, config.stroke_width * 0.75)
 			"rect":
 				var rect: Rect2 = shape_data.get("rect", Rect2(0, 0, 10, 10))
-				if filled:
-					draw_rect(rect, color)
+				var r: float = float(shape_data.get("corner_radius", shape_data.get("radius", 0.0)))
+				var segs: int = int(shape_data.get("segments", 10))
+				if r > 0.0:
+					_draw_rounded_rect(rect, r, color, filled, config.stroke_width * 0.75, segs)
 				else:
-					draw_rect(rect, color, false, config.stroke_width * 0.75)
+					if filled:
+						draw_rect(rect, color)
+					else:
+						draw_rect(rect, color, false, config.stroke_width * 0.75)
 			"oval":
 				var rect: Rect2 = shape_data.get("rect", Rect2(0, 0, 20, 10))
 				_draw_oval(rect, color, filled)
@@ -382,3 +387,74 @@ func _draw_unique_designation() -> void:
 		font_size,
 		config.text_color
 	)
+
+## Draw a rounded rectangle.
+## [param rect] Rect region in px.
+## [param radius] Corner radius in px (clamped to half of min(width, height)).
+## [param color] Fill/line color.
+## [param filled] If true, fills; otherwise draws outline.
+## [param width] Outline width in px (used when !filled).
+## [param segments] Segments per corner arc (>= 2 recommended).
+func _draw_rounded_rect(
+	rect: Rect2,
+	radius: float,
+	color: Color,
+	filled: bool,
+	width: float,
+	segments: int = 10
+) -> void:
+	var x := rect.position.x
+	var y := rect.position.y
+	var w := rect.size.x
+	var h := rect.size.y
+	var r := clampf(radius, 0.0, min(w, h) * 0.5)
+
+	if r <= 0.0:
+		if filled:
+			draw_rect(rect, color)
+		else:
+			draw_rect(rect, color, false, width)
+		return
+
+	if filled:
+		# Middle column
+		if w - 2.0 * r > 0.0:
+			draw_rect(Rect2(x + r, y, w - 2.0 * r, h), color)
+		# Left/right vertical strips
+		if h - 2.0 * r > 0.0:
+			draw_rect(Rect2(x,         y + r, r, h - 2.0 * r), color)
+			draw_rect(Rect2(x + w - r, y + r, r, h - 2.0 * r), color)
+		# Quarter-circle fills
+		_fill_arc_fan(Vector2(x + r,     y + r),     r, PI,        PI * 1.5, color, segments) # TL
+		_fill_arc_fan(Vector2(x + w - r, y + r),     r, -PI * 0.5, 0.0,       color, segments) # TR
+		_fill_arc_fan(Vector2(x + w - r, y + h - r), r, 0.0,       PI * 0.5,  color, segments) # BR
+		_fill_arc_fan(Vector2(x + r,     y + h - r), r, PI * 0.5,  PI,        color, segments) # BL
+	else:
+		# Straight edges
+		draw_line(Vector2(x + r,     y),         Vector2(x + w - r, y),         color, width)
+		draw_line(Vector2(x + w,     y + r),     Vector2(x + w,     y + h - r), color, width)
+		draw_line(Vector2(x + w - r, y + h),     Vector2(x + r,     y + h),     color, width)
+		draw_line(Vector2(x,         y + h - r), Vector2(x,         y + r),     color, width)
+		# Corner arcs
+		draw_arc(Vector2(x + w - r, y + r),     r, -PI * 0.5, 0.0,       segments, color, width) # TR
+		draw_arc(Vector2(x + w - r, y + h - r), r, 0.0,       PI * 0.5,  segments, color, width) # BR
+		draw_arc(Vector2(x + r,     y + h - r), r, PI * 0.5,  PI,        segments, color, width) # BL
+		draw_arc(Vector2(x + r,     y + r),     r, PI,        PI * 1.5,  segments, color, width) # TL
+		
+
+## Fill a quarter circle with a triangle fan.
+## [param center] Arc center.
+## [param r] Radius.
+## [param a0] Start angle (rad).
+## [param a1] End angle (rad).
+## [param color] Fill color.
+## [param segments] Arc smoothness (>=2).
+func _fill_arc_fan(center: Vector2, r: float, a0: float, a1: float, color: Color, segments: int) -> void:
+	var seg: int = max(2, segments)
+	var pts := PackedVector2Array()
+	pts.append(center)
+	for i in range(seg + 1):
+		var t := float(i) / float(seg)
+		var a := lerpf(a0, a1, t)
+		pts.append(center + Vector2(cos(a), sin(a)) * r)
+	draw_colored_polygon(pts, color)

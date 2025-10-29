@@ -14,10 +14,25 @@ enum UnitType {
 	ARTILLERY,
 	RECON,
 	ENGINEER,
+	MEDICAL,
+	SUPPLY,
 	HQ,
 	NONE
 }
-enum UnitSize { TEAM, SQUAD, SECTION, PLATOON, COMPANY, BATTALION, DIVISION, NONE }
+enum UnitSize { 
+	TEAM, 
+	SQUAD, 
+	SECTION, 
+	PLATOON, 
+	COMPANY, 
+	BATTALION,
+	REGIMENT,
+	BRIGADE,
+	DIVISION,
+	CORPS,
+	ARMY,
+	NONE 
+}
 
 ## Configuration
 var config: MilSymbolConfig
@@ -85,6 +100,9 @@ func generate_texture(
 		await tree.process_frame  # Extra frame to ensure render is complete
 
 	# Capture the texture
+	if _viewport == null:
+		LogService.error("Viewport is null", "MilSymbol.gd:104")
+		return
 	var img := _viewport.get_texture().get_image()
 
 	# If rendered at higher resolution, scale down with anti-aliasing
@@ -260,7 +278,7 @@ func _unit_type_to_icon(unit_type: UnitType) -> MilSymbolIcons.IconType:
 		UnitType.MECHANIZED:
 			return MilSymbolIcons.IconType.MECHANIZED
 		UnitType.MOTORIZED:
-			return MilSymbolIcons.IconType.MECHANIZED  # Use mechanized icon
+			return MilSymbolIcons.IconType.MOTORIZED
 		UnitType.ARMOR:
 			return MilSymbolIcons.IconType.ARMOR
 		UnitType.ANTI_TANK:
@@ -273,6 +291,10 @@ func _unit_type_to_icon(unit_type: UnitType) -> MilSymbolIcons.IconType:
 			return MilSymbolIcons.IconType.RECON
 		UnitType.ENGINEER:
 			return MilSymbolIcons.IconType.ENGINEER
+		UnitType.MEDICAL:
+			return MilSymbolIcons.IconType.MEDICAL
+		UnitType.SUPPLY:
+			return MilSymbolIcons.IconType.SUPPLY
 		UnitType.HQ:
 			return MilSymbolIcons.IconType.HEADQUARTERS
 		_:
@@ -282,24 +304,19 @@ func _unit_type_to_icon(unit_type: UnitType) -> MilSymbolIcons.IconType:
 ## Convert UnitSize enum to NATO size indicator text
 func _unit_size_to_text(unit_size: UnitSize) -> String:
 	match unit_size:
-		UnitSize.NONE:
-			return ""
-		UnitSize.TEAM:
-			return "ø"
-		UnitSize.SQUAD:
-			return "•"
-		UnitSize.SECTION:
-			return "••"
-		UnitSize.PLATOON:
-			return "•••"
-		UnitSize.COMPANY:
-			return "I"
-		UnitSize.BATTALION:
-			return "II"
-		UnitSize.DIVISION:
-			return "XX"
-		_:
-			return ""
+		UnitSize.NONE: return ""
+		UnitSize.TEAM: return "ø"
+		UnitSize.SQUAD: return "•"
+		UnitSize.SECTION: return "••"
+		UnitSize.PLATOON: return "•••"
+		UnitSize.COMPANY: return "I"
+		UnitSize.BATTALION: return "II"
+		UnitSize.REGIMENT: return "III"
+		UnitSize.BRIGADE: return "X"
+		UnitSize.DIVISION: return "XX"
+		UnitSize.CORPS: return "XXX"
+		UnitSize.ARMY: return "XXXX"
+		_: return ""
 
 
 ## Static convenience method: create and generate in one call

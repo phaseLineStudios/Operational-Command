@@ -8,13 +8,16 @@ enum IconType {
 	NONE,
 	INFANTRY,
 	ARMOR,
+	MOTORIZED,
 	MECHANIZED,
 	ARTILLERY,
 	RECON,
 	ENGINEER,
 	ANTI_TANK,
 	ANTI_AIR,
+	SUPPLY,
 	HEADQUARTERS,
+	MEDICAL,
 	COMMAND_POST
 }
 
@@ -37,7 +40,7 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 					return {
 						"type": "lines",
 						"paths":
-						[[Vector2(60, 70), Vector2(140, 130)], [Vector2(60, 130), Vector2(140, 70)]]
+						[[Vector2(64, 64), Vector2(136, 136)], [Vector2(64, 136), Vector2(136, 64)]]
 					}
 				MilSymbolConfig.Affiliation.NEUTRAL:
 					return {
@@ -49,27 +52,33 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 					return {
 						"type": "lines",
 						"paths":
-						[[Vector2(50, 65), Vector2(150, 135)], [Vector2(50, 135), Vector2(150, 65)]]
+						[[Vector2(45, 45), Vector2(155, 155)], [Vector2(45, 155), Vector2(155, 45)]]
 					}
 				_:
 					return {}
 		IconType.ARMOR:
 			# Oval track outline (MIL-STD-2525: oval shape)
-			# Using ellipse approximation for simplicity
 			return {
-				"type": "ellipse", "center": Vector2(100, 100), "rx": 50, "ry": 20, "filled": false
+				"type": "shapes",
+				"shapes": [
+					{
+						"shape": "rect",
+						"rect": Rect2(60, 79, 82, 44),
+						"corner_radius": 19.5,
+						"filled": false
+					}
+				],
 			}
-		IconType.MECHANIZED:
-			# Infantry + vertical line for wheeled
+		IconType.MOTORIZED:
 			match affiliation:
 				MilSymbolConfig.Affiliation.FRIEND:
 					return {
 						"type": "lines",
 						"paths":
 						[
-							[Vector2(25, 50), Vector2(175, 150)],  # Infantry cross
+							[Vector2(25, 50), Vector2(175, 150)],
 							[Vector2(25, 150), Vector2(175, 50)],
-							[Vector2(100, 50), Vector2(100, 150)]  # Motorized line
+							[Vector2(100, 50), Vector2(100, 150)]
 						]
 					}
 				MilSymbolConfig.Affiliation.HOSTILE:
@@ -77,9 +86,9 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 						"type": "lines",
 						"paths":
 						[
-							[Vector2(60, 70), Vector2(140, 130)],
-							[Vector2(60, 130), Vector2(140, 70)],
-							[Vector2(100, 70), Vector2(100, 130)]
+							[Vector2(64, 64), Vector2(136, 136)], 
+							[Vector2(64, 136), Vector2(136, 64)],
+							[Vector2(100, 28), Vector2(100, 172)]
 						]
 					}
 				_:
@@ -92,6 +101,56 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 							[Vector2(100, 45), Vector2(100, 155)]
 						]
 					}
+		IconType.MECHANIZED:
+			match affiliation:
+				MilSymbolConfig.Affiliation.FRIEND:
+					return {
+						"type": "mixed",
+						"shapes": [
+							{
+								"shape": "rect",
+								"rect": Rect2(60, 79, 82, 44),
+								"corner_radius": 19.5,
+								"filled": false
+							}
+						],
+						"paths": [
+							[Vector2(25, 50), Vector2(175, 150)],
+							[Vector2(25, 150), Vector2(175, 50)]
+						]
+					}
+				MilSymbolConfig.Affiliation.HOSTILE:
+					return {
+						"type": "mixed",
+						"shapes": [
+							{
+								"shape": "rect",
+								"rect": Rect2(60, 79, 82, 44),
+								"corner_radius": 19.5,
+								"filled": false
+							}
+						],
+						"paths": [
+							[Vector2(64, 64), Vector2(136, 136)], 
+							[Vector2(64, 136), Vector2(136, 64)]
+						]
+					}
+				_:
+					return {
+						"type": "mixed",
+						"shapes": [
+							{
+								"shape": "rect",
+								"rect": Rect2(60, 79, 82, 44),
+								"corner_radius": 19.5,
+								"filled": false
+							}
+						],
+						"paths": [
+							[Vector2(45, 45), Vector2(155, 155)], 
+							[Vector2(155, 45), Vector2(45, 155)]
+						]
+					}
 		IconType.ARTILLERY:
 			# Filled circle (MIL-STD-2525 standard)
 			return {"type": "circle", "center": Vector2(100, 100), "radius": 15, "filled": true}
@@ -101,7 +160,7 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 				MilSymbolConfig.Affiliation.FRIEND:
 					return {"type": "lines", "paths": [[Vector2(25, 150), Vector2(175, 50)]]}
 				MilSymbolConfig.Affiliation.HOSTILE:
-					return {"type": "lines", "paths": [[Vector2(60, 130), Vector2(140, 70)]]}
+					return {"type": "lines", "paths": [[Vector2(64, 136), Vector2(136, 64)]]}
 				MilSymbolConfig.Affiliation.NEUTRAL:
 					return {"type": "lines", "paths": [[Vector2(45, 155), Vector2(155, 45)]]}
 				MilSymbolConfig.Affiliation.UNKNOWN:
@@ -178,8 +237,50 @@ static func get_icon(icon_type: IconType, affiliation: MilSymbolConfig.Affiliati
 					return {"type": "lines", "paths": [[Vector2(25, 80), Vector2(175, 80)]]}
 				MilSymbolConfig.Affiliation.HOSTILE:
 					return {"type": "lines", "paths": [[Vector2(50, 80), Vector2(150, 80)]]}
+				MilSymbolConfig.Affiliation.NEUTRAL:
+					return {"type": "lines", "paths": [[Vector2(45, 80), Vector2(155, 80)]]}
 				_:
 					return {"type": "lines", "paths": [[Vector2(35, 80), Vector2(165, 80)]]}
+		IconType.SUPPLY:
+			# Horizontal line through center (MIL-STD-2525)
+			match affiliation:
+				MilSymbolConfig.Affiliation.FRIEND:
+					return {"type": "lines", "paths": [[Vector2(25, 120), Vector2(175, 120)]]}
+				MilSymbolConfig.Affiliation.HOSTILE:
+					return {"type": "lines", "paths": [[Vector2(50, 120), Vector2(150, 120)]]}
+				MilSymbolConfig.Affiliation.NEUTRAL:
+					return {"type": "lines", "paths": [[Vector2(45, 120), Vector2(155, 120)]]}
+				_:
+					return {"type": "lines", "paths": [[Vector2(35, 120), Vector2(165, 120)]]}
+		IconType.MEDICAL:
+			match affiliation:
+				MilSymbolConfig.Affiliation.FRIEND:
+					return {
+						"type": "lines",
+						"paths":
+						[
+							[Vector2(25, 100), Vector2(175, 100)],
+							[Vector2(100, 50), Vector2(100, 150)]
+						]
+					}
+				MilSymbolConfig.Affiliation.HOSTILE:
+					return {
+						"type": "lines",
+						"paths":
+						[
+							[Vector2(28, 100), Vector2(172, 100)], 
+							[Vector2(100, 28), Vector2(100, 172)]
+						]
+					}
+				_:
+					return {
+						"type": "lines",
+						"paths":
+						[
+							[Vector2(45, 100), Vector2(155, 100)],
+							[Vector2(100, 45), Vector2(100, 155)]
+						]
+					}
 		IconType.COMMAND_POST:
 			return {"type": "text", "text": "CP", "position": Vector2(100, 100), "size": 32}
 		_:
@@ -201,12 +302,18 @@ static func parse_unit_type(unit_type: String) -> IconType:
 		return IconType.ARMOR
 	elif "mech" in lower_type:
 		return IconType.MECHANIZED
+	elif "motor" in lower_type:
+		return IconType.MOTORIZED
 	elif "artillery" in lower_type or "arty" in lower_type:
 		return IconType.ARTILLERY
 	elif "recon" in lower_type or "scout" in lower_type:
 		return IconType.RECON
 	elif "engineer" in lower_type or "eng" in lower_type:
 		return IconType.ENGINEER
+	elif "sup" in lower_type or "supply" in lower_type:
+		return IconType.SUPPLY
+	elif "med" in lower_type or "medical" in lower_type:
+		return IconType.MEDICAL
 	elif "hq" in lower_type or "headquarters" in lower_type:
 		return IconType.HEADQUARTERS
 	elif "cp" in lower_type or "command" in lower_type:

@@ -1,212 +1,188 @@
+extends Control
+
 ## Test script for MilSymbol generator
 ## Demonstrates how to create and display military symbols
-extends Node2D
 
 ## Grid layout settings
 const SYMBOLS_PER_ROW: int = 4
 const SYMBOL_SPACING: int = 150
 
-## Test data for symbols to generate
-var test_symbols: Array[Dictionary] = [
-	{
-		"affiliation": MilSymbol.UnitAffiliation.FRIEND,
-		"type": MilSymbol.UnitType.INFANTRY,
-		"size": MilSymbol.UnitSize.COMPANY,
-		"designation": "A/1-5"
-	},
-	{
-		"affiliation": MilSymbol.UnitAffiliation.FRIEND,
-		"type": MilSymbol.UnitType.ARMOR,
-		"size": MilSymbol.UnitSize.BATTALION,
-		"designation": "1-67"
-	},
-	{
-		"affiliation": MilSymbol.UnitAffiliation.ENEMY,
-		"type": MilSymbol.UnitType.MECHANIZED,
-		"size": MilSymbol.UnitSize.COMPANY,
-		"designation": "2BTN"
-	},
-	{
-		"affiliation": MilSymbol.UnitAffiliation.ENEMY,
-		"type": MilSymbol.UnitType.ARTILLERY,
-		"size": MilSymbol.UnitSize.BATTALION,
-		"designation": "251"
-	},
-	{
-		"affiliation": MilSymbol.UnitAffiliation.NEUTRAL,
-		"type": MilSymbol.UnitType.RECON,
-		"size": MilSymbol.UnitSize.PLATOON,
-		"designation": "RECON"
-	},
-	{
-		"affiliation": MilSymbol.UnitAffiliation.UNKNOWN,
-		"type": MilSymbol.UnitType.ENGINEER,
-		"size": MilSymbol.UnitSize.COMPANY,
-		"designation": "ENG"
-	},
-	{
-		"affiliation": MilSymbol.UnitAffiliation.FRIEND,
-		"type": MilSymbol.UnitType.ANTI_TANK,
-		"size": MilSymbol.UnitSize.PLATOON,
-		"designation": "AT"
-	},
-	{
-		"affiliation": MilSymbol.UnitAffiliation.FRIEND,
-		"type": MilSymbol.UnitType.ANTI_AIR,
-		"size": MilSymbol.UnitSize.PLATOON,
-		"designation": "AA"
-	},
-	{
-		"affiliation": MilSymbol.UnitAffiliation.FRIEND,
-		"type": MilSymbol.UnitType.HQ,
-		"size": MilSymbol.UnitSize.COMPANY,
-		"designation": "HQ"
-	}
-]
+var config: MilSymbolConfig
+var generator: MilSymbol
 
+@onready var u_type: OptionButton = %Type
+@onready var u_size: OptionButton = %Size
+@onready var u_modifier_1: OptionButton = %Modifier1
+@onready var u_modifier_2: OptionButton = %Modifier2
+@onready var u_designation: LineEdit = %Designation
+@onready var u_status: OptionButton = %Status
+@onready var u_reinforced_reduced: OptionButton = %ReinforcedReduced
+@onready var u_frame: CheckBox = %Frame
+@onready var refresh_btn: Button = %Refresh
+
+@onready var fr_preview := %FRPreview
+@onready var eny_preview := %ENYPreview
+@onready var neu_preview := %NEUPreview
+@onready var unk_preview := %UNKPreview
 
 func _ready() -> void:
-	# Create title
-	var title_label := Label.new()
-	title_label.text = "Military Symbol Generator - Test Display"
-	title_label.position = Vector2(20, 20)
-	title_label.add_theme_font_size_override("font_size", 24)
-	add_child(title_label)
+	config = MilSymbolConfig.create_default()
+	config.size = MilSymbolConfig.Size.MEDIUM
+	generator = MilSymbol.new(config)
+	
+	_refresh_options()
+	
+	u_type.item_selected.connect(func(_idx: int): _generate_symbols())
+	u_size.item_selected.connect(func(_idx: int): _generate_symbols())
+	u_modifier_1.item_selected.connect(func(_idx: int): _generate_symbols())
+	u_modifier_2.item_selected.connect(func(_idx: int): _generate_symbols())
+	u_status.item_selected.connect(func(_idx: int): _generate_symbols())
+	u_reinforced_reduced.item_selected.connect(func(_idx: int): _generate_symbols())
+	u_frame.pressed.connect(func(): _generate_symbols())
+	refresh_btn.pressed.connect(func(): _on_refresh())
+	
+	_generate_symbols()
 
-	# Generate and display symbols
-	await _generate_symbols()
+## Handle Enter for designation and arrow-key selection for focused OptionButtons.
+func _input(event: InputEvent) -> void:
+	if not (event is InputEventKey and event.pressed and not event.echo):
+		return
 
+	if u_designation.has_focus() and event.keycode == KEY_ENTER:
+		_generate_symbols()
+		accept_event()
+		return
+
+	var focused := get_viewport().gui_get_focus_owner()
+	if not (focused is OptionButton):
+		return
+
+	if event.is_action_pressed("ui_up") or event.is_action_pressed("ui_left"):
+		_change_option_selection(focused, -1)
+		accept_event()
+	elif event.is_action_pressed("ui_down") or event.is_action_pressed("ui_right"):
+		_change_option_selection(focused, +1)
+		accept_event()
+
+
+## Increment/decrement selection on an OptionButton and emit item_selected.
+## [param ob] The OptionButton to change.
+## [param delta] +1 to move down/right, -1 to move up/left.
+func _change_option_selection(ob: OptionButton, delta: int) -> void:
+	var count := ob.get_item_count()
+	if count <= 0:
+		return
+	var new_idx := clampi(ob.selected + delta, 0, count - 1)
+	if new_idx == ob.selected:
+		return
+	ob.select(new_idx)
+	ob.emit_signal("item_selected", new_idx)
 
 ## Generate all test symbols and display them in a grid
 func _generate_symbols() -> void:
-	var config := MilSymbolConfig.create_default()
-	config.size = MilSymbolConfig.Size.MEDIUM
-	var generator := MilSymbol.new(config)
-
-	var row := 0
-	var col := 0
-
-	for symbol_data in test_symbols:
-		# Generate the symbol texture using enums
-		var texture := await generator.generate(
-			symbol_data["affiliation"],
-			symbol_data["type"],
-			symbol_data["size"],
-			symbol_data["designation"]
+	if not u_frame.button_pressed:
+		fr_preview.modulate = Color.WHITE
+		fr_preview.texture = await generator.generate(
+			MilSymbol.UnitAffiliation.FRIEND,
+			u_type.selected,
+			u_size.selected,
+			u_designation.text
 		)
-
-		# Create a Sprite2D to display it
-		var sprite := Sprite2D.new()
-		sprite.texture = texture
-		sprite.position = Vector2(100 + col * SYMBOL_SPACING, 100 + row * SYMBOL_SPACING)
-		add_child(sprite)
-
-		# Add label below
-		var label := Label.new()
-		var aff_name: String = MilSymbol.UnitAffiliation.keys()[symbol_data["affiliation"]]
-		var type_name: String = MilSymbol.UnitType.keys()[symbol_data["type"]]
-		label.text = "%s\n%s" % [aff_name, type_name]
-		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		label.position = sprite.position + Vector2(-50, 80)
-		label.size = Vector2(100, 50)
-		add_child(label)
-
-		# Update grid position
-		col += 1
-		if col >= SYMBOLS_PER_ROW:
-			col = 0
-			row += 1
-
-	generator.cleanup()
-
-	print("Generated %d military symbols" % test_symbols.size())
-
-
-## Example: Generate a single symbol
-func _example_single_symbol() -> void:
-	var config := MilSymbolConfig.create_default()
-	config.size = MilSymbolConfig.Size.LARGE
-
-	var generator := MilSymbol.new(config)
-
-	# Generate a friendly infantry company symbol
-	var texture := await generator.generate_texture(
-		MilSymbolConfig.Affiliation.FRIEND,
-		MilSymbolGeometry.Domain.GROUND,
-		MilSymbolIcons.IconType.INFANTRY,
-		"II",  # Company size
-		"A/1-5"  # Designation
-	)
-
-	# Use the texture
-	var sprite := Sprite2D.new()
-	sprite.texture = texture
-	add_child(sprite)
-
-	generator.cleanup()
-
-
-## Example: Generate from simple code
-func _example_code_generation() -> void:
-	var generator := MilSymbol.new()
-
-	# "F-G-INF" = Friend, Ground, Infantry
-	var texture := await generator.generate_from_code("F-G-INF", "III", "2-14")
-
-	var sprite := Sprite2D.new()
-	sprite.texture = texture
-	add_child(sprite)
-
+		eny_preview.modulate = Color.WHITE
+		eny_preview.texture = await generator.generate(
+			MilSymbol.UnitAffiliation.ENEMY,
+			u_type.selected,
+			u_size.selected,
+			u_designation.text
+		)
+		neu_preview.modulate = Color.WHITE
+		neu_preview.texture = await generator.generate(
+			MilSymbol.UnitAffiliation.NEUTRAL,
+			u_type.selected,
+			u_size.selected,
+			u_designation.text
+		)
+		unk_preview.modulate = Color.WHITE
+		unk_preview.texture = await generator.generate(
+			MilSymbol.UnitAffiliation.UNKNOWN,
+			u_type.selected,
+			u_size.selected,
+			u_designation.text
+		)
+	else:
+		var frame_colors := MilSymbolConfig.get_frame_colors()
+		fr_preview.modulate = frame_colors[MilSymbolConfig.Affiliation.FRIEND]
+		fr_preview.texture = await MilSymbol.create_frame_symbol(
+			MilSymbol.UnitAffiliation.FRIEND,
+			u_type.selected,
+			MilSymbolConfig.Size.MEDIUM,
+			u_size.selected,
+			u_designation.text
+		)
+		eny_preview.modulate = frame_colors[MilSymbolConfig.Affiliation.HOSTILE]
+		eny_preview.texture = await MilSymbol.create_frame_symbol(
+			MilSymbol.UnitAffiliation.ENEMY,
+			u_type.selected,
+			MilSymbolConfig.Size.MEDIUM,
+			u_size.selected,
+			u_designation.text
+		)
+		neu_preview.modulate = frame_colors[MilSymbolConfig.Affiliation.NEUTRAL]
+		neu_preview.texture = await MilSymbol.create_frame_symbol(
+			MilSymbol.UnitAffiliation.NEUTRAL,
+			u_type.selected,
+			MilSymbolConfig.Size.MEDIUM,
+			u_size.selected,
+			u_designation.text
+		)
+		unk_preview.modulate = frame_colors[MilSymbolConfig.Affiliation.UNKNOWN]
+		unk_preview.texture = await MilSymbol.create_frame_symbol(
+			MilSymbol.UnitAffiliation.UNKNOWN,
+			u_type.selected,
+			MilSymbolConfig.Size.MEDIUM,
+			u_size.selected,
+			u_designation.text
+		)
 	generator.cleanup()
 
 
-## Example: Using the static convenience method
-func _example_static_method() -> void:
-	var texture := await MilSymbol.create_symbol(
-		MilSymbol.UnitAffiliation.FRIEND,
-		MilSymbol.UnitType.ARMOR,
-		MilSymbolConfig.Size.MEDIUM,
-		MilSymbol.UnitSize.BATTALION,
-		"1-67"
-	)
-
-	var sprite := Sprite2D.new()
-	sprite.texture = texture
-	add_child(sprite)
+## Called when refresh button is clicked.
+func _on_refresh() -> void:
+	_refresh_options()
+	_generate_symbols()
 
 
-## Example: Frame-only symbols (no fill)
-func _example_frame_only() -> void:
-	# Method 1: Use the static convenience method
-	var texture1 := await MilSymbol.create_frame_symbol(
-		MilSymbol.UnitAffiliation.ENEMY,
-		MilSymbol.UnitType.MECHANIZED,
-		MilSymbolConfig.Size.MEDIUM,
-		MilSymbol.UnitSize.BATTALION,
-		"251"
-	)
-
-	var sprite1 := Sprite2D.new()
-	sprite1.texture = texture1
-	sprite1.position = Vector2(100, 100)
-	add_child(sprite1)
-
-	# Method 2: Use the frame-only configuration preset
-	var config := MilSymbolConfig.create_frame_only()
-	config.size = MilSymbolConfig.Size.LARGE
-	config.stroke_width = 5.0  # Thicker outline for visibility
-
-	var generator := MilSymbol.new(config)
-	var texture2 := await generator.generate(
-		MilSymbol.UnitAffiliation.FRIEND,
-		MilSymbol.UnitType.ARMOR,
-		MilSymbol.UnitSize.COMPANY,
-		"A-67"
-	)
-
-	var sprite2 := Sprite2D.new()
-	sprite2.texture = texture2
-	sprite2.position = Vector2(300, 100)
-	add_child(sprite2)
-
-	generator.cleanup()
+## Refreshes option buttons.
+func _refresh_options() -> void:
+	var u_type_val := u_type.selected
+	var u_size_val := u_size.selected
+	var u_modifier_1_val := u_modifier_1.selected
+	var u_modifier_2_val := u_modifier_2.selected
+	var u_status_val := u_status.selected
+	var u_reinforced_reduced_val := u_reinforced_reduced.selected
+	
+	u_type.clear()
+	for type_str in MilSymbol.UnitType.keys():
+		u_type.add_item(type_str)
+	u_type.select(u_type_val)
+	
+	u_size.clear()
+	for size_str in MilSymbol.UnitSize.keys():
+		u_size.add_item(size_str)
+	u_size.select(u_size_val)
+	
+	u_modifier_1.clear()
+	u_modifier_1.disabled = true
+	u_modifier_1.select(u_modifier_1_val)
+	
+	u_modifier_2.clear()
+	u_modifier_2.disabled = true
+	u_modifier_2.select(u_modifier_2_val)
+	
+	u_status.clear()
+	u_status.disabled = true
+	u_status.select(u_status_val)
+	
+	u_reinforced_reduced.clear()
+	u_reinforced_reduced.disabled = true
+	u_reinforced_reduced.select(u_reinforced_reduced_val)

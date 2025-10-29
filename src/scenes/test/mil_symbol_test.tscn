@@ -1,6 +1,175 @@
-[gd_scene load_steps=2 format=3 uid="uid://cb4l4q07drac4"]
+[gd_scene load_steps=4 format=3 uid="uid://cb4l4q07drac4"]
 
 [ext_resource type="Script" uid="uid://cmlst3ss4owwh" path="res://scripts/test/MilSymbolTest.gd" id="1_u0iq3"]
 
-[node name="MilSymbolTest" type="Node2D"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f2d24"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_onv4o"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+corner_detail = 5
+
+[node name="MilSymbolTest" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_u0iq3")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f2d24")
+
+[node name="VBoxContainer" type="HBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="PanelContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="TypeLabel" type="Label" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Type"
+
+[node name="Type" type="OptionButton" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Type of unit (main icon)"
+
+[node name="SizeLabel" type="Label" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Size"
+
+[node name="Size" type="OptionButton" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Size/Echelon of unit"
+
+[node name="Modifier1Label" type="Label" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Modifier 1"
+
+[node name="Modifier1" type="OptionButton" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Unit Modifier (top)"
+
+[node name="Modifier2Label" type="Label" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Modifier 2"
+
+[node name="Modifier2" type="OptionButton" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Unit Modifier (Bottom)"
+
+[node name="DesignationLabel" type="Label" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Designation"
+
+[node name="Designation" type="LineEdit" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Unit Designation (press enter to commit)"
+placeholder_text = "Alpha"
+
+[node name="StatusLabel" type="Label" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Status"
+
+[node name="Status" type="OptionButton" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Unit status"
+
+[node name="ReinforcedReducedLabel" type="Label" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Reinforced/Reduced"
+
+[node name="ReinforcedReduced" type="OptionButton" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Unit reinforced or reduced"
+
+[node name="FrameLabel" type="Label" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Frame"
+
+[node name="Frame" type="CheckBox" parent="PanelContainer/VBoxContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Should render frame only"
+
+[node name="Spacer" type="Control" parent="PanelContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Refresh" type="Button" parent="PanelContainer/VBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "⟳ Refresh"
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_onv4o")
+
+[node name="CenterContainer" type="CenterContainer" parent="PanelContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/PanelContainer/CenterContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+alignment = 1
+
+[node name="FRPreview" type="TextureRect" parent="PanelContainer/VBoxContainer/PanelContainer/CenterContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+
+[node name="ENYPreview" type="TextureRect" parent="PanelContainer/VBoxContainer/PanelContainer/CenterContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+
+[node name="NEUPreview" type="TextureRect" parent="PanelContainer/VBoxContainer/PanelContainer/CenterContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+
+[node name="UNKPreview" type="TextureRect" parent="PanelContainer/VBoxContainer/PanelContainer/CenterContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
