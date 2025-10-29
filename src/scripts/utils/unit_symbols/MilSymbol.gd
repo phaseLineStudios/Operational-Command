@@ -5,9 +5,10 @@ extends RefCounted
 
 enum UnitAffiliation { FRIEND, ENEMY, NEUTRAL, UNKNOWN }
 enum UnitType {
-	INFANTRY, MECHANIZED, MOTORIZED, ARMOR, ANTI_TANK, ANTI_AIR, ARTILLERY, RECON, ENGINEER, HQ
+	INFANTRY, MECHANIZED, MOTORIZED, ARMOR, ANTI_TANK, ANTI_AIR, ARTILLERY, 
+	RECON, ENGINEER, HQ, NONE
 }
-enum UnitSize { TEAM, SQUAD, SECTION, PLATOON, COMPANY, BATTALION, DIVISION }
+enum UnitSize { TEAM, SQUAD, SECTION, PLATOON, COMPANY, BATTALION, DIVISION, NONE }
 
 ## Configuration
 var config: MilSymbolConfig
@@ -243,6 +244,8 @@ func _affiliation_to_internal(affiliation: UnitAffiliation) -> MilSymbolConfig.A
 ## Convert UnitType enum to IconType enum
 func _unit_type_to_icon(unit_type: UnitType) -> MilSymbolIcons.IconType:
 	match unit_type:
+		UnitType.NONE:
+			return MilSymbolIcons.IconType.NONE
 		UnitType.INFANTRY:
 			return MilSymbolIcons.IconType.INFANTRY
 		UnitType.MECHANIZED:
@@ -270,6 +273,8 @@ func _unit_type_to_icon(unit_type: UnitType) -> MilSymbolIcons.IconType:
 ## Convert UnitSize enum to NATO size indicator text
 func _unit_size_to_text(unit_size: UnitSize) -> String:
 	match unit_size:
+		UnitSize.NONE:
+			return ""
 		UnitSize.TEAM:
 			return "ø"
 		UnitSize.SQUAD:
@@ -312,7 +317,7 @@ static func create_frame_symbol(
 	affiliation: UnitAffiliation,
 	unit_type: UnitType,
 	size: MilSymbolConfig.Size = MilSymbolConfig.Size.MEDIUM,
-	unit_size: UnitSize = UnitSize.COMPANY,
+	unit_size: UnitSize = UnitSize.PLATOON,
 	designation: String = ""
 ) -> ImageTexture:
 	var cfg := MilSymbolConfig.create_frame_only()

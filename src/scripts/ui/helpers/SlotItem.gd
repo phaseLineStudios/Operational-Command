@@ -114,7 +114,12 @@ func _update_icon() -> void:
 		if _assigned_unit.icon:
 			tex = _assigned_unit.icon
 	if tex == null:
-		tex = default_icon
+		tex = await MilSymbol.create_frame_symbol(
+			MilSymbol.UnitAffiliation.FRIEND,
+			MilSymbol.UnitType.NONE,
+			MilSymbolConfig.Size.MEDIUM,
+			MilSymbol.UnitSize.NONE
+		)
 	_icon.texture = tex
 
 

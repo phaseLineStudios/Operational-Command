@@ -1,31 +1,71 @@
 {
-	"id": "infantry_plt_2",
-	"title": "2nd Infantry",
-	"role": "INF",
-	"cost": 50,
-	"size": 2,
-	"strength": 40,
-	"equipment": {},
-	"experience": 0.0,
-	"stats": {
-		"attack": 55,
-		"defense": 35,
-		"spot_m": 1000,
-		"range_m": 500,
-		"morale": 0.9,
-		"speed_kph": 6
-	},
-	"state": {
-		"state_strength": 40.0,
-		"state_injured": 0.0,
-		"state_equipment": 1.0,
-		"cohesion": 1.0
-	},
-	"editor": {
-		"unit_category": "us_army"
-	},
-	"throughput": {},
-	"equipment_tags": [],
-	"allowed_slots": ["INF_SLOT", "RESERVE_ANY", "RESERVE_INF"],
-	"doctrine": "nato_inf_1985"
+  "allowed_slots": [
+    "INF_SLOT",
+    "RESERVE_ANY",
+    "RESERVE_INF"
+  ],
+  "ammunition": {
+    "ARTILLERY_AP": 0,
+    "ARTILLERY_ILLUM": 0,
+    "ARTILLERY_SMOKE": 0,
+    "ATGM": 0,
+    "AT_ROCKET": 0,
+    "AUTOCANNON": 0,
+    "ENGINEER_MUN": 0,
+    "HEAVY_WEAPONS": 0,
+    "MORTAR_AP": 0,
+    "MORTAR_ILLUM": 0,
+    "MORTAR_SMOKE": 0,
+    "SMALL_ARMS": 0,
+    "TANK_GUN": 0
+  },
+  "ammunition_critical_threshold": 0.1,
+  "ammunition_low_threshold": 0.25,
+  "cost": 50,
+  "doctrine": "nato_inf_1985",
+  "editor": {
+    "unit_category": "us_army"
+  },
+  "equipment": {
+    "radios": {
+
+    },
+    "vehicles": {
+
+    },
+    "weapons": {
+
+    }
+  },
+  "equipment_tags": [],
+  "experience": 0.0,
+  "id": "infantry_plt_2",
+  "movement_profile": 2,
+  "role": "INF",
+  "size": 2,
+  "state": {
+    "cohesion": 1.0,
+    "state_equipment": 1.0,
+    "state_injured": 0.0,
+    "state_strength": 40.0
+  },
+  "state_ammunition": {
+
+  },
+  "stats": {
+    "attack": 55.0,
+    "defense": 35.0,
+    "morale": 1.0,
+    "range_m": 500.0,
+    "speed_kph": 6.0,
+    "spot_m": 1000.0
+  },
+  "strength": 40,
+  "supply_transfer_radius_m": 30.0,
+  "supply_transfer_rate": 10.0,
+  "throughput": {
+
+  },
+  "title": "2nd Infantry",
+  "type": 2
 }
