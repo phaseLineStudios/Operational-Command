@@ -99,7 +99,7 @@ func generate_texture(
 
 	# Capture the texture
 	if _viewport == null:
-		LogService.error("Viewport is null", "MilSymbol.gd:104")
+		LogService.warning("Viewport is null", "MilSymbol.gd:104")
 		return
 	var img := _viewport.get_texture().get_image()
 

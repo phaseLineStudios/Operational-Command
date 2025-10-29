@@ -41,6 +41,7 @@ func info(msg: String, src := ""):
 func warning(msg: String, src := ""):
 	var fmt_msg := _fmt_msg(msg, LogLevel.WARNING, src)
 	emit_signal("line", fmt_msg, LogLevel.WARNING)
+	push_warning("%s (%s)" % [msg, src])
 	if _project_level >= LogLevel.WARNING:
 		print_rich(fmt_msg)
 
@@ -49,6 +50,7 @@ func warning(msg: String, src := ""):
 func error(msg: String, src := ""):
 	var fmt_msg := _fmt_msg(msg, LogLevel.ERROR, src)
 	emit_signal("line", fmt_msg, LogLevel.ERROR)
+	push_error("%s (%s)" % [msg, src])
 	if _project_level >= LogLevel.ERROR:
 		print_rich(fmt_msg)
 
