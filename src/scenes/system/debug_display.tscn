@@ -464,6 +464,13 @@ toggle_mode = true
 button_pressed = true
 text = "ERROR"
 
+[node name="FilterDebug" type="Button" parent="Menu/TabContainer/Log/Column/ActionsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = "DEBUG"
+
 [node name="FilterTrace" type="Button" parent="Menu/TabContainer/Log/Column/ActionsRow"]
 unique_name_in_owner = true
 layout_mode = 2
