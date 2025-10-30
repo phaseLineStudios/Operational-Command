@@ -277,19 +277,19 @@ func _init_ammunition_from_equipment(u: UnitData) -> void:
 
 	# Map AmmoTypes enum to ammo type string keys
 	const AMMO_TYPE_KEYS := [
-		"SMALL_ARMS",        # 0
-		"HEAVY_WEAPONS",     # 1
-		"AUTOCANNON",        # 2
-		"TANK_GUN",          # 3
-		"AT_ROCKET",         # 4
-		"ATGM",              # 5
-		"MORTAR_AP",         # 6
-		"MORTAR_SMOKE",      # 7
-		"MORTAR_ILLUM",      # 8
-		"ARTILLERY_AP",      # 9
-		"ARTILLERY_SMOKE",   # 10
-		"ARTILLERY_ILLUM",   # 11
-		"ENGINEER_MUN"       # 12
+		"SMALL_ARMS",  # 0
+		"HEAVY_WEAPONS",  # 1
+		"AUTOCANNON",  # 2
+		"TANK_GUN",  # 3
+		"AT_ROCKET",  # 4
+		"ATGM",  # 5
+		"MORTAR_AP",  # 6
+		"MORTAR_SMOKE",  # 7
+		"MORTAR_ILLUM",  # 8
+		"ARTILLERY_AP",  # 9
+		"ARTILLERY_SMOKE",  # 10
+		"ARTILLERY_ILLUM",  # 11
+		"ENGINEER_MUN"  # 12
 	]
 
 	# Calculate ammo capacity for each type based on equipment
@@ -330,6 +330,5 @@ func _init_ammunition_from_equipment(u: UnitData) -> void:
 				u.state_ammunition[ammo_key] = ammo_caps[ammo_key]
 
 		LogService.debug(
-			"Initialized ammo from equipment for %s: %s" % [u.id, str(ammo_caps)],
-			"AmmoSystem.gd"
+			"Initialized ammo from equipment for %s: %s" % [u.id, str(ammo_caps)], "AmmoSystem.gd"
 		)

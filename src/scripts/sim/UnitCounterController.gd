@@ -147,7 +147,9 @@ func _terrain_to_world(pos_m: Vector2) -> Variant:
 		return null
 
 	if _map_mesh == null or _map_mesh.mesh == null:
-		LogService.warning("_terrain_to_world: map_mesh or mesh is null", "UnitCounterController.gd")
+		LogService.warning(
+			"_terrain_to_world: map_mesh or mesh is null", "UnitCounterController.gd"
+		)
 		return null
 
 	var mesh_size := Vector2.ZERO
@@ -160,14 +162,18 @@ func _terrain_to_world(pos_m: Vector2) -> Variant:
 		return null
 
 	if _terrain_render.data == null:
-		LogService.warning("_terrain_to_world: terrain_render.data is null", "UnitCounterController.gd")
+		LogService.warning(
+			"_terrain_to_world: terrain_render.data is null", "UnitCounterController.gd"
+		)
 		return null
 
 	var terrain_width_m := float(_terrain_render.data.width_m)
 	var terrain_height_m := float(_terrain_render.data.height_m)
 
 	if terrain_width_m == 0 or terrain_height_m == 0:
-		LogService.warning("_terrain_to_world: terrain dimensions are zero", "UnitCounterController.gd")
+		LogService.warning(
+			"_terrain_to_world: terrain dimensions are zero", "UnitCounterController.gd"
+		)
 		return null
 
 	# Normalize terrain position to -0.5..0.5 range (mesh local space)

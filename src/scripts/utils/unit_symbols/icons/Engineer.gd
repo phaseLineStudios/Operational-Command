@@ -1,8 +1,10 @@
 extends BaseMilSymbolIcon
 ## Armored Icon.
 
+
 func get_type() -> MilSymbol.UnitType:
 	return MilSymbol.UnitType.ENGINEER
+
 
 func _get_default_icon() -> Dictionary:
 	return {

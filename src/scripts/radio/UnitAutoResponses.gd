@@ -9,12 +9,7 @@ extends Node
 ## - etc.
 
 ## Voice message priority levels
-enum Priority {
-	LOW = 0,      ## Info, routine updates
-	NORMAL = 1,   ## Movement, positions
-	HIGH = 2,     ## Contacts, objectives
-	URGENT = 3    ## Combat, casualties
-}
+enum Priority { LOW = 0, NORMAL = 1, HIGH = 2, URGENT = 3 }
 
 ## Event types that trigger voice responses
 enum EventType {
@@ -31,6 +26,7 @@ enum EventType {
 	ORDER_FAILED,
 	MOVEMENT_BLOCKED
 }
+
 
 ## Voice message in the queue
 class VoiceMessage:
@@ -56,116 +52,75 @@ class VoiceMessage:
 
 ## Event configuration - defines phrases and cooldowns for each event type
 const EVENT_CONFIG := {
-	EventType.MOVEMENT_STARTED: {
-		"phrases": [
-			"Moving out.",
-			"On the move.",
-			"Proceeding to waypoint.",
-			"Roger, moving."
-		],
+	EventType.MOVEMENT_STARTED:
+	{
+		"phrases": ["Moving out.", "On the move.", "Proceeding to waypoint.", "Roger, moving."],
 		"priority": Priority.NORMAL,
 		"cooldown_s": 10.0
 	},
-	EventType.POSITION_REACHED: {
-		"phrases": [
-			"Position reached.",
-			"In position.",
-			"Arrived at waypoint.",
-			"We're here."
-		],
+	EventType.POSITION_REACHED:
+	{
+		"phrases": ["Position reached.", "In position.", "Arrived at waypoint.", "We're here."],
 		"priority": Priority.NORMAL,
 		"cooldown_s": 5.0
 	},
-	EventType.CONTACT_SPOTTED: {
-		"phrases": [
-			"Contact!",
-			"Enemy spotted!",
-			"Eyes on hostile forces!",
-			"We have contact!"
-		],
+	EventType.CONTACT_SPOTTED:
+	{
+		"phrases": ["Contact!", "Enemy spotted!", "Eyes on hostile forces!", "We have contact!"],
 		"priority": Priority.HIGH,
 		"cooldown_s": 15.0
 	},
-	EventType.CONTACT_LOST: {
-		"phrases": [
-			"Contact lost.",
-			"Lost visual.",
-			"Target out of sight."
-		],
+	EventType.CONTACT_LOST:
+	{
+		"phrases": ["Contact lost.", "Lost visual.", "Target out of sight."],
 		"priority": Priority.LOW,
 		"cooldown_s": 20.0
 	},
-	EventType.TAKING_FIRE: {
-		"phrases": [
-			"Taking fire!",
-			"We're under fire!",
-			"Incoming fire!",
-			"Contact, contact!"
-		],
+	EventType.TAKING_FIRE:
+	{
+		"phrases": ["Taking fire!", "We're under fire!", "Incoming fire!", "Contact, contact!"],
 		"priority": Priority.URGENT,
 		"cooldown_s": 20.0
 	},
-	EventType.ENGAGING_TARGET: {
-		"phrases": [
-			"Engaging!",
-			"Firing!",
-			"Engaging hostile forces!",
-			"Opening fire!"
-		],
+	EventType.ENGAGING_TARGET:
+	{
+		"phrases": ["Engaging!", "Firing!", "Engaging hostile forces!", "Opening fire!"],
 		"priority": Priority.HIGH,
 		"cooldown_s": 15.0
 	},
-	EventType.AMMO_LOW: {
-		"phrases": [
-			"Running low on ammo.",
-			"Ammo running low.",
-			"We're low on ammunition."
-		],
+	EventType.AMMO_LOW:
+	{
+		"phrases": ["Running low on ammo.", "Ammo running low.", "We're low on ammunition."],
 		"priority": Priority.HIGH,
 		"cooldown_s": 60.0
 	},
-	EventType.AMMO_CRITICAL: {
-		"phrases": [
-			"Critically low on ammo!",
-			"Almost out of ammunition!",
-			"We need resupply!"
-		],
+	EventType.AMMO_CRITICAL:
+	{
+		"phrases": ["Critically low on ammo!", "Almost out of ammunition!", "We need resupply!"],
 		"priority": Priority.URGENT,
 		"cooldown_s": 60.0
 	},
-	EventType.FUEL_LOW: {
-		"phrases": [
-			"Fuel running low.",
-			"Low on fuel.",
-			"We need to refuel soon."
-		],
+	EventType.FUEL_LOW:
+	{
+		"phrases": ["Fuel running low.", "Low on fuel.", "We need to refuel soon."],
 		"priority": Priority.HIGH,
 		"cooldown_s": 60.0
 	},
-	EventType.FUEL_CRITICAL: {
-		"phrases": [
-			"Fuel critical!",
-			"Almost out of fuel!",
-			"We're running on fumes!"
-		],
+	EventType.FUEL_CRITICAL:
+	{
+		"phrases": ["Fuel critical!", "Almost out of fuel!", "We're running on fumes!"],
 		"priority": Priority.URGENT,
 		"cooldown_s": 60.0
 	},
-	EventType.ORDER_FAILED: {
-		"phrases": [
-			"Unable to comply.",
-			"Negative.",
-			"Can't execute that order."
-		],
+	EventType.ORDER_FAILED:
+	{
+		"phrases": ["Unable to comply.", "Negative.", "Can't execute that order."],
 		"priority": Priority.NORMAL,
 		"cooldown_s": 5.0
 	},
-	EventType.MOVEMENT_BLOCKED: {
-		"phrases": [
-			"We're blocked!",
-			"Can't proceed!",
-			"Movement blocked!"
-		],
+	EventType.MOVEMENT_BLOCKED:
+	{
+		"phrases": ["We're blocked!", "Can't proceed!", "Movement blocked!"],
 		"priority": Priority.HIGH,
 		"cooldown_s": 10.0
 	}
@@ -173,80 +128,57 @@ const EVENT_CONFIG := {
 
 ## Mapping of order failure reasons to specific response phrases
 const ORDER_FAILURE_PHRASES := {
-	"unknown_unit": [
-		"Unable to comply, unit not found.",
-		"Negative, unknown unit.",
-		"Can't locate that unit."
-	],
-	"dead_unit": [
+	"unknown_unit":
+	["Unable to comply, unit not found.", "Negative, unknown unit.", "Can't locate that unit."],
+	"dead_unit":
+	[
 		"Unable to comply, unit is down.",
 		"Negative, that unit is out of action.",
 		"Unit is no longer operational."
 	],
-	"unsupported_type": [
+	"unsupported_type":
+	[
 		"Unable to comply, invalid order type.",
 		"Negative, can't execute that order.",
 		"Order not recognized."
 	],
-	"move_missing_destination": [
+	"move_missing_destination":
+	[
 		"Unable to comply, no destination specified.",
 		"Negative, where do you want us to go?",
 		"Need a destination."
 	],
-	"move_destination_zero": [
+	"move_destination_zero":
+	[
 		"Unable to comply, invalid destination.",
 		"Negative, can't move there.",
 		"That's not a valid location."
 	],
-	"move_plan_failed": [
+	"move_plan_failed":
+	[
 		"Unable to comply, can't find a route.",
 		"Negative, no path available.",
 		"Can't get there from here."
 	],
-	"recon_no_destination": [
+	"recon_no_destination":
+	[
 		"Unable to comply, need a recon target.",
 		"Negative, where should we recon?",
 		"Need a location to scout."
 	],
-	"fire_missing_target": [
-		"Unable to comply, no target.",
-		"Negative, who do we engage?",
-		"Need a target."
-	],
-	"fire_unhandled": [
-		"Unable to comply, can't engage.",
-		"Negative, unable to fire.",
-		"Can't execute fire mission."
-	]
+	"fire_missing_target":
+	["Unable to comply, no target.", "Negative, who do we engage?", "Need a target."],
+	"fire_unhandled":
+	["Unable to comply, can't engage.", "Negative, unable to fire.", "Can't execute fire mission."]
 }
 
 ## Mapping of movement blocked reasons to specific response phrases
 const MOVEMENT_BLOCKED_PHRASES := {
-	"no_path": [
-		"Can't find a route!",
-		"No path available!",
-		"Unable to reach destination!"
-	],
-	"blocked_cell": [
-		"We're stuck!",
-		"Terrain is impassable!",
-		"Can't move through here!"
-	],
-	"no_grid": [
-		"Navigation error!",
-		"Can't navigate!",
-		"System error!"
-	],
-	"no_unit": [
-		"Unit error!",
-		"Can't move!",
-		"System error!"
-	],
-	"no_speed": [
-		"We're immobilized!",
-		"Can't move, immobilized!",
-		"Movement systems down!"
-	]
+	"no_path": ["Can't find a route!", "No path available!", "Unable to reach destination!"],
+	"blocked_cell": ["We're stuck!", "Terrain is impassable!", "Can't move through here!"],
+	"no_grid": ["Navigation error!", "Can't navigate!", "System error!"],
+	"no_unit": ["Unit error!", "Can't move!", "System error!"],
+	"no_speed": ["We're immobilized!", "Can't move, immobilized!", "Movement systems down!"]
 }
 
 ## Maximum messages in queue
@@ -575,9 +507,12 @@ func _get_unit_description(unit: ScenarioUnit) -> String:
 	var affiliation := "Enemy"
 	if unit:
 		match unit.affiliation:
-			0: affiliation = "Friendly"
-			1: affiliation = "Enemy"
-			_: affiliation = "Unknown"
+			0:
+				affiliation = "Friendly"
+			1:
+				affiliation = "Enemy"
+			_:
+				affiliation = "Unknown"
 
 	var unit_type := "forces"
 	if unit and unit.unit.type != -1:
@@ -588,11 +523,16 @@ func _get_unit_description(unit: ScenarioUnit) -> String:
 	var size_str := ""
 	if unit:
 		match unit.unit.size:
-			0: size_str = "team"
-			1: size_str = "squad"
-			2: size_str = "platoon"
-			3: size_str = "company"
-			4: size_str = "battalion"
+			0:
+				size_str = "team"
+			1:
+				size_str = "squad"
+			2:
+				size_str = "platoon"
+			3:
+				size_str = "company"
+			4:
+				size_str = "battalion"
 
 	if size_str != "":
 		return "%s %s %s" % [affiliation, unit_type, size_str]
@@ -638,13 +578,14 @@ func _spawn_contact_counter(contact_id: String) -> void:
 	var callsign: String = contact_unit.callsign
 	var pos_m: Vector2 = contact_unit.position_m
 
-	_counter_controller.spawn_counter_at_position(affiliation, unit_type, unit_size, callsign, pos_m)
+	_counter_controller.spawn_counter_at_position(
+		affiliation, unit_type, unit_size, callsign, pos_m
+	)
 
 	_spotted_contacts[contact_id] = true
 
 	LogService.debug(
-		"Spawned counter for contact %s at %s" % [callsign, pos_m],
-		"UnitAutoResponses.gd"
+		"Spawned counter for contact %s at %s" % [callsign, pos_m], "UnitAutoResponses.gd"
 	)
 
 
@@ -652,7 +593,10 @@ func _spawn_contact_counter(contact_id: String) -> void:
 ## [param aff] [enum ScenarioUnit.Affiliation] to parse.
 ## [return] parsed [enum MilSymbol.UnitAffiliation].
 func _parse_unit_affiliation(aff: ScenarioUnit.Affiliation) -> MilSymbol.UnitAffiliation:
-	match (aff):
-		0: return MilSymbol.UnitAffiliation.FRIEND
-		1: return MilSymbol.UnitAffiliation.ENEMY
-		_: return MilSymbol.UnitAffiliation.UNKNOWN
+	match aff:
+		0:
+			return MilSymbol.UnitAffiliation.FRIEND
+		1:
+			return MilSymbol.UnitAffiliation.ENEMY
+		_:
+			return MilSymbol.UnitAffiliation.UNKNOWN

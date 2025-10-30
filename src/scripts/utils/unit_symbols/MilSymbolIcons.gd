@@ -3,10 +3,10 @@
 class_name MilSymbolIcons
 extends RefCounted
 
-
 const ICONS_PATH := "res://scripts/utils/unit_symbols/icons"
 
 static var _generators: Dictionary = {}
+
 
 ## Load and cache icon generators from ICONS_PATH.
 ## Skips files with global class_names.
@@ -33,6 +33,7 @@ static func _get_icon_generators() -> Dictionary:
 		fname = dir.get_next()
 	dir.list_dir_end()
 	return _generators
+
 
 ## Get drawing instructions for [param icon_type] and [param affiliation].
 ## Coordinates use a 200x200 space.

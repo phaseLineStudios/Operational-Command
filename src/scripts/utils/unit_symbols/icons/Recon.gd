@@ -1,12 +1,12 @@
 extends BaseMilSymbolIcon
 ## Mechanized Icon.
 
+
 func get_type() -> MilSymbol.UnitType:
 	return MilSymbol.UnitType.RECON
 
-func get_icon_config(
-	affiliation: MilSymbol.UnitAffiliation
-) -> Dictionary:
+
+func get_icon_config(affiliation: MilSymbol.UnitAffiliation) -> Dictionary:
 	match affiliation:
 		MilSymbol.UnitAffiliation.FRIEND:
 			return {"type": "lines", "paths": [[Vector2(25, 150), Vector2(175, 50)]]}
