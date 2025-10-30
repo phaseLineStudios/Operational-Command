@@ -7,8 +7,7 @@ func get_type() -> MilSymbol.UnitType:
 func _get_default_icon() -> Dictionary:
 	return {
 		"type": "mixed",
-		"shapes":
-		[
+		"shapes": [
 			{
 				"shape": "circle",
 				"center": Vector2(100, 115),
@@ -16,8 +15,7 @@ func _get_default_icon() -> Dictionary:
 				"filled": false
 			}
 		],
-		"paths":
-		[
+		"paths": [
 			[Vector2(100, 110), Vector2(100, 80)], 
 			[Vector2(100, 80), Vector2(91, 90)],
 			[Vector2(100, 80), Vector2(109, 90)]
