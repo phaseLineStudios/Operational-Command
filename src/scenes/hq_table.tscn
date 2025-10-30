@@ -236,7 +236,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.248519, 0.736343, -0.30524
 skeleton = NodePath("../../Table/Mesh")
 
 [node name="LampLight" type="OmniLight3D" parent="StaticObjects"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.062008977, 1.24826, 0.557029)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0898442, 1.24826, 0.089353114)
+light_color = Color(1, 0.82169163, 0.6786466, 1)
 light_energy = 0.5
 
 [node name="PhysicsObjects" type="Node" parent="."]
