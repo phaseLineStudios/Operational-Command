@@ -21,6 +21,7 @@ extends Node3D
 @onready var drawing_controller: DrawingController = %DrawingController
 @onready var counter_controller: UnitCounterController = %UnitCounterController
 @onready var unit_voices: UnitVoiceResponses = %UnitVoiceResponses
+@onready var unit_auto_voices: UnitAutoResponses = %UnitAutoResponses
 @onready var tts_player: AudioStreamPlayer = %TTSPlayer
 
 
@@ -64,7 +65,7 @@ func _ready() -> void:
 
 	_update_subtitle_suggestions(scenario)
 	_create_initial_unit_counters(playable_units)
-	
+
 	# All initialization complete - hide loading screen
 	loading_screen.hide_loading()
 
@@ -81,6 +82,10 @@ func _init_drawing_controller() -> void:
 
 ## Initialize the counter controller and bind to trigger API
 func _init_counter_controller() -> void:
+	# Initialize counter controller with map mesh and terrain render for coordinate conversion
+	if counter_controller and map:
+		counter_controller.init(%Map, map.renderer)
+
 	if trigger_engine and trigger_engine._api:
 		trigger_engine._api._counter_controller = counter_controller
 
@@ -96,6 +101,14 @@ func _init_tts_system() -> void:
 	if unit_voices and sim and map:
 		unit_voices.init(sim._units_by_id, sim, map.renderer)
 		LogService.trace("Unit voice responses initialized.", "HQTable.gd:_init_tts_system")
+
+	# Initialize UnitAutoResponses for automatic unit event reporting
+	if unit_auto_voices and sim and map:
+		unit_auto_voices.init(sim, sim._units_by_id, map.renderer, counter_controller)
+		LogService.trace("Unit auto responses initialized.", "HQTable.gd:_init_tts_system")
+
+		# Wire up ammo/fuel warnings to auto-response system
+		_wire_logistics_warnings()
 
 	# Wire up OrdersRouter to UnitVoiceResponses
 	var orders_router := get_node_or_null("%RadioController/OrdersRouter")
@@ -121,11 +134,57 @@ func _init_tts_system() -> void:
 			)
 
 
+## Wire up ammo/fuel warning signals to auto-response system.
+func _wire_logistics_warnings() -> void:
+	if not sim:
+		return
+
+	# Connect ammo system warnings
+	if sim.ammo_system:
+		sim.ammo_system.ammo_low.connect(_on_ammo_low)
+		sim.ammo_system.ammo_critical.connect(_on_ammo_critical)
+
+	# Connect fuel system warnings
+	if sim.fuel_system:
+		sim.fuel_system.fuel_low.connect(_on_fuel_low)
+		sim.fuel_system.fuel_critical.connect(_on_fuel_critical)
+
+	LogService.trace("Logistics warnings wired to auto-response system.", "HQTable.gd")
+
+
+## Handle ammo low warning.
+func _on_ammo_low(unit_id: String) -> void:
+	if unit_auto_voices:
+		unit_auto_voices.trigger_ammo_low(unit_id)
+
+
+## Handle ammo critical warning.
+func _on_ammo_critical(unit_id: String) -> void:
+	if unit_auto_voices:
+		unit_auto_voices.trigger_ammo_critical(unit_id)
+
+
+## Handle fuel low warning.
+func _on_fuel_low(unit_id: String) -> void:
+	if unit_auto_voices:
+		unit_auto_voices.trigger_fuel_low(unit_id)
+
+
+## Handle fuel critical warning.
+func _on_fuel_critical(unit_id: String) -> void:
+	if unit_auto_voices:
+		unit_auto_voices.trigger_fuel_critical(unit_id)
+
+
 ## Handle radio messages from SimWorld (trigger API, ammo/fuel warnings, etc.)
 func _on_radio_message(_level: String, text: String) -> void:
 	# Skip "Order applied" and "Order failed" messages
 	# These are already handled by UnitVoiceResponses
 	if text.begins_with("Order applied") or text.begins_with("Order failed"):
+		return
+
+	# Skip ammo/fuel warnings - now handled by UnitAutoResponses
+	if text.contains("low ammo") or text.contains("winchester") or text.contains("low on fuel"):
 		return
 
 	# Speak the message via TTS

@@ -3,7 +3,19 @@
     "INF"
   ],
   "ammunition": {
-
+    "ARTILLERY_AP": 0,
+    "ARTILLERY_ILLUM": 0,
+    "ARTILLERY_SMOKE": 0,
+    "ATGM": 0,
+    "AT_ROCKET": 0,
+    "AUTOCANNON": 0,
+    "ENGINEER_MUN": 0,
+    "HEAVY_WEAPONS": 0,
+    "MORTAR_AP": 0,
+    "MORTAR_ILLUM": 0,
+    "MORTAR_SMOKE": 0,
+    "SMALL_ARMS": 0,
+    "TANK_GUN": 0
   },
   "ammunition_critical_threshold": 0.1,
   "ammunition_low_threshold": 0.25,
@@ -12,7 +24,6 @@
   "editor": {
     "unit_category": "frg_bw"
   },
-  "enemy_icon_path": "res://assets/textures/units/enemy_unknown_platoon.png",
   "equipment": {
     "radios": {
 
@@ -37,11 +48,12 @@
   },
   "equipment_tags": [],
   "experience": 0.0,
-  "icon_path": "res://assets/textures/units/nato_unknown_platoon.png",
   "id": "frg_opfor_2_bundeswehr",
+  "isEngineer": false,
+  "isMedical": false,
   "movement_profile": 2,
   "role": "INF",
-  "size": 2,
+  "size": 3,
   "state": {
     "cohesion": 0.0,
     "state_equipment": 0.0,
@@ -65,5 +77,6 @@
   "throughput": {
 
   },
-  "title": "Bundeswehr OPFOR-2"
+  "title": "Bundeswehr OPFOR-2",
+  "type": 0
 }

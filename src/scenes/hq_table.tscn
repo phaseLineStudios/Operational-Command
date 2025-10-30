@@ -1,4 +1,4 @@
-[gd_scene load_steps=73 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=74 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -34,7 +34,8 @@
 [ext_resource type="Script" uid="uid://cldkj080ext62" path="res://scripts/sim/UnitCounterController.gd" id="28_wrosp"]
 [ext_resource type="PackedScene" uid="uid://db2miy3a6hjke" path="res://scenes/ui/mission_dialog.tscn" id="29_dialog"]
 [ext_resource type="Script" uid="uid://bnus1tqft6rms" path="res://scripts/radio/UnitVoiceResponses.gd" id="30_voices"]
-[ext_resource type="Script" uid="uid://d1c2ojsjf1fws" path="res://scripts/audio/RadioSignalModulator.gd" id="31_modulator"]
+[ext_resource type="Script" uid="uid://cpcrrfahha6bx" path="res://scripts/radio/UnitAutoResponses.gd" id="31_auto_voices"]
+[ext_resource type="Script" uid="uid://d1c2ojsjf1fws" path="res://scripts/audio/RadioSignalModulator.gd" id="32_modulator"]
 [ext_resource type="PackedScene" uid="uid://bnexhgtx3llph" path="res://scenes/ui/counter_config_dialog.tscn" id="33_bsy1h"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
@@ -560,7 +561,11 @@ unique_name_in_owner = true
 bus = &"Radio"
 
 [node name="RadioSignalModulator" type="Node" parent="Controllers"]
-script = ExtResource("31_modulator")
+script = ExtResource("32_modulator")
+
+[node name="UnitAutoResponses" type="Node" parent="Controllers"]
+unique_name_in_owner = true
+script = ExtResource("31_auto_voices")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
