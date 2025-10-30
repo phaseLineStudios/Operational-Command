@@ -168,7 +168,7 @@ metadata/_custom_type_script = "uid://dnnu3w3b3j5rk"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_itljb"]
 shader = ExtResource("10_itljb")
-shader_parameter/grain_amount = 0.030000001425
+shader_parameter/grain_amount = 0.0350000016625
 shader_parameter/grain_size = 1.0
 
 [node name="HQTable" type="Node3D"]
@@ -244,7 +244,7 @@ skeleton = NodePath("../../Table/Mesh")
 
 [node name="LampLight" type="OmniLight3D" parent="StaticObjects"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0898442, 1.24826, 0.089353114)
-light_color = Color(0.73440415, 0.9999998, 0.970867, 1)
+light_color = Color(0.8953671, 0.9999998, 0.9876829, 1)
 light_energy = 0.4
 
 [node name="PhysicsObjects" type="Node" parent="."]
@@ -583,6 +583,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="UI" type="CanvasLayer" parent="."]
 

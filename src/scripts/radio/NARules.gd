@@ -210,7 +210,7 @@ func build_vosk_word_array(
 	var tables := get_parser_tables()
 
 	words.append_array(tables["action_synonyms"].keys())
-	words.append_array(["now", "immediately"])
+	words.append_array(["now", "immediately", "direct"])
 	# Add report type keywords (not in action_synonyms but needed for parsing)
 	words.append_array(["status", "position", "contact", "contacts"])
 

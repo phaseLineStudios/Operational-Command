@@ -23,6 +23,7 @@ const ORDER_KEYS := {
 	"quantity": 0,
 	"zone": "",
 	"target_callsign": "",
+	"direct": false,
 	"raw": []
 }
 
@@ -124,6 +125,12 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 			i += 1
 			continue
 
+		# Direct movement modifier (can come before or after move action)
+		if t == "direct":
+			cur.direct = true
+			i += 1
+			continue
+
 		# Action keyword.
 		if actions.has(t):
 			var ot := int(actions[t])
@@ -216,6 +223,7 @@ func _new_order_builder() -> Dictionary:
 		"quantity": 0,
 		"zone": "",
 		"target_callsign": "",
+		"direct": false,
 		"report_type": "",  # For REPORT orders: status, position, contact
 		"raw": PackedStringArray()
 	}
@@ -234,6 +242,7 @@ func _finalize(cur: Dictionary) -> Dictionary:
 		"quantity": int(cur.quantity),
 		"zone": str(cur.zone),
 		"target_callsign": str(cur.target_callsign),
+		"direct": bool(cur.get("direct", false)),
 		"report_type": str(cur.report_type),
 		"raw": (cur.raw as PackedStringArray).duplicate()
 	}
