@@ -68,7 +68,19 @@
     "state_strength": 28.0
   },
   "state_ammunition": {
-
+    "ARTILLERY_AP": 0,
+    "ARTILLERY_ILLUM": 0,
+    "ARTILLERY_SMOKE": 0,
+    "ATGM": 0,
+    "AT_ROCKET": 0,
+    "AUTOCANNON": 0,
+    "ENGINEER_MUN": 0,
+    "HEAVY_WEAPONS": 0,
+    "MORTAR_AP": 0,
+    "MORTAR_ILLUM": 0,
+    "MORTAR_SMOKE": 0,
+    "SMALL_ARMS": 0,
+    "TANK_GUN": 0
   },
   "stats": {
     "attack": 20.0,
@@ -85,5 +97,5 @@
 
   },
   "title": "Scout Platoon, 1/A/1-11 ACR",
-  "type": 7
+  "type": 8
 }

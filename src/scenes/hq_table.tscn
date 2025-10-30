@@ -214,13 +214,12 @@ size = Vector3(1.37492, 1.76648, 2.76892)
 transform = Transform3D(0.31243446, 0, -0.9499393, 0, 1, 0, 0.9499393, 0, 0.31243446, -0.3772638, 0.7311746, -0.22486593)
 
 [node name="UnitCounterDrawer" type="StaticBody3D" parent="StaticObjects"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.024217911, 0.8045154, -0.31927103)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.024217911, 0.8045154, -0.26940298)
 
 [node name="Collision" type="CollisionShape3D" parent="StaticObjects/UnitCounterDrawer"]
 shape = SubResource("BoxShape3D_cdjkm")
 
 [node name="Mesh" type="MeshInstance3D" parent="StaticObjects/UnitCounterDrawer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.031823426)
 mesh = SubResource("BoxMesh_wrosp")
 
 [node name="Map" type="MeshInstance3D" parent="StaticObjects"]
