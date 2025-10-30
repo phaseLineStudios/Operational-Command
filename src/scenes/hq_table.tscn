@@ -3,9 +3,10 @@
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
 [ext_resource type="Script" uid="uid://d0ojagsd85iyf" path="res://scripts/ui/HQTable.gd" id="1_qgda6"]
-[ext_resource type="PackedScene" uid="uid://xp0rbo1drhvx" path="res://assets/models/Timer.glb" id="2_2llyq"]
+[ext_resource type="PackedScene" uid="uid://xp0rbo1drhvx" path="res://assets/models/timer/Timer.glb" id="2_2llyq"]
 [ext_resource type="Script" uid="uid://4htsynbphlw0" path="res://scripts/core/TimerController.gd" id="3_2llyq"]
 [ext_resource type="Script" uid="uid://dn828tsljtrki" path="res://scripts/core/Camera.gd" id="3_3f477"]
+[ext_resource type="PackedScene" uid="uid://gfdfc6v4mqv6" path="res://assets/models/clipboard/Clipboard.glb" id="4_fhiww"]
 [ext_resource type="Script" uid="uid://0r8k717de5os" path="res://scripts/core/PlayerInteraction.gd" id="4_py2wd"]
 [ext_resource type="Script" uid="uid://6xtsg3rqhc8t" path="res://scripts/core/MapController.gd" id="5_lmes1"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="6_cx6my"]
@@ -61,7 +62,6 @@ size = Vector3(0.2, 0.12, 0.12)
 size = Vector3(0.2, 0.12, 0.12)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ge8rp"]
-shading_mode = 0
 texture_filter = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_p1n4g"]
@@ -79,16 +79,13 @@ rough = true
 absorbent = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cx6my"]
-size = Vector3(0.12, 0.005, 0.18)
-
-[sub_resource type="BoxMesh" id="BoxMesh_lmes1"]
-size = Vector3(0.12, 0.005, 0.18)
+size = Vector3(0.115510255, 0.0025, 0.17024414)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_uk27s"]
-size = Vector3(0.12, 0.005, 0.18)
+size = Vector3(0.115510255, 0.0025, 0.17024414)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ge8rp"]
-size = Vector3(0.12, 0.005, 0.18)
+size = Vector3(0.115510255, 0.0025, 0.17024414)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_vxnyp"]
 size = Vector3(0.12, 0.005, 0.15)
@@ -239,7 +236,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.248519, 0.736343, -0.30524
 skeleton = NodePath("../../Table/Mesh")
 
 [node name="LampLight" type="OmniLight3D" parent="StaticObjects"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.24826, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.062008977, 1.24826, 0.557029)
+light_energy = 0.5
 
 [node name="PhysicsObjects" type="Node" parent="."]
 unique_name_in_owner = true
@@ -257,9 +255,7 @@ inspect_rotation = Vector3(90, 0, 0)
 [node name="Collision" type="CollisionShape3D" parent="PhysicsObjects/IntelDoc"]
 shape = SubResource("BoxShape3D_cx6my")
 
-[node name="Mesh" type="MeshInstance3D" parent="PhysicsObjects/IntelDoc"]
-mesh = SubResource("BoxMesh_lmes1")
-skeleton = NodePath("../..")
+[node name="Mesh" parent="PhysicsObjects/IntelDoc" instance=ExtResource("4_fhiww")]
 
 [node name="TerrainDoc" type="RigidBody3D" parent="PhysicsObjects"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388701, 0.747355, 0.0703042)
@@ -274,9 +270,7 @@ inspect_rotation = Vector3(90, 0, 0)
 [node name="Collision" type="CollisionShape3D" parent="PhysicsObjects/TerrainDoc"]
 shape = SubResource("BoxShape3D_uk27s")
 
-[node name="Mesh" type="MeshInstance3D" parent="PhysicsObjects/TerrainDoc"]
-mesh = SubResource("BoxMesh_lmes1")
-skeleton = NodePath("../..")
+[node name="Mesh" parent="PhysicsObjects/TerrainDoc" instance=ExtResource("4_fhiww")]
 
 [node name="BriefingDoc" type="RigidBody3D" parent="PhysicsObjects"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388701, 0.754058, 0.228009)
@@ -289,11 +283,10 @@ inspect_enabled = true
 inspect_rotation = Vector3(90, 0, 0)
 
 [node name="Collision" type="CollisionShape3D" parent="PhysicsObjects/BriefingDoc"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5884638e-05, 0.0012500286, -0.0104150325)
 shape = SubResource("BoxShape3D_ge8rp")
 
-[node name="Mesh" type="MeshInstance3D" parent="PhysicsObjects/BriefingDoc"]
-mesh = SubResource("BoxMesh_lmes1")
-skeleton = NodePath("../..")
+[node name="Mesh" parent="PhysicsObjects/BriefingDoc" instance=ExtResource("4_fhiww")]
 
 [node name="FieldManual" type="RigidBody3D" parent="PhysicsObjects"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.358866, 0.737931, 0.245496)

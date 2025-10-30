@@ -163,6 +163,7 @@ func _on_objective_updated(_id: String, _obj_state: int) -> void:
 func _process(dt: float) -> void:
 	if _state != State.RUNNING:
 		if _state == State.PAUSED:
+			_process_orders()
 			trigger_engine.tick(dt)
 		return
 	_dt_accum += dt * _time_scale
