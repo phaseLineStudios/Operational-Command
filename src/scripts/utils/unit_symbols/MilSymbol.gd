@@ -22,12 +22,12 @@ enum UnitType {
 	NONE
 }
 ## Unit Size/Echelon.
-enum UnitSize { 
-	TEAM, 
-	SQUAD, 
-	SECTION, 
-	PLATOON, 
-	COMPANY, 
+enum UnitSize {
+	TEAM,
+	SQUAD,
+	SECTION,
+	PLATOON,
+	COMPANY,
 	BATTALION,
 	REGIMENT,
 	BRIGADE,
@@ -265,19 +265,32 @@ func _parse_domain(code: String) -> MilSymbolGeometry.Domain:
 ## Convert UnitSize enum to NATO size indicator text
 func _unit_size_to_text(unit_size: UnitSize) -> String:
 	match unit_size:
-		UnitSize.NONE: return ""
-		UnitSize.TEAM: return "ø"
-		UnitSize.SQUAD: return "•"
-		UnitSize.SECTION: return "••"
-		UnitSize.PLATOON: return "•••"
-		UnitSize.COMPANY: return "I"
-		UnitSize.BATTALION: return "II"
-		UnitSize.REGIMENT: return "III"
-		UnitSize.BRIGADE: return "X"
-		UnitSize.DIVISION: return "XX"
-		UnitSize.CORPS: return "XXX"
-		UnitSize.ARMY: return "XXXX"
-		_: return ""
+		UnitSize.NONE:
+			return ""
+		UnitSize.TEAM:
+			return "ø"
+		UnitSize.SQUAD:
+			return "•"
+		UnitSize.SECTION:
+			return "••"
+		UnitSize.PLATOON:
+			return "•••"
+		UnitSize.COMPANY:
+			return "I"
+		UnitSize.BATTALION:
+			return "II"
+		UnitSize.REGIMENT:
+			return "III"
+		UnitSize.BRIGADE:
+			return "X"
+		UnitSize.DIVISION:
+			return "XX"
+		UnitSize.CORPS:
+			return "XXX"
+		UnitSize.ARMY:
+			return "XXXX"
+		_:
+			return ""
 
 
 ## Static convenience method: create and generate in one call

@@ -388,6 +388,7 @@ func _draw_unique_designation() -> void:
 		config.text_color
 	)
 
+
 ## Draw a rounded rectangle.
 ## [param rect] Rect region in px.
 ## [param radius] Corner radius in px (clamped to half of min(width, height)).
@@ -396,12 +397,7 @@ func _draw_unique_designation() -> void:
 ## [param width] Outline width in px (used when !filled).
 ## [param segments] Segments per corner arc (>= 2 recommended).
 func _draw_rounded_rect(
-	rect: Rect2,
-	radius: float,
-	color: Color,
-	filled: bool,
-	width: float,
-	segments: int = 10
+	rect: Rect2, radius: float, color: Color, filled: bool, width: float, segments: int = 10
 ) -> void:
 	var x := rect.position.x
 	var y := rect.position.y
@@ -422,25 +418,25 @@ func _draw_rounded_rect(
 			draw_rect(Rect2(x + r, y, w - 2.0 * r, h), color)
 		# Left/right vertical strips
 		if h - 2.0 * r > 0.0:
-			draw_rect(Rect2(x,         y + r, r, h - 2.0 * r), color)
+			draw_rect(Rect2(x, y + r, r, h - 2.0 * r), color)
 			draw_rect(Rect2(x + w - r, y + r, r, h - 2.0 * r), color)
 		# Quarter-circle fills
-		_fill_arc_fan(Vector2(x + r,     y + r),     r, PI,        PI * 1.5, color, segments) # TL
-		_fill_arc_fan(Vector2(x + w - r, y + r),     r, -PI * 0.5, 0.0,       color, segments) # TR
-		_fill_arc_fan(Vector2(x + w - r, y + h - r), r, 0.0,       PI * 0.5,  color, segments) # BR
-		_fill_arc_fan(Vector2(x + r,     y + h - r), r, PI * 0.5,  PI,        color, segments) # BL
+		_fill_arc_fan(Vector2(x + r, y + r), r, PI, PI * 1.5, color, segments)  # TL
+		_fill_arc_fan(Vector2(x + w - r, y + r), r, -PI * 0.5, 0.0, color, segments)  # TR
+		_fill_arc_fan(Vector2(x + w - r, y + h - r), r, 0.0, PI * 0.5, color, segments)  # BR
+		_fill_arc_fan(Vector2(x + r, y + h - r), r, PI * 0.5, PI, color, segments)  # BL
 	else:
 		# Straight edges
-		draw_line(Vector2(x + r,     y),         Vector2(x + w - r, y),         color, width)
-		draw_line(Vector2(x + w,     y + r),     Vector2(x + w,     y + h - r), color, width)
-		draw_line(Vector2(x + w - r, y + h),     Vector2(x + r,     y + h),     color, width)
-		draw_line(Vector2(x,         y + h - r), Vector2(x,         y + r),     color, width)
+		draw_line(Vector2(x + r, y), Vector2(x + w - r, y), color, width)
+		draw_line(Vector2(x + w, y + r), Vector2(x + w, y + h - r), color, width)
+		draw_line(Vector2(x + w - r, y + h), Vector2(x + r, y + h), color, width)
+		draw_line(Vector2(x, y + h - r), Vector2(x, y + r), color, width)
 		# Corner arcs
-		draw_arc(Vector2(x + w - r, y + r),     r, -PI * 0.5, 0.0,       segments, color, width) # TR
-		draw_arc(Vector2(x + w - r, y + h - r), r, 0.0,       PI * 0.5,  segments, color, width) # BR
-		draw_arc(Vector2(x + r,     y + h - r), r, PI * 0.5,  PI,        segments, color, width) # BL
-		draw_arc(Vector2(x + r,     y + r),     r, PI,        PI * 1.5,  segments, color, width) # TL
-		
+		draw_arc(Vector2(x + w - r, y + r), r, -PI * 0.5, 0.0, segments, color, width)  # TR
+		draw_arc(Vector2(x + w - r, y + h - r), r, 0.0, PI * 0.5, segments, color, width)  # BR
+		draw_arc(Vector2(x + r, y + h - r), r, PI * 0.5, PI, segments, color, width)  # BL
+		draw_arc(Vector2(x + r, y + r), r, PI, PI * 1.5, segments, color, width)  # TL
+
 
 ## Fill a quarter circle with a triangle fan.
 ## [param center] Arc center.
@@ -449,7 +445,9 @@ func _draw_rounded_rect(
 ## [param a1] End angle (rad).
 ## [param color] Fill color.
 ## [param segments] Arc smoothness (>=2).
-func _fill_arc_fan(center: Vector2, r: float, a0: float, a1: float, color: Color, segments: int) -> void:
+func _fill_arc_fan(
+	center: Vector2, r: float, a0: float, a1: float, color: Color, segments: int
+) -> void:
 	var seg: int = max(2, segments)
 	var pts := PackedVector2Array()
 	pts.append(center)

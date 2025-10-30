@@ -44,7 +44,7 @@ var fill_colors: Dictionary = {
 }
 
 ## Colors for frame outlines
-@export var frame_colors: Dictionary = {
+var frame_colors: Dictionary = {
 	MilSymbol.UnitAffiliation.FRIEND: Color(0.0, 0.6, 1.0, 1.0),  ## Blue
 	MilSymbol.UnitAffiliation.ENEMY: Color(1.0, 0.0, 0.0, 1.0),  ## Red
 	MilSymbol.UnitAffiliation.NEUTRAL: Color(0.0, 0.8, 0.0, 1.0),  ## Green
@@ -97,10 +97,12 @@ static func create_frame_only() -> MilSymbolConfig:
 
 	return config
 
+
 static func get_frame_colors() -> Dictionary:
 	var config := MilSymbolConfig.new()
 	return config.frame_colors
-	
+
+
 static func get_fill_colors() -> Dictionary:
 	var config := MilSymbolConfig.new()
 	return config.fill_colors
