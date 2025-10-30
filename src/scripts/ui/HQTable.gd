@@ -104,7 +104,9 @@ func _init_tts_system() -> void:
 
 	# Initialize UnitAutoResponses for automatic unit event reporting
 	if unit_auto_voices and sim and map:
-		unit_auto_voices.init(sim, sim._units_by_id, map.renderer, counter_controller)
+		unit_auto_voices.init(
+			sim, sim._units_by_id, map.renderer, counter_controller, sim.artillery_controller
+		)
 		LogService.trace("Unit auto responses initialized.", "HQTable.gd:_init_tts_system")
 
 		# Wire up ammo/fuel warnings to auto-response system

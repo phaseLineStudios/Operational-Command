@@ -1,4 +1,4 @@
-[gd_scene load_steps=76 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=77 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -37,6 +37,7 @@
 [ext_resource type="Script" uid="uid://bnus1tqft6rms" path="res://scripts/radio/UnitVoiceResponses.gd" id="30_voices"]
 [ext_resource type="Script" uid="uid://cpcrrfahha6bx" path="res://scripts/radio/UnitAutoResponses.gd" id="31_auto_voices"]
 [ext_resource type="Script" uid="uid://d1c2ojsjf1fws" path="res://scripts/audio/RadioSignalModulator.gd" id="32_modulator"]
+[ext_resource type="Script" uid="uid://0xd5ojxkkl4q" path="res://scripts/sim/systems/ArtilleryController.gd" id="33_66vc6"]
 [ext_resource type="PackedScene" uid="uid://bnexhgtx3llph" path="res://scenes/ui/counter_config_dialog.tscn" id="33_bsy1h"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
@@ -496,14 +497,18 @@ combat_controller = NodePath("../../CombatController")
 terrain_renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
 metadata/_custom_type_script = "uid://ckdlg61462pgb"
 
-[node name="WorldController" type="Node" parent="Controllers" node_paths=PackedStringArray("los_adapter", "movement_adapter", "combat_controller", "trigger_engine", "_router")]
+[node name="WorldController" type="Node" parent="Controllers" node_paths=PackedStringArray("los_adapter", "movement_adapter", "combat_controller", "combat_adapter", "trigger_engine", "_router", "ammo_system", "fuel_system", "artillery_controller")]
 unique_name_in_owner = true
 script = ExtResource("7_ge8rp")
 los_adapter = NodePath("../LOSController/LOSAdapter")
 movement_adapter = NodePath("MovementAdapter")
 combat_controller = NodePath("../CombatController")
+combat_adapter = NodePath("../CombatController/CombatAdapter")
 trigger_engine = NodePath("TriggerEngine")
 _router = NodePath("../RadioController/OrdersRouter")
+ammo_system = NodePath("../CombatController/AmmoSystem")
+fuel_system = NodePath("FuelSystem")
+artillery_controller = NodePath("../ArtilleryController")
 
 [node name="MovementAdapter" type="Node" parent="Controllers/WorldController" node_paths=PackedStringArray("renderer")]
 unique_name_in_owner = true
@@ -580,6 +585,9 @@ script = ExtResource("32_modulator")
 [node name="UnitAutoResponses" type="Node" parent="Controllers"]
 unique_name_in_owner = true
 script = ExtResource("31_auto_voices")
+
+[node name="ArtilleryController" type="Node" parent="Controllers"]
+script = ExtResource("33_66vc6")
 
 [node name="PostProcess" type="CanvasLayer" parent="."]
 

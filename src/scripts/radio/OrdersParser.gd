@@ -24,6 +24,8 @@ const ORDER_KEYS := {
 	"zone": "",
 	"target_callsign": "",
 	"direct": false,
+	"ammo_type": "",  # For FIRE orders: "ap", "smoke", "illum"
+	"rounds": 1,  # For FIRE orders: number of rounds
 	"raw": []
 }
 
@@ -159,6 +161,52 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 						i += 1  # Skip the report type token
 				# "sitrep" keyword defaults to status (already set)
 
+			# Detect ammo type and rounds if this is a FIRE order
+			if ot == OrderType.FIRE:
+				# Default ammo type is AP
+				cur.ammo_type = "ap"
+				cur.rounds = 1
+				# Scan ahead for ammo type and rounds keywords
+				# But stop early if we hit grid/position keywords
+				var j := i + 1
+				while j < tokens.size():
+					var next := tokens[j]
+					# Stop IMMEDIATELY if we hit grid/position keywords
+					# (don't consume them, let normal parsing handle them)
+					if qty_labels.has(next) or directions.has(next):
+						break
+					# Detect ammo type
+					if next in ["ap", "he", "frag", "antipersonnel"]:
+						cur.ammo_type = "ap"
+						j += 1
+						continue
+					elif next in ["smoke"]:
+						cur.ammo_type = "smoke"
+						j += 1
+						continue
+					elif next in ["illum", "illumination", "flare", "flares"]:
+						cur.ammo_type = "illum"
+						j += 1
+						continue
+					# Detect rounds count
+					elif next in ["round", "rounds"]:
+						# Look for number before "round/rounds"
+						if j > i + 1:
+							var prev := tokens[j - 1]
+							if _is_int_literal(prev):
+								cur.rounds = int(prev)
+							elif number_words.has(prev):
+								cur.rounds = int(number_words[prev])
+						j += 1
+						continue
+					# Stop if we hit callsigns or other actions
+					elif callsigns.has(next) or actions.has(next):
+						break
+					# Otherwise skip this token
+					j += 1
+				# Don't update i - let normal parsing handle position/grid
+				# Only the ammo type scanning consumes its own tokens
+
 			i += 1
 			continue
 
@@ -225,6 +273,8 @@ func _new_order_builder() -> Dictionary:
 		"target_callsign": "",
 		"direct": false,
 		"report_type": "",  # For REPORT orders: status, position, contact
+		"ammo_type": "",  # For FIRE orders: "ap", "smoke", "illum"
+		"rounds": 1,  # For FIRE orders: number of rounds
 		"raw": PackedStringArray()
 	}
 
@@ -244,6 +294,8 @@ func _finalize(cur: Dictionary) -> Dictionary:
 		"target_callsign": str(cur.target_callsign),
 		"direct": bool(cur.get("direct", false)),
 		"report_type": str(cur.report_type),
+		"ammo_type": str(cur.ammo_type),
+		"rounds": int(cur.rounds),
 		"raw": (cur.raw as PackedStringArray).duplicate()
 	}
 

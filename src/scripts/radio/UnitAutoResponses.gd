@@ -24,7 +24,12 @@ enum EventType {
 	FUEL_LOW,
 	FUEL_CRITICAL,
 	ORDER_FAILED,
-	MOVEMENT_BLOCKED
+	MOVEMENT_BLOCKED,
+	MISSION_CONFIRMED,
+	ROUNDS_SHOT,
+	ROUNDS_SPLASH,
+	ROUNDS_IMPACT,
+	BATTLE_DAMAGE_ASSESSMENT
 }
 
 
@@ -123,7 +128,39 @@ const EVENT_CONFIG := {
 		"phrases": ["We're blocked!", "Can't proceed!", "Movement blocked!"],
 		"priority": Priority.HIGH,
 		"cooldown_s": 10.0
-	}
+	},
+	EventType.MISSION_CONFIRMED:
+	{
+		"phrases":
+		[
+			"Fire mission confirmed.",
+			"Roger, fire mission accepted.",
+			"Mission confirmed, preparing rounds.",
+			"Roger, fire mission acknowledged."
+		],
+		"priority": Priority.NORMAL,
+		"cooldown_s": 5.0
+	},
+	EventType.ROUNDS_SHOT:
+	{
+		"phrases": ["Shot!", "Rounds away!", "Shot, out!"],
+		"priority": Priority.HIGH,
+		"cooldown_s": 5.0
+	},
+	EventType.ROUNDS_SPLASH:
+	{
+		"phrases": ["Splash!", "Splash, out!", "Impact in 5 seconds!"],
+		"priority": Priority.HIGH,
+		"cooldown_s": 5.0
+	},
+	EventType.ROUNDS_IMPACT:
+	{
+		"phrases": ["Rounds on target.", "Impact confirmed.", "Rounds complete.", "Impact, out."],
+		"priority": Priority.NORMAL,
+		"cooldown_s": 5.0
+	},
+	EventType.BATTLE_DAMAGE_ASSESSMENT:  # Custom message per impact
+	{"phrases": [], "priority": Priority.HIGH, "cooldown_s": 10.0}
 }
 
 ## Mapping of order failure reasons to specific response phrases
@@ -168,6 +205,24 @@ const ORDER_FAILURE_PHRASES := {
 	],
 	"fire_missing_target":
 	["Unable to comply, no target.", "Negative, who do we engage?", "Need a target."],
+	"fire_not_artillery":
+	[
+		"Unable to comply, not an artillery unit.",
+		"Negative, we're not artillery.",
+		"We don't have indirect fire capability."
+	],
+	"fire_no_ammo":
+	[
+		"Unable to comply, no ammunition.",
+		"Negative, out of that ammo type.",
+		"We don't have that ammunition."
+	],
+	"fire_mission_rejected":
+	[
+		"Unable to comply, fire mission rejected.",
+		"Negative, can't execute fire mission.",
+		"Fire mission denied."
+	],
 	"fire_unhandled":
 	["Unable to comply, can't engage.", "Negative, unable to fire.", "Can't execute fire mission."]
 }
@@ -193,6 +248,7 @@ var _units_by_id: Dictionary = {}
 var _id_to_callsign: Dictionary = {}
 var _terrain_render: TerrainRender = null
 var _counter_controller: UnitCounterController = null
+var _artillery_controller: ArtilleryController = null
 
 var _unit_states: Dictionary = {}
 var _spotted_contacts: Dictionary = {}
@@ -215,19 +271,23 @@ func _ready() -> void:
 ## [param units_by_id] Dictionary mapping unit_id to unit data.
 ## [param terrain_render] TerrainRender for position to grid conversion.
 ## [param counter_controller] UnitCounterController for spawning counters.
+## [param artillery_controller] ArtilleryController for fire mission voice responses.
 func init(
 	sim_world: Node,
 	units_by_id: Dictionary,
 	terrain_render: TerrainRender = null,
-	counter_controller: UnitCounterController = null
+	counter_controller: UnitCounterController = null,
+	artillery_controller: ArtilleryController = null
 ) -> void:
 	_sim_world = sim_world
 	_units_by_id = units_by_id
 	_terrain_render = terrain_render
 	_counter_controller = counter_controller
+	_artillery_controller = artillery_controller
 
 	_build_callsign_mapping()
 	_connect_unit_signals()
+	_connect_artillery_signals()
 
 	if _sim_world:
 		_sim_world.unit_updated.connect(_on_unit_updated)
@@ -263,6 +323,23 @@ func _connect_unit_signals() -> void:
 			# Connect to move_blocked signal
 			if not unit.move_blocked.is_connected(_on_unit_move_blocked):
 				unit.move_blocked.connect(_on_unit_move_blocked.bind(unit_id))
+
+
+## Connect to artillery controller signals.
+func _connect_artillery_signals() -> void:
+	if not _artillery_controller:
+		return
+
+	if not _artillery_controller.mission_confirmed.is_connected(_on_mission_confirmed):
+		_artillery_controller.mission_confirmed.connect(_on_mission_confirmed)
+	if not _artillery_controller.rounds_shot.is_connected(_on_rounds_shot):
+		_artillery_controller.rounds_shot.connect(_on_rounds_shot)
+	if not _artillery_controller.rounds_splash.is_connected(_on_rounds_splash):
+		_artillery_controller.rounds_splash.connect(_on_rounds_splash)
+	if not _artillery_controller.rounds_impact.is_connected(_on_rounds_impact):
+		_artillery_controller.rounds_impact.connect(_on_rounds_impact)
+	if not _artillery_controller.battle_damage_assessment.is_connected(_on_battle_damage_assessment):
+		_artillery_controller.battle_damage_assessment.connect(_on_battle_damage_assessment)
 
 
 func _process(delta: float) -> void:
@@ -315,7 +392,17 @@ func _queue_message(unit_id: String, event_type: EventType) -> void:
 	var last_trigger_time: float = _event_last_triggered.get(event_key, 0.0)
 	var cooldown: float = EVENT_CONFIG[event_type].get("cooldown_s", 10.0)
 
+	LogService.debug(
+		"_queue_message: %s, event=%s, cooldown_remaining=%.1f" % [
+			unit_id, EventType.keys()[event_type], cooldown - (current_time - last_trigger_time)
+		],
+		"UnitAutoResponses.gd"
+	)
+
 	if current_time - last_trigger_time < cooldown:
+		LogService.debug(
+			"Message blocked by cooldown for %s" % unit_id, "UnitAutoResponses.gd"
+		)
 		return
 
 	var callsign: String = _id_to_callsign.get(unit_id, unit_id)
@@ -600,3 +687,68 @@ func _parse_unit_affiliation(aff: ScenarioUnit.Affiliation) -> MilSymbol.UnitAff
 			return MilSymbol.UnitAffiliation.ENEMY
 		_:
 			return MilSymbol.UnitAffiliation.UNKNOWN
+
+
+## Handle artillery mission confirmation.
+## [param unit_id] Artillery unit ID.
+## [param _target_pos] Target position in terrain meters.
+## [param _ammo_type] Ammunition type (e.g., "MORTAR_AP").
+## [param _rounds] Number of rounds.
+func _on_mission_confirmed(
+	unit_id: String, _target_pos: Vector2, _ammo_type: String, _rounds: int
+) -> void:
+	LogService.debug(
+		"_on_mission_confirmed called for %s" % unit_id, "UnitAutoResponses.gd"
+	)
+	_queue_message(unit_id, EventType.MISSION_CONFIRMED)
+
+
+## Handle rounds shot ("Shot" call).
+## [param unit_id] Artillery unit ID.
+## [param _target_pos] Target position in terrain meters.
+## [param _ammo_type] Ammunition type.
+## [param _rounds] Number of rounds.
+func _on_rounds_shot(
+	unit_id: String, _target_pos: Vector2, _ammo_type: String, _rounds: int
+) -> void:
+	LogService.debug(
+		"_on_rounds_shot called for %s" % unit_id, "UnitAutoResponses.gd"
+	)
+	_queue_message(unit_id, EventType.ROUNDS_SHOT)
+
+
+## Handle rounds splash warning (5s before impact).
+## [param unit_id] Artillery unit ID.
+## [param _target_pos] Target position in terrain meters.
+## [param _ammo_type] Ammunition type.
+## [param _rounds] Number of rounds.
+func _on_rounds_splash(
+	unit_id: String, _target_pos: Vector2, _ammo_type: String, _rounds: int
+) -> void:
+	_queue_message(unit_id, EventType.ROUNDS_SPLASH)
+
+
+## Handle rounds impact.
+## [param unit_id] Artillery unit ID.
+## [param _target_pos] Target position in terrain meters.
+## [param _ammo_type] Ammunition type.
+## [param _rounds] Number of rounds.
+## [param _damage] Total damage dealt.
+func _on_rounds_impact(
+	unit_id: String, _target_pos: Vector2, _ammo_type: String, _rounds: int, _damage: float
+) -> void:
+	_queue_message(unit_id, EventType.ROUNDS_IMPACT)
+
+
+## Handle battle damage assessment from observer.
+## [param observer_id] Observer unit ID.
+## [param target_pos] Impact position in terrain meters.
+## [param description] BDA description text.
+func _on_battle_damage_assessment(
+	observer_id: String, target_pos: Vector2, description: String
+) -> void:
+	var observer_callsign: String = _id_to_callsign.get(observer_id, observer_id)
+	var grid_pos := " ".join(_get_grid_from_position(target_pos).split(""))
+	var message := "%s At grid %s." % [description, grid_pos]
+
+	_queue_custom_message(observer_id, observer_callsign, message, Priority.HIGH)

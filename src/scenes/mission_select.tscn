@@ -92,6 +92,7 @@ metadata/_custom_type_script = "uid://boc05sevt2wad"
 
 [node name="MissionCard" type="PanelContainer" parent="."]
 unique_name_in_owner = true
+visible = false
 z_index = 3
 layout_mode = 1
 anchors_preset = -1

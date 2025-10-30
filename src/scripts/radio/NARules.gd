@@ -213,6 +213,10 @@ func build_vosk_word_array(
 	words.append_array(["now", "immediately", "direct"])
 	# Add report type keywords (not in action_synonyms but needed for parsing)
 	words.append_array(["status", "position", "contact", "contacts"])
+	# Add artillery ammo type keywords
+	words.append_array(
+		["ap", "he", "smoke", "illum", "illumination", "flare", "flares", "frag", "antipersonnel"]
+	)
 
 	var calls: Array = (
 		callsigns_override if callsigns_override.size() > 0 else tables["callsigns"].keys()

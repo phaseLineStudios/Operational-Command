@@ -42,6 +42,8 @@ enum State { INIT, RUNNING, PAUSED, COMPLETED }
 @export var ammo_system: AmmoSystem
 ## Fuel system node.
 @export var fuel_system: FuelSystem
+## Artillery controller for indirect fire missions.
+@export var artillery_controller: ArtilleryController
 ## Grace period before ending (seconds) to avoid flapping.
 @export var auto_end_grace_s := 2.0
 
@@ -128,6 +130,8 @@ func init_world(scenario: ScenarioData) -> void:
 		if su.playable:
 			_playable_by_callsign[su.callsign] = su.id
 	_router.bind_units(_units_by_id, _units_by_callsign)
+	if artillery_controller:
+		_router.artillery_controller = artillery_controller
 	_register_logistics_units()
 
 	# Initialize custom commands for this mission
@@ -316,6 +320,11 @@ func _update_logistics(dt: float) -> void:
 
 	if fuel_system:
 		fuel_system.tick(dt)
+
+	if artillery_controller:
+		for su: ScenarioUnit in _friendlies + _enemies:
+			artillery_controller.set_unit_position(su.id, su.position_m)
+		artillery_controller.tick(dt)
 
 
 ## Pairs in contact this tick: Array of { attacker: String, defender: String }.
@@ -664,6 +673,14 @@ func _register_logistics_units() -> void:
 		for su: ScenarioUnit in _friendlies + _enemies:
 			ammo_system.register_unit(su.unit)
 			ammo_system.set_unit_position(su.id, _v3_from_m(su.position_m))
+
+	if artillery_controller:
+		artillery_controller.bind_ammo_system(ammo_system)
+		if los_adapter:
+			artillery_controller.bind_los_adapter(los_adapter)
+		for su: ScenarioUnit in _friendlies + _enemies:
+			artillery_controller.register_unit(su.id, su.unit)
+			artillery_controller.set_unit_position(su.id, su.position_m)
 
 
 ## State change callback: finalize mission resolution.
