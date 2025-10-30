@@ -1,4 +1,4 @@
-[gd_scene load_steps=74 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=76 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -16,6 +16,7 @@
 [ext_resource type="Script" uid="uid://bxw82utaedlvn" path="res://scripts/radio/OrdersParser.gd" id="9_415kk"]
 [ext_resource type="Script" uid="uid://be785qai04d2g" path="res://scripts/sim/adapters/MovementAdapter.gd" id="9_fera7"]
 [ext_resource type="Script" uid="uid://dy2uex65i3y4m" path="res://scripts/sim/adapters/CombatAdapter.gd" id="9_vxnyp"]
+[ext_resource type="Shader" uid="uid://wfdnibuafvo6" path="res://assets/shaders/FilmGrain.gdshader" id="10_itljb"]
 [ext_resource type="Script" uid="uid://dq8m3cwvv276y" path="res://scripts/sim/Combat.gd" id="10_of8da"]
 [ext_resource type="Script" uid="uid://ckdlg61462pgb" path="res://scripts/sim/OrdersRouter.gd" id="11_tixey"]
 [ext_resource type="Script" uid="uid://c3rgrbya520ur" path="res://scripts/sim/systems/AmmoSystem.gd" id="12_lrkar"]
@@ -165,6 +166,11 @@ size = Vector2(0.75, 0.35)
 script = ExtResource("16_yatot")
 metadata/_custom_type_script = "uid://dnnu3w3b3j5rk"
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_itljb"]
+shader = ExtResource("10_itljb")
+shader_parameter/grain_amount = 0.030000001425
+shader_parameter/grain_size = 1.0
+
 [node name="HQTable" type="Node3D"]
 script = ExtResource("1_qgda6")
 debug = true
@@ -238,8 +244,8 @@ skeleton = NodePath("../../Table/Mesh")
 
 [node name="LampLight" type="OmniLight3D" parent="StaticObjects"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0898442, 1.24826, 0.089353114)
-light_color = Color(1, 0.82169163, 0.6786466, 1)
-light_energy = 0.5
+light_color = Color(0.73440415, 0.9999998, 0.970867, 1)
+light_energy = 0.4
 
 [node name="PhysicsObjects" type="Node" parent="."]
 unique_name_in_owner = true
@@ -431,6 +437,7 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("7_tixey")
+debug_enabled = true
 terrain_renderer = NodePath("..")
 _sim = NodePath("../../../../WorldController")
 _orders = NodePath("../../../../RadioController/OrdersRouter")
@@ -566,6 +573,16 @@ script = ExtResource("32_modulator")
 [node name="UnitAutoResponses" type="Node" parent="Controllers"]
 unique_name_in_owner = true
 script = ExtResource("31_auto_voices")
+
+[node name="PostProcess" type="CanvasLayer" parent="."]
+
+[node name="FilmGrain" type="ColorRect" parent="PostProcess"]
+material = SubResource("ShaderMaterial_itljb")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="UI" type="CanvasLayer" parent="."]
 

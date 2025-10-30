@@ -14,6 +14,7 @@ var metrics_visibility: OptionButton = $TabContainer/General/Column/MetricsContr
 @onready var event_log_filter_info: Button = %FilterInfo
 @onready var event_log_filter_warning: Button = %FilterWarning
 @onready var event_log_filter_error: Button = %FilterError
+@onready var event_log_filter_debug: Button = %FilterDebug
 @onready var event_log_filter_trace: Button = %FilterTrace
 
 
@@ -31,6 +32,7 @@ func _ready():
 	event_log_filter_warning.pressed.connect(_refresh_log)
 	event_log_filter_error.pressed.connect(_refresh_log)
 	event_log_filter_trace.pressed.connect(_refresh_log)
+	event_log_filter_debug.pressed.connect(_refresh_log)
 	event_log_clear.pressed.connect(_clear_log)
 
 
@@ -114,6 +116,7 @@ func _refresh_log():
 			or (lvl == LogService.LogLevel.INFO and event_log_filter_info.button_pressed)
 			or (lvl == LogService.LogLevel.WARNING and event_log_filter_warning.button_pressed)
 			or (lvl == LogService.LogLevel.ERROR and event_log_filter_error.button_pressed)
+			or (lvl == LogService.LogLevel.DEBUG and event_log_filter_debug.button_pressed)
 			or (lvl == LogService.LogLevel.TRACE and event_log_filter_trace.button_pressed)
 		):
 			filtered_lines.append(txt)
