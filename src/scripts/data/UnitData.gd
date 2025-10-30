@@ -34,8 +34,12 @@ enum AmmoTypes {
 	ARTILLERY_SMOKE,
 	## 105/122/152/155 mm tube artillery (Flare)
 	ARTILLERY_ILLUM,
-	## Engineer Munitions: Mines, demolition charges, etc.
-	ENGINEER_MUN
+	## Engineer Munitions: Mines
+	ENGINEER_MINE,
+	## Engineer Munitions: Demolition charges
+	ENGINEER_DEMO,
+	## Engineer Munitions: Bridge
+	ENGINEER_BRIDGE
 }
 
 ## Unique identifier for the unit

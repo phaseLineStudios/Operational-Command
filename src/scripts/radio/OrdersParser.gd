@@ -13,7 +13,7 @@ signal parse_error(msg: String)
 
 ## High-level order categories.
 ## [br]CUSTOM is used for mission-specific commands registered via [method register_custom_command].
-enum OrderType { MOVE, HOLD, ATTACK, DEFEND, RECON, FIRE, REPORT, CANCEL, CUSTOM, UNKNOWN }
+enum OrderType {MOVE, HOLD, ATTACK, DEFEND, RECON, FIRE, REPORT, CANCEL, ENGINEER, CUSTOM, UNKNOWN}
 
 ## Minimal schema returned per order.
 const ORDER_KEYS := {
@@ -26,6 +26,7 @@ const ORDER_KEYS := {
 	"direct": false,
 	"ammo_type": "",  # For FIRE orders: "ap", "smoke", "illum"
 	"rounds": 1,  # For FIRE orders: number of rounds
+	"engineer_task": "",  # For ENGINEER orders: "mine", "demo", "bridge"
 	"raw": []
 }
 
@@ -207,6 +208,37 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 				# Don't update i - let normal parsing handle position/grid
 				# Only the ammo type scanning consumes its own tokens
 
+			# Detect engineer task type if this is an ENGINEER order
+			if ot == OrderType.ENGINEER:
+				# Default task type is mine
+				cur.engineer_task = "mine"
+				# Scan ahead for task type keywords
+				var j := i + 1
+				while j < tokens.size():
+					var next := tokens[j]
+					# Stop if we hit grid/position keywords
+					if qty_labels.has(next) or directions.has(next):
+						break
+					# Detect task type
+					if next in ["mine", "mines", "minefield"]:
+						cur.engineer_task = "mine"
+						j += 1
+						continue
+					elif next in ["demo", "demolition", "demolitions", "charge", "charges"]:
+						cur.engineer_task = "demo"
+						j += 1
+						continue
+					elif next in ["bridge", "bridges"]:
+						cur.engineer_task = "bridge"
+						j += 1
+						continue
+					# Stop if we hit callsigns or other actions
+					elif callsigns.has(next) or actions.has(next):
+						break
+					# Otherwise skip this token
+					j += 1
+				# Don't update i - let normal parsing handle position/grid
+
 			i += 1
 			continue
 
@@ -275,6 +307,7 @@ func _new_order_builder() -> Dictionary:
 		"report_type": "",  # For REPORT orders: status, position, contact
 		"ammo_type": "",  # For FIRE orders: "ap", "smoke", "illum"
 		"rounds": 1,  # For FIRE orders: number of rounds
+		"engineer_task": "",  # For ENGINEER orders: "mine", "demo", "bridge"
 		"raw": PackedStringArray()
 	}
 
@@ -296,6 +329,7 @@ func _finalize(cur: Dictionary) -> Dictionary:
 		"report_type": str(cur.report_type),
 		"ammo_type": str(cur.ammo_type),
 		"rounds": int(cur.rounds),
+		"engineer_task": str(cur.engineer_task),
 		"raw": (cur.raw as PackedStringArray).duplicate()
 	}
 
@@ -486,6 +520,8 @@ func _order_type_to_string(t: int) -> String:
 			return "REPORT"
 		OrderType.CANCEL:
 			return "CANCEL"
+		OrderType.ENGINEER:
+			return "ENGINEER"
 		OrderType.CUSTOM:
 			return "CUSTOM"
 		_:

@@ -44,6 +44,8 @@ enum State { INIT, RUNNING, PAUSED, COMPLETED }
 @export var fuel_system: FuelSystem
 ## Artillery controller for indirect fire missions.
 @export var artillery_controller: ArtilleryController
+## Engineer controller for engineer tasks (mines, demo, bridges).
+@export var engineer_controller: EngineerController
 ## Grace period before ending (seconds) to avoid flapping.
 @export var auto_end_grace_s := 2.0
 
@@ -98,6 +100,28 @@ func _ready() -> void:
 		)
 		fuel_system.fuel_empty.connect(
 			func(uid): emit_signal("radio_message", "error", "%s immobilized: fuel out." % uid)
+		)
+
+	if engineer_controller:
+		engineer_controller.task_confirmed.connect(
+			func(uid, task, _pos):
+				var su: ScenarioUnit = _units_by_id.get(uid)
+				var callsign: String = su.callsign if su else uid
+				emit_signal(
+					"radio_message", "info", "%s: roger, %s task acknowledged." % [callsign, task]
+				)
+		)
+		engineer_controller.task_started.connect(
+			func(uid, task, _pos):
+				var su: ScenarioUnit = _units_by_id.get(uid)
+				var callsign: String = su.callsign if su else uid
+				emit_signal("radio_message", "info", "%s: starting %s work." % [callsign, task])
+		)
+		engineer_controller.task_completed.connect(
+			func(uid, task, _pos):
+				var su: ScenarioUnit = _units_by_id.get(uid)
+				var callsign: String = su.callsign if su else uid
+				emit_signal("radio_message", "info", "%s: %s task complete." % [callsign, task])
 		)
 
 	set_process(true)
@@ -325,6 +349,11 @@ func _update_logistics(dt: float) -> void:
 		for su: ScenarioUnit in _friendlies + _enemies:
 			artillery_controller.set_unit_position(su.id, su.position_m)
 		artillery_controller.tick(dt)
+
+	if engineer_controller:
+		for su: ScenarioUnit in _friendlies + _enemies:
+			engineer_controller.set_unit_position(su.id, su.position_m)
+		engineer_controller.tick(dt)
 
 
 ## Pairs in contact this tick: Array of { attacker: String, defender: String }.
@@ -682,6 +711,12 @@ func _register_logistics_units() -> void:
 			artillery_controller.register_unit(su.id, su.unit)
 			artillery_controller.set_unit_position(su.id, su.position_m)
 
+	if engineer_controller:
+		engineer_controller.bind_ammo_system(ammo_system)
+		for su: ScenarioUnit in _friendlies + _enemies:
+			engineer_controller.register_unit(su.id, su.unit)
+			engineer_controller.set_unit_position(su.id, su.position_m)
+
 
 ## State change callback: finalize mission resolution.
 ## [param prev] Previous state.
@@ -694,8 +729,13 @@ func _on_state_change_for_resolution(_prev: State, next: State) -> void:
 ## Router callback: order applied.
 ## [param order] Order dictionary.
 func _on_order_applied(order: Dictionary) -> void:
+	var order_type: int = int(order.get("type", -1))
+	# Skip generic acknowledgement for orders that have specific feedback
+	# (ENGINEER, FIRE have their own controller signals)
+	if order_type == OrdersParser.OrderType.ENGINEER or order_type == OrdersParser.OrderType.FIRE:
+		return
 	emit_signal("radio_message", "info", "Order applied: %s" % order.get("type", "?"))
-	var hr_order: String = OrdersParser.OrderType.keys()[int(order.get("type", -1))]
+	var hr_order: String = OrdersParser.OrderType.keys()[order_type]
 	LogService.info("radio_message: %s" % {"Order applied": hr_order}, "SimWorld.gd:293")
 
 

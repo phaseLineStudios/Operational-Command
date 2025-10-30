@@ -87,7 +87,12 @@ func get_parser_tables() -> Dictionary:
 			"report": OrdersParser.OrderType.REPORT,
 			"sitrep": OrdersParser.OrderType.REPORT,
 			"cancel": OrdersParser.OrderType.CANCEL,
-			"abort": OrdersParser.OrderType.CANCEL
+			"abort": OrdersParser.OrderType.CANCEL,
+			"lay": OrdersParser.OrderType.ENGINEER,
+			"place": OrdersParser.OrderType.ENGINEER,
+			"build": OrdersParser.OrderType.ENGINEER,
+			"construct": OrdersParser.OrderType.ENGINEER,
+			"engineer": OrdersParser.OrderType.ENGINEER
 		},
 		"directions":
 		{
@@ -215,7 +220,34 @@ func build_vosk_word_array(
 	words.append_array(["status", "position", "contact", "contacts"])
 	# Add artillery ammo type keywords
 	words.append_array(
-		["ap", "he", "smoke", "illum", "illumination", "flare", "flares", "frag", "antipersonnel"]
+		[
+			"ap",
+			"he",
+			"smoke",
+			"illum",
+			"illumination",
+			"flare",
+			"flares",
+			"frag",
+			"antipersonnel",
+			"round",
+			"rounds"
+		]
+	)
+	# Add engineer task keywords
+	words.append_array(
+		[
+			"mine",
+			"mines",
+			"minefield",
+			"demo",
+			"demolition",
+			"demolitions",
+			"charge",
+			"charges",
+			"bridge",
+			"bridges"
+		]
 	)
 
 	var calls: Array = (

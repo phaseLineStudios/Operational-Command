@@ -26,8 +26,9 @@ const _TYPE_NAMES := {
 	5: "FIRE",
 	6: "REPORT",
 	7: "CANCEL",
-	8: "CUSTOM",
-	9: "UNKNOWN"
+	8: "ENGINEER",
+	9: "CUSTOM",
+	10: "UNKNOWN"
 }
 
 ## Movement adapter used to plan and start moves.
@@ -38,6 +39,8 @@ const _TYPE_NAMES := {
 @export var combat_controller: CombatController
 ## Artillery controller used for indirect fire missions.
 @export var artillery_controller: ArtilleryController
+## Engineer controller used for engineer tasks (mines, demo, bridges).
+@export var engineer_controller: EngineerController
 ## Terrain renderer for grid/metric conversions.
 @export var terrain_renderer: TerrainRender
 
@@ -83,6 +86,8 @@ func apply(order: Dictionary) -> bool:
 			return _apply_fire(unit, order)
 		"REPORT":
 			return _apply_report(unit, order)
+		"ENGINEER":
+			return _apply_engineer(unit, order)
 		"CUSTOM":
 			return _apply_custom(unit, order)
 		_:
@@ -246,6 +251,47 @@ func _apply_fire(unit: ScenarioUnit, order: Dictionary) -> bool:
 ## [param order] Order dictionary.
 ## [return] Always `true`.
 func _apply_report(_unit: ScenarioUnit, order: Dictionary) -> bool:
+	emit_signal("order_applied", order)
+	return true
+
+
+## ENGINEER: engineer task orders (mines, demo, bridges).
+## [param unit] Subject unit.
+## [param order] Order dictionary.
+## [return] `true` if applied, otherwise `false`.
+func _apply_engineer(unit: ScenarioUnit, order: Dictionary) -> bool:
+	# ENGINEER order only works for engineer-capable units
+	if not engineer_controller:
+		LogService.error(
+			"Engineer controller is NULL! Cannot process ENGINEER orders.", "OrdersRouter.gd"
+		)
+		emit_signal("order_failed", order, "engineer_controller_missing")
+		return false
+
+	if not engineer_controller.is_engineer_unit(unit.id):
+		emit_signal("order_failed", order, "engineer_not_capable")
+		return false
+
+	# Get destination from order (same as move orders)
+	var dest: Variant = _compute_destination(unit, order)
+	if dest == null or dest == Vector2.ZERO:
+		emit_signal("order_failed", order, "engineer_missing_target")
+		return false
+
+	# Get engineer task type from order
+	var task_type: String = order.get("engineer_task", "mine")
+
+	# Request engineer task (this queues the task, which will start when unit arrives)
+	if not engineer_controller.request_task(unit.id, task_type, dest):
+		emit_signal("order_failed", order, "engineer_task_rejected")
+		return false
+
+	# Move unit to destination (task will start when unit arrives)
+	if movement_adapter and movement_adapter.plan_and_start(unit, dest):
+		emit_signal("order_applied", order)
+		return true
+
+	# Movement failed, but task was queued (unit may already be at destination)
 	emit_signal("order_applied", order)
 	return true
 

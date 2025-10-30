@@ -1,4 +1,4 @@
-[gd_scene load_steps=77 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=80 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -26,6 +26,7 @@
 [ext_resource type="Script" uid="uid://bxi60at4j0nrr" path="res://scripts/sim/scenario/TriggerEngine.gd" id="16_rdwew"]
 [ext_resource type="Script" uid="uid://dnnu3w3b3j5rk" path="res://scripts/data/FuelProfile.gd" id="16_yatot"]
 [ext_resource type="FontFile" uid="uid://cxbhb0lo85wr0" path="res://assets/fonts/dseg7/DSEG7Classic-Bold.ttf" id="23_nfu8j"]
+[ext_resource type="Script" uid="uid://ch73kyybwrkb8" path="res://scripts/data/AmmoProfile.gd" id="24_jjp33"]
 [ext_resource type="Texture2D" uid="uid://cww2l5lebx4nn" path="res://assets/textures/ui/button_pause.png" id="24_l12u7"]
 [ext_resource type="Texture2D" uid="uid://g1tchqqnd2wx" path="res://assets/textures/ui/button_play.png" id="25_k8ks5"]
 [ext_resource type="Texture2D" uid="uid://c5ch0odwq6o64" path="res://assets/textures/ui/button_skip.png" id="26_4ip4k"]
@@ -39,6 +40,7 @@
 [ext_resource type="Script" uid="uid://d1c2ojsjf1fws" path="res://scripts/audio/RadioSignalModulator.gd" id="32_modulator"]
 [ext_resource type="Script" uid="uid://0xd5ojxkkl4q" path="res://scripts/sim/systems/ArtilleryController.gd" id="33_66vc6"]
 [ext_resource type="PackedScene" uid="uid://bnexhgtx3llph" path="res://scenes/ui/counter_config_dialog.tscn" id="33_bsy1h"]
+[ext_resource type="Script" uid="uid://ckqvusamktt4" path="res://scripts/sim/systems/EngineerController.gd" id="34_1yvtb"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
 size = Vector2(10, 30)
@@ -166,6 +168,10 @@ size = Vector2(0.75, 0.35)
 [sub_resource type="Resource" id="Resource_2llyq"]
 script = ExtResource("16_yatot")
 metadata/_custom_type_script = "uid://dnnu3w3b3j5rk"
+
+[sub_resource type="Resource" id="Resource_gaccj"]
+script = ExtResource("24_jjp33")
+metadata/_custom_type_script = "uid://ch73kyybwrkb8"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_itljb"]
 shader = ExtResource("10_itljb")
@@ -489,15 +495,32 @@ parser = NodePath("OrdersParser")
 unique_name_in_owner = true
 script = ExtResource("9_415kk")
 
-[node name="OrdersRouter" type="Node" parent="Controllers/RadioController" node_paths=PackedStringArray("movement_adapter", "los_adapter", "combat_controller", "terrain_renderer")]
+[node name="OrdersRouter" type="Node" parent="Controllers/RadioController" node_paths=PackedStringArray("movement_adapter", "los_adapter", "combat_controller", "artillery_controller", "engineer_controller", "terrain_renderer")]
 script = ExtResource("11_tixey")
 movement_adapter = NodePath("../../WorldController/MovementAdapter")
 los_adapter = NodePath("../../LOSController/LOSAdapter")
 combat_controller = NodePath("../../CombatController")
+artillery_controller = NodePath("../../CombatController/ArtilleryController")
+engineer_controller = NodePath("../../CombatController/EngineerController")
 terrain_renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
 metadata/_custom_type_script = "uid://ckdlg61462pgb"
 
-[node name="WorldController" type="Node" parent="Controllers" node_paths=PackedStringArray("los_adapter", "movement_adapter", "combat_controller", "combat_adapter", "trigger_engine", "_router", "ammo_system", "fuel_system", "artillery_controller")]
+[node name="UnitVoiceResponses" type="Node" parent="Controllers/RadioController"]
+unique_name_in_owner = true
+script = ExtResource("30_voices")
+
+[node name="TTSPlayer" type="AudioStreamPlayer" parent="Controllers/RadioController/UnitVoiceResponses"]
+unique_name_in_owner = true
+bus = &"Radio"
+
+[node name="RadioSignalModulator" type="Node" parent="Controllers/RadioController"]
+script = ExtResource("32_modulator")
+
+[node name="UnitAutoResponses" type="Node" parent="Controllers/RadioController"]
+unique_name_in_owner = true
+script = ExtResource("31_auto_voices")
+
+[node name="WorldController" type="Node" parent="Controllers" node_paths=PackedStringArray("los_adapter", "movement_adapter", "combat_controller", "combat_adapter", "trigger_engine", "_router", "ammo_system", "fuel_system", "artillery_controller", "engineer_controller")]
 unique_name_in_owner = true
 script = ExtResource("7_ge8rp")
 los_adapter = NodePath("../LOSController/LOSAdapter")
@@ -508,7 +531,8 @@ trigger_engine = NodePath("TriggerEngine")
 _router = NodePath("../RadioController/OrdersRouter")
 ammo_system = NodePath("../CombatController/AmmoSystem")
 fuel_system = NodePath("FuelSystem")
-artillery_controller = NodePath("../ArtilleryController")
+artillery_controller = NodePath("../CombatController/ArtilleryController")
+engineer_controller = NodePath("../CombatController/EngineerController")
 
 [node name="MovementAdapter" type="Node" parent="Controllers/WorldController" node_paths=PackedStringArray("renderer")]
 unique_name_in_owner = true
@@ -538,7 +562,15 @@ metadata/_custom_type_script = "uid://dy2uex65i3y4m"
 
 [node name="AmmoSystem" type="Node" parent="Controllers/CombatController"]
 script = ExtResource("12_lrkar")
+ammo_profile = SubResource("Resource_gaccj")
 metadata/_custom_type_script = "uid://c3rgrbya520ur"
+
+[node name="ArtilleryController" type="Node" parent="Controllers/CombatController"]
+script = ExtResource("33_66vc6")
+
+[node name="EngineerController" type="Node" parent="Controllers/CombatController" node_paths=PackedStringArray("terrain_renderer")]
+script = ExtResource("34_1yvtb")
+terrain_renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
 
 [node name="LOSController" type="Node" parent="Controllers"]
 script = ExtResource("13_qgda6")
@@ -570,24 +602,6 @@ unique_name_in_owner = true
 script = ExtResource("28_wrosp")
 drawer = NodePath("../../StaticObjects/UnitCounterDrawer")
 counter_dialog = NodePath("../../UI/CounterConfigDialog")
-
-[node name="UnitVoiceResponses" type="Node" parent="Controllers"]
-unique_name_in_owner = true
-script = ExtResource("30_voices")
-
-[node name="TTSPlayer" type="AudioStreamPlayer" parent="Controllers/UnitVoiceResponses"]
-unique_name_in_owner = true
-bus = &"Radio"
-
-[node name="RadioSignalModulator" type="Node" parent="Controllers"]
-script = ExtResource("32_modulator")
-
-[node name="UnitAutoResponses" type="Node" parent="Controllers"]
-unique_name_in_owner = true
-script = ExtResource("31_auto_voices")
-
-[node name="ArtilleryController" type="Node" parent="Controllers"]
-script = ExtResource("33_66vc6")
 
 [node name="PostProcess" type="CanvasLayer" parent="."]
 

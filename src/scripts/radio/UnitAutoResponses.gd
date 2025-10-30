@@ -338,7 +338,9 @@ func _connect_artillery_signals() -> void:
 		_artillery_controller.rounds_splash.connect(_on_rounds_splash)
 	if not _artillery_controller.rounds_impact.is_connected(_on_rounds_impact):
 		_artillery_controller.rounds_impact.connect(_on_rounds_impact)
-	if not _artillery_controller.battle_damage_assessment.is_connected(_on_battle_damage_assessment):
+	if not _artillery_controller.battle_damage_assessment.is_connected(
+		_on_battle_damage_assessment
+	):
 		_artillery_controller.battle_damage_assessment.connect(_on_battle_damage_assessment)
 
 
@@ -393,16 +395,15 @@ func _queue_message(unit_id: String, event_type: EventType) -> void:
 	var cooldown: float = EVENT_CONFIG[event_type].get("cooldown_s", 10.0)
 
 	LogService.debug(
-		"_queue_message: %s, event=%s, cooldown_remaining=%.1f" % [
-			unit_id, EventType.keys()[event_type], cooldown - (current_time - last_trigger_time)
-		],
+		(
+			"_queue_message: %s, event=%s, cooldown_remaining=%.1f"
+			% [unit_id, EventType.keys()[event_type], cooldown - (current_time - last_trigger_time)]
+		),
 		"UnitAutoResponses.gd"
 	)
 
 	if current_time - last_trigger_time < cooldown:
-		LogService.debug(
-			"Message blocked by cooldown for %s" % unit_id, "UnitAutoResponses.gd"
-		)
+		LogService.debug("Message blocked by cooldown for %s" % unit_id, "UnitAutoResponses.gd")
 		return
 
 	var callsign: String = _id_to_callsign.get(unit_id, unit_id)
@@ -697,9 +698,7 @@ func _parse_unit_affiliation(aff: ScenarioUnit.Affiliation) -> MilSymbol.UnitAff
 func _on_mission_confirmed(
 	unit_id: String, _target_pos: Vector2, _ammo_type: String, _rounds: int
 ) -> void:
-	LogService.debug(
-		"_on_mission_confirmed called for %s" % unit_id, "UnitAutoResponses.gd"
-	)
+	LogService.debug("_on_mission_confirmed called for %s" % unit_id, "UnitAutoResponses.gd")
 	_queue_message(unit_id, EventType.MISSION_CONFIRMED)
 
 
@@ -711,9 +710,7 @@ func _on_mission_confirmed(
 func _on_rounds_shot(
 	unit_id: String, _target_pos: Vector2, _ammo_type: String, _rounds: int
 ) -> void:
-	LogService.debug(
-		"_on_rounds_shot called for %s" % unit_id, "UnitAutoResponses.gd"
-	)
+	LogService.debug("_on_rounds_shot called for %s" % unit_id, "UnitAutoResponses.gd")
 	_queue_message(unit_id, EventType.ROUNDS_SHOT)
 
 

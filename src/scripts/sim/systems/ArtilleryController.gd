@@ -182,9 +182,7 @@ func request_fire_mission(
 	_active_missions.append(mission)
 
 	# Emit confirmation signal
-	LogService.debug(
-		"Emitting mission_confirmed for %s" % unit_id, "ArtilleryController"
-	)
+	LogService.debug("Emitting mission_confirmed for %s" % unit_id, "ArtilleryController")
 	emit_signal("mission_confirmed", unit_id, target_pos, ammo_type, rounds)
 
 	LogService.info(
@@ -203,9 +201,7 @@ func tick(delta: float) -> void:
 
 		# Call "Shot" once at the start
 		if not mission.shot_called:
-			LogService.debug(
-				"Emitting rounds_shot for %s" % mission.unit_id, "ArtilleryController"
-			)
+			LogService.debug("Emitting rounds_shot for %s" % mission.unit_id, "ArtilleryController")
 			emit_signal(
 				"rounds_shot",
 				mission.unit_id,
