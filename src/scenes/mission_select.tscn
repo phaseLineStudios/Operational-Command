@@ -7,10 +7,10 @@
 [ext_resource type="Script" uid="uid://boc05sevt2wad" path="res://scripts/ui/controls/OcMenuButton.gd" id="5_2fh0n"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m1w60"]
-content_margin_left = 25.0
-content_margin_top = 25.0
-content_margin_right = 25.0
-content_margin_bottom = 25.0
+content_margin_left = 27.0
+content_margin_top = 27.0
+content_margin_right = 27.0
+content_margin_bottom = 27.0
 bg_color = Color(0.067, 0.082, 0.098, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0p1xe"]
@@ -92,7 +92,6 @@ metadata/_custom_type_script = "uid://boc05sevt2wad"
 
 [node name="MissionCard" type="PanelContainer" parent="."]
 unique_name_in_owner = true
-visible = false
 z_index = 3
 layout_mode = 1
 anchors_preset = -1

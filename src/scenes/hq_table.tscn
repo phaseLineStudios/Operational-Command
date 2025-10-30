@@ -226,6 +226,13 @@ shape = SubResource("BoxShape3D_cdjkm")
 [node name="Mesh" type="MeshInstance3D" parent="StaticObjects/UnitCounterDrawer"]
 mesh = SubResource("BoxMesh_wrosp")
 
+[node name="Label3D" type="Label3D" parent="StaticObjects/UnitCounterDrawer"]
+transform = Transform3D(0.2801153, 0, 0, 0, 0.2801153, 0, 0, 0, 1, 0, 0, 0.06194757)
+pixel_size = 0.001
+text = "UNIT COUNTER DRAWER"
+font_size = 48
+outline_size = 5
+
 [node name="Map" type="MeshInstance3D" parent="StaticObjects"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.731, 0.068)
