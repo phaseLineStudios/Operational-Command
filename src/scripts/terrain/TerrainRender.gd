@@ -109,6 +109,7 @@ var _surface_meta: Array = []
 @onready var contour_layer: ContourLayer = %ContourLayer
 @onready var grid_layer: GridLayer = %GridLayer
 @onready var label_layer: LabelLayer = %LabelLayer
+@onready var stamp_layer: StampLayer = %StampLayer
 @onready var error_layer: CenterContainer = %ErrorLayer
 @onready var error_label: Label = %ErrorLayer/ErrorLabel
 

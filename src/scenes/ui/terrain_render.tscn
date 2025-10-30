@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://cm8auwtr4pxfp" path="res://scripts/terrain/PointLayer.gd" id="5_c2fte"]
 [ext_resource type="Script" uid="uid://bio2qt3p5m683" path="res://scripts/terrain/LabelLayer.gd" id="8_tecap"]
 [ext_resource type="Script" uid="uid://dqy52pwnjeeb1" path="res://scripts/terrain/PathGridDebugLayer.gd" id="9_4od0y"]
+[ext_resource type="Script" path="res://scripts/terrain/StampLayer.gd" id="10_stamp"]
 [ext_resource type="Script" uid="uid://bagvx400o1qwa" path="res://scripts/terrain/PathGrid.gd" id="11_xg8js"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ceejx"]
@@ -109,6 +110,11 @@ layout_mode = 2
 script = ExtResource("8_tecap")
 text_color = Color(0.27451, 0.219608, 0.219608, 1)
 font = SubResource("FontVariation_tecap")
+
+[node name="StampLayer" type="Control" parent="MapMargin/TerrainBase"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("10_stamp")
 
 [node name="PathGridDebugLayer" type="Control" parent="MapMargin/TerrainBase" node_paths=PackedStringArray("grid")]
 layout_mode = 2

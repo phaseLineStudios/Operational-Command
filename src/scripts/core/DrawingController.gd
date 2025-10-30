@@ -31,7 +31,6 @@ var _is_drawing: bool = false
 var _current_stroke: Array[Vector3] = []
 var _strokes: Array[Dictionary] = []  # {tool: Tool, points: Array[Vector3]}
 var _scenario_strokes: Array[Dictionary] = []  # Pre-drawn strokes from scenario
-var _scenario_stamps: Array[Node3D] = []  # Pre-drawn stamps as Sprite3D nodes
 var _last_point: Vector3 = Vector3.ZERO
 var _terrain_render: TerrainRender = null  # TerrainRender reference for coordinate conversion
 
@@ -212,22 +211,10 @@ func _update_drawing_mesh() -> void:
 	var surface_tool := SurfaceTool.new()
 	surface_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 
-	LogService.debug(
-		(
-			"_update_drawing_mesh: scenario_strokes=%d player_strokes=%d"
-			% [_scenario_strokes.size(), _strokes.size()]
-		),
-		"DrawingController.gd"
-	)
-
 	# Draw scenario strokes first (underneath player strokes)
 	for stroke in _scenario_strokes:
 		var points: Array = stroke.points
 		var color: Color = stroke.get("color", Color.BLACK)
-		LogService.debug(
-			"Drawing scenario stroke with %d points, color=%s" % [points.size(), color],
-			"DrawingController.gd"
-		)
 		_draw_stroke(surface_tool, points, Tool.NONE, false, color)
 
 	# Draw all completed player strokes
@@ -244,18 +231,8 @@ func _update_drawing_mesh() -> void:
 		surface_tool.generate_normals()
 		var array_mesh := surface_tool.commit()
 		drawing_mesh.mesh = array_mesh
-		LogService.debug(
-			(
-				"_update_drawing_mesh: mesh committed with %d surfaces"
-				% array_mesh.get_surface_count()
-			),
-			"DrawingController.gd"
-		)
 	else:
 		drawing_mesh.mesh = null
-		LogService.debug(
-			"_update_drawing_mesh: no primitives, mesh cleared", "DrawingController.gd"
-		)
 
 
 func _draw_stroke(
@@ -376,12 +353,6 @@ func clear_all() -> void:
 	_current_stroke.clear()
 	_is_drawing = false
 
-	# Clean up scenario stamps
-	for stamp_node in _scenario_stamps:
-		if stamp_node and is_instance_valid(stamp_node):
-			stamp_node.queue_free()
-	_scenario_stamps.clear()
-
 	# Clear scenario strokes
 	_scenario_strokes.clear()
 
@@ -405,105 +376,37 @@ func load_scenario_drawings(scenario: ScenarioData, terrain_renderer: TerrainRen
 		return
 
 	_terrain_render = terrain_renderer
-	LogService.debug(
-		"Loading scenario drawings: %d total" % scenario.drawings.size(), "DrawingController.gd"
-	)
 
 	# Clear existing scenario drawings
-	for stamp_node in _scenario_stamps:
-		if stamp_node and is_instance_valid(stamp_node):
-			stamp_node.queue_free()
-	_scenario_stamps.clear()
 	_scenario_strokes.clear()
 
-	# Convert scenario drawings to internal format
+	# Separate stamps and strokes
+	var stamps: Array[ScenarioDrawingStamp] = []
+
 	for drawing in scenario.drawings:
 		if drawing == null:
 			continue
 
 		if drawing is ScenarioDrawingStroke and drawing.visible:
-			LogService.debug(
-				"Converting stroke: %s with %d points" % [drawing.id, drawing.points_m.size()],
-				"DrawingController.gd"
-			)
 			var stroke := _convert_scenario_stroke(drawing)
 			if stroke != null and not stroke.is_empty():
 				_scenario_strokes.append(stroke)
-				LogService.debug(
-					(
-						"Stroke %s converted with %d world points"
-						% [drawing.id, stroke.get("points", []).size()]
-					),
-					"DrawingController.gd"
-				)
 			else:
 				LogService.warning(
 					"Failed to convert stroke %s" % drawing.id, "DrawingController.gd"
 				)
 		elif drawing is ScenarioDrawingStamp and drawing.visible:
-			LogService.debug(
-				"Creating stamp: %s at %s" % [drawing.id, drawing.position_m],
-				"DrawingController.gd"
-			)
-			var stamp_node := _create_scenario_stamp(drawing)
-			if stamp_node != null:
-				_scenario_stamps.append(stamp_node)
-				map_mesh.add_child(stamp_node)
-				LogService.debug(
-					"Stamp %s created successfully" % drawing.id, "DrawingController.gd"
-				)
-			else:
-				LogService.warning("Failed to create stamp %s" % drawing.id, "DrawingController.gd")
+			stamps.append(drawing)
 
-	LogService.info(
-		(
-			"Loaded %d scenario strokes and %d scenario stamps"
-			% [_scenario_strokes.size(), _scenario_stamps.size()]
-		),
-		"DrawingController.gd"
-	)
-	_update_drawing_mesh()
-
-
-## Create a Sprite3D node for a scenario stamp.
-## [param stamp] ScenarioDrawingStamp to create node for.
-## [return] Sprite3D node or null if creation fails.
-func _create_scenario_stamp(stamp: ScenarioDrawingStamp) -> Sprite3D:
-	# Convert terrain position to world position
-	var world_pos: Variant = _terrain_to_world(stamp.position_m)
-	if world_pos == null:
-		LogService.warning("Failed to convert stamp position to world", "DrawingController.gd")
-		return null
-
-	# Load texture
-	var tex: Texture2D = null
-	if stamp.texture_path != "" and ResourceLoader.exists(stamp.texture_path):
-		tex = load(stamp.texture_path)
-	if tex == null:
+	# Load stamps into 2D StampLayer (rendered in terrain viewport)
+	if terrain_renderer.stamp_layer:
+		terrain_renderer.stamp_layer.load_stamps(stamps)
+	else:
 		LogService.warning(
-			"Failed to load stamp texture: %s" % stamp.texture_path, "DrawingController.gd"
+			"Cannot load stamps: terrain_renderer.stamp_layer is null", "DrawingController.gd"
 		)
-		return null
 
-	# Create Sprite3D
-	var sprite := Sprite3D.new()
-	sprite.texture = tex
-	sprite.modulate = stamp.modulate
-	sprite.modulate.a *= stamp.opacity
-	sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y  # Face camera but stay upright
-	sprite.pixel_size = 0.0005 * stamp.scale  # Convert scale to world units
-	sprite.position = world_pos
-	sprite.rotate_y(deg_to_rad(-stamp.rotation_deg))  # Apply rotation
-
-	# Offset slightly above map to prevent z-fighting
-	sprite.position.y += 0.005
-
-	LogService.debug(
-		"Created stamp sprite at world_pos=%s pixel_size=%f" % [world_pos, sprite.pixel_size],
-		"DrawingController.gd"
-	)
-
-	return sprite
+	_update_drawing_mesh()
 
 
 ## Convert a ScenarioDrawingStroke to internal stroke format.
@@ -537,14 +440,6 @@ func _terrain_to_world(pos_m: Vector2) -> Variant:
 		LogService.warning("_terrain_to_world: _terrain_render is null", "DrawingController.gd")
 		return null
 
-	if not _terrain_render.has_method("terrain_to_map"):
-		LogService.warning(
-			"_terrain_to_world: _terrain_render missing terrain_to_map method",
-			"DrawingController.gd"
-		)
-		return null
-
-	# Get map mesh bounds
 	if map_mesh == null or map_mesh.mesh == null:
 		LogService.warning("_terrain_to_world: map_mesh or mesh is null", "DrawingController.gd")
 		return null
@@ -558,7 +453,6 @@ func _terrain_to_world(pos_m: Vector2) -> Variant:
 		)
 		return null
 
-	# Get terrain dimensions in meters
 	if _terrain_render.data == null:
 		LogService.warning("_terrain_to_world: terrain_render.data is null", "DrawingController.gd")
 		return null
@@ -571,7 +465,6 @@ func _terrain_to_world(pos_m: Vector2) -> Variant:
 		return null
 
 	# Normalize terrain position to -0.5..0.5 range (mesh local space)
-	# Terrain coordinates are in meters relative to terrain origin
 	var normalized_x := (pos_m.x / terrain_width_m) - 0.5
 	var normalized_z := (pos_m.y / terrain_height_m) - 0.5
 
