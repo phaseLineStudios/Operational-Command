@@ -76,6 +76,10 @@ enum AmmoTypes {
 		return type
 ## Number of personnel in the unit at full strength
 @export var strength: int = 36
+## Is unit an engineer unit (can repair).
+@export var isEngineer: bool = false
+## Is unit a medical unit (can medic injured).
+@export var isMedical: bool = false
 ## Dictionary of equipment definitions
 @export var equipment: Dictionary = {}
 ## Average experience level
@@ -192,6 +196,8 @@ func serialize() -> Dictionary:
 		"size": int(size),
 		"type": int(type),
 		"strength": strength,
+		"isEngineer": isEngineer,
+		"isMedical": isMedical,
 		"equipment": equipment.duplicate(),
 		"experience": experience,
 		"stats":
@@ -249,6 +255,8 @@ static func deserialize(data: Variant) -> UnitData:
 		int(data.get("movement_profile", u.movement_profile)) as TerrainBrush.MoveProfile
 	)
 	u.strength = int(data.get("strength", u.strength))
+	u.isEngineer = bool(data.get("isEngineer", u.isEngineer))
+	u.isMedical = bool(data.get("isMedical", u.isMedical))
 	u.equipment = data.get("equipment", u.equipment)
 	u.experience = float(data.get("experience", u.experience))
 

@@ -56,9 +56,11 @@ layout_mode = 2
 
 [node name="IconContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer"]
 layout_mode = 2
+folded = true
 title = "Icon"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/IconContainer"]
+visible = false
 layout_mode = 2
 
 [node name="GridContainer" type="GridContainer" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer"]
@@ -182,24 +184,47 @@ title = "Unit Meta"
 visible = false
 layout_mode = 2
 
-[node name="StrengthLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer"]
 layout_mode = 2
-text = "Unit Strength (personnel)"
+columns = 2
 
-[node name="Strength" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer"]
+[node name="StrengthLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Unit Strength"
+
+[node name="Strength" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 max_value = 1000.0
 value = 31.0
 suffix = "men"
 
-[node name="MoveProfileLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer"]
+[node name="MoveProfileLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Movement Profile"
 
-[node name="MoveProfile" type="OptionButton" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer"]
+[node name="MoveProfile" type="OptionButton" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="EngineerLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Is Engineer Troop"
+
+[node name="IsEngineer" type="CheckBox" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Can repair vehicles?"
+
+[node name="MedicalLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Is Medical Troop"
+
+[node name="IsMedical" type="CheckBox" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Can medic injured?"
 
 [node name="StatsContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer"]
 layout_mode = 2

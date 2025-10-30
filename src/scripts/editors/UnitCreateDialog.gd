@@ -30,6 +30,8 @@ var _ammo_keys: Array[String] = []
 @onready var _range_m: SpinBox = %Range
 @onready var _morale: SpinBox = %Morale
 @onready var _speed_kph: SpinBox = %Speed
+@onready var _is_engineer: CheckBox = %IsEngineer
+@onready var _is_medical: CheckBox = %IsMedical
 
 @onready var _icon_fr_preview: TextureRect = %IconPreview
 @onready var _icon_eny_preview: TextureRect = %EnemyIconPreview
@@ -136,6 +138,8 @@ func _load_from_working() -> void:
 	_range_m.value = _working.range_m
 	_morale.value = _working.morale
 	_speed_kph.value = _working.speed_kph
+	_is_engineer.set_pressed_no_signal(_working.isEngineer)
+	_is_medical.set_pressed_no_signal(_working.isMedical)
 
 	_select_size(_working.size)
 	_select_type(_working.type)
@@ -220,6 +224,8 @@ func _collect_into_working() -> void:
 	_working.range_m = float(_range_m.value)
 	_working.morale = clamp(float(_morale.value), 0.0, 1.0)
 	_working.speed_kph = float(_speed_kph.value)
+	_working.isEngineer = _is_engineer.button_pressed
+	_working.isMedical = _is_medical.button_pressed
 
 	_working.type = int(_type_ob.get_selected_id()) as MilSymbol.UnitType
 	_working.size = int(_size_ob.get_selected_id()) as MilSymbol.UnitSize
@@ -615,8 +621,11 @@ func _reset_ui() -> void:
 	_select_size(MilSymbol.UnitSize.PLATOON)
 	_select_type(MilSymbol.UnitType.INFANTRY)
 	_select_move_profile(_default_move_profile())
-
+	_equip_cat.select(UnitData.EquipCategory.VEHICLES)
+	
 	_equip_ammo_container.visible = false
+	_is_engineer.set_pressed_no_signal(false)
+	_is_medical.set_pressed_no_signal(false)
 
 
 ## Reset equipment dictionary.
