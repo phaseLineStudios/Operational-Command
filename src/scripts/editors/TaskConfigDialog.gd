@@ -11,6 +11,8 @@ var instance: ScenarioTask
 var _before: ScenarioTask
 
 @onready var form: VBoxContainer = %Form
+@onready var pos_x_in: SpinBox = %PositionX
+@onready var pos_y_in: SpinBox = %PositionY
 @onready var save_btn: Button = %Save
 @onready var close_btn: Button = %Close
 
@@ -25,6 +27,8 @@ func show_for(_editor: ScenarioEditor, inst: ScenarioTask) -> void:
 	editor = _editor
 	instance = inst
 	_before = instance.duplicate(true)
+	pos_x_in.value = instance.position_m.x
+	pos_y_in.value = instance.position_m.y
 	_build_form()
 	visible = true
 
@@ -140,6 +144,7 @@ func _on_save() -> void:
 
 	var after := instance.duplicate(true)
 	after.params = params
+	after.position_m = Vector2(pos_x_in.value, pos_y_in.value)
 
 	if editor and editor.history:
 		editor.history.push_res_edit_by_id(

@@ -40,6 +40,8 @@ func _ready() -> void:
 	map.init_terrain(scenario)
 	trigger_engine.bind_scenario(scenario)
 	trigger_engine.bind_dialog(mission_dialog)
+	if trigger_engine and trigger_engine._api:
+		trigger_engine._api.map_controller = map
 	sim.init_world(scenario)
 	sim.bind_radio(%RadioController, %OrdersParser)
 	sim.init_resolution(scenario.briefing.frag_objectives)

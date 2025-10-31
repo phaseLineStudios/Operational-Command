@@ -18,6 +18,8 @@ var _autocomplete_deactivate: CodeEditAutocomplete
 @onready var close_btn: Button = %Close
 @onready var trig_id: LineEdit = %Id
 @onready var trig_title: LineEdit = %Title
+@onready var pos_x_in: SpinBox = %PositionX
+@onready var pos_y_in: SpinBox = %PositionY
 @onready var trig_shape: OptionButton = %Shape
 @onready var trig_size_x: SpinBox = %SizeX
 @onready var trig_size_y: SpinBox = %SizeY
@@ -58,6 +60,8 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 
 	trig_id.text = trig.id
 	trig_title.text = trig.title
+	pos_x_in.value = trig.area_center_m.x
+	pos_y_in.value = trig.area_center_m.y
 	trig_presence.clear()
 	for i in ScenarioTrigger.PresenceMode.size():
 		trig_presence.add_item(str(ScenarioTrigger.PresenceMode.keys()[i]).capitalize(), i)
@@ -84,6 +88,7 @@ func _on_save() -> void:
 	var after := live.duplicate(true)
 	after.id = trig_id.text
 	after.title = trig_title.text
+	after.area_center_m = Vector2(pos_x_in.value, pos_y_in.value)
 	after.area_shape = trig_shape.get_selected_id() as ScenarioTrigger.AreaShape
 	after.area_size_m = Vector2(trig_size_x.value, trig_size_y.value)
 	after.require_duration_s = trig_duration.value

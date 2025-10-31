@@ -6,6 +6,7 @@ extends RefCounted
 var sim: SimWorld
 var engine: TriggerEngine
 var drawing_controller = null  # DrawingController reference
+var map_controller: MapController = null  # MapController reference for position conversion
 
 var _last_radio_command: String = ""
 var _mission_dialog: Control = null
@@ -194,6 +195,7 @@ func has_global(key: String) -> bool:
 
 ## Show a mission dialog with text and an OK button.
 ## Optionally pauses the simulation until the player dismisses the dialog.
+## Can display a line from the dialog to a position on the map.
 ## [br][br]
 ## [b]Usage in trigger expressions:[/b]
 ## [codeblock]
@@ -202,12 +204,21 @@ func has_global(key: String) -> bool:
 ##
 ## # Show dialog and pause game
 ## show_dialog("Mission briefing: Secure the village.", true)
+##
+## # Show dialog with a line pointing to a map position
+## show_dialog("Check this location!", false, vec2(500, 750))
+##
+## # Show dialog pointing to a unit's position
+## var enemy = unit("BRAVO")
+## if enemy:
+##     show_dialog("Watch out for enemies here!", true, enemy.position_m)
 ## [/codeblock]
 ## [param text] Dialog text to display (supports BBCode formatting)
 ## [param pause_game] If true, pauses simulation until dialog is dismissed
-func show_dialog(text: String, pause_game: bool = false) -> void:
+## [param position_m] Optional position on map (in meters) to draw a line to
+func show_dialog(text: String, pause_game: bool = false, position_m: Variant = null) -> void:
 	if _mission_dialog and _mission_dialog.has_method("show_dialog"):
-		_mission_dialog.show_dialog(text, pause_game, sim)
+		_mission_dialog.show_dialog(text, pause_game, sim, position_m, map_controller)
 
 
 ## Check if the player has drawn anything on the map.
@@ -279,3 +290,71 @@ func get_counter_count() -> int:
 	if _counter_controller and _counter_controller.has_method("get_counter_count"):
 		return _counter_controller.get_counter_count()
 	return 0
+
+
+## Create a Vector2 from x and y coordinates.
+## Use this helper to construct Vector2 in trigger expressions.
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Show dialog with line to position
+## show_dialog("Check here!", false, vec2(500, 750))
+##
+## # Store position in global variable
+## set_global("checkpoint", vec2(1000, 500))
+## [/codeblock]
+## [param x] X coordinate
+## [param y] Y coordinate
+## [return] Vector2 with given coordinates
+func vec2(x: float, y: float) -> Vector2:
+	return Vector2(x, y)
+
+
+## Create a Vector3 from x, y, and z coordinates.
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Create 3D position
+## set_global("spawn_point", vec3(500, 0, 750))
+## [/codeblock]
+## [param x] X coordinate
+## [param y] Y coordinate
+## [param z] Z coordinate
+## [return] Vector3 with given coordinates
+func vec3(x: float, y: float, z: float) -> Vector3:
+	return Vector3(x, y, z)
+
+
+## Create a Color from RGB or RGBA values (0.0 to 1.0).
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Create red color
+## set_global("marker_color", color(1.0, 0.0, 0.0))
+##
+## # Create semi-transparent blue
+## set_global("marker_color", color(0.0, 0.0, 1.0, 0.5))
+## [/codeblock]
+## [param r] Red component (0.0 to 1.0)
+## [param g] Green component (0.0 to 1.0)
+## [param b] Blue component (0.0 to 1.0)
+## [param a] Alpha component (0.0 to 1.0), defaults to 1.0
+## [return] Color with given components
+func color(r: float, g: float, b: float, a: float = 1.0) -> Color:
+	return Color(r, g, b, a)
+
+
+## Create a Rect2 from position and size.
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Create rectangle area
+## set_global("patrol_area", rect2(500, 750, 200, 100))
+## [/codeblock]
+## [param x] X position
+## [param y] Y position
+## [param width] Width
+## [param height] Height
+## [return] Rect2 with given position and size
+func rect2(x: float, y: float, width: float, height: float) -> Rect2:
+	return Rect2(x, y, width, height)
