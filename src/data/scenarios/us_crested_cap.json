@@ -356,7 +356,7 @@
 		},
 		"condition_expr": "true",
 		"id": "mission_init",
-		"on_activate_expr": "show_dialog(\"Welcome to Field Training Exercise (FTX) Crested Cap Checkride. This exercise will train you on basic leadership skills and radio etiquette.\", false, vec2(501, 1721))",
+		"on_activate_expr": "sleep_ui(5.0);\nshow_dialog(\n    \"Welcome to Field Training Exercise (FTX) Crested Cap Checkride. This exercise will train you on basic leadership skills and radio etiquette.\",\n    false,\n    vec2(501, 1721)\n);",
 		"on_deactivate_expr": "",
 		"presence": 0,
 		"require_duration_s": 0.0,

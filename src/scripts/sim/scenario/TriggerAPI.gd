@@ -11,6 +11,9 @@ var map_controller: MapController = null  # MapController reference for position
 var _last_radio_command: String = ""
 var _mission_dialog: Control = null
 var _counter_controller = null  # UnitCounterController reference
+var _sleep_requested: bool = false
+var _sleep_duration: float = 0.0
+var _sleep_use_realtime: bool = false
 
 
 ## Return mission time in seconds.
@@ -358,3 +361,95 @@ func color(r: float, g: float, b: float, a: float = 1.0) -> Color:
 ## [return] Rect2 with given position and size
 func rect2(x: float, y: float, width: float, height: float) -> Rect2:
 	return Rect2(x, y, width, height)
+
+
+## Pause execution for a duration (mission time).
+## All statements after this call will be delayed by the specified duration.
+## Uses mission time, so pausing the game pauses the sleep timer.
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Show sequential messages
+## show_dialog("First message")
+## sleep(5.0)
+## show_dialog("Second message after 5 seconds")
+## sleep(3.0)
+## show_dialog("Third message after 8 seconds total")
+##
+## # Countdown sequence
+## radio("Starting countdown...")
+## sleep(3.0)
+## radio("3...")
+## sleep(3.0)
+## radio("2...")
+## sleep(3.0)
+## radio("1...")
+## sleep(3.0)
+## radio("Go!")
+## set_objective("start", 1)
+##
+## # Dialog with position then delayed attack order
+## show_dialog("Watch this position", false, vec2(500, 500))
+## sleep(5.0)
+## show_dialog("Attack here!", false, vec2(1000, 1000))
+## sleep(2.0)
+## radio("All units, engage!")
+## [/codeblock]
+## [param duration_s] Duration in seconds (mission time) to pause execution
+func sleep(duration_s: float) -> void:
+	_sleep_requested = true
+	_sleep_duration = duration_s
+	_sleep_use_realtime = false
+
+
+## Pause execution for a duration (real-time).
+## All statements after this call will be delayed by the specified duration.
+## Uses real-time, so the sleep continues even when the game is paused.
+## Useful for UI sequences and tutorials.
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Tutorial sequence that continues even if player pauses
+## show_dialog("Welcome to the tutorial", true)
+## sleep_ui(2.0)
+## show_dialog("Step 1: Use radio checks", true)
+## sleep_ui(3.0)
+## show_dialog("Step 2: Place markers", true)
+##
+## # Timed UI feedback
+## radio("Command acknowledged")
+## sleep_ui(1.5)
+## radio("Executing order...")
+## sleep_ui(2.0)
+## radio("Order complete")
+## [/codeblock]
+## [param duration_s] Duration in seconds (real-time) to pause execution
+func sleep_ui(duration_s: float) -> void:
+	_sleep_requested = true
+	_sleep_duration = duration_s
+	_sleep_use_realtime = true
+
+
+## Check if sleep was requested (internal use by TriggerVM).
+## [return] True if sleep was called.
+func _is_sleep_requested() -> bool:
+	return _sleep_requested
+
+
+## Get sleep duration (internal use by TriggerVM).
+## [return] Sleep duration in seconds.
+func _get_sleep_duration() -> float:
+	return _sleep_duration
+
+
+## Check if sleep uses realtime (internal use by TriggerVM).
+## [return] True if sleep_ui was called, false if sleep was called.
+func _is_sleep_realtime() -> bool:
+	return _sleep_use_realtime
+
+
+## Reset sleep state (internal use by TriggerVM).
+func _reset_sleep() -> void:
+	_sleep_requested = false
+	_sleep_duration = 0.0
+	_sleep_use_realtime = false

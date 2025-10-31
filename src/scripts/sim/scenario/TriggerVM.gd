@@ -43,6 +43,7 @@ func eval_condition(expr_src: String, ctx: Dictionary) -> bool:
 
 
 ## Run side-effect expressions (activation/deactivation). Ignores return values.
+## Handles blocking sleep - if sleep is called, remaining statements are scheduled.
 ## [param expr_src] Expression source.
 ## [param ctx] becomes constants accessible in the expression.
 func run(expr_src: String, ctx: Dictionary) -> void:
@@ -50,12 +51,39 @@ func run(expr_src: String, ctx: Dictionary) -> void:
 	var src := expr_src.strip_edges()
 	if src == "":
 		return
-	for line in _split_lines(src):
+
+	# Reset sleep state before execution
+	if _api:
+		_api._reset_sleep()
+
+	var lines := _split_lines(src)
+	for i in lines.size():
+		var line := lines[i]
 		var compiled := _compile(line, ctx)
 		if compiled == null or compiled.is_empty():
 			continue
 		var inputs := _values_for(compiled.names, ctx)
 		compiled.expr.execute(inputs, _api, false, false)
+
+		# Check if sleep was requested after this statement
+		if _api and _api._is_sleep_requested():
+			# Collect remaining statements
+			var remaining_lines := PackedStringArray()
+			for j in range(i + 1, lines.size()):
+				remaining_lines.append(lines[j])
+
+			if remaining_lines.size() > 0:
+				var remaining_expr := "\n".join(remaining_lines)
+				var sleep_duration := _api._get_sleep_duration()
+				var use_realtime := _api._is_sleep_realtime()
+
+				# Schedule remaining statements
+				if _api.engine and _api.engine.has_method("schedule_action"):
+					_api.engine.schedule_action(sleep_duration, remaining_expr, ctx, use_realtime)
+
+			# Reset sleep state and stop processing
+			_api._reset_sleep()
+			return
 
 
 ## Compile a given expression.
@@ -100,16 +128,85 @@ func _sorted_keys(ctx: Dictionary) -> PackedStringArray:
 	return ks
 
 
-## Split source by lines.
+## Split source by lines, respecting multi-line expressions.
+## Handles parentheses, brackets, and braces to keep multi-line calls together.
 ## [param src] Source string.
 ## [return] PackedStringArray of code lines.
 func _split_lines(src: String) -> PackedStringArray:
-	var work := src.replace("\r", "\n").split("\n", false)
+	var work := src.replace("\r", "\n")
 	var out := PackedStringArray()
-	for s in work:
-		var parts := s.split(";", false)
-		for p in parts:
-			var t := p.strip_edges()
-			if t != "":
-				out.append(t)
+	var current := ""
+	var paren_depth := 0
+	var bracket_depth := 0
+	var brace_depth := 0
+	var in_string := false
+	var string_char := ""
+	var i := 0
+
+	while i < work.length():
+		var c := work[i]
+
+		# Handle string literals
+		if c == '"' or c == "'":
+			if not in_string:
+				in_string = true
+				string_char = c
+			elif c == string_char:
+				# Check if escaped
+				if i > 0 and work[i - 1] != "\\":
+					in_string = false
+			current += c
+			i += 1
+			continue
+
+		# Skip if inside string
+		if in_string:
+			current += c
+			i += 1
+			continue
+
+		# Track depth
+		if c == "(":
+			paren_depth += 1
+		elif c == ")":
+			paren_depth -= 1
+		elif c == "[":
+			bracket_depth += 1
+		elif c == "]":
+			bracket_depth -= 1
+		elif c == "{":
+			brace_depth += 1
+		elif c == "}":
+			brace_depth -= 1
+
+		# Statement separator
+		if c == ";" and paren_depth == 0 and bracket_depth == 0 and brace_depth == 0:
+			var stmt := current.strip_edges()
+			if stmt != "":
+				out.append(stmt)
+			current = ""
+			i += 1
+			continue
+
+		# Newline - only split if all depths are zero
+		if c == "\n":
+			if paren_depth == 0 and bracket_depth == 0 and brace_depth == 0:
+				var stmt := current.strip_edges()
+				if stmt != "":
+					out.append(stmt)
+				current = ""
+			else:
+				# Keep the newline as a space for multi-line expressions
+				current += " "
+			i += 1
+			continue
+
+		current += c
+		i += 1
+
+	# Add remaining
+	var stmt := current.strip_edges()
+	if stmt != "":
+		out.append(stmt)
+
 	return out
