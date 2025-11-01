@@ -68,7 +68,7 @@ func on_attributemenu_pressed(id: int) -> void:
 func open_slot_config(index: int) -> void:
 	if not editor.ctx.data or not editor.ctx.data.unit_slots:
 		return
-	editor._slot_cfg.show_for(editor, index)
+	editor.slot_cfg.show_for(editor, index)
 
 
 ## Open unit configuration dialog for a unit index.
@@ -76,7 +76,7 @@ func open_slot_config(index: int) -> void:
 func open_unit_config(index: int) -> void:
 	if not editor.ctx.data or not editor.ctx.data.units:
 		return
-	editor._unit_cfg.show_for(editor, index)
+	editor.unit_cfg.show_for(editor, index)
 
 
 ## Open task configuration dialog for a task index.
@@ -85,7 +85,7 @@ func open_task_config(task_index: int) -> void:
 	if not editor.ctx.data or editor.ctx.data.tasks == null:
 		return
 	var inst: ScenarioTask = editor.ctx.data.tasks[task_index]
-	editor._task_cfg.show_for(editor, inst)
+	editor.task_cfg.show_for(editor, inst)
 
 
 ## Open trigger configuration dialog for a trigger index.
@@ -93,7 +93,7 @@ func open_task_config(task_index: int) -> void:
 func open_trigger_config(index: int) -> void:
 	if index < 0 or index >= editor.ctx.data.triggers.size():
 		return
-	editor._trigger_cfg.show_for(editor, index)
+	editor.trigger_cfg.show_for(editor, index)
 
 
 ## Open custom command configuration dialog for a command index.
@@ -101,4 +101,4 @@ func open_trigger_config(index: int) -> void:
 func open_command_config(index: int) -> void:
 	if index < 0 or index >= editor.ctx.data.custom_commands.size():
 		return
-	editor._command_cfg.show_for(editor, index)
+	editor.command_cfg.show_for(editor, index)

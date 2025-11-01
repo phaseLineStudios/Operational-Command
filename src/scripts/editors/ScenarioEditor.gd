@@ -67,11 +67,11 @@ var menus := ScenarioEditorMenus.new()
 @onready var st_list: ItemList = %STList
 @onready var st_load_btn: Button = %LoadTexture
 
-@onready var _slot_cfg: SlotConfigDialog = %SlotConfigDialog
-@onready var _unit_cfg: UnitConfigDialog = %UnitConfigDialog
-@onready var _task_cfg: TaskConfigDialog = %TaskConfigDialog
-@onready var _trigger_cfg: TriggerConfigDialog = %TriggerConfigDialog
-@onready var _command_cfg: CustomCommandConfigDialog = %CustomCommandConfigDialog
+@onready var slot_cfg: SlotConfigDialog = %SlotConfigDialog
+@onready var unit_cfg: UnitConfigDialog = %UnitConfigDialog
+@onready var task_cfg: TaskConfigDialog = %TaskConfigDialog
+@onready var trigger_cfg: TriggerConfigDialog = %TriggerConfigDialog
+@onready var command_cfg: CustomCommandConfigDialog = %CustomCommandConfigDialog
 
 @onready var _tab_container1: TabContainer = %TabContainer1
 
@@ -163,7 +163,7 @@ func _ready():
 	new_command_btn.pressed.connect(_on_new_command)
 	edit_command_btn.pressed.connect(_on_edit_command)
 	delete_command_btn.pressed.connect(_on_delete_command)
-	_command_cfg.saved.connect(func(_idx: int, _cmd: CustomCommand): _rebuild_command_list())
+	command_cfg.saved.connect(func(_idx: int, _cmd: CustomCommand): _rebuild_command_list())
 
 	draw_tools.build_stamp_pool()
 

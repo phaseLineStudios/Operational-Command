@@ -491,7 +491,7 @@
       },
       {
         "area_center_m": {
-          "x": 2151.0,
+          "x": 2152.52563476563,
           "y": 351.0
         },
         "condition_expr": "has_created_counter()",
@@ -557,7 +557,7 @@
           "x": 2751.0,
           "y": 151.0
         },
-        "condition_expr": "get_global(\"ambush_triggered\", false)\nand last_radio_command().to_lower().contains(\"contact\")",
+        "condition_expr": "get_global(\"ambush_triggered\", false) and last_radio_command().to_lower().contains(\"contact\")",
         "id": "ambush_reports",
         "on_activate_expr": "sleep(3.0);\nvar pos := get_unit_position(\"ALPHA\");\nshow_dialog(\"Good! Now destroy VICTOR!\", pos);",
         "on_deactivate_expr": "",
@@ -578,7 +578,7 @@
           "x": 2751.0,
           "y": 351.0
         },
-        "condition_expr": "get_global(\"ambush_triggered\", false)\nand is_unit_destroyed(\"VICTOR\")",
+        "condition_expr": "get_global(\"ambush_triggered\", false) and is_unit_destroyed(\"VICTOR\")",
         "id": "victor_destroyed_trigger",
         "on_activate_expr": "show_dialog(\"VICTOR is Destroyed! Now break contact with BORIS and move to OBJ 2\", true, vec2(2138, 648));\n",
         "on_deactivate_expr": "",

@@ -278,7 +278,7 @@ func show_dialog(
 ## [param block] If true (default), blocks execution until dialog is closed
 func tutorial_dialog(text: String, node_identifier: String = "", block: bool = true) -> void:
 	if _mission_dialog and _mission_dialog.has_method("show_dialog"):
-		var target = node_identifier if node_identifier != "" else null
+		var target = node_identifier as Variant if node_identifier != "" else null
 		_mission_dialog.show_dialog(text, true, sim, null, map_controller, target)
 		if block:
 			_dialog_blocking = true

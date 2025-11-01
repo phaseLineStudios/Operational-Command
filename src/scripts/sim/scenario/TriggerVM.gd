@@ -15,8 +15,9 @@ func set_api(api: TriggerAPI) -> void:
 ## Evaluate a condition expression.
 ## [param expr_src] Expression source.
 ## [param ctx] becomes constants accessible in the expression.
+## [param debug_info] Optional debug info for error messages (trigger_id, expr_type).
 ## [return] empty/"true" -> true.
-func eval_condition(expr_src: String, ctx: Dictionary) -> bool:
+func eval_condition(expr_src: String, ctx: Dictionary, debug_info: Dictionary = {}) -> bool:
 	var src := expr_src.strip_edges()
 	if src == "" or src == "true":
 		return true
@@ -24,7 +25,7 @@ func eval_condition(expr_src: String, ctx: Dictionary) -> bool:
 	var lines := _split_lines(src)
 	var last: Variant = true
 	for line in lines:
-		var compiled := _compile(line, ctx)
+		var compiled: Variant = _compile(line, ctx, debug_info)
 		if compiled == null:
 			return false
 
@@ -48,7 +49,8 @@ func eval_condition(expr_src: String, ctx: Dictionary) -> bool:
 ## - If dialog blocking is requested, remaining statements execute when dialog closes
 ## [param expr_src] Expression source.
 ## [param ctx] becomes constants accessible in the expression.
-func run(expr_src: String, ctx: Dictionary) -> void:
+## [param debug_info] Optional debug info for error messages (trigger_id, expr_type).
+func run(expr_src: String, ctx: Dictionary, debug_info: Dictionary = {}) -> void:
 	LogService.trace("Ran trigger expression", "TriggerVM.gd:49")
 	var src := expr_src.strip_edges()
 	if src == "":
@@ -61,7 +63,7 @@ func run(expr_src: String, ctx: Dictionary) -> void:
 	var lines := _split_lines(src)
 	for i in lines.size():
 		var line := lines[i]
-		var compiled := _compile(line, ctx)
+		var compiled: Variant = _compile(line, ctx, debug_info)
 		if compiled == null or compiled.is_empty():
 			continue
 		var inputs := _values_for(compiled.names, ctx)
@@ -105,8 +107,10 @@ func run(expr_src: String, ctx: Dictionary) -> void:
 
 ## Compile a given expression.
 ## [param src] Source to compile.
-## [return] Compiled expression.
-func _compile(src: String, ctx: Dictionary) -> Dictionary:
+## [param ctx] Context dictionary.
+## [param debug_info] Optional debug info for error messages.
+## [return] Compiled expression, or null on error.
+func _compile(src: String, ctx: Dictionary, debug_info: Dictionary = {}) -> Variant:
 	var names := _sorted_keys(ctx)
 	var key := src + "\n--names--\n" + "|".join(names)
 	if _cache.has(key):
@@ -115,8 +119,25 @@ func _compile(src: String, ctx: Dictionary) -> Dictionary:
 	var e := Expression.new()
 	var err := e.parse(src, names)
 	if err != OK:
-		push_warning("TriggerVM parse error: %s" % e.get_error_text())
-		return {}
+		# Build detailed error message with context
+		var error_msg := "TriggerVM parse error: %s" % e.get_error_text()
+
+		# Add trigger context if available
+		if debug_info.has("trigger_id") and debug_info.get("trigger_id", "") != "":
+			error_msg += "\n  Trigger ID: %s" % debug_info.get("trigger_id", "")
+		if debug_info.has("trigger_title") and debug_info.get("trigger_title", "") != "":
+			error_msg += "\n  Trigger Title: %s" % debug_info.get("trigger_title", "")
+		if debug_info.has("expr_type"):
+			error_msg += "\n  Expression Type: %s" % debug_info.get("expr_type", "")
+
+		# Add expression snippet
+		var snippet := src
+		if snippet.length() > 80:
+			snippet = snippet.substr(0, 77) + "..."
+		error_msg += "\n  Expression: %s" % snippet
+
+		push_warning(error_msg)
+		return null
 
 	var out := {"expr": e, "names": names}
 	_cache[key] = out
@@ -160,6 +181,7 @@ func _split_lines(src: String) -> PackedStringArray:
 	var string_char := ""
 	var i := 0
 
+	var stmt: String
 	while i < work.length():
 		var c := work[i]
 
@@ -198,20 +220,25 @@ func _split_lines(src: String) -> PackedStringArray:
 
 		# Statement separator
 		if c == ";" and paren_depth == 0 and bracket_depth == 0 and brace_depth == 0:
-			var stmt := current.strip_edges()
+			stmt = current.strip_edges()
 			if stmt != "":
 				out.append(stmt)
 			current = ""
 			i += 1
 			continue
 
-		# Newline - only split if all depths are zero
+		# Newline - only split if all depths are zero AND not continuing an operator
 		if c == "\n":
 			if paren_depth == 0 and bracket_depth == 0 and brace_depth == 0:
-				var stmt := current.strip_edges()
-				if stmt != "":
+				stmt = current.strip_edges()
+				# Check if line ends with a continuation operator/token
+				var should_continue := _line_needs_continuation(stmt)
+				if stmt != "" and not should_continue:
 					out.append(stmt)
-				current = ""
+					current = ""
+				else:
+					# Keep the newline as a space for multi-line expressions
+					current += " "
 			else:
 				# Keep the newline as a space for multi-line expressions
 				current += " "
@@ -222,8 +249,48 @@ func _split_lines(src: String) -> PackedStringArray:
 		i += 1
 
 	# Add remaining
-	var stmt := current.strip_edges()
+	stmt = current.strip_edges()
 	if stmt != "":
 		out.append(stmt)
 
 	return out
+
+
+## Check if a line ends with a token that requires continuation on the next line.
+## [param line] Line to check.
+## [return] True if the line needs continuation.
+func _line_needs_continuation(line: String) -> bool:
+	if line == "":
+		return false
+
+	# Binary operators that require a right-hand side
+	var continuation_tokens := [
+		"and",
+		"or",
+		"not",
+		"+",
+		"-",
+		"*",
+		"/",
+		"%",
+		"==",
+		"!=",
+		"<",
+		">",
+		"<=",
+		">=",
+		"in",
+		"is",
+		".",
+		",",
+		"=",
+	]
+
+	for token in continuation_tokens:
+		if line.ends_with(token):
+			return true
+		# Also check for token followed by whitespace (already stripped)
+		if line.ends_with(token + " "):
+			return true
+
+	return false
