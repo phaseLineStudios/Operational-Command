@@ -317,7 +317,7 @@ shape = SubResource("BoxShape3D_cx6my")
 
 [node name="Mesh" parent="PhysicsObjects/IntelDoc" instance=ExtResource("4_fhiww")]
 
-[node name="TerrainDoc" type="RigidBody3D" parent="PhysicsObjects"]
+[node name="TranscriptDoc" type="RigidBody3D" parent="PhysicsObjects"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388701, 0.747355, 0.0703042)
 collision_layer = 2
@@ -328,10 +328,10 @@ script = ExtResource("1_oof4l")
 inspect_enabled = true
 inspect_rotation = Vector3(90, 0, 0)
 
-[node name="Collision" type="CollisionShape3D" parent="PhysicsObjects/TerrainDoc"]
+[node name="Collision" type="CollisionShape3D" parent="PhysicsObjects/TranscriptDoc"]
 shape = SubResource("BoxShape3D_uk27s")
 
-[node name="Mesh" parent="PhysicsObjects/TerrainDoc" instance=ExtResource("4_fhiww")]
+[node name="Mesh" parent="PhysicsObjects/TranscriptDoc" instance=ExtResource("4_fhiww")]
 
 [node name="BriefingDoc" type="RigidBody3D" parent="PhysicsObjects"]
 unique_name_in_owner = true
