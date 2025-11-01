@@ -196,8 +196,10 @@ static func _compute_los_and_atten(
 	if cfg and cfg.debug and dist > 800.0 and total_samples > 0:
 		var forest_pct := float(forest_samples) / float(total_samples) * 100.0
 		LogService.info(
-			"LOS trace: dist=%.0fm, samples=%d, forest_hits=%d (%.1f%%), atten=%.2f"
-			% [dist, total_samples, forest_samples, forest_pct, atten],
+			(
+				"LOS trace: dist=%.0fm, samples=%d, forest_hits=%d (%.1f%%), atten=%.2f"
+				% [dist, total_samples, forest_samples, forest_pct, atten]
+			),
 			"TerrainEffects"
 		)
 

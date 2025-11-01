@@ -29,6 +29,12 @@ func _ready() -> void:
 	_api.sim = _sim
 	_api.engine = self
 	_vm.set_api(_api)
+	# Bind controllers for tracking
+	if _sim:
+		if _sim.engineer_controller:
+			_api._bind_engineer_controller(_sim.engineer_controller)
+		if _sim.artillery_controller:
+			_api._bind_artillery_controller(_sim.artillery_controller)
 	# Always process to track real-time for sleep_ui
 	set_process(true)
 

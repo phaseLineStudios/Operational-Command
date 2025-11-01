@@ -10,12 +10,6 @@
     "mission": {
       "objectives": [
         {
-          "id": "notional_casualties",
-          "score": 100,
-          "success": "Keep notional casualties under 10%. If notional casualties exceeds 10% complete a CAS request (simulated).",
-          "title": "Keep notional casualties under 10%"
-        },
-        {
           "id": "lane_1_comms",
           "score": 20,
           "success": "Perform a radio check and receive a reply.",
@@ -38,6 +32,36 @@
           "score": 40,
           "success": "Draw movement plan for Training Lane 2.",
           "title": "Lane 1: Draw movement plan"
+        },
+        {
+          "id": "lane2_movement",
+          "score": 50,
+          "success": "Reach the objective.",
+          "title": "Lane 2: Move to objective"
+        },
+        {
+          "id": "lane2_combat",
+          "score": 50,
+          "success": "The unit must report contact and status, destroy one enemy platoon and break contact with the second.",
+          "title": "Lane 2: Practice Combat"
+        },
+        {
+          "id": "lane3_bridge",
+          "score": 30,
+          "success": "Have engineers build a bridge east of OBJ 3.",
+          "title": "Lane 3: Build Bridge"
+        },
+        {
+          "id": "lane3_artillery",
+          "score": 30,
+          "success": "Call artillery barrage of smoke to cover unit movement",
+          "title": "Lane 3: Call for smoke barrage"
+        },
+        {
+          "id": "lane3_retreat",
+          "score": 40,
+          "success": "Have a friendly unit cross the bridge from east to west and move to OBJ 3.",
+          "title": "Lane 3: Move across bridge"
         }
       ],
       "statement": "At 0900C 05 NOV 83, A Trp/1-11 ACR (-) conducts a four-lane evaluation at Wildflecken to rehearse comms discipline, movement under contact, break-contact with smoke, and river crossing in order to certify the troop GO for follow-on taskings."
@@ -245,6 +269,57 @@
         "type": "stroke",
         "visible": true,
         "width_px": 3.0
+      },
+      {
+        "id": "draw_stamp_004",
+        "label": "OBJ 1",
+        "layer": 0,
+        "modulate": "000000ff",
+        "opacity": 1.0,
+        "order": 1147628579,
+        "position_m": {
+          "x": 2318.63305664063,
+          "y": 1836.00170898438
+        },
+        "rotation_deg": 0.0,
+        "scale": 0.1,
+        "texture_path": "res://assets/textures/stamps/stamp_obj.png",
+        "type": "stamp",
+        "visible": true
+      },
+      {
+        "id": "draw_stamp_005",
+        "label": "OBJ 2",
+        "layer": 0,
+        "modulate": "000000ff",
+        "opacity": 1.0,
+        "order": 1154825170,
+        "position_m": {
+          "x": 2133.353515625,
+          "y": 647.418334960938
+        },
+        "rotation_deg": 0.0,
+        "scale": 0.1,
+        "texture_path": "res://assets/textures/stamps/stamp_obj.png",
+        "type": "stamp",
+        "visible": true
+      },
+      {
+        "id": "draw_stamp_006",
+        "label": "OBJ3",
+        "layer": 0,
+        "modulate": "000000ff",
+        "opacity": 1.0,
+        "order": 425292265,
+        "position_m": {
+          "x": 1449.53857421875,
+          "y": 353.136962890625
+        },
+        "rotation_deg": 0.0,
+        "scale": 0.1,
+        "texture_path": "res://assets/textures/stamps/stamp_obj.png",
+        "type": "stamp",
+        "visible": true
       }
     ],
     "tasks": [
@@ -337,7 +412,7 @@
         },
         "condition_expr": "last_radio_command().to_lower().contains(\"radio check\")",
         "id": "radio_check_trigger",
-        "on_activate_expr": "radio(\"Compant this is Alpha. I Read you five by five.\");\nset_objective(\"lane_1_comms\", 1);\nsleep_ui(2.0);\ntutorial_dialog(\"Good! Next we have your unit counter drawer. Here you can create new Unit Counters.\", \"%UnitCounterDrawer\", true);\ntutorial_dialog(\"Try creating a Unit Counter for the \\\"UMPIRE\\\". (size: Team, type: HQ, affiliation: Neutral)\", \"%UnitCounterDrawer\", true);",
+        "on_activate_expr": "radio(\"Company this is Alpha. I Read you five by five.\");\nset_objective(\"lane_1_comms\", 1);\nsleep_ui(2.0);\ntutorial_dialog(\"Good! Next we have your unit counter drawer. Here you can create new Unit Counters.\", \"%UnitCounterDrawer\", true);\ntutorial_dialog(\"Try creating a Unit Counter for the \\\"UMPIRE\\\". (size: Team, type: HQ, affiliation: Neutral)\", \"%UnitCounterDrawer\", true);",
         "on_deactivate_expr": "",
         "presence": 0,
         "require_duration_s": 0.0,
@@ -358,7 +433,7 @@
         },
         "condition_expr": "true",
         "id": "mission_init",
-        "on_activate_expr": "set_global(\"is_tool_tut_finished\", false);\n\nsleep_ui(5.0);\ntutorial_dialog(\"Welcome to Operational Command. This mission will serve to familiarize you with the tools at your disposal.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"Let's start with the most important; This is your map. It shows you the current terrain.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This is the briefing document. Here you can see the Mission Operations Order and most importantly; your objectives (LMB + drag to move it. 2x LMB to view. RMB to stop).\", \"%BriefingDoc\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This is the terrain document. Here you will find intel on the terrain considerations.\", \"%TerrainDoc\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This is the intelligence document. Here you will find mission specific intel like enemy disposition.\", \"%IntelDoc\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This is a protractor. It can be used to gague more accurate distances and compass headings.\", \"%Protractor\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This is your Field Manual. In here you can find everything you'll learn in this tutorial and everything else.\", \"%FieldManual\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This is your radio. To transmitt you need to hold down the PTT (SPACE). Try saying \\\"Radio Check\\\".\", \"%Radio\", true);\nset_global(\"is_tool_tut_finished\", true);",
+        "on_activate_expr": "set_global(\"is_tool_tut_finished\", false);\n\nsleep_ui(1.0);\ntutorial_dialog(\"Welcome to Operational Command. This mission will serve to familiarize you with the tools at your disposal.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"Let's start with the most important; This is your map. It shows you the current terrain.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This is the briefing document. Here you can see the Mission Operations Order and most importantly; your objectives (LMB + drag to move it. 2x LMB to view. RMB to stop).\", \"%BriefingDoc\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This is the terrain document. Here you will find intel on the terrain considerations.\", \"%TerrainDoc\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This is the intelligence document. Here you will find mission specific intel like enemy disposition.\", \"%IntelDoc\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This is a protractor. It can be used to gague more accurate distances and compass headings.\", \"%Protractor\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This is your Field Manual. In here you can find everything you'll learn in this tutorial and everything else.\", \"%FieldManual\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This is your radio. To transmitt you need to hold down the PTT (SPACE). Try saying \\\"Radio Check\\\".\", \"%Radio\", true);\nset_global(\"is_tool_tut_finished\", true);",
         "on_deactivate_expr": "",
         "presence": 0,
         "require_duration_s": 0.0,
@@ -379,7 +454,7 @@
         },
         "condition_expr": "has_drawn()",
         "id": "drawing_check_trigger",
-        "on_activate_expr": "set_objective(\"draw_plan\", 1)\n\ntutorial_dialog(\"Good! Now let's have ALPHA move to wildflecken camp. Hold your PTT and say: \\\"ALPHA Move To Grid 634858\\\".\", \"%Radio\", true);\n",
+        "on_activate_expr": "set_objective(\"draw_plan\", 1)\n\ntutorial_dialog(\"Good! Now let's have ALPHA move to wildflecken camp (OBJ 1). Hold your PTT and say: \\\"ALPHA Move To Grid 633858\\\".\", \"%Radio\", true);\n",
         "on_deactivate_expr": "",
         "presence": 0,
         "require_duration_s": 0.0,
@@ -400,7 +475,7 @@
         },
         "condition_expr": "is_running()",
         "id": "timer_check_trigger",
-        "on_activate_expr": "set_objective(\"set_time\", 1)\n\nsleep(5.0);\ntutorial_dialog(\"You can get a unit's position/status by transmitting: \\\"Alpha, report position/status\\\" \", \"%Radio\", true);",
+        "on_activate_expr": "set_objective(\"set_time\", 1)\n\nsleep(20.0);\ntutorial_dialog(\"You can get a unit's position/status by transmitting: \\\"Alpha, report position/status\\\" \", \"%Radio\", true);",
         "on_deactivate_expr": "",
         "presence": 0,
         "require_duration_s": 0.0,
@@ -421,7 +496,7 @@
         },
         "condition_expr": "has_created_counter()",
         "id": "unit_counter_trigger",
-        "on_activate_expr": "set_objective(\"unit_markers\", 1)\n\nsleep_ui(2.0);\ntutorial_dialog(\"Good! Next, these are your drawing tools. Select one by clicking it and hold LMB to draw/erase. RMB to drop it.\", \"%PenBlue\", true);\ntutorial_dialog(\"Let us draw a maneuver plan. On the map draw some arrows between the waypoints (wp) down to wildflecken camp (following the road).\", \"%Map\", true);",
+        "on_activate_expr": "set_objective(\"unit_markers\", 1)\n\nsleep_ui(2.0);\ntutorial_dialog(\"Good! Next, these are your drawing tools. Select one by clicking it and hold LMB to draw/erase. RMB to drop it.\", \"%PenBlue\", true);\ntutorial_dialog(\"Let us draw a maneuver plan. On the map draw some arrows between the waypoints (wp) down to OBJ 1 (following the road).\", \"%Map\", true);",
         "on_deactivate_expr": "",
         "presence": 0,
         "require_duration_s": 0.0,
@@ -455,6 +530,153 @@
         "synced_tasks": [],
         "synced_units": [],
         "title": "Alpha Move Check"
+      },
+      {
+        "area_center_m": {
+          "x": 2551.0,
+          "y": 351.0
+        },
+        "condition_expr": "is_unit_in_combat(\"ALPHA\")",
+        "id": "combat_trigger",
+        "on_activate_expr": "set_global(\"ambush_triggered\", true);\nvar pos := get_unit_position(\"ALPHA\");\nshow_dialog(\"Alpha has just entered combat. Request a contact report and a status report.\", true);\n",
+        "on_deactivate_expr": "",
+        "presence": 0,
+        "require_duration_s": 0.0,
+        "run_once": false,
+        "shape": 0,
+        "size_m": {
+          "x": 100.0,
+          "y": 100.0
+        },
+        "synced_tasks": [],
+        "synced_units": [],
+        "title": "Combat Trigger"
+      },
+      {
+        "area_center_m": {
+          "x": 2751.0,
+          "y": 151.0
+        },
+        "condition_expr": "get_global(\"ambush_triggered\", false)\nand last_radio_command().to_lower().contains(\"contact\")",
+        "id": "ambush_reports",
+        "on_activate_expr": "sleep(3.0);\nvar pos := get_unit_position(\"ALPHA\");\nshow_dialog(\"Good! Now destroy VICTOR!\", pos);",
+        "on_deactivate_expr": "",
+        "presence": 0,
+        "require_duration_s": 0.0,
+        "run_once": true,
+        "shape": 0,
+        "size_m": {
+          "x": 100.0,
+          "y": 100.0
+        },
+        "synced_tasks": [],
+        "synced_units": [],
+        "title": "Ambush Reports Trigger"
+      },
+      {
+        "area_center_m": {
+          "x": 2751.0,
+          "y": 351.0
+        },
+        "condition_expr": "get_global(\"ambush_triggered\", false)\nand is_unit_destroyed(\"VICTOR\")",
+        "id": "victor_destroyed_trigger",
+        "on_activate_expr": "show_dialog(\"VICTOR is Destroyed! Now break contact with BORIS and move to OBJ 2\", true, vec2(2138, 648));\n",
+        "on_deactivate_expr": "",
+        "presence": 0,
+        "require_duration_s": 0.0,
+        "run_once": true,
+        "shape": 0,
+        "size_m": {
+          "x": 100.0,
+          "y": 100.0
+        },
+        "synced_tasks": [],
+        "synced_units": [],
+        "title": "VICTOR Destroyed Trigger"
+      },
+      {
+        "area_center_m": {
+          "x": 2131.0,
+          "y": 651.0
+        },
+        "condition_expr": "true",
+        "id": "ambush_contact_break_trigger",
+        "on_activate_expr": "set_global(\"ambush_broke_contact\", true);\ncomplete_objective(\"lane2_movement\");\ncomplete_objective(\"lane2_combat\");",
+        "on_deactivate_expr": "",
+        "presence": 1,
+        "require_duration_s": 0.0,
+        "run_once": true,
+        "shape": 0,
+        "size_m": {
+          "x": 200.0,
+          "y": 200.0
+        },
+        "synced_tasks": [],
+        "synced_units": [],
+        "title": "Ambush Contact Break Trigger"
+      },
+      {
+        "area_center_m": {
+          "x": 2951.0,
+          "y": 151.0
+        },
+        "condition_expr": "has_built_bridge()",
+        "id": "bridge_trigger",
+        "on_activate_expr": "set_global(\"bridge_built\", true);\nsleep(2.0);\nshow_dialog(\"Bridge has been built! Now call for a smoke barrage from DELTA and move ALPHA across the bridge to grid 624843.\", false, vec2(1687, 340));\ncomplete_objective(\"lane3_bridge\");",
+        "on_deactivate_expr": "",
+        "presence": 0,
+        "require_duration_s": 0.0,
+        "run_once": false,
+        "shape": 0,
+        "size_m": {
+          "x": 100.0,
+          "y": 100.0
+        },
+        "synced_tasks": [],
+        "synced_units": [],
+        "title": "Bridge Trigger"
+      },
+      {
+        "area_center_m": {
+          "x": 2951.0,
+          "y": 351.0
+        },
+        "condition_expr": "has_called_artillery()",
+        "id": "arty_trigger",
+        "on_activate_expr": "complete_objective(\"lane3_artillery\")",
+        "on_deactivate_expr": "",
+        "presence": 0,
+        "require_duration_s": 0.0,
+        "run_once": false,
+        "shape": 0,
+        "size_m": {
+          "x": 100.0,
+          "y": 100.0
+        },
+        "synced_tasks": [],
+        "synced_units": [],
+        "title": "Artillery trigger"
+      },
+      {
+        "area_center_m": {
+          "x": 1451.0,
+          "y": 351.0
+        },
+        "condition_expr": "get_global(\"bridge_built\", false)",
+        "id": "alpha_retreat_trigger",
+        "on_activate_expr": "complete_objective(\"lane3_retreat\")",
+        "on_deactivate_expr": "",
+        "presence": 1,
+        "require_duration_s": 0.0,
+        "run_once": true,
+        "shape": 0,
+        "size_m": {
+          "x": 100.0,
+          "y": 100.0
+        },
+        "synced_tasks": [],
+        "synced_units": [],
+        "title": "Alpha Retreat Trigger"
       }
     ],
     "units": [

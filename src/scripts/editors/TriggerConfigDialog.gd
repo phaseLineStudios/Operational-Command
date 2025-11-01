@@ -250,7 +250,136 @@ func _setup_autocomplete() -> void:
 			"return_type": "void",
 			"description":
 			"Show a mission dialog with text and an OK button. Optionally pauses the simulation.",
-			"params": ["text: String", "pause_game: bool = false"],
+			"params":
+			[
+				"text: String",
+				"pause_game: bool = false",
+				"position_m: Variant = null",
+				"block: bool = false"
+			],
+		},
+		"tutorial_dialog":
+		{
+			"return_type": "void",
+			"description":
+			"Show a tutorial dialog pointing at a UI element. Automatically pauses and blocks execution.",
+			"params": ["text: String", 'node_identifier: String = ""', "block: bool = true"],
+		},
+		"has_drawn":
+		{
+			"return_type": "bool",
+			"description": "Check if the player has drawn anything on the map.",
+			"params": [],
+		},
+		"get_drawing_count":
+		{
+			"return_type": "int",
+			"description": "Get the number of drawing strokes the player has made.",
+			"params": [],
+		},
+		"has_created_counter":
+		{
+			"return_type": "bool",
+			"description": "Check if the player has created any unit counters.",
+			"params": [],
+		},
+		"get_counter_count":
+		{
+			"return_type": "int",
+			"description": "Get the number of unit counters the player has created.",
+			"params": [],
+		},
+		"is_unit_in_combat":
+		{
+			"return_type": "bool",
+			"description": "Check if a unit is currently in combat (has spotted enemies).",
+			"params": ["id_or_callsign: String"],
+		},
+		"get_unit_position":
+		{
+			"return_type": "Variant",
+			"description": "Get the current position of a unit in terrain meters (Vector2).",
+			"params": ["id_or_callsign: String"],
+		},
+		"get_unit_grid":
+		{
+			"return_type": "String",
+			"description": 'Get the current grid position of a unit (e.g., "630852").',
+			"params": ["id_or_callsign: String", "digits: int = 6"],
+		},
+		"is_unit_destroyed":
+		{
+			"return_type": "bool",
+			"description": "Check if a unit is destroyed (wiped out, state_strength == 0).",
+			"params": ["id_or_callsign: String"],
+		},
+		"get_unit_strength":
+		{
+			"return_type": "float",
+			"description": "Get the current strength of a unit (base strength × state_strength).",
+			"params": ["id_or_callsign: String"],
+		},
+		"has_built_bridge":
+		{
+			"return_type": "bool",
+			"description": "Check if any engineers have built a bridge.",
+			"params": [],
+		},
+		"get_bridges_built":
+		{
+			"return_type": "int",
+			"description": "Get the number of bridges built by engineers.",
+			"params": [],
+		},
+		"has_called_artillery":
+		{
+			"return_type": "bool",
+			"description": "Check if any artillery fire missions have been called.",
+			"params": [],
+		},
+		"get_artillery_calls":
+		{
+			"return_type": "int",
+			"description": "Get the number of artillery fire missions called.",
+			"params": [],
+		},
+		"vec2":
+		{
+			"return_type": "Vector2",
+			"description": "Create a Vector2 from x and y coordinates.",
+			"params": ["x: float", "y: float"],
+		},
+		"vec3":
+		{
+			"return_type": "Vector3",
+			"description": "Create a Vector3 from x, y, and z coordinates.",
+			"params": ["x: float", "y: float", "z: float"],
+		},
+		"color":
+		{
+			"return_type": "Color",
+			"description": "Create a Color from RGB or RGBA values (0.0 to 1.0).",
+			"params": ["r: float", "g: float", "b: float", "a: float = 1.0"],
+		},
+		"rect2":
+		{
+			"return_type": "Rect2",
+			"description": "Create a Rect2 from position and size.",
+			"params": ["x: float", "y: float", "width: float", "height: float"],
+		},
+		"sleep":
+		{
+			"return_type": "void",
+			"description":
+			"Pause execution for a duration (mission time). Pausing the game pauses the sleep timer.",
+			"params": ["duration_s: float"],
+		},
+		"sleep_ui":
+		{
+			"return_type": "void",
+			"description":
+			"Pause execution for a duration (real-time). Continues even when game is paused.",
+			"params": ["duration_s: float"],
 		},
 	}
 

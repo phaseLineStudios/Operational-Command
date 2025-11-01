@@ -17,6 +17,8 @@ var _sleep_use_realtime: bool = false
 var _dialog_blocking: bool = false
 var _dialog_pending_expr: String = ""
 var _dialog_pending_ctx: Dictionary = {}
+var _bridges_built: int = 0  # Counter for completed bridges
+var _artillery_called: int = 0  # Counter for artillery missions
 
 
 ## Return mission time in seconds.
@@ -356,6 +358,249 @@ func get_counter_count() -> int:
 	return 0
 
 
+## Check if a unit is currently in combat (has spotted enemies).
+## Returns true if the unit has line-of-sight to any enemy units.
+## [br][br]
+## [b]Usage in trigger condition:[/b]
+## [codeblock]
+## # Trigger when ALPHA unit is in combat
+## is_unit_in_combat("ALPHA")
+##
+## # Trigger when any player unit is in combat
+## var u = unit("ALPHA")
+## if u:
+##     is_unit_in_combat(u.id)
+##
+## # Tutorial: explain combat when ambushed
+## is_unit_in_combat("ALPHA") and not has_global("combat_tutorial_shown")
+## [/codeblock]
+## [param id_or_callsign] Unit ID or callsign to check.
+## [return] True if unit has spotted enemies (in combat).
+func is_unit_in_combat(id_or_callsign: String) -> bool:
+	if not sim:
+		return false
+
+	# Try to get unit to resolve callsign -> ID
+	var unit_data := unit(id_or_callsign)
+	var unit_id := ""
+	if unit_data.has("id"):
+		unit_id = unit_data.get("id", "")
+	else:
+		# Fallback: assume it's already an ID
+		unit_id = id_or_callsign
+
+	if unit_id == "":
+		return false
+
+	# Check if unit has any contacts (spotted enemies)
+	var contacts: Array = sim.get_contacts_for_unit(unit_id)
+	return contacts.size() > 0
+
+
+## Get the current position of a unit in terrain meters (Vector2).
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Get unit position
+## var pos = get_unit_position("ALPHA")
+## radio("ALPHA is at position " + str(pos))
+##
+## # Check if unit reached a location
+## var target = vec2(1000, 500)
+## var pos = get_unit_position("ALPHA")
+## if pos and pos.distance_to(target) < 50:
+##     radio("ALPHA reached the objective!")
+##
+## # Point dialog at unit's current position
+## var pos = get_unit_position("BRAVO")
+## if pos:
+##     show_dialog("Enemy spotted here!", false, pos)
+## [/codeblock]
+## [param id_or_callsign] Unit ID or callsign.
+## [return] Vector2 position in terrain meters, or null if unit not found.
+func get_unit_position(id_or_callsign: String) -> Variant:
+	var unit_data := unit(id_or_callsign)
+	if unit_data.is_empty():
+		return null
+	return unit_data.get("position_m", null)
+
+
+## Get the current grid position of a unit (e.g., "630852").
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Get unit grid position
+## var grid = get_unit_grid("ALPHA")
+## radio("ALPHA is at grid " + grid)
+##
+## # Tutorial: explain grid coordinates
+## var grid = get_unit_grid("ALPHA")
+## tutorial_dialog("You are at grid " + grid + ". Use this for radio reports.")
+##
+## # Check if unit is in specific grid area
+## var grid = get_unit_grid("BRAVO")
+## if grid.begins_with("63"):
+##     radio("BRAVO is in the northern sector")
+## [/codeblock]
+## [param id_or_callsign] Unit ID or callsign.
+## [param digits] Total number of digits in grid (default 6).
+## [return] Grid position string (e.g., "630852"), or empty string if unit not found.
+func get_unit_grid(id_or_callsign: String, digits: int = 6) -> String:
+	var pos: Variant = get_unit_position(id_or_callsign)
+	if pos == null or not (pos is Vector2):
+		return ""
+
+	if map_controller == null or map_controller.renderer == null:
+		return ""
+
+	return map_controller.renderer.pos_to_grid(pos, digits)
+
+
+## Check if a unit is destroyed (wiped out, state_strength == 0).
+## Returns true if the unit is dead or has zero strength.
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Trigger when ALPHA is destroyed
+## is_unit_destroyed("ALPHA")
+##
+## # Check for unit destruction and complete objective
+## if is_unit_destroyed("ENEMY_1"):
+##     complete_objective("destroy_enemy")
+##     radio("Enemy unit eliminated!")
+##
+## # Tutorial: explain unit loss
+## if is_unit_destroyed("ALPHA") and not has_global("unit_loss_tutorial_shown"):
+##     set_global("unit_loss_tutorial_shown", true)
+##     show_dialog("Your unit has been destroyed!", true)
+## [/codeblock]
+## [param id_or_callsign] Unit ID or callsign to check.
+## [return] True if unit is destroyed/dead, false if alive or not found.
+func is_unit_destroyed(id_or_callsign: String) -> bool:
+	var unit_data := unit(id_or_callsign)
+	if unit_data.is_empty():
+		return false
+	return unit_data.get("dead", false)
+
+
+## Get the current strength of a unit.
+## Strength is calculated as base strength × state_strength.
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Check if unit is below 50% strength
+## if get_unit_strength("ALPHA") < 50:
+##     radio("ALPHA is heavily damaged!")
+##
+## # Trigger when unit strength is critical
+## get_unit_strength("ALPHA") > 0 and get_unit_strength("ALPHA") < 20
+##
+## # Compare strengths
+## var alpha_str = get_unit_strength("ALPHA")
+## var bravo_str = get_unit_strength("BRAVO")
+## if alpha_str > bravo_str * 2:
+##     radio("ALPHA is significantly stronger than BRAVO")
+##
+## # Tutorial: explain unit strength
+## if get_unit_strength("ALPHA") < 30 and not has_global("strength_warning_shown"):
+##     set_global("strength_warning_shown", true)
+##     tutorial_dialog("Your unit strength is low! Consider withdrawing.")
+## [/codeblock]
+## [param id_or_callsign] Unit ID or callsign.
+## [return] Current strength value (0.0 if destroyed/not found).
+func get_unit_strength(id_or_callsign: String) -> float:
+	var unit_data := unit(id_or_callsign)
+	if unit_data.is_empty():
+		return 0.0
+	return unit_data.get("strength", 0.0)
+
+
+## Check if any engineers have built a bridge.
+## Returns true if at least one bridge has been completed.
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Trigger when first bridge is built
+## has_built_bridge()
+##
+## # Tutorial: explain bridge building
+## if has_built_bridge() and not has_global("bridge_tutorial_shown"):
+##     set_global("bridge_tutorial_shown", true)
+##     radio("Well done! The bridge is complete.")
+##     show_dialog("Engineers can build bridges across water obstacles.")
+##
+## # Complete objective when bridge built
+## if has_built_bridge():
+##     complete_objective("build_crossing")
+## [/codeblock]
+## [return] True if at least one bridge has been built.
+func has_built_bridge() -> bool:
+	return _bridges_built > 0
+
+
+## Get the number of bridges built by engineers.
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Trigger when 2 bridges are built
+## get_bridges_built() >= 2
+##
+## # Radio report on progress
+## var count = get_bridges_built()
+## radio("Engineers have completed " + str(count) + " bridge(s)")
+##
+## # Tutorial: reinforce successful bridge building
+## if get_bridges_built() >= 3:
+##     show_dialog("Excellent work! Your engineers are very efficient.")
+## [/codeblock]
+## [return] Number of bridges built.
+func get_bridges_built() -> int:
+	return _bridges_built
+
+
+## Check if any artillery fire missions have been called.
+## Returns true if at least one artillery mission has been requested.
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Trigger when first artillery is called
+## has_called_artillery()
+##
+## # Tutorial: explain artillery usage
+## if has_called_artillery() and not has_global("artillery_tutorial_shown"):
+##     set_global("artillery_tutorial_shown", true)
+##     radio("Shot! Rounds on the way.")
+##     show_dialog("Artillery takes time to impact. Listen for 'Splash' warning.")
+##
+## # Complete objective when artillery called
+## if has_called_artillery():
+##     complete_objective("call_fire_support")
+## [/codeblock]
+## [return] True if at least one artillery mission has been called.
+func has_called_artillery() -> bool:
+	return _artillery_called > 0
+
+
+## Get the number of artillery fire missions called.
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Trigger when 3 fire missions called
+## get_artillery_calls() >= 3
+##
+## # Radio report on fire support usage
+## var count = get_artillery_calls()
+## radio("We've called " + str(count) + " fire mission(s) so far")
+##
+## # Tutorial: warn about ammo conservation
+## if get_artillery_calls() > 5:
+##     show_dialog("Watch your artillery ammunition - you only have limited rounds!")
+## [/codeblock]
+## [return] Number of artillery missions called.
+func get_artillery_calls() -> int:
+	return _artillery_called
+
+
 ## Create a Vector2 from x and y coordinates.
 ## Use this helper to construct Vector2 in trigger expressions.
 ## [br][br]
@@ -545,3 +790,30 @@ func _on_dialog_closed() -> void:
 		_dialog_pending_ctx = {}
 		# Execute the remaining statements
 		engine.execute_expression(expr, ctx)
+
+
+## Bind to EngineerController to track bridge completions (internal, called by TriggerEngine).
+## [param engineer_ctrl] EngineerController reference.
+func _bind_engineer_controller(engineer_ctrl: EngineerController) -> void:
+	if engineer_ctrl and not engineer_ctrl.task_completed.is_connected(_on_engineer_task_completed):
+		engineer_ctrl.task_completed.connect(_on_engineer_task_completed)
+
+
+## Bind to ArtilleryController to track fire missions (internal, called by TriggerEngine).
+## [param artillery_ctrl] ArtilleryController reference.
+func _bind_artillery_controller(artillery_ctrl: ArtilleryController) -> void:
+	if artillery_ctrl and not artillery_ctrl.mission_confirmed.is_connected(_on_artillery_called):
+		artillery_ctrl.mission_confirmed.connect(_on_artillery_called)
+
+
+## Handle engineer task completion signal (internal).
+func _on_engineer_task_completed(_unit_id: String, task_type: String, _target_pos: Vector2) -> void:
+	if task_type.to_lower() == "bridge" or task_type.to_lower() == "build_bridge":
+		_bridges_built += 1
+
+
+## Handle artillery mission confirmed signal (internal).
+func _on_artillery_called(
+	_unit_id: String, _target_pos: Vector2, _ammo_type: String, _rounds: int
+) -> void:
+	_artillery_called += 1
