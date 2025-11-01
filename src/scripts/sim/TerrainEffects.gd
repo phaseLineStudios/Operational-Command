@@ -161,6 +161,8 @@ static func _compute_los_and_atten(
 
 	var last_per_m := -1.0
 	var last_surface_id := -1
+	var forest_samples := 0
+	var total_samples := 0
 
 	for i in range(1, steps):
 		var t := float(i) * inv_steps
@@ -187,6 +189,17 @@ static func _compute_los_and_atten(
 						last_surface_id = sid
 		if per_m > 0.0:
 			atten += per_m * step_len
+			forest_samples += 1
+		total_samples += 1
+
+	# Debug: log long-range LOS traces to understand forest coverage
+	if cfg and cfg.debug and dist > 800.0 and total_samples > 0:
+		var forest_pct := float(forest_samples) / float(total_samples) * 100.0
+		LogService.info(
+			"LOS trace: dist=%.0fm, samples=%d, forest_hits=%d (%.1f%%), atten=%.2f"
+			% [dist, total_samples, forest_samples, forest_pct, atten],
+			"TerrainEffects"
+		)
 
 	return {"blocked": blocked, "atten_integral": atten}
 

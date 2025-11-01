@@ -38,27 +38,21 @@ func has_los(a: ScenarioUnit, b: ScenarioUnit) -> bool:
 	if a == null or b == null or _los == null or _renderer == null:
 		return false
 
-	# Check if terrain data is loaded
 	var range_m := a.position_m.distance_to(b.position_m)
 	var max_spot_range := a.unit.spot_m if (a.unit and a.unit.spot_m > 0) else 2000.0
 	if _renderer.data == null:
 		return range_m <= max_spot_range
 
-	# Out of spotting range
 	if range_m > max_spot_range:
 		return false
 
-	# Check terrain blocking
 	var res: Dictionary = _los.trace_los(
 		a.position_m, b.position_m, _renderer, _renderer.data, effects_config
 	)
 	var blocked: bool = res.get("blocked", false)
 	var atten_integral: float = res.get("atten_integral", 0.0)
 
-	# Dense vegetation (forests, etc.) can also block LOS via attenuation
-	# If attenuation integral is high enough, treat as blocked
-	# exp(-5.0) ≈ 0.0067 = ~0.7% spotting chance = effectively blocked
-	const ATTEN_BLOCK_THRESHOLD := 5.0
+	const ATTEN_BLOCK_THRESHOLD := 3.4
 	if atten_integral >= ATTEN_BLOCK_THRESHOLD:
 		blocked = true
 
