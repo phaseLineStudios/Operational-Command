@@ -56,6 +56,9 @@ func _ready() -> void:
 	# Initialize counter controller
 	_init_counter_controller()
 
+	# Bind artillery and engineer controllers to trigger API
+	_init_combat_controllers()
+
 	# Initialize TTS and unit voice responses
 	_init_tts_system()
 
@@ -90,6 +93,22 @@ func _init_counter_controller() -> void:
 
 	if trigger_engine and trigger_engine._api:
 		trigger_engine._api._counter_controller = counter_controller
+
+
+## Bind artillery and engineer controllers to trigger API for tracking
+func _init_combat_controllers() -> void:
+	if trigger_engine and trigger_engine._api and sim:
+		if sim.artillery_controller:
+			trigger_engine._api._bind_artillery_controller(sim.artillery_controller)
+			LogService.trace(
+				"Artillery controller bound to TriggerAPI.", "HQTable.gd:_init_combat_controllers"
+			)
+
+		if sim.engineer_controller:
+			trigger_engine._api._bind_engineer_controller(sim.engineer_controller)
+			LogService.trace(
+				"Engineer controller bound to TriggerAPI.", "HQTable.gd:_init_combat_controllers"
+			)
 
 
 ## Initialize TTS service and wire up unit voice responses
