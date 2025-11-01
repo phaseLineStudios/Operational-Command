@@ -25,6 +25,7 @@ var _autocomplete_deactivate: CodeEditAutocomplete
 @onready var trig_size_y: SpinBox = %SizeY
 @onready var trig_duration: SpinBox = %Duration
 @onready var trig_presence: OptionButton = %Presence
+@onready var run_once: CheckBox = %RunOnce
 @onready var trig_condition: CodeEdit = %Condition
 @onready var trig_on_activate: CodeEdit = %OnActivate
 @onready var trig_on_deactivate: CodeEdit = %OnDeactivate
@@ -73,6 +74,7 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 	trig_size_x.value = trig.area_size_m.x
 	trig_size_y.value = trig.area_size_m.y
 	trig_duration.value = trig.require_duration_s
+	run_once.set_pressed_no_signal(trig.run_once)
 	trig_condition.text = trig.condition_expr
 	trig_on_activate.text = trig.on_activate_expr
 	trig_on_deactivate.text = trig.on_deactivate_expr
@@ -93,6 +95,7 @@ func _on_save() -> void:
 	after.area_size_m = Vector2(trig_size_x.value, trig_size_y.value)
 	after.require_duration_s = trig_duration.value
 	after.presence = trig_presence.get_selected_id() as ScenarioTrigger.PresenceMode
+	after.run_once = run_once.button_pressed
 	after.condition_expr = trig_condition.text
 	after.on_activate_expr = trig_on_activate.text
 	after.on_deactivate_expr = trig_on_deactivate.text
@@ -109,6 +112,7 @@ func _on_save() -> void:
 		live.area_size_m = after.area_size_m
 		live.require_duration_s = after.require_duration_s
 		live.presence = after.presence
+		live.run_once = after.run_once
 		live.condition_expr = after.condition_expr
 		live.on_activate_expr = after.on_activate_expr
 		live.on_deactivate_expr = after.on_deactivate_expr

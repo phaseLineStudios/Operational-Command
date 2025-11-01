@@ -1,4 +1,4 @@
-[gd_scene load_steps=80 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=86 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -41,6 +41,8 @@
 [ext_resource type="Script" uid="uid://0xd5ojxkkl4q" path="res://scripts/sim/systems/ArtilleryController.gd" id="33_66vc6"]
 [ext_resource type="PackedScene" uid="uid://bnexhgtx3llph" path="res://scenes/ui/counter_config_dialog.tscn" id="33_bsy1h"]
 [ext_resource type="Script" uid="uid://ckqvusamktt4" path="res://scripts/sim/systems/EngineerController.gd" id="34_1yvtb"]
+[ext_resource type="Script" uid="uid://mjmvtp2w61ri" path="res://scripts/ui/PostProcessController.gd" id="36_yef6r"]
+[ext_resource type="Shader" uid="uid://csoyxm10cdmqn" path="res://assets/shaders/general.gdshader" id="37_gaccj"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
 size = Vector2(10, 30)
@@ -173,10 +175,42 @@ metadata/_custom_type_script = "uid://dnnu3w3b3j5rk"
 script = ExtResource("24_jjp33")
 metadata/_custom_type_script = "uid://ch73kyybwrkb8"
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yef6r"]
+shader = ExtResource("37_gaccj")
+shader_parameter/vignette = true
+shader_parameter/vignette_intensity = 0.35
+shader_parameter/vignette_softness = 0.5
+shader_parameter/chromatic_abberation = true
+shader_parameter/ca_intensity = 1.25
+shader_parameter/sharpen = true
+shader_parameter/sharpen_strength = 0.6
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_itljb"]
 shader = ExtResource("10_itljb")
 shader_parameter/grain_amount = 0.0350000016625
 shader_parameter/grain_size = 1.0
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jjp33"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_gaccj"]
+sky_material = SubResource("ProceduralSkyMaterial_jjp33")
+
+[sub_resource type="Environment" id="Environment_yef6r"]
+background_mode = 2
+sky = SubResource("Sky_gaccj")
+ambient_light_sky_contribution = 0.5
+ambient_light_energy = 0.1
+tonemap_mode = 3
+ssr_enabled = true
+ssao_enabled = true
+glow_enabled = true
+glow_intensity = 0.6
+glow_bloom = 0.04
+adjustment_enabled = true
+adjustment_contrast = 1.05
+adjustment_saturation = 0.9
 
 [node name="HQTable" type="Node3D"]
 script = ExtResource("1_qgda6")
@@ -222,9 +256,11 @@ size = Vector3(1.37492, 1.76648, 2.76892)
 [node name="StaticObjects" type="Node" parent="."]
 
 [node name="Timer" parent="StaticObjects" instance=ExtResource("2_2llyq")]
+unique_name_in_owner = true
 transform = Transform3D(0.31243446, 0, -0.9499393, 0, 1, 0, 0.9499393, 0, 0.31243446, -0.3772638, 0.7311746, -0.22486593)
 
 [node name="UnitCounterDrawer" type="StaticBody3D" parent="StaticObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.024217911, 0.8045154, -0.26940298)
 
 [node name="Collision" type="CollisionShape3D" parent="StaticObjects/UnitCounterDrawer"]
@@ -247,6 +283,7 @@ mesh = SubResource("PlaneMesh_p1n4g")
 skeleton = NodePath("../../Table/Mesh")
 
 [node name="Radio" type="MeshInstance3D" parent="StaticObjects"]
+unique_name_in_owner = true
 transform = Transform3D(0.894638, 0, -0.446791, 0, 1, 0, 0.446791, 0, 0.894638, 0.384348, 0.781427, -0.278661)
 mesh = SubResource("BoxMesh_py2wd")
 skeleton = NodePath("../..")
@@ -259,12 +296,13 @@ skeleton = NodePath("../../Table/Mesh")
 [node name="LampLight" type="OmniLight3D" parent="StaticObjects"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0898442, 1.24826, 0.089353114)
 light_color = Color(0.8953671, 0.9999998, 0.9876829, 1)
-light_energy = 0.4
+light_energy = 0.25
 
 [node name="PhysicsObjects" type="Node" parent="."]
 unique_name_in_owner = true
 
 [node name="IntelDoc" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.383427, 0.735465, -0.0676914)
 collision_layer = 2
 collision_mask = 3
@@ -280,6 +318,7 @@ shape = SubResource("BoxShape3D_cx6my")
 [node name="Mesh" parent="PhysicsObjects/IntelDoc" instance=ExtResource("4_fhiww")]
 
 [node name="TerrainDoc" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388701, 0.747355, 0.0703042)
 collision_layer = 2
 collision_mask = 3
@@ -295,6 +334,7 @@ shape = SubResource("BoxShape3D_uk27s")
 [node name="Mesh" parent="PhysicsObjects/TerrainDoc" instance=ExtResource("4_fhiww")]
 
 [node name="BriefingDoc" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388701, 0.754058, 0.228009)
 collision_layer = 2
 collision_mask = 3
@@ -311,6 +351,7 @@ shape = SubResource("BoxShape3D_ge8rp")
 [node name="Mesh" parent="PhysicsObjects/BriefingDoc" instance=ExtResource("4_fhiww")]
 
 [node name="FieldManual" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.358866, 0.737931, 0.245496)
 collision_layer = 2
 collision_mask = 3
@@ -328,6 +369,7 @@ mesh = SubResource("BoxMesh_cx6my")
 skeleton = NodePath("../..")
 
 [node name="Protractor" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.356782, 0.737931, -0.0401387)
 collision_layer = 2
 collision_mask = 3
@@ -343,6 +385,7 @@ mesh = SubResource("BoxMesh_p1n4g")
 skeleton = NodePath("../..")
 
 [node name="PenBlack" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.289519, 0.738096, 0.087646)
 collision_layer = 2
 collision_mask = 3
@@ -363,6 +406,7 @@ mesh = SubResource("CylinderMesh_uk27s")
 skeleton = NodePath("../..")
 
 [node name="PenBlue" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.31455153, 0.738096, 0.087646)
 collision_layer = 2
 collision_mask = 3
@@ -383,6 +427,7 @@ mesh = SubResource("CylinderMesh_ge8rp")
 skeleton = NodePath("../..")
 
 [node name="PenRed" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.3388422, 0.738096, 0.087646)
 collision_layer = 2
 collision_mask = 3
@@ -403,6 +448,7 @@ mesh = SubResource("CylinderMesh_of8da")
 skeleton = NodePath("../..")
 
 [node name="Eraser" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.40282, 0.738096, 0.087646)
 collision_layer = 2
 collision_mask = 3
@@ -604,6 +650,16 @@ drawer = NodePath("../../StaticObjects/UnitCounterDrawer")
 counter_dialog = NodePath("../../UI/CounterConfigDialog")
 
 [node name="PostProcess" type="CanvasLayer" parent="."]
+script = ExtResource("36_yef6r")
+
+[node name="GeneralPP" type="ColorRect" parent="PostProcess"]
+material = SubResource("ShaderMaterial_yef6r")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="FilmGrain" type="ColorRect" parent="PostProcess"]
 material = SubResource("ShaderMaterial_itljb")
@@ -634,3 +690,7 @@ visible = false
 
 [node name="CounterConfigDialog" parent="UI" instance=ExtResource("33_bsy1h")]
 visible = false
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+unique_name_in_owner = true
+environment = SubResource("Environment_yef6r")

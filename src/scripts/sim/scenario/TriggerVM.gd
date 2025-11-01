@@ -43,7 +43,9 @@ func eval_condition(expr_src: String, ctx: Dictionary) -> bool:
 
 
 ## Run side-effect expressions (activation/deactivation). Ignores return values.
-## Handles blocking sleep - if sleep is called, remaining statements are scheduled.
+## Handles blocking sleep and dialog blocking:
+## - If sleep is called, remaining statements are scheduled for later execution
+## - If dialog blocking is requested, remaining statements execute when dialog closes
 ## [param expr_src] Expression source.
 ## [param ctx] becomes constants accessible in the expression.
 func run(expr_src: String, ctx: Dictionary) -> void:
@@ -83,6 +85,21 @@ func run(expr_src: String, ctx: Dictionary) -> void:
 
 			# Reset sleep state and stop processing
 			_api._reset_sleep()
+			return
+
+		# Check if dialog blocking was requested after this statement
+		if _api and _api._is_dialog_blocking():
+			# Collect remaining statements
+			var remaining_lines := PackedStringArray()
+			for j in range(i + 1, lines.size()):
+				remaining_lines.append(lines[j])
+
+			if remaining_lines.size() > 0:
+				var remaining_expr := "\n".join(remaining_lines)
+				# Store the pending expression to execute when dialog closes
+				_api._set_dialog_pending(remaining_expr, ctx)
+
+			# Stop processing (dialog blocking flag remains set)
 			return
 
 

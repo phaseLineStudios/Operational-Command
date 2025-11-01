@@ -14,6 +14,9 @@ var _counter_controller = null  # UnitCounterController reference
 var _sleep_requested: bool = false
 var _sleep_duration: float = 0.0
 var _sleep_use_realtime: bool = false
+var _dialog_blocking: bool = false
+var _dialog_pending_expr: String = ""
+var _dialog_pending_ctx: Dictionary = {}
 
 
 ## Return mission time in seconds.
@@ -215,13 +218,71 @@ func has_global(key: String) -> bool:
 ## var enemy = unit("BRAVO")
 ## if enemy:
 ##     show_dialog("Watch out for enemies here!", true, enemy.position_m)
+##
+## # Block execution until dialog is closed
+## show_dialog("First message", true, null, true)
+## show_dialog("This shows after first is closed", true, null, true)
 ## [/codeblock]
 ## [param text] Dialog text to display (supports BBCode formatting)
 ## [param pause_game] If true, pauses simulation until dialog is dismissed
 ## [param position_m] Optional position on map (in meters) to draw a line to
-func show_dialog(text: String, pause_game: bool = false, position_m: Variant = null) -> void:
+## [param block] If true, blocks trigger execution until dialog is closed
+func show_dialog(
+	text: String, pause_game: bool = false, position_m: Variant = null, block: bool = false
+) -> void:
 	if _mission_dialog and _mission_dialog.has_method("show_dialog"):
 		_mission_dialog.show_dialog(text, pause_game, sim, position_m, map_controller)
+		if block:
+			_dialog_blocking = true
+			# Connect to dialog_closed signal if not already connected
+			if not _mission_dialog.is_connected("dialog_closed", _on_dialog_closed):
+				_mission_dialog.dialog_closed.connect(_on_dialog_closed)
+
+
+## Show a tutorial dialog with a line pointing to a UI element.
+## Designed for tutorial sequences to highlight specific tools, buttons, or UI elements.
+## Automatically pauses the simulation and points at the specified node.
+## By default, blocks execution until the dialog is dismissed (can be disabled).
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Point to a node by unique name (% prefix) - blocks until dismissed
+## tutorial_dialog("This is the radio button. Press spacebar to transmit.", "%RadioButton")
+##
+## # Point to a node by name (searches from root)
+## tutorial_dialog("Use this tool to draw on the map.", "DrawingTool")
+##
+## # Point to a node by path
+## tutorial_dialog("These are your unit cards.", "HBoxContainer/UnitPanel")
+##
+## # Tutorial sequence - automatically waits for each dialog to be dismissed
+## tutorial_dialog("Welcome to the mission!")
+## tutorial_dialog("This is the map viewer.", "%MapViewer")
+## tutorial_dialog("Click and drag to pan the map.", "%MapViewer")
+## tutorial_dialog("Press spacebar to use the radio.", "%RadioButton")
+##
+## # Non-blocking tutorial dialog (old behavior with sleep_ui)
+## tutorial_dialog("Watch this!", "%SomeNode", false)
+## sleep_ui(3.0)
+## tutorial_dialog("Now this!", "%OtherNode", false)
+## [/codeblock]
+## [br]
+## [b]Note:[/b] The dialog will automatically pause the simulation. Node lookup tries:
+## [br]1. Unique name lookup (if starts with %)
+## [br]2. Direct path from dialog node
+## [br]3. Recursive search from root by name
+## [param text] Dialog text to display (supports BBCode formatting)
+## [param node_identifier] Node name, unique name (%), or path to point at
+## [param block] If true (default), blocks execution until dialog is closed
+func tutorial_dialog(text: String, node_identifier: String = "", block: bool = true) -> void:
+	if _mission_dialog and _mission_dialog.has_method("show_dialog"):
+		var target = node_identifier if node_identifier != "" else null
+		_mission_dialog.show_dialog(text, true, sim, null, map_controller, target)
+		if block:
+			_dialog_blocking = true
+			# Connect to dialog_closed signal if not already connected
+			if not _mission_dialog.is_connected("dialog_closed", _on_dialog_closed):
+				_mission_dialog.dialog_closed.connect(_on_dialog_closed)
 
 
 ## Check if the player has drawn anything on the map.
@@ -453,3 +514,34 @@ func _reset_sleep() -> void:
 	_sleep_requested = false
 	_sleep_duration = 0.0
 	_sleep_use_realtime = false
+
+
+## Check if dialog blocking is active (internal use by TriggerVM).
+## [return] True if waiting for dialog to close.
+func _is_dialog_blocking() -> bool:
+	return _dialog_blocking
+
+
+## Set pending expression to execute when dialog closes (internal use by TriggerVM).
+## [param expr] Expression to execute.
+## [param ctx] Context dictionary.
+func _set_dialog_pending(expr: String, ctx: Dictionary) -> void:
+	_dialog_pending_expr = expr
+	_dialog_pending_ctx = ctx
+
+
+## Handle dialog closed signal (internal).
+func _on_dialog_closed() -> void:
+	_dialog_blocking = false
+	# Disconnect the signal to avoid memory leaks
+	if _mission_dialog and _mission_dialog.is_connected("dialog_closed", _on_dialog_closed):
+		_mission_dialog.dialog_closed.disconnect(_on_dialog_closed)
+
+	# Execute pending expression if any
+	if _dialog_pending_expr != "" and engine:
+		var expr := _dialog_pending_expr
+		var ctx := _dialog_pending_ctx
+		_dialog_pending_expr = ""
+		_dialog_pending_ctx = {}
+		# Execute the remaining statements
+		engine.execute_expression(expr, ctx)

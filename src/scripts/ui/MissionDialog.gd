@@ -3,7 +3,7 @@ extends Control
 ##
 ## Shows text content with an OK button, optionally pausing the simulation.
 ## Used by TriggerAPI to display narrative moments, objectives, and updates.
-## Can display a line from the dialog to a position on the map.
+## Can display a line from the dialog to a position on the map or to a UI node (for tutorials).
 
 ## Emitted when the dialog is closed.
 signal dialog_closed
@@ -18,6 +18,7 @@ var _was_paused: bool = false
 var _should_unpause: bool = false
 var _map_controller: MapController = null
 var _position_m: Variant = null
+var _target_node: Variant = null  # Node or NodePath to point at
 
 @onready var _text_label: RichTextLabel = %DialogText
 @onready var _ok_button: Button = %OkButton
@@ -39,12 +40,14 @@ func _ready() -> void:
 ## [param sim_world] Reference to SimWorld for pause control
 ## [param position_m] Optional position on map (in meters) to draw a line to
 ## [param map_controller] Reference to MapController for position conversion
+## [param target_node] Optional node or node path to point at (for tutorials)
 func show_dialog(
 	text: String,
 	pause_game: bool = false,
 	sim_world: SimWorld = null,
 	position_m: Variant = null,
-	map_controller: MapController = null
+	map_controller: MapController = null,
+	target_node: Variant = null
 ) -> void:
 	if _text_label:
 		_text_label.text = text
@@ -53,6 +56,7 @@ func show_dialog(
 	_should_unpause = false
 	_position_m = position_m
 	_map_controller = map_controller
+	_target_node = target_node
 
 	# Handle pause if requested
 	if pause_game and _sim:
@@ -65,9 +69,11 @@ func show_dialog(
 	if _ok_button:
 		_ok_button.grab_focus()
 
-	# Update line overlay visibility
+	# Update line overlay visibility (show if we have either position or target node)
 	if _line_overlay:
-		_line_overlay.visible = (_position_m != null and _map_controller != null)
+		var has_map_pos := _position_m != null and _map_controller != null
+		var has_target_node := _target_node != null
+		_line_overlay.visible = has_map_pos or has_target_node
 		if _line_overlay.visible:
 			_line_overlay.queue_redraw()
 
@@ -80,9 +86,10 @@ func hide_dialog() -> void:
 	if _line_overlay:
 		_line_overlay.visible = false
 
-	# Clear position and map controller references
+	# Clear position, node, and map controller references
 	_position_m = null
 	_map_controller = null
+	_target_node = null
 
 	# Resume if we paused it
 	if _should_unpause and _sim:
@@ -103,14 +110,49 @@ func _process(_delta: float) -> void:
 		_line_overlay.queue_redraw()
 
 
-## Draw the line from dialog to map position
+## Draw the line from dialog to map position or target node
 func _draw_line() -> void:
-	if not visible or _position_m == null or _map_controller == null:
+	if not visible:
 		return
 
-	# Get screen position of terrain location
-	var map_screen_pos: Variant = _map_controller.terrain_to_screen(_position_m)
-	if map_screen_pos == null:
+	var target_screen_pos: Variant = null
+
+	# Priority 1: Target node (for tutorials)
+	if _target_node != null:
+		var node: Node = null
+		if _target_node is String:
+			# Try to find node by unique name first (%NodeName)
+			if _target_node.begins_with("%"):
+				node = get_node_or_null(_target_node)
+			# Then try as a regular path
+			if node == null:
+				node = get_node_or_null(_target_node)
+			# Finally try searching from root
+			if node == null and get_tree():
+				node = get_tree().root.find_child(_target_node.trim_prefix("%"), true, false)
+		elif _target_node is NodePath:
+			node = get_node_or_null(_target_node)
+		elif _target_node is Node:
+			node = _target_node
+
+		if node and node is Control:
+			# For Control nodes, use global rect center
+			target_screen_pos = (node as Control).get_global_rect().get_center()
+		elif node and node is Node2D:
+			# For Node2D, use global position
+			target_screen_pos = (node as Node2D).global_position
+		elif node and node is Node3D:
+			# For Node3D, try to get viewport position (may not always work)
+			var cam := get_viewport().get_camera_3d()
+			if cam:
+				target_screen_pos = cam.unproject_position((node as Node3D).global_position)
+
+	# Priority 2: Map position
+	if target_screen_pos == null and _position_m != null and _map_controller != null:
+		target_screen_pos = _map_controller.terrain_to_screen(_position_m)
+
+	# If we don't have a valid target, bail out
+	if target_screen_pos == null:
 		return
 
 	# Get dialog center position (use the panel container's global rect)
@@ -120,14 +162,14 @@ func _draw_line() -> void:
 
 	var dialog_rect := panel.get_global_rect()
 
-	# Calculate closest point on dialog edge to the map position
-	var start_pos := _get_closest_edge_point(dialog_rect, map_screen_pos)
+	# Calculate closest point on dialog edge to the target position
+	var start_pos := _get_closest_edge_point(dialog_rect, target_screen_pos)
 
-	# Draw line from dialog edge to map position
-	_line_overlay.draw_line(start_pos, map_screen_pos, pos_line_color, 2.0)
+	# Draw line from dialog edge to target position
+	_line_overlay.draw_line(start_pos, target_screen_pos, pos_line_color, 2.0)
 
-	# Draw a small circle at the map position
-	_line_overlay.draw_circle(map_screen_pos, 5.0, pos_color)
+	# Draw a small circle at the target position
+	_line_overlay.draw_circle(target_screen_pos, 5.0, pos_color)
 
 
 ## Get the closest point on the rectangle edge to a target position

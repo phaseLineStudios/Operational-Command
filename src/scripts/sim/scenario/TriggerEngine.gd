@@ -104,6 +104,10 @@ func _refresh_unit_indices() -> void:
 ## [param t] Trigger to evaluate.
 ## [param dt] Delta time since last tick.
 func _evaluate_trigger(t: ScenarioTrigger, dt: float) -> void:
+	# Skip evaluation if this is a run_once trigger that has already run
+	if t.run_once and t._has_run:
+		return
+
 	var presence_ok := _check_presence(t)
 	var ctx := _make_ctx(t, presence_ok)
 	var condition_ok := _vm.eval_condition(t.condition_expr, ctx)
@@ -119,6 +123,9 @@ func _evaluate_trigger(t: ScenarioTrigger, dt: float) -> void:
 	if not t._active and passed:
 		t._active = true
 		_vm.run(t.on_activate_expr, ctx)
+		# Mark as run if this is a run_once trigger
+		if t.run_once:
+			t._has_run = true
 	elif t._active and not combined:
 		t._active = false
 		_vm.run(t.on_deactivate_expr, ctx)
@@ -328,6 +335,14 @@ func clear_globals() -> void:
 	_globals.clear()
 
 
+## Execute an expression immediately (used by dialog blocking).
+## [param expr] Expression to execute.
+## [param ctx] Context dictionary for the expression.
+func execute_expression(expr: String, ctx: Dictionary) -> void:
+	if _vm:
+		_vm.run(expr, ctx)
+
+
 ## Schedule an action to execute after a delay.
 ## [param delay_s] Delay in seconds before execution.
 ## [param expr] Expression to execute.
@@ -337,7 +352,9 @@ func schedule_action(
 	delay_s: float, expr: String, ctx: Dictionary, use_realtime: bool = false
 ) -> void:
 	if not _sim and not use_realtime:
-		push_warning("TriggerEngine: Cannot schedule mission-time action without SimWorld reference")
+		push_warning(
+			"TriggerEngine: Cannot schedule mission-time action without SimWorld reference"
+		)
 		return
 
 	var execute_at: float

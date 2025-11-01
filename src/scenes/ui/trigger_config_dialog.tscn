@@ -53,9 +53,6 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Root/ScrollContainer/VBox/InitContainer"]
-layout_mode = 2
-
 [node name="TransformContainer" type="FoldableContainer" parent="Root/ScrollContainer/VBox"]
 layout_mode = 2
 title = "Trigger Transformation"
@@ -163,6 +160,14 @@ size_flags_horizontal = 3
 max_value = 36000.0
 step = 0.5
 suffix = "s"
+
+[node name="RunOnceLabel" type="Label" parent="Root/ScrollContainer/VBox/ActivationContainer/GridContainer"]
+layout_mode = 2
+text = "Run Once"
+
+[node name="RunOnce" type="CheckBox" parent="Root/ScrollContainer/VBox/ActivationContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="ExpressionContainer" type="FoldableContainer" parent="Root/ScrollContainer/VBox"]
 layout_mode = 2
