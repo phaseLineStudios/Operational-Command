@@ -7,6 +7,11 @@ on:
 permissions:
   contents: write
 
+# Prevent overlapping runs on the same branch (e.g. after the bump push)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   version-bump:
     name: Bump Version
@@ -16,6 +21,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: true
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -28,20 +34,27 @@ jobs:
           echo "out<<EOF" >> $GITHUB_OUTPUT
           cat .bump_out >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-          echo "BUMP_MSG=$(cat .bump_out)" >> $GITHUB_ENV
+          echo "BUMP_MSG=$(tr -d '\n' < .bump_out)" >> $GITHUB_ENV
 
       - name: Commit & push if changed
         run: |
-          if git diff --quiet project.godot; then
+          set -e
+          # Correct path and quiet check
+          if git diff --quiet -- ./src/project.godot; then
             echo "No version change; exiting."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin main
+          git checkout main
+          git pull --rebase origin main
+
           git add -- ./src/project.godot
-          git commit -m "chore: bump version ${BUMP_MSG} [no bump]"
+          git commit -m "chore: bump version ${BUMP_MSG} [no bump] [no docs]"
           git push
-        
+
       - name: Create tag
         run: |
           NEW_VER=$(grep -Po '^\s*config/version\s*=\s*"\K[^"]+' "./src/project.godot" || true)
@@ -60,6 +73,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          persist-credentials: true
           fetch-depth: 0
 
       - name: Setup Python
@@ -82,6 +96,11 @@ jobs:
           if git status --porcelain docs/game | grep .; then
             git config user.name  "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+            git fetch origin main
+            git checkout main
+            git pull --rebase origin main
+
             git add docs/game
             git commit -m "docs: auto-generate game API [no bump]"
             git push
