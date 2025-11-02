@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Operational Command"
-config/version="0.1.81"
+config/version="0.1.82"
 run/main_scene="uid://dqsf56jld2bf6"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="uid://dlsstpfgchh2t"
