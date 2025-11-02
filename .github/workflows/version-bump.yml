@@ -39,18 +39,16 @@ jobs:
       - name: Commit & push if changed
         run: |
           set -e
-          # Correct path and quiet check
           if git diff --quiet -- ./src/project.godot; then
             echo "No version change; exiting."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
+      
           git fetch origin main
-          git checkout main
-          git pull --rebase origin main
-
+          git pull --rebase --autostash origin main
+      
           git add -- ./src/project.godot
           git commit -m "chore: bump version ${BUMP_MSG} [no bump] [no docs]"
           git push
@@ -99,10 +97,10 @@ jobs:
 
             git fetch origin main
             git checkout main
-            git pull --rebase origin main
+            git pull --rebase --autostash origin main
 
             git add docs/game
-            git commit -m "docs: auto-generate game API [no bump]"
+            git commit -m "docs: auto-generate game API [no bump] [no docs]"
             git push
           else
             echo "No documentation changes; skipping commit."
