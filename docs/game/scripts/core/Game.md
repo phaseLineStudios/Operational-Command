@@ -35,10 +35,15 @@ tactical map → debrief → unit management.
 - [`func record_casualties(fr: int, en: int) -> void`](Game/functions/record_casualties.md) — Record casualties
 - [`func record_unit_lost(count: int = 1) -> void`](Game/functions/record_unit_lost.md) — record lost units
 - [`func end_scenario_and_go_to_debrief() -> void`](Game/functions/end_scenario_and_go_to_debrief.md) — End mission and navigate to debrief
+- [`func get_replacement_pool() -> int`](Game/functions/get_replacement_pool.md) — Return available replacements pool
+- [`func set_replacement_pool(v: int) -> void`](Game/functions/set_replacement_pool.md) — Set replacement pool (non-persistent placeholder)
+- [`func get_current_units() -> Array`](Game/functions/get_current_units.md) — Return current units in context for screens that need them.
+- [`func save_campaign_state() -> void`](Game/functions/save_campaign_state.md)
 
 ## Public Attributes
 
 - `PackedScene debug_display_scene`
+- `int campaign_replacement_pool` — Personnel replacements available for pre-mission reinforcement
 - `CanvasLayer debug_display`
 - `CampaignData current_campaign`
 - `StringName current_save_id`
@@ -164,6 +169,37 @@ func end_scenario_and_go_to_debrief() -> void
 
 End mission and navigate to debrief
 
+### get_replacement_pool
+
+```gdscript
+func get_replacement_pool() -> int
+```
+
+Return available replacements pool
+
+### set_replacement_pool
+
+```gdscript
+func set_replacement_pool(v: int) -> void
+```
+
+Set replacement pool (non-persistent placeholder)
+
+### get_current_units
+
+```gdscript
+func get_current_units() -> Array
+```
+
+Return current units in context for screens that need them.
+Prefer Scenario.units entries, but fall back to unit_recruits.
+
+### save_campaign_state
+
+```gdscript
+func save_campaign_state() -> void
+```
+
 ## Member Data Documentation
 
 ### debug_display_scene
@@ -171,6 +207,16 @@ End mission and navigate to debrief
 ```gdscript
 var debug_display_scene: PackedScene
 ```
+
+### campaign_replacement_pool
+
+```gdscript
+var campaign_replacement_pool: int
+```
+
+Decorators: `@export`
+
+Personnel replacements available for pre-mission reinforcement
 
 ### debug_display
 

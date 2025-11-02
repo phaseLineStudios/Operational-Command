@@ -1,6 +1,6 @@
 # OrdersParser::_is_int_literal Function Reference
 
-*Defined at:* `scripts/radio/OrdersParser.gd` (lines 280–289)</br>
+*Defined at:* `scripts/radio/OrdersParser.gd` (lines 281–290)</br>
 *Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**

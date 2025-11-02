@@ -1,6 +1,6 @@
 # MissionResolution::_score_breakdown Function Reference
 
-*Defined at:* `scripts/core/MissionResolution.gd` (lines 171–186)</br>
+*Defined at:* `scripts/core/MissionResolution.gd` (lines 174–191)</br>
 *Belongs to:* [MissionResolution](../../MissionResolution.md)
 
 **Signature**

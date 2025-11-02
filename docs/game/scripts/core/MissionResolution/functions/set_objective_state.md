@@ -1,6 +1,6 @@
 # MissionResolution::set_objective_state Function Reference
 
-*Defined at:* `scripts/core/MissionResolution.gd` (lines 58–71)</br>
+*Defined at:* `scripts/core/MissionResolution.gd` (lines 60–73)</br>
 *Belongs to:* [MissionResolution](../../MissionResolution.md)
 
 **Signature**

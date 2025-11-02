@@ -1,6 +1,6 @@
 # CombatController::_apply_casualties Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 288–305)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 298–320)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**
@@ -22,6 +22,11 @@ func _apply_casualties(u: UnitData, raw_losses: int) -> int:
 	var before := int(round(u.state_strength))
 	var loss: int = clamp(raw_losses, 0, before)
 	u.state_strength = float(before - loss)
+
+	# Record for debrief summary (does NOT re-apply at debrief unless change policy)
+	var game := get_tree().get_root().get_node_or_null("/root/Game")
+	if game and game.has_node("resolution"):
+		game.resolution.add_unit_losses(u.id, loss)
 
 	var wia_ratio := 0.6
 	u.state_injured = max(0.0, u.state_injured + float(round(loss * wia_ratio)))

@@ -27,4 +27,4 @@ func _transition(prev: State, next: State) -> void:
 
 ## References
 
-- [`signal mission_state_changed`](..\..\SimWorld.md#mission_state_changed)
+- [`signal mission_state_changed`](../../SimWorld.md#mission_state_changed)

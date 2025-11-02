@@ -1,6 +1,6 @@
 # MissionResolution::_reset Function Reference
 
-*Defined at:* `scripts/core/MissionResolution.gd` (lines 147–156)</br>
+*Defined at:* `scripts/core/MissionResolution.gd` (lines 150–159)</br>
 *Belongs to:* [MissionResolution](../../MissionResolution.md)
 
 **Signature**

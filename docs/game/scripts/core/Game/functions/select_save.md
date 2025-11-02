@@ -1,6 +1,6 @@
 # Game::select_save Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 53–57)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 55–59)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

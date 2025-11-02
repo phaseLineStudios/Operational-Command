@@ -1,6 +1,6 @@
 # CombatController::_set_debug_rate Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 414–423)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 441–450)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**

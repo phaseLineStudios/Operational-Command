@@ -1,6 +1,6 @@
 # Game::select_scenario Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 59–63)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 61–65)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

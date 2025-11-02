@@ -1,6 +1,6 @@
 # MissionResolution::add_units_lost Function Reference
 
-*Defined at:* `scripts/core/MissionResolution.gd` (lines 83–90)</br>
+*Defined at:* `scripts/core/MissionResolution.gd` (lines 85–92)</br>
 *Belongs to:* [MissionResolution](../../MissionResolution.md)
 
 **Signature**

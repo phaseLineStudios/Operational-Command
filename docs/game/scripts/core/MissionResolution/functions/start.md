@@ -1,6 +1,6 @@
 # MissionResolution::start Function Reference
 
-*Defined at:* `scripts/core/MissionResolution.gd` (lines 40–49)</br>
+*Defined at:* `scripts/core/MissionResolution.gd` (lines 42–51)</br>
 *Belongs to:* [MissionResolution](../../MissionResolution.md)
 
 **Signature**

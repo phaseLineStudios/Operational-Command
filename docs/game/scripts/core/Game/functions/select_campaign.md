@@ -1,6 +1,6 @@
 # Game::select_campaign Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 47–51)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 49–53)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**
