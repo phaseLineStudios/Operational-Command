@@ -491,12 +491,12 @@
       },
       {
         "area_center_m": {
-          "x": 2152.52563476563,
+          "x": 2151.0,
           "y": 351.0
         },
         "condition_expr": "has_created_counter()",
         "id": "unit_counter_trigger",
-        "on_activate_expr": "set_objective(\"unit_markers\", 1)\n\nsleep_ui(2.0);\ntutorial_dialog(\"Perfect! Unit counters help you track units on the map. You can place them anywhere.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"These are drawing tools. Click a pen to pick it up, then hold LMB on the map to draw. Right-click to put it down.\", \"%PenBlue\", true);\ntutorial_dialog(\"Let's plan a route to OBJ 1. Pick the BLUE pen and draw arrows from WP 1 → WP 2 → WP 3 → OBJ 1.\", \"%Map\", true);",
+        "on_activate_expr": "set_objective(\"unit_markers\", 1)\n\nsleep_ui(2.0);\ntutorial_dialog(\"Perfect! Unit counters help you track units on the map. You can pcik them up andplace them anywhere using LMB.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"These are drawing tools. Click a pen to pick it up, then hold LMB on the map to draw. Right-click to put it down.\", \"%PenBlue\", true);\ntutorial_dialog(\"Let's plan a route to OBJ 1. Pick the BLUE pen and draw arrows from WP 1 → WP 2 → WP 3 → OBJ 1.\", \"%Map\", true);",
         "on_deactivate_expr": "",
         "presence": 0,
         "require_duration_s": 0.0,
