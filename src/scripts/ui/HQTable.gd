@@ -5,9 +5,6 @@ extends Node3D
 ## Sets up terrain, simulation world, radio pipeline, and speech word list.
 ## Generates playable units from scenario slots and binds controllers.
 
-## Enable extra debug paths/overlays in connected systems.
-@export var debug: bool = false
-
 @onready var sim: SimWorld = %WorldController
 @onready var map: MapController = %MapController
 @onready var renderer: TerrainRender = %TerrainRender
