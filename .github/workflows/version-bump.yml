@@ -53,6 +53,7 @@ jobs:
   build-docs:
     name: Build & Commit Docs
     if: ${{ !contains(github.event.head_commit.message || '', '[no docs]') }}
+    needs: version-bump
     runs-on: ubuntu-latest
 
     steps:
