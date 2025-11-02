@@ -23,4 +23,4 @@ func _on_objective_create(obj: ScenarioObjectiveData) -> void:
 
 ## References
 
-- [`class ScenarioObjectiveData`](..\..\..\data\ScenarioObjectiveData.md)
+- [`class ScenarioObjectiveData`](../../../data/ScenarioObjectiveData.md)

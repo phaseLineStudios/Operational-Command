@@ -1,6 +1,6 @@
 # MissionResolution::finalize Function Reference
 
-*Defined at:* `scripts/core/MissionResolution.gd` (lines 114–130)</br>
+*Defined at:* `scripts/core/MissionResolution.gd` (lines 116–132)</br>
 *Belongs to:* [MissionResolution](../../MissionResolution.md)
 
 **Signature**

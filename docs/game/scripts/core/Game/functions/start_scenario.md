@@ -1,6 +1,6 @@
 # Game::start_scenario Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 71–77)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 73–84)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**
@@ -21,4 +21,9 @@ func start_scenario(prim: Array[String]) -> void:
 		push_error("No scenario loaded. Cannot start scenario")
 		return
 	resolution.start(prim, current_scenario.id)
+
+	# Try to find the SimWorld in the current scene tree and spawn
+	var sim := get_tree().get_root().find_child("SimWorld", true, false)
+	if sim and sim.has_method("spawn_scenario_units"):
+		sim.spawn_scenario_units(current_scenario)
 ```

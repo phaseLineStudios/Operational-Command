@@ -1,6 +1,6 @@
 # ScenarioUnit::is_dead Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 61–64)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 60–63)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**

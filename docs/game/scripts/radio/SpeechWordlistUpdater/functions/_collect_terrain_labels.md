@@ -34,4 +34,4 @@ func _collect_terrain_labels() -> Array[String]:
 
 ## References
 
-- [`member TerrainRender.data.labels`](..\..\..\terrain\TerrainRender.md)
+- [`member TerrainRender.data.labels`](../../../terrain/TerrainRender.md)

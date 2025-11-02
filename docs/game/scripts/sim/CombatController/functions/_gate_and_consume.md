@@ -1,6 +1,6 @@
 # CombatController::_gate_and_consume Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 258–286)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 268–296)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**
@@ -27,7 +27,7 @@ Behavior:
 
 ```gdscript
 func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> Dictionary:
-	if _adapter == null:
+	if combat_adapter == null:
 		return {
 			"allow": true,
 			"state": "normal",
@@ -39,11 +39,11 @@ func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> Di
 		}
 
 	# Preferred path (penalties + consume)
-	if _adapter.has_method("request_fire_with_penalty"):
-		return _adapter.request_fire_with_penalty(attacker.id, ammo_type, rounds)
+	if combat_adapter.has_method("request_fire_with_penalty"):
+		return combat_adapter.request_fire_with_penalty(attacker.id, ammo_type, rounds)
 
 	# Fallback: just block/consume via request_fire, no penalties
-	var ok := _adapter.request_fire(attacker.id, ammo_type, rounds)
+	var ok := combat_adapter.request_fire(attacker.id, ammo_type, rounds)
 	return {
 		"allow": ok,
 		"state": "normal" if ok else "empty",

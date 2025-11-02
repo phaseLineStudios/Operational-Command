@@ -1,6 +1,6 @@
 # Game::record_casualties Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 95–98)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 102–105)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**
