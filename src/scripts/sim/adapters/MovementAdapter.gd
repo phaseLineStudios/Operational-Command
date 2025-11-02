@@ -250,3 +250,28 @@ func _on_grid_ready(profile: int) -> void:
 			su.erase_meta("_pending_start_dest")
 			if su.plan_move(_grid, dest_m):
 				su.start_move(_grid)
+
+## Behaviour mapping from AIAgent
+func set_behaviour_params(speed_mult: float, cover_bias: float, noise_level: float) -> void:
+	pass
+
+## TaskMove
+func request_move_to(dest: Vector3) -> void:
+	pass
+
+func is_move_complete() -> bool:
+	return false
+
+## TaskDefend
+func request_hold_area(center: Vector3, radius: float) -> void:
+	pass
+
+func is_hold_established() -> bool:
+	return false
+
+## TaskPatrol
+func request_patrol(points: Array[Vector3], ping_pong: bool) -> void:
+	pass
+
+func is_patrol_running() -> bool:
+	return false

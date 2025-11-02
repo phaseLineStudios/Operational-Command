@@ -122,3 +122,8 @@ func request_fire_with_penalty(unit_id: String, ammo_type: String, rounds: int =
 		"morale_delta": pen.morale_delta,
 		"ai_recommendation": pen.ai_recommendation,
 	}
+
+## Rules of engagement from AIAgent
+## 0 = HOLD_FIRE, 1 = RETURN_FIRE, 2 = OPEN_FIRE
+func set_rules_of_engagement(mode: int) -> void:
+	pass

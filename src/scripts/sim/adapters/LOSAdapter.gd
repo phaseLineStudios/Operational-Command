@@ -67,3 +67,8 @@ func contacts_between(friends: Array[ScenarioUnit], enemies: Array[ScenarioUnit]
 			if has_los(f, e):
 				out.append({"attacker": f, "defender": e})
 	return out
+
+
+## Used by AIAgent wait-until-contact
+func has_hostile_contact() -> bool:
+	return false
