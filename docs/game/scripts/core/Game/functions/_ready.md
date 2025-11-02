@@ -1,6 +1,6 @@
 # Game::_ready Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 33–37)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 35–39)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

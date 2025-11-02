@@ -1,6 +1,6 @@
 # MissionResolution::add_casualties Function Reference
 
-*Defined at:* `scripts/core/MissionResolution.gd` (lines 73–81)</br>
+*Defined at:* `scripts/core/MissionResolution.gd` (lines 75–83)</br>
 *Belongs to:* [MissionResolution](../../MissionResolution.md)
 
 **Signature**

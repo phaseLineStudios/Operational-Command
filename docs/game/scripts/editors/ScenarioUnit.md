@@ -17,6 +17,7 @@ Start movement; will plan if needed or if dest is provided.
 
 ## Public Member Functions
 
+- [`func is_dead() -> bool`](ScenarioUnit/functions/is_dead.md) — Check if unit is dead.
 - [`func _init() -> void`](ScenarioUnit/functions/_init.md)
 - [`func _on_morale_changed(unit_id: String, prev: float, cur: float, source: String) -> void`](ScenarioUnit/functions/_on_morale_changed.md)
 - [`func _on_morale_state_changed(unit_id: String, prev: int, cur: int) -> void`](ScenarioUnit/functions/_on_morale_state_changed.md)
@@ -46,6 +47,7 @@ Start movement; will plan if needed or if dest is provided.
 - `Affiliation affiliation` — Unit Affiliation
 - `CombatMode combat_mode` — Unit Combat Mode
 - `Behaviour behaviour` — Unit Behaviour
+- `bool playable` — Is unit playable.
 - `MoveState _move_state`
 - `Vector2 _move_dest_m`
 - `PackedVector2Array _move_path`
@@ -71,6 +73,15 @@ Start movement; will plan if needed or if dest is provided.
 - `enum MoveState` — Runtime movement states.
 
 ## Member Function Documentation
+
+### is_dead
+
+```gdscript
+func is_dead() -> bool
+```
+
+Check if unit is dead.
+[return] True if unit is destroyed.
 
 ### _init
 
@@ -284,6 +295,16 @@ var behaviour: Behaviour
 Decorators: `@export`
 
 Unit Behaviour
+
+### playable
+
+```gdscript
+var playable: bool
+```
+
+Decorators: `@export`
+
+Is unit playable.
 
 ### _move_state
 

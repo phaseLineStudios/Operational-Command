@@ -1,6 +1,6 @@
 # MissionResolution::to_summary_payload Function Reference
 
-*Defined at:* `scripts/core/MissionResolution.gd` (lines 132–145)</br>
+*Defined at:* `scripts/core/MissionResolution.gd` (lines 134–148)</br>
 *Belongs to:* [MissionResolution](../../MissionResolution.md)
 
 **Signature**
@@ -27,5 +27,6 @@ func to_summary_payload() -> Dictionary:
 		"score_total": _total_score,
 		"score_breakdown": _score_breakdown(),
 		"outcome": _outcome,
+		"losses_by_unit": _losses_by_unit.duplicate(true),
 	}
 ```

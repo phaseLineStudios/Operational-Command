@@ -47,4 +47,4 @@ func _resolve_combat() -> void:
 
 ## References
 
-- [`signal engagement_reported`](..\..\SimWorld.md#engagement_reported)
+- [`signal engagement_reported`](../../SimWorld.md#engagement_reported)

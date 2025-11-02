@@ -1,6 +1,6 @@
 # UnitData::serialize Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 92–134)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 94–136)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MissionResolution::_recompute_score Function Reference
 
-*Defined at:* `scripts/core/MissionResolution.gd` (lines 157–170)</br>
+*Defined at:* `scripts/core/MissionResolution.gd` (lines 160–173)</br>
 *Belongs to:* [MissionResolution](../../MissionResolution.md)
 
 **Signature**

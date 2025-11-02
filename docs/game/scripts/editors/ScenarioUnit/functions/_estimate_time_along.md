@@ -1,6 +1,6 @@
 # ScenarioUnit::_estimate_time_along Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 243–258)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 255–270)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**

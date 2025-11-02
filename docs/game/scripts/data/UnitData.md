@@ -46,6 +46,7 @@ Logistics variables, is part of ammunition and we can add stuff here later, like
 - `float speed_kph` — Movement speed in kilometers per hour
 - `float state_strength` — Current strength
 - `float state_injured` — Current injured
+- `float understrength_threshold` — per-unit understrength threshold
 - `float state_equipment` — Current remaining equipment
 - `float cohesion` — Current cohesion level (0.0–1.0).
 - `Dictionary throughput` — Supply throughput { "supply_type": (int)amount }
@@ -282,6 +283,16 @@ var state_injured: float
 Decorators: `@export`
 
 Current injured
+
+### understrength_threshold
+
+```gdscript
+var understrength_threshold: float
+```
+
+Decorators: `@export`
+
+per-unit understrength threshold
 
 ### state_equipment
 

@@ -28,6 +28,8 @@ Scoring weights
 - [`func _reset() -> void`](MissionResolution/functions/_reset.md) — Clear all state.
 - [`func _recompute_score() -> void`](MissionResolution/functions/_recompute_score.md)
 - [`func _score_breakdown() -> Dictionary`](MissionResolution/functions/_score_breakdown.md)
+- [`func apply_casualties_to_units(units: Array, losses: Dictionary) -> void`](MissionResolution/functions/apply_casualties_to_units.md) — Apply per-unit casualties to UnitData.state_strength.
+- [`func add_unit_losses(uid: String, lost: int) -> void`](MissionResolution/functions/add_unit_losses.md)
 
 ## Public Attributes
 
@@ -39,6 +41,7 @@ Scoring weights
 - `int _total_score`
 - `MissionOutcome _outcome`
 - `bool _is_final`
+- `Dictionary _losses_by_unit`
 
 ## Signals
 
@@ -137,6 +140,22 @@ func _recompute_score() -> void
 func _score_breakdown() -> Dictionary
 ```
 
+### apply_casualties_to_units
+
+```gdscript
+func apply_casualties_to_units(units: Array, losses: Dictionary) -> void
+```
+
+Apply per-unit casualties to UnitData.state_strength.
+`losses` is { unit_id: lost_personnel }.
+This mutates the UnitData instances passed in.
+
+### add_unit_losses
+
+```gdscript
+func add_unit_losses(uid: String, lost: int) -> void
+```
+
 ## Member Data Documentation
 
 ### scenario_id
@@ -185,6 +204,12 @@ var _outcome: MissionOutcome
 
 ```gdscript
 var _is_final: bool
+```
+
+### _losses_by_unit
+
+```gdscript
+var _losses_by_unit: Dictionary
 ```
 
 ## Signal Documentation
