@@ -7,7 +7,6 @@
 
 [node name="AIAgent" type="Node"]
 script = ExtResource("1")
-unit_id = -1
 movement_adapter_path = NodePath("MovementAdapter")
 combat_adapter_path = NodePath("CombatAdapter")
 los_adapter_path = NodePath("LOSAdapter")

@@ -28,6 +28,46 @@ const _PROFILE_BY_TAG := {
 ## Enable resolving String destinations using TerrainData.labels[].text.
 @export var enable_label_destinations := true
 
+## AI Agent Related Variables
+## The Node3D that actually moves (usually the unit root).
+@export var actor_path: NodePath
+## Base speed before behaviour multipliers (meters per second).
+@export var base_speed_mps: float = 4.0
+## Stop when closer than this distance to a target.
+@export var arrive_epsilon: float = 0.5
+## Rotate actor to face velocity during movement.
+@export var rotate_to_velocity: bool = true
+## Time that must elapse after arriving in a hold area to consider it established.
+@export var hold_settle_time: float = 1.0
+## Dwell time on each patrol point before advancing.
+@export var patrol_dwell_seconds: float = 0.5
+
+var _actor: Node3D
+
+# Behaviour mapping from AIAgent
+var _speed_mult: float = 1.0
+var _cover_bias: float = 0.5
+var _noise_level: float = 0.6
+
+# Move state
+var _moving: bool = false
+var _move_target: Vector3 = Vector3.ZERO
+
+# Hold state
+var _holding: bool = false
+var _hold_center: Vector3 = Vector3.ZERO
+var _hold_radius: float = 0.0
+var _hold_timer: float = 0.0
+
+# Patrol state
+var _patrol_running: bool = false
+var _patrol_points: Array[Vector3] = []
+var _patrol_ping_pong: bool = false
+var _patrol_index: int = 0
+var _patrol_forward: bool = true
+var _patrol_segments_remaining: int = 0
+var _patrol_dwell: float = 0.0
+
 var _grid: PathGrid
 var _labels: Dictionary = {}
 
@@ -39,7 +79,28 @@ func _ready() -> void:
 
 	if _grid and not _grid.is_connected("build_ready", Callable(self, "_on_grid_ready")):
 		_grid.build_ready.connect(_on_grid_ready)
+	
+	if actor_path.is_empty():
+		_actor = get_parent() as Node3D
+	else:
+		_actor = get_node_or_null(actor_path) as Node3D
+		
 
+func _physics_process(dt: float) -> void:
+	if _actor == null:
+		return
+
+	# Patrol takes priority and drives _moving
+	if _patrol_running:
+		_tick_patrol(dt)
+
+	# Move step
+	if _moving:
+		_step_move(dt)
+
+	# Hold settle timer
+	if _holding:
+		_tick_hold(dt)
 
 ## Rebuilds the label lookup from TerrainData.labels.
 ## Stores: normalized_text -> Array[Vector2] (terrain meters).
@@ -253,25 +314,144 @@ func _on_grid_ready(profile: int) -> void:
 
 ## Behaviour mapping from AIAgent
 func set_behaviour_params(speed_mult: float, cover_bias: float, noise_level: float) -> void:
-	pass
+	_speed_mult = speed_mult
+	_cover_bias = cover_bias
+	_noise_level = noise_level
 
 ## TaskMove
 func request_move_to(dest: Vector3) -> void:
-	pass
+	_patrol_running = false
+	_holding = false
+	_move_target = dest
+	_moving = true
 
 func is_move_complete() -> bool:
-	return false
+	return not _moving
 
 ## TaskDefend
 func request_hold_area(center: Vector3, radius: float) -> void:
-	pass
+	_patrol_running = false
+	_holding = true
+	_hold_center = center
+	_hold_radius = max(radius, 0.0)
+	_hold_timer = 0.0
+
+	# If outside radius, move to nearest point on the circle, else stop immediately and start settling
+	if _actor != null:
+		var offset: Vector3 = _actor.global_position - center
+		var dist: float = offset.length()
+		if dist > _hold_radius + arrive_epsilon:
+			var dir: Vector3 = offset.normalized()
+			_move_target = center + dir * _hold_radius
+			_moving = true
+		else:
+			_moving = false
 
 func is_hold_established() -> bool:
-	return false
+	# Established when inside radius and settled long enough
+	if _actor == null:
+		return true
+	var inside: bool = _actor.global_position.distance_to(_hold_center) <= _hold_radius + arrive_epsilon
+	return inside and _hold_timer >= hold_settle_time
 
 ## TaskPatrol
 func request_patrol(points: Array[Vector3], ping_pong: bool) -> void:
-	pass
+	_holding = false
+	_patrol_points = points.duplicate()
+	_patrol_ping_pong = ping_pong
+	_patrol_index = 0
+	_patrol_forward = true
+	_patrol_dwell = 0.0
+	_moving = false
+	# One single cycle then stop:
+	# cycle: visit each point once (N segments)
+	# ping-pong: go to end and back without repeating endpoints (2*N-2 segments)
+	var n: int = _patrol_points.size()
+	if n <= 1:
+		_patrol_running = false
+		return
+	_patrol_segments_remaining = n if not ping_pong else max(2 * n - 2, 1)
+	_patrol_running = true
+	# Set first leg
+	_move_target = _patrol_points[1]
+	_moving = true
+	_patrol_index = 1
 
 func is_patrol_running() -> bool:
-	return false
+	return _patrol_running
+	
+	
+# Initial helpers
+func _step_move(dt: float) -> void:
+	var speed: float = base_speed_mps * _speed_mult
+	var pos: Vector3 = _actor.global_position
+	var to_target: Vector3 = _move_target - pos
+	var dist: float = to_target.length()
+
+	if dist <= arrive_epsilon:
+		_moving = false
+		return
+
+	var dir: Vector3 = to_target / max(dist, 0.0001)
+	if rotate_to_velocity and dir.length() > 0.001:
+		# Keep y up, rotate on horizontal plane
+		var flat: Vector3 = Vector3(dir.x, 0.0, dir.z).normalized()
+		if flat.length() > 0.001:
+			_actor.look_at(_actor.global_position + flat, Vector3.UP)
+
+	_actor.global_position = pos + dir * speed * dt
+
+func _tick_hold(dt: float) -> void:
+	if _actor == null:
+		return
+	var inside: bool = _actor.global_position.distance_to(_hold_center) <= _hold_radius + arrive_epsilon
+	if inside and not _moving:
+		_hold_timer += dt
+	else:
+		_hold_timer = 0.0
+
+func _tick_patrol(dt: float) -> void:
+	if not _moving:
+		# dwell on point before next leg
+		if _patrol_dwell < patrol_dwell_seconds:
+			_patrol_dwell += dt
+			return
+		# advance to next patrol leg
+		if _advance_patrol_leg():
+			_patrol_dwell = 0.0
+		else:
+			# finished a single cycle
+			_patrol_running = false
+			return
+	# move step
+	_step_move(dt)
+	# when a leg finishes, _moving becomes false and dwell begins next frame
+
+func _advance_patrol_leg() -> bool:
+	if _patrol_points.is_empty():
+		return false
+	if _patrol_segments_remaining <= 0:
+		return false
+
+	var n: int = _patrol_points.size()
+	# Compute next index
+	if _patrol_ping_pong:
+		if _patrol_forward:
+			if _patrol_index >= n - 1:
+				_patrol_forward = false
+				_patrol_index -= 1
+			else:
+				_patrol_index += 1
+		else:
+			if _patrol_index <= 0:
+				_patrol_forward = true
+				_patrol_index += 1
+			else:
+				_patrol_index -= 1
+	else:
+		_patrol_index = (_patrol_index + 1) % n
+
+	_move_target = _patrol_points[_patrol_index]
+	_moving = true
+	_patrol_segments_remaining -= 1
+	return true
