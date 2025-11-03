@@ -1,9 +1,22 @@
-[gd_scene format=3 uid="uid://bulje21ovawd6"]
+[gd_scene load_steps=5 format=3 uid="uid://bulje21ovawd6"]
 
-[node name="AiAgent" type="Control"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[ext_resource type="Script" uid="uid://bfmgnmqg0uly6" path="res://scripts/ai/AIAgent.gd" id="1"]
+[ext_resource type="Script" uid="uid://be785qai04d2g" path="res://scripts/sim/adapters/MovementAdapter.gd" id="2"]
+[ext_resource type="Script" uid="uid://dy2uex65i3y4m" path="res://scripts/sim/adapters/CombatAdapter.gd" id="3"]
+[ext_resource type="Script" uid="uid://cw4tt3twmh4gk" path="res://scripts/sim/adapters/LOSAdapter.gd" id="4"]
+
+[node name="AIAgent" type="Node"]
+script = ExtResource("1")
+unit_id = -1
+movement_adapter_path = NodePath("MovementAdapter")
+combat_adapter_path = NodePath("CombatAdapter")
+los_adapter_path = NodePath("LOSAdapter")
+
+[node name="MovementAdapter" type="Node" parent="."]
+script = ExtResource("2")
+
+[node name="CombatAdapter" type="Node" parent="."]
+script = ExtResource("3")
+
+[node name="LOSAdapter" type="Node" parent="."]
+script = ExtResource("4")
