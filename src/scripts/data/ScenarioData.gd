@@ -46,6 +46,8 @@ enum ScenarioDifficulty { EASY, NORMAL, HARD }
 @export_range(0.0, 23.0, 1.0) var hour: int = 12
 ## Minute of the hour
 @export_range(0.0, 59.0, 1.0) var minute: int = 0
+## Seconds
+@export_range(0.0, 59.0, 1.0) var second: int = 0
 
 @export_category("Units")
 ## Total points available to the player to deploy units
