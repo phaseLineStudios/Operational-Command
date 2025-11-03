@@ -6,6 +6,14 @@ extends Node
 ## multipliers, and build contact pairs between forces.
 ## @experimental
 
+## Minimal contact detector used by TaskWait until_contact.
+## Either toggle by API, or do a simple distance scan against a group.
+
+## If actor_path is set and hostiles_group_name is non-empty, we will auto-scan each frame.
+@export var actor_path: NodePath
+@export var hostiles_group_name: StringName = &"hostile"
+@export var detection_radius: float = 60.0
+
 ## NodePath to a LOS helper that implements:
 ## `trace_los(a_pos, b_pos, renderer, terrain_data, effects_config) -> Dictionary`
 @export var los_node_path: NodePath
@@ -19,6 +27,8 @@ var _los: Node
 var _renderer: TerrainRender
 var _terrain: TerrainData
 
+var _actor: Node3D
+var _hostile_contact: bool = false
 
 ## Autowires LOS helper and terrain renderer from exported paths.
 func _ready() -> void:
@@ -27,7 +37,25 @@ func _ready() -> void:
 	if terrain_renderer_path != NodePath(""):
 		_renderer = get_node(terrain_renderer_path) as TerrainRender
 		_terrain = _renderer.data
+	if actor_path.is_empty():
+		_actor = get_parent() as Node3D
+	else:
+		_actor = get_node_or_null(actor_path) as Node3D
 
+func _process(_dt: float) -> void:
+	if _actor == null:
+		return
+	if String(hostiles_group_name) == "":
+		return
+	# Simple proximity scan; replace with your perception logic when ready
+	var pos: Vector3 = _actor.global_position
+	var found: bool = false
+	for n in get_tree().get_nodes_in_group(hostiles_group_name):
+		if n is Node3D:
+			if (n as Node3D).global_position.distance_to(pos) <= detection_radius:
+				found = true
+				break
+	_hostile_contact = found
 
 ## Returns true if there is an unobstructed LOS from [param a] to [param b].
 ## [param a] Attacking/observing unit.
@@ -71,4 +99,8 @@ func contacts_between(friends: Array[ScenarioUnit], enemies: Array[ScenarioUnit]
 
 ## Used by AIAgent wait-until-contact
 func has_hostile_contact() -> bool:
-	return false
+	return _hostile_contact
+
+## Allow external systems to toggle contact directly.
+func set_hostile_contact(v: bool) -> void:
+	_hostile_contact = v
