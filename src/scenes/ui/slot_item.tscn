@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://dvyattx2k3rxj"]
+[gd_scene load_steps=9 format=3 uid="uid://dvyattx2k3rxj"]
 
 [ext_resource type="Script" uid="uid://cvi1gs1ld0p43" path="res://scripts/ui/helpers/SlotItem.gd" id="1_hm8yw"]
+[ext_resource type="Theme" uid="uid://dy2ly8e3tggi0" path="res://assets/themes/menu.theme" id="1_ykbww"]
 [ext_resource type="Texture2D" uid="uid://dycem6t75tfbd" path="res://assets/textures/units/nato_unknown_platoon.png" id="2_3q1nv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3q1nv"]
@@ -91,6 +92,7 @@ offset_right = -852.0
 offset_bottom = -588.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_ykbww")
 theme_override_styles/panel = SubResource("StyleBoxFlat_3q1nv")
 script = ExtResource("1_hm8yw")
 hover_style_empty = SubResource("StyleBoxFlat_ykbww")
@@ -116,8 +118,10 @@ layout_mode = 2
 
 [node name="Title" type="Label" parent="Row/Column"]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "[EMPTY]"
 
 [node name="Slot" type="Label" parent="Row/Column"]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "Slot 1/3"

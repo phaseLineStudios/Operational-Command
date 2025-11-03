@@ -1,7 +1,47 @@
-[gd_scene load_steps=3 format=3 uid="uid://o3h5jon6ffip"]
+[gd_scene load_steps=9 format=3 uid="uid://o3h5jon6ffip"]
 
 [ext_resource type="Script" uid="uid://bbr2ohjdpwwns" path="res://scripts/ui/Briefing.gd" id="1_opxbr"]
+[ext_resource type="Script" uid="uid://nobo2pvlx00b" path="res://scripts/ui/controls/OcMenuContainer.gd" id="2_jghtx"]
 [ext_resource type="Texture2D" uid="uid://dntvximcm6324" path="res://assets/textures/ui/whiteboard.png" id="2_siir0"]
+[ext_resource type="Script" uid="uid://boc05sevt2wad" path="res://scripts/ui/controls/OcMenuButton.gd" id="4_h1l70"]
+[ext_resource type="Theme" uid="uid://dy2ly8e3tggi0" path="res://assets/themes/menu.theme" id="5_snsoq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h1l70"]
+content_margin_left = 26.0
+content_margin_top = 26.0
+content_margin_right = 26.0
+content_margin_bottom = 26.0
+bg_color = Color(0.067, 0.082, 0.098, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aclu0"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.067, 0.082, 0.098, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_snsoq"]
+content_margin_left = 5.0
+content_margin_top = 0.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.06666667, 0.08235294, 0.09803922, 0.7137255)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.23529412, 0.26666668, 0.2784314, 1)
+corner_detail = 5
 
 [node name="Briefing" type="Control"]
 layout_mode = 3
@@ -10,6 +50,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("5_snsoq")
 script = ExtResource("1_opxbr")
 
 [node name="Root" type="VBoxContainer" parent="."]
@@ -20,36 +61,100 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Board" type="PanelContainer" parent="Root"]
+[node name="BottomBar" type="PanelContainer" parent="Root"]
+layout_mode = 2
+
+[node name="OCMenuContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_h1l70")
+script = ExtResource("2_jghtx")
+inner_padding = Vector4i(1, 1, 1, 1)
+noise_enabled = true
+noise_opacity = 0.02
+noise_grain = 1.0
+metadata/_custom_type_script = "uid://nobo2pvlx00b"
+
+[node name="Column" type="VBoxContainer" parent="OCMenuContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="OCMenuContainer/Column"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="PanelContainer" type="PanelContainer" parent="OCMenuContainer/Column/MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_aclu0")
+
+[node name="Row" type="HBoxContainer" parent="OCMenuContainer/Column/MarginContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="HBoxContainer" type="HBoxContainer" parent="OCMenuContainer/Column/MarginContainer/PanelContainer/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.3
+
+[node name="Back" type="Button" parent="OCMenuContainer/Column/MarginContainer/PanelContainer/Row/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Back to Scenarios"
+script = ExtResource("4_h1l70")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
+
+[node name="Title" type="Label" parent="OCMenuContainer/Column/MarginContainer/PanelContainer/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("5_snsoq")
+theme_override_colors/font_color = Color(0.9494234, 0.95214313, 0.9535087, 1)
+text = "Briefing"
+horizontal_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="OCMenuContainer/Column/MarginContainer/PanelContainer/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.3
+alignment = 2
+
+[node name="Continue" type="Button" parent="OCMenuContainer/Column/MarginContainer/PanelContainer/Row/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Continue"
+script = ExtResource("4_h1l70")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
+
+[node name="MarginContainer2" type="MarginContainer" parent="OCMenuContainer/Column"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="Whiteboard" type="TextureRect" parent="Root/Board"]
+[node name="BoxContainer" type="PanelContainer" parent="OCMenuContainer/Column/MarginContainer2"]
 layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_snsoq")
+
+[node name="Whiteboard" type="TextureRect" parent="OCMenuContainer/Column/MarginContainer2/BoxContainer"]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 1, 1, 0.43137255)
+layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 2
 texture = ExtResource("2_siir0")
 expand_mode = 1
 
-[node name="ItemsLayer" type="Control" parent="Root/Board"]
-layout_mode = 2
-
-[node name="BottomBar" type="PanelContainer" parent="Root"]
-layout_mode = 2
-
-[node name="Row" type="HBoxContainer" parent="Root/BottomBar"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="Back" type="Button" parent="Root/BottomBar/Row"]
-layout_mode = 2
-text = "Back"
-
-[node name="Title" type="Label" parent="Root/BottomBar/Row"]
+[node name="ItemsLayer" type="Control" parent="OCMenuContainer/Column/MarginContainer2/BoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Briefing"
-horizontal_alignment = 1
-
-[node name="Continue" type="Button" parent="Root/BottomBar/Row"]
-layout_mode = 2
-text = "Continue"

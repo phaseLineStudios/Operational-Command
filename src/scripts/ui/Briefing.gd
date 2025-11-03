@@ -18,10 +18,10 @@ const DEFAULT_THUMB_SIZE := Vector2i(128, 96)
 var _brief: BriefData
 var _items: Array = []
 
-@onready var _btn_back: Button = $"Root/BottomBar/Row/Back"
-@onready var _btn_next: Button = $"Root/BottomBar/Row/Continue"
-@onready var _title: Label = $"Root/BottomBar/Row/Title"
-@onready var _whiteboard: TextureRect = $"Root/Board/Whiteboard"
+@onready var _btn_back: Button = %Back
+@onready var _btn_next: Button = %Continue
+@onready var _title: Label = %Title
+@onready var _whiteboard: TextureRect = %Whiteboard
 
 
 ## Init: load data, build board, wire UI.
