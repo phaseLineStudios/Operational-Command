@@ -46,6 +46,8 @@ enum State { INIT, RUNNING, PAUSED, COMPLETED }
 @export var artillery_controller: ArtilleryController
 ## Engineer controller for engineer tasks (mines, demo, bridges).
 @export var engineer_controller: EngineerController
+## Environment controller for environment laoding
+@export var environment_controller: EnvironmentController
 ## Grace period before ending (seconds) to avoid flapping.
 @export var auto_end_grace_s := 2.0
 
@@ -164,6 +166,10 @@ func init_world(scenario: ScenarioData) -> void:
 	# Start paused so player can review before beginning
 	_transition(State.INIT, State.PAUSED)
 
+	# Set Start time
+	var start_s := scenario.second + scenario.minute * 60 + scenario.hour * 60 * 60
+	environment_controller.time_of_day = start_s
+
 
 ## Initialize mission resolution and connect state changes.
 ## [param primary_ids] Objective IDs.
@@ -208,6 +214,7 @@ func _step_tick(dt: float) -> void:
 	_update_movement(dt)
 	_update_logistics(dt)
 	_update_los()
+	_update_time(dt)
 	_resolve_combat()
 	_update_morale()
 	_emit_events()
@@ -378,6 +385,11 @@ func get_contacts_for_unit(unit_id: String) -> Array:
 ## Updates morale (placeholder).
 func _update_morale() -> void:
 	pass
+
+
+## Advance world time
+func _update_time(dt: float) -> void:
+	environment_controller.tick(dt)
 
 
 ## Emits per-tick radio/log events (placeholder).

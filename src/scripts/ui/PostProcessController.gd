@@ -57,7 +57,7 @@ var environment: Environment
 
 @onready var film_grain_rect: ColorRect = $GeneralPP
 @onready var general_rect: ColorRect = $FilmGrain
-@onready var world_environment: WorldEnvironment = %WorldEnvironment
+@onready var world_environment: WorldEnvironment = %EnvironmentController
 
 
 func _ready() -> void:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=86 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=109 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -41,17 +41,11 @@
 [ext_resource type="Script" uid="uid://0xd5ojxkkl4q" path="res://scripts/sim/systems/ArtilleryController.gd" id="33_66vc6"]
 [ext_resource type="PackedScene" uid="uid://bnexhgtx3llph" path="res://scenes/ui/counter_config_dialog.tscn" id="33_bsy1h"]
 [ext_resource type="Script" uid="uid://ckqvusamktt4" path="res://scripts/sim/systems/EngineerController.gd" id="34_1yvtb"]
+[ext_resource type="Shader" uid="uid://5d11ompav57u" path="res://assets/shaders/SkyShader.gdshader" id="36_66gqg"]
+[ext_resource type="Script" uid="uid://f0yaq3wflq5" path="res://scripts/sim/EnvironmentController.gd" id="36_c0crp"]
 [ext_resource type="Script" uid="uid://mjmvtp2w61ri" path="res://scripts/ui/PostProcessController.gd" id="36_yef6r"]
 [ext_resource type="Shader" uid="uid://csoyxm10cdmqn" path="res://assets/shaders/general.gdshader" id="37_gaccj"]
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
-size = Vector2(10, 30)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p1n4g"]
-albedo_color = Color(0.103343, 0.276828, 0.0129619, 1)
-
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ge0qv"]
-data = PackedVector3Array(5, 0, 15, -5, 0, 15, 5, 0, -15, -5, 0, 15, -5, 0, -15, 5, 0, -15)
+[ext_resource type="Script" uid="uid://d33v0jsmojsg1" path="res://scripts/sim/SkyPreset.gd" id="44_hovgm"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qevx8"]
 size = Vector3(1, 0.75, 0.7)
@@ -69,6 +63,7 @@ size = Vector3(0.2, 0.12, 0.12)
 size = Vector3(0.2, 0.12, 0.12)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ge8rp"]
+disable_ambient_light = true
 texture_filter = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_p1n4g"]
@@ -175,6 +170,157 @@ metadata/_custom_type_script = "uid://dnnu3w3b3j5rk"
 script = ExtResource("24_jjp33")
 metadata/_custom_type_script = "uid://ch73kyybwrkb8"
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_66gqg"]
+shader = ExtResource("36_66gqg")
+shader_parameter/base_color = Color(0.204346, 0.344014, 0.5625, 1)
+shader_parameter/scatter_color = Color(1, 1, 1, 1)
+shader_parameter/scatter_color_2 = Color(1, 1, 1, 1)
+shader_parameter/b_anim_clouds = true
+shader_parameter/b_anim_stars = true
+shader_parameter/sun_radius = 0.0003
+shader_parameter/sun_edge_blur = 3600.0
+shader_parameter/sun_disc_color = Color(0.737255, 0.694118, 0.603922, 1)
+shader_parameter/sun_glow_color = Color(1, 0.955033, 0.827864, 1)
+shader_parameter/sunlight_color = Vector3(0, 0, 0)
+shader_parameter/sun_glow_intensity = 0.45
+shader_parameter/moon_radius = 0.0003
+shader_parameter/moon_edge_blur = 10000.0
+shader_parameter/moon_glow_color = Color(1, 1, 1, 0)
+shader_parameter/moon_glow_intensity = 0.8
+shader_parameter/base_cloud_color = Color(1, 1, 1, 1)
+shader_parameter/cloud_density = 4.25
+shader_parameter/mg_size = 0.92
+shader_parameter/cloud_alpha = 1.0
+shader_parameter/cloud_speed = 0.0003
+shader_parameter/horizon_fog_color = Color(0.82882583, 0.9191148, 0.9999997, 1)
+shader_parameter/horizon_alpha = 1.0
+shader_parameter/horizon_size = 3.0
+shader_parameter/star_color = Color(0.43, 0.55, 0.91, 1)
+shader_parameter/star_brightness = 0.2
+shader_parameter/twinkle_speed = 0.025
+shader_parameter/twinkle_scale = 4.0
+shader_parameter/star_resolution = 1.0
+shader_parameter/star_speed = 0.002
+
+[sub_resource type="Sky" id="Sky_nq7cy"]
+sky_material = SubResource("ShaderMaterial_66gqg")
+process_mode = 3
+
+[sub_resource type="Environment" id="Environment_idixg"]
+background_mode = 2
+background_energy_multiplier = 0.75
+sky = SubResource("Sky_nq7cy")
+ambient_light_source = 3
+ambient_light_sky_contribution = 0.5
+reflected_light_source = 2
+tonemap_mode = 3
+tonemap_exposure = 0.75
+ssr_enabled = true
+ssao_enabled = true
+sdfgi_enabled = true
+sdfgi_use_occlusion = true
+sdfgi_min_cell_size = 1.953125
+glow_enabled = true
+glow_intensity = 0.6
+glow_bloom = 0.04
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0042
+adjustment_enabled = true
+adjustment_contrast = 1.05
+adjustment_saturation = 0.9
+
+[sub_resource type="Gradient" id="Gradient_d51i2"]
+offsets = PackedFloat32Array(0.419118, 0.553191, 0.601064, 0.691489)
+colors = PackedColorArray(0.0601829, 0.0849014, 0.199897, 1, 0.381723, 0.127307, 0.10311, 1, 0.638549, 0.335553, 0.0995967, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_3g2ag"]
+gradient = SubResource("Gradient_d51i2")
+
+[sub_resource type="Gradient" id="Gradient_ylwct"]
+offsets = PackedFloat32Array(0.3125, 0.414239, 0.469256, 0.574468, 0.803191)
+colors = PackedColorArray(0.0145395, 0.0244694, 0.0874464, 1, 0.0949225, 0.045259, 0.27951, 1, 0.334622, 0.303664, 0.453753, 1, 0.792964, 0.761777, 0.932676, 1, 0.204346, 0.344014, 0.5625, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_018ci"]
+gradient = SubResource("Gradient_ylwct")
+
+[sub_resource type="Gradient" id="Gradient_tmt0o"]
+offsets = PackedFloat32Array(0.174757, 0.475728, 0.660194, 0.824468, 1)
+colors = PackedColorArray(0.0166131, 0.0263546, 0.101967, 1, 0.168694, 0.216311, 0.435438, 1, 0.916989, 0.704468, 0.478476, 1, 0.684128, 0.761883, 0.794691, 1, 0.828826, 0.919115, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_os6q3"]
+gradient = SubResource("Gradient_tmt0o")
+
+[sub_resource type="Gradient" id="Gradient_6k7bt"]
+offsets = PackedFloat32Array(0.482759, 0.612069)
+colors = PackedColorArray(0.544003, 0.651053, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ehjqo"]
+gradient = SubResource("Gradient_6k7bt")
+
+[sub_resource type="Gradient" id="Gradient_jpydu"]
+offsets = PackedFloat32Array(0.161812, 0.521036, 0.612069)
+colors = PackedColorArray(0.195465, 0.222085, 0.341751, 1, 0.471032, 0.514768, 0.697211, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_4hx2p"]
+gradient = SubResource("Gradient_jpydu")
+
+[sub_resource type="Curve" id="Curve_xqlrs"]
+_data = [Vector2(0, 0.0423728), 0.0, 0.0, 0, 0, Vector2(0.477528, 0.0677966), 0.0, 0.0, 0, 0, Vector2(0.560886, 0), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Gradient" id="Gradient_ju4b8"]
+offsets = PackedFloat32Array(0.345745, 0.62234)
+colors = PackedColorArray(3.38419e-09, 0, 0.0381053, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_r1wnv"]
+gradient = SubResource("Gradient_ju4b8")
+
+[sub_resource type="Gradient" id="Gradient_g3sdw"]
+offsets = PackedFloat32Array(0.366379, 0.49569, 0.901639)
+colors = PackedColorArray(0, 0, 0, 1, 0.776471, 0.501961, 0.309804, 0.976471, 0.737255, 0.694118, 0.603922, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_8iaup"]
+gradient = SubResource("Gradient_g3sdw")
+use_hdr = true
+
+[sub_resource type="Gradient" id="Gradient_03x5b"]
+offsets = PackedFloat32Array(0.443182, 0.566343, 0.660194)
+colors = PackedColorArray(0, 0, 0, 1, 0.94902, 0.882353, 0, 1, 1, 0.955033, 0.827864, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_tw4w3"]
+gradient = SubResource("Gradient_03x5b")
+
+[sub_resource type="Gradient" id="Gradient_tp7rf"]
+offsets = PackedFloat32Array(0.02589, 0.365696, 0.462783, 0.543689, 0.993528)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1, 0.71298, 0.203695, 1.47464e-07, 1, 0.979906, 0.738618, 0.391285, 1, 0.996078, 0.996078, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_5yowr"]
+gradient = SubResource("Gradient_tp7rf")
+use_hdr = true
+
+[sub_resource type="Curve" id="Curve_66gqg"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.477012, 0), 0.0, 0.0, 0, 0, Vector2(0.58908, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Resource" id="Resource_g6xw8"]
+script = ExtResource("44_hovgm")
+sun_light_intensity = SubResource("Curve_66gqg")
+moon_light_intensity = SubResource("Curve_xqlrs")
+base_sky_color = SubResource("GradientTexture1D_018ci")
+base_cloud_color = SubResource("GradientTexture1D_3g2ag")
+overcast_sky_color = SubResource("GradientTexture1D_r1wnv")
+horizon_fog_color = SubResource("GradientTexture1D_os6q3")
+sun_light_color = SubResource("GradientTexture1D_5yowr")
+sun_disc_color = SubResource("GradientTexture1D_8iaup")
+sun_glow = SubResource("GradientTexture1D_tw4w3")
+moon_light_color = SubResource("GradientTexture1D_4hx2p")
+moon_glow_color = SubResource("GradientTexture1D_ehjqo")
+metadata/_custom_type_script = "uid://d33v0jsmojsg1"
+
+[sub_resource type="SphereMesh" id="SphereMesh_5bsee"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_rio5r"]
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yef6r"]
 shader = ExtResource("37_gaccj")
 shader_parameter/vignette = true
@@ -190,40 +336,8 @@ shader = ExtResource("10_itljb")
 shader_parameter/grain_amount = 0.0350000016625
 shader_parameter/grain_size = 1.0
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jjp33"]
-sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
-ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
-
-[sub_resource type="Sky" id="Sky_gaccj"]
-sky_material = SubResource("ProceduralSkyMaterial_jjp33")
-
-[sub_resource type="Environment" id="Environment_yef6r"]
-background_mode = 2
-sky = SubResource("Sky_gaccj")
-ambient_light_sky_contribution = 0.5
-ambient_light_energy = 0.1
-tonemap_mode = 3
-ssr_enabled = true
-ssao_enabled = true
-glow_enabled = true
-glow_intensity = 0.6
-glow_bloom = 0.04
-adjustment_enabled = true
-adjustment_contrast = 1.05
-adjustment_saturation = 0.9
-
 [node name="HQTable" type="Node3D"]
 script = ExtResource("1_qgda6")
-
-[node name="Ground" type="StaticBody3D" parent="."]
-
-[node name="Mesh" type="MeshInstance3D" parent="Ground"]
-mesh = SubResource("PlaneMesh_yqfno")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_p1n4g")
-
-[node name="Collision" type="CollisionShape3D" parent="Ground"]
-shape = SubResource("ConcavePolygonShape3D_ge0qv")
 
 [node name="Table" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.355681, 0)
@@ -237,20 +351,24 @@ skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_3f477")
 
 [node name="Tent" type="MeshInstance3D" parent="."]
+metadata/_edit_lock_ = true
 
 [node name="PlaceHolder" type="CSGBox3D" parent="Tent"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0238228, 0.86145, 0.0106506)
 size = Vector3(3.33334, 1.77856, 3.539)
+metadata/_edit_lock_ = true
 
 [node name="InsideSpace" type="CSGBox3D" parent="Tent/PlaceHolder"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0218391, -0.392822, -0.339142)
 operation = 2
 size = Vector3(3.13879, 1.81592, 2.76892)
+metadata/_edit_lock_ = true
 
 [node name="Door" type="CSGBox3D" parent="Tent/PlaceHolder"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00355911, -0.417542, -1.20057)
 operation = 2
 size = Vector3(1.37492, 1.76648, 2.76892)
+metadata/_edit_lock_ = true
 
 [node name="StaticObjects" type="Node" parent="."]
 
@@ -479,6 +597,7 @@ script = ExtResource("4_py2wd")
 [node name="InteractionBounds" type="MeshInstance3D" parent="Controllers/ObjectController"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7437553, 0)
 mesh = SubResource("PlaneMesh_ge8rp")
+metadata/_edit_lock_ = true
 
 [node name="MapController" type="Node" parent="Controllers"]
 unique_name_in_owner = true
@@ -526,6 +645,7 @@ tilt_smooth = 15.0
 [node name="CameraBounds" type="MeshInstance3D" parent="Controllers/CameraController"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0213583, 0.2977755)
 mesh = SubResource("PlaneMesh_uk27s")
+metadata/_edit_lock_ = true
 
 [node name="Camera" type="Camera3D" parent="Controllers/CameraController/CameraBounds"]
 transform = Transform3D(1, 0, 0, 0, 0.809017, 0.58778524, 0, -0.58778524, 0.809017, 0, 0, 0.20071936)
@@ -564,7 +684,7 @@ script = ExtResource("32_modulator")
 unique_name_in_owner = true
 script = ExtResource("31_auto_voices")
 
-[node name="WorldController" type="Node" parent="Controllers" node_paths=PackedStringArray("los_adapter", "movement_adapter", "combat_controller", "combat_adapter", "trigger_engine", "_router", "ammo_system", "fuel_system", "artillery_controller", "engineer_controller")]
+[node name="WorldController" type="Node" parent="Controllers" node_paths=PackedStringArray("los_adapter", "movement_adapter", "combat_controller", "combat_adapter", "trigger_engine", "_router", "ammo_system", "fuel_system", "artillery_controller", "engineer_controller", "environment_controller")]
 unique_name_in_owner = true
 script = ExtResource("7_ge8rp")
 los_adapter = NodePath("../LOSController/LOSAdapter")
@@ -577,6 +697,7 @@ ammo_system = NodePath("../CombatController/AmmoSystem")
 fuel_system = NodePath("FuelSystem")
 artillery_controller = NodePath("../CombatController/ArtilleryController")
 engineer_controller = NodePath("../CombatController/EngineerController")
+environment_controller = NodePath("../EnvironmentController")
 
 [node name="MovementAdapter" type="Node" parent="Controllers/WorldController" node_paths=PackedStringArray("renderer")]
 unique_name_in_owner = true
@@ -647,6 +768,49 @@ script = ExtResource("28_wrosp")
 drawer = NodePath("../../StaticObjects/UnitCounterDrawer")
 counter_dialog = NodePath("../../UI/CounterConfigDialog")
 
+[node name="EnvironmentController" type="WorldEnvironment" parent="Controllers" node_paths=PackedStringArray("sun_moon_parent", "sun_root", "moon_root", "sun", "moon", "env_anchor")]
+unique_name_in_owner = true
+environment = SubResource("Environment_idixg")
+script = ExtResource("36_c0crp")
+sun_moon_parent = NodePath("SunMoon")
+sun_root = NodePath("SunMoon/Sun")
+moon_root = NodePath("SunMoon/Moon")
+sun = NodePath("SunMoon/Sun/SunLight")
+moon = NodePath("SunMoon/Moon/MoonLight")
+env_anchor = NodePath("EnvironmentAnchor")
+sky_preset = SubResource("Resource_g6xw8")
+
+[node name="SunMoon" type="Node3D" parent="Controllers/EnvironmentController"]
+transform = Transform3D(1, 0, 0, 0, -0.9999995, 8.7422734e-08, 0, -8.7422734e-08, -0.9999995, 0, 0, 0)
+metadata/_edit_lock_ = true
+
+[node name="Sun" type="MeshInstance3D" parent="Controllers/EnvironmentController/SunMoon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+transparency = 1.0
+mesh = SubResource("SphereMesh_5bsee")
+metadata/_edit_lock_ = true
+
+[node name="SunLight" type="DirectionalLight3D" parent="Controllers/EnvironmentController/SunMoon/Sun"]
+transform = Transform3D(1, 0, 1.49012e-08, -1.49012e-08, -8.19564e-08, -1, 2.98023e-08, 1, -3.72529e-08, 0, 0, 0)
+light_color = Color(0.996078, 0.996078, 1, 1)
+shadow_enabled = true
+metadata/_edit_lock_ = true
+
+[node name="Moon" type="MeshInstance3D" parent="Controllers/EnvironmentController/SunMoon"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 1, 0)
+transparency = 1.0
+mesh = SubResource("SphereMesh_rio5r")
+metadata/_edit_lock_ = true
+
+[node name="MoonLight" type="DirectionalLight3D" parent="Controllers/EnvironmentController/SunMoon/Moon"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+light_color = Color(0, 0, 0, 1)
+light_energy = 0.0
+shadow_enabled = true
+metadata/_edit_lock_ = true
+
+[node name="EnvironmentAnchor" type="Node3D" parent="Controllers/EnvironmentController"]
+
 [node name="PostProcess" type="CanvasLayer" parent="."]
 script = ExtResource("36_yef6r")
 
@@ -688,7 +852,3 @@ visible = false
 
 [node name="CounterConfigDialog" parent="UI" instance=ExtResource("33_bsy1h")]
 visible = false
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-unique_name_in_owner = true
-environment = SubResource("Environment_yef6r")
