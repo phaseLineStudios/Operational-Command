@@ -74,16 +74,15 @@ func _resolve_id_path(dir_abs: String, id: String) -> String:
 func get_all_objects(dir_path: String) -> Array:
 	var dir_abs := _norm_dir(dir_path)
 	var out: Array = []
-	var files := DirAccess.get_files_at(dir_abs)
-	if files.is_empty():
-		return out
-	for f in files:
-		if f.get_extension().to_lower() != "json":
-			continue
-		var path := "%s/%s" % [dir_abs, f]
-		var obj := _load_json(path)
-		if not obj.is_empty():
-			out.append(obj)
+	var files := ResourceLoader.list_directory(dir_abs)
+	for file in files:
+		var is_dir := file[file.length() - 1] == "/"
+		var extension := file.split(".")[-1]
+		if not is_dir and extension in ["json"]:
+			var path := "%s/%s" % [dir_abs, file]
+			var obj := _load_json(path)
+			if not obj.is_empty():
+				out.append(obj)
 	return out
 
 

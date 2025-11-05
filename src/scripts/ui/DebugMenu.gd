@@ -118,13 +118,14 @@ func _recursive_collect_scenes(path: String, out: Array) -> void:
 	if path.ends_with("/.godot") or path.ends_with("/.import"):
 		return
 
-	for f in DirAccess.get_files_at(path):
-		if f.ends_with(".tscn") or f.ends_with(".scn"):
-			out.append(path.path_join(f))
-	for d in DirAccess.get_directories_at(path):
-		if d.begins_with(".git") or d == ".godot" or d == ".import":
-			continue
-		_recursive_collect_scenes(path.path_join(d), out)
+	var files := ResourceLoader.list_directory(path)
+	for file in files:
+		var is_dir := file[file.length() - 1] == "/"
+		var extension := file.split(".")[-1]
+		if not is_dir and extension in ["tscn", "scn"]:
+			out.append(path.path_join(file))
+		elif is_dir and not (file.begins_with(".git") or file == ".godot" or file == ".import"):
+			_recursive_collect_scenes(path.path_join(file), out)
 
 
 ## Prettify scene name

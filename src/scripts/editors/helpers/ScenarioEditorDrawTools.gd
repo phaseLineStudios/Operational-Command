@@ -33,31 +33,21 @@ func build_stamp_pool() -> void:
 	draw_tex_paths.clear()
 	editor.st_list.clear()
 
-	var dir := DirAccess.open("res://assets/textures/stamps")
-	if dir:
-		dir.list_dir_begin()
-		while true:
-			var f := dir.get_next()
-			if f == "":
-				break
-			if dir.current_is_dir():
-				continue
-			if (
-				f.to_lower().ends_with(".png")
-				or f.to_lower().ends_with(".webp")
-				or f.to_lower().ends_with(".jpg")
-			):
-				var p := "res://assets/textures/stamps/%s" % f
-				var t: Texture2D = load(p)
-				if t:
-					var idx := editor.st_list.add_item(f.get_basename())
-					var icon_img := t.get_image()
-					icon_img.resize(32, 32, Image.INTERPOLATE_LANCZOS)
-					editor.st_list.set_item_icon(idx, ImageTexture.create_from_image(icon_img))
-					editor.st_list.set_item_metadata(idx, {"path": p})
-					draw_textures.append(t)
-					draw_tex_paths.append(p)
-		dir.list_dir_end()
+	var files := ResourceLoader.list_directory("res://assets/textures/stamps")
+	for file in files:
+		var is_dir := file[file.length() - 1] == "/"
+		var extension := file.split(".")[-1]
+		if not is_dir and extension in ["png", "webp", "jpg"]:
+			var path := "res://assets/textures/stamps".path_join(file)
+			var tex: Texture2D = load(path)
+			if tex:
+				var idx := editor.st_list.add_item(file.get_basename())
+				var icon_img := tex.get_image()
+				icon_img.resize(32, 32, Image.INTERPOLATE_LANCZOS)
+				editor.st_list.set_item_icon(idx, ImageTexture.create_from_image(icon_img))
+				editor.st_list.set_item_metadata(idx, {"path": path})
+				draw_textures.append(tex)
+				draw_tex_paths.append(path)
 
 
 ## Start freehand tool with current UI values.

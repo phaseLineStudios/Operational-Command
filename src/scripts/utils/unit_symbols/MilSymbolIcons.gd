@@ -15,23 +15,18 @@ static func _get_icon_generators() -> Dictionary:
 	if not _generators.is_empty():
 		return _generators
 
-	var dir := DirAccess.open(ICONS_PATH)
-	if dir == null:
-		LogService.error("Could not open directory: %s" % ICONS_PATH, "MilSymbolIcons.gd:20")
-		return _generators
-
-	dir.list_dir_begin()
-	var fname := dir.get_next()
-	while fname != "":
-		if not dir.current_is_dir() and fname.get_extension() == "gd":
-			var script := load(ICONS_PATH.path_join(fname)) as GDScript
+	var files := ResourceLoader.list_directory(ICONS_PATH)
+	for file in files:
+		var is_dir := file[file.length() - 1] == "/"
+		var extension := file.split(".")[-1]
+		if not is_dir and extension == "gd":
+			var script := load(ICONS_PATH.path_join(file)) as GDScript
 			if script:
 				var inst: Variant = script.new()
 				if inst is BaseMilSymbolIcon:
 					var unit_type: MilSymbol.UnitType = inst.get_type()
 					_generators[unit_type] = inst
-		fname = dir.get_next()
-	dir.list_dir_end()
+
 	return _generators
 
 
