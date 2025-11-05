@@ -124,7 +124,14 @@ func _recursive_collect_scenes(path: String, out: Array) -> void:
 		var extension := file.split(".")[-1]
 		if not is_dir and extension in ["tscn", "scn"]:
 			out.append(path.path_join(file))
-		elif is_dir and not (file.begins_with(".git") or file == ".godot" or file == ".import"):
+
+		if is_dir:
+			if (
+				file.begins_with(".git")
+				or file.begins_with(".godot")
+				or file.begins_with(".import")
+			):
+				continue
 			_recursive_collect_scenes(path.path_join(file), out)
 
 
