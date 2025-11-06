@@ -228,6 +228,29 @@ func plan_and_start(su: ScenarioUnit, dest_m: Vector2) -> bool:
 	return false
 
 
+## Plans and starts direct straight-line movement without pathfinding.
+## Defers start if the profile grid is still building.
+## [param su] ScenarioUnit to move.
+## [param dest_m] Destination in terrain meters.
+## [return] True if planned (or deferred), false on error.
+func plan_and_start_direct(su: ScenarioUnit, dest_m: Vector2) -> bool:
+	if su == null or _grid == null:
+		LogService.warning("unit or grid null", "MovementAdapter.gd")
+		return false
+	var p := su.unit.movement_profile
+	if not _grid.ensure_profile(p):
+		su.set_meta("_pending_start_dest", dest_m)
+		su.set_meta("_pending_start_profile", p)
+		su.set_meta("_pending_start_direct", true)
+		return true
+	_grid.use_profile(p)
+	if su.plan_direct_move(_grid, dest_m):
+		su.start_move(_grid)
+		return true
+	LogService.warning("plan_direct_move failed", "MovementAdapter.gd")
+	return false
+
+
 ## Starts any deferred moves whose profile just finished building.
 ## [param profile] Movement profile that became available.
 func _on_grid_ready(profile: int) -> void:
@@ -246,7 +269,17 @@ func _on_grid_ready(profile: int) -> void:
 			and int(su.get_meta("_pending_start_profile")) == profile
 		):
 			var dest_m: Vector2 = su.get_meta("_pending_start_dest")
+			var is_direct: bool = su.get_meta("_pending_start_direct", false)
 			su.erase_meta("_pending_start_profile")
 			su.erase_meta("_pending_start_dest")
-			if su.plan_move(_grid, dest_m):
+			su.erase_meta("_pending_start_direct")
+
+			# Use direct or normal pathfinding
+			var planned: bool = false
+			if is_direct:
+				planned = su.plan_direct_move(_grid, dest_m)
+			else:
+				planned = su.plan_move(_grid, dest_m)
+
+			if planned:
 				su.start_move(_grid)

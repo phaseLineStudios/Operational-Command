@@ -15,7 +15,7 @@ extends Resource
 @export_range(10.0, 2000.0, 5.0) var conceal_full_effect_range_m: float = 300.0
 
 ## LOS ray sample spacing (meters)
-@export_range(1.0, 50.0, 1.0) var los_raycast_step_m: float = 5.0
+@export_range(1.0, 50.0, 1.0) var los_raycast_step_m: float = 10.0
 ## Eye/target heights above ground (meters)
 @export var los_attacker_eye_h_m: float = 1.6
 @export var los_target_h_m: float = 1.2

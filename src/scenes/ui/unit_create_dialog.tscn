@@ -1,0 +1,495 @@
+[gd_scene load_steps=2 format=3 uid="uid://c7ms1i2uof7kp"]
+
+[ext_resource type="Script" uid="uid://bkrpswa310obj" path="res://scripts/editors/UnitCreateDialog.gd" id="1_wa3bu"]
+
+[node name="UnitCreateDialog" type="Window"]
+auto_translate_mode = 1
+oversampling_override = 1.0
+title = "Create Unit"
+position = Vector2i(325, 100)
+size = Vector2i(500, 500)
+script = ExtResource("1_wa3bu")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="IdLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Unique identifier"
+
+[node name="Id" type="LineEdit" parent="VBox/ScrollContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "e.g. us_unit_parent"
+
+[node name="TitleLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Unit Name"
+
+[node name="Title" type="LineEdit" parent="VBox/ScrollContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Name"
+
+[node name="CategoryLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Editor Category"
+
+[node name="Category" type="OptionButton" parent="VBox/ScrollContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="IconContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+folded = true
+title = "Icon"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/IconContainer"]
+visible = false
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="SizeLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Unit Size"
+
+[node name="UnitSize" type="OptionButton" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TypeLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Unit Type"
+
+[node name="UnitType" type="OptionButton" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="IconLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer"]
+layout_mode = 2
+text = "Icons"
+
+[node name="IconHBox" type="HBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="IconPreview" type="TextureRect" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer/IconHBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="EnemyIconPreview" type="TextureRect" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer/IconHBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NeutralIconPreview" type="TextureRect" parent="VBox/ScrollContainer/VBoxContainer/IconContainer/VBoxContainer/IconHBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RoleContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+folded = true
+title = "Selection Settings"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/RoleContainer"]
+visible = false
+layout_mode = 2
+
+[node name="RoleLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/RoleContainer/VBoxContainer"]
+layout_mode = 2
+text = "Role"
+
+[node name="Role" type="LineEdit" parent="VBox/ScrollContainer/VBoxContainer/RoleContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Role"
+
+[node name="SlotsLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/RoleContainer/VBoxContainer"]
+layout_mode = 2
+text = "Allowed Slots"
+
+[node name="SlotsList" type="PanelContainer" parent="VBox/ScrollContainer/VBoxContainer/RoleContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Scroll" type="ScrollContainer" parent="VBox/ScrollContainer/VBoxContainer/RoleContainer/VBoxContainer/SlotsList"]
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+
+[node name="SlotsVBox" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/RoleContainer/VBoxContainer/SlotsList/Scroll"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 3
+
+[node name="Slots" type="HBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/RoleContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SlotInput" type="LineEdit" parent="VBox/ScrollContainer/VBoxContainer/RoleContainer/VBoxContainer/Slots"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Slot Filter"
+
+[node name="SlotAdd" type="Button" parent="VBox/ScrollContainer/VBoxContainer/RoleContainer/VBoxContainer/Slots"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Add"
+
+[node name="CostLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/RoleContainer/VBoxContainer"]
+layout_mode = 2
+text = "Unit Cost"
+
+[node name="Cost" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/RoleContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 10000.0
+value = 100.0
+
+[node name="MetaContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+folded = true
+title = "Unit Meta"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer"]
+visible = false
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="StrengthLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Unit Strength"
+
+[node name="Strength" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1000.0
+value = 31.0
+suffix = "men"
+
+[node name="MoveProfileLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Movement Profile"
+
+[node name="MoveProfile" type="OptionButton" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="EngineerLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Is Engineer Troop"
+
+[node name="IsEngineer" type="CheckBox" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Can repair vehicles?"
+
+[node name="MedicalLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Is Medical Troop"
+
+[node name="IsMedical" type="CheckBox" parent="VBox/ScrollContainer/VBoxContainer/MetaContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Can medic injured?"
+
+[node name="StatsContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+folded = true
+title = "Unit Stats"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/StatsContainer"]
+visible = false
+layout_mode = 2
+
+[node name="AttackLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/StatsContainer/VBoxContainer"]
+layout_mode = 2
+text = "Attack"
+
+[node name="Attack" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/StatsContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+value = 20.0
+
+[node name="DefenseLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/StatsContainer/VBoxContainer"]
+layout_mode = 2
+text = "Defense"
+
+[node name="Defense" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/StatsContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+value = 10.0
+
+[node name="SpotLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/StatsContainer/VBoxContainer"]
+layout_mode = 2
+text = "Spotting Range"
+
+[node name="Spot" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/StatsContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 20000.0
+value = 800.0
+suffix = "m"
+
+[node name="RangeLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/StatsContainer/VBoxContainer"]
+layout_mode = 2
+text = "Engagement Range"
+
+[node name="Range" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/StatsContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 20000.0
+value = 400.0
+suffix = "m"
+
+[node name="MoraleLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/StatsContainer/VBoxContainer"]
+layout_mode = 2
+text = "Morale"
+
+[node name="Morale" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/StatsContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+value = 90.0
+suffix = "%"
+
+[node name="SpeedLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/StatsContainer/VBoxContainer"]
+layout_mode = 2
+text = "Movement Speed"
+
+[node name="Speed" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/StatsContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 2000.0
+value = 10.0
+suffix = "kph"
+
+[node name="EquipmentContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+folded = true
+title = "Equipment"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer"]
+visible = false
+layout_mode = 2
+
+[node name="EquipmentLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer"]
+layout_mode = 2
+text = "Equipment"
+
+[node name="EquipmentScroll" type="ScrollContainer" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/EquipmentScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="EquipmentList" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/EquipmentScroll/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="EquipmentHbox" type="HBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="EquipmentCategory" type="OptionButton" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/EquipmentHbox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="TypeLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/EquipmentHbox"]
+layout_mode = 2
+text = "Type"
+
+[node name="EquipmentType" type="LineEdit" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/EquipmentHbox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Type"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="AmountLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Amount"
+
+[node name="EquipmentAmount" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 10000.0
+value = 10.0
+
+[node name="EquipmentAmmoContainer" type="HBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/HBoxContainer/EquipmentAmmoContainer"]
+layout_mode = 2
+text = "Ammo"
+
+[node name="EquipmentAmmo" type="OptionButton" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/HBoxContainer/EquipmentAmmoContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EquipmentAdd" type="Button" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Add"
+
+[node name="HSeparator" type="HSeparator" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="AmmoLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer"]
+layout_mode = 2
+text = "Ammunition"
+
+[node name="AmmoContainer" type="GridContainer" parent="VBox/ScrollContainer/VBoxContainer/EquipmentContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+columns = 4
+
+[node name="SupplyContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+folded = true
+title = "Supply"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/SupplyContainer"]
+visible = false
+layout_mode = 2
+
+[node name="ThroughputLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/SupplyContainer/VBoxContainer"]
+layout_mode = 2
+text = "Throughput Supply"
+
+[node name="ThroughputScroll" type="ScrollContainer" parent="VBox/ScrollContainer/VBoxContainer/SupplyContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="VBox/ScrollContainer/VBoxContainer/SupplyContainer/VBoxContainer/ThroughputScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ThroughputList" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/SupplyContainer/VBoxContainer/ThroughputScroll/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ThroughputScroll2" type="HBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/SupplyContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TypeLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/SupplyContainer/VBoxContainer/ThroughputScroll2"]
+layout_mode = 2
+text = "Type"
+
+[node name="ThroughputType" type="LineEdit" parent="VBox/ScrollContainer/VBoxContainer/SupplyContainer/VBoxContainer/ThroughputScroll2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Type"
+
+[node name="AmountLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/SupplyContainer/VBoxContainer/ThroughputScroll2"]
+layout_mode = 2
+text = "Amount"
+
+[node name="ThroughputAmount" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/SupplyContainer/VBoxContainer/ThroughputScroll2"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 10000.0
+value = 10.0
+
+[node name="ThroughputAdd" type="Button" parent="VBox/ScrollContainer/VBoxContainer/SupplyContainer/VBoxContainer/ThroughputScroll2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Add"
+
+[node name="SupplyRateLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/SupplyContainer/VBoxContainer"]
+layout_mode = 2
+text = "Supply Rate"
+
+[node name="SupplyRate" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/SupplyContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1000.0
+value = 1.0
+suffix = "spl/s"
+
+[node name="SupplyRadiusLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/SupplyContainer/VBoxContainer"]
+layout_mode = 2
+text = "Supply Radius"
+
+[node name="SupplyRadius" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/SupplyContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1000.0
+value = 50.0
+suffix = "m"
+
+[node name="ActionRow" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="Close" type="Button" parent="VBox/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"
+
+[node name="Spacer" type="Control" parent="VBox/ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Save" type="Button" parent="VBox/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Save"
+
+[node name="IconFileDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+
+[node name="EnemyIconFileDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+
+[node name="ErrorDialog" type="AcceptDialog" parent="."]
+unique_name_in_owner = true

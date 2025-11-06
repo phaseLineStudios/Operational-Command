@@ -10,6 +10,11 @@ extends Node
 signal order_applied(order: Dictionary)
 ## Emitted when an order cannot be applied.
 signal order_failed(order: Dictionary, reason: String)
+## Emitted when a CUSTOM order is received (for mission-specific handling).
+## [br]Order dictionary contains: [code]custom_keyword[/code], [code]custom_full_text[/code],
+## [code]custom_metadata[/code].
+## [br]Connect to this signal to handle mission-specific voice commands that route as orders.
+signal custom_order_received(order: Dictionary)
 
 ## Map OrdersParser.OrderType enum indices to string tokens.
 const _TYPE_NAMES := {
@@ -21,7 +26,9 @@ const _TYPE_NAMES := {
 	5: "FIRE",
 	6: "REPORT",
 	7: "CANCEL",
-	8: "UNKNOWN"
+	8: "ENGINEER",
+	9: "CUSTOM",
+	10: "UNKNOWN"
 }
 
 ## Movement adapter used to plan and start moves.
@@ -30,6 +37,10 @@ const _TYPE_NAMES := {
 @export var los_adapter: LOSAdapter
 ## Combat controller used to set intent/targets and fire missions.
 @export var combat_controller: CombatController
+## Artillery controller used for indirect fire missions.
+@export var artillery_controller: ArtilleryController
+## Engineer controller used for engineer tasks (mines, demo, bridges).
+@export var engineer_controller: EngineerController
 ## Terrain renderer for grid/metric conversions.
 @export var terrain_renderer: TerrainRender
 
@@ -75,6 +86,10 @@ func apply(order: Dictionary) -> bool:
 			return _apply_fire(unit, order)
 		"REPORT":
 			return _apply_report(unit, order)
+		"ENGINEER":
+			return _apply_engineer(unit, order)
+		"CUSTOM":
+			return _apply_custom(unit, order)
 		_:
 			emit_signal("order_failed", order, "unsupported_type")
 			return false
@@ -92,7 +107,18 @@ func _apply_move(unit: ScenarioUnit, order: Dictionary) -> bool:
 	if dest == Vector2.ZERO:
 		emit_signal("order_failed", order, "move_destination_zero")
 		return false
-	if movement_adapter and movement_adapter.plan_and_start(unit, dest):
+
+	# Check if this is a direct move (straight line, no pathfinding)
+	var is_direct: bool = order.get("direct", false)
+	var success: bool = false
+
+	if movement_adapter:
+		if is_direct:
+			success = movement_adapter.plan_and_start_direct(unit, dest)
+		else:
+			success = movement_adapter.plan_and_start(unit, dest)
+
+	if success:
 		emit_signal("order_applied", order)
 		return true
 	emit_signal("order_failed", order, "move_plan_failed")
@@ -156,33 +182,68 @@ func _apply_recon(unit: ScenarioUnit, order: Dictionary) -> bool:
 	return false
 
 
-## FIRE: request fire mission if possible; else move to target unit.
+## FIRE: artillery indirect fire only (no direct fire or movement fallback).
 ## [param unit] Subject unit.
 ## [param order] Order dictionary.
 ## [return] `true` if applied, otherwise `false`.
 func _apply_fire(unit: ScenarioUnit, order: Dictionary) -> bool:
-	var target: ScenarioUnit = _resolve_target(order)
-	if target == null:
-		if combat_controller and combat_controller.has_method("set_engagement_intent"):
-			combat_controller.set_engagement_intent(unit, "fire")
-			emit_signal("order_applied", order)
-			return true
+	# FIRE order only works for artillery-capable units
+	if not artillery_controller:
+		LogService.error(
+			"Artillery controller is NULL! Cannot process FIRE orders.", "OrdersRouter.gd"
+		)
+		emit_signal("order_failed", order, "fire_not_artillery")
+		return false
+
+	if not artillery_controller.is_artillery_unit(unit.id):
+		emit_signal("order_failed", order, "fire_not_artillery")
+		return false
+
+	# Get destination from order (same as move orders)
+	var dest: Variant = _compute_destination(unit, order)
+	if dest == null or dest == Vector2.ZERO:
 		emit_signal("order_failed", order, "fire_missing_target")
 		return false
-	if combat_controller:
-		if combat_controller.has_method("request_fire_mission"):
-			combat_controller.request_fire_mission(unit, target)
-			emit_signal("order_applied", order)
-			return true
-		elif combat_controller.has_method("set_target"):
-			combat_controller.set_target(unit, target)
-			emit_signal("order_applied", order)
-			return true
-	if movement_adapter and movement_adapter.plan_and_start(unit, target.position_m):
+
+	# Get ammo type and rounds from order
+	var ammo_type: String = order.get("ammo_type", "ap")
+	var rounds: int = order.get("rounds", 1)
+
+	# Map generic ammo type to unit-specific ammo type
+	var available_types := artillery_controller.get_available_ammo_types(unit.id)
+	var full_ammo_type := ""
+
+	# Try to match ammo type to available types
+	for available in available_types:
+		if ammo_type == "ap" and available.ends_with("_AP"):
+			full_ammo_type = available
+			break
+		elif ammo_type == "smoke" and available.ends_with("_SMOKE"):
+			full_ammo_type = available
+			break
+		elif ammo_type == "illum" and available.ends_with("_ILLUM"):
+			full_ammo_type = available
+			break
+
+	# If no matching ammo type found, try to use first available AP type
+	if full_ammo_type == "":
+		for available in available_types:
+			if available.ends_with("_AP"):
+				full_ammo_type = available
+				break
+
+	# If still no ammo type, fail the order
+	if full_ammo_type == "":
+		emit_signal("order_failed", order, "fire_no_ammo")
+		return false
+
+	# Request fire mission
+	if artillery_controller.request_fire_mission(unit.id, dest, full_ammo_type, rounds):
 		emit_signal("order_applied", order)
 		return true
-	emit_signal("order_failed", order, "fire_unhandled")
-	return false
+	else:
+		emit_signal("order_failed", order, "fire_mission_rejected")
+		return false
 
 
 ## REPORT: informational pass-through.
@@ -190,6 +251,64 @@ func _apply_fire(unit: ScenarioUnit, order: Dictionary) -> bool:
 ## [param order] Order dictionary.
 ## [return] Always `true`.
 func _apply_report(_unit: ScenarioUnit, order: Dictionary) -> bool:
+	emit_signal("order_applied", order)
+	return true
+
+
+## ENGINEER: engineer task orders (mines, demo, bridges).
+## [param unit] Subject unit.
+## [param order] Order dictionary.
+## [return] `true` if applied, otherwise `false`.
+func _apply_engineer(unit: ScenarioUnit, order: Dictionary) -> bool:
+	# ENGINEER order only works for engineer-capable units
+	if not engineer_controller:
+		LogService.error(
+			"Engineer controller is NULL! Cannot process ENGINEER orders.", "OrdersRouter.gd"
+		)
+		emit_signal("order_failed", order, "engineer_controller_missing")
+		return false
+
+	if not engineer_controller.is_engineer_unit(unit.id):
+		emit_signal("order_failed", order, "engineer_not_capable")
+		return false
+
+	# Get destination from order (same as move orders)
+	var dest: Variant = _compute_destination(unit, order)
+	if dest == null or dest == Vector2.ZERO:
+		emit_signal("order_failed", order, "engineer_missing_target")
+		return false
+
+	# Get engineer task type from order
+	var task_type: String = order.get("engineer_task", "mine")
+
+	# Request engineer task (this queues the task, which will start when unit arrives)
+	if not engineer_controller.request_task(unit.id, task_type, dest):
+		emit_signal("order_failed", order, "engineer_task_rejected")
+		return false
+
+	# Move unit to destination (task will start when unit arrives)
+	if movement_adapter and movement_adapter.plan_and_start(unit, dest):
+		emit_signal("order_applied", order)
+		return true
+
+	# Movement failed, but task was queued (unit may already be at destination)
+	emit_signal("order_applied", order)
+	return true
+
+
+## CUSTOM: Emit signal for mission-specific handling. Does not apply standard routing.
+## Emits [signal custom_order_received] with full order dictionary for external handling.
+## [br][br]
+## [b]Order dictionary contains:[/b]
+## [br]- [code]custom_keyword: String[/code]
+## [br]- [code]custom_full_text: String[/code]
+## [br]- [code]custom_metadata: Dictionary[/code]
+## [br]- [code]raw: PackedStringArray[/code]
+## [param _unit] Subject unit (unused, but kept for consistency).
+## [param order] Custom order dictionary with custom_keyword and custom_metadata.
+## [return] Always returns [code]true[/code] (order is "accepted" but deferred to signal handlers).
+func _apply_custom(_unit: ScenarioUnit, order: Dictionary) -> bool:
+	emit_signal("custom_order_received", order)
 	emit_signal("order_applied", order)
 	return true
 

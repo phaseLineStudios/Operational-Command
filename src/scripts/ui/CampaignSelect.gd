@@ -17,12 +17,14 @@ const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 var _campaign_rows: Array[CampaignData] = []
 var _selected_campaign: CampaignData
 
-@onready var list_campaigns: ItemList = $"HBoxContainer/VBoxContainer/CampaignList"
-@onready var details_root: VBoxContainer = $"HBoxContainer/DetailsRoot"
-@onready var btn_continue_last: Button = $"HBoxContainer/DetailsRoot/Options/ContinueLast"
-@onready var btn_select_save: Button = $"HBoxContainer/DetailsRoot/Options/SelectSave"
-@onready var btn_new_save: Button = $"HBoxContainer/DetailsRoot/Options/NewSave"
-@onready var btn_back: Button = $"HBoxContainer/VBoxContainer/HBoxContainer/BackToMainMenu"
+@onready var list_campaigns: ItemList = %CampaignList
+@onready var details_root: PanelContainer = %DetailsRoot
+@onready var btn_continue_last: OCMenuButton = %ContinueLast
+@onready var btn_select_save: OCMenuButton = %SelectSave
+@onready var btn_new_save: OCMenuButton = %NewSave
+@onready var btn_back: OCMenuButton = %BackToMainMenu
+@onready var campaign_poster: TextureRect = %CampaignPoster
+@onready var campaign_desc: RichTextLabel = %CampaignDescription
 
 
 ## Init UI, populate list, connect signals.
@@ -60,17 +62,17 @@ func _populate_campaigns() -> void:
 ## Handle campaign selection; update details + show actions.
 func _on_campaign_selected(index: int) -> void:
 	_selected_campaign = _campaign_rows[index]
-	_update_details_placeholder(_selected_campaign)
+	_update_details(_selected_campaign)
 	_set_action_buttons_visible(true)
 
 
 ## Placeholder details update (to be replaced later).
-func _update_details_placeholder(campaign: CampaignData) -> void:
-	# TODO populate CampaignDetails UI later with real data
-	# For now, just update the placeholder label if present
-	var label := details_root.get_node_or_null("Panel/CampaignDetails/PlaceholderLabel") as Label
-	if label:
-		label.text = "CAMPAIGN DETAILS Placeholder\n\nSelected: %s" % [String(campaign.id)]
+func _update_details(campaign: CampaignData) -> void:
+	if campaign.preview != null:
+		campaign_poster.texture = campaign.preview
+	else:
+		campaign_poster.texture = null
+	campaign_desc.text = campaign.description
 
 
 ## Show/hide the three action buttons.

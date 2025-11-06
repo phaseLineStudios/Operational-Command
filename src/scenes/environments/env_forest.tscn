@@ -1,0 +1,57 @@
+[gd_scene load_steps=8 format=3 uid="uid://bwlvqqsapvnqw"]
+
+[ext_resource type="Script" uid="uid://466r2hsx0sun" path="res://scripts/sim/SceneEnvironment.gd" id="1_a18hc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7hg7v"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0, 0, 0.7490196)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fnomj"]
+material = SubResource("StandardMaterial3D_7hg7v")
+size = Vector3(3.3, 1.7, 3.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_b77up"]
+size = Vector3(0.2, 0.15, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7chd0"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0, 0, 1, 0.7490196)
+
+[sub_resource type="PrismMesh" id="PrismMesh_cxntu"]
+size = Vector3(0.3, 0.2, 0.15)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fnomj"]
+albedo_color = Color(0.21995509, 0.36228085, 0.15907207, 1)
+
+[node name="EnvForest" type="Node3D"]
+script = ExtResource("1_a18hc")
+
+[node name="Helpers" type="Node3D" parent="."]
+unique_name_in_owner = true
+metadata/_edit_lock_ = true
+
+[node name="TentShape" type="MeshInstance3D" parent="Helpers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8550242, 0)
+mesh = SubResource("BoxMesh_fnomj")
+skeleton = NodePath("../..")
+metadata/_edit_lock_ = true
+
+[node name="TentDoorArrow" type="MeshInstance3D" parent="Helpers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5525934, -1.9004143)
+mesh = SubResource("BoxMesh_b77up")
+surface_material_override/0 = SubResource("StandardMaterial3D_7chd0")
+metadata/_edit_lock_ = true
+
+[node name="ArrowHead" type="MeshInstance3D" parent="Helpers/TentDoorArrow"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 3.3228877e-09, -0.20120525)
+mesh = SubResource("PrismMesh_cxntu")
+surface_material_override/0 = SubResource("StandardMaterial3D_7chd0")
+metadata/_edit_lock_ = true
+
+[node name="Content" type="Node" parent="."]
+
+[node name="Ground" type="CSGBox3D" parent="Content"]
+size = Vector3(50, 0.001, 50)
+material = SubResource("StandardMaterial3D_fnomj")

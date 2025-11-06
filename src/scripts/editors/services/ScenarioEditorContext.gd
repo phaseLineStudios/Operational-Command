@@ -22,6 +22,8 @@ var unit_category_opt: OptionButton
 var unit_search: LineEdit
 var unit_faction_friend: Button
 var unit_faction_enemy: Button
+var unit_create_btn: Button
+var unit_create_dlg: UnitCreateDialog
 
 var task_list: ItemList
 var trigger_list: ItemList

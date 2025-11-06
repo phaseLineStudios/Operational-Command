@@ -46,6 +46,8 @@ enum ScenarioDifficulty { EASY, NORMAL, HARD }
 @export_range(0.0, 23.0, 1.0) var hour: int = 12
 ## Minute of the hour
 @export_range(0.0, 59.0, 1.0) var minute: int = 0
+## Seconds
+@export_range(0.0, 59.0, 1.0) var second: int = 0
 
 @export_category("Units")
 ## Total points available to the player to deploy units
@@ -72,6 +74,8 @@ enum ScenarioDifficulty { EASY, NORMAL, HARD }
 @export var tasks: Array[ScenarioTask] = []
 ## Drawings or map overlays associated with the scenario
 @export var drawings: Array = []
+## Custom voice commands for this mission
+@export var custom_commands: Array[CustomCommand] = []
 
 var preview: Texture2D
 
@@ -98,12 +102,22 @@ func serialize() -> Dictionary:
 		if task is ScenarioTask:
 			placed_tasks.append(task.serialize())
 
+	var placed_drawings: Array = []
+	for d in drawings:
+		if d is ScenarioDrawing:
+			placed_drawings.append(d.serialize())
+
+	var placed_custom_commands: Array = []
+	for cmd in custom_commands:
+		if cmd is CustomCommand:
+			placed_custom_commands.append(cmd.serialize())
+
 	return {
 		"id": id,
 		"title": title,
 		"description": description,
 		"preview_path": preview_path,
-		"terrain_path": ContentDB.res_path_or_null(terrain),
+		"terrain_id": terrain.terrain_id,
 		"briefing": briefing.serialize() as Variant if briefing else null as Variant,
 		"difficulty": int(difficulty),
 		"map_position": _vec2_to_dict(map_position),
@@ -123,7 +137,8 @@ func serialize() -> Dictionary:
 			"units": placed_units,
 			"triggers": placed_triggers,
 			"tasks": placed_tasks,
-			"drawings": drawings
+			"drawings": placed_drawings,
+			"custom_commands": placed_custom_commands
 		}
 	}
 
@@ -139,11 +154,9 @@ static func deserialize(json: Variant) -> ScenarioData:
 	s.description = json.get("description", s.description)
 	s.preview_path = json.get("preview_path", s.preview_path)
 
-	var terr_path: Variant = json.get("terrain_path", null)
-	if typeof(terr_path) == TYPE_STRING and terr_path != "":
-		var terr: Variant = ContentDB.load_res(String(terr_path))
-		if terr is TerrainData:
-			s.terrain = terr
+	var terr_id: Variant = json.get("terrain_id", null)
+	if typeof(terr_id) == TYPE_STRING and terr_id != "":
+		s.terrain = ContentDB.get_terrain(terr_id)
 
 	var brief_val: Variant = json.get("briefing", null)
 	if brief_val != null:
@@ -202,7 +215,23 @@ static func deserialize(json: Variant) -> ScenarioData:
 				scenario_tasks.append(ScenarioTask.deserialize(task))
 			s.tasks = scenario_tasks
 
-		s.drawings = content.get("drawings", s.drawings)
+		var placed_drawings: Array = content.get("drawings", [])
+		if typeof(placed_drawings) == TYPE_ARRAY:
+			var out: Array = []
+			for raw in placed_drawings:
+				var d := ScenarioDrawing.deserialize(raw)
+				if d != null:
+					out.append(d)
+			s.drawings = out
+
+		var placed_custom_commands: Array = content.get("custom_commands", [])
+		if typeof(placed_custom_commands) == TYPE_ARRAY:
+			var cmds: Array[CustomCommand] = []
+			for raw in placed_custom_commands:
+				var cmd := CustomCommand.deserialize(raw)
+				if cmd != null:
+					cmds.append(cmd)
+			s.custom_commands = cmds
 
 	if typeof(s.preview_path) == TYPE_STRING and s.preview_path != "":
 		var tex := load(s.preview_path)

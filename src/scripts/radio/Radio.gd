@@ -5,10 +5,18 @@ extends Node
 ## Plays squelch/static, shows UI state, and opens/closes the mic path to the
 ## speech recognizer while PTT is active.
 
+## Emitted when PTT is pressed (radio transmission starts).
 signal radio_on
+## Emitted when PTT is released (radio transmission ends).
 signal radio_off
+## Emitted during recognition with partial/interim transcription.
 signal radio_partial(text: String)
+## Emitted when recognition completes with final transcription.
 signal radio_result(text: String)
+## Emitted with raw command text before parsing (for custom trigger matching).
+## Connected to [TriggerEngine] via [method TriggerEngine.bind_radio] to make
+## text available in trigger conditions via [method TriggerAPI.last_radio_command].
+signal radio_raw_command(text: String)
 
 @export var parser: OrdersParser
 
@@ -41,6 +49,7 @@ func _unhandled_input(event: InputEvent) -> void:
 ## TODO Remove this
 func _on_result(t):
 	LogService.trace("Heard: %s" % t, "Radio.gd:39")
+	emit_signal("radio_raw_command", t)
 	emit_signal("radio_result", t)
 
 

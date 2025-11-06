@@ -5,7 +5,7 @@
 [node name="SlotConfigDialog" type="Window"]
 auto_translate_mode = 1
 oversampling_override = 1.0
-title = "Playable Slot"
+title = "Edit: Playable Slot"
 position = Vector2i(325, 175)
 size = Vector2i(500, 300)
 script = ExtResource("1_nsms8")
@@ -17,61 +17,135 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="KeyLabel" type="Label" parent="VBox"]
-layout_mode = 2
-text = "Slot ID"
-
-[node name="Key" type="LineEdit" parent="VBox"]
-unique_name_in_owner = true
-layout_mode = 2
-placeholder_text = "Unique Slot ID"
-
-[node name="TitleLabel" type="Label" parent="VBox"]
-layout_mode = 2
-text = "Slot Title"
-
-[node name="Title" type="LineEdit" parent="VBox"]
-unique_name_in_owner = true
-layout_mode = 2
-placeholder_text = "Slot Title"
-
-[node name="CallsignLabel" type="Label" parent="VBox"]
-layout_mode = 2
-text = "Slot Callsign"
-
-[node name="Callsign" type="LineEdit" parent="VBox"]
-unique_name_in_owner = true
-layout_mode = 2
-placeholder_text = "Slot Callsign"
-
-[node name="RolesLabel" type="Label" parent="VBox"]
-layout_mode = 2
-text = "Role Filter"
-
-[node name="RoleList" type="PanelContainer" parent="VBox"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBox"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Scroll" type="ScrollContainer" parent="VBox/RoleList"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="InitContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+title = "Slot Init"
+
+[node name="GridContainer" type="GridContainer" parent="VBox/ScrollContainer/VBoxContainer/InitContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="KeyLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/InitContainer/GridContainer"]
+layout_mode = 2
+text = "Slot ID"
+
+[node name="Key" type="LineEdit" parent="VBox/ScrollContainer/VBoxContainer/InitContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Required"
+
+[node name="TitleLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/InitContainer/GridContainer"]
+layout_mode = 2
+text = "Slot Title"
+
+[node name="Title" type="LineEdit" parent="VBox/ScrollContainer/VBoxContainer/InitContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Slot Title"
+
+[node name="FoldableContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+title = "Slot Transformation"
+
+[node name="GridContainer" type="GridContainer" parent="VBox/ScrollContainer/VBoxContainer/FoldableContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="PositionLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/FoldableContainer/GridContainer"]
+layout_mode = 2
+text = "Position"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/FoldableContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="XLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/FoldableContainer/GridContainer/HBoxContainer"]
+layout_mode = 2
+text = "X:"
+
+[node name="PositionX" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/FoldableContainer/GridContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -99999.0
+max_value = 99999.0
+step = 10.0
+value = 1.0
+
+[node name="YLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/FoldableContainer/GridContainer/HBoxContainer"]
+layout_mode = 2
+text = "Y:"
+
+[node name="PositionY" type="SpinBox" parent="VBox/ScrollContainer/VBoxContainer/FoldableContainer/GridContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -99999.0
+max_value = 99999.0
+step = 10.0
+value = 1.0
+
+[node name="AttributeContainer" type="FoldableContainer" parent="VBox/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+title = "Slot Attributes"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/AttributeContainer"]
 layout_mode = 2
 
-[node name="RoleVBox" type="VBoxContainer" parent="VBox/RoleList/Scroll"]
+[node name="GridContainer" type="GridContainer" parent="VBox/ScrollContainer/VBoxContainer/AttributeContainer/VBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="CallsignLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/AttributeContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Slot Callsign"
+
+[node name="Callsign" type="LineEdit" parent="VBox/ScrollContainer/VBoxContainer/AttributeContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Slot Callsign"
+
+[node name="RolesLabel" type="Label" parent="VBox/ScrollContainer/VBoxContainer/AttributeContainer/VBoxContainer"]
+layout_mode = 2
+text = "Role Filter"
+
+[node name="RoleList" type="PanelContainer" parent="VBox/ScrollContainer/VBoxContainer/AttributeContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Scroll" type="ScrollContainer" parent="VBox/ScrollContainer/VBoxContainer/AttributeContainer/VBoxContainer/RoleList"]
+layout_mode = 2
+
+[node name="RoleVBox" type="VBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/AttributeContainer/VBoxContainer/RoleList/Scroll"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 3
 
-[node name="Roles" type="HBoxContainer" parent="VBox"]
+[node name="Roles" type="HBoxContainer" parent="VBox/ScrollContainer/VBoxContainer/AttributeContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="RoleInput" type="LineEdit" parent="VBox/Roles"]
+[node name="RoleInput" type="LineEdit" parent="VBox/ScrollContainer/VBoxContainer/AttributeContainer/VBoxContainer/Roles"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Role Filter"
 
-[node name="RoleAdd" type="Button" parent="VBox/Roles"]
+[node name="RoleAdd" type="Button" parent="VBox/ScrollContainer/VBoxContainer/AttributeContainer/VBoxContainer/Roles"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Add"

@@ -1,13 +1,89 @@
-[gd_scene load_steps=2 format=3 uid="uid://qsm7784yjbw7"]
+[gd_scene load_steps=13 format=3 uid="uid://qsm7784yjbw7"]
 
 [ext_resource type="Script" uid="uid://dweep418akwjf" path="res://scripts/editors/WeatherDialog.gd" id="1_fr0su"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fr0su"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7hnq2"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_detail = 5
+
+[sub_resource type="DPITexture" id="DPITexture_fr0su"]
+
+[sub_resource type="DPITexture" id="DPITexture_7hnq2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_am0qc"]
+content_margin_left = 4.0
+content_margin_top = 15.0
+content_margin_right = 4.0
+content_margin_bottom = 15.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_detail = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6nqhp"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.4)
+corner_detail = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cti51"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.75)
+corner_detail = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_twfqr"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.101960786, 0.101960786, 0.101960786, 0)
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rcahk"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.101960786, 0.101960786, 0.101960786, 0)
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t4q7u"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.75)
+corner_detail = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n6aq0"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.75)
+corner_detail = 6
 
 [node name="WeatherDialog" type="Window"]
 auto_translate_mode = 1
 oversampling_override = 1.0
-title = "Change Weather"
-position = Vector2i(325, 200)
-size = Vector2i(500, 300)
+title = "Attributes: Environment"
+position = Vector2i(325, 125)
+size = Vector2i(500, 400)
 script = ExtResource("1_fr0su")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -17,61 +93,227 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="RainLabel" type="Label" parent="VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 layout_mode = 2
-text = "Rain (mm/h)"
+size_flags_vertical = 3
 
-[node name="Rain" type="SpinBox" parent="VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="DateContainer" type="FoldableContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+title = "Date"
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer/DateContainer"]
+layout_mode = 2
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="Datelabel" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer/DateContainer/GridContainer"]
+layout_mode = 2
+text = "Date"
+
+[node name="DateBox" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer/DateContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Year" type="OptionButton" parent="VBoxContainer/ScrollContainer/VBoxContainer/DateContainer/GridContainer/DateBox"]
 unique_name_in_owner = true
 layout_mode = 2
-max_value = 50.0
-step = 0.1
-suffix = "mm/h"
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_fr0su")
 
-[node name="FogLabel" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-text = "Fog Visibility in meters"
-
-[node name="Fog" type="SpinBox" parent="VBoxContainer"]
+[node name="Month" type="OptionButton" parent="VBoxContainer/ScrollContainer/VBoxContainer/DateContainer/GridContainer/DateBox"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_7hnq2")
+
+[node name="Day" type="OptionButton" parent="VBoxContainer/ScrollContainer/VBoxContainer/DateContainer/GridContainer/DateBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_7hnq2")
+
+[node name="TimeLabel" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer/DateContainer/GridContainer"]
+layout_mode = 2
+text = "Time"
+
+[node name="TimeBox" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer/DateContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TimeSlider" type="HSlider" parent="VBoxContainer/ScrollContainer/VBoxContainer/DateContainer/GridContainer/TimeBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_icons/grabber = SubResource("DPITexture_fr0su")
+theme_override_icons/grabber_highlight = SubResource("DPITexture_7hnq2")
+theme_override_styles/slider = SubResource("StyleBoxFlat_am0qc")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_6nqhp")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_cti51")
+max_value = 86400.0
+step = 600.0
+value = 43200.0
+
+[node name="TimeEdit" type="PanelContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer/DateContainer/GridContainer/TimeBox"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer/DateContainer/GridContainer/TimeBox/TimeEdit"]
+layout_mode = 2
+
+[node name="Hour" type="LineEdit" parent="VBoxContainer/ScrollContainer/VBoxContainer/DateContainer/GridContainer/TimeBox/TimeEdit/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/minimum_character_width = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_twfqr")
+text = "12"
+alignment = 1
+max_length = 2
+emoji_menu_enabled = false
+
+[node name="HMLabel" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer/DateContainer/GridContainer/TimeBox/TimeEdit/HBoxContainer"]
+layout_mode = 2
+text = ":"
+
+[node name="Minute" type="LineEdit" parent="VBoxContainer/ScrollContainer/VBoxContainer/DateContainer/GridContainer/TimeBox/TimeEdit/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/minimum_character_width = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_rcahk")
+text = "00"
+alignment = 1
+max_length = 2
+emoji_menu_enabled = false
+
+[node name="MSLabel" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer/DateContainer/GridContainer/TimeBox/TimeEdit/HBoxContainer"]
+layout_mode = 2
+text = ":"
+
+[node name="Second" type="LineEdit" parent="VBoxContainer/ScrollContainer/VBoxContainer/DateContainer/GridContainer/TimeBox/TimeEdit/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/minimum_character_width = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_rcahk")
+text = "00"
+alignment = 1
+max_length = 2
+emoji_menu_enabled = false
+
+[node name="FogContainer" type="FoldableContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+title = "Fog"
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer/FogContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="FogLabel" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer/FogContainer/GridContainer"]
+layout_mode = 2
+text = "Visibility"
+
+[node name="FogBox" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer/FogContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FogSlider" type="HSlider" parent="VBoxContainer/ScrollContainer/VBoxContainer/FogContainer/GridContainer/FogBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+tooltip_text = "Visibility in meters"
+theme_override_icons/grabber = SubResource("DPITexture_fr0su")
+theme_override_icons/grabber_highlight = SubResource("DPITexture_7hnq2")
+theme_override_styles/slider = SubResource("StyleBoxFlat_am0qc")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_6nqhp")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_t4q7u")
+max_value = 10000.0
+step = 100.0
+value = 8000.0
+
+[node name="Fog" type="SpinBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/FogContainer/GridContainer/FogBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+tooltip_text = "Visibility in meters"
 max_value = 10000.0
 value = 8000.0
 suffix = "m"
 
-[node name="WindLabel" type="Label" parent="VBoxContainer"]
+[node name="RainContainer" type="FoldableContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
-text = "Wind"
+title = "Rain"
 
-[node name="Wind" type="HBoxContainer" parent="VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer/RainContainer"]
 layout_mode = 2
+columns = 2
 
-[node name="DirectionLabel" type="Label" parent="VBoxContainer/Wind"]
+[node name="RainLabel" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer/RainContainer/GridContainer"]
+layout_mode = 2
+text = "Rain"
+
+[node name="RainBox" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer/RainContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RainSlider" type="HSlider" parent="VBoxContainer/ScrollContainer/VBoxContainer/RainContainer/GridContainer/RainBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+tooltip_text = "millimeters per hour"
+theme_override_icons/grabber = SubResource("DPITexture_fr0su")
+theme_override_icons/grabber_highlight = SubResource("DPITexture_7hnq2")
+theme_override_styles/slider = SubResource("StyleBoxFlat_am0qc")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_6nqhp")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_n6aq0")
+max_value = 50.0
+step = 0.1
+
+[node name="Rain" type="SpinBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/RainContainer/GridContainer/RainBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+tooltip_text = "millimeters per hour"
+max_value = 50.0
+step = 0.1
+suffix = "mm/h"
+
+[node name="WindContainer" type="FoldableContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+title = "Wind"
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer/WindContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="DirectionLabel" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer/WindContainer/GridContainer"]
 layout_mode = 2
 text = "Direction"
 
-[node name="WindDir" type="SpinBox" parent="VBoxContainer/Wind"]
+[node name="WindDir" type="SpinBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/WindContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 max_value = 360.0
 suffix = "°"
 
-[node name="SpeedLabel" type="Label" parent="VBoxContainer/Wind"]
+[node name="SpeedLabel" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer/WindContainer/GridContainer"]
 layout_mode = 2
 text = "Speed"
 
-[node name="WindSpeed" type="SpinBox" parent="VBoxContainer/Wind"]
+[node name="WindSpeed" type="SpinBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/WindContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 max_value = 110.0
 step = 0.5
 value = 1.0
 suffix = "m/s"
-
-[node name="Spacer" type="Control" parent="VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 
 [node name="ActionRow" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -79,7 +321,7 @@ layout_mode = 2
 [node name="Close" type="Button" parent="VBoxContainer/ActionRow"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Close"
+text = "Cancel"
 
 [node name="Spacer" type="Control" parent="VBoxContainer/ActionRow"]
 layout_mode = 2

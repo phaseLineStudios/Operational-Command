@@ -1,9 +1,12 @@
-[gd_scene load_steps=59 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=109 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
 [ext_resource type="Script" uid="uid://d0ojagsd85iyf" path="res://scripts/ui/HQTable.gd" id="1_qgda6"]
+[ext_resource type="PackedScene" uid="uid://xp0rbo1drhvx" path="res://assets/models/timer/Timer.glb" id="2_2llyq"]
+[ext_resource type="Script" uid="uid://4htsynbphlw0" path="res://scripts/core/TimerController.gd" id="3_2llyq"]
 [ext_resource type="Script" uid="uid://dn828tsljtrki" path="res://scripts/core/Camera.gd" id="3_3f477"]
+[ext_resource type="PackedScene" uid="uid://gfdfc6v4mqv6" path="res://assets/models/clipboard/Clipboard.glb" id="4_fhiww"]
 [ext_resource type="Script" uid="uid://0r8k717de5os" path="res://scripts/core/PlayerInteraction.gd" id="4_py2wd"]
 [ext_resource type="Script" uid="uid://6xtsg3rqhc8t" path="res://scripts/core/MapController.gd" id="5_lmes1"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="6_cx6my"]
@@ -13,24 +16,36 @@
 [ext_resource type="Script" uid="uid://bxw82utaedlvn" path="res://scripts/radio/OrdersParser.gd" id="9_415kk"]
 [ext_resource type="Script" uid="uid://be785qai04d2g" path="res://scripts/sim/adapters/MovementAdapter.gd" id="9_fera7"]
 [ext_resource type="Script" uid="uid://dy2uex65i3y4m" path="res://scripts/sim/adapters/CombatAdapter.gd" id="9_vxnyp"]
+[ext_resource type="Shader" uid="uid://wfdnibuafvo6" path="res://assets/shaders/FilmGrain.gdshader" id="10_itljb"]
 [ext_resource type="Script" uid="uid://dq8m3cwvv276y" path="res://scripts/sim/Combat.gd" id="10_of8da"]
 [ext_resource type="Script" uid="uid://ckdlg61462pgb" path="res://scripts/sim/OrdersRouter.gd" id="11_tixey"]
-[ext_resource type="Script" uid="uid://bct80my556v84" path="res://scripts/radio/WordListUpdater.gd" id="12_4otl8"]
 [ext_resource type="Script" uid="uid://c3rgrbya520ur" path="res://scripts/sim/systems/AmmoSystem.gd" id="12_lrkar"]
 [ext_resource type="Script" uid="uid://c5dqpttm5xyed" path="res://scripts/sim/LOS.gd" id="13_qgda6"]
 [ext_resource type="Script" uid="uid://cw4tt3twmh4gk" path="res://scripts/sim/adapters/LOSAdapter.gd" id="14_415kk"]
 [ext_resource type="Script" uid="uid://brp222cgifhj0" path="res://scripts/sim/systems/FuelSystem.gd" id="14_hvywg"]
 [ext_resource type="Script" uid="uid://bxi60at4j0nrr" path="res://scripts/sim/scenario/TriggerEngine.gd" id="16_rdwew"]
 [ext_resource type="Script" uid="uid://dnnu3w3b3j5rk" path="res://scripts/data/FuelProfile.gd" id="16_yatot"]
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_yqfno"]
-size = Vector2(10, 30)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p1n4g"]
-albedo_color = Color(0.103343, 0.276828, 0.0129619, 1)
-
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ge0qv"]
-data = PackedVector3Array(5, 0, 15, -5, 0, 15, 5, 0, -15, -5, 0, 15, -5, 0, -15, 5, 0, -15)
+[ext_resource type="FontFile" uid="uid://cxbhb0lo85wr0" path="res://assets/fonts/dseg7/DSEG7Classic-Bold.ttf" id="23_nfu8j"]
+[ext_resource type="Script" uid="uid://ch73kyybwrkb8" path="res://scripts/data/AmmoProfile.gd" id="24_jjp33"]
+[ext_resource type="Texture2D" uid="uid://cww2l5lebx4nn" path="res://assets/textures/ui/button_pause.png" id="24_l12u7"]
+[ext_resource type="Texture2D" uid="uid://g1tchqqnd2wx" path="res://assets/textures/ui/button_play.png" id="25_k8ks5"]
+[ext_resource type="Texture2D" uid="uid://c5ch0odwq6o64" path="res://assets/textures/ui/button_skip.png" id="26_4ip4k"]
+[ext_resource type="Script" uid="uid://7o20krixdmt5" path="res://scripts/core/DrawingController.gd" id="27_cdjkm"]
+[ext_resource type="PackedScene" uid="uid://0v7ebxx3jxi2" path="res://scenes/ui/radio_subtitles.tscn" id="27_subtitles"]
+[ext_resource type="PackedScene" uid="uid://b7u4ajeh13tpn" path="res://scenes/ui/loading_screen.tscn" id="28_loading"]
+[ext_resource type="Script" uid="uid://cldkj080ext62" path="res://scripts/sim/UnitCounterController.gd" id="28_wrosp"]
+[ext_resource type="PackedScene" uid="uid://db2miy3a6hjke" path="res://scenes/ui/mission_dialog.tscn" id="29_dialog"]
+[ext_resource type="Script" uid="uid://bnus1tqft6rms" path="res://scripts/radio/UnitVoiceResponses.gd" id="30_voices"]
+[ext_resource type="Script" uid="uid://cpcrrfahha6bx" path="res://scripts/radio/UnitAutoResponses.gd" id="31_auto_voices"]
+[ext_resource type="Script" uid="uid://d1c2ojsjf1fws" path="res://scripts/audio/RadioSignalModulator.gd" id="32_modulator"]
+[ext_resource type="Script" uid="uid://0xd5ojxkkl4q" path="res://scripts/sim/systems/ArtilleryController.gd" id="33_66vc6"]
+[ext_resource type="PackedScene" uid="uid://bnexhgtx3llph" path="res://scenes/ui/counter_config_dialog.tscn" id="33_bsy1h"]
+[ext_resource type="Script" uid="uid://ckqvusamktt4" path="res://scripts/sim/systems/EngineerController.gd" id="34_1yvtb"]
+[ext_resource type="Shader" uid="uid://5d11ompav57u" path="res://assets/shaders/SkyShader.gdshader" id="36_66gqg"]
+[ext_resource type="Script" uid="uid://f0yaq3wflq5" path="res://scripts/sim/EnvironmentController.gd" id="36_c0crp"]
+[ext_resource type="Script" uid="uid://mjmvtp2w61ri" path="res://scripts/ui/PostProcessController.gd" id="36_yef6r"]
+[ext_resource type="Shader" uid="uid://csoyxm10cdmqn" path="res://assets/shaders/general.gdshader" id="37_gaccj"]
+[ext_resource type="Script" uid="uid://d33v0jsmojsg1" path="res://scripts/sim/SkyPreset.gd" id="44_hovgm"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qevx8"]
 size = Vector3(1, 0.75, 0.7)
@@ -41,8 +56,15 @@ size = Vector3(1, 0.75, 0.7)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3f477"]
 albedo_color = Color(0.375626, 0.28718, 0.13782, 1)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_cdjkm"]
+size = Vector3(0.2, 0.12, 0.12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wrosp"]
+size = Vector3(0.2, 0.12, 0.12)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ge8rp"]
-shading_mode = 0
+disable_ambient_light = true
+texture_filter = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_p1n4g"]
 material = SubResource("StandardMaterial3D_ge8rp")
@@ -54,24 +76,18 @@ size = Vector3(0.273, 0.1, 0.273)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lmes1"]
 albedo_color = Color(0.295867, 0.295866, 0.295866, 1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_3f477"]
-size = Vector3(0.15, 0.075, 0.1)
-
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_cx6my"]
 rough = true
 absorbent = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cx6my"]
-size = Vector3(0.12, 0.005, 0.18)
-
-[sub_resource type="BoxMesh" id="BoxMesh_lmes1"]
-size = Vector3(0.12, 0.005, 0.18)
+size = Vector3(0.115510255, 0.0025, 0.17024414)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_uk27s"]
-size = Vector3(0.12, 0.005, 0.18)
+size = Vector3(0.115510255, 0.0025, 0.17024414)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ge8rp"]
-size = Vector3(0.12, 0.005, 0.18)
+size = Vector3(0.115510255, 0.0025, 0.17024414)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_vxnyp"]
 size = Vector3(0.12, 0.005, 0.15)
@@ -150,19 +166,178 @@ size = Vector2(0.75, 0.35)
 script = ExtResource("16_yatot")
 metadata/_custom_type_script = "uid://dnnu3w3b3j5rk"
 
+[sub_resource type="Resource" id="Resource_gaccj"]
+script = ExtResource("24_jjp33")
+metadata/_custom_type_script = "uid://ch73kyybwrkb8"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_66gqg"]
+shader = ExtResource("36_66gqg")
+shader_parameter/base_color = Color(0.204346, 0.344014, 0.5625, 1)
+shader_parameter/scatter_color = Color(1, 1, 1, 1)
+shader_parameter/scatter_color_2 = Color(1, 1, 1, 1)
+shader_parameter/b_anim_clouds = true
+shader_parameter/b_anim_stars = true
+shader_parameter/sun_radius = 0.0003
+shader_parameter/sun_edge_blur = 3600.0
+shader_parameter/sun_disc_color = Color(0.737255, 0.694118, 0.603922, 1)
+shader_parameter/sun_glow_color = Color(1, 0.955033, 0.827864, 1)
+shader_parameter/sunlight_color = Vector3(0, 0, 0)
+shader_parameter/sun_glow_intensity = 0.45
+shader_parameter/moon_radius = 0.0003
+shader_parameter/moon_edge_blur = 10000.0
+shader_parameter/moon_glow_color = Color(1, 1, 1, 0)
+shader_parameter/moon_glow_intensity = 0.8
+shader_parameter/base_cloud_color = Color(1, 1, 1, 1)
+shader_parameter/cloud_density = 4.25
+shader_parameter/mg_size = 0.92
+shader_parameter/cloud_alpha = 1.0
+shader_parameter/cloud_speed = 0.0003
+shader_parameter/horizon_fog_color = Color(0.82882583, 0.9191148, 0.9999997, 1)
+shader_parameter/horizon_alpha = 1.0
+shader_parameter/horizon_size = 3.0
+shader_parameter/star_color = Color(0.43, 0.55, 0.91, 1)
+shader_parameter/star_brightness = 0.2
+shader_parameter/twinkle_speed = 0.025
+shader_parameter/twinkle_scale = 4.0
+shader_parameter/star_resolution = 1.0
+shader_parameter/star_speed = 0.002
+
+[sub_resource type="Sky" id="Sky_nq7cy"]
+sky_material = SubResource("ShaderMaterial_66gqg")
+process_mode = 3
+
+[sub_resource type="Environment" id="Environment_idixg"]
+background_mode = 2
+background_energy_multiplier = 0.75
+sky = SubResource("Sky_nq7cy")
+ambient_light_source = 3
+ambient_light_sky_contribution = 0.5
+reflected_light_source = 2
+tonemap_mode = 3
+tonemap_exposure = 0.75
+ssr_enabled = true
+ssao_enabled = true
+sdfgi_enabled = true
+sdfgi_use_occlusion = true
+sdfgi_min_cell_size = 1.953125
+glow_enabled = true
+glow_intensity = 0.6
+glow_bloom = 0.04
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0042
+adjustment_enabled = true
+adjustment_contrast = 1.05
+adjustment_saturation = 0.9
+
+[sub_resource type="Gradient" id="Gradient_d51i2"]
+offsets = PackedFloat32Array(0.419118, 0.553191, 0.601064, 0.691489)
+colors = PackedColorArray(0.0601829, 0.0849014, 0.199897, 1, 0.381723, 0.127307, 0.10311, 1, 0.638549, 0.335553, 0.0995967, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_3g2ag"]
+gradient = SubResource("Gradient_d51i2")
+
+[sub_resource type="Gradient" id="Gradient_ylwct"]
+offsets = PackedFloat32Array(0.3125, 0.414239, 0.469256, 0.574468, 0.803191)
+colors = PackedColorArray(0.0145395, 0.0244694, 0.0874464, 1, 0.0949225, 0.045259, 0.27951, 1, 0.334622, 0.303664, 0.453753, 1, 0.792964, 0.761777, 0.932676, 1, 0.204346, 0.344014, 0.5625, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_018ci"]
+gradient = SubResource("Gradient_ylwct")
+
+[sub_resource type="Gradient" id="Gradient_tmt0o"]
+offsets = PackedFloat32Array(0.174757, 0.475728, 0.660194, 0.824468, 1)
+colors = PackedColorArray(0.0166131, 0.0263546, 0.101967, 1, 0.168694, 0.216311, 0.435438, 1, 0.916989, 0.704468, 0.478476, 1, 0.684128, 0.761883, 0.794691, 1, 0.828826, 0.919115, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_os6q3"]
+gradient = SubResource("Gradient_tmt0o")
+
+[sub_resource type="Gradient" id="Gradient_6k7bt"]
+offsets = PackedFloat32Array(0.482759, 0.612069)
+colors = PackedColorArray(0.544003, 0.651053, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ehjqo"]
+gradient = SubResource("Gradient_6k7bt")
+
+[sub_resource type="Gradient" id="Gradient_jpydu"]
+offsets = PackedFloat32Array(0.161812, 0.521036, 0.612069)
+colors = PackedColorArray(0.195465, 0.222085, 0.341751, 1, 0.471032, 0.514768, 0.697211, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_4hx2p"]
+gradient = SubResource("Gradient_jpydu")
+
+[sub_resource type="Curve" id="Curve_xqlrs"]
+_data = [Vector2(0, 0.0423728), 0.0, 0.0, 0, 0, Vector2(0.477528, 0.0677966), 0.0, 0.0, 0, 0, Vector2(0.560886, 0), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Gradient" id="Gradient_ju4b8"]
+offsets = PackedFloat32Array(0.345745, 0.62234)
+colors = PackedColorArray(3.38419e-09, 0, 0.0381053, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_r1wnv"]
+gradient = SubResource("Gradient_ju4b8")
+
+[sub_resource type="Gradient" id="Gradient_g3sdw"]
+offsets = PackedFloat32Array(0.366379, 0.49569, 0.901639)
+colors = PackedColorArray(0, 0, 0, 1, 0.776471, 0.501961, 0.309804, 0.976471, 0.737255, 0.694118, 0.603922, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_8iaup"]
+gradient = SubResource("Gradient_g3sdw")
+use_hdr = true
+
+[sub_resource type="Gradient" id="Gradient_03x5b"]
+offsets = PackedFloat32Array(0.443182, 0.566343, 0.660194)
+colors = PackedColorArray(0, 0, 0, 1, 0.94902, 0.882353, 0, 1, 1, 0.955033, 0.827864, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_tw4w3"]
+gradient = SubResource("Gradient_03x5b")
+
+[sub_resource type="Gradient" id="Gradient_tp7rf"]
+offsets = PackedFloat32Array(0.02589, 0.365696, 0.462783, 0.543689, 0.993528)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1, 0.71298, 0.203695, 1.47464e-07, 1, 0.979906, 0.738618, 0.391285, 1, 0.996078, 0.996078, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_5yowr"]
+gradient = SubResource("Gradient_tp7rf")
+use_hdr = true
+
+[sub_resource type="Curve" id="Curve_66gqg"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.477012, 0), 0.0, 0.0, 0, 0, Vector2(0.58908, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Resource" id="Resource_g6xw8"]
+script = ExtResource("44_hovgm")
+sun_light_intensity = SubResource("Curve_66gqg")
+moon_light_intensity = SubResource("Curve_xqlrs")
+base_sky_color = SubResource("GradientTexture1D_018ci")
+base_cloud_color = SubResource("GradientTexture1D_3g2ag")
+overcast_sky_color = SubResource("GradientTexture1D_r1wnv")
+horizon_fog_color = SubResource("GradientTexture1D_os6q3")
+sun_light_color = SubResource("GradientTexture1D_5yowr")
+sun_disc_color = SubResource("GradientTexture1D_8iaup")
+sun_glow = SubResource("GradientTexture1D_tw4w3")
+moon_light_color = SubResource("GradientTexture1D_4hx2p")
+moon_glow_color = SubResource("GradientTexture1D_ehjqo")
+metadata/_custom_type_script = "uid://d33v0jsmojsg1"
+
+[sub_resource type="SphereMesh" id="SphereMesh_5bsee"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_rio5r"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yef6r"]
+shader = ExtResource("37_gaccj")
+shader_parameter/vignette = true
+shader_parameter/vignette_intensity = 0.35
+shader_parameter/vignette_softness = 0.5
+shader_parameter/chromatic_abberation = true
+shader_parameter/ca_intensity = 1.25
+shader_parameter/sharpen = true
+shader_parameter/sharpen_strength = 0.6
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_itljb"]
+shader = ExtResource("10_itljb")
+shader_parameter/grain_amount = 0.0350000016625
+shader_parameter/grain_size = 1.0
+
 [node name="HQTable" type="Node3D"]
 script = ExtResource("1_qgda6")
-debug = true
-
-[node name="Ground" type="StaticBody3D" parent="."]
-
-[node name="Mesh" type="MeshInstance3D" parent="Ground"]
-mesh = SubResource("PlaneMesh_yqfno")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_p1n4g")
-
-[node name="Collision" type="CollisionShape3D" parent="Ground"]
-shape = SubResource("ConcavePolygonShape3D_ge0qv")
 
 [node name="Table" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.355681, 0)
@@ -176,22 +351,47 @@ skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_3f477")
 
 [node name="Tent" type="MeshInstance3D" parent="."]
+metadata/_edit_lock_ = true
 
 [node name="PlaceHolder" type="CSGBox3D" parent="Tent"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0238228, 0.86145, 0.0106506)
 size = Vector3(3.33334, 1.77856, 3.539)
+metadata/_edit_lock_ = true
 
 [node name="InsideSpace" type="CSGBox3D" parent="Tent/PlaceHolder"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0218391, -0.392822, -0.339142)
 operation = 2
 size = Vector3(3.13879, 1.81592, 2.76892)
+metadata/_edit_lock_ = true
 
 [node name="Door" type="CSGBox3D" parent="Tent/PlaceHolder"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00355911, -0.417542, -1.20057)
 operation = 2
 size = Vector3(1.37492, 1.76648, 2.76892)
+metadata/_edit_lock_ = true
 
 [node name="StaticObjects" type="Node" parent="."]
+
+[node name="Timer" parent="StaticObjects" instance=ExtResource("2_2llyq")]
+unique_name_in_owner = true
+transform = Transform3D(0.31243446, 0, -0.9499393, 0, 1, 0, 0.9499393, 0, 0.31243446, -0.3772638, 0.7311746, -0.22486593)
+
+[node name="UnitCounterDrawer" type="StaticBody3D" parent="StaticObjects"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.024217911, 0.8045154, -0.26940298)
+
+[node name="Collision" type="CollisionShape3D" parent="StaticObjects/UnitCounterDrawer"]
+shape = SubResource("BoxShape3D_cdjkm")
+
+[node name="Mesh" type="MeshInstance3D" parent="StaticObjects/UnitCounterDrawer"]
+mesh = SubResource("BoxMesh_wrosp")
+
+[node name="Label3D" type="Label3D" parent="StaticObjects/UnitCounterDrawer"]
+transform = Transform3D(0.2801153, 0, 0, 0, 0.2801153, 0, 0, 0, 1, 0, 0, 0.06194757)
+pixel_size = 0.001
+text = "UNIT COUNTER DRAWER"
+font_size = 48
+outline_size = 5
 
 [node name="Map" type="MeshInstance3D" parent="StaticObjects"]
 unique_name_in_owner = true
@@ -200,15 +400,10 @@ mesh = SubResource("PlaneMesh_p1n4g")
 skeleton = NodePath("../../Table/Mesh")
 
 [node name="Radio" type="MeshInstance3D" parent="StaticObjects"]
+unique_name_in_owner = true
 transform = Transform3D(0.894638, 0, -0.446791, 0, 1, 0, 0.446791, 0, 0.894638, 0.384348, 0.781427, -0.278661)
 mesh = SubResource("BoxMesh_py2wd")
 skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_lmes1")
-
-[node name="Timer" type="MeshInstance3D" parent="StaticObjects"]
-transform = Transform3D(0.778561, 0, 0.627569, 0, 1, 0, -0.627569, 0, 0.778561, -0.383399, 0.771598, -0.261362)
-mesh = SubResource("BoxMesh_3f477")
-skeleton = NodePath("../../Table/Mesh")
 surface_material_override/0 = SubResource("StandardMaterial3D_lmes1")
 
 [node name="Lamp" type="MeshInstance3D" parent="StaticObjects"]
@@ -216,11 +411,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.248519, 0.736343, -0.30524
 skeleton = NodePath("../../Table/Mesh")
 
 [node name="LampLight" type="OmniLight3D" parent="StaticObjects"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.24826, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0898442, 1.24826, 0.089353114)
+light_color = Color(0.8953671, 0.9999998, 0.9876829, 1)
+light_energy = 0.25
 
 [node name="PhysicsObjects" type="Node" parent="."]
+unique_name_in_owner = true
 
 [node name="IntelDoc" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.383427, 0.735465, -0.0676914)
 collision_layer = 2
 collision_mask = 3
@@ -233,11 +432,10 @@ inspect_rotation = Vector3(90, 0, 0)
 [node name="Collision" type="CollisionShape3D" parent="PhysicsObjects/IntelDoc"]
 shape = SubResource("BoxShape3D_cx6my")
 
-[node name="Mesh" type="MeshInstance3D" parent="PhysicsObjects/IntelDoc"]
-mesh = SubResource("BoxMesh_lmes1")
-skeleton = NodePath("../..")
+[node name="Mesh" parent="PhysicsObjects/IntelDoc" instance=ExtResource("4_fhiww")]
 
-[node name="TerrainDoc" type="RigidBody3D" parent="PhysicsObjects"]
+[node name="TranscriptDoc" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388701, 0.747355, 0.0703042)
 collision_layer = 2
 collision_mask = 3
@@ -247,14 +445,13 @@ script = ExtResource("1_oof4l")
 inspect_enabled = true
 inspect_rotation = Vector3(90, 0, 0)
 
-[node name="Collision" type="CollisionShape3D" parent="PhysicsObjects/TerrainDoc"]
+[node name="Collision" type="CollisionShape3D" parent="PhysicsObjects/TranscriptDoc"]
 shape = SubResource("BoxShape3D_uk27s")
 
-[node name="Mesh" type="MeshInstance3D" parent="PhysicsObjects/TerrainDoc"]
-mesh = SubResource("BoxMesh_lmes1")
-skeleton = NodePath("../..")
+[node name="Mesh" parent="PhysicsObjects/TranscriptDoc" instance=ExtResource("4_fhiww")]
 
 [node name="BriefingDoc" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388701, 0.754058, 0.228009)
 collision_layer = 2
 collision_mask = 3
@@ -265,13 +462,13 @@ inspect_enabled = true
 inspect_rotation = Vector3(90, 0, 0)
 
 [node name="Collision" type="CollisionShape3D" parent="PhysicsObjects/BriefingDoc"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5884638e-05, 0.0012500286, -0.0104150325)
 shape = SubResource("BoxShape3D_ge8rp")
 
-[node name="Mesh" type="MeshInstance3D" parent="PhysicsObjects/BriefingDoc"]
-mesh = SubResource("BoxMesh_lmes1")
-skeleton = NodePath("../..")
+[node name="Mesh" parent="PhysicsObjects/BriefingDoc" instance=ExtResource("4_fhiww")]
 
 [node name="FieldManual" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.358866, 0.737931, 0.245496)
 collision_layer = 2
 collision_mask = 3
@@ -289,6 +486,7 @@ mesh = SubResource("BoxMesh_cx6my")
 skeleton = NodePath("../..")
 
 [node name="Protractor" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.356782, 0.737931, -0.0401387)
 collision_layer = 2
 collision_mask = 3
@@ -304,6 +502,7 @@ mesh = SubResource("BoxMesh_p1n4g")
 skeleton = NodePath("../..")
 
 [node name="PenBlack" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.289519, 0.738096, 0.087646)
 collision_layer = 2
 collision_mask = 3
@@ -312,6 +511,7 @@ continuous_cd = true
 script = ExtResource("1_oof4l")
 pick_toggle = true
 hide_mouse = true
+use_fixed_anchor = true
 snap_to_origin_position = true
 snap_to_origin_rotation = true
 
@@ -323,6 +523,7 @@ mesh = SubResource("CylinderMesh_uk27s")
 skeleton = NodePath("../..")
 
 [node name="PenBlue" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.31455153, 0.738096, 0.087646)
 collision_layer = 2
 collision_mask = 3
@@ -331,6 +532,7 @@ continuous_cd = true
 script = ExtResource("1_oof4l")
 pick_toggle = true
 hide_mouse = true
+use_fixed_anchor = true
 snap_to_origin_position = true
 snap_to_origin_rotation = true
 
@@ -342,6 +544,7 @@ mesh = SubResource("CylinderMesh_ge8rp")
 skeleton = NodePath("../..")
 
 [node name="PenRed" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.3388422, 0.738096, 0.087646)
 collision_layer = 2
 collision_mask = 3
@@ -350,6 +553,7 @@ continuous_cd = true
 script = ExtResource("1_oof4l")
 pick_toggle = true
 hide_mouse = true
+use_fixed_anchor = true
 snap_to_origin_position = true
 snap_to_origin_rotation = true
 
@@ -361,12 +565,17 @@ mesh = SubResource("CylinderMesh_of8da")
 skeleton = NodePath("../..")
 
 [node name="Eraser" type="RigidBody3D" parent="PhysicsObjects"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.40282, 0.738096, 0.087646)
 collision_layer = 2
 collision_mask = 3
 physics_material_override = SubResource("PhysicsMaterial_cx6my")
 continuous_cd = true
 script = ExtResource("1_oof4l")
+pick_toggle = true
+hide_mouse = true
+snap_to_origin_position = true
+snap_to_origin_rotation = true
 
 [node name="Collision" type="CollisionShape3D" parent="PhysicsObjects/Eraser"]
 shape = SubResource("BoxShape3D_ge0qv")
@@ -375,20 +584,20 @@ shape = SubResource("BoxShape3D_ge0qv")
 mesh = SubResource("BoxMesh_ge8rp")
 skeleton = NodePath("../..")
 
-[node name="UI" type="CanvasLayer" parent="."]
-
-[node name="PauseMenu" parent="UI" instance=ExtResource("7_uk27s")]
+[node name="CounterSpawnLocation" type="Marker3D" parent="PhysicsObjects"]
 unique_name_in_owner = true
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2887795, 0.7449176, -0.14969571)
 
 [node name="Controllers" type="Node" parent="."]
 
 [node name="ObjectController" type="Node" parent="Controllers"]
+unique_name_in_owner = true
 script = ExtResource("4_py2wd")
 
 [node name="InteractionBounds" type="MeshInstance3D" parent="Controllers/ObjectController"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7911129, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7437553, 0)
 mesh = SubResource("PlaneMesh_ge8rp")
+metadata/_edit_lock_ = true
 
 [node name="MapController" type="Node" parent="Controllers"]
 unique_name_in_owner = true
@@ -406,7 +615,6 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("7_tixey")
-debug_enabled = true
 terrain_renderer = NodePath("..")
 _sim = NodePath("../../../../WorldController")
 _orders = NodePath("../../../../RadioController/OrdersRouter")
@@ -437,6 +645,7 @@ tilt_smooth = 15.0
 [node name="CameraBounds" type="MeshInstance3D" parent="Controllers/CameraController"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0213583, 0.2977755)
 mesh = SubResource("PlaneMesh_uk27s")
+metadata/_edit_lock_ = true
 
 [node name="Camera" type="Camera3D" parent="Controllers/CameraController/CameraBounds"]
 transform = Transform3D(1, 0, 0, 0, 0.809017, 0.58778524, 0, -0.58778524, 0.809017, 0, 0, 0.20071936)
@@ -450,28 +659,45 @@ parser = NodePath("OrdersParser")
 unique_name_in_owner = true
 script = ExtResource("9_415kk")
 
-[node name="OrdersRouter" type="Node" parent="Controllers/RadioController" node_paths=PackedStringArray("movement_adapter", "los_adapter", "combat_controller", "terrain_renderer")]
+[node name="OrdersRouter" type="Node" parent="Controllers/RadioController" node_paths=PackedStringArray("movement_adapter", "los_adapter", "combat_controller", "artillery_controller", "engineer_controller", "terrain_renderer")]
 script = ExtResource("11_tixey")
 movement_adapter = NodePath("../../WorldController/MovementAdapter")
 los_adapter = NodePath("../../LOSController/LOSAdapter")
 combat_controller = NodePath("../../CombatController")
+artillery_controller = NodePath("../../CombatController/ArtilleryController")
+engineer_controller = NodePath("../../CombatController/EngineerController")
 terrain_renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
 metadata/_custom_type_script = "uid://ckdlg61462pgb"
 
-[node name="WordListUpdater" type="Node" parent="Controllers/RadioController" node_paths=PackedStringArray("sim", "terrain_renderer")]
+[node name="UnitVoiceResponses" type="Node" parent="Controllers/RadioController"]
 unique_name_in_owner = true
-script = ExtResource("12_4otl8")
-sim = NodePath("../../WorldController")
-terrain_renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
+script = ExtResource("30_voices")
 
-[node name="WorldController" type="Node" parent="Controllers" node_paths=PackedStringArray("los_adapter", "movement_adapter", "combat_controller", "trigger_engine", "_router")]
+[node name="TTSPlayer" type="AudioStreamPlayer" parent="Controllers/RadioController/UnitVoiceResponses"]
+unique_name_in_owner = true
+bus = &"Radio"
+
+[node name="RadioSignalModulator" type="Node" parent="Controllers/RadioController"]
+script = ExtResource("32_modulator")
+
+[node name="UnitAutoResponses" type="Node" parent="Controllers/RadioController"]
+unique_name_in_owner = true
+script = ExtResource("31_auto_voices")
+
+[node name="WorldController" type="Node" parent="Controllers" node_paths=PackedStringArray("los_adapter", "movement_adapter", "combat_controller", "combat_adapter", "trigger_engine", "_router", "ammo_system", "fuel_system", "artillery_controller", "engineer_controller", "environment_controller")]
 unique_name_in_owner = true
 script = ExtResource("7_ge8rp")
 los_adapter = NodePath("../LOSController/LOSAdapter")
 movement_adapter = NodePath("MovementAdapter")
 combat_controller = NodePath("../CombatController")
+combat_adapter = NodePath("../CombatController/CombatAdapter")
 trigger_engine = NodePath("TriggerEngine")
 _router = NodePath("../RadioController/OrdersRouter")
+ammo_system = NodePath("../CombatController/AmmoSystem")
+fuel_system = NodePath("FuelSystem")
+artillery_controller = NodePath("../CombatController/ArtilleryController")
+engineer_controller = NodePath("../CombatController/EngineerController")
+environment_controller = NodePath("../EnvironmentController")
 
 [node name="MovementAdapter" type="Node" parent="Controllers/WorldController" node_paths=PackedStringArray("renderer")]
 unique_name_in_owner = true
@@ -501,7 +727,15 @@ metadata/_custom_type_script = "uid://dy2uex65i3y4m"
 
 [node name="AmmoSystem" type="Node" parent="Controllers/CombatController"]
 script = ExtResource("12_lrkar")
+ammo_profile = SubResource("Resource_gaccj")
 metadata/_custom_type_script = "uid://c3rgrbya520ur"
+
+[node name="ArtilleryController" type="Node" parent="Controllers/CombatController"]
+script = ExtResource("33_66vc6")
+
+[node name="EngineerController" type="Node" parent="Controllers/CombatController" node_paths=PackedStringArray("terrain_renderer")]
+script = ExtResource("34_1yvtb")
+terrain_renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
 
 [node name="LOSController" type="Node" parent="Controllers"]
 script = ExtResource("13_qgda6")
@@ -510,3 +744,111 @@ script = ExtResource("13_qgda6")
 script = ExtResource("14_415kk")
 los_node_path = NodePath("..")
 terrain_renderer_path = NodePath("../../MapController/TerrainViewport/TerrainRender")
+
+[node name="TimerController" type="Node" parent="Controllers" node_paths=PackedStringArray("timer", "sim_world", "camera")]
+script = ExtResource("3_2llyq")
+timer = NodePath("../../StaticObjects/Timer")
+sim_world = NodePath("../WorldController")
+camera = NodePath("../CameraController/CameraBounds/Camera")
+press_depth = 0.005
+collision_box_position = Vector3(0, 0.06, 0)
+lcd_font = ExtResource("23_nfu8j")
+lcd_letter_spacing = 2
+pause_icon = ExtResource("24_l12u7")
+play_icon = ExtResource("25_k8ks5")
+fastforward_icon = ExtResource("26_4ip4k")
+
+[node name="DrawingController" type="Node" parent="Controllers"]
+unique_name_in_owner = true
+script = ExtResource("27_cdjkm")
+
+[node name="UnitCounterController" type="Node" parent="Controllers" node_paths=PackedStringArray("drawer", "counter_dialog")]
+unique_name_in_owner = true
+script = ExtResource("28_wrosp")
+drawer = NodePath("../../StaticObjects/UnitCounterDrawer")
+counter_dialog = NodePath("../../UI/CounterConfigDialog")
+
+[node name="EnvironmentController" type="WorldEnvironment" parent="Controllers" node_paths=PackedStringArray("sun_moon_parent", "sun_root", "moon_root", "sun", "moon", "env_anchor")]
+unique_name_in_owner = true
+environment = SubResource("Environment_idixg")
+script = ExtResource("36_c0crp")
+sun_moon_parent = NodePath("SunMoon")
+sun_root = NodePath("SunMoon/Sun")
+moon_root = NodePath("SunMoon/Moon")
+sun = NodePath("SunMoon/Sun/SunLight")
+moon = NodePath("SunMoon/Moon/MoonLight")
+env_anchor = NodePath("EnvironmentAnchor")
+sky_preset = SubResource("Resource_g6xw8")
+
+[node name="SunMoon" type="Node3D" parent="Controllers/EnvironmentController"]
+transform = Transform3D(1, 0, 0, 0, -0.9999995, 8.7422734e-08, 0, -8.7422734e-08, -0.9999995, 0, 0, 0)
+metadata/_edit_lock_ = true
+
+[node name="Sun" type="MeshInstance3D" parent="Controllers/EnvironmentController/SunMoon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+transparency = 1.0
+mesh = SubResource("SphereMesh_5bsee")
+metadata/_edit_lock_ = true
+
+[node name="SunLight" type="DirectionalLight3D" parent="Controllers/EnvironmentController/SunMoon/Sun"]
+transform = Transform3D(1, 0, 1.49012e-08, -1.49012e-08, -8.19564e-08, -1, 2.98023e-08, 1, -3.72529e-08, 0, 0, 0)
+light_color = Color(0.996078, 0.996078, 1, 1)
+shadow_enabled = true
+metadata/_edit_lock_ = true
+
+[node name="Moon" type="MeshInstance3D" parent="Controllers/EnvironmentController/SunMoon"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 1, 0)
+transparency = 1.0
+mesh = SubResource("SphereMesh_rio5r")
+metadata/_edit_lock_ = true
+
+[node name="MoonLight" type="DirectionalLight3D" parent="Controllers/EnvironmentController/SunMoon/Moon"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+light_color = Color(0, 0, 0, 1)
+light_energy = 0.0
+shadow_enabled = true
+metadata/_edit_lock_ = true
+
+[node name="EnvironmentAnchor" type="Node3D" parent="Controllers/EnvironmentController"]
+
+[node name="PostProcess" type="CanvasLayer" parent="."]
+script = ExtResource("36_yef6r")
+
+[node name="GeneralPP" type="ColorRect" parent="PostProcess"]
+material = SubResource("ShaderMaterial_yef6r")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FilmGrain" type="ColorRect" parent="PostProcess"]
+material = SubResource("ShaderMaterial_itljb")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="RadioSubtitles" parent="UI" instance=ExtResource("27_subtitles")]
+unique_name_in_owner = true
+visible = false
+max_suggestions = 10
+
+[node name="LoadingScreen" parent="UI" instance=ExtResource("28_loading")]
+unique_name_in_owner = true
+
+[node name="MissionDialog" parent="UI" instance=ExtResource("29_dialog")]
+unique_name_in_owner = true
+visible = false
+
+[node name="PauseMenu" parent="UI" instance=ExtResource("7_uk27s")]
+unique_name_in_owner = true
+visible = false
+
+[node name="CounterConfigDialog" parent="UI" instance=ExtResource("33_bsy1h")]
+visible = false

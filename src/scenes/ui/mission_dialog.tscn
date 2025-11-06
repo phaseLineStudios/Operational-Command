@@ -1,0 +1,112 @@
+[gd_scene load_steps=7 format=3 uid="uid://db2miy3a6hjke"]
+
+[ext_resource type="Script" uid="uid://chm4v6kkjxwfl" path="res://scripts/ui/MissionDialog.gd" id="1"]
+[ext_resource type="Script" uid="uid://nobo2pvlx00b" path="res://scripts/ui/controls/OcMenuContainer.gd" id="2_w8hnu"]
+[ext_resource type="FontFile" uid="uid://b7vlkovyvotx8" path="res://assets/fonts/ibm_plex_sans/IBMPlexSans.ttf" id="3_ebr41"]
+[ext_resource type="Script" uid="uid://boc05sevt2wad" path="res://scripts/ui/controls/OcMenuButton.gd" id="4_p4x82"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qufku"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.067, 0.082, 0.098, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_p4x82"]
+color = Color(0.49803922, 0.49803922, 0.49803922, 1)
+thickness = 2
+
+[node name="MissionDialog" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1")
+
+[node name="LineOverlay" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="DialogPanel" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(600, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_qufku")
+script = ExtResource("2_w8hnu")
+padding = Vector4i(0, 0, 0, 0)
+inner_padding = Vector4i(0, 0, 0, 0)
+border_color = Color(0.49803922, 0.49803922, 0.49803922, 1)
+grid_enabled = false
+noise_enabled = true
+noise_opacity = 0.02
+noise_grain = 1.0
+metadata/_custom_type_script = "uid://nobo2pvlx00b"
+
+[node name="DialogRoot" type="VBoxContainer" parent="CenterContainer/DialogPanel"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="DragBar" type="HBoxContainer" parent="CenterContainer/DialogPanel/DialogRoot"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/DialogPanel/DialogRoot"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_p4x82")
+
+[node name="Content" type="MarginContainer" parent="CenterContainer/DialogPanel/DialogRoot"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/DialogPanel/DialogRoot/Content"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="DialogText" type="RichTextLabel" parent="CenterContainer/DialogPanel/DialogRoot/Content/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_fonts/normal_font = ExtResource("3_ebr41")
+theme_override_font_sizes/normal_font_size = 16
+bbcode_enabled = true
+text = "Mission message text goes here."
+fit_content = true
+scroll_active = false
+
+[node name="ButtonContainer" type="HBoxContainer" parent="CenterContainer/DialogPanel/DialogRoot/Content/VBoxContainer"]
+layout_mode = 2
+alignment = 2
+
+[node name="OkButton" type="Button" parent="CenterContainer/DialogPanel/DialogRoot/Content/VBoxContainer/ButtonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+text = "OK"
+script = ExtResource("4_p4x82")
+metadata/_custom_type_script = "uid://boc05sevt2wad"

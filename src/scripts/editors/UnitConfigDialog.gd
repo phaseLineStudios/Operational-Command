@@ -13,6 +13,8 @@ var _before: ScenarioUnit
 @onready var aff_in: OptionButton = %Affiliation
 @onready var combat_in: OptionButton = %CombatMode
 @onready var beh_in: OptionButton = %Behaviour
+@onready var pos_x_in: SpinBox = %PositionX
+@onready var pos_y_in: SpinBox = %PositionY
 @onready var save_btn: Button = %Save
 @onready var close_btn: Button = %Close
 
@@ -63,6 +65,9 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 			beh_in.select(i)
 			break
 
+	pos_x_in.value = su.position_m.x
+	pos_y_in.value = su.position_m.y
+
 	visible = true
 
 
@@ -75,6 +80,7 @@ func _on_save() -> void:
 	after.affiliation = aff_in.get_selected_id() as ScenarioUnit.Affiliation
 	after.combat_mode = combat_in.get_selected_id() as ScenarioUnit.CombatMode
 	after.behaviour = beh_in.get_selected_id() as ScenarioUnit.Behaviour
+	after.position_m = Vector2(pos_x_in.value, pos_y_in.value)
 
 	if editor.history:
 		var desc := "Edit Unit %s" % String(_before.callsign)

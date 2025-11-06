@@ -32,6 +32,8 @@ enum AreaShape { CIRCLE, RECT }
 @export var presence: PresenceMode = PresenceMode.NONE
 ## Time (seconds) the combined condition must stay true before activation
 @export var require_duration_s: float = 0.0
+## If true, trigger only fires once and then disables itself
+@export var run_once: bool = false
 ## Extra condition (must be true along with presence), evaluated every frame
 @export_multiline var condition_expr: String = "true"
 ## Executed once on activation. Same variable scope as condition
@@ -47,6 +49,8 @@ enum AreaShape { CIRCLE, RECT }
 var _active: bool = false
 @warning_ignore("unused_private_class_variable")
 var _accum_true: float = 0.0
+@warning_ignore("unused_private_class_variable")
+var _has_run: bool = false
 
 
 func serialize() -> Dictionary:
@@ -58,6 +62,7 @@ func serialize() -> Dictionary:
 		"size_m": ContentDB.v2(area_size_m),
 		"presence": int(presence),
 		"require_duration_s": require_duration_s,
+		"run_once": run_once,
 		"condition_expr": condition_expr,
 		"on_activate_expr": on_activate_expr,
 		"on_deactivate_expr": on_deactivate_expr,
@@ -78,6 +83,7 @@ static func deserialize(d: Variant) -> ScenarioTrigger:
 	t.area_size_m = ContentDB.v2_from(d.get("size_m", Vector2.ZERO))
 	t.presence = int(d.get("presence", 0)) as PresenceMode
 	t.require_duration_s = float(d.get("require_duration_s", 0.0))
+	t.run_once = bool(d.get("run_once", false))
 	t.condition_expr = String(d.get("condition_expr", "true"))
 	t.on_activate_expr = String(d.get("on_activate_expr", ""))
 	t.on_deactivate_expr = String(d.get("on_deactivate_expr", ""))

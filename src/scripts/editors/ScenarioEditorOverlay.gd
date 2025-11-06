@@ -17,7 +17,7 @@ const MI_DELETE := 1099
 ## Owning editor reference (provides ctx, data, and services)
 @export var editor: ScenarioEditor
 ## Pixel size of unit icons on the overlay
-@export var unit_icon_px: int = 48
+@export var unit_icon_px: int = 72
 ## Pixel size of player slot icons on the overlay
 @export var slot_icon_px: int = 48
 ## Pixel size of outer task glyphs on the overlay
@@ -45,6 +45,7 @@ const MI_DELETE := 1099
 ## Arrow head length (pixels) for link arrows
 @export var arrow_head_len_px: float = 10.0
 
+var _tex_cache: Dictionary = {}
 var _icon_cache := {}
 var _ctx: PopupMenu
 var _last_pick: Dictionary = {}
@@ -56,6 +57,8 @@ var _link_preview_active := false
 var _link_preview_src: Dictionary = {}
 var _link_preview_pos := Vector2.ZERO
 
+var _unit_signal_handles: Dictionary = {}
+
 
 ## Initialize popup menu and mouse handling
 func _ready() -> void:
@@ -65,10 +68,12 @@ func _ready() -> void:
 	_ctx = PopupMenu.new()
 	add_child(_ctx)
 	_ctx.id_pressed.connect(_on_ctx_pressed)
+	call_deferred("refresh_icon_bindings")
 
 
 ## Main overlay draw: links first, then glyphs, then active tool
 func _draw() -> void:
+	_draw_drawings()
 	_draw_task_links()
 	_draw_sync_links()
 	_draw_units()
@@ -152,13 +157,13 @@ func on_dbl_click(event: InputEventMouseButton):
 	var pick := _pick_at(event.position)
 	match pick.get("type", &""):
 		&"slot":
-			editor._open_slot_config(pick["index"])
+			editor.menus.open_slot_config(pick["index"])
 		&"unit":
-			editor._open_unit_config(pick["index"])
+			editor.menus.open_unit_config(pick["index"])
 		&"task":
-			editor._open_task_config(pick["index"])
+			editor.menus.open_task_config(pick["index"])
 		&"trigger":
-			editor._open_trigger_config(pick["index"])
+			editor.menus.open_trigger_config(pick["index"])
 		_:
 			pass
 
@@ -175,19 +180,19 @@ func _on_ctx_pressed(id: int) -> void:
 	match id:
 		MI_CONFIG_SLOT:
 			if _last_pick.get("type", &"") == &"slot":
-				editor._open_slot_config(_last_pick["index"])
+				editor.menus.open_slot_config(_last_pick["index"])
 		MI_CONFIG_UNIT:
 			if _last_pick.get("type", &"") == &"unit":
-				editor._open_unit_config(_last_pick["index"])
+				editor.menus.open_unit_config(_last_pick["index"])
 		MI_CONFIG_TASK:
 			if _last_pick.get("type", &"") == &"task":
-				editor._open_task_config(_last_pick["index"])
+				editor.menus.open_task_config(_last_pick["index"])
 		MI_CONFIG_TRIGGER:
 			if _last_pick.get("type", &"") == &"trigger":
-				editor._open_trigger_config(_last_pick["index"])
+				editor.menus.open_trigger_config(_last_pick["index"])
 		MI_DELETE:
 			if not _last_pick.is_empty():
-				editor._delete_pick(_last_pick)
+				editor.deletion_ops.delete_pick(_last_pick)
 
 
 ## Draw all unit glyphs and hover titles
@@ -204,6 +209,7 @@ func _draw_units() -> void:
 		var su: ScenarioUnit = editor.ctx.data.units[i]
 		if su == null or su.unit == null:
 			continue
+		_ensure_bound_for_unit(su.unit)
 		var tex := _get_scaled_icon_unit(su)
 		if tex == null:
 			continue
@@ -440,6 +446,57 @@ func _is_highlighted(t: StringName, idx: int) -> bool:
 	)
 
 
+## Draw scenario drawings (strokes and stamps).
+func _draw_drawings() -> void:
+	if not editor or not editor.ctx or not editor.ctx.data:
+		return
+	var arr: Array = editor.ctx.data.drawings
+	if arr == null or arr.is_empty():
+		return
+	var sorted := arr.duplicate()
+	sorted.sort_custom(
+		func(a, b):
+			var la: int = a.layer if a is Resource else int(a.get("layer"))
+			var lb: int = b.layer if b is Resource else int(b.get("layer"))
+			if la != lb:
+				return la < lb
+			var oa: int = a.order if a is Resource else int(a.get("order"))
+			var ob: int = b.order if b is Resource else int(b.get("order"))
+			return oa < ob
+	)
+
+	for it in sorted:
+		if it == null:
+			continue
+		if it is ScenarioDrawingStroke:
+			if not it.visible or it.points_m.is_empty():
+				continue
+			var col: Color = it.color
+			col.a *= it.opacity
+			var last_px := Vector2.INF
+			for p_m in it.points_m:
+				var p_px := editor.terrain_render.terrain_to_map(p_m)
+				if last_px.is_finite():
+					draw_line(last_px, p_px, col, it.width_px, true)
+				last_px = p_px
+		elif it is ScenarioDrawingStamp:
+			if not it.visible:
+				continue
+			var tex := _get_tex(it.texture_path)
+			if tex:
+				var pos_px := editor.terrain_render.terrain_to_map(it.position_m)
+				var sz: Vector2 = tex.get_size() * it.scale
+				var tint: Color = it.modulate
+				tint.a *= it.opacity
+				draw_set_transform(pos_px, deg_to_rad(it.rotation_deg))
+				draw_texture_rect(tex, Rect2(-sz * 0.5, sz), false, tint)
+				draw_set_transform(Vector2(0, 0))
+
+				# Draw label to the right of the stamp if present
+				if it.label != null and it.label != "":
+					_draw_stamp_label(it.label, pos_px, sz.x * 0.5, tint)
+
+
 ## Draw a texture centered, with hover scale/opacity feedback
 func _draw_icon_with_hover(tex: Texture2D, center: Vector2, hovered: bool) -> void:
 	var icon_size: Vector2 = tex.get_size()
@@ -471,6 +528,23 @@ func _draw_title(text: String, center: Vector2) -> void:
 		fs,
 		Color(1, 1, 1, 0.96)
 	)
+
+
+## Draw label text to the right of a stamp
+## [param text] Label text.
+## [param center] Stamp center position in pixels.
+## [param stamp_half_width] Half width of the stamp texture.
+## [param color] Color to draw the label in.
+func _draw_stamp_label(
+	text: String, center: Vector2, stamp_half_width: float, color: Color
+) -> void:
+	var font := get_theme_default_font()
+	var fs := get_theme_default_font_size()
+	if font == null:
+		return
+	# Position text to the right of the stamp with small padding
+	var text_pos := Vector2(center.x + stamp_half_width + 8, center.y + fs * 0.35)
+	draw_string(font, text_pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, color)
 
 
 ## Delegate task glyph drawing to the task resource
@@ -633,6 +707,45 @@ func _scaled_cached(key: String, base: Texture2D, px: int) -> Texture2D:
 	return tex
 
 
+## UnitData finished generating icons; drop scaled cache and redraw.
+## [param u] UnitData whose icons changed.
+func _on_unit_icons_ready(u: UnitData) -> void:
+	_invalidate_unit_icon_cache(u)
+	queue_redraw()
+
+
+## Generic change fallback (covers editor-time tweaks).
+func _on_unit_changed(u: UnitData) -> void:
+	_invalidate_unit_icon_cache(u)
+	queue_redraw()
+
+
+## Remove all scaled entries for this unit (both affiliations/sizes).
+func _invalidate_unit_icon_cache(u: UnitData) -> void:
+	var id_str := String(u.id if u and u.id != "" else "unknown")
+	var prefix := "UNIT:%s:" % id_str
+	var to_erase: Array = []
+	for k in _icon_cache.keys():
+		if String(k).begins_with(prefix):
+			to_erase.append(k)
+	for k in to_erase:
+		_icon_cache.erase(k)
+
+
+## Load or fetch cached texture.
+## [param path] res:// path.
+## [return] Texture2D or null.
+func _get_tex(path: String) -> Texture2D:
+	if path == "":
+		return null
+	if _tex_cache.has(path) and is_instance_valid(_tex_cache[path]):
+		return _tex_cache[path]
+	var t: Texture2D = load(path)
+	if t:
+		_tex_cache[path] = t
+	return t
+
+
 ## Return approximate visual radius for a glyph kind/index
 func _glyph_radius(kind: StringName, idx: int) -> float:
 	match kind:
@@ -650,6 +763,45 @@ func _glyph_radius(kind: StringName, idx: int) -> float:
 			)
 		_:
 			return 0.0
+
+
+## (Re)bind overlay to all units in the current ctx.
+func refresh_icon_bindings() -> void:
+	_clear_unit_icon_bindings()
+	_bind_unit_icon_signals()
+
+
+## Connect to UnitData signals so we refresh when icons complete.
+func _bind_unit_icon_signals() -> void:
+	if not editor or not editor.ctx or not editor.ctx.data or editor.ctx.data.units == null:
+		return
+	for su: ScenarioUnit in editor.ctx.data.units:
+		if su == null or su.unit == null:
+			continue
+		_ensure_bound_for_unit(su.unit)
+
+
+## Ensure we are bound for this UnitData (idempotent).
+func _ensure_bound_for_unit(u: UnitData) -> void:
+	if _unit_signal_handles.has(u):
+		return
+	var c_icons := Callable(self, "_on_unit_icons_ready").bind(u)
+	var c_changed := Callable(self, "_on_unit_changed").bind(u)
+	u.icons_ready.connect(c_icons)
+	u.changed.connect(c_changed)
+	_unit_signal_handles[u] = {"icons": c_icons, "changed": c_changed}
+
+
+## Disconnect everything we previously bound.
+func _clear_unit_icon_bindings() -> void:
+	for u in _unit_signal_handles.keys():
+		if is_instance_valid(u):
+			var h: Variant = _unit_signal_handles[u]
+			if u.is_connected("icons_ready", h.icons):
+				u.icons_ready.disconnect(h.icons)
+			if u.is_connected("changed", h.changed):
+				u.changed.disconnect(h.changed)
+	_unit_signal_handles.clear()
 
 
 ## Shorten a segment at both ends by given trims (pixels)

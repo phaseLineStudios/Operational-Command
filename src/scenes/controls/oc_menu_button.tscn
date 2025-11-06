@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://1vslnyevej8j"]
+
+[ext_resource type="Theme" uid="uid://dy2ly8e3tggi0" path="res://assets/themes/menu.theme" id="1_bl8pa"]
+[ext_resource type="Script" uid="uid://boc05sevt2wad" path="res://scripts/ui/controls/OcMenuButton.gd" id="2_pgxxv"]
+
+[node name="OplButton" type="Button"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_bl8pa")
+script = ExtResource("2_pgxxv")

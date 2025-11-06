@@ -1,9 +1,10 @@
 {
 	"id": "nato_1985_west_ger",
-	"title": "NATO 1985 – West German Front",
+	"title": "NATO – Autumn To Fire 83'",
 	"blurb": "Defensive to counteroffensive along the Inner German Border.",
-	"preview_path": "",
-	"scenario_bg_path": "res://campaigns/campaign/west_ger_map.png",
-	"scenarios": ["wg_exercise_reforger", "wg_border_probe"],
+	"description": "Under the calm cover of Autumn Forge ’83, a real war breaks loose. [b]AUTUMN TO IRON[/b] drops you into the NATO forward screen as radio checks and drill lanes at Wildflecken turn to first contact in the Fulda Gap, a DDR-led thrust crashes west, and a coup splinters Berlin. Lead a company-scale combined-arms team through delay fights, bridge denials, urban holds, night screens, and convoy escorts, then drive a razor-thin counterattack before a fragile ceasefire at the inner German border. Ammunition, fuel, and crews persist between missions; losses and choices echo forward. It’s 1983 - maps are paper, nerves are steel, and every report on the net could be the one that changes the day.",
+	"preview_path": "res://assets/textures/campaigns/nato_autumn_fire_poster.png",
+	"scenario_bg_path": "res://assets/textures/campaigns/nato_autumn_fire.png",
+	"scenarios": ["us_crested_cap", "us_border_probe"],
 	"order": 0
 }

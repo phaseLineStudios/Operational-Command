@@ -5,8 +5,8 @@
 [node name="TriggerConfigDialog" type="Window"]
 auto_translate_mode = 1
 oversampling_override = 1.0
-title = "Trigger"
-position = Vector2i(325, 37)
+title = "Edit: Trigger"
+position = Vector2i(325, 36)
 size = Vector2i(500, 600)
 script = ExtResource("1_5rotb")
 
@@ -26,94 +26,205 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TitleLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+[node name="InitContainer" type="FoldableContainer" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+title = "Trigger Init"
+
+[node name="GridContainer" type="GridContainer" parent="Root/ScrollContainer/VBox/InitContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="IdLabel" type="Label" parent="Root/ScrollContainer/VBox/InitContainer/GridContainer"]
+layout_mode = 2
+text = "Unique ID"
+
+[node name="Id" type="LineEdit" parent="Root/ScrollContainer/VBox/InitContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Required"
+
+[node name="TitleLabel" type="Label" parent="Root/ScrollContainer/VBox/InitContainer/GridContainer"]
 layout_mode = 2
 text = "Trigger Name"
 
-[node name="Title" type="LineEdit" parent="Root/ScrollContainer/VBox"]
+[node name="Title" type="LineEdit" parent="Root/ScrollContainer/VBox/InitContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="ShapeLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+[node name="TransformContainer" type="FoldableContainer" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+title = "Trigger Transformation"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/ScrollContainer/VBox/TransformContainer"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="Root/ScrollContainer/VBox/TransformContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/v_separation = 15
+columns = 2
+
+[node name="PositionLabel" type="Label" parent="Root/ScrollContainer/VBox/TransformContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Position"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Root/ScrollContainer/VBox/TransformContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="XLabel" type="Label" parent="Root/ScrollContainer/VBox/TransformContainer/VBoxContainer/GridContainer/HBoxContainer"]
+layout_mode = 2
+text = "X:"
+
+[node name="PositionX" type="SpinBox" parent="Root/ScrollContainer/VBox/TransformContainer/VBoxContainer/GridContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -99999.0
+max_value = 99999.0
+step = 10.0
+
+[node name="YLabel" type="Label" parent="Root/ScrollContainer/VBox/TransformContainer/VBoxContainer/GridContainer/HBoxContainer"]
+layout_mode = 2
+text = "Y:"
+
+[node name="PositionY" type="SpinBox" parent="Root/ScrollContainer/VBox/TransformContainer/VBoxContainer/GridContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -99999.0
+max_value = 99999.0
+step = 10.0
+
+[node name="ShapeLabel" type="Label" parent="Root/ScrollContainer/VBox/TransformContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Area Shape"
 
-[node name="Shape" type="OptionButton" parent="Root/ScrollContainer/VBox"]
+[node name="Shape" type="OptionButton" parent="Root/ScrollContainer/VBox/TransformContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SizeLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+[node name="SizeLabel" type="Label" parent="Root/ScrollContainer/VBox/TransformContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "Size"
+text = "Area Size"
 
-[node name="Size" type="HBoxContainer" parent="Root/ScrollContainer/VBox"]
+[node name="Size" type="HBoxContainer" parent="Root/ScrollContainer/VBox/TransformContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="LabelX" type="Label" parent="Root/ScrollContainer/VBox/Size"]
+[node name="LabelX" type="Label" parent="Root/ScrollContainer/VBox/TransformContainer/VBoxContainer/GridContainer/Size"]
 layout_mode = 2
 text = "X"
 
-[node name="SizeX" type="SpinBox" parent="Root/ScrollContainer/VBox/Size"]
+[node name="SizeX" type="SpinBox" parent="Root/ScrollContainer/VBox/TransformContainer/VBoxContainer/GridContainer/Size"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 max_value = 10000.0
-suffix = "m"
 
-[node name="LabelY" type="Label" parent="Root/ScrollContainer/VBox/Size"]
+[node name="LabelY" type="Label" parent="Root/ScrollContainer/VBox/TransformContainer/VBoxContainer/GridContainer/Size"]
 layout_mode = 2
 text = "Y"
 
-[node name="SizeY" type="SpinBox" parent="Root/ScrollContainer/VBox/Size"]
+[node name="SizeY" type="SpinBox" parent="Root/ScrollContainer/VBox/TransformContainer/VBoxContainer/GridContainer/Size"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 max_value = 10000.0
-suffix = "m"
 
-[node name="PresenceLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+[node name="ActivationContainer" type="FoldableContainer" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+title = "Trigger Activation"
+
+[node name="GridContainer" type="GridContainer" parent="Root/ScrollContainer/VBox/ActivationContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="PresenceLabel" type="Label" parent="Root/ScrollContainer/VBox/ActivationContainer/GridContainer"]
 layout_mode = 2
 text = "Presence"
 
-[node name="Presence" type="OptionButton" parent="Root/ScrollContainer/VBox"]
+[node name="Presence" type="OptionButton" parent="Root/ScrollContainer/VBox/ActivationContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="DurationLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+[node name="DurationLabel" type="Label" parent="Root/ScrollContainer/VBox/ActivationContainer/GridContainer"]
 layout_mode = 2
 text = "Required Duration"
 
-[node name="Duration" type="SpinBox" parent="Root/ScrollContainer/VBox"]
+[node name="Duration" type="SpinBox" parent="Root/ScrollContainer/VBox/ActivationContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 max_value = 36000.0
 step = 0.5
 suffix = "s"
 
-[node name="ConditionLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+[node name="RunOnceLabel" type="Label" parent="Root/ScrollContainer/VBox/ActivationContainer/GridContainer"]
+layout_mode = 2
+text = "Run Once"
+
+[node name="RunOnce" type="CheckBox" parent="Root/ScrollContainer/VBox/ActivationContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ExpressionContainer" type="FoldableContainer" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+title = "Trigger Expression"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/ScrollContainer/VBox/ExpressionContainer"]
+layout_mode = 2
+
+[node name="ConditionLabel" type="Label" parent="Root/ScrollContainer/VBox/ExpressionContainer/VBoxContainer"]
 layout_mode = 2
 text = "Condition"
 
-[node name="Condition" type="TextEdit" parent="Root/ScrollContainer/VBox"]
+[node name="Condition" type="CodeEdit" parent="Root/ScrollContainer/VBox/ExpressionContainer/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
+symbol_lookup_on_click = true
+symbol_tooltip_on_hover = true
+gutters_draw_line_numbers = true
+code_completion_enabled = true
+indent_automatic = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
 
-[node name="OnActivateLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+[node name="OnActivateLabel" type="Label" parent="Root/ScrollContainer/VBox/ExpressionContainer/VBoxContainer"]
 layout_mode = 2
 text = "On Activate"
 
-[node name="OnActivate" type="TextEdit" parent="Root/ScrollContainer/VBox"]
+[node name="OnActivate" type="CodeEdit" parent="Root/ScrollContainer/VBox/ExpressionContainer/VBoxContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 120)
+custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
+symbol_lookup_on_click = true
+symbol_tooltip_on_hover = true
+gutters_draw_line_numbers = true
+code_completion_enabled = true
+indent_use_spaces = true
+indent_automatic = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
 
-[node name="OnDeactivateLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+[node name="OnDeactivateLabel" type="Label" parent="Root/ScrollContainer/VBox/ExpressionContainer/VBoxContainer"]
 layout_mode = 2
 text = "On Deactivate"
 
-[node name="OnDeactivate" type="TextEdit" parent="Root/ScrollContainer/VBox"]
+[node name="OnDeactivate" type="CodeEdit" parent="Root/ScrollContainer/VBox/ExpressionContainer/VBoxContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 120)
+custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
+symbol_lookup_on_click = true
+symbol_tooltip_on_hover = true
+gutters_draw_line_numbers = true
+code_completion_enabled = true
+indent_use_spaces = true
+indent_automatic = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
 
 [node name="ActionRow" type="HBoxContainer" parent="Root"]
 layout_mode = 2
@@ -121,7 +232,7 @@ layout_mode = 2
 [node name="Close" type="Button" parent="Root/ActionRow"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Close"
+text = "Cancel"
 
 [node name="Spacer" type="Control" parent="Root/ActionRow"]
 layout_mode = 2

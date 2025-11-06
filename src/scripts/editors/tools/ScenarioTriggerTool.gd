@@ -30,7 +30,7 @@ func _on_mouse_move(e: InputEventMouseMotion) -> bool:
 		_hover_valid = false
 		return false
 	_hover_map_pos = editor.terrain_render.map_to_terrain(e.position)
-	_hover_valid = editor.terrain_render.is_inside_map(_hover_map_pos)
+	_hover_valid = editor.terrain_render.is_inside_map(e.position)
 	emit_signal("request_redraw_overlay")
 	return true
 

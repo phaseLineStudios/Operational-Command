@@ -14,6 +14,14 @@ var _api := TriggerAPI.new()
 var _snap_by_id: Dictionary = {}
 var _id_by_callsign: Dictionary = {}
 var _player_ids := {}
+var _radio: Radio = null
+var _last_radio_text: String = ""
+## Shared global variables accessible across all triggers
+var _globals: Dictionary = {}
+## Scheduled actions queue: [{execute_at: float, expr: String, ctx: Dictionary, use_realtime: bool}]
+var _scheduled_actions: Array = []
+## Real-time accumulator for sleep_ui
+var _realtime_accumulator: float = 0.0
 
 
 ## Wire API.
@@ -21,11 +29,16 @@ func _ready() -> void:
 	_api.sim = _sim
 	_api.engine = self
 	_vm.set_api(_api)
-	set_process(run_in_process)
+	# Always process to track real-time for sleep_ui
+	set_process(true)
 
 
-## Tick triggers independently.
+## Tick triggers independently and track real-time.
 func _process(dt: float) -> void:
+	# Track real-time for sleep_ui
+	_realtime_accumulator += dt
+	# Process real-time scheduled actions (sleep_ui)
+	_process_realtime_actions()
 	if run_in_process:
 		tick(dt)
 
@@ -36,12 +49,37 @@ func bind_scenario(scenario: ScenarioData) -> void:
 	_scenario = scenario
 
 
+## Bind radio to listen for raw commands.
+## Connects to [signal Radio.radio_raw_command] to capture voice input before parsing.
+## Makes raw text available to triggers via [method TriggerAPI.last_radio_command].
+## [br][br]
+## [b]Called automatically by SimWorld.bind_radio().[/b]
+## [param radio] Radio node emitting [signal Radio.radio_raw_command] signal.
+func bind_radio(radio: Radio) -> void:
+	if _radio and _radio.radio_raw_command.is_connected(_on_radio_raw):
+		_radio.radio_raw_command.disconnect(_on_radio_raw)
+	_radio = radio
+	if _radio and not _radio.radio_raw_command.is_connected(_on_radio_raw):
+		_radio.radio_raw_command.connect(_on_radio_raw)
+
+
+## Bind mission dialog UI for trigger scripts.
+## Makes dialog available via [method TriggerAPI.show_dialog].
+## [param dialog] MissionDialog node for displaying trigger messages.
+func bind_dialog(dialog: Control) -> void:
+	_api._mission_dialog = dialog
+
+
 ## Deterministic evaluation entry point.
 ## [param dt] delta time from last tick.
 func tick(dt: float) -> void:
 	_refresh_unit_indices()
+	_process_mission_time_actions()
 	for t in _scenario.triggers:
 		_evaluate_trigger(t, dt)
+	# Clear radio command after all triggers evaluated
+	_last_radio_text = ""
+	_api._set_last_radio_command("")
 
 
 ## Refresh unit indices.
@@ -66,9 +104,17 @@ func _refresh_unit_indices() -> void:
 ## [param t] Trigger to evaluate.
 ## [param dt] Delta time since last tick.
 func _evaluate_trigger(t: ScenarioTrigger, dt: float) -> void:
+	# Skip evaluation if this is a run_once trigger that has already run
+	if t.run_once and t._has_run:
+		return
+
 	var presence_ok := _check_presence(t)
 	var ctx := _make_ctx(t, presence_ok)
-	var condition_ok := _vm.eval_condition(t.condition_expr, ctx)
+
+	# Build debug info for better error messages
+	var debug_info := {"trigger_id": t.id, "trigger_title": t.title, "expr_type": "condition_expr"}
+
+	var condition_ok := _vm.eval_condition(t.condition_expr, ctx, debug_info)
 	var combined := presence_ok and condition_ok
 
 	if combined:
@@ -80,10 +126,15 @@ func _evaluate_trigger(t: ScenarioTrigger, dt: float) -> void:
 
 	if not t._active and passed:
 		t._active = true
-		_vm.run(t.on_activate_expr, ctx)
+		debug_info["expr_type"] = "on_activate_expr"
+		_vm.run(t.on_activate_expr, ctx, debug_info)
+		# Mark as run if this is a run_once trigger
+		if t.run_once:
+			t._has_run = true
 	elif t._active and not combined:
 		t._active = false
-		_vm.run(t.on_deactivate_expr, ctx)
+		debug_info["expr_type"] = "on_deactivate_expr"
+		_vm.run(t.on_deactivate_expr, ctx, debug_info)
 
 
 ## Check trigger unit presence.
@@ -116,7 +167,7 @@ func _check_presence(t: ScenarioTrigger) -> bool:
 ## [return] trigger context.
 func _make_ctx(t: ScenarioTrigger, presence_ok: bool) -> Dictionary:
 	var counts := _counts_in_area(t.area_center_m, t.area_size_m, t.area_shape)
-	return {
+	var ctx := {
 		"trigger_id": t.id,
 		"title": t.title,
 		"center": t.area_center_m,
@@ -126,6 +177,11 @@ func _make_ctx(t: ScenarioTrigger, presence_ok: bool) -> Dictionary:
 		"count_enemy": counts.enemy,
 		"count_player": counts.player,
 	}
+	# Include all global variables in context for easy access
+	for key in _globals.keys():
+		if not ctx.has(key):  # Don't override built-in context vars
+			ctx[key] = _globals[key]
+	return ctx
 
 
 ## Count of units in area.
@@ -232,3 +288,131 @@ func units_in_area(
 			_:
 				pass
 	return out
+
+
+## Handle raw radio command from Radio node.
+func _on_radio_raw(text: String) -> void:
+	_last_radio_text = text
+	_api._set_last_radio_command(text)
+
+
+## Manually activate a trigger by ID.
+## Forces a trigger to become active and run its on_activate expression.
+## Used by custom voice commands to fire specific triggers.
+## [param trigger_id] ID of the trigger to activate.
+## [return] True if trigger was found and activated.
+func activate_trigger(trigger_id: String) -> bool:
+	if not _scenario:
+		return false
+	for t in _scenario.triggers:
+		if t.id == trigger_id and not t._active:
+			t._active = true
+			var ctx := _make_ctx(t, false)
+			_vm.run(t.on_activate_expr, ctx)
+			LogService.trace("Manually activated trigger: %s" % trigger_id, "TriggerEngine.gd")
+			return true
+	return false
+
+
+## Get a global variable value shared across all triggers.
+## [param key] Variable name.
+## [param default] Default value if variable doesn't exist.
+## [return] Variable value or default.
+func get_global(key: String, default: Variant = null) -> Variant:
+	return _globals.get(key, default)
+
+
+## Set a global variable value shared across all triggers.
+## [param key] Variable name.
+## [param value] Value to store.
+func set_global(key: String, value: Variant) -> void:
+	_globals[key] = value
+
+
+## Check if a global variable exists.
+## [param key] Variable name.
+## [return] True if variable exists.
+func has_global(key: String) -> bool:
+	return _globals.has(key)
+
+
+## Clear all global variables.
+func clear_globals() -> void:
+	_globals.clear()
+
+
+## Execute an expression immediately (used by dialog blocking).
+## [param expr] Expression to execute.
+## [param ctx] Context dictionary for the expression.
+func execute_expression(expr: String, ctx: Dictionary) -> void:
+	if _vm:
+		_vm.run(expr, ctx)
+
+
+## Schedule an action to execute after a delay.
+## [param delay_s] Delay in seconds before execution.
+## [param expr] Expression to execute.
+## [param ctx] Context dictionary for the expression.
+## [param use_realtime] If true, uses real-time instead of mission time.
+func schedule_action(
+	delay_s: float, expr: String, ctx: Dictionary, use_realtime: bool = false
+) -> void:
+	if not _sim and not use_realtime:
+		push_warning(
+			"TriggerEngine: Cannot schedule mission-time action without SimWorld reference"
+		)
+		return
+
+	var execute_at: float
+	if use_realtime:
+		execute_at = _realtime_accumulator + delay_s
+	else:
+		execute_at = _sim.get_mission_time_s() + delay_s
+
+	_scheduled_actions.append(
+		{"execute_at": execute_at, "expr": expr, "ctx": ctx, "use_realtime": use_realtime}
+	)
+
+
+## Process mission-time scheduled actions that are ready to execute.
+func _process_mission_time_actions() -> void:
+	if not _sim:
+		return
+	var current_time := _sim.get_mission_time_s()
+	var remaining: Array = []
+
+	for action in _scheduled_actions:
+		# Only process mission-time actions
+		if not action.use_realtime:
+			if action.execute_at <= current_time:
+				# Execute the action
+				_vm.run(action.expr, action.ctx)
+			else:
+				# Keep for later
+				remaining.append(action)
+		else:
+			# Keep real-time actions for _process_realtime_actions
+			remaining.append(action)
+
+	_scheduled_actions = remaining
+
+
+## Process real-time scheduled actions that are ready to execute.
+func _process_realtime_actions() -> void:
+	var current_time := _realtime_accumulator
+	var remaining: Array = []
+
+	for action in _scheduled_actions:
+		# Only process real-time actions
+		if action.use_realtime:
+			if action.execute_at <= current_time:
+				# Execute the action
+				_vm.run(action.expr, action.ctx)
+			else:
+				# Keep for later
+				remaining.append(action)
+		else:
+			# Keep mission-time actions for _process_mission_time_actions
+			remaining.append(action)
+
+	_scheduled_actions = remaining

@@ -13,6 +13,11 @@ var thumbnail: Texture2D
 var dialog_mode: DialogMode = DialogMode.CREATE
 var working: ScenarioData
 
+var _all_units: Array[UnitData] = []
+var _unit_by_id: Dictionary = {}
+var _selected_units: Array[UnitData] = []
+
+@onready var id_input: LineEdit = %Id
 @onready var title_input: LineEdit = %Title
 @onready var desc_input: TextEdit = %Description
 @onready var thumb_preview: TextureRect = %ThumbnailPreview
@@ -23,6 +28,10 @@ var working: ScenarioData
 @onready var terrain_btn: Button = %SelectTerrain
 @onready var close_btn: Button = %Close
 @onready var create_btn: Button = %Create
+@onready var unit_pool: ItemList = %UnitPoolList
+@onready var unit_selected: ItemList = %UnitSelectedList
+@onready var unit_add: Button = %UnitAdd
+@onready var unit_remove: Button = %UnitRemove
 
 
 func _ready():
@@ -33,6 +42,11 @@ func _ready():
 	thumb_btn.pressed.connect(_on_thumbnail_select)
 	thumb_clear.pressed.connect(_on_thumbnail_clear)
 
+	unit_add.pressed.connect(_on_unit_add_pressed)
+	unit_remove.pressed.connect(_on_unit_remove_pressed)
+	_load_units_pool()
+	_refresh_unit_lists()
+
 
 func _on_primary_pressed() -> void:
 	match dialog_mode:
@@ -41,19 +55,23 @@ func _on_primary_pressed() -> void:
 				push_warning("No terrain selected")
 				return
 			var sd := ScenarioData.new()
+			sd.id = id_input.text
 			sd.title = title_input.text
 			sd.description = desc_input.text
 			sd.preview = thumbnail
 			sd.terrain = terrain
+			sd.unit_recruits = _selected_units.duplicate()
 			emit_signal("request_create", sd)
 		DialogMode.EDIT:
 			if not working:
 				push_warning("No scenario to update")
 				return
+			working.id = id_input.text
 			working.title = title_input.text
 			working.description = desc_input.text
 			working.preview = thumbnail
 			working.terrain = terrain
+			working.unit_recruits = _selected_units.duplicate()
 			emit_signal("request_update", working)
 	show_dialog(false)
 
@@ -62,14 +80,22 @@ func _on_terrain_select() -> void:
 	var dlg := FileDialog.new()
 	dlg.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 	dlg.access = FileDialog.ACCESS_FILESYSTEM
-	dlg.add_filter("*.tres, *.res ; TerrainData")
+	dlg.add_filter("*.json, *.json ; TerrainData")
 	add_child(dlg)
 	dlg.popup_centered_ratio(0.5)
 	dlg.file_selected.connect(
 		func(path):
-			var res := ResourceLoader.load(path)
-			if res is TerrainData:
-				terrain = res
+			var f := FileAccess.open(path, FileAccess.READ)
+			if f == null:
+				return false
+			var text := f.get_as_text()
+			f.close()
+			var parsed: Variant = JSON.parse_string(text)
+			if typeof(parsed) != TYPE_DICTIONARY:
+				return false
+			var dta := TerrainData.deserialize(parsed)
+			if dta != null:
+				terrain = dta
 				terrain_path.text = path
 			else:
 				push_error("Not a TerrainData: %s" % path)
@@ -124,6 +150,7 @@ func _reset_values() -> void:
 
 ## Preload fields from existing ScenarioData.
 func _load_from_data(d: ScenarioData) -> void:
+	id_input.text = d.id
 	title_input.text = d.title
 	desc_input.text = d.description
 	thumbnail = d.preview
@@ -133,6 +160,12 @@ func _load_from_data(d: ScenarioData) -> void:
 		terrain_path.text = terrain.resource_path
 	else:
 		terrain_path.text = ""
+	_selected_units = []
+	if d.unit_recruits:
+		for u in d.unit_recruits:
+			if u is UnitData:
+				_selected_units.append(u)
+	_refresh_unit_lists()
 
 
 ## Update window title and primary button text to reflect mode.
@@ -148,7 +181,7 @@ func _title_button_from_mode() -> void:
 ## Show/hide dialog.
 func show_dialog(state: bool, existing: ScenarioData = null) -> void:
 	if not state:
-		visible = false
+		hide()
 		_reset_values()
 		return
 
@@ -160,4 +193,138 @@ func show_dialog(state: bool, existing: ScenarioData = null) -> void:
 		dialog_mode = DialogMode.CREATE
 
 	_title_button_from_mode()
-	visible = true
+	popup_centered_ratio(0.55)
+
+
+## Load all units from ContentDB and build id map.
+func _load_units_pool() -> void:
+	_all_units = []
+	_unit_by_id.clear()
+	if typeof(ContentDB) == TYPE_NIL:
+		push_warning("ContentDB singleton not found; pool is empty.")
+		return
+	var arr := []
+	if ContentDB.has_method("list_units"):
+		arr = ContentDB.list_units()
+	elif ContentDB.has_method("get_all_units"):
+		arr = ContentDB.get_all_units()
+	for u in arr:
+		if u is UnitData and String(u.id) != "":
+			_all_units.append(u)
+			_unit_by_id[String(u.id)] = u
+
+
+## Refresh both ItemLists from state.
+func _refresh_unit_lists() -> void:
+	if not is_instance_valid(unit_pool) or not is_instance_valid(unit_selected):
+		return
+
+	unit_pool.clear()
+	unit_selected.clear()
+
+	# Build a quick selected id set
+	var sel_ids := {}
+	for u in _selected_units:
+		sel_ids[String(u.id)] = true
+
+	# Pool = all - selected
+	for u in _all_units:
+		var uid := String(u.id)
+		if sel_ids.has(uid):
+			continue
+		var idx := unit_pool.add_item(_unit_line(u))
+		unit_pool.set_item_metadata(idx, {"id": uid})
+		if u.icon:
+			var img := u.icon.get_image()
+			img.resize(24, 24, Image.INTERPOLATE_LANCZOS)
+			unit_pool.set_item_icon(idx, ImageTexture.create_from_image(img))
+
+	# Selected list
+	for u in _selected_units:
+		var uid := String(u.id)
+		var idx := unit_selected.add_item(_unit_line(u))
+		unit_selected.set_item_metadata(idx, {"id": uid})
+		if u.icon:
+			var img := u.icon.get_image()
+			img.resize(24, 24, Image.INTERPOLATE_LANCZOS)
+			unit_selected.set_item_icon(idx, ImageTexture.create_from_image(img))
+
+
+## Compose a display line.
+static func _unit_line(u: UnitData) -> String:
+	return u.title
+
+
+## Add by ItemList selection (pool -> selected).
+func _on_unit_add_pressed() -> void:
+	var items := unit_pool.get_selected_items()
+	if items.is_empty():
+		return
+	var ids: Array[String] = []
+	for i in items:
+		var md: Variant = unit_pool.get_item_metadata(i)
+		if typeof(md) == TYPE_DICTIONARY and md.has("id"):
+			ids.append(String(md["id"]))
+	_add_units_by_ids(ids)
+
+
+## Remove by ItemList selection (selected -> pool).
+func _on_unit_remove_pressed() -> void:
+	var items := unit_selected.get_selected_items()
+	if items.is_empty():
+		return
+	var ids: Array[String] = []
+	for i in items:
+		var md: Variant = unit_selected.get_item_metadata(i)
+		if typeof(md) == TYPE_DICTIONARY and md.has("id"):
+			ids.append(String(md["id"]))
+	_remove_units_by_ids(ids)
+
+
+## Drag & drop callback from UnitDDItemList.
+## [param from_kind] UnitDDItemList.Kind
+## [param to_kind] UnitDDItemList.Kind
+func _on_unit_dropped(from_kind: int, to_kind: int, unit_id: String) -> void:
+	if unit_id == "":
+		return
+	if from_kind == to_kind:
+		return
+	if to_kind == 1:  # SELECTED
+		_add_units_by_ids([unit_id])
+	else:  # POOL
+		_remove_units_by_ids([unit_id])
+
+
+## Append units by ids (dedup).
+func _add_units_by_ids(ids: Array[String]) -> void:
+	var need_refresh := false
+	for id in ids:
+		if not _unit_by_id.has(id):
+			continue
+		var u: UnitData = _unit_by_id[id]
+		var already := false
+		for ex in _selected_units:
+			if String(ex.id) == id:
+				already = true
+				break
+		if not already:
+			_selected_units.append(u)
+			need_refresh = true
+	if need_refresh:
+		_refresh_unit_lists()
+
+
+## Remove units by ids.
+func _remove_units_by_ids(ids: Array[String]) -> void:
+	if ids.is_empty():
+		return
+	var need_refresh := false
+	var keep: Array[UnitData] = []
+	for u in _selected_units:
+		if String(u.id) in ids:
+			need_refresh = true
+			continue
+		keep.append(u)
+	_selected_units = keep
+	if need_refresh:
+		_refresh_unit_lists()

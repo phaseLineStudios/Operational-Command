@@ -1,11 +1,23 @@
-[gd_scene load_steps=5 format=3 uid="uid://d33nfyk6l0sn7"]
+[gd_scene load_steps=6 format=3 uid="uid://d33nfyk6l0sn7"]
 
 [ext_resource type="Script" uid="uid://xjb7jlwvtuc3" path="res://scripts/ui/DebugMetricsDisplay.gd" id="1_tc4bw"]
 [ext_resource type="Script" uid="uid://we3y4ug41ivm" path="res://scripts/ui/DebugMenu.gd" id="2_ij3wc"]
-[ext_resource type="FontFile" uid="uid://cm5bhtv1cbqw6" path="res://assets/fonts/JetBrainsMono-Regular.ttf" id="3_jtkf4"]
+[ext_resource type="FontFile" uid="uid://cur8nvqxih1gl" path="res://assets/fonts/jet_brains_mono/JetBrainsMono-Regular.ttf" id="3_jtkf4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xpsq0"]
 bg_color = Color(0, 0, 0, 0.25098)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jtkf4"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
 
 [node name="DebugDisplay" type="CanvasLayer"]
 
@@ -397,6 +409,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jtkf4")
 current_tab = 1
 
 [node name="Log" type="ScrollContainer" parent="Menu/TabContainer"]
@@ -415,6 +428,7 @@ size_flags_vertical = 3
 
 [node name="LogContent" type="RichTextLabel" parent="Menu/TabContainer/Log/Column/Log"]
 layout_mode = 2
+focus_mode = 2
 theme_override_constants/line_separation = 6
 theme_override_constants/paragraph_separation = 6
 theme_override_fonts/normal_font = ExtResource("3_jtkf4")
@@ -424,6 +438,8 @@ theme_override_fonts/italics_font = ExtResource("3_jtkf4")
 theme_override_fonts/mono_font = ExtResource("3_jtkf4")
 theme_override_font_sizes/normal_font_size = 12
 bbcode_enabled = true
+scroll_following = true
+selection_enabled = true
 
 [node name="ActionsRow" type="HBoxContainer" parent="Menu/TabContainer/Log/Column"]
 layout_mode = 2
@@ -461,6 +477,13 @@ toggle_mode = true
 button_pressed = true
 text = "ERROR"
 
+[node name="FilterDebug" type="Button" parent="Menu/TabContainer/Log/Column/ActionsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = "DEBUG"
+
 [node name="FilterTrace" type="Button" parent="Menu/TabContainer/Log/Column/ActionsRow"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -480,20 +503,20 @@ text = "Clear"
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="Column" type="VBoxContainer" parent="Menu/TabContainer/General"]
+[node name="Column" type="GridContainer" parent="Menu/TabContainer/General"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_constants/v_separation = 10
+columns = 2
 
-[node name="MetricsControl" type="HBoxContainer" parent="Menu/TabContainer/General/Column"]
+[node name="MetricsLabel" type="Label" parent="Menu/TabContainer/General/Column"]
 layout_mode = 2
+text = "Performance Metrics"
 
-[node name="Label" type="Label" parent="Menu/TabContainer/General/Column/MetricsControl"]
+[node name="MetricsVisibility" type="OptionButton" parent="Menu/TabContainer/General/Column"]
 layout_mode = 2
-text = "Display performance Metrics"
-
-[node name="MetricsVisibility" type="OptionButton" parent="Menu/TabContainer/General/Column/MetricsControl"]
-layout_mode = 2
+size_flags_horizontal = 3
 selected = 0
 item_count = 4
 popup/item_0/text = "Hidden"
@@ -505,16 +528,49 @@ popup/item_2/id = 2
 popup/item_3/text = "Max"
 popup/item_3/id = 3
 
-[node name="SceneLoader" type="HBoxContainer" parent="Menu/TabContainer/General/Column"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Menu/TabContainer/General/Column/SceneLoader"]
+[node name="SceneLabel" type="Label" parent="Menu/TabContainer/General/Column"]
 layout_mode = 2
 text = "Scene Loader"
 
+[node name="SceneLoader" type="HBoxContainer" parent="Menu/TabContainer/General/Column"]
+layout_mode = 2
+
 [node name="Scene" type="OptionButton" parent="Menu/TabContainer/General/Column/SceneLoader"]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="Load" type="Button" parent="Menu/TabContainer/General/Column/SceneLoader"]
 layout_mode = 2
 text = "Load"
+
+[node name="Scene" type="VBoxContainer" parent="Menu/TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="RefreshRow" type="HBoxContainer" parent="Menu/TabContainer/Scene"]
+layout_mode = 2
+
+[node name="Status" type="Label" parent="Menu/TabContainer/Scene/RefreshRow"]
+layout_mode = 2
+text = "Ready"
+
+[node name="Spacer" type="Control" parent="Menu/TabContainer/Scene/RefreshRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Refresh" type="Button" parent="Menu/TabContainer/Scene/RefreshRow"]
+layout_mode = 2
+text = "Refresh"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Menu/TabContainer/Scene"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Column" type="GridContainer" parent="Menu/TabContainer/Scene/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 10
+columns = 2

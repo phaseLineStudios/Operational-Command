@@ -30,16 +30,33 @@ func _ready() -> void:
 
 
 ## Returns true if there is an unobstructed LOS from [param a] to [param b].
+## Checks both terrain blocking AND maximum spotting range.
 ## [param a] Attacking/observing unit.
 ## [param b] Defending/observed unit.
-## [return] True if LOS is clear, otherwise false.
+## [return] True if LOS is clear and within range, otherwise false.
 func has_los(a: ScenarioUnit, b: ScenarioUnit) -> bool:
 	if a == null or b == null or _los == null or _renderer == null:
 		return false
+
+	var range_m := a.position_m.distance_to(b.position_m)
+	var max_spot_range := a.unit.spot_m if (a.unit and a.unit.spot_m > 0) else 2000.0
+	if _renderer.data == null:
+		return range_m <= max_spot_range
+
+	if range_m > max_spot_range:
+		return false
+
 	var res: Dictionary = _los.trace_los(
 		a.position_m, b.position_m, _renderer, _renderer.data, effects_config
 	)
-	return not bool(res.get("blocked", false))
+	var blocked: bool = res.get("blocked", false)
+	var atten_integral: float = res.get("atten_integral", 0.0)
+
+	const ATTEN_BLOCK_THRESHOLD := 3.4
+	if atten_integral >= ATTEN_BLOCK_THRESHOLD:
+		blocked = true
+
+	return not blocked
 
 
 ## Computes a spotting multiplier (0..1) at [param range_m] from [param pos_d].
