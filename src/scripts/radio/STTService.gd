@@ -184,3 +184,16 @@ func _join_non_empty(a: String, b: String) -> String:
 ## Return a reference to the current recognizer.
 func get_recognizer() -> Vosk:
 	return _stt
+
+
+## Update the recognizer's grammar word list at runtime.
+## Called by SimWorld after mission-specific custom commands are registered.
+## [param callsigns] Mission callsigns override.
+## [param labels] Mission-specific label texts.
+func update_wordlist(callsigns: Array[String] = [], labels: Array[String] = []) -> void:
+	if _stt == null:
+		push_warning("STTService: Cannot update wordlist, recognizer not initialized")
+		return
+	var wordlist := NARules.get_vosk_grammar_words(callsigns, labels)
+	_stt.set_wordlist(wordlist)
+	LogService.info("Updated STT grammar wordlist", "STTService.gd")

@@ -144,8 +144,10 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 	}
 
 	var f := TerrainEffects.compute_terrain_factors(attacker, defender, env)
-	if dist_m > attacker.unit.spot_m * float(f.get("spotting_mul", 1.0)):
-		return 0.0
+
+	# Note: Do NOT apply spotting_mul to range here - that creates a disconnect
+	# with the LOS system. If has_los() passed, the unit should be able to engage
+	# (within engagement_envelope). The spotting_mul affects accuracy/damage, not range.
 
 	var min_acc: float = terrain_config.min_accuracy
 	var acc_mul: float = float(f.get("accuracy_mul", 1.0))
@@ -319,12 +321,13 @@ func _apply_casualties(u: UnitData, raw_losses: int) -> int:
 
 
 ## True if attacker is permitted to fire at defender at distance 'dist_m'.
+## Note: LOS/spotting is already checked via LOSAdapter before combat resolution.
+## This only checks if target is within weapon engagement range.
 func _within_engagement_envelope(attacker: ScenarioUnit, dist_m: float) -> bool:
-	var spot_m := attacker.unit.spot_m
 	var engage_m := attacker.unit.range_m
-	if spot_m <= 0.0 or engage_m <= 0.0:
+	if engage_m <= 0.0:
 		return false
-	return (dist_m <= spot_m + 0.5) and (dist_m <= engage_m + 0.5)
+	return dist_m <= engage_m + 0.5
 
 
 ## Debug - build and emit a snapshot (for overlays/logging)

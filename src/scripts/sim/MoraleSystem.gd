@@ -13,7 +13,7 @@ var unit_id: String  ##id of unit
 var morale: float = 0.6  ##pure value used to determine state
 var morale_state: int = MoraleState.STEADY  ##state used for multiplier
 var owner: ScenarioUnit  ##unit connected to the script
-var scenario: ScenarioData = Game.current_scenario  ##points to current scenario to check weather
+var scenario: ScenarioData  ##points to current scenario to check weather
 
 
 ##sets value of id variables
@@ -21,6 +21,7 @@ func _init(u_id: String = "", u_owner: ScenarioUnit = null) -> void:
 	unit_id = u_id
 	morale_state = get_morale_state(morale)
 	owner = u_owner
+	scenario = Game.current_scenario
 
 
 ##returns the raw moralevalue
@@ -68,6 +69,9 @@ func is_broken() -> bool:
 
 ##applies overtime moralechanges
 func tick(dt: float) -> void:
+	if not scenario:
+		return
+
 	#idle
 	if owner.move_state() == ScenarioUnit.MoveState.IDLE:
 		apply_morale_delta(-0.001 * dt, "idle_decay")
@@ -82,6 +86,9 @@ func tick(dt: float) -> void:
 
 ##applies morale boost to nearby units
 func nearby_ally_morale_change(amount: float = 0.0, source: String = "nearby victory") -> void:
+	if not scenario or not scenario.units:
+		return
+
 	var nearby: Array = []
 	var max_distance = 500
 
@@ -112,6 +119,9 @@ func morale_effectiveness_mul() -> float:
 
 ##gains morale if no enemies nearby
 func safe_rest() -> void:
+	if not scenario or not scenario.units:
+		return
+
 	var min_distance = 2000
 	var safe = true
 

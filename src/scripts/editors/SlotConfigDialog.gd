@@ -8,6 +8,8 @@ var _before: UnitSlotData
 
 @onready var key_input: LineEdit = %Key
 @onready var title_input: LineEdit = %Title
+@onready var pos_x: SpinBox = %PositionX
+@onready var pos_y: SpinBox = %PositionY
 @onready var callsign_input: LineEdit = %Callsign
 @onready var roles_input: LineEdit = %RoleInput
 @onready var roles_add: Button = %RoleAdd
@@ -32,6 +34,8 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 
 	key_input.text = String(s.key)
 	title_input.text = s.title
+	pos_x.value = s.start_position.x
+	pos_y.value = s.start_position.y
 	callsign_input.text = s.callsign
 	_roles = s.allowed_roles
 	_refresh_role_list()
@@ -49,6 +53,7 @@ func _on_save() -> void:
 	after.title = title_input.text
 	after.callsign = callsign_input.text
 	after.allowed_roles = _roles
+	after.start_position = Vector2(pos_x.value, pos_y.value)
 
 	if editor.history:
 		var desc := "Edit Slot %s" % String(_before.title)

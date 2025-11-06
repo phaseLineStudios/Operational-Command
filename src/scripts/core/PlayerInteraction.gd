@@ -108,7 +108,11 @@ func _try_pickup(mouse_pos: Vector2) -> void:
 	if _held.has_method("on_pickup"):
 		_held.call("on_pickup")
 
-	_grab_offset_local = _held.to_local(hit.position)
+	# Use the item's grab offset method if available, otherwise calculate manually
+	if _held.has_method("get_grab_offset"):
+		_grab_offset_local = _held.get_grab_offset(hit.position)
+	else:
+		_grab_offset_local = _held.to_local(hit.position)
 
 	var p: Variant = _project_mouse_to_finite_plane(mouse_pos)
 	if p != null:

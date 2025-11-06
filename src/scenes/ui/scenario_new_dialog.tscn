@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://5awqyidom0l2"]
+[gd_scene load_steps=3 format=3 uid="uid://5awqyidom0l2"]
 
 [ext_resource type="Script" uid="uid://b4bj1a02xuud3" path="res://scripts/editors/NewScenarioDialog.gd" id="1_f0svs"]
+[ext_resource type="Script" uid="uid://ccoypa6qydg57" path="res://scripts/editors/helpers/UnitDDItemList.gd" id="2_8kexb"]
 
 [node name="NewScenarioDialog" type="Window"]
 auto_translate_mode = 1
@@ -10,105 +11,181 @@ position = Vector2i(325, 36)
 size = Vector2i(500, 600)
 script = ExtResource("1_f0svs")
 
-[node name="VBox" type="VBoxContainer" parent="."]
+[node name="Root" type="VBoxContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TitleLabel" type="Label" parent="VBox"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Root"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBox" type="VBoxContainer" parent="Root/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="IdLabel" type="Label" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+text = "Unique Scenario ID"
+
+[node name="Id" type="LineEdit" parent="Root/ScrollContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "required"
+
+[node name="TitleLabel" type="Label" parent="Root/ScrollContainer/VBox"]
 layout_mode = 2
 text = "Scenario name"
 
-[node name="Title" type="LineEdit" parent="VBox"]
+[node name="Title" type="LineEdit" parent="Root/ScrollContainer/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "Name"
 
-[node name="DescriptionLabel" type="Label" parent="VBox"]
-layout_mode = 2
-text = "Description"
-
-[node name="Description" type="TextEdit" parent="VBox"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 100)
-layout_mode = 2
-placeholder_text = "Description"
-
-[node name="ThumbnailLabel" type="Label" parent="VBox"]
-layout_mode = 2
-text = "Thumbnail"
-
-[node name="PreviewCenter" type="CenterContainer" parent="VBox"]
-layout_mode = 2
-
-[node name="PreviewContainer" type="PanelContainer" parent="VBox/PreviewCenter"]
-layout_mode = 2
-
-[node name="ThumbnailPreview" type="TextureRect" parent="VBox/PreviewCenter/PreviewContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(300, 200)
-layout_mode = 2
-expand_mode = 1
-stretch_mode = 5
-
-[node name="ThumbnailRow" type="HBoxContainer" parent="VBox"]
-layout_mode = 2
-
-[node name="ThumbnailPath" type="LineEdit" parent="VBox/ThumbnailRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-text = "No Thumbnail Selected"
-editable = false
-
-[node name="ClearThumbnail" type="Button" parent="VBox/ThumbnailRow"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Clear"
-
-[node name="SelectThumbnail" type="Button" parent="VBox/ThumbnailRow"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Select"
-
-[node name="TerrainLabel" type="Label" parent="VBox"]
+[node name="TerrainLabel" type="Label" parent="Root/ScrollContainer/VBox"]
 layout_mode = 2
 text = "Terrain"
 
-[node name="TerrainRow" type="HBoxContainer" parent="VBox"]
+[node name="TerrainRow" type="HBoxContainer" parent="Root/ScrollContainer/VBox"]
 layout_mode = 2
 
-[node name="TerrainPath" type="LineEdit" parent="VBox/TerrainRow"]
+[node name="TerrainPath" type="LineEdit" parent="Root/ScrollContainer/VBox/TerrainRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "No Terrain Selected"
 editable = false
 
-[node name="SelectTerrain" type="Button" parent="VBox/TerrainRow"]
+[node name="SelectTerrain" type="Button" parent="Root/ScrollContainer/VBox/TerrainRow"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Select"
 
-[node name="Spacer" type="Control" parent="VBox"]
+[node name="MetaContainer" type="FoldableContainer" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+folded = true
+title = "Scenario Meta"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/ScrollContainer/VBox/MetaContainer"]
+visible = false
+layout_mode = 2
+
+[node name="DescriptionLabel" type="Label" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer"]
+layout_mode = 2
+text = "Description"
+
+[node name="Description" type="TextEdit" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+placeholder_text = "Description"
+
+[node name="ThumbnailLabel" type="Label" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer"]
+layout_mode = 2
+text = "Thumbnail"
+
+[node name="PreviewCenter" type="CenterContainer" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PreviewContainer" type="PanelContainer" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer/PreviewCenter"]
+layout_mode = 2
+
+[node name="ThumbnailPreview" type="TextureRect" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer/PreviewCenter/PreviewContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 200)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ThumbnailRow" type="HBoxContainer" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ThumbnailPath" type="LineEdit" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer/ThumbnailRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "No Thumbnail Selected"
+editable = false
+
+[node name="ClearThumbnail" type="Button" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer/ThumbnailRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Clear"
+
+[node name="SelectThumbnail" type="Button" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer/ThumbnailRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Select"
+
+[node name="UnitContainer" type="FoldableContainer" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+title = "Player unit pool"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Root/ScrollContainer/VBox/UnitContainer"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+
+[node name="PoolContainer" type="VBoxContainer" parent="Root/ScrollContainer/VBox/UnitContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Root/ScrollContainer/VBox/UnitContainer/HBoxContainer/PoolContainer"]
+layout_mode = 2
+text = "Available Units"
+
+[node name="UnitPoolList" type="ItemList" parent="Root/ScrollContainer/VBox/UnitContainer/HBoxContainer/PoolContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+script = ExtResource("2_8kexb")
+dialog_path = NodePath("../../../../../../..")
 
-[node name="ActionRow" type="HBoxContainer" parent="VBox"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/ScrollContainer/VBox/UnitContainer/HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="UnitAdd" type="Button" parent="Root/ScrollContainer/VBox/UnitContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = ">"
+
+[node name="UnitRemove" type="Button" parent="Root/ScrollContainer/VBox/UnitContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "<"
+
+[node name="SelectedContainer" type="VBoxContainer" parent="Root/ScrollContainer/VBox/UnitContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Root/ScrollContainer/VBox/UnitContainer/HBoxContainer/SelectedContainer"]
+layout_mode = 2
+text = "Selected Units"
+
+[node name="UnitSelectedList" type="ItemList" parent="Root/ScrollContainer/VBox/UnitContainer/HBoxContainer/SelectedContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_8kexb")
+kind = 1
+dialog_path = NodePath("../../../../../../..")
+
+[node name="ActionRow" type="HBoxContainer" parent="Root"]
 layout_mode = 2
 
-[node name="Close" type="Button" parent="VBox/ActionRow"]
+[node name="Close" type="Button" parent="Root/ActionRow"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Close"
 
-[node name="Spacer" type="Control" parent="VBox/ActionRow"]
+[node name="Spacer" type="Control" parent="Root/ActionRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Create" type="Button" parent="VBox/ActionRow"]
+[node name="Create" type="Button" parent="Root/ActionRow"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Create"

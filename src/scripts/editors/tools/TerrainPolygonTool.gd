@@ -25,15 +25,16 @@ func _init():
 
 func _load_brushes() -> void:
 	brushes.clear()
-	var dir := DirAccess.open("res://assets/terrain_brushes/")
-	if dir:
-		for f in dir.get_files():
-			if f.ends_with(".tres") or f.ends_with(".res"):
-				var r := ResourceLoader.load("res://assets/terrain_brushes/%s" % f)
-				if r is TerrainBrush:
-					if r.feature_type != TerrainBrush.FeatureType.AREA:
-						continue
-					brushes.append(r)
+	var files := ResourceLoader.list_directory("res://assets/terrain_brushes")
+	for file in files:
+		var is_dir := file[file.length() - 1] == "/"
+		var extension := file.split(".")[-1]
+		if not is_dir and extension in ["tres", "res"]:
+			var r := ResourceLoader.load("res://assets/terrain_brushes/%s" % file)
+			if r is TerrainBrush:
+				if r.feature_type != TerrainBrush.FeatureType.AREA:
+					continue
+				brushes.append(r)
 
 
 func build_options_ui(p: Control) -> void:

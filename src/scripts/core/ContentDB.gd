@@ -74,16 +74,15 @@ func _resolve_id_path(dir_abs: String, id: String) -> String:
 func get_all_objects(dir_path: String) -> Array:
 	var dir_abs := _norm_dir(dir_path)
 	var out: Array = []
-	var files := DirAccess.get_files_at(dir_abs)
-	if files.is_empty():
-		return out
-	for f in files:
-		if f.get_extension().to_lower() != "json":
-			continue
-		var path := "%s/%s" % [dir_abs, f]
-		var obj := _load_json(path)
-		if not obj.is_empty():
-			out.append(obj)
+	var files := ResourceLoader.list_directory(dir_abs)
+	for file in files:
+		var is_dir := file[file.length() - 1] == "/"
+		var extension := file.split(".")[-1]
+		if not is_dir and extension in ["json"]:
+			var path := "%s/%s" % [dir_abs, file]
+			var obj := _load_json(path)
+			if not obj.is_empty():
+				out.append(obj)
 	return out
 
 
@@ -163,10 +162,10 @@ func get_scenario(id: String) -> ScenarioData:
 
 
 ## Get multiple scenarios by IDs
-func get_scenarios(ids: Array) -> Array[CampaignData]:
-	var out: Array[CampaignData] = []
+func get_scenarios(ids: Array) -> Array[ScenarioData]:
+	var out: Array[ScenarioData] = []
 	for raw in ids:
-		var s := get_campaign(String(raw))
+		var s := get_scenario(String(raw))
 		if s:
 			out.append(s)
 	return out
@@ -181,6 +180,45 @@ func list_scenarios() -> Array[ScenarioData]:
 	var out: Array[ScenarioData] = []
 	for item in camps:
 		var res := ScenarioData.deserialize(item)
+		if res != null:
+			out.append(res)
+	return out
+
+
+## Terrain helpers.
+## Get Terrain by ID.
+## [param id] Terrain ID.
+## [return] Associated Terrain Data.
+func get_terrain(id: String) -> TerrainData:
+	var d := get_object("terrains", id)
+	if d.is_empty():
+		push_warning("Terrain not found: %s" % id)
+		return null
+	return TerrainData.deserialize(d)
+
+
+## Get multiple terrains by IDs.
+## [param ids] Array of ids to fetch.
+## [return] Array of associated Terrain Data.
+func get_terrains(ids: Array) -> Array[TerrainData]:
+	var out: Array[TerrainData] = []
+	for raw in ids:
+		var s := get_terrain(String(raw))
+		if s:
+			out.append(s)
+	return out
+
+
+## list all terrains.
+## [return] Array of all terrains.
+func list_terrains() -> Array[TerrainData]:
+	var terrs := get_all_objects("terrains")
+	if terrs.is_empty():
+		return []
+
+	var out: Array[TerrainData] = []
+	for item in terrs:
+		var res := TerrainData.deserialize(item)
 		if res != null:
 			out.append(res)
 	return out
@@ -310,6 +348,31 @@ func list_units() -> Array[UnitData]:
 		if res != null:
 			out.append(res)
 	return out
+
+
+## Save a UnitData to res://data/units/<id>.json and update cache.
+## [param unit] UnitData to save.
+## [return] Absolute path or "" on error.
+func save_unit(unit: UnitData) -> String:
+	if unit == null or String(unit.id).strip_edges() == "":
+		push_warning("save_unit: missing unit or id")
+		return ""
+	var dir_abs := _norm_dir("units")
+	var mk := DirAccess.make_dir_recursive_absolute(dir_abs)
+	if mk != OK and mk != ERR_ALREADY_EXISTS:
+		push_warning("save_unit: cannot create %s (err %d)" % [dir_abs, mk])
+		return ""
+	var abs_path := "%s/%s.json" % [dir_abs, unit.id]
+	var f := FileAccess.open(abs_path, FileAccess.WRITE)
+	if f == null:
+		push_warning("save_unit: cannot open %s (err %d)" % [abs_path, FileAccess.get_open_error()])
+		return ""
+	var payload := unit.serialize().duplicate(true)
+	f.store_string(JSON.stringify(payload, "  "))
+	f.flush()
+	f.close()
+	_cache[abs_path] = payload
+	return abs_path
 
 
 ## Unit Category helpers.
@@ -472,6 +535,13 @@ func resources_from_ids(ids: Array, loader: Callable) -> Array:
 		if res != null:
 			out.append(res)
 	return out
+
+
+## Generate ID from string
+## [param string] String to generate ID from.
+func id_from_string(string: String) -> String:
+	var cleaned := string.to_lower().replace(" ", "_")
+	return cleaned
 
 
 ## Safely duplicate a dictionary or array

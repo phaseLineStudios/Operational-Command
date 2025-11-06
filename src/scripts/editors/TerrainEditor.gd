@@ -371,9 +371,15 @@ func _save():
 	if _current_path == "":
 		_save_as()
 		return
-	var err := ResourceSaver.save(data, _current_path)
-	if err != OK:
-		push_error("Save failed: %s" % err)
+	var srl := JSON.stringify(data.serialize())
+	var f := FileAccess.open(_current_path, FileAccess.WRITE)
+	if f == null:
+		return false
+	var ok := f.store_string(srl)
+	f.flush()
+	f.close()
+	if not ok:
+		LogService.error("Save failed", "TerrainEditor.gd:382")
 	else:
 		_saved_history_index = _current_history_index
 		_dirty = false
@@ -389,14 +395,19 @@ func _save_as():
 	var dlg := FileDialog.new()
 	dlg.file_mode = FileDialog.FILE_MODE_SAVE_FILE
 	dlg.access = FileDialog.ACCESS_FILESYSTEM
-	dlg.add_filter("*.tres ; Text Resource")
-	dlg.add_filter("*.res ; Binary Resource")
+	dlg.add_filter("*.json ; JSON")
 	add_child(dlg)
 	dlg.popup_centered_ratio(0.5)
 	dlg.file_selected.connect(
 		func(path):
-			var err := ResourceSaver.save(data, path)
-			if err == OK:
+			var srl := JSON.stringify(data.serialize())
+			var f := FileAccess.open(path, FileAccess.WRITE)
+			if f == null:
+				return false
+			var ok := f.store_string(srl)
+			f.flush()
+			f.close()
+			if ok:
 				_current_path = path
 				_saved_history_index = _current_history_index
 				_dirty = false
@@ -404,7 +415,7 @@ func _save_as():
 					_pending_quit_after_save = false
 					_perform_pending_exit()
 			else:
-				push_error("Save As failed: %s" % err)
+				LogService.error("Save As failed", "TerrainEditor.gd:412")
 			dlg.queue_free()
 	)
 	dlg.canceled.connect(func(): dlg.queue_free())
@@ -415,14 +426,22 @@ func _open():
 	var dlg := FileDialog.new()
 	dlg.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 	dlg.access = FileDialog.ACCESS_FILESYSTEM
-	dlg.add_filter("*.tres, *.res ; TerrainData")
+	dlg.add_filter("*.json ; JSON")
 	add_child(dlg)
 	dlg.popup_centered_ratio(0.5)
 	dlg.file_selected.connect(
 		func(path):
-			var res := ResourceLoader.load(path)
-			if res is TerrainData:
-				_new_terrain(res)
+			var f := FileAccess.open(path, FileAccess.READ)
+			if f == null:
+				return false
+			var text := f.get_as_text()
+			f.close()
+			var parsed: Variant = JSON.parse_string(text)
+			if typeof(parsed) != TYPE_DICTIONARY:
+				return false
+			var dta := TerrainData.deserialize(parsed)
+			if dta != null:
+				_new_terrain(dta)
 			else:
 				push_error("Not a TerrainData: %s" % path)
 			dlg.queue_free()

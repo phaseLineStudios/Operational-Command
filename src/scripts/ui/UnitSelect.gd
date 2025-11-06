@@ -44,21 +44,21 @@ var _selected_card: UnitCard = null
 @onready var _search: LineEdit = %Search
 @onready var _pool: PoolDropArea = %Pool/List
 
-@onready var _slots_list: SlotsList = $"Root/Main/TaskOrgSheet/SlotsList"
+@onready var _slots_list: SlotsList = %SlotsList
 
 @onready var _lbl_ammo: Label = %Ammo
 @onready var _lbl_fuel: Label = %Fuel
 @onready var _lbl_med: Label = %Medical
 @onready var _lbl_rep: Label = %Repair
 
-@onready var _lbl_vet: Label = $"Root/Main/LeftTray/AvailableUnits/UnitStats/Veterancy"
-@onready var _lbl_att: Label = $"Root/Main/LeftTray/AvailableUnits/UnitStats/Attack"
-@onready var _lbl_def: Label = $"Root/Main/LeftTray/AvailableUnits/UnitStats/Defence"
-@onready var _lbl_spot: Label = $"Root/Main/LeftTray/AvailableUnits/UnitStats/SpottingDistance"
-@onready var _lbl_range: Label = $"Root/Main/LeftTray/AvailableUnits/UnitStats/EngagementRange"
-@onready var _lbl_morale: Label = $"Root/Main/LeftTray/AvailableUnits/UnitStats/Morale"
-@onready var _lbl_speed: Label = $"Root/Main/LeftTray/AvailableUnits/UnitStats/GroundSpeed"
-@onready var _lbl_coh: Label = $"Root/Main/LeftTray/AvailableUnits/UnitStats/Cohesion"
+@onready var _lbl_vet: Label = %UnitStats/Veterancy
+@onready var _lbl_att: Label = %UnitStats/Attack
+@onready var _lbl_def: Label = %UnitStats/Defence
+@onready var _lbl_spot: Label = %UnitStats/SpottingDistance
+@onready var _lbl_range: Label = %UnitStats/EngagementRange
+@onready var _lbl_morale: Label = %UnitStats/Morale
+@onready var _lbl_speed: Label = %UnitStats/GroundSpeed
+@onready var _lbl_coh: Label = %UnitStats/Cohesion
 
 
 ## Build UI, load mission

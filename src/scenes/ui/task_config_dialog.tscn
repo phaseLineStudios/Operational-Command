@@ -5,44 +5,94 @@
 [node name="TaskConfigDialog" type="Window"]
 auto_translate_mode = 1
 oversampling_override = 1.0
-title = "Task"
+title = "Edit: Task"
 position = Vector2i(325, 175)
 size = Vector2i(500, 300)
 script = ExtResource("1_002jk")
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="Root" type="VBoxContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBox" type="VBoxContainer" parent="ScrollContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Root"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBox" type="VBoxContainer" parent="Root/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Form" type="VBoxContainer" parent="ScrollContainer/VBox"]
+[node name="PositionContainer" type="FoldableContainer" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+title = "Task Transformation"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/ScrollContainer/VBox/PositionContainer"]
+layout_mode = 2
+
+[node name="PositionContainer" type="HBoxContainer" parent="Root/ScrollContainer/VBox/PositionContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="Root/ScrollContainer/VBox/PositionContainer/VBoxContainer"]
+layout_mode = 2
+columns = 5
+
+[node name="PositionLabel" type="Label" parent="Root/ScrollContainer/VBox/PositionContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Position"
+
+[node name="XLabel" type="Label" parent="Root/ScrollContainer/VBox/PositionContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "X:"
+
+[node name="PositionX" type="SpinBox" parent="Root/ScrollContainer/VBox/PositionContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -99999.0
+max_value = 99999.0
+step = 10.0
+
+[node name="YLabel" type="Label" parent="Root/ScrollContainer/VBox/PositionContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Y:"
+
+[node name="PositionY" type="SpinBox" parent="Root/ScrollContainer/VBox/PositionContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -99999.0
+max_value = 99999.0
+step = 10.0
+
+[node name="FormContainer" type="FoldableContainer" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+title = "Task Attributes"
+
+[node name="Form" type="VBoxContainer" parent="Root/ScrollContainer/VBox/FormContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Spacer" type="Control" parent="ScrollContainer/VBox"]
+[node name="Spacer" type="Control" parent="Root/ScrollContainer/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ActionRow" type="HBoxContainer" parent="ScrollContainer/VBox"]
+[node name="ActionRow" type="HBoxContainer" parent="Root"]
 layout_mode = 2
 
-[node name="Close" type="Button" parent="ScrollContainer/VBox/ActionRow"]
+[node name="Close" type="Button" parent="Root/ActionRow"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Close"
+text = "Cancel"
 
-[node name="Spacer" type="Control" parent="ScrollContainer/VBox/ActionRow"]
+[node name="Spacer" type="Control" parent="Root/ActionRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Save" type="Button" parent="ScrollContainer/VBox/ActionRow"]
+[node name="Save" type="Button" parent="Root/ActionRow"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Save"

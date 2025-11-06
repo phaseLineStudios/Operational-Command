@@ -35,7 +35,7 @@ func _on_mouse_move(e: InputEventMouseMotion) -> bool:
 	if snap_to_grid or Input.is_key_pressed(KEY_SHIFT):
 		mp = _snap(mp)
 	_hover_map_pos = mp
-	_hover_valid = editor.terrain_render.is_inside_map(mp)
+	_hover_valid = editor.terrain_render.is_inside_map(e.position)
 	emit_signal("request_redraw_overlay")
 	return true
 

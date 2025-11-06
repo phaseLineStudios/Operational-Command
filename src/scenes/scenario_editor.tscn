@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c5vv37x66vtg7"]
+[gd_scene load_steps=14 format=3 uid="uid://c5vv37x66vtg7"]
 
 [ext_resource type="Script" uid="uid://cilbctp6dmcm" path="res://scripts/editors/ScenarioEditor.gd" id="1_wqbsy"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="2_gsqds"]
@@ -9,8 +9,10 @@
 [ext_resource type="PackedScene" uid="uid://yvffgqffurqd" path="res://scenes/ui/briefing_dialog.tscn" id="11_csmny"]
 [ext_resource type="PackedScene" uid="uid://dkpal3npfyfbj" path="res://scenes/ui/task_config_dialog.tscn" id="11_ltmm0"]
 [ext_resource type="PackedScene" uid="uid://cb5oknciymdd4" path="res://scenes/ui/slot_config_dialog.tscn" id="12_csmny"]
+[ext_resource type="PackedScene" uid="uid://c7ms1i2uof7kp" path="res://scenes/ui/unit_create_dialog.tscn" id="12_dnx60"]
 [ext_resource type="PackedScene" uid="uid://blt6fcbjfelax" path="res://scenes/ui/unit_config_dialog.tscn" id="13_dnx60"]
 [ext_resource type="PackedScene" uid="uid://cdabq224o47g4" path="res://scenes/ui/trigger_config_dialog.tscn" id="17_72fj5"]
+[ext_resource type="PackedScene" uid="uid://ct4m2p8r3ufw8" path="res://scenes/ui/custom_command_config_dialog.tscn" id="18_custom"]
 
 [node name="ScenarioEditor" type="Control"]
 layout_mode = 3
@@ -76,7 +78,7 @@ popup/item_0/text = "Scenario"
 popup/item_0/id = 0
 popup/item_1/text = "Briefing"
 popup/item_1/id = 1
-popup/item_2/text = "Weather"
+popup/item_2/text = "Environment"
 popup/item_2/id = 2
 
 [node name="Help" type="MenuButton" parent="Root/TopBar/HBox"]
@@ -132,7 +134,7 @@ mouse_target = true
 
 [node name="View" type="SubViewport" parent="Root/HBox/TerrainView"]
 handle_input_locally = false
-size = Vector2i(614, 586)
+size = Vector2i(552, 586)
 render_target_update_mode = 4
 
 [node name="World" parent="Root/HBox/TerrainView/View" instance=ExtResource("2_gsqds")]
@@ -226,7 +228,6 @@ hide_root = true
 [node name="NewUnit" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Units"]
 unique_name_in_owner = true
 layout_mode = 2
-disabled = true
 text = "+ New Unit"
 
 [node name="Triggers" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
@@ -257,15 +258,195 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Draw" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
-unique_name_in_owner = true
+[node name="Cmds" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 
-[node name="Label" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+[node name="Label" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Cmds"]
 layout_mode = 2
-text = "NOT YET IMPLEMENTED"
+text = "Custom Voice Commands"
+
+[node name="Commands" type="ItemList" parent="Root/HBox/RightTray/VBox/TabContainer3/Cmds"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Buttons" type="HBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3/Cmds"]
+layout_mode = 2
+
+[node name="NewCommand" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Cmds/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "+ New"
+
+[node name="EditCommand" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Cmds/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Edit"
+
+[node name="DeleteCommand" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Cmds/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Delete"
+
+[node name="Draw" type="VBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+metadata/_tab_index = 4
+
+[node name="Toolbar" type="HBoxContainer" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+layout_mode = 2
+
+[node name="BtnFreehand" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/Toolbar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "FreeHand"
+
+[node name="BtnStamp" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/Toolbar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Stamp"
+
+[node name="BtnEraser" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/Toolbar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Eraser"
+
+[node name="HSeparator" type="HSeparator" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+layout_mode = 2
+
+[node name="STLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Symbols"
+
+[node name="STList" type="ItemList" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+same_column_width = true
+
+[node name="LoadTexture" type="Button" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Load Symbol"
+
+[node name="STSeperator" type="HSeparator" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="FHSettings" type="GridContainer" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+columns = 2
+
+[node name="ColorLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/FHSettings"]
+layout_mode = 2
+text = "Color"
+
+[node name="FHColor" type="ColorPickerButton" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/FHSettings"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WidthLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/FHSettings"]
+layout_mode = 2
+text = "Width"
+
+[node name="FHWidth" type="SpinBox" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/FHSettings"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 32.0
+value = 3.0
+
+[node name="OpacityLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/FHSettings"]
+layout_mode = 2
+text = "Opacity"
+
+[node name="FHOpacity" type="HSlider" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/FHSettings"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 2
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="STSettings" type="GridContainer" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+columns = 2
+
+[node name="ColorLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+layout_mode = 2
+text = "Color"
+
+[node name="STColor" type="ColorPickerButton" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ScaleLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+layout_mode = 2
+text = "Scale"
+
+[node name="STScale" type="SpinBox" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.1
+max_value = 10.0
+step = 0.1
+value = 1.0
+
+[node name="RotationLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+layout_mode = 2
+text = "Rotation"
+
+[node name="STRotation" type="SpinBox" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = -180.0
+max_value = 180.0
+
+[node name="OpacityLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+layout_mode = 2
+text = "Opacity"
+
+[node name="STOpacity" type="HSlider" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="LabelTextLabel" type="Label" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+layout_mode = 2
+text = "Label"
+
+[node name="STLabelText" type="LineEdit" parent="Root/HBox/RightTray/VBox/TabContainer3/Draw/STSettings"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Optional label text"
 
 [node name="BottomBar" type="PanelContainer" parent="Root"]
 layout_mode = 2
@@ -311,6 +492,14 @@ visible = false
 unique_name_in_owner = true
 visible = false
 
+[node name="CustomCommandConfigDialog" parent="." instance=ExtResource("18_custom")]
+unique_name_in_owner = true
+visible = false
+
 [node name="BriefingDialog" parent="." instance=ExtResource("11_csmny")]
+unique_name_in_owner = true
+visible = false
+
+[node name="UnitCreateDialog" parent="." instance=ExtResource("12_dnx60")]
 unique_name_in_owner = true
 visible = false

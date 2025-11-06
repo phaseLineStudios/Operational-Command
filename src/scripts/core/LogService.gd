@@ -5,7 +5,7 @@ extends Node
 signal line(text: String, level: LogLevel)
 
 ## Log Level for message
-enum LogLevel { LOG, INFO, ERROR, WARNING, TRACE }
+enum LogLevel { LOG, INFO, ERROR, WARNING, DEBUG, TRACE }
 
 var _tap: LogTap
 var _project_level: LogLevel = ProjectSettings.get_setting("debug/settings/stdout/log_level")
@@ -41,6 +41,7 @@ func info(msg: String, src := ""):
 func warning(msg: String, src := ""):
 	var fmt_msg := _fmt_msg(msg, LogLevel.WARNING, src)
 	emit_signal("line", fmt_msg, LogLevel.WARNING)
+	push_warning("%s (%s)" % [msg, src])
 	if _project_level >= LogLevel.WARNING:
 		print_rich(fmt_msg)
 
@@ -49,7 +50,18 @@ func warning(msg: String, src := ""):
 func error(msg: String, src := ""):
 	var fmt_msg := _fmt_msg(msg, LogLevel.ERROR, src)
 	emit_signal("line", fmt_msg, LogLevel.ERROR)
+	push_error("%s (%s)" % [msg, src])
 	if _project_level >= LogLevel.ERROR:
+		print_rich(fmt_msg)
+
+
+## Log a DEBUG level rich message.
+## [param msg] Message to log.
+## [param src] source of log message e.g. "LogService.gd:58"
+func debug(msg: String, src := ""):
+	var fmt_msg := _fmt_msg(msg, LogLevel.DEBUG, src)
+	emit_signal("line", fmt_msg, LogLevel.DEBUG)
+	if _project_level >= LogLevel.DEBUG:
 		print_rich(fmt_msg)
 
 
@@ -86,6 +98,8 @@ func _fmt_level(lvl: LogLevel) -> String:
 			return "[bgcolor=#dac663][color=black] WARNING [/color][/bgcolor]"
 		LogLevel.ERROR:
 			return "[bgcolor=#f8736d][color=black]  ERROR  [/color][/bgcolor]"
+		LogLevel.DEBUG:
+			return "[bgcolor=#d26aca][color=black]  DEBUG  [/color][/bgcolor]"
 		LogLevel.TRACE:
 			return "[bgcolor=#a78bb9][color=black]  TRACE  [/color][/bgcolor]"
 	return ""

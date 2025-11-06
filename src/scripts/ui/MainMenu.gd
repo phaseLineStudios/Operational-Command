@@ -28,13 +28,13 @@ var _state: SubmenuState = SubmenuState.COLLAPSED
 var _editor_wrapper: VBoxContainer
 var _submenu_holder: VBoxContainer
 
-@onready var menu_hbox: VBoxContainer = $"MenuContainer"
-@onready var btn_campaign: Button = %CampaignButton
-@onready var btn_scenarios: Button = %ScenariosButton
-@onready var btn_multiplayer: Button = %MultiplayerButton
-@onready var btn_editor: Button = %EditorButton
-@onready var btn_settings: Button = %SettingsButton
-@onready var btn_quit: Button = %CloseButton
+@onready var menu_hbox: VBoxContainer = %MenuContainer
+@onready var btn_campaign: OCMenuButton = %CampaignButton
+@onready var btn_scenarios: OCMenuButton = %ScenariosButton
+@onready var btn_multiplayer: OCMenuButton = %MultiplayerButton
+@onready var btn_editor: OCMenuButton = %EditorButton
+@onready var btn_settings: OCMenuButton = %SettingsButton
+@onready var btn_quit: OCMenuButton = %CloseButton
 
 
 func _ready() -> void:

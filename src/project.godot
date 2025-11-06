@@ -11,8 +11,8 @@ config_version=5
 [application]
 
 config/name="Operational Command"
-config/version="0.1.84"
-run/main_scene="uid://dqsf56jld2bf6"
+config/version="0.1.85"
+run/main_scene="uid://dkugvwc2gd622"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="uid://dlsstpfgchh2t"
 
@@ -33,7 +33,7 @@ TTSService="*res://scripts/radio/TTSService.gd"
 
 [debug]
 
-settings/stdout/log_level=3
+settings/stdout/log_level=4
 
 [input]
 
@@ -81,3 +81,10 @@ pause_menu={
 [physics]
 
 3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+textures/default_filters/anisotropic_filtering_level=3
+anti_aliasing/quality/msaa_3d=3
+textures/default_filters/texture_mipmap_bias=-0.5
+anti_aliasing/quality/screen_space_aa=2
