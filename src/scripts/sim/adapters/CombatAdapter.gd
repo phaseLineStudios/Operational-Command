@@ -19,7 +19,7 @@ enum ROE { HOLD_FIRE, RETURN_FIRE, OPEN_FIRE }
 
 var _ammo: AmmoSystem  ## Cached AmmoSystem reference
 
-var _roe: int = ROE.RETURN_FIRE
+var _roe: int = 2 # 0 HOLD_FIRE, 1 RETURN_FIRE, 2 OPEN_FIRE
 var _shot_timer: float = 0.0
 var _saw_hostile_shot: bool = false
 
@@ -127,9 +127,19 @@ func get_ammo_penalty(unit_id: String, ammo_type: String) -> Dictionary:
 ##       # optionally apply r.morale_delta and heed r.ai_recommendation
 func request_fire_with_penalty(unit_id: String, ammo_type: String, rounds: int = 1) -> Dictionary:
 	var pen := get_ammo_penalty(unit_id, ammo_type)
-	var allow := request_fire(unit_id, ammo_type, rounds)
+	var allow := false
+	match _roe:
+		0: allow = false
+		1: allow = _saw_hostile_shot
+		2: allow = true
+	if not allow:
+		return {
+			"allow": false, "state": "roe_blocked",
+			"attack_power_mult": 1.0, "attack_cycle_mult": 1.0,
+			"suppression_mult": 1.0, "morale_delta": 0, "ai_recommendation": "hold"
+		}
 	return {
-		"allow": allow,
+		"allow": request_fire(unit_id, ammo_type, rounds),
 		"state": pen.state,
 		"attack_power_mult": pen.attack_power_mult,
 		"attack_cycle_mult": pen.attack_cycle_mult,

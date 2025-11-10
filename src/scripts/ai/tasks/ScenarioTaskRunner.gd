@@ -4,9 +4,9 @@ class_name ScenarioTaskRunner
 ## Runs a deterministic chain of authored tasks for one unit and emits lifecycle events.
 ##
 ## Expected task dictionaries:
-##   { "type": "TaskMove", "point": Vector3 }
-##   { "type": "TaskDefend", "center": Vector3, "radius": 25.0 }
-##   { "type": "TaskPatrol", "points": Array[Vector3], "ping_pong": bool }
+##   { "type": "TaskMove", "point_m": Vector2 }
+##   { "type": "TaskDefend", "center_m": Vector2, "radius": 25.0 }
+##   { "type": "TaskPatrol", "points_m": Array[Vector2], "ping_pong": bool }
 ##   { "type": "TaskSetBehaviour", "behaviour": int }
 ##   { "type": "TaskSetCombatMode", "mode": int }
 ##   { "type": "TaskWait", "seconds": float, "until_contact": bool }
@@ -69,7 +69,7 @@ func tick(dt: float, agent: AIAgent) -> void:
 		"TaskMove":
 			if not _started_current:
 				_started_current = true
-				agent.intent_move_begin(_active.get("point", Vector3()))
+				agent.intent_move_begin(_active.get("point_m", Vector2.ZERO))
 			if agent.intent_move_check():
 				emit_signal("task_completed", unit_id, StringName(t_name))
 				_active.clear()
@@ -79,7 +79,7 @@ func tick(dt: float, agent: AIAgent) -> void:
 			if not _started_current:
 				_started_current = true
 				agent.intent_defend_begin(
-					_active.get("center", Vector3()),
+					_active.get("center_m", Vector2.ZERO),
 					float(_active.get("radius", 0.0))
 				)
 			if agent.intent_defend_check():
@@ -90,10 +90,11 @@ func tick(dt: float, agent: AIAgent) -> void:
 		"TaskPatrol":
 			if not _started_current:
 				_started_current = true
-				var pts: Array = _active.get("points", [])
+				var pts: Array = _active.get("points_m", [])
 				var typed: Array[Vector3] = []
 				for p in pts:
-					typed.append(p as Vector3)
+					var v2: Vector2 = p as Vector2
+					typed.append(Vector3(v2.x, 0.0, v2.y))
 				agent.intent_patrol_begin(typed, bool(_active.get("ping_pong", false)))
 			if agent.intent_patrol_check():
 				emit_signal("task_completed", unit_id, StringName(t_name))

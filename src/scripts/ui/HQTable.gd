@@ -67,6 +67,9 @@ func _ready() -> void:
 
 	_update_subtitle_suggestions(scenario)
 	_create_initial_unit_counters(playable_units)
+	
+	# Initialize the AI
+	_init_enemy_ai()
 
 	# All initialization complete - hide loading screen
 	loading_screen.hide_loading()
@@ -378,3 +381,39 @@ func _init_test_scenario() -> void:
 		"mission_id": "us_crested_cap",
 		"points_used": 319
 	}
+
+
+func _init_enemy_ai() -> void:
+	var ai_scene := load("res://scenes/ai/AiController.tscn")
+	var ai: AIController = ai_scene.instantiate()
+	add_child(ai)
+
+	# Build per-unit queues from scenario JSON
+	var flat_tasks: Array = Game.current_scenario.tasks
+	var normalized: Array = ai.normalize_tasks(flat_tasks)
+	var per_unit: Dictionary = ai.build_per_unit_queues(normalized)
+
+	# Adapter node paths in HQ Table
+	var move_path: NodePath = ^"Controllers/WorldController/MovementAdapter"
+	var combat_path: NodePath = ^"Controllers/CombatController/CombatAdapter"
+	var los_path: NodePath = ^"Controllers/LOSController/LOSAdapter"
+
+	# Create an agent per ENEMY unit in content.units
+	for i in Game.current_scenario.units.size():
+		var u : ScenarioUnit = Game.current_scenario.units[i]
+		if int(u.affiliation) != 1: # 1 = ENEMY
+			continue
+		var agent := AIAgent.new()
+		agent.unit_id = i
+		agent.movement_adapter_path = move_path
+		agent.combat_adapter_path = combat_path
+		agent.los_adapter_path = los_path
+		add_child(agent)
+
+		# Apply ScenarioUnit initial behaviour/ROE
+		agent.set_behaviour(int(u.behaviour))
+		agent.set_combat_mode(int(u.combat_mode))
+
+		# Convert scenario tasks to runner tasks (normalize inside AIController)
+		var ordered: Array = per_unit.get(i, [])
+		ai.register_unit(i, agent, ordered)
