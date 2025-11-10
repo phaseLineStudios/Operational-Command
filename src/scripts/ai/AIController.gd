@@ -175,6 +175,7 @@ func normalize_tasks(flat_tasks: Array) -> Array[Dictionary]:
 					"type": "TaskPatrol",
 					"points_m": pts,
 					"ping_pong": false,
+					"dwell_s": float(params.get("dwell_s", 0.0)),
 				}
 			"set_behaviour":
 				d = {"type": "TaskSetBehaviour", "behaviour": int(params.get("behaviour", 1))}

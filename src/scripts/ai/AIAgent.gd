@@ -125,18 +125,18 @@ func intent_move_check() -> bool:
 		return true
 	return su.move_state() == ScenarioUnit.MoveState.ARRIVED
 
-func intent_defend_begin(center_m: Variant, _radius: float) -> void:
+func intent_defend_begin(center_m: Variant, radius: float) -> void:
 	var su := _get_su()
 	if su == null or _movement == null:
 		return
-	var dest_m: Vector2 = Vector2.ZERO
+	var center_v3: Vector3
 	if typeof(center_m) == TYPE_VECTOR2:
-		dest_m = center_m as Vector2
+		var v2: Vector2 = center_m
+		center_v3 = Vector3(v2.x, 0.0, v2.y)
 	else:
-		var c3: Vector3 = center_m
-		dest_m = Vector2(c3.x, c3.z)
-	if _movement.has_method("plan_and_start"):
-		_movement.plan_and_start(su, dest_m)
+		center_v3 = center_m
+	if _movement.has_method("request_hold_area"):
+		_movement.request_hold_area(center_v3, radius)
 
 func intent_defend_check() -> bool:
 	var su := _get_su()
@@ -146,12 +146,18 @@ func intent_defend_check() -> bool:
 	return su.move_state() in [ScenarioUnit.MoveState.ARRIVED, ScenarioUnit.MoveState.IDLE]
 
 func intent_patrol_begin(points: Array[Vector3], ping_pong: bool) -> void:
-	# Minimal fallback: treat first point as a move, then complete
-	if points.size() > 0:
-		intent_move_begin(points[0])
+	if _movement != null and _movement.has_method("request_patrol"):
+		_movement.request_patrol(points, ping_pong)
 
 func intent_patrol_check() -> bool:
-	return intent_move_check()
+	if _movement == null:
+		return true
+	return not bool(_movement.is_patrol_running())
+
+## Optional: set patrol dwell time (seconds) if adapter supports it
+func set_patrol_dwell(seconds: float) -> void:
+	if _movement != null and _movement.has_method("set_patrol_dwell"):
+		_movement.set_patrol_dwell(max(0.0, seconds))
 
 func intent_wait_begin(seconds: float, until_contact: bool) -> void:
 	_wait_timer = max(seconds, 0.0)

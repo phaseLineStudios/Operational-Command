@@ -412,6 +412,10 @@ func request_patrol(points: Array[Vector3], ping_pong: bool) -> void:
 
 func is_patrol_running() -> bool:
 	return _patrol_running
+
+## Optional setter to customize dwell time between patrol legs
+func set_patrol_dwell(seconds: float) -> void:
+	patrol_dwell_seconds = max(0.0, seconds)
 	
 	
 # Initial helpers
