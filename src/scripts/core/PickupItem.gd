@@ -27,6 +27,12 @@ extends RigidBody3D
 ## Higher = snappier follow in inspect (0 = teleport)
 @export var inspect_smooth: float = 14.0
 
+@export_group("Document Input")
+## Viewport to forward clicks to (for interactive documents)
+@export var document_viewport: SubViewport
+## Size of the document viewport for coordinate mapping
+@export var document_viewport_size := Vector2(2048, 2048)
+
 var origin_position: Vector3
 var origin_rotation: Vector3
 var _pre_pick_freeze := false
@@ -166,3 +172,67 @@ func _process(delta: float) -> void:
 		global_transform.basis = Basis(q_from.slerp(q_to, a))
 	else:
 		global_transform = target_t
+
+
+## Handle input events on this object (for document interaction)
+func _input_event(_camera: Camera3D, event: InputEvent, click_position: Vector3, _click_normal: Vector3, _shape_idx: int) -> void:
+	# Only forward to document viewport if set
+	if not document_viewport:
+		return
+
+	# Only handle mouse button events
+	if not event is InputEventMouseButton:
+		return
+
+	var mouse_event := event as InputEventMouseButton
+
+	# Get UV coordinates at click position
+	var uv := _get_document_uv(click_position)
+	if uv == Vector2(-1, -1):
+		return
+
+	# Convert UV (0-1 range) to viewport pixel coordinates
+	var viewport_pos := uv * document_viewport_size
+
+	# Create new mouse event with viewport coordinates
+	var viewport_event := InputEventMouseButton.new()
+	viewport_event.button_index = mouse_event.button_index
+	viewport_event.pressed = mouse_event.pressed
+	viewport_event.position = viewport_pos
+	viewport_event.global_position = viewport_pos
+
+	# Push event to viewport
+	document_viewport.push_input(viewport_event)
+
+
+## Get UV coordinates at a 3D position on the document mesh
+func _get_document_uv(pos: Vector3) -> Vector2:
+	# Find the mesh instance
+	var mesh_instance: MeshInstance3D = null
+	for child in get_children():
+		if child is MeshInstance3D:
+			mesh_instance = child
+			break
+
+	if not mesh_instance:
+		return Vector2(-1, -1)
+
+	# Convert 3D position to local mesh space
+	var local_pos := mesh_instance.to_local(pos)
+
+	# For a plane mesh, UV coordinates map directly to local XZ position
+	var mesh := mesh_instance.mesh
+	if mesh is PlaneMesh:
+		var plane_size: Vector2 = mesh.size
+
+		# Normalize position to 0-1 range
+		var u := (local_pos.x / plane_size.x) + 0.5
+		var v := (local_pos.z / plane_size.y) + 0.5
+
+		# Clamp to valid range
+		u = clampf(u, 0.0, 1.0)
+		v = clampf(v, 0.0, 1.0)
+
+		return Vector2(u, v)
+
+	return Vector2(-1, -1)

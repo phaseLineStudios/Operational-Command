@@ -1,0 +1,112 @@
+[gd_scene load_steps=9 format=3 uid="uid://dcwerdsr4uscw"]
+
+[ext_resource type="Script" uid="uid://x85e16yetlk8" path="res://scripts/ui/DocumentFace.gd" id="1_face"]
+[ext_resource type="FontFile" uid="uid://cas3deagteblp" path="res://assets/fonts/ibm_plex_mono/IBMPlexMono-Medium.ttf" id="1_u4wxa"]
+[ext_resource type="FontFile" uid="uid://b7vlkovyvotx8" path="res://assets/fonts/ibm_plex_sans/IBMPlexSans.ttf" id="1_veykj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u4wxa"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="FontVariation" id="FontVariation_rir50"]
+base_font = ExtResource("1_veykj")
+variation_embolden = 0.5
+
+[sub_resource type="FontVariation" id="FontVariation_veykj"]
+base_font = ExtResource("1_veykj")
+variation_embolden = 1.5
+
+[sub_resource type="FontVariation" id="FontVariation_qpbqj"]
+base_font = ExtResource("1_veykj")
+variation_embolden = 1.5
+
+[sub_resource type="FontVariation" id="FontVariation_tfdwq"]
+base_font = ExtResource("1_veykj")
+variation_embolden = 0.5
+
+[node name="DocumentFace" type="PanelContainer"]
+custom_minimum_size = Vector2(2048, 2048)
+offset_right = 2048.0
+offset_bottom = 2048.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_u4wxa")
+script = ExtResource("1_face")
+
+[node name="Center" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Center"]
+layout_mode = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 200
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 100
+
+[node name="VBox" type="VBoxContainer" parent="Center/MarginContainer"]
+layout_mode = 2
+
+[node name="PaperContent" type="RichTextLabel" parent="Center/MarginContainer/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(1200, 1600)
+layout_mode = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = SubResource("FontVariation_rir50")
+theme_override_fonts/bold_font = SubResource("FontVariation_veykj")
+theme_override_fonts/bold_italics_font = SubResource("FontVariation_qpbqj")
+theme_override_fonts/italics_font = SubResource("FontVariation_rir50")
+theme_override_fonts/mono_font = ExtResource("1_u4wxa")
+theme_override_font_sizes/normal_font_size = 48
+theme_override_font_sizes/bold_font_size = 48
+theme_override_font_sizes/bold_italics_font_size = 48
+theme_override_font_sizes/italics_font_size = 48
+theme_override_font_sizes/mono_font_size = 48
+bbcode_enabled = true
+text = "NORMAL
+[b]BOLD[/b]
+[i]ITALIC[/i]"
+scroll_active = false
+
+[node name="NavigationBar" type="HBoxContainer" parent="Center/MarginContainer/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="PrevButton" type="Button" parent="Center/MarginContainer/VBox/NavigationBar"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0.5, 0.5, 0.5, 1)
+theme_override_colors/font_hover_color = Color(0.3, 0.3, 0.3, 1)
+theme_override_fonts/font = SubResource("FontVariation_tfdwq")
+theme_override_font_sizes/font_size = 48
+text = "◄ PREV"
+flat = true
+
+[node name="PageIndicator" type="Label" parent="Center/MarginContainer/VBox/NavigationBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("FontVariation_tfdwq")
+theme_override_font_sizes/font_size = 56
+text = "Page 1/1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NextButton" type="Button" parent="Center/MarginContainer/VBox/NavigationBar"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0.5, 0.5, 0.5, 1)
+theme_override_colors/font_hover_color = Color(0.3, 0.3, 0.3, 1)
+theme_override_fonts/font = SubResource("FontVariation_tfdwq")
+theme_override_font_sizes/font_size = 48
+text = "NEXT ►"
+flat = true

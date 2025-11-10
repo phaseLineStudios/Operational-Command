@@ -17,6 +17,7 @@ extends Node3D
 @onready var mission_dialog: Control = %MissionDialog
 @onready var drawing_controller: DrawingController = %DrawingController
 @onready var counter_controller: UnitCounterController = %UnitCounterController
+@onready var document_controller: DocumentController = %DocumentController
 @onready var unit_voices: UnitVoiceResponses = %UnitVoiceResponses
 @onready var unit_auto_voices: UnitAutoResponses = %UnitAutoResponses
 @onready var tts_player: AudioStreamPlayer = %TTSPlayer
@@ -52,6 +53,9 @@ func _ready() -> void:
 
 	# Initialize counter controller
 	_init_counter_controller()
+
+	# Initialize document controller
+	_init_document_controller(scenario)
 
 	# Bind artillery and engineer controllers to trigger API
 	_init_combat_controllers()
@@ -90,6 +94,35 @@ func _init_counter_controller() -> void:
 
 	if trigger_engine and trigger_engine._api:
 		trigger_engine._api._counter_controller = counter_controller
+
+
+## Initialize the document controller and render documents
+func _init_document_controller(scenario: ScenarioData) -> void:
+	if document_controller:
+		await document_controller.init(%IntelDoc, %TranscriptDoc, %BriefingDoc, scenario)
+		LogService.trace("Document controller initialized.", "HQTable.gd:_init_document_controller")
+
+		# Connect radio signals for transcript logging
+		if radio:
+			radio.radio_result.connect(_on_radio_transcript_player)
+
+		# Connect SimWorld radio messages for AI responses
+		if sim:
+			sim.radio_message.connect(_on_radio_transcript_ai)
+
+
+## Handle player radio result for transcript
+func _on_radio_transcript_player(text: String) -> void:
+	if document_controller and text != "":
+		document_controller.add_transcript_entry("PLAYER", text)
+
+
+## Handle AI radio messages for transcript
+func _on_radio_transcript_ai(_level: String, text: String) -> void:
+	if document_controller and text != "":
+		# Extract speaker from message if possible, default to "HQ"
+		var speaker := "HQ"
+		document_controller.add_transcript_entry(speaker, text)
 
 
 ## Bind artillery and engineer controllers to trigger API for tracking
