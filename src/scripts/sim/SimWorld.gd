@@ -13,6 +13,8 @@ signal unit_updated(unit_id: String, snapshot: Dictionary)
 ## Emitted when LOS contact is reported (attacker->defender).
 signal contact_reported(attacker_id: String, defender_id: String)
 ## Emitted for radio/log feedback.
+## Levels: "debug" (internal), "info" (radio), "warn" (status), "error" (critical)
+## Only non-debug messages should appear in radio transcript.
 signal radio_message(level: String, text: String)
 ## Emitted when mission state transitions.
 signal mission_state_changed(prev: State, next: State)
@@ -746,7 +748,7 @@ func _on_order_applied(order: Dictionary) -> void:
 	# (ENGINEER, FIRE have their own controller signals)
 	if order_type == OrdersParser.OrderType.ENGINEER or order_type == OrdersParser.OrderType.FIRE:
 		return
-	emit_signal("radio_message", "info", "Order applied: %s" % order.get("type", "?"))
+	emit_signal("radio_message", "debug", "Order applied: %s" % order.get("type", "?"))
 	var hr_order: String = OrdersParser.OrderType.keys()[order_type]
 	LogService.info("radio_message: %s" % {"Order applied": hr_order}, "SimWorld.gd:293")
 
@@ -755,5 +757,5 @@ func _on_order_applied(order: Dictionary) -> void:
 ## [param _order] Order dictionary (unused).
 ## [param reason] Failure reason.
 func _on_order_failed(_order: Dictionary, reason: String) -> void:
-	emit_signal("radio_message", "error", "Order failed (%s)." % reason)
+	emit_signal("radio_message", "debug", "Order failed (%s)." % reason)
 	LogService.warning("radio_message: %s" % {"Order failed": reason}, "SimWorld.gd:299")

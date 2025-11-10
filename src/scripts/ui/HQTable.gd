@@ -118,11 +118,16 @@ func _on_radio_transcript_player(text: String) -> void:
 
 
 ## Handle AI radio messages for transcript
-func _on_radio_transcript_ai(_level: String, text: String) -> void:
-	if document_controller and text != "":
-		# Extract speaker from message if possible, default to "HQ"
-		var speaker := "HQ"
-		document_controller.add_transcript_entry(speaker, text)
+func _on_radio_transcript_ai(level: String, text: String) -> void:
+	if not document_controller or text == "":
+		return
+
+	# Filter out debug-level messages (internal system feedback)
+	if level == "debug":
+		return
+
+	var speaker := "HQ"
+	document_controller.add_transcript_entry(speaker, text)
 
 
 ## Bind artillery and engineer controllers to trigger API for tracking

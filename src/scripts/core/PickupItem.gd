@@ -59,6 +59,9 @@ func _ready():
 	origin_position = global_transform.origin
 	origin_rotation = global_rotation
 
+	if document_viewport:
+		set_process_unhandled_input(true)
+
 
 ## Runs on pickup
 func on_pickup() -> void:
@@ -125,30 +128,59 @@ func handle_inspect_input(event: InputEvent) -> bool:
 		return true
 
 	if event is InputEventMouseButton and event.pressed:
-		if not event.button_index == MOUSE_BUTTON_RIGHT:
-			return false
-		if _inspect_camera == null or not is_instance_valid(_inspect_camera):
-			end_inspect()
+		if event.button_index == MOUSE_BUTTON_LEFT and document_viewport:
+			var mouse_event := event as InputEventMouseButton
+			if _inspect_camera == null or not is_instance_valid(_inspect_camera):
+				return false
+
+			var mouse_pos: Vector2 = mouse_event.position
+			var from := _inspect_camera.project_ray_origin(mouse_pos)
+			var dir := _inspect_camera.project_ray_normal(mouse_pos)
+			var to := from + dir * 10_000.0
+
+			var space := _inspect_camera.get_world_3d().direct_space_state
+			var params := PhysicsRayQueryParameters3D.create(from, to)
+			params.collide_with_bodies = true
+			params.collision_mask = collision_layer
+			var hit := space.intersect_ray(params)
+
+			if not hit.is_empty() and hit.collider == self:
+				var uv := _get_document_uv_from_hit(hit)
+				if uv != Vector2(-1, -1):
+					var viewport_pos := uv * document_viewport_size
+
+					var viewport_event := InputEventMouseButton.new()
+					viewport_event.button_index = mouse_event.button_index
+					viewport_event.pressed = mouse_event.pressed
+					viewport_event.position = viewport_pos
+					viewport_event.global_position = viewport_pos
+					document_viewport.push_input(viewport_event)
+					return true
+
+		# Handle right clicks for closing inspect
+		if event.button_index == MOUSE_BUTTON_RIGHT:
+			if _inspect_camera == null or not is_instance_valid(_inspect_camera):
+				end_inspect()
+				return true
+			var mouse_pos: Vector2 = event.position
+			var from := _inspect_camera.project_ray_origin(mouse_pos)
+			var dir := _inspect_camera.project_ray_normal(mouse_pos)
+			var to := from + dir * 10_000.0
+
+			var space := _inspect_camera.get_world_3d().direct_space_state
+			var params := PhysicsRayQueryParameters3D.create(from, to)
+			params.collide_with_bodies = true
+			params.collide_with_areas = true
+			var hit := space.intersect_ray(params)
+
+			var clicked_self := false
+			if hit.size() > 0:
+				var col: Variant = hit.collider
+				if col is Node:
+					clicked_self = (col == self) or self.is_ancestor_of(col)
+			if not clicked_self:
+				end_inspect()
 			return true
-		var mouse_pos: Vector2 = event.position
-		var from := _inspect_camera.project_ray_origin(mouse_pos)
-		var dir := _inspect_camera.project_ray_normal(mouse_pos)
-		var to := from + dir * 10_000.0
-
-		var space := _inspect_camera.get_world_3d().direct_space_state
-		var params := PhysicsRayQueryParameters3D.create(from, to)
-		params.collide_with_bodies = true
-		params.collide_with_areas = true
-		var hit := space.intersect_ray(params)
-
-		var clicked_self := false
-		if hit.size() > 0:
-			var col: Variant = hit.collider
-			if col is Node:
-				clicked_self = (col == self) or self.is_ancestor_of(col)
-		if not clicked_self:
-			end_inspect()
-		return true
 
 	return false
 
@@ -174,42 +206,71 @@ func _process(delta: float) -> void:
 		global_transform = target_t
 
 
-## Handle input events on this object (for document interaction)
-func _input_event(_camera: Camera3D, event: InputEvent, click_position: Vector3, _click_normal: Vector3, _shape_idx: int) -> void:
-	# Only forward to document viewport if set
+## Handle unhandled input for document interaction
+func _unhandled_input(event: InputEvent) -> void:
 	if not document_viewport:
 		return
 
-	# Only handle mouse button events
+	# Only handle mouse button clicks while inspecting
+	if not _inspecting:
+		return
+
 	if not event is InputEventMouseButton:
 		return
 
 	var mouse_event := event as InputEventMouseButton
 
-	# Get UV coordinates at click position
-	var uv := _get_document_uv(click_position)
+	# Only handle left clicks
+	if mouse_event.button_index != MOUSE_BUTTON_LEFT:
+		return
+
+	var camera := get_viewport().get_camera_3d()
+	if not camera:
+		return
+	var mouse_pos := mouse_event.position
+	var from := camera.project_ray_origin(mouse_pos)
+	var dir := camera.project_ray_normal(mouse_pos)
+	var to := from + dir * 1000.0
+
+	var space := get_world_3d().direct_space_state
+	var params := PhysicsRayQueryParameters3D.create(from, to)
+	params.collide_with_bodies = true
+	params.collision_mask = collision_layer
+	var hit := space.intersect_ray(params)
+
+	if hit.is_empty() or hit.collider != self:
+		return
+
+	var uv := _get_document_uv_from_hit(hit)
 	if uv == Vector2(-1, -1):
 		return
 
-	# Convert UV (0-1 range) to viewport pixel coordinates
 	var viewport_pos := uv * document_viewport_size
 
-	# Create new mouse event with viewport coordinates
 	var viewport_event := InputEventMouseButton.new()
 	viewport_event.button_index = mouse_event.button_index
 	viewport_event.pressed = mouse_event.pressed
 	viewport_event.position = viewport_pos
 	viewport_event.global_position = viewport_pos
-
-	# Push event to viewport
 	document_viewport.push_input(viewport_event)
 
+	get_viewport().set_input_as_handled()
 
-## Get UV coordinates at a 3D position on the document mesh
-func _get_document_uv(pos: Vector3) -> Vector2:
-	# Find the mesh instance
+
+## Get UV coordinates from raycast hit on document mesh
+## Surface index 3 is the paper surface on the clipboard
+const PAPER_SURFACE_INDEX := 3
+
+func _get_document_uv_from_hit(hit: Dictionary) -> Vector2:
+	if not hit.has("face_index"):
+		return Vector2(-1, -1)
+
+	var mesh_node := get_node_or_null("Mesh")
+	if not mesh_node:
+		return Vector2(-1, -1)
+
 	var mesh_instance: MeshInstance3D = null
-	for child in get_children():
+	for child in mesh_node.get_children():
 		if child is MeshInstance3D:
 			mesh_instance = child
 			break
@@ -217,22 +278,76 @@ func _get_document_uv(pos: Vector3) -> Vector2:
 	if not mesh_instance:
 		return Vector2(-1, -1)
 
-	# Convert 3D position to local mesh space
-	var local_pos := mesh_instance.to_local(pos)
-
-	# For a plane mesh, UV coordinates map directly to local XZ position
 	var mesh := mesh_instance.mesh
-	if mesh is PlaneMesh:
-		var plane_size: Vector2 = mesh.size
+	if not mesh is ArrayMesh:
+		return Vector2(-1, -1)
 
-		# Normalize position to 0-1 range
-		var u := (local_pos.x / plane_size.x) + 0.5
-		var v := (local_pos.z / plane_size.y) + 0.5
+	if mesh.get_surface_count() <= PAPER_SURFACE_INDEX:
+		return Vector2(-1, -1)
 
-		# Clamp to valid range
-		u = clampf(u, 0.0, 1.0)
-		v = clampf(v, 0.0, 1.0)
+	var arrays := mesh.surface_get_arrays(PAPER_SURFACE_INDEX)
+	if arrays.size() == 0:
+		return Vector2(-1, -1)
 
-		return Vector2(u, v)
+	var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var uvs: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV]
+	var indices: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
 
-	return Vector2(-1, -1)
+	if vertices.size() == 0 or uvs.size() == 0:
+		return Vector2(-1, -1)
+
+	var face_index: int = hit.face_index
+	var i0: int
+	var i1: int
+	var i2: int
+
+	if indices.size() > 0:
+		if face_index * 3 + 2 >= indices.size():
+			return Vector2(-1, -1)
+		i0 = indices[face_index * 3]
+		i1 = indices[face_index * 3 + 1]
+		i2 = indices[face_index * 3 + 2]
+	else:
+		i0 = face_index * 3
+		i1 = face_index * 3 + 1
+		i2 = face_index * 3 + 2
+
+	if i0 >= vertices.size() or i1 >= vertices.size() or i2 >= vertices.size():
+		return Vector2(-1, -1)
+
+	var v0 := mesh_instance.to_global(vertices[i0])
+	var v1 := mesh_instance.to_global(vertices[i1])
+	var v2 := mesh_instance.to_global(vertices[i2])
+
+	var hit_pos: Vector3 = hit.position
+	var bary := _barycentric_coords(hit_pos, v0, v1, v2)
+
+	var uv0 := uvs[i0]
+	var uv1 := uvs[i1]
+	var uv2 := uvs[i2]
+
+	var uv := uv0 * bary.x + uv1 * bary.y + uv2 * bary.z
+	return uv
+
+
+## Calculate barycentric coordinates of point p in triangle (a, b, c)
+func _barycentric_coords(p: Vector3, a: Vector3, b: Vector3, c: Vector3) -> Vector3:
+	var v0 := b - a
+	var v1 := c - a
+	var v2 := p - a
+
+	var d00 := v0.dot(v0)
+	var d01 := v0.dot(v1)
+	var d11 := v1.dot(v1)
+	var d20 := v2.dot(v0)
+	var d21 := v2.dot(v1)
+
+	var denom := d00 * d11 - d01 * d01
+	if abs(denom) < 0.0001:
+		return Vector3(1, 0, 0)  # Degenerate triangle
+
+	var v := (d11 * d20 - d01 * d21) / denom
+	var w := (d00 * d21 - d01 * d20) / denom
+	var u := 1.0 - v - w
+
+	return Vector3(u, v, w)

@@ -59,6 +59,9 @@ var _transcript_entries: Array[Dictionary] = []
 ## Current scenario reference
 var _scenario: ScenarioData
 
+## Mission resolution for objective tracking
+var _resolution: MissionResolution
+
 ## Material references for texture updates
 var _intel_material: StandardMaterial3D
 var _transcript_material: StandardMaterial3D
@@ -84,11 +87,12 @@ func init(
 	transcript_clipboard = transcript
 	briefing_clipboard = briefing
 	_scenario = scenario
+	_resolution = Game.resolution
 
 	_setup_viewports()
 	_setup_content_labels()
 	_setup_refresh_timers()
-	await get_tree().process_frame  # Wait for viewport setup
+	await get_tree().process_frame
 
 	await _render_intel_doc()
 	await _render_briefing_doc()
@@ -96,8 +100,10 @@ func init(
 
 	await _apply_textures()
 
-	# Setup input forwarding for clickable buttons
 	_setup_document_input()
+
+	if _resolution:
+		_resolution.objective_updated.connect(_on_objective_updated)
 
 
 ## Setup SubViewports for each document
@@ -155,18 +161,26 @@ func _setup_refresh_timers() -> void:
 
 ## Setup input forwarding from 3D documents to viewports
 func _setup_document_input() -> void:
-	# Set viewport properties on PickupItem documents
 	if intel_clipboard:
 		intel_clipboard.document_viewport = _intel_viewport
-		intel_clipboard.document_viewport_size = Vector2(DOC_WIDTH * RESOLUTION_SCALE, DOC_HEIGHT * RESOLUTION_SCALE)
+		intel_clipboard.document_viewport_size = Vector2(
+			DOC_WIDTH * RESOLUTION_SCALE, DOC_HEIGHT * RESOLUTION_SCALE
+		)
+		intel_clipboard.input_ray_pickable = true
 
 	if transcript_clipboard:
 		transcript_clipboard.document_viewport = _transcript_viewport
-		transcript_clipboard.document_viewport_size = Vector2(DOC_WIDTH * RESOLUTION_SCALE, DOC_HEIGHT * RESOLUTION_SCALE)
+		transcript_clipboard.document_viewport_size = Vector2(
+			DOC_WIDTH * RESOLUTION_SCALE, DOC_HEIGHT * RESOLUTION_SCALE
+		)
+		transcript_clipboard.input_ray_pickable = true
 
 	if briefing_clipboard:
 		briefing_clipboard.document_viewport = _briefing_viewport
-		briefing_clipboard.document_viewport_size = Vector2(DOC_WIDTH * RESOLUTION_SCALE, DOC_HEIGHT * RESOLUTION_SCALE)
+		briefing_clipboard.document_viewport_size = Vector2(
+			DOC_WIDTH * RESOLUTION_SCALE, DOC_HEIGHT * RESOLUTION_SCALE
+		)
+		briefing_clipboard.input_ray_pickable = true
 
 
 ## Setup document face scenes and get RichTextLabel content containers
@@ -245,7 +259,7 @@ func _render_briefing_doc() -> void:
 		page2 += "[b]Objectives:[/b]\n"
 		for obj in brief.frag_objectives:
 			if obj is ScenarioObjectiveData:
-				var status_icon := "[ ]"
+				var status_icon := _get_objective_status_icon(obj.id)
 				page2 += "%s %s\n" % [status_icon, obj.title]
 		page2 += "\n"
 	_briefing_pages.append(page2)
@@ -316,8 +330,12 @@ func add_transcript_entry(speaker: String, message: String) -> void:
 	if _transcript_entries.size() > MAX_TRANSCRIPT_ENTRIES:
 		_transcript_entries.pop_front()
 
-	_render_transcript_doc()
-	_refresh_transcript_texture()
+	# Remember if user was on the last page before update
+	var was_on_last_page := false
+	if _transcript_face and _transcript_pages.size() > 0:
+		was_on_last_page = _transcript_face.current_page >= _transcript_pages.size() - 1
+
+	await _update_transcript_content(was_on_last_page)
 
 
 ## Get current mission timestamp as formatted string
@@ -379,13 +397,7 @@ func _apply_texture_to_clipboard(
 		material = StandardMaterial3D.new()
 		mesh_instance.set_surface_override_material(PAPER_MATERIAL_INDEX, material)
 
-	# Generate texture snapshot with mipmaps for readability
 	_refresh_texture(material, viewport)
-
-	LogService.trace(
-		"Applied document texture to clipboard: %s" % clipboard.name, "DocumentController.gd"
-	)
-
 	return material
 
 
@@ -566,4 +578,51 @@ func prev_page_briefing() -> void:
 		_briefing_face.prev_page()
 
 
-# Navigation now handled by clickable buttons on the document face
+## Get status icon for an objective based on MissionResolution state
+func _get_objective_status_icon(obj_id: String) -> String:
+	if not _resolution:
+		return "[ ]"
+
+	var state = _resolution._objective_states.get(obj_id, MissionResolution.ObjectiveState.PENDING)
+	match state:
+		MissionResolution.ObjectiveState.SUCCESS:
+			return "[✓]"
+		MissionResolution.ObjectiveState.FAILED:
+			return "[✗]"
+		_:
+			return "[ ]"
+
+
+## Handle objective state changes and refresh briefing
+func _on_objective_updated(_obj_id: String, _state: int) -> void:
+	_refresh_briefing_objectives()
+
+
+## Refresh only the briefing objectives page
+func _refresh_briefing_objectives() -> void:
+	if not _scenario or not _scenario.briefing:
+		return
+
+	var brief: BriefData = _scenario.briefing
+
+	# Rebuild page 2 (MISSION page with objectives)
+	var page2 := ""
+	page2 += "[b]2. MISSION[/b]\n\n"
+	if brief.frag_mission != null and brief.frag_mission != "":
+		page2 += "%s\n\n" % brief.frag_mission
+	if brief.frag_objectives != null and brief.frag_objectives.size() > 0:
+		page2 += "[b]Objectives:[/b]\n"
+		for obj in brief.frag_objectives:
+			if obj is ScenarioObjectiveData:
+				var status_icon := _get_objective_status_icon(obj.id)
+				page2 += "%s %s\n" % [status_icon, obj.title]
+		page2 += "\n"
+
+	# Update the briefing pages array
+	if _briefing_pages.size() >= 2:
+		_briefing_pages[1] = page2
+
+	# If currently viewing page 2, refresh the display
+	if _briefing_face and _briefing_face.current_page == 1:
+		_display_page(_briefing_face, _briefing_content, _briefing_pages, 1)
+		_briefing_refresh_timer.start()
