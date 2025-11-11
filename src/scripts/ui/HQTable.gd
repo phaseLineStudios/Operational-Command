@@ -41,6 +41,12 @@ func _ready() -> void:
 	if trigger_engine and trigger_engine._api:
 		trigger_engine._api.map_controller = map
 	sim.init_world(scenario)
+
+	# Connect player transcript handler BEFORE bind_radio so it processes first
+	# This ensures player messages appear before trigger responses
+	if radio and document_controller:
+		radio.radio_result.connect(_on_radio_transcript_player_early)
+
 	sim.bind_radio(%RadioController, %OrdersParser)
 	sim.init_resolution(scenario.briefing.frag_objectives)
 
@@ -102,9 +108,8 @@ func _init_document_controller(scenario: ScenarioData) -> void:
 		await document_controller.init(%IntelDoc, %TranscriptDoc, %BriefingDoc, scenario)
 		LogService.trace("Document controller initialized.", "HQTable.gd:_init_document_controller")
 
-		# Connect radio signals for transcript logging
-		if radio:
-			radio.radio_result.connect(_on_radio_transcript_player)
+		# Player transcript handler already connected early in _ready()
+		# (before bind_radio to ensure correct ordering)
 
 		# Connect SimWorld radio messages for AI responses
 		if sim:
@@ -119,8 +124,9 @@ func _init_document_controller(scenario: ScenarioData) -> void:
 			unit_auto_voices.unit_auto_response.connect(_on_unit_voice_transcript)
 
 
-## Handle player radio result for transcript
-func _on_radio_transcript_player(text: String) -> void:
+## Handle player radio result for transcript (early connection)
+## Connected before trigger system to ensure player messages appear first
+func _on_radio_transcript_player_early(text: String) -> void:
 	if document_controller and text != "":
 		await document_controller.add_transcript_entry("PLAYER", text)
 
@@ -133,6 +139,9 @@ func _on_radio_transcript_ai(level: String, text: String) -> void:
 	# Filter out debug-level messages (internal system feedback)
 	if level == "debug":
 		return
+
+	# Small delay to ensure player messages appear first in transcript
+	await get_tree().process_frame
 
 	# Try to extract speaker from message text
 	# Messages often follow patterns like "ALPHA: message" or "ALPHA message"

@@ -787,7 +787,7 @@ func prev_page_briefing() -> void:
 ## Get status icon for an objective based on MissionResolution state
 func _get_objective_status_icon(obj_id: String) -> String:
 	if not _resolution:
-		return "[ ]"
+		return "[   ]"
 
 	var state = _resolution._objective_states.get(obj_id, MissionResolution.ObjectiveState.PENDING)
 	match state:
@@ -796,7 +796,7 @@ func _get_objective_status_icon(obj_id: String) -> String:
 		MissionResolution.ObjectiveState.FAILED:
 			return "[✗]"
 		_:
-			return "[ ]"
+			return "[   ]"
 
 
 ## Handle objective state changes and refresh briefing
