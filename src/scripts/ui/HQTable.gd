@@ -42,34 +42,22 @@ func _ready() -> void:
 		trigger_engine._api.map_controller = map
 	sim.init_world(scenario)
 
-	# Connect player transcript handler BEFORE bind_radio so it processes first
-	# This ensures player messages appear before trigger responses
 	if radio and document_controller:
 		radio.radio_result.connect(_on_radio_transcript_player_early)
 
 	sim.bind_radio(%RadioController, %OrdersParser)
 	sim.init_resolution(scenario.briefing.frag_objectives)
 
-	# Initialize drawing controller
 	_init_drawing_controller()
 
-	# Load scenario drawings
 	if drawing_controller and map:
 		drawing_controller.load_scenario_drawings(scenario, renderer)
 
-	# Initialize counter controller
 	_init_counter_controller()
-
-	# Initialize document controller
 	_init_document_controller(scenario)
-
-	# Bind artillery and engineer controllers to trigger API
 	_init_combat_controllers()
-
-	# Initialize TTS and unit voice responses
 	_init_tts_system()
 
-	# Connect radio signals to subtitle display
 	radio.radio_on.connect(_on_radio_on)
 	radio.radio_off.connect(_on_radio_off)
 	radio.radio_partial.connect(_on_radio_partial)
@@ -78,7 +66,6 @@ func _ready() -> void:
 	_update_subtitle_suggestions(scenario)
 	_create_initial_unit_counters(playable_units)
 
-	# All initialization complete - hide loading screen
 	loading_screen.hide_loading()
 
 
@@ -106,26 +93,18 @@ func _init_counter_controller() -> void:
 func _init_document_controller(scenario: ScenarioData) -> void:
 	if document_controller:
 		await document_controller.init(%IntelDoc, %TranscriptDoc, %BriefingDoc, scenario)
-		LogService.trace("Document controller initialized.", "HQTable.gd:_init_document_controller")
 
-		# Player transcript handler already connected early in _ready()
-		# (before bind_radio to ensure correct ordering)
-
-		# Connect SimWorld radio messages for AI responses
 		if sim:
 			sim.radio_message.connect(_on_radio_transcript_ai)
 
-		# Connect unit voice responses for transcript logging
 		if unit_voices:
 			unit_voices.unit_response.connect(_on_unit_voice_transcript)
 
-		# Connect unit auto responses for transcript logging
 		if unit_auto_voices:
 			unit_auto_voices.unit_auto_response.connect(_on_unit_voice_transcript)
 
 
-## Handle player radio result for transcript (early connection)
-## Connected before trigger system to ensure player messages appear first
+## Handle player radio result for transcript
 func _on_radio_transcript_player_early(text: String) -> void:
 	if document_controller and text != "":
 		await document_controller.add_transcript_entry("PLAYER", text)
@@ -136,15 +115,11 @@ func _on_radio_transcript_ai(level: String, text: String) -> void:
 	if not document_controller or text == "":
 		return
 
-	# Filter out debug-level messages (internal system feedback)
 	if level == "debug":
 		return
 
-	# Small delay to ensure player messages appear first in transcript
 	await get_tree().process_frame
 
-	# Try to extract speaker from message text
-	# Messages often follow patterns like "ALPHA: message" or "ALPHA message"
 	var speaker := _extract_speaker_from_message(text)
 	await document_controller.add_transcript_entry(speaker, text)
 
@@ -185,61 +160,38 @@ func _init_combat_controllers() -> void:
 	if trigger_engine and trigger_engine._api and sim:
 		if sim.artillery_controller:
 			trigger_engine._api._bind_artillery_controller(sim.artillery_controller)
-			LogService.trace(
-				"Artillery controller bound to TriggerAPI.", "HQTable.gd:_init_combat_controllers"
-			)
 
 		if sim.engineer_controller:
 			trigger_engine._api._bind_engineer_controller(sim.engineer_controller)
-			LogService.trace(
-				"Engineer controller bound to TriggerAPI.", "HQTable.gd:_init_combat_controllers"
-			)
 
 
 ## Initialize TTS service and wire up unit voice responses
 func _init_tts_system() -> void:
-	# Register the audio player with TTSService
 	if TTSService and tts_player:
 		TTSService.register_player(tts_player)
-		LogService.trace("TTS player registered in HQTable.", "HQTable.gd:_init_tts_system")
 
-	# Initialize UnitVoiceResponses with unit index, SimWorld, and terrain renderer
 	if unit_voices and sim and map:
 		unit_voices.init(sim._units_by_id, sim, map.renderer)
-		LogService.trace("Unit voice responses initialized.", "HQTable.gd:_init_tts_system")
 
-	# Initialize UnitAutoResponses for automatic unit event reporting
 	if unit_auto_voices and sim and map:
 		unit_auto_voices.init(
 			sim, sim._units_by_id, map.renderer, counter_controller, sim.artillery_controller
 		)
-		LogService.trace("Unit auto responses initialized.", "HQTable.gd:_init_tts_system")
-
-		# Wire up ammo/fuel warnings to auto-response system
 		_wire_logistics_warnings()
 
-	# Wire up OrdersRouter to UnitVoiceResponses
 	var orders_router := get_node_or_null("%RadioController/OrdersRouter")
 	if orders_router and unit_voices:
-		# Check if already connected to avoid duplicate connections
 		if not orders_router.order_applied.is_connected(unit_voices._on_order_applied):
 			orders_router.order_applied.connect(unit_voices._on_order_applied)
-			LogService.trace(
-				"Unit voice responses connected to OrdersRouter.", "HQTable.gd:_init_tts_system"
-			)
 		else:
 			LogService.warning(
 				"OrdersRouter already connected to UnitVoiceResponses!",
 				"HQTable.gd:_init_tts_system"
 			)
 
-	# Wire up SimWorld radio_message signal to TTS for trigger API radio() calls
 	if sim and TTSService:
 		if not sim.radio_message.is_connected(_on_radio_message):
 			sim.radio_message.connect(_on_radio_message)
-			LogService.trace(
-				"SimWorld radio_message connected to TTS.", "HQTable.gd:_init_tts_system"
-			)
 
 
 ## Wire up ammo/fuel warning signals to auto-response system.
@@ -247,17 +199,13 @@ func _wire_logistics_warnings() -> void:
 	if not sim:
 		return
 
-	# Connect ammo system warnings
 	if sim.ammo_system:
 		sim.ammo_system.ammo_low.connect(_on_ammo_low)
 		sim.ammo_system.ammo_critical.connect(_on_ammo_critical)
 
-	# Connect fuel system warnings
 	if sim.fuel_system:
 		sim.fuel_system.fuel_low.connect(_on_fuel_low)
 		sim.fuel_system.fuel_critical.connect(_on_fuel_critical)
-
-	LogService.trace("Logistics warnings wired to auto-response system.", "HQTable.gd")
 
 
 ## Handle ammo low warning.
@@ -335,7 +283,6 @@ func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]:
 				units.append(su)
 				callsigns.append(slot.callsign)
 
-	LogService.trace("Generated playable units: %s" % str(callsigns), "HQTable.gd:42")
 	return units
 
 

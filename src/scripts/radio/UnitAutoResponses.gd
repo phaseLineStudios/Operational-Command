@@ -302,11 +302,6 @@ func init(
 		if _sim_world._router:
 			_sim_world._router.order_failed.connect(_on_order_failed)
 
-	LogService.info(
-		"UnitAutoResponses initialized with %d units" % _id_to_callsign.size(),
-		"UnitAutoResponses.gd"
-	)
-
 
 ## Build callsign mapping from units dictionary.
 func _build_callsign_mapping() -> void:
@@ -389,9 +384,7 @@ func _emit_voice_message(msg: VoiceMessage) -> void:
 	var formatted := "%s, %s" % [msg.callsign, msg.text]
 	if TTSService:
 		TTSService.say(formatted)
-	# Emit signal for transcript logging
 	unit_auto_response.emit(msg.callsign, formatted)
-	LogService.debug("Unit voice: %s" % formatted, "UnitAutoResponses.gd")
 
 
 ## Queue a voice message for a unit.
@@ -401,16 +394,7 @@ func _queue_message(unit_id: String, event_type: EventType) -> void:
 	var last_trigger_time: float = _event_last_triggered.get(event_key, 0.0)
 	var cooldown: float = EVENT_CONFIG[event_type].get("cooldown_s", 10.0)
 
-	LogService.debug(
-		(
-			"_queue_message: %s, event=%s, cooldown_remaining=%.1f"
-			% [unit_id, EventType.keys()[event_type], cooldown - (current_time - last_trigger_time)]
-		),
-		"UnitAutoResponses.gd"
-	)
-
 	if current_time - last_trigger_time < cooldown:
-		LogService.debug("Message blocked by cooldown for %s" % unit_id, "UnitAutoResponses.gd")
 		return
 
 	var callsign: String = _id_to_callsign.get(unit_id, unit_id)
@@ -705,7 +689,6 @@ func _parse_unit_affiliation(aff: ScenarioUnit.Affiliation) -> MilSymbol.UnitAff
 func _on_mission_confirmed(
 	unit_id: String, _target_pos: Vector2, _ammo_type: String, _rounds: int
 ) -> void:
-	LogService.debug("_on_mission_confirmed called for %s" % unit_id, "UnitAutoResponses.gd")
 	_queue_message(unit_id, EventType.MISSION_CONFIRMED)
 
 
@@ -717,7 +700,6 @@ func _on_mission_confirmed(
 func _on_rounds_shot(
 	unit_id: String, _target_pos: Vector2, _ammo_type: String, _rounds: int
 ) -> void:
-	LogService.debug("_on_rounds_shot called for %s" % unit_id, "UnitAutoResponses.gd")
 	_queue_message(unit_id, EventType.ROUNDS_SHOT)
 
 

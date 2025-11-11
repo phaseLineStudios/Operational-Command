@@ -375,56 +375,40 @@ func add_transcript_entry(speaker: String, message: String) -> void:
 	var timestamp := _get_mission_timestamp()
 	var entry := {"timestamp": timestamp, "speaker": speaker, "message": message}
 
-	# ALWAYS add entry to list immediately to preserve chronological order
-	# This ensures player messages appear before trigger responses even if both arrive in same frame
 	_transcript_entries.append(entry)
 
-	# Prune old entries if exceeding max
 	if _transcript_entries.size() > MAX_TRANSCRIPT_ENTRIES:
 		_transcript_entries.pop_front()
 
-	# If already updating display, mark that we need another refresh
 	if _transcript_updating:
-		# Entry is already added above, just flag that refresh is needed
 		_transcript_pending_entries.append(entry)
 		return
 
-	# Mark as updating display
 	_transcript_updating = true
 
-	# Remember if user was on the last page before update
 	var was_on_last_page := false
 	if _transcript_face and _transcript_pages.size() > 0:
 		was_on_last_page = _transcript_face.current_page >= _transcript_pages.size() - 1
 
-	# Update display with all current entries
 	await _update_transcript_content(was_on_last_page)
 
-	# Mark display update as done
 	_transcript_updating = false
 
-	# If more entries were added during our update, refresh display again
 	if _transcript_pending_entries.size() > 0:
 		_transcript_pending_entries.clear()
-		# Trigger another display refresh (entries already added to list above)
 		await _refresh_transcript_display()
 
 
 ## Refresh transcript display without adding new entries
-## Used when entries were queued during an update
 func _refresh_transcript_display() -> void:
-	# Mark as updating
 	_transcript_updating = true
 
-	# Remember if user was on the last page
 	var was_on_last_page := false
 	if _transcript_face and _transcript_pages.size() > 0:
 		was_on_last_page = _transcript_face.current_page >= _transcript_pages.size() - 1
 
-	# Update display with all current entries
 	await _update_transcript_content(was_on_last_page)
 
-	# Mark as done
 	_transcript_updating = false
 
 
@@ -522,7 +506,6 @@ func _split_transcript_into_pages(content: RichTextLabel, full_text: String) -> 
 	var total_lines := content.get_line_count()
 	var visible_lines := content.get_visible_line_count()
 
-	# Safety check - if visible_lines is 0 or unreasonably small, use default
 	if visible_lines < 10:
 		LogService.warning(
 			"visible_lines=%d is too small, defaulting to 30" % visible_lines,
@@ -530,27 +513,21 @@ func _split_transcript_into_pages(content: RichTextLabel, full_text: String) -> 
 		)
 		visible_lines = 30
 
-	# If everything fits on one page
 	if total_lines <= visible_lines:
 		pages.append(full_text)
 		return pages
 
-	# Split by lines
 	var all_lines := full_text.split("\n")
-
-	# Build blocks: header (lines 0-2), then message blocks (groups of 3 lines each)
 	var blocks: Array[Array] = []
 
-	# Header block (first 3 lines: title line, subtitle line, blank line)
+	# Header block: title, subtitle, blank line
 	if all_lines.size() >= 3:
 		blocks.append([all_lines[0], all_lines[1], all_lines[2]])
 		var line_idx := 3
 
-		# Group remaining lines into message blocks (timestamp, message, blank)
+		# Message blocks: timestamp, message, blank line
 		while line_idx < all_lines.size():
 			var block: Array[String] = []
-
-			# Add up to 3 lines for this message block
 			for i in range(3):
 				if line_idx < all_lines.size():
 					block.append(all_lines[line_idx])
@@ -561,40 +538,32 @@ func _split_transcript_into_pages(content: RichTextLabel, full_text: String) -> 
 			if block.size() > 0:
 				blocks.append(block)
 	else:
-		# Fallback: treat entire content as one block
 		blocks.append(all_lines)
 
-	# Now build pages by adding blocks atomically
+	# Build pages by adding blocks atomically
 	var block_idx := 0
 	while block_idx < blocks.size():
 		var page_blocks: Array[Array] = []
 
-		# Try to add blocks to this page
 		while block_idx < blocks.size():
-			# Add the next block
 			page_blocks.append(blocks[block_idx])
 
-			# Build test text from all blocks on this page
 			var test_lines: Array[String] = []
 			for block in page_blocks:
 				test_lines.append_array(block)
 			var test_text := "\n".join(test_lines)
 
-			# Test if this fits
 			content.text = test_text
 			await get_tree().process_frame
 
 			var test_total := content.get_line_count()
 
 			if test_total <= visible_lines:
-				# This block fits! Keep it and try adding more
 				block_idx += 1
 			else:
-				# This block doesn't fit, remove it and finish this page
 				page_blocks.pop_back()
 				break
 
-		# If we didn't add any blocks (block too large), force add it anyway
 		if page_blocks.is_empty() and block_idx < blocks.size():
 			page_blocks.append(blocks[block_idx])
 			block_idx += 1
@@ -602,7 +571,6 @@ func _split_transcript_into_pages(content: RichTextLabel, full_text: String) -> 
 				"Message block too long to fit on page, forcing it anyway", "DocumentController.gd"
 			)
 
-		# Build the page text
 		var page_lines: Array[String] = []
 		for block in page_blocks:
 			page_lines.append_array(block)
@@ -611,7 +579,6 @@ func _split_transcript_into_pages(content: RichTextLabel, full_text: String) -> 
 		if page_text.strip_edges() != "":
 			pages.append(page_text)
 
-	# Ensure at least one page
 	if pages.is_empty():
 		LogService.warning(
 			"No transcript pages created, adding full text as single page", "DocumentController.gd"
@@ -702,7 +669,6 @@ func _split_into_pages(content: RichTextLabel, full_text: String) -> Array[Strin
 		)
 		pages.append(full_text)
 
-	LogService.debug("Total pages created: %d" % pages.size(), "DocumentController.gd")
 	return pages
 
 
