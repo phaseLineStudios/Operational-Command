@@ -1,6 +1,9 @@
 class_name PickupItem
 extends RigidBody3D
 
+## Surface index 3 is the paper surface on the clipboard
+const PAPER_SURFACE_INDEX := 3
+
 ## Rotation of object when held
 @export var held_rotation: Vector3 = Vector3.ZERO
 ## Should pick be a toggle action or a held action
@@ -258,10 +261,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 ## Get UV coordinates from raycast hit on document mesh
-## Surface index 3 is the paper surface on the clipboard
-const PAPER_SURFACE_INDEX := 3
-
-
 func _get_document_uv_from_hit(hit: Dictionary) -> Vector2:
 	if not hit.has("face_index"):
 		return Vector2(-1, -1)
