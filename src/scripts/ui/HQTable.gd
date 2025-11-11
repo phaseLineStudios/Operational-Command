@@ -110,11 +110,19 @@ func _init_document_controller(scenario: ScenarioData) -> void:
 		if sim:
 			sim.radio_message.connect(_on_radio_transcript_ai)
 
+		# Connect unit voice responses for transcript logging
+		if unit_voices:
+			unit_voices.unit_response.connect(_on_unit_voice_transcript)
+
+		# Connect unit auto responses for transcript logging
+		if unit_auto_voices:
+			unit_auto_voices.unit_auto_response.connect(_on_unit_voice_transcript)
+
 
 ## Handle player radio result for transcript
 func _on_radio_transcript_player(text: String) -> void:
 	if document_controller and text != "":
-		document_controller.add_transcript_entry("PLAYER", text)
+		await document_controller.add_transcript_entry("PLAYER", text)
 
 
 ## Handle AI radio messages for transcript
@@ -126,8 +134,41 @@ func _on_radio_transcript_ai(level: String, text: String) -> void:
 	if level == "debug":
 		return
 
-	var speaker := "HQ"
-	document_controller.add_transcript_entry(speaker, text)
+	# Try to extract speaker from message text
+	# Messages often follow patterns like "ALPHA: message" or "ALPHA message"
+	var speaker := _extract_speaker_from_message(text)
+	await document_controller.add_transcript_entry(speaker, text)
+
+
+## Handle unit voice responses for transcript (both acknowledgments and auto-responses)
+func _on_unit_voice_transcript(callsign: String, message: String) -> void:
+	if document_controller and message != "":
+		await document_controller.add_transcript_entry(callsign, message)
+
+
+## Extract speaker callsign from message text if present, otherwise return "HQ".
+## Handles formats: "ALPHA: message", "ALPHA message", or plain messages.
+func _extract_speaker_from_message(text: String) -> String:
+	# Check for "CALLSIGN: message" format
+	var colon_pos := text.find(":")
+	if colon_pos > 0:
+		var potential_callsign := text.substr(0, colon_pos).strip_edges()
+		# Verify it looks like a callsign (uppercase letters, possibly with numbers)
+		if potential_callsign.length() >= 2 and potential_callsign.length() <= 12:
+			if potential_callsign.to_upper() == potential_callsign:
+				return potential_callsign
+
+	# Check for "CALLSIGN message" format (first word is all caps)
+	var words := text.split(" ", false, 1)
+	if words.size() >= 2:
+		var first_word := words[0].strip_edges()
+		# Check if first word is uppercase and looks like a callsign
+		if first_word.length() >= 2 and first_word.length() <= 12:
+			if first_word.to_upper() == first_word and first_word.is_valid_identifier():
+				return first_word
+
+	# Default to HQ if no callsign detected
+	return "HQ"
 
 
 ## Bind artillery and engineer controllers to trigger API for tracking

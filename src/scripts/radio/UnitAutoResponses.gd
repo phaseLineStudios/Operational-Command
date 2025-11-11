@@ -8,6 +8,11 @@ extends Node
 ## - "Taking fire!" when under attack
 ## - etc.
 
+## Emitted when a unit generates an automatic voice response.
+## [param callsign] The unit's callsign.
+## [param message] The full message text.
+signal unit_auto_response(callsign: String, message: String)
+
 ## Voice message priority levels
 enum Priority { LOW = 0, NORMAL = 1, HIGH = 2, URGENT = 3 }
 
@@ -384,6 +389,8 @@ func _emit_voice_message(msg: VoiceMessage) -> void:
 	var formatted := "%s, %s" % [msg.callsign, msg.text]
 	if TTSService:
 		TTSService.say(formatted)
+	# Emit signal for transcript logging
+	unit_auto_response.emit(msg.callsign, formatted)
 	LogService.debug("Unit voice: %s" % formatted, "UnitAutoResponses.gd")
 
 

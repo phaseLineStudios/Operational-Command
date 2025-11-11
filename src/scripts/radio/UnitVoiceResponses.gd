@@ -3,6 +3,11 @@ extends Node
 ## Generates unit voice acknowledgments for orders.
 ## Connects to OrdersRouter signals and triggers TTS responses.
 
+## Emitted when a unit generates a voice response.
+## [param callsign] The unit's callsign.
+## [param message] The full message text.
+signal unit_response(callsign: String, message: String)
+
 ## Acknowledgment phrases by order type.
 const ACKNOWLEDGMENTS := {
 	"MOVE":
@@ -115,6 +120,9 @@ func _on_order_applied(order: Dictionary) -> void:
 	# Speak the response
 	tts_service.say(response)
 
+	# Emit signal for transcript logging
+	unit_response.emit(callsign, response)
+
 
 ## Get a random acknowledgment phrase for an order type.
 ## [param order_type] Order type string (MOVE, ATTACK, etc.).
@@ -175,6 +183,8 @@ func _handle_report(order: Dictionary, callsign: String, unit_id: String) -> voi
 
 	if not report.is_empty():
 		tts_service.say(report)
+		# Emit signal for transcript logging
+		unit_response.emit(callsign, report)
 	else:
 		LogService.warning("Generated empty report", "UnitVoiceResponses.gd:_handle_report")
 

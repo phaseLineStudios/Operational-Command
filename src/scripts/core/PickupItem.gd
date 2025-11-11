@@ -261,6 +261,7 @@ func _unhandled_input(event: InputEvent) -> void:
 ## Surface index 3 is the paper surface on the clipboard
 const PAPER_SURFACE_INDEX := 3
 
+
 func _get_document_uv_from_hit(hit: Dictionary) -> Vector2:
 	if not hit.has("face_index"):
 		return Vector2(-1, -1)

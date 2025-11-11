@@ -23,6 +23,9 @@ const PAPER_MATERIAL_INDEX := 3
 ## Maximum transcript entries before pruning oldest
 const MAX_TRANSCRIPT_ENTRIES := 50
 
+## Refresh delay in seconds (wait for user to stop navigating)
+const REFRESH_DELAY := 0.15
+
 ## References to the clipboard RigidBody3D nodes
 var intel_clipboard: RigidBody3D
 var transcript_clipboard: RigidBody3D
@@ -56,6 +59,10 @@ var _briefing_pages: Array[String] = []
 ## Transcript storage
 var _transcript_entries: Array[Dictionary] = []
 
+## Transcript update mutex to prevent concurrent updates
+var _transcript_updating := false
+var _transcript_pending_entries: Array[Dictionary] = []
+
 ## Current scenario reference
 var _scenario: ScenarioData
 
@@ -71,9 +78,6 @@ var _briefing_material: StandardMaterial3D
 var _intel_refresh_timer: Timer
 var _transcript_refresh_timer: Timer
 var _briefing_refresh_timer: Timer
-
-## Refresh delay in seconds (wait for user to stop navigating)
-const REFRESH_DELAY := 0.15
 
 
 ## Initialize the document controller with references to the clipboard nodes.
@@ -292,10 +296,11 @@ func _render_briefing_doc() -> void:
 	_display_page(_briefing_face, _briefing_content, _briefing_pages, 0)
 
 
-## Render transcript document
+## Render transcript document (initial render)
 func _render_transcript_doc() -> void:
-	_transcript_full_content = "[center][b]RADIO TRANSCRIPT[/b][/center]\n"
-	_transcript_full_content += "[center]Mission Communications Log[/center]\n\n"
+	# Header as atomic block during pagination (2 lines: title, subtitle)
+	_transcript_full_content = "[center][b]RADIO TRANSCRIPT[/b]\n"
+	_transcript_full_content += "Mission Communications Log[/center]\n\n"
 
 	if _transcript_entries.is_empty():
 		_transcript_full_content += "[i]No communications recorded.[/i]\n"
@@ -308,7 +313,9 @@ func _render_transcript_doc() -> void:
 			_transcript_full_content += "[b]%s[/b] [%s]\n" % [timestamp, speaker]
 			_transcript_full_content += "%s\n\n" % message
 
-	_transcript_pages = await _split_into_pages(_transcript_content, _transcript_full_content)
+	_transcript_pages = await _split_transcript_into_pages(
+		_transcript_content, _transcript_full_content
+	)
 	# Show last page (most recent entries) for transcript
 	var last_page: int = max(0, _transcript_pages.size() - 1)
 	# Initialize face state
@@ -318,24 +325,107 @@ func _render_transcript_doc() -> void:
 	_display_page(_transcript_face, _transcript_content, _transcript_pages, last_page)
 
 
+## Update transcript content while preserving page position
+func _update_transcript_content(follow_new_messages: bool) -> void:
+	# Remember current page
+	var old_page: int = _transcript_face.current_page if _transcript_face else 0
+
+	# Rebuild content - header as atomic block during pagination (2 lines: title, subtitle)
+	_transcript_full_content = "[center][b]RADIO TRANSCRIPT[/b]\n"
+	_transcript_full_content += "Mission Communications Log[/center]\n\n"
+
+	if _transcript_entries.is_empty():
+		_transcript_full_content += "[i]No communications recorded.[/i]\n"
+	else:
+		for entry in _transcript_entries:
+			var timestamp: String = entry.get("timestamp", "")
+			var speaker: String = entry.get("speaker", "")
+			var message: String = entry.get("message", "")
+
+			_transcript_full_content += "[b]%s[/b] [%s]\n" % [timestamp, speaker]
+			_transcript_full_content += "%s\n\n" % message
+
+	# Re-paginate
+	_transcript_pages = await _split_transcript_into_pages(
+		_transcript_content, _transcript_full_content
+	)
+	_transcript_face.total_pages = _transcript_pages.size()
+
+	# Choose which page to show
+	var target_page: int
+	if follow_new_messages:
+		# User was on last page, follow new messages
+		target_page = max(0, _transcript_pages.size() - 1)
+	else:
+		# User was reading old messages, stay on same page (or closest valid)
+		target_page = clampi(old_page, 0, _transcript_pages.size() - 1)
+
+	_transcript_face.current_page = target_page
+	_transcript_face.update_page_indicator()
+	_display_page(_transcript_face, _transcript_content, _transcript_pages, target_page)
+
+	# Refresh texture immediately for transcript updates (no debounce needed)
+	await _do_transcript_refresh()
+
+
 ## Add a radio transmission to the transcript
 ## [param speaker] Who is speaking (e.g., "PLAYER", "ALPHA", "HQ")
 ## [param message] The message text
 func add_transcript_entry(speaker: String, message: String) -> void:
 	var timestamp := _get_mission_timestamp()
+	var entry := {"timestamp": timestamp, "speaker": speaker, "message": message}
 
-	_transcript_entries.append({"timestamp": timestamp, "speaker": speaker, "message": message})
+	# ALWAYS add entry to list immediately to preserve chronological order
+	# This ensures player messages appear before trigger responses even if both arrive in same frame
+	_transcript_entries.append(entry)
 
 	# Prune old entries if exceeding max
 	if _transcript_entries.size() > MAX_TRANSCRIPT_ENTRIES:
 		_transcript_entries.pop_front()
+
+	# If already updating display, mark that we need another refresh
+	if _transcript_updating:
+		# Entry is already added above, just flag that refresh is needed
+		_transcript_pending_entries.append(entry)
+		return
+
+	# Mark as updating display
+	_transcript_updating = true
 
 	# Remember if user was on the last page before update
 	var was_on_last_page := false
 	if _transcript_face and _transcript_pages.size() > 0:
 		was_on_last_page = _transcript_face.current_page >= _transcript_pages.size() - 1
 
+	# Update display with all current entries
 	await _update_transcript_content(was_on_last_page)
+
+	# Mark display update as done
+	_transcript_updating = false
+
+	# If more entries were added during our update, refresh display again
+	if _transcript_pending_entries.size() > 0:
+		_transcript_pending_entries.clear()
+		# Trigger another display refresh (entries already added to list above)
+		await _refresh_transcript_display()
+
+
+## Refresh transcript display without adding new entries
+## Used when entries were queued during an update
+func _refresh_transcript_display() -> void:
+	# Mark as updating
+	_transcript_updating = true
+
+	# Remember if user was on the last page
+	var was_on_last_page := false
+	if _transcript_face and _transcript_pages.size() > 0:
+		was_on_last_page = _transcript_face.current_page >= _transcript_pages.size() - 1
+
+	# Update display with all current entries
+	await _update_transcript_content(was_on_last_page)
+
+	# Mark as done
+	_transcript_updating = false
 
 
 ## Get current mission timestamp as formatted string
@@ -404,6 +494,7 @@ func _apply_texture_to_clipboard(
 ## Refresh a material's texture from viewport with mipmaps
 func _refresh_texture(material: StandardMaterial3D, viewport: SubViewport) -> void:
 	if material == null or viewport == null:
+		LogService.warning("Cannot refresh: material or viewport is null", "DocumentController.gd")
 		return
 
 	var img := viewport.get_texture().get_image()
@@ -413,6 +504,121 @@ func _refresh_texture(material: StandardMaterial3D, viewport: SubViewport) -> vo
 
 	img.generate_mipmaps()
 	material.albedo_texture = ImageTexture.create_from_image(img)
+
+
+## Split transcript into pages, keeping message blocks atomic
+## Each message block (timestamp + speaker + message + blank line) stays together
+func _split_transcript_into_pages(content: RichTextLabel, full_text: String) -> Array[String]:
+	var pages: Array[String] = []
+
+	if full_text.is_empty():
+		pages.append("")
+		return pages
+
+	# Set the full text to measure once
+	content.text = full_text
+	await get_tree().process_frame  # Wait for layout
+
+	var total_lines := content.get_line_count()
+	var visible_lines := content.get_visible_line_count()
+
+	# Safety check - if visible_lines is 0 or unreasonably small, use default
+	if visible_lines < 10:
+		LogService.warning(
+			"visible_lines=%d is too small, defaulting to 30" % visible_lines,
+			"DocumentController.gd"
+		)
+		visible_lines = 30
+
+	# If everything fits on one page
+	if total_lines <= visible_lines:
+		pages.append(full_text)
+		return pages
+
+	# Split by lines
+	var all_lines := full_text.split("\n")
+
+	# Build blocks: header (lines 0-2), then message blocks (groups of 3 lines each)
+	var blocks: Array[Array] = []
+
+	# Header block (first 3 lines: title line, subtitle line, blank line)
+	if all_lines.size() >= 3:
+		blocks.append([all_lines[0], all_lines[1], all_lines[2]])
+		var line_idx := 3
+
+		# Group remaining lines into message blocks (timestamp, message, blank)
+		while line_idx < all_lines.size():
+			var block: Array[String] = []
+
+			# Add up to 3 lines for this message block
+			for i in range(3):
+				if line_idx < all_lines.size():
+					block.append(all_lines[line_idx])
+					line_idx += 1
+				else:
+					break
+
+			if block.size() > 0:
+				blocks.append(block)
+	else:
+		# Fallback: treat entire content as one block
+		blocks.append(all_lines)
+
+	# Now build pages by adding blocks atomically
+	var block_idx := 0
+	while block_idx < blocks.size():
+		var page_blocks: Array[Array] = []
+
+		# Try to add blocks to this page
+		while block_idx < blocks.size():
+			# Add the next block
+			page_blocks.append(blocks[block_idx])
+
+			# Build test text from all blocks on this page
+			var test_lines: Array[String] = []
+			for block in page_blocks:
+				test_lines.append_array(block)
+			var test_text := "\n".join(test_lines)
+
+			# Test if this fits
+			content.text = test_text
+			await get_tree().process_frame
+
+			var test_total := content.get_line_count()
+
+			if test_total <= visible_lines:
+				# This block fits! Keep it and try adding more
+				block_idx += 1
+			else:
+				# This block doesn't fit, remove it and finish this page
+				page_blocks.pop_back()
+				break
+
+		# If we didn't add any blocks (block too large), force add it anyway
+		if page_blocks.is_empty() and block_idx < blocks.size():
+			page_blocks.append(blocks[block_idx])
+			block_idx += 1
+			LogService.warning(
+				"Message block too long to fit on page, forcing it anyway", "DocumentController.gd"
+			)
+
+		# Build the page text
+		var page_lines: Array[String] = []
+		for block in page_blocks:
+			page_lines.append_array(block)
+		var page_text := "\n".join(page_lines)
+
+		if page_text.strip_edges() != "":
+			pages.append(page_text)
+
+	# Ensure at least one page
+	if pages.is_empty():
+		LogService.warning(
+			"No transcript pages created, adding full text as single page", "DocumentController.gd"
+		)
+		pages.append(full_text)
+
+	return pages
 
 
 ## Split content into pages based on what fits in the RichTextLabel
@@ -443,66 +649,66 @@ func _split_into_pages(content: RichTextLabel, full_text: String) -> Array[Strin
 		pages.append(full_text)
 		return pages
 
-	# Split by lines and use binary search to find what actually fits
+	# Split by lines and use greedy line-by-line approach
 	var all_lines := full_text.split("\n")
-	var remaining_lines := all_lines.duplicate()
+	var line_idx := 0
 
-	while remaining_lines.size() > 0:
-		# Binary search to find max lines that fit
-		var low := 1
-		var high := remaining_lines.size()
-		var best_fit := 1
+	while line_idx < all_lines.size():
+		# Build current page by adding lines until we overflow
+		var page_lines: Array[String] = []
 
-		while low <= high:
-			var mid := int((low + high) / 2.0)
-			var test_lines := remaining_lines.slice(0, mid)
-			var test_text := "\n".join(test_lines)
+		# Keep adding lines while they fit
+		while line_idx < all_lines.size():
+			# Try adding the next line
+			page_lines.append(all_lines[line_idx])
+			var test_text := "\n".join(page_lines)
 
-			# Test if this fits
 			content.text = test_text
 			await get_tree().process_frame
 
 			var test_total := content.get_line_count()
-			var test_visible := content.get_visible_line_count()
 
-			if test_total <= test_visible:
-				# Fits! Try more lines
-				best_fit = mid
-				low = mid + 1
+			# Use cached visible_lines for consistency
+			if test_total <= visible_lines:
+				# This line fits! Keep it and try adding more
+				line_idx += 1
 			else:
-				# Too many lines, try fewer
-				high = mid - 1
+				# This line doesn't fit, remove it and finish this page
+				page_lines.pop_back()
+				break
 
-		# Add the page with best_fit lines
-		var page_lines := remaining_lines.slice(0, best_fit)
+		# If we didn't add any lines (very long line that doesn't fit), force add at least one
+		if page_lines.is_empty() and line_idx < all_lines.size():
+			page_lines.append(all_lines[line_idx])
+			line_idx += 1
+			LogService.warning(
+				"Line too long to fit on page, forcing it anyway", "DocumentController.gd"
+			)
+
+		# Add the completed page (skip empty pages unless it's the first)
 		var page_text := "\n".join(page_lines)
-
-		# Only add non-empty pages
+		# Only add if page has content, or if no pages exist yet
 		if page_text.strip_edges() != "":
 			pages.append(page_text)
-
-		# Remove used lines
-		remaining_lines = remaining_lines.slice(best_fit)
-
-		# Safety check to avoid infinite loop
-		if best_fit == 0:
-			LogService.warning(
-				"Could not fit any content - forcing remaining %d lines" % remaining_lines.size(),
-				"DocumentController.gd"
-			)
-			pages.append("\n".join(remaining_lines))
-			break
+		elif pages.is_empty():
+			# Ensure at least one page exists (even if empty)
+			LogService.warning("Creating empty first page", "DocumentController.gd")
+			pages.append(page_text)
 
 	# Ensure at least one page
 	if pages.is_empty():
+		LogService.warning(
+			"No pages created, adding full text as single page", "DocumentController.gd"
+		)
 		pages.append(full_text)
 
+	LogService.debug("Total pages created: %d" % pages.size(), "DocumentController.gd")
 	return pages
 
 
 ## Display a specific page for a document
 func _display_page(
-	face: Control, content: RichTextLabel, pages: Array[String], page_index: int
+	_face: Control, content: RichTextLabel, pages: Array[String], page_index: int
 ) -> void:
 	if pages.is_empty():
 		LogService.warning("No pages to display", "DocumentController.gd")
