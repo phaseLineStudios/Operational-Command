@@ -145,9 +145,9 @@ func intent_defend_check() -> bool:
 	# Consider defend established when unit is idle (arrived or holding)
 	return su.move_state() in [ScenarioUnit.MoveState.ARRIVED, ScenarioUnit.MoveState.IDLE]
 
-func intent_patrol_begin(points: Array[Vector3], ping_pong: bool) -> void:
+func intent_patrol_begin(points: Array[Vector3], ping_pong: bool, loop_forever: bool = false) -> void:
 	if _movement != null and _movement.has_method("request_patrol"):
-		_movement.request_patrol(points, ping_pong)
+		_movement.request_patrol(points, ping_pong, loop_forever)
 
 func intent_patrol_check() -> bool:
 	if _movement == null:

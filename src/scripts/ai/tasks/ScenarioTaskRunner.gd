@@ -97,7 +97,11 @@ func tick(dt: float, agent: AIAgent) -> void:
 					typed.append(Vector3(v2.x, 0.0, v2.y))
 				# Optional dwell time per point
 				agent.set_patrol_dwell(float(_active.get("dwell_s", 0.0)))
-				agent.intent_patrol_begin(typed, bool(_active.get("ping_pong", false)))
+				agent.intent_patrol_begin(
+					typed,
+					bool(_active.get("ping_pong", false)),
+					bool(_active.get("loop_forever", false))
+				)
 			if agent.intent_patrol_check():
 				emit_signal("task_completed", unit_id, StringName(t_name))
 				_active.clear()

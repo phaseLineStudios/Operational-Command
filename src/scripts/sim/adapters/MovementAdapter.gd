@@ -67,6 +67,7 @@ var _patrol_index: int = 0
 var _patrol_forward: bool = true
 var _patrol_segments_remaining: int = 0
 var _patrol_dwell: float = 0.0
+var _patrol_loop_forever: bool = false
 
 var _grid: PathGrid
 var _labels: Dictionary = {}
@@ -411,13 +412,15 @@ func is_hold_established() -> bool:
 	return inside and _hold_timer >= hold_settle_time
 
 ## TaskPatrol
-func request_patrol(points: Array[Vector3], ping_pong: bool) -> void:
+
+func request_patrol(points: Array[Vector3], ping_pong: bool, loop_forever: bool = false) -> void:
 	_holding = false
 	_patrol_points = points.duplicate()
 	_patrol_ping_pong = ping_pong
 	_patrol_index = 0
 	_patrol_forward = true
 	_patrol_dwell = 0.0
+	_patrol_loop_forever = loop_forever
 	_moving = false
 	# One single cycle then stop:
 	# cycle: visit each point once (N segments)
@@ -481,6 +484,15 @@ func _tick_patrol(dt: float) -> void:
 			_patrol_dwell = 0.0
 		else:
 			# finished a single cycle
+			if _patrol_loop_forever:
+				# reset segments and continue
+				var n: int = _patrol_points.size()
+				_patrol_segments_remaining = n if not _patrol_ping_pong else max(2 * n - 2, 1)
+				_patrol_forward = true
+				_patrol_index = wrapi(_patrol_index, 0, max(n, 1))
+				_patrol_dwell = 0.0
+				# re-enter on next frame
+				return
 			_patrol_running = false
 			return
 	# move step
