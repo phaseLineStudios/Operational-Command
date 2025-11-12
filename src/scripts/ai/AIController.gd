@@ -23,6 +23,8 @@ func _ready() -> void:
 	var sim: SimWorld = get_tree().get_root().find_child("SimWorld", true, false)
 	if sim and not sim.engagement_reported.is_connected(_on_engagement_reported):
 		sim.engagement_reported.connect(_on_engagement_reported)
+	# Ensure runners tick via _physics_process
+	set_physics_process(true)
 
 
 ## Register a unit's agent and its prebuilt ordered task list.

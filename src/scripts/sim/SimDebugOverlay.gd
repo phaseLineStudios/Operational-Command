@@ -8,7 +8,14 @@ extends Control
 ## @experimental
 
 ## Master toggle; when false the overlay does not process or draw.
-@export var debug_enabled: bool = false
+@export var debug_enabled: bool:
+	get:
+		return _debug_enabled
+	set(value):
+		_debug_enabled = value
+		visible = value
+		set_process(value)
+		queue_redraw()
 ## Terrain renderer used for map/terrain coordinate transforms.
 @export var terrain_renderer: TerrainRender
 ## Simulation world for unit snapshots and mission timing.
@@ -79,6 +86,8 @@ var _map_rect: Rect2
 var _unit_by_id: Dictionary = {}
 var _last_order: Dictionary = {}
 var _recent_contact_until: Dictionary = {}
+
+var _debug_enabled: bool = false
 
 
 ## Auto-wire references, build caches, connect signals, and set processing.
