@@ -253,7 +253,7 @@ func _physics_process(dt: float) -> void:
 				if idx >= 0 and Game.current_scenario and Game.current_scenario.units.size() > idx:
 					var su: ScenarioUnit = Game.current_scenario.units[idx]
 					if su and su.has_meta(k):
-						su.erase_meta(k)
+						su.remove_meta(k)
 				_recent_attack_marks.remove_at(i)
 
 	for uid in _runners.keys():

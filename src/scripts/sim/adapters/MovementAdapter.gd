@@ -355,10 +355,10 @@ func _on_grid_ready(profile: int) -> void:
 			_grid.use_profile(profile)
 			var dest_m: Vector2 = su.get_meta("_pending_start_dest")
 			var is_direct: bool = su.get_meta("_pending_start_direct", false)
-			su.erase_meta("_pending_start_profile")
-			su.erase_meta("_pending_start_dest")
-			su.erase_meta("_pending_start_direct")
-			su.erase_meta("_pending_road_bias_weight")
+			su.remove_meta("_pending_start_profile")
+			su.remove_meta("_pending_start_dest")
+			su.remove_meta("_pending_start_direct")
+			su.remove_meta("_pending_road_bias_weight")
 
 			# Use direct or normal pathfinding
 			var planned: bool = false
