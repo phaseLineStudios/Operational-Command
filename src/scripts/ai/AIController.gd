@@ -15,7 +15,7 @@ var _recent_attack_marks: Array = []  ## Array of { uid:int, key:String, expire:
 
 func _ready() -> void:
 	# Wire return-fire window from SimWorld engagement events
-	var sim := get_tree().get_root().find_child("SimWorld", true, false)
+	var sim: SimWorld = get_tree().get_root().find_child("SimWorld", true, false)
 	if sim and not sim.engagement_reported.is_connected(_on_engagement_reported):
 		sim.engagement_reported.connect(_on_engagement_reported)
 

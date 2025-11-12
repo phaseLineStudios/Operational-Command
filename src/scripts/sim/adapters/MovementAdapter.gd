@@ -280,8 +280,8 @@ func plan_and_start(su: ScenarioUnit, dest_m: Vector2) -> bool:
 		return false
 	var p := su.unit.movement_profile
 	# Inject behaviour-based path preference via PathGrid.road_bias_weight
-	var prev_rbw := _grid.road_bias_weight
-	var rbw := clamp(1.0 - _cover_bias, 0.0, 1.0)
+	var prev_rbw: float = _grid.road_bias_weight
+	var rbw: float = clamp(1.0 - _cover_bias, 0.0, 1.0)
 	_grid.road_bias_weight = rbw
 	if not _grid.ensure_profile(p):
 		su.set_meta("_pending_start_dest", dest_m)
@@ -311,8 +311,8 @@ func plan_and_start_direct(su: ScenarioUnit, dest_m: Vector2) -> bool:
 		return false
 	var p := su.unit.movement_profile
 	# Inject behaviour-based path preference via PathGrid.road_bias_weight
-	var prev_rbw := _grid.road_bias_weight
-	var rbw := clamp(1.0 - _cover_bias, 0.0, 1.0)
+	var prev_rbw: float = _grid.road_bias_weight
+	var rbw: float = clamp(1.0 - _cover_bias, 0.0, 1.0)
 	_grid.road_bias_weight = rbw
 	if not _grid.ensure_profile(p):
 		su.set_meta("_pending_start_dest", dest_m)

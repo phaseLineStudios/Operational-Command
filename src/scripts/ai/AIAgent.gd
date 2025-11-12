@@ -61,7 +61,7 @@ func notify_hostile_shot() -> void:
 func _get_su() -> ScenarioUnit:
 	if Game.current_scenario == null:
 		return null
-	var units := Game.current_scenario.units
+	var units: Array = Game.current_scenario.units
 	if unit_id >= 0 and unit_id < units.size():
 		return units[unit_id]
 	return null
@@ -192,8 +192,8 @@ func intent_wait_check(dt: float) -> bool:
 			_wait_timer = 0.0
 			return true
 		# Fallback to SimWorld contacts
-		var su := _get_su()
-		var sim := get_tree().get_root().find_child("SimWorld", true, false)
+		var su: ScenarioUnit = _get_su()
+		var sim: SimWorld = get_tree().get_root().find_child("SimWorld", true, false)
 		if su and sim and sim.has_method("get_contacts_for_unit"):
 			var contacts: Array = sim.get_contacts_for_unit(su.id)
 			if contacts.size() > 0:
