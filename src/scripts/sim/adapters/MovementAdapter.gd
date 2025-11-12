@@ -80,12 +80,12 @@ func _ready() -> void:
 
 	if _grid and not _grid.is_connected("build_ready", Callable(self, "_on_grid_ready")):
 		_grid.build_ready.connect(_on_grid_ready)
-	
+
 	if actor_path.is_empty():
 		_actor = get_parent() as Node3D
 	else:
 		_actor = get_node_or_null(actor_path) as Node3D
-		
+
 
 func _physics_process(dt: float) -> void:
 	if _actor == null:
@@ -102,6 +102,7 @@ func _physics_process(dt: float) -> void:
 	# Hold settle timer
 	if _holding:
 		_tick_hold(dt)
+
 
 ## Rebuilds the label lookup from TerrainData.labels.
 ## Stores: normalized_text -> Array[Vector2] (terrain meters).
@@ -369,11 +370,13 @@ func _on_grid_ready(profile: int) -> void:
 			if planned:
 				su.start_move(_grid)
 
+
 ## Behaviour mapping from AIAgent
 func set_behaviour_params(speed_mult: float, cover_bias: float, noise_level: float) -> void:
 	_speed_mult = speed_mult
 	_cover_bias = cover_bias
 	_noise_level = noise_level
+
 
 ## TaskMove
 func request_move_to(dest: Vector3) -> void:
@@ -382,8 +385,10 @@ func request_move_to(dest: Vector3) -> void:
 	_move_target = dest
 	_moving = true
 
+
 func is_move_complete() -> bool:
 	return not _moving
+
 
 ## TaskDefend
 func request_hold_area(center: Vector3, radius: float) -> void:
@@ -404,14 +409,19 @@ func request_hold_area(center: Vector3, radius: float) -> void:
 		else:
 			_moving = false
 
+
 func is_hold_established() -> bool:
 	# Established when inside radius and settled long enough
 	if _actor == null:
 		return true
-	var inside: bool = _actor.global_position.distance_to(_hold_center) <= _hold_radius + arrive_epsilon
+	var inside: bool = (
+		_actor.global_position.distance_to(_hold_center) <= _hold_radius + arrive_epsilon
+	)
 	return inside and _hold_timer >= hold_settle_time
 
+
 ## TaskPatrol
+
 
 func request_patrol(points: Array[Vector3], ping_pong: bool, loop_forever: bool = false) -> void:
 	_holding = false
@@ -436,14 +446,16 @@ func request_patrol(points: Array[Vector3], ping_pong: bool, loop_forever: bool 
 	_moving = true
 	_patrol_index = 1
 
+
 func is_patrol_running() -> bool:
 	return _patrol_running
+
 
 ## Optional setter to customize dwell time between patrol legs
 func set_patrol_dwell(seconds: float) -> void:
 	patrol_dwell_seconds = max(0.0, seconds)
-	
-	
+
+
 # Initial helpers
 func _step_move(dt: float) -> void:
 	var speed: float = base_speed_mps * _speed_mult
@@ -464,14 +476,18 @@ func _step_move(dt: float) -> void:
 
 	_actor.global_position = pos + dir * speed * dt
 
+
 func _tick_hold(dt: float) -> void:
 	if _actor == null:
 		return
-	var inside: bool = _actor.global_position.distance_to(_hold_center) <= _hold_radius + arrive_epsilon
+	var inside: bool = (
+		_actor.global_position.distance_to(_hold_center) <= _hold_radius + arrive_epsilon
+	)
 	if inside and not _moving:
 		_hold_timer += dt
 	else:
 		_hold_timer = 0.0
+
 
 func _tick_patrol(dt: float) -> void:
 	if not _moving:
@@ -498,6 +514,7 @@ func _tick_patrol(dt: float) -> void:
 	# move step
 	_step_move(dt)
 	# when a leg finishes, _moving becomes false and dwell begins next frame
+
 
 func _advance_patrol_leg() -> bool:
 	if _patrol_points.is_empty():

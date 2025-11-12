@@ -21,6 +21,7 @@ var _active: Dictionary = {}
 var _paused: bool = false
 var _started_current: bool = false
 
+
 func setup(p_unit_id: int, ordered_tasks: Array[Dictionary]) -> void:
 	unit_id = p_unit_id
 	_queue = ordered_tasks.duplicate(true)
@@ -28,22 +29,28 @@ func setup(p_unit_id: int, ordered_tasks: Array[Dictionary]) -> void:
 	_paused = false
 	_started_current = false
 
+
 func is_idle() -> bool:
 	return _active.is_empty() and _queue.is_empty()
+
 
 func pause() -> void:
 	_paused = true
 
+
 func resume() -> void:
 	_paused = false
+
 
 func cancel_active() -> void:
 	_active.clear()
 	_started_current = false
 
+
 func advance() -> void:
 	_active.clear()
 	_started_current = false
+
 
 func _start_next() -> void:
 	if _queue.is_empty():
@@ -53,6 +60,7 @@ func _start_next() -> void:
 	_active = _queue.pop_front()
 	_started_current = false
 	emit_signal("task_started", unit_id, StringName(_active.get("type", "unknown")))
+
 
 func tick(dt: float, agent: AIAgent) -> void:
 	if _paused:
@@ -79,8 +87,7 @@ func tick(dt: float, agent: AIAgent) -> void:
 			if not _started_current:
 				_started_current = true
 				agent.intent_defend_begin(
-					_active.get("center_m", Vector2.ZERO),
-					float(_active.get("radius", 0.0))
+					_active.get("center_m", Vector2.ZERO), float(_active.get("radius", 0.0))
 				)
 			if agent.intent_defend_check():
 				emit_signal("task_completed", unit_id, StringName(t_name))
@@ -127,8 +134,7 @@ func tick(dt: float, agent: AIAgent) -> void:
 			if not _started_current:
 				_started_current = true
 				agent.intent_wait_begin(
-					float(_active.get("seconds", 0.0)),
-					bool(_active.get("until_contact", false))
+					float(_active.get("seconds", 0.0)), bool(_active.get("until_contact", false))
 				)
 			if agent.intent_wait_check(dt):
 				emit_signal("task_completed", unit_id, StringName(t_name))

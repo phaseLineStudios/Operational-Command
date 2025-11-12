@@ -19,9 +19,10 @@ enum ROE { HOLD_FIRE, RETURN_FIRE, OPEN_FIRE }
 
 var _ammo: AmmoSystem  ## Cached AmmoSystem reference
 
-var _roe: int = 2 # 0 HOLD_FIRE, 1 RETURN_FIRE, 2 OPEN_FIRE
+var _roe: int = 2  # 0 HOLD_FIRE, 1 RETURN_FIRE, 2 OPEN_FIRE
 var _shot_timer: float = 0.0
 var _saw_hostile_shot: bool = false
+
 
 ## Resolve the AmmoSystem reference when the node enters the tree.
 func _ready() -> void:
@@ -29,11 +30,13 @@ func _ready() -> void:
 		_ammo = get_node(ammo_system_path) as AmmoSystem
 	add_to_group("CombatAdapter")
 
+
 func _process(dt: float) -> void:
 	if _saw_hostile_shot:
 		_shot_timer -= dt
 		if _shot_timer <= 0.0:
 			_saw_hostile_shot = false
+
 
 ## Request to fire: returns true if ammo was consumed; false if blocked.
 ## Fails open (true) when there is no ammo system or unit is unknown.
@@ -129,14 +132,21 @@ func request_fire_with_penalty(unit_id: String, ammo_type: String, rounds: int =
 	var pen := get_ammo_penalty(unit_id, ammo_type)
 	var allow := false
 	match _roe:
-		0: allow = false
-		1: allow = _saw_hostile_shot
-		2: allow = true
+		0:
+			allow = false
+		1:
+			allow = _saw_hostile_shot
+		2:
+			allow = true
 	if not allow:
 		return {
-			"allow": false, "state": "roe_blocked",
-			"attack_power_mult": 1.0, "attack_cycle_mult": 1.0,
-			"suppression_mult": 1.0, "morale_delta": 0, "ai_recommendation": "hold"
+			"allow": false,
+			"state": "roe_blocked",
+			"attack_power_mult": 1.0,
+			"attack_cycle_mult": 1.0,
+			"suppression_mult": 1.0,
+			"morale_delta": 0,
+			"ai_recommendation": "hold"
 		}
 	return {
 		"allow": request_fire(unit_id, ammo_type, rounds),
@@ -148,15 +158,18 @@ func request_fire_with_penalty(unit_id: String, ammo_type: String, rounds: int =
 		"ai_recommendation": pen.ai_recommendation,
 	}
 
+
 ## Rules of engagement from AIAgent
 ## 0 = HOLD_FIRE, 1 = RETURN_FIRE, 2 = OPEN_FIRE
 func set_rules_of_engagement(mode: int) -> void:
 	_roe = mode
 
+
 ## External systems call this when the unit observes an enemy firing event.
 func report_hostile_shot_observed() -> void:
 	_saw_hostile_shot = true
 	_shot_timer = return_fire_window_sec
+
 
 ## Query for fire permission based on current ROE.
 func can_fire() -> bool:

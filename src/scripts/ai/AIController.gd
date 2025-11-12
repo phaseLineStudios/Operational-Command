@@ -7,16 +7,18 @@ class_name AIController
 
 ## Coordinates per-unit ScenarioTaskRunner and AIAgent to execute authored task chains.
 
-var _runners: Dictionary = {}   ## unit_id -> ScenarioTaskRunner
-var _agents: Dictionary = {}    ## unit_id -> AIAgent
+var _runners: Dictionary = {}  ## unit_id -> ScenarioTaskRunner
+var _agents: Dictionary = {}  ## unit_id -> AIAgent
 var _recent_attack_marks: Array = []  ## Array of { uid:int, key:String, expire:float }
 @export var return_fire_window_sec: float = 5.0
+
 
 func _ready() -> void:
 	# Wire return-fire window from SimWorld engagement events
 	var sim := get_tree().get_root().find_child("SimWorld", true, false)
 	if sim and not sim.engagement_reported.is_connected(_on_engagement_reported):
 		sim.engagement_reported.connect(_on_engagement_reported)
+
 
 func register_unit(unit_id: int, agent: AIAgent, ordered_tasks: Array[Dictionary]) -> void:
 	if _runners.has(unit_id):
@@ -27,6 +29,7 @@ func register_unit(unit_id: int, agent: AIAgent, ordered_tasks: Array[Dictionary
 	_runners[unit_id] = runner
 	_agents[unit_id] = agent
 
+
 func unregister_unit(unit_id: int) -> void:
 	if _runners.has(unit_id):
 		var r: ScenarioTaskRunner = _runners[unit_id]
@@ -35,26 +38,32 @@ func unregister_unit(unit_id: int) -> void:
 			r.queue_free()
 	_agents.erase(unit_id)
 
+
 func is_unit_idle(unit_id: int) -> bool:
 	if not _runners.has(unit_id):
 		return true
 	return _runners[unit_id].is_idle()
 
+
 func pause_unit(unit_id: int) -> void:
 	if _runners.has(unit_id):
 		_runners[unit_id].pause()
+
 
 func resume_unit(unit_id: int) -> void:
 	if _runners.has(unit_id):
 		_runners[unit_id].resume()
 
+
 func cancel_active(unit_id: int) -> void:
 	if _runners.has(unit_id):
 		_runners[unit_id].cancel_active()
 
+
 func advance_unit(unit_id: int) -> void:
 	if _runners.has(unit_id):
 		_runners[unit_id].advance()
+
 
 ## Build per-unit ordered queues from a flat list using unit_index and optional links.
 func build_per_unit_queues(flat_tasks: Array[Dictionary]) -> Dictionary:
@@ -63,11 +72,11 @@ func build_per_unit_queues(flat_tasks: Array[Dictionary]) -> Dictionary:
 	# Tag each task with its source index so next/prev_index stay meaningful
 	for i in flat_tasks.size():
 		var t: Dictionary = flat_tasks[i]
-		if t == null: 
+		if t == null:
 			continue
 		t["__src_index"] = i
 		var uid := int(t.get("unit_index", -1))
-		if uid < 0: 
+		if uid < 0:
 			continue
 		if not by_unit.has(uid):
 			by_unit[uid] = []
@@ -110,8 +119,10 @@ func build_per_unit_queues(flat_tasks: Array[Dictionary]) -> Dictionary:
 
 	return by_unit
 
+
 static func _cmp_by_src_index(a: Dictionary, b: Dictionary) -> bool:
 	return int(a.get("__src_index", 0)) < int(b.get("__src_index", 0))
+
 
 ## Normalize ScenarioData.tasks entries (ScenarioTask resources or JSON dicts)
 ## into runner-friendly dictionaries.
@@ -200,6 +211,7 @@ func normalize_tasks(flat_tasks: Array) -> Array[Dictionary]:
 
 	return out
 
+
 func _on_engagement_reported(attacker_id: String, defender_id: String, _damage: float) -> void:
 	# Allow RETURN_FIRE units to respond for a short window
 	# defender_id maps to ScenarioUnit.id; our dictionary keys are unit indices, so search
@@ -214,14 +226,20 @@ func _on_engagement_reported(attacker_id: String, defender_id: String, _damage: 
 			# Mark defender as recently attacked by this attacker (for Combat.gd's return-fire check)
 			var key := "recently_attacked_" + String(attacker_id)
 			su.set_meta(key, true)
-			_recent_attack_marks.append({
-				"uid": uid,
-				"key": key,
-				"expire": (Time.get_ticks_msec() / 1000.0) + return_fire_window_sec,
-			})
+			(
+				_recent_attack_marks
+				. append(
+					{
+						"uid": uid,
+						"key": key,
+						"expire": (Time.get_ticks_msec() / 1000.0) + return_fire_window_sec,
+					}
+				)
+			)
 			# Also unlock RETURN_FIRE via CombatAdapter path
 			agent.notify_hostile_shot()
 			break
+
 
 func _physics_process(dt: float) -> void:
 	# Sweep and clear expired "recently_attacked_*" marks

@@ -67,7 +67,7 @@ func _ready() -> void:
 
 	_update_subtitle_suggestions(scenario)
 	_create_initial_unit_counters(playable_units)
-	
+
 	# Initialize the AI
 	_init_enemy_ai()
 
@@ -400,8 +400,8 @@ func _init_enemy_ai() -> void:
 
 	# Create an agent per ENEMY unit in content.units
 	for i in Game.current_scenario.units.size():
-		var u : ScenarioUnit = Game.current_scenario.units[i]
-		if int(u.affiliation) != 1: # 1 = ENEMY
+		var u: ScenarioUnit = Game.current_scenario.units[i]
+		if int(u.affiliation) != 1:  # 1 = ENEMY
 			continue
 		var agent := AIAgent.new()
 		agent.unit_id = i

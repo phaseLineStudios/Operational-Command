@@ -20,7 +20,7 @@ extends Node
 ## NodePath to the TerrainRender that provides `data: TerrainData`.
 @export var terrain_renderer_path: NodePath
 ## Terrain effects configuration used by LOS/spotting calculations.
-@export 
+@export
 var effects_config: TerrainEffectsConfig = preload("res://assets/configs/terrain_effects.tres")
 
 @export var simworld_path: NodePath
@@ -34,6 +34,7 @@ var _terrain: TerrainData
 
 var _actor: Node3D
 var _hostile_contact: bool = false
+
 
 ## Autowires LOS helper and terrain renderer from exported paths.
 func _ready() -> void:
@@ -54,6 +55,7 @@ func _ready() -> void:
 	else:
 		_actor = get_node_or_null(actor_path) as Node3D
 
+
 func _process(_dt: float) -> void:
 	if _actor == null:
 		return
@@ -68,6 +70,7 @@ func _process(_dt: float) -> void:
 				found = true
 				break
 	_hostile_contact = found
+
 
 ## Returns true if there is an unobstructed LOS from [param a] to [param b].
 ## Checks both terrain blocking AND maximum spotting range.
@@ -125,17 +128,20 @@ func contacts_between(friends: Array[ScenarioUnit], enemies: Array[ScenarioUnit]
 				out.append({"attacker": f, "defender": e})
 	return out
 
+
 ## used by AIAgent to determine what to do on contact in LOSAdapter
 func _on_contact(attacker: String, defender: String) -> void:
 	if attacker == unit_id or defender == unit_id:
 		_last_contact_s = Time.get_ticks_msec() / 1000.0
 
+
 ## Used by AIAgent wait-until-contact
 func has_hostile_contact() -> bool:
 	if _last_contact_s < 0.0:
 		return false
-	var curr_time := (Time.get_ticks_msec() / 1000.0)
+	var curr_time := Time.get_ticks_msec() / 1000.0
 	return curr_time - _last_contact_s <= contact_memory_sec
+
 
 ## Allow external systems to toggle contact directly.
 func set_hostile_contact(v: bool) -> void:
