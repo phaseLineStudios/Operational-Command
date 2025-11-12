@@ -1,5 +1,5 @@
-extends Node
 class_name AIController
+extends Node
 ## Enemy AI task manager with Cold War doctrine behaviors.
 ##
 ## Maintains a rolling task list (defend, attack, delay, ambush) and reacts to
@@ -7,10 +7,10 @@ class_name AIController
 
 ## Coordinates per-unit ScenarioTaskRunner and AIAgent to execute authored task chains.
 
+@export var return_fire_window_sec: float = 5.0
 var _runners: Dictionary = {}  ## unit_id -> ScenarioTaskRunner
 var _agents: Dictionary = {}  ## unit_id -> AIAgent
 var _recent_attack_marks: Array = []  ## Array of { uid:int, key:String, expire:float }
-@export var return_fire_window_sec: float = 5.0
 
 
 func _ready() -> void:

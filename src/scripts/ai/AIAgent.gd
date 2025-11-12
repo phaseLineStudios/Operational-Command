@@ -1,5 +1,5 @@
-extends Node
 class_name AIAgent
+extends Node
 
 ## Translates tasks into intents for your existing adapters in scripts/sim/adapters.
 

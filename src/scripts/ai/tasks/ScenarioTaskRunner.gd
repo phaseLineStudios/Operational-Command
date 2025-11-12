@@ -1,5 +1,5 @@
-extends Node
 class_name ScenarioTaskRunner
+extends Node
 
 ## Runs a deterministic chain of authored tasks for one unit and emits lifecycle events.
 ##
