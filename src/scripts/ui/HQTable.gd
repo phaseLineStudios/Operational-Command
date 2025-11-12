@@ -384,7 +384,14 @@ func _init_test_scenario() -> void:
 
 
 func _init_enemy_ai() -> void:
-	var ai_scene := load("res://scenes/ai/AiController.tscn")
+	# Load AI controller scene (prefer snake_case; fall back to legacy name)
+	var ai_p := "res://scenes/ai/ai_controller.tscn"
+	var ai_scene := load(ai_p)
+	if ai_scene == null:
+		ai_scene = load("res://scenes/ai/AiController.tscn")
+		if ai_scene == null:
+			push_error("_init_enemy_ai(): Failed loading AI Controller scene at %s" % ai_p)
+			return
 	var ai: AIController = ai_scene.instantiate()
 	add_child(ai)
 
