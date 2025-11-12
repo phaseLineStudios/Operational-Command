@@ -46,7 +46,6 @@ var _actor: Node3D
 
 # Behaviour mapping from AIAgent
 var _speed_mult: float = 1.0
-var _cover_bias: float = 0.5
 var _noise_level: float = 0.6
 
 # Move state
@@ -279,24 +278,15 @@ func plan_and_start(su: ScenarioUnit, dest_m: Vector2) -> bool:
 		LogService.warning("unit or grid null", "MovementAdapter.gd:151")
 		return false
 	var p := su.unit.movement_profile
-	# Inject behaviour-based path preference via PathGrid.road_bias_weight
-	var prev_rbw: float = _grid.road_bias_weight
-	var rbw: float = clamp(1.0 - _cover_bias, 0.0, 1.0)
-	_grid.road_bias_weight = rbw
 	if not _grid.ensure_profile(p):
 		su.set_meta("_pending_start_dest", dest_m)
 		su.set_meta("_pending_start_profile", p)
-		su.set_meta("_pending_road_bias_weight", rbw)
 		return true
 	_grid.use_profile(p)
 	if su.plan_move(_grid, dest_m):
 		su.start_move(_grid)
-		# Restore previous preference to avoid affecting other units
-		_grid.road_bias_weight = prev_rbw
 		return true
 	LogService.warning("plan_move failed", "MovementAdapter.gd:163")
-	# Restore previous preference on failure as well
-	_grid.road_bias_weight = prev_rbw
 	return false
 
 
@@ -310,25 +300,16 @@ func plan_and_start_direct(su: ScenarioUnit, dest_m: Vector2) -> bool:
 		LogService.warning("unit or grid null", "MovementAdapter.gd")
 		return false
 	var p := su.unit.movement_profile
-	# Inject behaviour-based path preference via PathGrid.road_bias_weight
-	var prev_rbw: float = _grid.road_bias_weight
-	var rbw: float = clamp(1.0 - _cover_bias, 0.0, 1.0)
-	_grid.road_bias_weight = rbw
 	if not _grid.ensure_profile(p):
 		su.set_meta("_pending_start_dest", dest_m)
 		su.set_meta("_pending_start_profile", p)
 		su.set_meta("_pending_start_direct", true)
-		su.set_meta("_pending_road_bias_weight", rbw)
 		return true
 	_grid.use_profile(p)
 	if su.plan_direct_move(_grid, dest_m):
 		su.start_move(_grid)
-		# Restore previous preference to avoid affecting other units
-		_grid.road_bias_weight = prev_rbw
 		return true
 	LogService.warning("plan_direct_move failed", "MovementAdapter.gd")
-	# Restore previous preference on failure as well
-	_grid.road_bias_weight = prev_rbw
 	return false
 
 
@@ -341,7 +322,7 @@ func _on_grid_ready(profile: int) -> void:
 	var all_units: Array = []
 	all_units.append_array(scen.units)
 	all_units.append_array(scen.playable_units)
-	# Use the intended per-unit road_bias_weight (if set) before selecting cache profile
+	_grid.use_profile(profile)
 	for su in all_units:
 		if su == null:
 			continue
@@ -349,16 +330,11 @@ func _on_grid_ready(profile: int) -> void:
 			su.has_meta("_pending_start_profile")
 			and int(su.get_meta("_pending_start_profile")) == profile
 		):
-			# Switch to the A* cache variant that matches the stored bias
-			if su.has_meta("_pending_road_bias_weight"):
-				_grid.road_bias_weight = float(su.get_meta("_pending_road_bias_weight"))
-			_grid.use_profile(profile)
 			var dest_m: Vector2 = su.get_meta("_pending_start_dest")
 			var is_direct: bool = su.get_meta("_pending_start_direct", false)
 			su.remove_meta("_pending_start_profile")
 			su.remove_meta("_pending_start_dest")
 			su.remove_meta("_pending_start_direct")
-			su.remove_meta("_pending_road_bias_weight")
 
 			# Use direct or normal pathfinding
 			var planned: bool = false
@@ -372,9 +348,8 @@ func _on_grid_ready(profile: int) -> void:
 
 
 ## Behaviour mapping from AIAgent
-func set_behaviour_params(speed_mult: float, cover_bias: float, noise_level: float) -> void:
+func set_behaviour_params(speed_mult: float, _cover_bias_unused: float, noise_level: float) -> void:
 	_speed_mult = speed_mult
-	_cover_bias = cover_bias
 	_noise_level = noise_level
 
 
