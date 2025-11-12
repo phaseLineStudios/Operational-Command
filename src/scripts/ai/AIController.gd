@@ -240,30 +240,42 @@ func normalize_tasks(flat_tasks: Array) -> Array[Dictionary]:
 func _on_engagement_reported(attacker_id: String, defender_id: String, _damage: float) -> void:
 	# Allow RETURN_FIRE units to respond for a short window
 	# defender_id maps to ScenarioUnit.id; our dictionary keys are unit indices, so search
+	var attacker_idx := -1
+	var defender_idx := -1
 	for uid in _agents.keys():
-		var agent: AIAgent = _agents[uid]
-		if agent == null:
-			continue
 		var su: ScenarioUnit = null
 		if Game.current_scenario and Game.current_scenario.units.size() > uid:
 			su = Game.current_scenario.units[uid]
-		if su and su.id == defender_id:
-			# Mark defender as recently attacked by this attacker (for Combat.gd's return-fire check)
-			var key := "recently_attacked_" + String(attacker_id)
-			su.set_meta(key, true)
-			(
-				_recent_attack_marks
-				. append(
-					{
-						"uid": uid,
-						"key": key,
-						"expire": (Time.get_ticks_msec() / 1000.0) + return_fire_window_sec,
-					}
-				)
-			)
-			# Also unlock RETURN_FIRE via CombatAdapter path
-			agent.notify_hostile_shot()
-			break
+		if su == null:
+			continue
+		if su.id == attacker_id:
+			attacker_idx = uid
+		elif su.id == defender_id:
+			defender_idx = uid
+
+	if defender_idx >= 0:
+		var def_su: ScenarioUnit = Game.current_scenario.units[defender_idx]
+		var key_def := "recently_attacked_" + String(attacker_id)
+		def_su.set_meta(key_def, true)
+		_recent_attack_marks.append({
+			"uid": defender_idx,
+			"key": key_def,
+			"expire": (Time.get_ticks_msec() / 1000.0) + return_fire_window_sec,
+		})
+		var def_agent: AIAgent = _agents.get(defender_idx, null)
+		if def_agent:
+			def_agent.notify_hostile_shot()
+
+	if attacker_idx >= 0:
+		# Also mark the attacker so RETURN_FIRE from the defender will be allowed when roles swap
+		var att_su: ScenarioUnit = Game.current_scenario.units[attacker_idx]
+		var key_att := "recently_attacked_" + String(defender_id)
+		att_su.set_meta(key_att, true)
+		_recent_attack_marks.append({
+			"uid": attacker_idx,
+			"key": key_att,
+			"expire": (Time.get_ticks_msec() / 1000.0) + return_fire_window_sec,
+		})
 
 
 ## Tick all runners (fixed step) and clear expired return-fire marks.

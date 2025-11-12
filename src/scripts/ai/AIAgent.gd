@@ -71,6 +71,10 @@ func set_behaviour(b: int) -> void:
 	behaviour = b
 	emit_signal("behaviour_changed", unit_id, behaviour)
 	_apply_behaviour_mapping()
+	# Also write through to the ScenarioUnit so simulation logic sees it
+	var su := _get_su()
+	if su:
+		su.behaviour = int(behaviour) as ScenarioUnit.Behaviour
 
 
 func set_combat_mode(m: int) -> void:
@@ -78,6 +82,10 @@ func set_combat_mode(m: int) -> void:
 	emit_signal("combat_mode_changed", unit_id, combat_mode)
 	if _combat != null:
 		_combat.set_rules_of_engagement(combat_mode)
+	# Also write through to the ScenarioUnit so CombatController uses updated ROE
+	var su := _get_su()
+	if su:
+		su.combat_mode = int(combat_mode) as ScenarioUnit.CombatMode
 
 
 func _apply_behaviour_mapping() -> void:
