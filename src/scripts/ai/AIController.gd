@@ -7,12 +7,17 @@ extends Node
 
 ## Coordinates per-unit ScenarioTaskRunner and AIAgent to execute authored task chains.
 
+## Seconds a RETURN_FIRE unit may fire after being attacked.
 @export var return_fire_window_sec: float = 5.0
+## Active task runners per unit id.
 var _runners: Dictionary = {}  ## unit_id -> ScenarioTaskRunner
+## AI agents per unit id.
 var _agents: Dictionary = {}  ## unit_id -> AIAgent
+## Temporary return-fire flags: { uid:int, key:String, expire:float }.
 var _recent_attack_marks: Array = []  ## Array of { uid:int, key:String, expire:float }
 
 
+## Initialize controller and subscribe to sim engagement events for RETURN_FIRE.
 func _ready() -> void:
 	# Wire return-fire window from SimWorld engagement events
 	var sim: SimWorld = get_tree().get_root().find_child("SimWorld", true, false)
@@ -20,6 +25,10 @@ func _ready() -> void:
 		sim.engagement_reported.connect(_on_engagement_reported)
 
 
+## Register a unit's agent and its prebuilt ordered task list.
+## [param unit_id] Index in ScenarioData.units.
+## [param agent] AIAgent that will execute intents.
+## [param ordered_tasks] Runner-ready task dictionaries for this unit.
 func register_unit(unit_id: int, agent: AIAgent, ordered_tasks: Array[Dictionary]) -> void:
 	if _runners.has(unit_id):
 		unregister_unit(unit_id)
@@ -30,6 +39,7 @@ func register_unit(unit_id: int, agent: AIAgent, ordered_tasks: Array[Dictionary
 	_agents[unit_id] = agent
 
 
+## Unregister and free the runner/agent for a unit id (idempotent).
 func unregister_unit(unit_id: int) -> void:
 	if _runners.has(unit_id):
 		var r: ScenarioTaskRunner = _runners[unit_id]
@@ -39,33 +49,41 @@ func unregister_unit(unit_id: int) -> void:
 	_agents.erase(unit_id)
 
 
+## True if a unit has no active or queued tasks in its runner.
 func is_unit_idle(unit_id: int) -> bool:
 	if not _runners.has(unit_id):
 		return true
 	return _runners[unit_id].is_idle()
 
 
+## Pause the unit's task processing (current task remains active).
 func pause_unit(unit_id: int) -> void:
 	if _runners.has(unit_id):
 		_runners[unit_id].pause()
 
 
+## Resume a paused unit's task processing.
 func resume_unit(unit_id: int) -> void:
 	if _runners.has(unit_id):
 		_runners[unit_id].resume()
 
 
+## Cancel the active task (runner will start the next queued task).
 func cancel_active(unit_id: int) -> void:
 	if _runners.has(unit_id):
 		_runners[unit_id].cancel_active()
 
 
+## Force-advance to the next task in the queue.
 func advance_unit(unit_id: int) -> void:
 	if _runners.has(unit_id):
 		_runners[unit_id].advance()
 
 
 ## Build per-unit ordered queues from a flat list using unit_index and optional links.
+## Build per-unit ordered queues from a flat list of ScenarioData.tasks.
+## Uses unit_index and prev/next_index to form a deterministic chain.
+## [return] Dictionary: unit_index -> Array[Dictionary] (runner task dicts).
 func build_per_unit_queues(flat_tasks: Array[Dictionary]) -> Dictionary:
 	var by_unit: Dictionary = {}  # int -> Array[Dictionary]
 
@@ -120,6 +138,7 @@ func build_per_unit_queues(flat_tasks: Array[Dictionary]) -> Dictionary:
 	return by_unit
 
 
+## Sort helper to keep original authoring order when no explicit links exist.
 static func _cmp_by_src_index(a: Dictionary, b: Dictionary) -> bool:
 	return int(a.get("__src_index", 0)) < int(b.get("__src_index", 0))
 
@@ -127,6 +146,9 @@ static func _cmp_by_src_index(a: Dictionary, b: Dictionary) -> bool:
 ## Normalize ScenarioData.tasks entries (ScenarioTask resources or JSON dicts)
 ## into runner-friendly dictionaries.
 ## Supported task_type: move, defend, patrol, set_behaviour, set_combat_mode, wait
+## Convert ScenarioTask resources/JSON into runner dictionaries (TaskMove/Defend/...).
+## Supports: move, defend, patrol (ping_pong, dwell_s, loop_forever), set_behaviour,
+## set_combat_mode, wait (seconds, until_contact). Positions are terrain meters (Vector2).
 func normalize_tasks(flat_tasks: Array) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	for t in flat_tasks:
@@ -212,6 +234,7 @@ func normalize_tasks(flat_tasks: Array) -> Array[Dictionary]:
 	return out
 
 
+## SimWorld callback: mark defender as recently attacked and open return-fire window.
 func _on_engagement_reported(attacker_id: String, defender_id: String, _damage: float) -> void:
 	# Allow RETURN_FIRE units to respond for a short window
 	# defender_id maps to ScenarioUnit.id; our dictionary keys are unit indices, so search
@@ -241,6 +264,7 @@ func _on_engagement_reported(attacker_id: String, defender_id: String, _damage: 
 			break
 
 
+## Tick all runners (fixed step) and clear expired return-fire marks.
 func _physics_process(dt: float) -> void:
 	# Sweep and clear expired "recently_attacked_*" marks
 	if not _recent_attack_marks.is_empty():

@@ -11,17 +11,28 @@ extends Node
 ##   { "type": "TaskSetCombatMode", "mode": int }
 ##   { "type": "TaskWait", "seconds": float, "until_contact": bool }
 
+## Emitted when a task becomes active for this unit.
 signal task_started(unit_id: int, task_type: StringName)
+## Emitted when the active task completes successfully.
 signal task_completed(unit_id: int, task_type: StringName)
+## Emitted when a task cannot be executed (unknown/malformed).
 signal task_failed(unit_id: int, task_type: StringName, reason: StringName)
 
+## Unit index in ScenarioData.units that this runner controls.
 var unit_id: int = -1
+## Pending tasks for this unit (FIFO order).
 var _queue: Array[Dictionary] = []
+## Currently executing task dictionary.
 var _active: Dictionary = {}
+## If true, tick() is ignored until resume() is called.
 var _paused: bool = false
+## Internal flag to issue begin/intents only once per task.
 var _started_current: bool = false
 
 
+## Initialize this runner for a unit and its ordered task list.
+## [param p_unit_id] Unit index in ScenarioData.units.
+## [param ordered_tasks] Runner-ready tasks in execution order.
 func setup(p_unit_id: int, ordered_tasks: Array[Dictionary]) -> void:
 	unit_id = p_unit_id
 	_queue = ordered_tasks.duplicate(true)
@@ -30,28 +41,34 @@ func setup(p_unit_id: int, ordered_tasks: Array[Dictionary]) -> void:
 	_started_current = false
 
 
+## True when there is no active task and the queue is empty.
 func is_idle() -> bool:
 	return _active.is_empty() and _queue.is_empty()
 
 
+## Pause task processing (current task remains active).
 func pause() -> void:
 	_paused = true
 
 
+## Resume task processing after a pause().
 func resume() -> void:
 	_paused = false
 
 
+## Cancel the active task; the next tick will start the next queued task.
 func cancel_active() -> void:
 	_active.clear()
 	_started_current = false
 
 
+## Force-skip the active task and begin the next one.
 func advance() -> void:
 	_active.clear()
 	_started_current = false
 
 
+## Pop the next task and emit task_started; no-op if queue is empty.
 func _start_next() -> void:
 	if _queue.is_empty():
 		_active = {}
@@ -62,6 +79,9 @@ func _start_next() -> void:
 	emit_signal("task_started", unit_id, StringName(_active.get("type", "unknown")))
 
 
+## Advance the active task using the supplied AIAgent.
+## [param dt] Delta time (seconds).
+## [param agent] AIAgent that performs intents and completion checks.
 func tick(dt: float, agent: AIAgent) -> void:
 	if _paused:
 		return
