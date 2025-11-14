@@ -30,6 +30,10 @@ var _runners: Dictionary = {}  ## unit_id -> ScenarioTaskRunner
 var _agents: Dictionary = {}  ## unit_id -> AIAgent
 ## Temporary return-fire flags: { uid:int, key:String, expire:float }.
 var _recent_attack_marks: Array = []  ## Array of { uid:int, key:String, expire:float }
+## Trigger id -> Array[Dictionary(unit_id, task_index)].
+var _blocked_triggers: Dictionary = {}
+## Unit id -> Array[task_index] (initial blocks before triggers fire).
+var _initial_blocks_by_unit: Dictionary = {}
 ## Cached scene references for adapter injection.
 var _sim: SimWorld
 var _movement_adapter: MovementAdapter
@@ -63,6 +67,7 @@ func register_unit(unit_id: int, agent: AIAgent, ordered_tasks: Array[Dictionary
 	runner.setup(unit_id, ordered_tasks)
 	_runners[unit_id] = runner
 	_agents[unit_id] = agent
+	_apply_initial_blocks_for_unit(unit_id)
 
 
 ## Unregister and free the runner/agent for a unit id (idempotent).
@@ -349,6 +354,31 @@ func _physics_process(dt: float) -> void:
 		runner.tick(dt, agent)
 
 
+func _apply_initial_blocks_for_unit(unit_id: int) -> void:
+	var idxs: Array = _initial_blocks_by_unit.get(unit_id, [])
+	if idxs.is_empty():
+		return
+	var runner: ScenarioTaskRunner = _runners.get(unit_id, null)
+	if runner == null:
+		return
+	for idx in idxs:
+		runner.block_task_index(int(idx), true)
+	_initial_blocks_by_unit.erase(unit_id)
+
+
+func _on_trigger_activated(trigger_id: String) -> void:
+	var entries: Array = _blocked_triggers.get(trigger_id, [])
+	if entries.is_empty():
+		return
+	for entry in entries:
+		var uid := int(entry.get("unit_id", -1))
+		var tidx := int(entry.get("task_index", -1))
+		var runner: ScenarioTaskRunner = _runners.get(uid, null)
+		if runner:
+			runner.block_task_index(tidx, false)
+	_blocked_triggers.erase(trigger_id)
+
+
 ## Instantiate and bind an AIAgent using configured adapters.
 func create_agent(unit_id: int) -> AIAgent:
 	_ensure_adapter_cache()
@@ -427,3 +457,44 @@ func refresh_unit_index_cache() -> void:
 		if su.id == null or String(su.id).is_empty():
 			continue
 		_unit_index_cache[String(su.id)] = i
+
+
+## Register trigger/task sync so tasks stay blocked until trigger activates.
+## [param per_unit] Dictionary returned from build_per_unit_queues.
+## [param triggers] Scenario triggers.
+func apply_trigger_sync(per_unit: Dictionary, triggers: Array) -> void:
+	_initial_blocks_by_unit.clear()
+	_blocked_triggers.clear()
+	if triggers == null:
+		return
+	var owner_by_task: Dictionary = {}
+	for uid in per_unit.keys():
+		var tasks: Array = per_unit[uid]
+		for task in tasks:
+			var idx := int(task.get("__src_index", -1))
+			if idx < 0:
+				continue
+			owner_by_task[idx] = uid
+	for trig in triggers:
+		if trig == null:
+			continue
+		var tid := String(trig.id)
+		for tidx in trig.synced_tasks:
+			var idx := int(tidx)
+			var uid := int(owner_by_task.get(idx, -1))
+			if uid < 0:
+				continue
+			if not _initial_blocks_by_unit.has(uid):
+				_initial_blocks_by_unit[uid] = []
+			(_initial_blocks_by_unit[uid] as Array).append(idx)
+			if not _blocked_triggers.has(tid):
+				_blocked_triggers[tid] = []
+			(_blocked_triggers[tid] as Array).append({"unit_id": uid, "task_index": idx})
+
+
+## Bind TriggerEngine to receive trigger_activated notifications.
+func bind_trigger_engine(engine: TriggerEngine) -> void:
+	if engine == null:
+		return
+	if not engine.trigger_activated.is_connected(_on_trigger_activated):
+		engine.trigger_activated.connect(_on_trigger_activated)

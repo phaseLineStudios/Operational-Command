@@ -28,6 +28,8 @@ var _active: Dictionary = {}
 var _paused: bool = false
 ## Internal flag to issue begin/intents only once per task.
 var _started_current: bool = false
+## Lookup: scenario task index -> array of queue entries.
+var _tasks_by_index: Dictionary = {}
 
 
 ## Initialize this runner for a unit and its ordered task list.
@@ -39,6 +41,14 @@ func setup(p_unit_id: int, ordered_tasks: Array[Dictionary]) -> void:
 	_active = {}
 	_paused = false
 	_started_current = false
+	_tasks_by_index.clear()
+	for task in _queue:
+		var idx := int(task.get("__src_index", -1))
+		if idx < 0:
+			continue
+		if not _tasks_by_index.has(idx):
+			_tasks_by_index[idx] = []
+		(_tasks_by_index[idx] as Array).append(task)
 
 
 ## True when there is no active task and the queue is empty.
@@ -68,15 +78,22 @@ func advance() -> void:
 	_started_current = false
 
 
-## Pop the next task and emit task_started; no-op if queue is empty.
-func _start_next() -> void:
+## Pop the next task (if unblocked) and emit task_started.
+## [return] True if a task was started.
+func _start_next() -> bool:
 	if _queue.is_empty():
 		_active = {}
 		_started_current = false
-		return
+		return false
+	var candidate: Dictionary = _queue[0]
+	if bool(candidate.get("_blocked", false)):
+		_active = {}
+		_started_current = false
+		return false
 	_active = _queue.pop_front()
 	_started_current = false
 	emit_signal("task_started", unit_id, StringName(_active.get("type", "unknown")))
+	return true
 
 
 ## Advance the active task using the supplied AIAgent.
@@ -87,8 +104,7 @@ func tick(dt: float, agent: AIAgent) -> void:
 		return
 
 	if _active.is_empty():
-		_start_next()
-		if _active.is_empty():
+		if not _start_next():
 			return
 
 	var t_name: String = String(_active.get("type", "unknown"))
@@ -165,3 +181,14 @@ func tick(dt: float, agent: AIAgent) -> void:
 			emit_signal("task_failed", unit_id, StringName(t_name), StringName("unknown_task"))
 			_active.clear()
 			_started_current = false
+
+
+## Block or unblock tasks by their scenario source index.
+func block_task_index(idx: int, blocked: bool) -> void:
+	var tasks: Array = _tasks_by_index.get(idx, [])
+	if tasks.is_empty():
+		return
+	for task in tasks:
+		task["_blocked"] = blocked
+	if not _active.is_empty() and int(_active.get("__src_index", -1)) == idx:
+		_active["_blocked"] = blocked

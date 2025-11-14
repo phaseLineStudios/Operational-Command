@@ -393,6 +393,9 @@ func _init_enemy_ai() -> void:
 	if scenario == null:
 		return
 
+	if trigger_engine:
+		ai_controller.bind_trigger_engine(trigger_engine)
+
 	ai_controller.unregister_all_units()
 	ai_controller.refresh_unit_index_cache()
 
@@ -402,6 +405,7 @@ func _init_enemy_ai() -> void:
 		flat_tasks = scenario.tasks
 	var normalized: Array = ai_controller.normalize_tasks(flat_tasks)
 	var per_unit: Dictionary = ai_controller.build_per_unit_queues(normalized)
+	ai_controller.apply_trigger_sync(per_unit, scenario.triggers)
 
 	# Create an agent per ENEMY unit in scenario.units
 	for i in scenario.units.size():
