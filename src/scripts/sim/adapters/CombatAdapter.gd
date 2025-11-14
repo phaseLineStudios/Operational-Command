@@ -7,10 +7,21 @@ extends Node
 ## Emitted when a unit attempts to fire but is out of the requested ammo type.
 signal fire_blocked_empty(unit_id: String, ammo_type: String)
 
+## Minimal ROE gate that other systems can consult or drive.
+## We can expand this to hook into our targeting and firing systems.
+enum ROE { HOLD_FIRE, RETURN_FIRE, OPEN_FIRE }
+
+## How long after a hostile shot we consider "return fire" permitted.
+@export var return_fire_window_sec: float = 5.0
+
 ## NodePath to an AmmoSystem node in the scene.
 @export var ammo_system_path: NodePath
 
 var _ammo: AmmoSystem  ## Cached AmmoSystem reference
+
+var _roe: int = 2  # 0 HOLD_FIRE, 1 RETURN_FIRE, 2 OPEN_FIRE
+var _shot_timer: float = 0.0
+var _saw_hostile_shot: bool = false
 
 
 ## Resolve the AmmoSystem reference when the node enters the tree.
@@ -18,6 +29,13 @@ func _ready() -> void:
 	if ammo_system_path != NodePath(""):
 		_ammo = get_node(ammo_system_path) as AmmoSystem
 	add_to_group("CombatAdapter")
+
+
+func _process(dt: float) -> void:
+	if _saw_hostile_shot:
+		_shot_timer -= dt
+		if _shot_timer <= 0.0:
+			_saw_hostile_shot = false
 
 
 ## Request to fire: returns true if ammo was consumed; false if blocked.
@@ -112,9 +130,26 @@ func get_ammo_penalty(unit_id: String, ammo_type: String) -> Dictionary:
 ##       # optionally apply r.morale_delta and heed r.ai_recommendation
 func request_fire_with_penalty(unit_id: String, ammo_type: String, rounds: int = 1) -> Dictionary:
 	var pen := get_ammo_penalty(unit_id, ammo_type)
-	var allow := request_fire(unit_id, ammo_type, rounds)
+	var allow := false
+	match _roe:
+		0:
+			allow = false
+		1:
+			allow = _saw_hostile_shot
+		2:
+			allow = true
+	if not allow:
+		return {
+			"allow": false,
+			"state": "roe_blocked",
+			"attack_power_mult": 1.0,
+			"attack_cycle_mult": 1.0,
+			"suppression_mult": 1.0,
+			"morale_delta": 0,
+			"ai_recommendation": "hold"
+		}
 	return {
-		"allow": allow,
+		"allow": request_fire(unit_id, ammo_type, rounds),
 		"state": pen.state,
 		"attack_power_mult": pen.attack_power_mult,
 		"attack_cycle_mult": pen.attack_cycle_mult,
@@ -122,3 +157,27 @@ func request_fire_with_penalty(unit_id: String, ammo_type: String, rounds: int =
 		"morale_delta": pen.morale_delta,
 		"ai_recommendation": pen.ai_recommendation,
 	}
+
+
+## Rules of engagement from AIAgent
+## 0 = HOLD_FIRE, 1 = RETURN_FIRE, 2 = OPEN_FIRE
+func set_rules_of_engagement(mode: int) -> void:
+	_roe = mode
+
+
+## External systems call this when the unit observes an enemy firing event.
+func report_hostile_shot_observed() -> void:
+	_saw_hostile_shot = true
+	_shot_timer = return_fire_window_sec
+
+
+## Query for fire permission based on current ROE.
+func can_fire() -> bool:
+	match _roe:
+		ROE.HOLD_FIRE:
+			return false
+		ROE.RETURN_FIRE:
+			return _saw_hostile_shot
+		ROE.OPEN_FIRE:
+			return true
+	return false

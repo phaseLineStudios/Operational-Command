@@ -3,6 +3,8 @@ extends Node
 ## Deterministic evaluator for ScenarioTrigger resources.
 ## Combines presence checks with a sandboxed condition VM and executes actions.
 
+signal trigger_activated(trigger_id: String)
+
 ## SimWorld for time and snapshots
 @export var _sim: SimWorld
 ## If false, call tick(dt) manually from SimWorld
@@ -128,6 +130,7 @@ func _evaluate_trigger(t: ScenarioTrigger, dt: float) -> void:
 		t._active = true
 		debug_info["expr_type"] = "on_activate_expr"
 		_vm.run(t.on_activate_expr, ctx, debug_info)
+		emit_signal("trigger_activated", t.id)
 		# Mark as run if this is a run_once trigger
 		if t.run_once:
 			t._has_run = true
