@@ -82,11 +82,15 @@ func has_los(a: ScenarioUnit, b: ScenarioUnit) -> bool:
 		return false
 
 	var range_m := a.position_m.distance_to(b.position_m)
-	var max_spot_range := a.unit.spot_m if (a.unit and a.unit.spot_m > 0) else 2000.0
-	if _renderer.data == null:
-		return range_m <= max_spot_range
+	var base_spot_range := a.unit.spot_m if (a.unit and a.unit.spot_m > 0) else 2000.0
+	var behaviour_mult := _behaviour_spotting_mult(b)
+	var terrain_mult := 1.0
 
-	if range_m > max_spot_range:
+	if _renderer.data != null:
+		terrain_mult = spotting_mul(b.position_m, range_m)
+
+	var effective_spot_range := base_spot_range * terrain_mult * behaviour_mult
+	if range_m > effective_spot_range:
 		return false
 
 	var res: Dictionary = _los.trace_los(
@@ -146,3 +150,21 @@ func has_hostile_contact() -> bool:
 ## Allow external systems to toggle contact directly.
 func set_hostile_contact(v: bool) -> void:
 	_hostile_contact = v
+
+
+func _behaviour_spotting_mult(target: ScenarioUnit) -> float:
+	if target == null:
+		return 1.0
+	match target.behaviour:
+		ScenarioUnit.Behaviour.CARELESS:
+			return 1.1
+		ScenarioUnit.Behaviour.SAFE:
+			return 1.0
+		ScenarioUnit.Behaviour.AWARE:
+			return 0.9
+		ScenarioUnit.Behaviour.COMBAT:
+			return 0.8
+		ScenarioUnit.Behaviour.STEALTH:
+			return 0.6
+		_:
+			return 1.0
