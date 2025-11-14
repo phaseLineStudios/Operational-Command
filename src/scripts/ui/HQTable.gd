@@ -421,4 +421,9 @@ func _init_enemy_ai() -> void:
 		agent.set_combat_mode(int(u.combat_mode))
 
 		var ordered: Array = per_unit.get(i, [])
+		if ordered.is_empty():
+			agent.set_behaviour(ScenarioUnit.Behaviour.AWARE)
+			u.behaviour = ScenarioUnit.Behaviour.AWARE
+			agent.set_combat_mode(ScenarioUnit.CombatMode.DO_NOT_FIRE_UNLESS_FIRED_UPON)
+			u.combat_mode = ScenarioUnit.CombatMode.DO_NOT_FIRE_UNLESS_FIRED_UPON
 		ai_controller.register_unit(i, agent, ordered)
