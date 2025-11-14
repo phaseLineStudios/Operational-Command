@@ -192,7 +192,7 @@ func _on_order_failed(order: Dictionary, _reason: String) -> void:
 ## Mark attacker/defender as “hot” for a short period after combat.
 ## [param attacker_id] Attacker unit id.
 ## [param defender_id] Defender unit id.
-func _on_contact(attacker_id: String, defender_id: String) -> void:
+func _on_contact(attacker_id: String, defender_id: String, _damage: float = 0.0) -> void:
 	if not show_combat_hot:
 		return
 	var now := _sim.get_mission_time_s() if _sim else Time.get_ticks_msec() / 1000.0

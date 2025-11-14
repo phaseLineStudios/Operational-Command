@@ -29,24 +29,40 @@ var _router: OrdersRouter
 
 
 func _ready() -> void:
-	if orders_router_path.is_empty():
-		_router = null
-	else:
-		_router = get_node_or_null(orders_router_path)
+	_ensure_adapter_refs()
+	_on_adapters_changed()
 
-	if movement_adapter_path.is_empty():
-		_movement = null
-	else:
+
+## Provide adapter references directly (preferred over NodePath lookups).
+func bind_adapters(
+	movement: MovementAdapter = null,
+	combat: CombatAdapter = null,
+	los: LOSAdapter = null,
+	router: OrdersRouter = null
+) -> void:
+	if movement:
+		_movement = movement
+	if combat:
+		_combat = combat
+	if los:
+		_los = los
+	if router:
+		_router = router
+	_on_adapters_changed()
+
+
+func _ensure_adapter_refs() -> void:
+	if _router == null and not orders_router_path.is_empty():
+		_router = get_node_or_null(orders_router_path)
+	if _movement == null and not movement_adapter_path.is_empty():
 		_movement = get_node_or_null(movement_adapter_path)
-	if combat_adapter_path.is_empty():
-		_combat = null
-	else:
+	if _combat == null and not combat_adapter_path.is_empty():
 		_combat = get_node_or_null(combat_adapter_path)
-	if los_adapter_path.is_empty():
-		_los = null
-	else:
+	if _los == null and not los_adapter_path.is_empty():
 		_los = get_node_or_null(los_adapter_path)
 
+
+func _on_adapters_changed() -> void:
 	_apply_behaviour_mapping()
 	if _combat != null:
 		_combat.set_rules_of_engagement(combat_mode)

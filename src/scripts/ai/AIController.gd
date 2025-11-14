@@ -7,6 +7,21 @@ extends Node
 
 ## Coordinates per-unit ScenarioTaskRunner and AIAgent to execute authored task chains.
 
+## Node references resolved in-scene (preferred over find_child calls).
+@export var sim_world_ref: SimWorld
+@export var movement_adapter_ref: MovementAdapter
+@export var combat_adapter_ref: CombatAdapter
+@export var los_adapter_ref: LOSAdapter
+@export var orders_router_ref: OrdersRouter
+@export var agents_root_ref: Node
+
+@export var sim_world_path: NodePath
+@export var movement_adapter_path: NodePath
+@export var combat_adapter_path: NodePath
+@export var los_adapter_path: NodePath
+@export var orders_router_path: NodePath
+@export var agents_root_path: NodePath
+
 ## Seconds a RETURN_FIRE unit may fire after being attacked.
 @export var return_fire_window_sec: float = 5.0
 ## Active task runners per unit id.
@@ -15,14 +30,23 @@ var _runners: Dictionary = {}  ## unit_id -> ScenarioTaskRunner
 var _agents: Dictionary = {}  ## unit_id -> AIAgent
 ## Temporary return-fire flags: { uid:int, key:String, expire:float }.
 var _recent_attack_marks: Array = []  ## Array of { uid:int, key:String, expire:float }
+## Cached scene references for adapter injection.
+var _sim: SimWorld
+var _movement_adapter: MovementAdapter
+var _combat_adapter: CombatAdapter
+var _los_adapter: LOSAdapter
+var _orders_router: OrdersRouter
+var _agents_root: Node
+## ScenarioUnit id -> index cache for quick lookup.
+var _unit_index_cache: Dictionary = {}
 
 
 ## Initialize controller and subscribe to sim engagement events for RETURN_FIRE.
 func _ready() -> void:
+	_resolve_context_nodes()
 	# Wire return-fire window from SimWorld engagement events
-	var sim: SimWorld = get_tree().get_root().find_child("SimWorld", true, false)
-	if sim and not sim.engagement_reported.is_connected(_on_engagement_reported):
-		sim.engagement_reported.connect(_on_engagement_reported)
+	if _sim and not _sim.engagement_reported.is_connected(_on_engagement_reported):
+		_sim.engagement_reported.connect(_on_engagement_reported)
 	# Ensure runners tick via _physics_process
 	set_physics_process(true)
 
@@ -48,7 +72,22 @@ func unregister_unit(unit_id: int) -> void:
 		_runners.erase(unit_id)
 		if is_instance_valid(r):
 			r.queue_free()
-	_agents.erase(unit_id)
+	if _agents.has(unit_id):
+		var a: AIAgent = _agents[unit_id]
+		_agents.erase(unit_id)
+		if is_instance_valid(a):
+			a.queue_free()
+
+
+## Remove all registered units and dispose of their agents/runners.
+func unregister_all_units() -> void:
+	var runner_ids := _runners.keys()
+	for uid in runner_ids:
+		unregister_unit(uid)
+	if not _agents.is_empty():
+		var agent_ids := _agents.keys()
+		for uid in agent_ids:
+			unregister_unit(uid)
 
 
 ## True if a unit has no active or queued tasks in its runner.
@@ -238,21 +277,19 @@ func normalize_tasks(flat_tasks: Array) -> Array[Dictionary]:
 
 ## SimWorld callback: mark defender as recently attacked and open return-fire window.
 func _on_engagement_reported(attacker_id: String, defender_id: String, _damage: float) -> void:
+	if Game.current_scenario == null:
+		return
+	var attacker_idx: int = int(_unit_index_cache.get(attacker_id, -1))
+	var defender_idx: int = int(_unit_index_cache.get(defender_id, -1))
+	if attacker_idx == -1 or defender_idx == -1:
+		refresh_unit_index_cache()
+		if attacker_idx == -1:
+			attacker_idx = int(_unit_index_cache.get(attacker_id, -1))
+		if defender_idx == -1:
+			defender_idx = int(_unit_index_cache.get(defender_id, -1))
+
 	# Allow RETURN_FIRE units to respond for a short window
 	# defender_id maps to ScenarioUnit.id; our dictionary keys are unit indices, so search
-	var attacker_idx := -1
-	var defender_idx := -1
-	for uid in _agents.keys():
-		var su: ScenarioUnit = null
-		if Game.current_scenario and Game.current_scenario.units.size() > uid:
-			su = Game.current_scenario.units[uid]
-		if su == null:
-			continue
-		if su.id == attacker_id:
-			attacker_idx = uid
-		elif su.id == defender_id:
-			defender_idx = uid
-
 	if defender_idx >= 0:
 		var def_su: ScenarioUnit = Game.current_scenario.units[defender_idx]
 		var key_def := "recently_attacked_" + String(attacker_id)
@@ -310,3 +347,76 @@ func _physics_process(dt: float) -> void:
 		if agent == null:
 			continue
 		runner.tick(dt, agent)
+
+
+## Instantiate and bind an AIAgent using configured adapters.
+func create_agent(unit_id: int) -> AIAgent:
+	_ensure_adapter_cache()
+	if _movement_adapter == null:
+		LogService.error("AIController missing MovementAdapter reference.", "AIController.gd:create_agent")
+		return null
+	if _combat_adapter == null:
+		LogService.error("AIController missing CombatAdapter reference.", "AIController.gd:create_agent")
+		return null
+	if _los_adapter == null:
+		LogService.warning("AIController missing LOSAdapter; TaskWait until_contact will be blind.", "AIController.gd:create_agent")
+	var agent := AIAgent.new()
+	agent.unit_id = unit_id
+	agent.bind_adapters(_movement_adapter, _combat_adapter, _los_adapter, _orders_router)
+	if _agents_root and is_instance_valid(_agents_root):
+		_agents_root.add_child(agent)
+	else:
+		add_child(agent)
+	return agent
+
+
+func _resolve_context_nodes() -> void:
+	_sim = sim_world_ref if sim_world_ref else _get_node_from_path(sim_world_path) as SimWorld
+	if _sim == null:
+		_sim = get_tree().get_root().find_child("SimWorld", true, false)
+	_ensure_adapter_cache()
+
+
+func _ensure_adapter_cache() -> void:
+	if _movement_adapter == null:
+		_movement_adapter = movement_adapter_ref
+	if _movement_adapter == null and not movement_adapter_path.is_empty():
+		_movement_adapter = _get_node_from_path(movement_adapter_path) as MovementAdapter
+	if _combat_adapter == null:
+		_combat_adapter = combat_adapter_ref
+	if _combat_adapter == null and not combat_adapter_path.is_empty():
+		_combat_adapter = _get_node_from_path(combat_adapter_path) as CombatAdapter
+	if _los_adapter == null:
+		_los_adapter = los_adapter_ref
+	if _los_adapter == null and not los_adapter_path.is_empty():
+		_los_adapter = _get_node_from_path(los_adapter_path) as LOSAdapter
+	if _orders_router == null:
+		_orders_router = orders_router_ref
+	if _orders_router == null and not orders_router_path.is_empty():
+		_orders_router = _get_node_from_path(orders_router_path) as OrdersRouter
+	if _agents_root == null:
+		_agents_root = agents_root_ref
+	if _agents_root == null:
+		var node := _get_node_from_path(agents_root_path)
+		_agents_root = node if node else self
+
+
+func _get_node_from_path(path: NodePath) -> Node:
+	if path.is_empty():
+		return null
+	return get_node_or_null(path)
+
+
+## Rebuild the ScenarioUnit id -> index cache for quick lookups.
+func refresh_unit_index_cache() -> void:
+	_unit_index_cache.clear()
+	if Game.current_scenario == null:
+		return
+	var units: Array = Game.current_scenario.units
+	for i in units.size():
+		var su: ScenarioUnit = units[i]
+		if su == null:
+			continue
+		if su.id == null or String(su.id).is_empty():
+			continue
+		_unit_index_cache[String(su.id)] = i

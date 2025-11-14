@@ -46,6 +46,7 @@
 [ext_resource type="Script" uid="uid://mjmvtp2w61ri" path="res://scripts/ui/PostProcessController.gd" id="36_yef6r"]
 [ext_resource type="Shader" uid="uid://csoyxm10cdmqn" path="res://assets/shaders/general.gdshader" id="37_gaccj"]
 [ext_resource type="Script" uid="uid://d33v0jsmojsg1" path="res://scripts/sim/SkyPreset.gd" id="44_hovgm"]
+[ext_resource type="Script" uid="uid://qvbcqwk2gyo1" path="res://scripts/ai/AIController.gd" id="45_ai"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qevx8"]
 size = Vector3(1, 0.75, 0.7)
@@ -744,6 +745,24 @@ script = ExtResource("13_qgda6")
 script = ExtResource("14_415kk")
 los_node_path = NodePath("..")
 terrain_renderer_path = NodePath("../../MapController/TerrainViewport/TerrainRender")
+
+[node name="AIController" type="Node" parent="Controllers" node_paths=PackedStringArray("sim_world_ref", "movement_adapter_ref", "combat_adapter_ref", "los_adapter_ref", "orders_router_ref", "agents_root_ref")]
+unique_name_in_owner = true
+script = ExtResource("45_ai")
+sim_world_ref = NodePath("../WorldController")
+sim_world_path = NodePath("../WorldController")
+movement_adapter_ref = NodePath("../WorldController/MovementAdapter")
+movement_adapter_path = NodePath("../WorldController/MovementAdapter")
+combat_adapter_ref = NodePath("../CombatController/CombatAdapter")
+combat_adapter_path = NodePath("../CombatController/CombatAdapter")
+los_adapter_ref = NodePath("../LOSController/LOSAdapter")
+los_adapter_path = NodePath("../LOSController/LOSAdapter")
+orders_router_ref = NodePath("../RadioController/OrdersRouter")
+orders_router_path = NodePath("../RadioController/OrdersRouter")
+agents_root_ref = NodePath("Agents")
+agents_root_path = NodePath("Agents")
+
+[node name="Agents" type="Node" parent="Controllers/AIController"]
 
 [node name="TimerController" type="Node" parent="Controllers" node_paths=PackedStringArray("timer", "sim_world", "camera")]
 script = ExtResource("3_2llyq")

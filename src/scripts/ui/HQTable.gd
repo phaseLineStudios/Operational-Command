@@ -20,6 +20,7 @@ extends Node3D
 @onready var unit_voices: UnitVoiceResponses = %UnitVoiceResponses
 @onready var unit_auto_voices: UnitAutoResponses = %UnitAutoResponses
 @onready var tts_player: AudioStreamPlayer = %TTSPlayer
+@onready var ai_controller: AIController = %AIController
 
 
 ## Initialize mission systems and bind services.
@@ -384,43 +385,36 @@ func _init_test_scenario() -> void:
 
 
 func _init_enemy_ai() -> void:
-	# Load AI controller scene (prefer snake_case; fall back to legacy name)
-	var ai_p := "res://scenes/ai/ai_controller.tscn"
-	var ai_scene := load(ai_p)
-	if ai_scene == null:
-		ai_scene = load("res://scenes/ai/AiController.tscn")
-		if ai_scene == null:
-			push_error("_init_enemy_ai(): Failed loading AI Controller scene at %s" % ai_p)
-			return
-	var ai: AIController = ai_scene.instantiate()
-	add_child(ai)
+	if ai_controller == null:
+		push_error("_init_enemy_ai(): AIController node is missing from the scene.")
+		return
 
-	# Build per-unit queues from scenario JSON
-	var flat_tasks: Array = Game.current_scenario.tasks
-	var normalized: Array = ai.normalize_tasks(flat_tasks)
-	var per_unit: Dictionary = ai.build_per_unit_queues(normalized)
+	var scenario := Game.current_scenario
+	if scenario == null:
+		return
 
-	# Adapter node paths in HQ Table
-	var move_path: NodePath = ^"Controllers/WorldController/MovementAdapter"
-	var combat_path: NodePath = ^"Controllers/CombatController/CombatAdapter"
-	var los_path: NodePath = ^"Controllers/LOSController/LOSAdapter"
+	ai_controller.unregister_all_units()
+	ai_controller.refresh_unit_index_cache()
 
-	# Create an agent per ENEMY unit in content.units
-	for i in Game.current_scenario.units.size():
-		var u: ScenarioUnit = Game.current_scenario.units[i]
-		if int(u.affiliation) != 1:  # 1 = ENEMY
+	# Build per-unit queues from scenario JSON (normalize inside AIController)
+	var flat_tasks: Array = []
+	if scenario.tasks is Array:
+		flat_tasks = scenario.tasks
+	var normalized: Array = ai_controller.normalize_tasks(flat_tasks)
+	var per_unit: Dictionary = ai_controller.build_per_unit_queues(normalized)
+
+	# Create an agent per ENEMY unit in scenario.units
+	for i in scenario.units.size():
+		var u: ScenarioUnit = scenario.units[i]
+		if u == null or u.affiliation != ScenarioUnit.Affiliation.ENEMY:
 			continue
-		var agent := AIAgent.new()
-		agent.unit_id = i
-		agent.movement_adapter_path = move_path
-		agent.combat_adapter_path = combat_path
-		agent.los_adapter_path = los_path
-		add_child(agent)
+		var agent := ai_controller.create_agent(i)
+		if agent == null:
+			continue
 
-		# Apply ScenarioUnit initial behaviour/ROE
+		# Apply ScenarioUnit initial behaviour/ROE before queue starts
 		agent.set_behaviour(int(u.behaviour))
 		agent.set_combat_mode(int(u.combat_mode))
 
-		# Convert scenario tasks to runner tasks (normalize inside AIController)
 		var ordered: Array = per_unit.get(i, [])
-		ai.register_unit(i, agent, ordered)
+		ai_controller.register_unit(i, agent, ordered)
