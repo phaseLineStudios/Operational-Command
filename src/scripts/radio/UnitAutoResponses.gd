@@ -472,7 +472,9 @@ func _on_contact_reported(attacker_id: String, defender_id: String) -> void:
 
 
 ## Handle engagement reported signal.
-func _on_engagement_reported(attacker_id: String, defender_id: String) -> void:
+func _on_engagement_reported(
+	attacker_id: String, defender_id: String, _damage: float = 0.0
+) -> void:
 	_queue_message(attacker_id, EventType.ENGAGING_TARGET)
 	_queue_message(defender_id, EventType.TAKING_FIRE)
 
