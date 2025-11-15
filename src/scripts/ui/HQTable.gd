@@ -67,7 +67,6 @@ func _ready() -> void:
 	_update_subtitle_suggestions(scenario)
 	_create_initial_unit_counters(playable_units)
 
-
 	# Initialize the AI
 	_init_enemy_ai()
 
