@@ -17,6 +17,7 @@ extends Node3D
 @onready var mission_dialog: Control = %MissionDialog
 @onready var drawing_controller: DrawingController = %DrawingController
 @onready var counter_controller: UnitCounterController = %UnitCounterController
+@onready var document_controller: DocumentController = %DocumentController
 @onready var unit_voices: UnitVoiceResponses = %UnitVoiceResponses
 @onready var unit_auto_voices: UnitAutoResponses = %UnitAutoResponses
 @onready var tts_player: AudioStreamPlayer = %TTSPlayer
@@ -41,26 +42,23 @@ func _ready() -> void:
 	if trigger_engine and trigger_engine._api:
 		trigger_engine._api.map_controller = map
 	sim.init_world(scenario)
+
+	if radio and document_controller:
+		radio.radio_result.connect(_on_radio_transcript_player_early)
+
 	sim.bind_radio(%RadioController, %OrdersParser)
 	sim.init_resolution(scenario.briefing.frag_objectives)
 
-	# Initialize drawing controller
 	_init_drawing_controller()
 
-	# Load scenario drawings
 	if drawing_controller and map:
 		drawing_controller.load_scenario_drawings(scenario, renderer)
 
-	# Initialize counter controller
 	_init_counter_controller()
-
-	# Bind artillery and engineer controllers to trigger API
+	_init_document_controller(scenario)
 	_init_combat_controllers()
-
-	# Initialize TTS and unit voice responses
 	_init_tts_system()
 
-	# Connect radio signals to subtitle display
 	radio.radio_on.connect(_on_radio_on)
 	radio.radio_off.connect(_on_radio_off)
 	radio.radio_partial.connect(_on_radio_partial)
@@ -96,66 +94,109 @@ func _init_counter_controller() -> void:
 		trigger_engine._api._counter_controller = counter_controller
 
 
+## Initialize the document controller and render documents
+func _init_document_controller(scenario: ScenarioData) -> void:
+	if document_controller:
+		await document_controller.init(%IntelDoc, %TranscriptDoc, %BriefingDoc, scenario)
+
+		if sim:
+			sim.radio_message.connect(_on_radio_transcript_ai)
+
+		if unit_voices:
+			unit_voices.unit_response.connect(_on_unit_voice_transcript)
+
+		if unit_auto_voices:
+			unit_auto_voices.unit_auto_response.connect(_on_unit_voice_transcript)
+
+
+## Handle player radio result for transcript
+func _on_radio_transcript_player_early(text: String) -> void:
+	if document_controller and text != "":
+		await document_controller.add_transcript_entry("PLAYER", text)
+
+
+## Handle AI radio messages for transcript
+func _on_radio_transcript_ai(level: String, text: String) -> void:
+	if not document_controller or text == "":
+		return
+
+	if level == "debug":
+		return
+
+	await get_tree().process_frame
+
+	var speaker := _extract_speaker_from_message(text)
+	await document_controller.add_transcript_entry(speaker, text)
+
+
+## Handle unit voice responses for transcript (both acknowledgments and auto-responses)
+func _on_unit_voice_transcript(callsign: String, message: String) -> void:
+	if document_controller and message != "":
+		await document_controller.add_transcript_entry(callsign, message)
+
+
+## Extract speaker callsign from message text if present, otherwise return "HQ".
+## Handles formats: "ALPHA: message", "ALPHA message", or plain messages.
+func _extract_speaker_from_message(text: String) -> String:
+	# Check for "CALLSIGN: message" format
+	var colon_pos := text.find(":")
+	if colon_pos > 0:
+		var potential_callsign := text.substr(0, colon_pos).strip_edges()
+		# Verify it looks like a callsign (uppercase letters, possibly with numbers)
+		if potential_callsign.length() >= 2 and potential_callsign.length() <= 12:
+			if potential_callsign.to_upper() == potential_callsign:
+				return potential_callsign
+
+	# Check for "CALLSIGN message" format (first word is all caps)
+	var words := text.split(" ", false, 1)
+	if words.size() >= 2:
+		var first_word := words[0].strip_edges()
+		# Check if first word is uppercase and looks like a callsign
+		if first_word.length() >= 2 and first_word.length() <= 12:
+			if first_word.to_upper() == first_word and first_word.is_valid_identifier():
+				return first_word
+
+	# Default to HQ if no callsign detected
+	return "HQ"
+
+
 ## Bind artillery and engineer controllers to trigger API for tracking
 func _init_combat_controllers() -> void:
 	if trigger_engine and trigger_engine._api and sim:
 		if sim.artillery_controller:
 			trigger_engine._api._bind_artillery_controller(sim.artillery_controller)
-			LogService.trace(
-				"Artillery controller bound to TriggerAPI.", "HQTable.gd:_init_combat_controllers"
-			)
 
 		if sim.engineer_controller:
 			trigger_engine._api._bind_engineer_controller(sim.engineer_controller)
-			LogService.trace(
-				"Engineer controller bound to TriggerAPI.", "HQTable.gd:_init_combat_controllers"
-			)
 
 
 ## Initialize TTS service and wire up unit voice responses
 func _init_tts_system() -> void:
-	# Register the audio player with TTSService
 	if TTSService and tts_player:
 		TTSService.register_player(tts_player)
-		LogService.trace("TTS player registered in HQTable.", "HQTable.gd:_init_tts_system")
 
-	# Initialize UnitVoiceResponses with unit index, SimWorld, and terrain renderer
 	if unit_voices and sim and map:
 		unit_voices.init(sim._units_by_id, sim, map.renderer)
-		LogService.trace("Unit voice responses initialized.", "HQTable.gd:_init_tts_system")
 
-	# Initialize UnitAutoResponses for automatic unit event reporting
 	if unit_auto_voices and sim and map:
 		unit_auto_voices.init(
 			sim, sim._units_by_id, map.renderer, counter_controller, sim.artillery_controller
 		)
-		LogService.trace("Unit auto responses initialized.", "HQTable.gd:_init_tts_system")
-
-		# Wire up ammo/fuel warnings to auto-response system
 		_wire_logistics_warnings()
 
-	# Wire up OrdersRouter to UnitVoiceResponses
 	var orders_router := get_node_or_null("%RadioController/OrdersRouter")
 	if orders_router and unit_voices:
-		# Check if already connected to avoid duplicate connections
 		if not orders_router.order_applied.is_connected(unit_voices._on_order_applied):
 			orders_router.order_applied.connect(unit_voices._on_order_applied)
-			LogService.trace(
-				"Unit voice responses connected to OrdersRouter.", "HQTable.gd:_init_tts_system"
-			)
 		else:
 			LogService.warning(
 				"OrdersRouter already connected to UnitVoiceResponses!",
 				"HQTable.gd:_init_tts_system"
 			)
 
-	# Wire up SimWorld radio_message signal to TTS for trigger API radio() calls
 	if sim and TTSService:
 		if not sim.radio_message.is_connected(_on_radio_message):
 			sim.radio_message.connect(_on_radio_message)
-			LogService.trace(
-				"SimWorld radio_message connected to TTS.", "HQTable.gd:_init_tts_system"
-			)
 
 
 ## Wire up ammo/fuel warning signals to auto-response system.
@@ -163,17 +204,13 @@ func _wire_logistics_warnings() -> void:
 	if not sim:
 		return
 
-	# Connect ammo system warnings
 	if sim.ammo_system:
 		sim.ammo_system.ammo_low.connect(_on_ammo_low)
 		sim.ammo_system.ammo_critical.connect(_on_ammo_critical)
 
-	# Connect fuel system warnings
 	if sim.fuel_system:
 		sim.fuel_system.fuel_low.connect(_on_fuel_low)
 		sim.fuel_system.fuel_critical.connect(_on_fuel_critical)
-
-	LogService.trace("Logistics warnings wired to auto-response system.", "HQTable.gd")
 
 
 ## Handle ammo low warning.
@@ -251,7 +288,6 @@ func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]:
 				units.append(su)
 				callsigns.append(slot.callsign)
 
-	LogService.trace("Generated playable units: %s" % str(callsigns), "HQTable.gd:42")
 	return units
 
 

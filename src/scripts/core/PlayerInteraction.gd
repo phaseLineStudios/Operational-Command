@@ -26,8 +26,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		var handled := _held.handle_inspect_input(event)
 		if handled:
 			get_viewport().set_input_as_handled()
-			return
-		get_viewport().set_input_as_handled()
 		return
 
 	if event is InputEventMouseButton and event.is_pressed():

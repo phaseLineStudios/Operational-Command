@@ -33,7 +33,7 @@ TTSService="*res://scripts/radio/TTSService.gd"
 
 [debug]
 
-settings/stdout/log_level=4
+settings/stdout/log_level=5
 
 [input]
 
