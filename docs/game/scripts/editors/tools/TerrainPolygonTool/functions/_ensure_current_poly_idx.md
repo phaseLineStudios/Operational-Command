@@ -1,6 +1,6 @@
 # TerrainPolygonTool::_ensure_current_poly_idx Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 394–404)</br>
+*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 395–405)</br>
 *Belongs to:* [TerrainPolygonTool](../../TerrainPolygonTool.md)
 
 **Signature**

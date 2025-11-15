@@ -1,6 +1,6 @@
 # TerrainPointTool::_place_preview Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 118–127)</br>
+*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 119–128)</br>
 *Belongs to:* [TerrainPointTool](../../TerrainPointTool.md)
 
 **Signature**

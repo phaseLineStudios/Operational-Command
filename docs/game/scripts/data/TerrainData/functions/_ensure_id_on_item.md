@@ -1,6 +1,6 @@
 # TerrainData::_ensure_id_on_item Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 455–461)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 461–467)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

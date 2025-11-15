@@ -1,6 +1,6 @@
 # TerrainPolygonTool::_current_points Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 280–292)</br>
+*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 281–293)</br>
 *Belongs to:* [TerrainPolygonTool](../../TerrainPolygonTool.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # DebugMenu::_refresh_log Function Reference
 
-*Defined at:* `scripts/ui/DebugMenu.gd` (lines 106–123)</br>
+*Defined at:* `scripts/ui/DebugMenu.gd` (lines 152–170)</br>
 *Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**
@@ -27,6 +27,7 @@ func _refresh_log():
 			or (lvl == LogService.LogLevel.INFO and event_log_filter_info.button_pressed)
 			or (lvl == LogService.LogLevel.WARNING and event_log_filter_warning.button_pressed)
 			or (lvl == LogService.LogLevel.ERROR and event_log_filter_error.button_pressed)
+			or (lvl == LogService.LogLevel.DEBUG and event_log_filter_debug.button_pressed)
 			or (lvl == LogService.LogLevel.TRACE and event_log_filter_trace.button_pressed)
 		):
 			filtered_lines.append(txt)

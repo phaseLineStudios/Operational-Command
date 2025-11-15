@@ -1,6 +1,6 @@
 # HQTable::_init_drawing_controller Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 76–84)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 78–86)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

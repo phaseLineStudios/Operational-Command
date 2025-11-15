@@ -1,6 +1,6 @@
 # TerrainPointTool::_update_preview_appearance Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 128–139)</br>
+*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 129–140)</br>
 *Belongs to:* [TerrainPointTool](../../TerrainPointTool.md)
 
 **Signature**

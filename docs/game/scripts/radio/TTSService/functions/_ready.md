@@ -1,6 +1,6 @@
 # TTSService::_ready Function Reference
 
-*Defined at:* `scripts/radio/TTSService.gd` (lines 34–43)</br>
+*Defined at:* `scripts/radio/TTSService.gd` (lines 36–41)</br>
 *Belongs to:* [TTSService](../../TTSService.md)
 
 **Signature**
@@ -13,11 +13,7 @@ func _ready() -> void
 
 ```gdscript
 func _ready() -> void:
-	_piper_path = _get_platform_binary()
-	if _piper_path == "":
-		LogService.warning("Could not find piper binary.", "TTSService.gd:_ready")
-		return
-	if not set_voice(model):
-		return
-	say("check")
+	# Defer TTS initialization to avoid blocking game startup
+	_is_initializing = true
+	call_deferred("_initialize_async")
 ```

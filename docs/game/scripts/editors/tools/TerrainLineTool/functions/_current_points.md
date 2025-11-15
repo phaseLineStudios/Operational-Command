@@ -1,6 +1,6 @@
 # TerrainLineTool::_current_points Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 323–331)</br>
+*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 324–332)</br>
 *Belongs to:* [TerrainLineTool](../../TerrainLineTool.md)
 
 **Signature**

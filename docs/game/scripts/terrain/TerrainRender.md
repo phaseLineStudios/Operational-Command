@@ -32,6 +32,7 @@ If true, rebuild the grid automatically when data is set/changed.
 - [`func _debounce_relayout_and_push() -> void`](TerrainRender/functions/_debounce_relayout_and_push.md) — Debounce the relayout and push styles
 - [`func _draw_map_size() -> void`](TerrainRender/functions/_draw_map_size.md) — Resize the map to fit the terrain data
 - [`func _on_base_layer_resize()`](TerrainRender/functions/_on_base_layer_resize.md) — Emit a resize event for base layer
+- [`func _rebuild_surface_spatial_index() -> void`](TerrainRender/functions/_rebuild_surface_spatial_index.md) — Build a spatial hash for polygon AREA surfaces.
 - [`func clamp_point_to_terrain(p: Vector2) -> Vector2`](TerrainRender/functions/clamp_point_to_terrain.md) — Clamp a single point to the terrain (local map coordinates)
 - [`func clamp_shape_to_terrain(pts: PackedVector2Array) -> PackedVector2Array`](TerrainRender/functions/clamp_shape_to_terrain.md) — Clamp an entire polygon (without mutating the source array)
 - [`func map_to_terrain(local_m: Vector2) -> Vector2`](TerrainRender/functions/map_to_terrain.md) — Helper function to convert terrain position to map position
@@ -43,7 +44,7 @@ If true, rebuild the grid automatically when data is set/changed.
 - [`func grid_to_pos(grid: String) -> Vector2`](TerrainRender/functions/grid_to_pos.md) — API to get terrain local position from grid number
 - [`func get_terrain_size() -> Vector2`](TerrainRender/functions/get_terrain_size.md) — API to get the map size
 - [`func get_terrain_position() -> Vector2`](TerrainRender/functions/get_terrain_position.md) — API to get the map position
-- [`func get_surface_at_terrain_position(terrain_pos: Vector2) -> Dictionary`](TerrainRender/functions/get_surface_at_terrain_position.md) — API to get surface at map position
+- [`func get_surface_at_terrain_position(terrain_pos: Vector2) -> Dictionary`](TerrainRender/functions/get_surface_at_terrain_position.md) — Surface under a terrain-local position.
 - [`func nav_find_path_m(start_m: Vector2, goal_m: Vector2) -> PackedVector2Array`](TerrainRender/functions/nav_find_path_m.md) — Request a path in terrain meters via attached PathGrid
 - [`func nav_estimate_time_s(path_m: PackedVector2Array, base_speed_mps: float, profile: int) -> float`](TerrainRender/functions/nav_estimate_time_s.md) — Estimate travel time (seconds) along a path for a given base speed and profile
 
@@ -83,8 +84,11 @@ If true, rebuild the grid automatically when data is set/changed.
 - `float contour_label_gap_extra_px` — Extra space beyond plaque width
 - `PathGrid path_grid` — reference to the PathGrid used for movement/pathfinding.
 - `int nav_default_profile` — Default profile to rebuild for when auto-building.
+- `int surface_index_cell_m` — Cell size (m) for surface spatial index grid.
 - `StyleBoxFlat _base_sb`
 - `SceneTreeTimer _debounce_timer`
+- `Dictionary _surface_index`
+- `Array _surface_meta`
 - `PanelContainer margin`
 - `PanelContainer base_layer`
 - `SurfaceLayer surface_layer`
@@ -93,6 +97,7 @@ If true, rebuild the grid automatically when data is set/changed.
 - `ContourLayer contour_layer`
 - `GridLayer grid_layer`
 - `LabelLayer label_layer`
+- `StampLayer stamp_layer`
 - `CenterContainer error_layer`
 - `Label error_label`
 
@@ -192,6 +197,14 @@ func _on_base_layer_resize()
 
 Emit a resize event for base layer
 
+### _rebuild_surface_spatial_index
+
+```gdscript
+func _rebuild_surface_spatial_index() -> void
+```
+
+Build a spatial hash for polygon AREA surfaces.
+
 ### clamp_point_to_terrain
 
 ```gdscript
@@ -284,7 +297,8 @@ API to get the map position
 func get_surface_at_terrain_position(terrain_pos: Vector2) -> Dictionary
 ```
 
-API to get surface at map position
+Surface under a terrain-local position.
+Returns the topmost polygon AREA surface dict or {}.
 
 ### nav_find_path_m
 
@@ -644,6 +658,16 @@ Decorators: `@export`
 
 Default profile to rebuild for when auto-building.
 
+### surface_index_cell_m
+
+```gdscript
+var surface_index_cell_m: int
+```
+
+Decorators: `@export`
+
+Cell size (m) for surface spatial index grid.
+
 ### _base_sb
 
 ```gdscript
@@ -654,6 +678,18 @@ var _base_sb: StyleBoxFlat
 
 ```gdscript
 var _debounce_timer: SceneTreeTimer
+```
+
+### _surface_index
+
+```gdscript
+var _surface_index: Dictionary
+```
+
+### _surface_meta
+
+```gdscript
+var _surface_meta: Array
 ```
 
 ### margin
@@ -702,6 +738,12 @@ var grid_layer: GridLayer
 
 ```gdscript
 var label_layer: LabelLayer
+```
+
+### stamp_layer
+
+```gdscript
+var stamp_layer: StampLayer
 ```
 
 ### error_layer

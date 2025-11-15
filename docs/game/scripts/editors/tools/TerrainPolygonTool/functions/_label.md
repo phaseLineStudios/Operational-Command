@@ -1,6 +1,6 @@
 # TerrainPolygonTool::_label Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 375–380)</br>
+*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 376–381)</br>
 *Belongs to:* [TerrainPolygonTool](../../TerrainPolygonTool.md)
 
 **Signature**

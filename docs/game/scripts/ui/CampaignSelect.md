@@ -31,7 +31,7 @@ Path to Main Menu Scene
 - [`func _connect_signals() -> void`](CampaignSelect/functions/_connect_signals.md) — Connects UI signals to handlers.
 - [`func _populate_campaigns() -> void`](CampaignSelect/functions/_populate_campaigns.md) — Fill ItemList from ContentDB.
 - [`func _on_campaign_selected(index: int) -> void`](CampaignSelect/functions/_on_campaign_selected.md) — Handle campaign selection; update details + show actions.
-- [`func _update_details_placeholder(campaign: CampaignData) -> void`](CampaignSelect/functions/_update_details_placeholder.md) — Placeholder details update (to be replaced later).
+- [`func _update_details(campaign: CampaignData) -> void`](CampaignSelect/functions/_update_details.md) — Placeholder details update (to be replaced later).
 - [`func _set_action_buttons_visible(state: bool) -> void`](CampaignSelect/functions/_set_action_buttons_visible.md) — Show/hide the three action buttons.
 - [`func _on_new_save_pressed() -> void`](CampaignSelect/functions/_on_new_save_pressed.md) — Create/select new save and go to Mission Select.
 - [`func _on_continue_last_pressed() -> void`](CampaignSelect/functions/_on_continue_last_pressed.md) — resolves last save for the current campaign (if any).
@@ -43,11 +43,13 @@ Path to Main Menu Scene
 - `Array[CampaignData] _campaign_rows`
 - `CampaignData _selected_campaign`
 - `ItemList list_campaigns`
-- `VBoxContainer details_root`
-- `Button btn_continue_last`
-- `Button btn_select_save`
-- `Button btn_new_save`
-- `Button btn_back`
+- `PanelContainer details_root`
+- `OCMenuButton btn_continue_last`
+- `OCMenuButton btn_select_save`
+- `OCMenuButton btn_new_save`
+- `OCMenuButton btn_back`
+- `TextureRect campaign_poster`
+- `RichTextLabel campaign_desc`
 
 ## Member Function Documentation
 
@@ -83,10 +85,10 @@ func _on_campaign_selected(index: int) -> void
 
 Handle campaign selection; update details + show actions.
 
-### _update_details_placeholder
+### _update_details
 
 ```gdscript
-func _update_details_placeholder(campaign: CampaignData) -> void
+func _update_details(campaign: CampaignData) -> void
 ```
 
 Placeholder details update (to be replaced later).
@@ -154,29 +156,41 @@ var list_campaigns: ItemList
 ### details_root
 
 ```gdscript
-var details_root: VBoxContainer
+var details_root: PanelContainer
 ```
 
 ### btn_continue_last
 
 ```gdscript
-var btn_continue_last: Button
+var btn_continue_last: OCMenuButton
 ```
 
 ### btn_select_save
 
 ```gdscript
-var btn_select_save: Button
+var btn_select_save: OCMenuButton
 ```
 
 ### btn_new_save
 
 ```gdscript
-var btn_new_save: Button
+var btn_new_save: OCMenuButton
 ```
 
 ### btn_back
 
 ```gdscript
-var btn_back: Button
+var btn_back: OCMenuButton
+```
+
+### campaign_poster
+
+```gdscript
+var campaign_poster: TextureRect
+```
+
+### campaign_desc
+
+```gdscript
+var campaign_desc: RichTextLabel
 ```

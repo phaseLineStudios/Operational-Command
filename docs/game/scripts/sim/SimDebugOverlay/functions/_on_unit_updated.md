@@ -1,6 +1,6 @@
 # SimDebugOverlay::_on_unit_updated Function Reference
 
-*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 197–200)</br>
+*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 210–213)</br>
 *Belongs to:* [SimDebugOverlay](../../SimDebugOverlay.md)
 
 **Signature**

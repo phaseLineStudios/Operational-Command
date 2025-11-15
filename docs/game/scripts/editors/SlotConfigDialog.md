@@ -28,6 +28,8 @@ extends Window
 - `UnitSlotData _before`
 - `LineEdit key_input`
 - `LineEdit title_input`
+- `SpinBox pos_x`
+- `SpinBox pos_y`
 - `LineEdit callsign_input`
 - `LineEdit roles_input`
 - `Button roles_add`
@@ -121,6 +123,18 @@ var key_input: LineEdit
 
 ```gdscript
 var title_input: LineEdit
+```
+
+### pos_x
+
+```gdscript
+var pos_x: SpinBox
+```
+
+### pos_y
+
+```gdscript
+var pos_y: SpinBox
 ```
 
 ### callsign_input

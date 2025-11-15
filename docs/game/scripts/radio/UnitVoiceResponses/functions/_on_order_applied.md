@@ -1,6 +1,6 @@
 # UnitVoiceResponses::_on_order_applied Function Reference
 
-*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 93–118)</br>
+*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 98–126)</br>
 *Belongs to:* [UnitVoiceResponses](../../UnitVoiceResponses.md)
 
 **Signature**
@@ -42,4 +42,7 @@ func _on_order_applied(order: Dictionary) -> void:
 
 	# Speak the response
 	tts_service.say(response)
+
+	# Emit signal for transcript logging
+	unit_response.emit(callsign, response)
 ```

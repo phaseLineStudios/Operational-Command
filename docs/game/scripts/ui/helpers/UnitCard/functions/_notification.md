@@ -1,6 +1,6 @@
 # UnitCard::_notification Function Reference
 
-*Defined at:* `scripts/ui/helpers/UnitCard.gd` (lines 98–104)</br>
+*Defined at:* `scripts/ui/helpers/UnitCard.gd` (lines 100–106)</br>
 *Belongs to:* [UnitCard](../../UnitCard.md)
 
 **Signature**

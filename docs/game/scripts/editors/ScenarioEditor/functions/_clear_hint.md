@@ -1,6 +1,6 @@
 # ScenarioEditor::_clear_hint Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 361–365)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 309–313)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # SimWorld::_init_custom_commands Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 622–683)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 638–699)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # TriggerAPI::set_objective Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 39–42)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 93–96)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

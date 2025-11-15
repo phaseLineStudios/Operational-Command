@@ -1,6 +1,6 @@
 # OrdersRouter::_dir_to_vec Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 321–343)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 440–462)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**

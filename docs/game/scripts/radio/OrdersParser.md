@@ -23,9 +23,12 @@ machine-readable orders for AI units using tables from `NaRules`.
 
 Minimal schema returned per order.
 
+Build a CUSTOM order from a matched keyword.
+
 ## Public Member Functions
 
 - [`func _ready() -> void`](OrdersParser/functions/_ready.md)
+- [`func register_custom_command(keyword: String, metadata: Dictionary = {}) -> void`](OrdersParser/functions/register_custom_command.md) — Register a custom command keyword for this mission.
 - [`func parse(text: String) -> Array`](OrdersParser/functions/parse.md) — Parse a full STT sentence into one or more structured orders.
 - [`func _extract_orders(tokens: PackedStringArray) -> Array`](OrdersParser/functions/_extract_orders.md) — Scan tokens left→right and extract orders.
 - [`func _new_order_builder() -> Dictionary`](OrdersParser/functions/_new_order_builder.md) — Builder for a fresh order dictionary.
@@ -42,6 +45,8 @@ Minimal schema returned per order.
 ## Public Attributes
 
 - `Dictionary _tables`
+- `Dictionary _custom_commands`
+- `Dictionary metadata`
 
 ## Signals
 
@@ -59,6 +64,38 @@ Minimal schema returned per order.
 ```gdscript
 func _ready() -> void
 ```
+
+### register_custom_command
+
+```gdscript
+func register_custom_command(keyword: String, metadata: Dictionary = {}) -> void
+```
+
+Register a custom command keyword for this mission.
+When the keyword is detected in voice input, generates a
+CUSTOM order instead of standard parsing.
+  
+  
+
+**Called automatically by SimWorld._init_custom_commands() during mission init.**
+  
+  
+
+The generated order dictionary will contain:
+  
+- `type: OrderType.CUSTOM`
+  
+- `custom_keyword: String` - The matched keyword
+  
+- `custom_full_text: String` - Full radio text
+  
+- `custom_metadata: Dictionary` - Metadata passed here
+  
+- `raw: PackedStringArray` - Tokenized input
+`keyword` The keyword/phrase to match (e.g., "fire mission").
+Case-insensitive substring match.
+`metadata` Optional metadata dict to attach to the CUSTOM order
+(e.g., trigger_id, route_as_order).
 
 ### parse
 
@@ -164,6 +201,18 @@ String name for OrderType.
 var _tables: Dictionary
 ```
 
+### _custom_commands
+
+```gdscript
+var _custom_commands: Dictionary
+```
+
+### metadata
+
+```gdscript
+var metadata: Dictionary
+```
+
 ## Signal Documentation
 
 ### parsed
@@ -191,3 +240,5 @@ enum OrderType
 ```
 
 High-level order categories.
+  
+CUSTOM is used for mission-specific commands registered via `method register_custom_command`.

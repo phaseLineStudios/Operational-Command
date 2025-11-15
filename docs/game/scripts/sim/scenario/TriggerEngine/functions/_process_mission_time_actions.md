@@ -1,6 +1,6 @@
 # TriggerEngine::_process_mission_time_actions Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 378–399)</br>
+*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 381–402)</br>
 *Belongs to:* [TriggerEngine](../../TriggerEngine.md)
 
 **Signature**

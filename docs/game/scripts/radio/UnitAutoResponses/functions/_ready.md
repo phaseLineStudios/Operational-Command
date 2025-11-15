@@ -1,6 +1,6 @@
 # UnitAutoResponses::_ready Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 265–268)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 270–273)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

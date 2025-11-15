@@ -1,6 +1,6 @@
 # InteractionController::_project_mouse_to_finite_plane Function Reference
 
-*Defined at:* `scripts/core/PlayerInteraction.gd` (lines 131–153)</br>
+*Defined at:* `scripts/core/PlayerInteraction.gd` (lines 133–155)</br>
 *Belongs to:* [InteractionController](../../InteractionController.md)
 
 **Signature**

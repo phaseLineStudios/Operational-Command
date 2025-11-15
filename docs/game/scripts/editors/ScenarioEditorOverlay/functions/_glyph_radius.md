@@ -1,6 +1,6 @@
 # ScenarioEditorOverlay::_glyph_radius Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 637–654)</br>
+*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 750–767)</br>
 *Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**

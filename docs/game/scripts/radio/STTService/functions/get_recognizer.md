@@ -1,6 +1,6 @@
 # STTService::get_recognizer Function Reference
 
-*Defined at:* `scripts/radio/STTService.gd` (lines 185–186)</br>
+*Defined at:* `scripts/radio/STTService.gd` (lines 185–188)</br>
 *Belongs to:* [STTService](../../STTService.md)
 
 **Signature**

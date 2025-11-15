@@ -1,6 +1,6 @@
 # MovementAdapter::plan_and_start_direct Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 236–253)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 298–315)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

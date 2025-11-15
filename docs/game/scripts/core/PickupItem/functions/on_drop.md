@@ -1,6 +1,6 @@
 # PickupItem::on_drop Function Reference
 
-*Defined at:* `scripts/core/PickupItem.gd` (lines 51–66)</br>
+*Defined at:* `scripts/core/PickupItem.gd` (lines 79–94)</br>
 *Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**

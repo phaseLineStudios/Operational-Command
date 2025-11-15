@@ -1,6 +1,6 @@
 # TerrainRender::clear_render_error Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 195–200)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 202–207)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**

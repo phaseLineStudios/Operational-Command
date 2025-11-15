@@ -1,6 +1,6 @@
 # TerrainPointTool::_queue_free_children Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 274–278)</br>
+*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 275–279)</br>
 *Belongs to:* [TerrainPointTool](../../TerrainPointTool.md)
 
 **Signature**

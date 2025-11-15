@@ -1,6 +1,6 @@
 # HQTable::_update_subtitle_suggestions Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 275–295)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 315–335)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

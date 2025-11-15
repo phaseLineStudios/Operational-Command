@@ -1,6 +1,6 @@
 # SimDebugOverlay::_process Function Reference
 
-*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 112–125)</br>
+*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 125–138)</br>
 *Belongs to:* [SimDebugOverlay](../../SimDebugOverlay.md)
 
 **Signature**

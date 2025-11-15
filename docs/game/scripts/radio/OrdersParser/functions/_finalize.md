@@ -1,6 +1,6 @@
 # OrdersParser::_finalize Function Reference
 
-*Defined at:* `scripts/radio/OrdersParser.gd` (lines 169–184)</br>
+*Defined at:* `scripts/radio/OrdersParser.gd` (lines 316–336)</br>
 *Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**
@@ -28,6 +28,11 @@ func _finalize(cur: Dictionary) -> Dictionary:
 		"quantity": int(cur.quantity),
 		"zone": str(cur.zone),
 		"target_callsign": str(cur.target_callsign),
+		"direct": bool(cur.get("direct", false)),
+		"report_type": str(cur.report_type),
+		"ammo_type": str(cur.ammo_type),
+		"rounds": int(cur.rounds),
+		"engineer_task": str(cur.engineer_task),
 		"raw": (cur.raw as PackedStringArray).duplicate()
 	}
 ```

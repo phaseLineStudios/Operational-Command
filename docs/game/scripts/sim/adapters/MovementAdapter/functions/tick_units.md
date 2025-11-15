@@ -1,6 +1,6 @@
 # MovementAdapter::tick_units Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 181–200)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 243–262)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

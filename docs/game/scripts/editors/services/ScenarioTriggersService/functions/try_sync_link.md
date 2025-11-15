@@ -1,6 +1,6 @@
 # ScenarioTriggersService::try_sync_link Function Reference
 
-*Defined at:* `scripts/editors/services/ScenarioTriggersService.gd` (lines 51–81)</br>
+*Defined at:* `scripts/editors/services/ScenarioTriggersService.gd` (lines 51–85)</br>
 *Belongs to:* [ScenarioTriggersService](../../ScenarioTriggersService.md)
 
 **Signature**
@@ -13,6 +13,10 @@ func try_sync_link(ctx: ScenarioEditorContext, a: Dictionary, b: Dictionary) -> 
 
 ```gdscript
 func try_sync_link(ctx: ScenarioEditorContext, a: Dictionary, b: Dictionary) -> void:
+	LogService.trace(
+		"Tried to sync a: \n%s \nwith b: \n%s" % [JSON.stringify(a), JSON.stringify(b)],
+		"ScenarioTriggerService.gd:52"
+	)
 	if a.is_empty() or b.is_empty():
 		return
 	var ta := StringName(a.get("type", ""))

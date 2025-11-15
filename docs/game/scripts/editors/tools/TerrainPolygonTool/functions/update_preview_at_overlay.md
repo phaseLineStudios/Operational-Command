@@ -1,6 +1,6 @@
 # TerrainPolygonTool::update_preview_at_overlay Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 108–111)</br>
+*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 109–112)</br>
 *Belongs to:* [TerrainPolygonTool](../../TerrainPolygonTool.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # TriggerEngine::bind_dialog Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 69–72)</br>
+*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 71–74)</br>
 *Belongs to:* [TriggerEngine](../../TriggerEngine.md)
 
 **Signature**

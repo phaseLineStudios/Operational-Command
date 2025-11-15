@@ -1,6 +1,6 @@
 # SimWorld::_transition Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 443–448)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 600–608)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -22,7 +22,10 @@ Apply a state transition and emit `signal mission_state_changed`.
 func _transition(prev: State, next: State) -> void:
 	_state = next
 	emit_signal("mission_state_changed", prev, next)
-	LogService.info("mission_state_changed: %s" % {"prev": prev, "next": next}, "SimWorld.gd:285")
+	LogService.info(
+		"mission_state_changed: %s" % {"prev": State.keys()[prev], "next": State.keys()[next]},
+		"SimWorld.gd:285"
+	)
 ```
 
 ## References

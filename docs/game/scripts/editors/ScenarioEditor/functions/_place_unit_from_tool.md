@@ -1,6 +1,6 @@
 # ScenarioEditor::_place_unit_from_tool Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 284–302)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 228–246)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
@@ -24,8 +24,8 @@ func _place_unit_from_tool(u: UnitData, pos_m: Vector2) -> void:
 	su.unit = u
 	su.position_m = pos_m
 	su.affiliation = ctx.selected_unit_affiliation
-	su.callsign = _generate_callsign(ctx.selected_unit_affiliation)
-	su.id = _generate_unit_instance_id_for(u)
+	su.callsign = id_gen.generate_callsign(ctx.selected_unit_affiliation)
+	su.id = id_gen.generate_unit_instance_id_for(u)
 	if ctx.data.units == null:
 		ctx.data.units = []
 	history.push_res_insert(ctx.data, "units", "id", su, "Place Unit %s" % su.callsign)

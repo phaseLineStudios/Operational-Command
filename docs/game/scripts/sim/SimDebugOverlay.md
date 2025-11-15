@@ -63,7 +63,7 @@ Alpha for dead units' icons.
 - [`func _rebuild_id_index() -> void`](SimDebugOverlay/functions/_rebuild_id_index.md) — Build unit_id -> ScenarioUnit lookup from the current scenario.
 - [`func _on_order_applied(order: Dictionary) -> void`](SimDebugOverlay/functions/_on_order_applied.md) — Record the last applied order per unit for label display.
 - [`func _on_order_failed(order: Dictionary, _reason: String) -> void`](SimDebugOverlay/functions/_on_order_failed.md) — Record failed order attempts (marked ✖) to aid debugging.
-- [`func _on_contact(attacker_id: String, defender_id: String) -> void`](SimDebugOverlay/functions/_on_contact.md) — Mark attacker/defender as “hot” for a short period after combat.
+- [`func _on_contact(attacker_id: String, defender_id: String, _damage: float = 0.0) -> void`](SimDebugOverlay/functions/_on_contact.md) — Mark attacker/defender as “hot” for a short period after combat.
 - [`func _on_state(_prev, _next) -> void`](SimDebugOverlay/functions/_on_state.md) — Request redraw when mission state changes (e.g.
 - [`func _on_unit_updated(_id: String, _snap: Dictionary) -> void`](SimDebugOverlay/functions/_on_unit_updated.md) — Request redraw when a unit snapshot updates.
 - [`func _draw() -> void`](SimDebugOverlay/functions/_draw.md) — Draw icons, paths, destinations, labels, and bars for all units.
@@ -74,7 +74,7 @@ Alpha for dead units' icons.
 
 ## Public Attributes
 
-- `bool debug_enabled` — Master toggle; when false the overlay does not process or draw.
+- `bool: debug_enabled` — Master toggle; when false the overlay does not process or draw.
 - `TerrainRender terrain_renderer` — Terrain renderer used for map/terrain coordinate transforms.
 - `SimWorld _sim` — Simulation world for unit snapshots and mission timing.
 - `OrdersRouter _orders` — Orders router to show last applied order per unit.
@@ -94,6 +94,7 @@ Alpha for dead units' icons.
 - `Dictionary _unit_by_id`
 - `Dictionary _last_order`
 - `Dictionary _recent_contact_until`
+- `bool _debug_enabled`
 
 ## Member Function Documentation
 
@@ -160,7 +161,7 @@ Record failed order attempts (marked ✖) to aid debugging.
 ### _on_contact
 
 ```gdscript
-func _on_contact(attacker_id: String, defender_id: String) -> void
+func _on_contact(attacker_id: String, defender_id: String, _damage: float = 0.0) -> void
 ```
 
 Mark attacker/defender as “hot” for a short period after combat.
@@ -241,7 +242,7 @@ Convert ScenarioUnit.MoveState to a compact label.
 ### debug_enabled
 
 ```gdscript
-var debug_enabled: bool
+var debug_enabled: bool:
 ```
 
 Decorators: `@export`
@@ -412,4 +413,10 @@ var _last_order: Dictionary
 
 ```gdscript
 var _recent_contact_until: Dictionary
+```
+
+### _debug_enabled
+
+```gdscript
+var _debug_enabled: bool
 ```

@@ -68,7 +68,8 @@ Terrain model: size, elevation, surfaces, features, labels.
 
 ## Public Attributes
 
-- `String name` — Name of the terrain.
+- `String terrain_id` — unique terrain identifier
+- `String: name` — Name of the terrain.
 - `int width_m` — Width of the map in meters.
 - `int height_m` — Height of the map in meters.
 - `int elevation_resolution_m` — World meters per elevation sample (grid step).
@@ -457,10 +458,20 @@ Deserialize from JSON
 
 ## Member Data Documentation
 
+### terrain_id
+
+```gdscript
+var terrain_id: String
+```
+
+Decorators: `@export`
+
+unique terrain identifier
+
 ### name
 
 ```gdscript
-var name: String
+var name: String:
 ```
 
 Decorators: `@export`

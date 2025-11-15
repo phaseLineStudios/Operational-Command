@@ -1,6 +1,6 @@
 # TerrainLineTool::_queue_free_children Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 398–402)</br>
+*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 399–403)</br>
 *Belongs to:* [TerrainLineTool](../../TerrainLineTool.md)
 
 **Signature**

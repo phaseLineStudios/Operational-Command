@@ -1,6 +1,6 @@
 # MissionSelect::_update_pin_positions Function Reference
 
-*Defined at:* `scripts/ui/MissionSelect.gd` (lines 187–210)</br>
+*Defined at:* `scripts/ui/MissionSelect.gd` (lines 125–145)</br>
 *Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**
@@ -35,7 +35,4 @@ func _update_pin_positions() -> void:
 		var p: Vector2 = node.get_meta("pos_norm", Vector2.ZERO)
 		var px := offset + Vector2(p.x * drawn_size.x, p.y * drawn_size.y) - Vector2(pin_size) * 0.5
 		(node as Control).position = px
-
-	if _card.visible and is_instance_valid(_card_pin_button):
-		_position_card_near_pin(_card_pin_button)
 ```

@@ -1,6 +1,6 @@
 # ScenarioEditor::_get_callsign_pool Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 842–859)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 506–523)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
@@ -22,12 +22,12 @@ func _get_callsign_pool(affiliation: ScenarioUnit.Affiliation) -> Array[String]:
 		if data and data.friendly_callsigns and data.friendly_callsigns.size() > 0:
 			pool = data.friendly_callsigns
 		else:
-			pool = DEFAULT_FRIENDLY_CALLSIGNS
+			pool = ScenarioEditorIDGenerator.DEFAULT_FRIENDLY_CALLSIGNS
 	else:
 		if data and data.enemy_callsigns and data.enemy_callsigns.size() > 0:
 			pool = data.enemy_callsigns
 		else:
-			pool = DEFAULT_ENEMY_CALLSIGNS
+			pool = ScenarioEditorIDGenerator.DEFAULT_ENEMY_CALLSIGNS
 	var out: Array[String] = []
 	for v in pool:
 		out.append(str(v))

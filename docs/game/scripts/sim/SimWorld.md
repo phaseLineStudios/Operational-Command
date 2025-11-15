@@ -41,7 +41,9 @@ Grace period before ending (seconds) to avoid flapping.
 - [`func _resolve_combat() -> void`](SimWorld/functions/_resolve_combat.md) — Resolves combat for current contact pairs (range/logic inside controller).
 - [`func _update_logistics(dt: float) -> void`](SimWorld/functions/_update_logistics.md) — Ticks logistics systems and updates positions for proximity logic.
 - [`func get_current_contacts() -> Array`](SimWorld/functions/get_current_contacts.md) — Pairs in contact this tick: Array of { attacker: String, defender: String }.
+- [`func get_contacts_for_unit(unit_id: String) -> Array`](SimWorld/functions/get_contacts_for_unit.md) — Get enemy units that a specific unit can see (has LOS to).
 - [`func _update_morale() -> void`](SimWorld/functions/_update_morale.md) — Updates morale (placeholder).
+- [`func _update_time(dt: float) -> void`](SimWorld/functions/_update_time.md) — Advance world time
 - [`func _emit_events() -> void`](SimWorld/functions/_emit_events.md) — Emits per-tick radio/log events (placeholder).
 - [`func _mission_complete_check(dt: float) -> void`](SimWorld/functions/_mission_complete_check.md) — Check if mission is complete.
 - [`func _record_replay() -> void`](SimWorld/functions/_record_replay.md) — Records a compact snapshot for replays.
@@ -49,8 +51,11 @@ Grace period before ending (seconds) to avoid flapping.
 - [`func bind_radio(radio: Radio, parser: Node) -> void`](SimWorld/functions/bind_radio.md) — Bind Radio and Parser so voice results are queued automatically.
 - [`func pause() -> void`](SimWorld/functions/pause.md) — Pause simulation.
 - [`func resume() -> void`](SimWorld/functions/resume.md) — Resume simulation.
+- [`func set_time_scale(scale: float) -> void`](SimWorld/functions/set_time_scale.md) — Set simulation time scale (1.0 = normal, 2.0 = 2x speed).
+- [`func get_time_scale() -> float`](SimWorld/functions/get_time_scale.md) — Get current simulation time scale (1.0 = normal, 2.0 = 2x speed, 0.0 = paused).
 - [`func step() -> void`](SimWorld/functions/step.md) — Step one tick while paused.
 - [`func complete(_failed: bool) -> void`](SimWorld/functions/complete.md) — Complete mission.
+- [`func get_state() -> State`](SimWorld/functions/get_state.md) — Get current simulation state.
 - [`func get_tick() -> int`](SimWorld/functions/get_tick.md) — Current tick index.
 - [`func get_mission_time_s() -> float`](SimWorld/functions/get_mission_time_s.md) — Mission clock in seconds.
 - [`func get_unit_snapshot(unit_id: String) -> Dictionary`](SimWorld/functions/get_unit_snapshot.md) — Shallow snapshot of a unit for UI.
@@ -62,6 +67,8 @@ Grace period before ending (seconds) to avoid flapping.
 - [`func _transition(prev: State, next: State) -> void`](SimWorld/functions/_transition.md) — Apply a state transition and emit `signal mission_state_changed`.
 - [`func get_unit_debug_path(uid: String) -> PackedVector2Array`](SimWorld/functions/get_unit_debug_path.md) — Planned path for a unit (for debug).
 - [`func _v3_from_m(p_m: Vector2) -> Vector3`](SimWorld/functions/_v3_from_m.md) — Current XZ position to 3D vector for systems needing 3D.
+- [`func _init_custom_commands(scenario: ScenarioData) -> void`](SimWorld/functions/_init_custom_commands.md) — Initialize mission-specific voice grammar with STT and OrdersParser.
+- [`func _on_radio_command_for_triggers(text: String) -> void`](SimWorld/functions/_on_radio_command_for_triggers.md) — Handle radio commands and auto-activate triggers for matching custom commands.
 - [`func _register_logistics_units() -> void`](SimWorld/functions/_register_logistics_units.md) — Register all units with logistics systems and bind hooks.
 - [`func _on_state_change_for_resolution(_prev: State, next: State) -> void`](SimWorld/functions/_on_state_change_for_resolution.md) — State change callback: finalize mission resolution.
 - [`func _on_order_applied(order: Dictionary) -> void`](SimWorld/functions/_on_order_applied.md) — Router callback: order applied.
@@ -78,6 +85,9 @@ Grace period before ending (seconds) to avoid flapping.
 - `OrdersRouter _router` — Orders router.
 - `AmmoSystem ammo_system` — Ammo system node.
 - `FuelSystem fuel_system` — Fuel system node.
+- `ArtilleryController artillery_controller` — Artillery controller for indirect fire missions.
+- `EngineerController engineer_controller` — Engineer controller for engineer tasks (mines, demo, bridges).
+- `EnvironmentController environment_controller` — Environment controller for environment laoding
 - `State _state`
 - `OrdersQueue _orders`
 - `ScenarioData _scenario`
@@ -89,6 +99,7 @@ Grace period before ending (seconds) to avoid flapping.
 - `Array[Dictionary] _replay`
 - `PackedStringArray _last_contacts`
 - `Array _contact_pairs`
+- `Dictionary _unit_positions`
 
 ## Signals
 
@@ -182,6 +193,7 @@ func _update_los() -> void
 ```
 
 Computes LOS contact pairs once per tick and emits contact events.
+Optimized to only check LOS between units when at least one has moved.
 
 ### _resolve_combat
 
@@ -209,6 +221,16 @@ func get_current_contacts() -> Array
 
 Pairs in contact this tick: Array of { attacker: String, defender: String }.
 
+### get_contacts_for_unit
+
+```gdscript
+func get_contacts_for_unit(unit_id: String) -> Array
+```
+
+Get enemy units that a specific unit can see (has LOS to).
+`unit_id` Unit ID to get contacts for.
+[return] Array of ScenarioUnit enemies in LOS.
+
 ### _update_morale
 
 ```gdscript
@@ -216,6 +238,14 @@ func _update_morale() -> void
 ```
 
 Updates morale (placeholder).
+
+### _update_time
+
+```gdscript
+func _update_time(dt: float) -> void
+```
+
+Advance world time
 
 ### _emit_events
 
@@ -278,6 +308,23 @@ func resume() -> void
 
 Resume simulation.
 
+### set_time_scale
+
+```gdscript
+func set_time_scale(scale: float) -> void
+```
+
+Set simulation time scale (1.0 = normal, 2.0 = 2x speed).
+
+### get_time_scale
+
+```gdscript
+func get_time_scale() -> float
+```
+
+Get current simulation time scale (1.0 = normal, 2.0 = 2x speed, 0.0 = paused).
+[return] Current time scale multiplier.
+
 ### step
 
 ```gdscript
@@ -293,6 +340,15 @@ func complete(_failed: bool) -> void
 ```
 
 Complete mission.
+
+### get_state
+
+```gdscript
+func get_state() -> State
+```
+
+Get current simulation state.
+[return] Current State enum value.
 
 ### get_tick
 
@@ -395,6 +451,49 @@ func _v3_from_m(p_m: Vector2) -> Vector3
 ```
 
 Current XZ position to 3D vector for systems needing 3D.
+
+### _init_custom_commands
+
+```gdscript
+func _init_custom_commands(scenario: ScenarioData) -> void
+```
+
+Initialize mission-specific voice grammar with STT and OrdersParser.
+  
+  
+
+Collects and registers:
+  
+1. Custom commands from `member ScenarioData.custom_commands`
+  
+2. Unit callsigns from scenario units
+  
+3. Terrain labels from `member TerrainData.labels`
+  
+  
+
+Updates:
+  
+- [OrdersParser] via `method OrdersParser.register_custom_command`
+  
+- [NARules] via `method NARules.set_mission_overrides`
+  
+- [STTService] via `method STTService.update_wordlist` with all collected words
+  
+  
+
+**Called automatically by `method init_world` during mission initialization.**
+`scenario` Scenario with units, terrain, and custom commands.
+
+### _on_radio_command_for_triggers
+
+```gdscript
+func _on_radio_command_for_triggers(text: String) -> void
+```
+
+Handle radio commands and auto-activate triggers for matching custom commands.
+Connected to `signal Radio.radio_raw_command` in `method bind_radio`.
+`text` Raw text from STT.
 
 ### _register_logistics_units
 
@@ -525,6 +624,36 @@ Decorators: `@export`
 
 Fuel system node.
 
+### artillery_controller
+
+```gdscript
+var artillery_controller: ArtilleryController
+```
+
+Decorators: `@export`
+
+Artillery controller for indirect fire missions.
+
+### engineer_controller
+
+```gdscript
+var engineer_controller: EngineerController
+```
+
+Decorators: `@export`
+
+Engineer controller for engineer tasks (mines, demo, bridges).
+
+### environment_controller
+
+```gdscript
+var environment_controller: EnvironmentController
+```
+
+Decorators: `@export`
+
+Environment controller for environment laoding
+
 ### _state
 
 ```gdscript
@@ -591,6 +720,12 @@ var _last_contacts: PackedStringArray
 var _contact_pairs: Array
 ```
 
+### _unit_positions
+
+```gdscript
+var _unit_positions: Dictionary
+```
+
 ## Signal Documentation
 
 ### unit_updated
@@ -616,6 +751,8 @@ signal radio_message(level: String, text: String)
 ```
 
 Emitted for radio/log feedback.
+Levels: "debug" (internal), "info" (radio), "warn" (status), "error" (critical)
+Only non-debug messages should appear in radio transcript.
 
 ### mission_state_changed
 

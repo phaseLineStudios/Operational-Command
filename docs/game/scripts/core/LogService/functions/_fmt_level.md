@@ -1,6 +1,6 @@
 # LogService::_fmt_level Function Reference
 
-*Defined at:* `scripts/core/LogService.gd` (lines 79–91)</br>
+*Defined at:* `scripts/core/LogService.gd` (lines 91–105)</br>
 *Belongs to:* [LogService](../../LogService.md)
 
 **Signature**
@@ -26,6 +26,8 @@ func _fmt_level(lvl: LogLevel) -> String:
 			return "[bgcolor=#dac663][color=black] WARNING [/color][/bgcolor]"
 		LogLevel.ERROR:
 			return "[bgcolor=#f8736d][color=black]  ERROR  [/color][/bgcolor]"
+		LogLevel.DEBUG:
+			return "[bgcolor=#d26aca][color=black]  DEBUG  [/color][/bgcolor]"
 		LogLevel.TRACE:
 			return "[bgcolor=#a78bb9][color=black]  TRACE  [/color][/bgcolor]"
 	return ""

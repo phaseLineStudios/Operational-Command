@@ -31,8 +31,11 @@ with basic validation and helpful error messages.
 - [`func get_campaigns(ids: Array) -> Array`](ContentDB/functions/get_campaigns.md) — Get multiple campaigns by IDs
 - [`func list_campaigns() -> Array`](ContentDB/functions/list_campaigns.md) — List all campaigns
 - [`func get_scenario(id: String) -> ScenarioData`](ContentDB/functions/get_scenario.md) — Missions helpers.
-- [`func get_scenarios(ids: Array) -> Array[CampaignData]`](ContentDB/functions/get_scenarios.md) — Get multiple scenarios by IDs
+- [`func get_scenarios(ids: Array) -> Array[ScenarioData]`](ContentDB/functions/get_scenarios.md) — Get multiple scenarios by IDs
 - [`func list_scenarios() -> Array[ScenarioData]`](ContentDB/functions/list_scenarios.md) — list all scenarios
+- [`func get_terrain(id: String) -> TerrainData`](ContentDB/functions/get_terrain.md) — Terrain helpers.
+- [`func get_terrains(ids: Array) -> Array[TerrainData]`](ContentDB/functions/get_terrains.md) — Get multiple terrains by IDs.
+- [`func list_terrains() -> Array[TerrainData]`](ContentDB/functions/list_terrains.md) — list all terrains.
 - [`func list_scenarios_for_campaign(campaign_id: StringName) -> Array[ScenarioData]`](ContentDB/functions/list_scenarios_for_campaign.md) — List all scenarios for a campaign by ID
 - [`func get_briefing(id_or_mission_id: String) -> BriefData`](ContentDB/functions/get_briefing.md) — Briefing helpers.
 - [`func get_briefings(ids: Array) -> Array[BriefData]`](ContentDB/functions/get_briefings.md) — Get multiple briefings by ids
@@ -41,6 +44,7 @@ with basic validation and helpful error messages.
 - [`func get_unit(id: String) -> UnitData`](ContentDB/functions/get_unit.md) — Units helpers.
 - [`func get_units(ids: Array) -> Array[UnitData]`](ContentDB/functions/get_units.md) — Get units by IDs
 - [`func list_units() -> Array[UnitData]`](ContentDB/functions/list_units.md) — List all units
+- [`func save_unit(unit: UnitData) -> String`](ContentDB/functions/save_unit.md) — Save a UnitData to res://data/units/<id>.json and update cache.
 - [`func get_unit_category(id: String) -> UnitCategoryData`](ContentDB/functions/get_unit_category.md) — Unit Category helpers.
 - [`func get_unit_categories(ids: Array) -> Array[UnitCategoryData]`](ContentDB/functions/get_unit_categories.md) — Get unit categories by IDs
 - [`func list_unit_categories() -> Array[UnitCategoryData]`](ContentDB/functions/list_unit_categories.md) — List all unit categories
@@ -55,6 +59,8 @@ with basic validation and helpful error messages.
 - [`func png_b64_to_image(b64: Variant) -> Image`](ContentDB/functions/png_b64_to_image.md) — Deserialize a image from Base 64
 - [`func ids_from_resources(arr: Array, id_prop: String = "id") -> Array`](ContentDB/functions/ids_from_resources.md) — Serialize resources to IDs
 - [`func resources_from_ids(ids: Array, loader: Callable) -> Array`](ContentDB/functions/resources_from_ids.md) — Deserialize resources from IDs
+- [`func id_from_string(string: String) -> String`](ContentDB/functions/id_from_string.md) — Generate ID from string
+`string` String to generate ID from.
 - [`func safe_dup(v: Variant) -> Variant`](ContentDB/functions/safe_dup.md) — Safely duplicate a dictionary or array
 
 ## Public Attributes
@@ -156,7 +162,7 @@ Get Mission by ID
 ### get_scenarios
 
 ```gdscript
-func get_scenarios(ids: Array) -> Array[CampaignData]
+func get_scenarios(ids: Array) -> Array[ScenarioData]
 ```
 
 Get multiple scenarios by IDs
@@ -168,6 +174,36 @@ func list_scenarios() -> Array[ScenarioData]
 ```
 
 list all scenarios
+
+### get_terrain
+
+```gdscript
+func get_terrain(id: String) -> TerrainData
+```
+
+Terrain helpers.
+Get Terrain by ID.
+`id` Terrain ID.
+[return] Associated Terrain Data.
+
+### get_terrains
+
+```gdscript
+func get_terrains(ids: Array) -> Array[TerrainData]
+```
+
+Get multiple terrains by IDs.
+`ids` Array of ids to fetch.
+[return] Array of associated Terrain Data.
+
+### list_terrains
+
+```gdscript
+func list_terrains() -> Array[TerrainData]
+```
+
+list all terrains.
+[return] Array of all terrains.
 
 ### list_scenarios_for_campaign
 
@@ -234,6 +270,16 @@ func list_units() -> Array[UnitData]
 ```
 
 List all units
+
+### save_unit
+
+```gdscript
+func save_unit(unit: UnitData) -> String
+```
+
+Save a UnitData to res://data/units/<id>.json and update cache.
+`unit` UnitData to save.
+[return] Absolute path or "" on error.
 
 ### get_unit_category
 
@@ -348,6 +394,15 @@ func resources_from_ids(ids: Array, loader: Callable) -> Array
 ```
 
 Deserialize resources from IDs
+
+### id_from_string
+
+```gdscript
+func id_from_string(string: String) -> String
+```
+
+Generate ID from string
+`string` String to generate ID from.
 
 ### safe_dup
 

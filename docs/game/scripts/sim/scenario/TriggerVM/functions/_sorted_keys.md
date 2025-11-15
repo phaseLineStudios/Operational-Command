@@ -1,6 +1,6 @@
 # TriggerVM::_sorted_keys Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerVM.gd` (lines 95–102)</br>
+*Defined at:* `scripts/sim/scenario/TriggerVM.gd` (lines 161–168)</br>
 *Belongs to:* [TriggerVM](../../TriggerVM.md)
 
 **Signature**

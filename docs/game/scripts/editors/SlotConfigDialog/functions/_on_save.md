@@ -1,6 +1,6 @@
 # SlotConfigDialog::_on_save Function Reference
 
-*Defined at:* `scripts/editors/SlotConfigDialog.gd` (lines 42–68)</br>
+*Defined at:* `scripts/editors/SlotConfigDialog.gd` (lines 46–73)</br>
 *Belongs to:* [SlotConfigDialog](../../SlotConfigDialog.md)
 
 **Signature**
@@ -26,6 +26,7 @@ func _on_save() -> void:
 	after.title = title_input.text
 	after.callsign = callsign_input.text
 	after.allowed_roles = _roles
+	after.start_position = Vector2(pos_x.value, pos_y.value)
 
 	if editor.history:
 		var desc := "Edit Slot %s" % String(_before.title)

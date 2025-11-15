@@ -20,7 +20,9 @@ Audio generator buffer length (sec).
 ## Public Member Functions
 
 - [`func _ready() -> void`](TTSService/functions/_ready.md)
+- [`func _initialize_async() -> void`](TTSService/functions/_initialize_async.md) — Initialize TTS asynchronously to avoid blocking startup.
 - [`func is_ready() -> bool`](TTSService/functions/is_ready.md) — Check if TTS Service is ready.
+- [`func is_initializing() -> bool`](TTSService/functions/is_initializing.md) — Check if TTS is currently initializing.
 - [`func get_stream() -> AudioStreamGenerator`](TTSService/functions/get_stream.md) — Return the current AudioStreamGenerator.
 - [`func set_voice(new_model: Model) -> bool`](TTSService/functions/set_voice.md) — Set speaker voice model and restart streaming service.
 - [`func register_playback(playback: AudioStreamGeneratorPlayback) -> void`](TTSService/functions/register_playback.md) — Register the consumer's playback so we can push frames into it.
@@ -38,6 +40,8 @@ Audio generator buffer length (sec).
 
 - `Model model` — Model to use for voice.
 - `AudioStreamGeneratorPlayback _playback`
+- `bool _is_initializing`
+- `bool _initialization_complete`
 
 ## Signals
 
@@ -57,6 +61,14 @@ Audio generator buffer length (sec).
 func _ready() -> void
 ```
 
+### _initialize_async
+
+```gdscript
+func _initialize_async() -> void
+```
+
+Initialize TTS asynchronously to avoid blocking startup.
+
 ### is_ready
 
 ```gdscript
@@ -65,6 +77,15 @@ func is_ready() -> bool
 
 Check if TTS Service is ready.
 [return] True if the Piper streaming process is running.
+
+### is_initializing
+
+```gdscript
+func is_initializing() -> bool
+```
+
+Check if TTS is currently initializing.
+[return] True if initialization is in progress.
 
 ### get_stream
 
@@ -185,6 +206,18 @@ Model to use for voice.
 
 ```gdscript
 var _playback: AudioStreamGeneratorPlayback
+```
+
+### _is_initializing
+
+```gdscript
+var _is_initializing: bool
+```
+
+### _initialization_complete
+
+```gdscript
+var _initialization_complete: bool
 ```
 
 ## Signal Documentation

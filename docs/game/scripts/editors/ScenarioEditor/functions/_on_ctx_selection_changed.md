@@ -1,6 +1,6 @@
 # ScenarioEditor::_on_ctx_selection_changed Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 219–232)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 192–205)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

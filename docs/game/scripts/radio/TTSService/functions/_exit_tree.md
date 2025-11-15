@@ -1,6 +1,6 @@
 # TTSService::_exit_tree Function Reference
 
-*Defined at:* `scripts/radio/TTSService.gd` (lines 125–128)</br>
+*Defined at:* `scripts/radio/TTSService.gd` (lines 151–154)</br>
 *Belongs to:* [TTSService](../../TTSService.md)
 
 **Signature**

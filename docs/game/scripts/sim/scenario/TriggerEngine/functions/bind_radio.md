@@ -1,6 +1,6 @@
 # TriggerEngine::bind_radio Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 58–65)</br>
+*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 60–67)</br>
 *Belongs to:* [TriggerEngine](../../TriggerEngine.md)
 
 **Signature**

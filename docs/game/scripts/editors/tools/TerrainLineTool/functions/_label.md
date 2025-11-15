@@ -1,6 +1,6 @@
 # TerrainLineTool::_label Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 392–397)</br>
+*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 393–398)</br>
 *Belongs to:* [TerrainLineTool](../../TerrainLineTool.md)
 
 **Signature**

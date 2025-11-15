@@ -46,6 +46,8 @@ Queue a message with custom text (bypasses phrase selection).
 `text` Custom message text.
 `priority` Message priority.
 
+Handle engagement reported signal.
+
 Handle artillery mission confirmation.
 `unit_id` Artillery unit ID.
 `_target_pos` Target position in terrain meters.
@@ -91,7 +93,6 @@ Handle battle damage assessment from observer.
 - [`func _check_movement_state(unit_id: String, prev: Dictionary, current: Dictionary) -> void`](UnitAutoResponses/functions/_check_movement_state.md) — Check for movement state changes.
 - [`func _check_contact_changes(unit_id: String, prev: Dictionary, current: Dictionary) -> void`](UnitAutoResponses/functions/_check_contact_changes.md) — Check for contact changes (enemies spotted/lost).
 - [`func _on_contact_reported(attacker_id: String, defender_id: String) -> void`](UnitAutoResponses/functions/_on_contact_reported.md) — Handle contact reported signal.
-- [`func _on_engagement_reported(attacker_id: String, defender_id: String) -> void`](UnitAutoResponses/functions/_on_engagement_reported.md) — Handle engagement reported signal.
 - [`func _on_order_failed(order: Dictionary, reason: String) -> void`](UnitAutoResponses/functions/_on_order_failed.md) — Handle order failure.
 - [`func _on_unit_move_blocked(reason: String, unit_id: String) -> void`](UnitAutoResponses/functions/_on_unit_move_blocked.md) — Handle unit move_blocked signal.
 - [`func trigger_ammo_low(unit_id: String) -> void`](UnitAutoResponses/functions/trigger_ammo_low.md) — Trigger ammo low event for unit.
@@ -128,6 +129,10 @@ Handle battle damage assessment from observer.
 - `Dictionary _unit_last_message`
 - `Dictionary _event_last_triggered`
 - `String observer_callsign`
+
+## Signals
+
+- `signal unit_auto_response(callsign: String, message: String)` — Emitted when a unit generates an automatic voice response.
 
 ## Enumerations
 
@@ -234,14 +239,6 @@ func _on_contact_reported(attacker_id: String, defender_id: String) -> void
 ```
 
 Handle contact reported signal.
-
-### _on_engagement_reported
-
-```gdscript
-func _on_engagement_reported(attacker_id: String, defender_id: String) -> void
-```
-
-Handle engagement reported signal.
 
 ### _on_order_failed
 
@@ -497,6 +494,18 @@ var _event_last_triggered: Dictionary
 ```gdscript
 var observer_callsign: String
 ```
+
+## Signal Documentation
+
+### unit_auto_response
+
+```gdscript
+signal unit_auto_response(callsign: String, message: String)
+```
+
+Emitted when a unit generates an automatic voice response.
+`callsign` The unit's callsign.
+`message` The full message text.
 
 ## Enumeration Type Documentation
 

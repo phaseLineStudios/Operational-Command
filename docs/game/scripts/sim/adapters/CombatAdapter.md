@@ -23,18 +23,30 @@ this into AmmoSystem or combat resolution.
 ## Public Member Functions
 
 - [`func _ready() -> void`](CombatAdapter/functions/_ready.md) — Resolve the AmmoSystem reference when the node enters the tree.
+- [`func _process(dt: float) -> void`](CombatAdapter/functions/_process.md)
 - [`func request_fire(unit_id: String, ammo_type: String, rounds: int = 1) -> bool`](CombatAdapter/functions/request_fire.md) — Request to fire: returns true if ammo was consumed; false if blocked.
 - [`func get_ammo_penalty(unit_id: String, ammo_type: String) -> Dictionary`](CombatAdapter/functions/get_ammo_penalty.md) — Compute penalty multipliers given the unit and ammo_type *without* consuming.
 - [`func request_fire_with_penalty(unit_id: String, ammo_type: String, rounds: int = 1) -> Dictionary`](CombatAdapter/functions/request_fire_with_penalty.md) — Request to fire *and* return penalty info for the caller to apply to accuracy/ROF/etc.
+- [`func set_rules_of_engagement(mode: int) -> void`](CombatAdapter/functions/set_rules_of_engagement.md) — Rules of engagement from AIAgent
+- [`func report_hostile_shot_observed() -> void`](CombatAdapter/functions/report_hostile_shot_observed.md) — External systems call this when the unit observes an enemy firing event.
+- [`func can_fire() -> bool`](CombatAdapter/functions/can_fire.md) — Query for fire permission based on current ROE.
 
 ## Public Attributes
 
+- `float return_fire_window_sec` — How long after a hostile shot we consider "return fire" permitted.
 - `NodePath ammo_system_path` — NodePath to an AmmoSystem node in the scene.
 - `AmmoSystem  ## Cached AmmoSystem reference _ammo`
+- `int _roe`
+- `float _shot_timer`
+- `bool _saw_hostile_shot`
 
 ## Signals
 
 - `signal fire_blocked_empty(unit_id: String, ammo_type: String)` — Emitted when a unit attempts to fire but is out of the requested ammo type.
+
+## Enumerations
+
+- `enum ROE` — Minimal ROE gate that other systems can consult or drive.
 
 ## Member Function Documentation
 
@@ -45,6 +57,12 @@ func _ready() -> void
 ```
 
 Resolve the AmmoSystem reference when the node enters the tree.
+
+### _process
+
+```gdscript
+func _process(dt: float) -> void
+```
 
 ### request_fire
 
@@ -93,7 +111,42 @@ cycle_time *= r.attack_cycle_mult
 suppression *= r.suppression_mult
 # optionally apply r.morale_delta and heed r.ai_recommendation
 
+### set_rules_of_engagement
+
+```gdscript
+func set_rules_of_engagement(mode: int) -> void
+```
+
+Rules of engagement from AIAgent
+0 = HOLD_FIRE, 1 = RETURN_FIRE, 2 = OPEN_FIRE
+
+### report_hostile_shot_observed
+
+```gdscript
+func report_hostile_shot_observed() -> void
+```
+
+External systems call this when the unit observes an enemy firing event.
+
+### can_fire
+
+```gdscript
+func can_fire() -> bool
+```
+
+Query for fire permission based on current ROE.
+
 ## Member Data Documentation
+
+### return_fire_window_sec
+
+```gdscript
+var return_fire_window_sec: float
+```
+
+Decorators: `@export`
+
+How long after a hostile shot we consider "return fire" permitted.
 
 ### ammo_system_path
 
@@ -111,6 +164,24 @@ NodePath to an AmmoSystem node in the scene.
 var _ammo: AmmoSystem  ## Cached AmmoSystem reference
 ```
 
+### _roe
+
+```gdscript
+var _roe: int
+```
+
+### _shot_timer
+
+```gdscript
+var _shot_timer: float
+```
+
+### _saw_hostile_shot
+
+```gdscript
+var _saw_hostile_shot: bool
+```
+
 ## Signal Documentation
 
 ### fire_blocked_empty
@@ -120,3 +191,14 @@ signal fire_blocked_empty(unit_id: String, ammo_type: String)
 ```
 
 Emitted when a unit attempts to fire but is out of the requested ammo type.
+
+## Enumeration Type Documentation
+
+### ROE
+
+```gdscript
+enum ROE
+```
+
+Minimal ROE gate that other systems can consult or drive.
+We can expand this to hook into our targeting and firing systems.

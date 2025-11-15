@@ -1,6 +1,6 @@
 # LOSAdapter::contacts_between Function Reference
 
-*Defined at:* `scripts/sim/adapters/LOSAdapter.gd` (lines 63–69)</br>
+*Defined at:* `scripts/sim/adapters/LOSAdapter.gd` (lines 127–135)</br>
 *Belongs to:* [LOSAdapter](../../LOSAdapter.md)
 
 **Signature**

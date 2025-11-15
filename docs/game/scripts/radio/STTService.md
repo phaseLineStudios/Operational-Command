@@ -34,6 +34,7 @@ vosk_gd. Emits transcription results for parsing into orders.
 - [`func _build_full_sentence() -> String`](STTService/functions/_build_full_sentence.md) — Build the visible sentence from committed + segment with single spacing.
 - [`func _join_non_empty(a: String, b: String) -> String`](STTService/functions/_join_non_empty.md) — Join a and b with a single space if both are non-empty.
 - [`func get_recognizer() -> Vosk`](STTService/functions/get_recognizer.md) — Return a reference to the current recognizer.
+- [`func update_wordlist(callsigns: Array[String] = [], labels: Array[String] = []) -> void`](STTService/functions/update_wordlist.md) — Update the recognizer's grammar word list at runtime.
 
 ## Public Attributes
 
@@ -157,6 +158,17 @@ func get_recognizer() -> Vosk
 ```
 
 Return a reference to the current recognizer.
+
+### update_wordlist
+
+```gdscript
+func update_wordlist(callsigns: Array[String] = [], labels: Array[String] = []) -> void
+```
+
+Update the recognizer's grammar word list at runtime.
+Called by SimWorld after mission-specific custom commands are registered.
+`callsigns` Mission callsigns override.
+`labels` Mission-specific label texts.
 
 ## Member Data Documentation
 

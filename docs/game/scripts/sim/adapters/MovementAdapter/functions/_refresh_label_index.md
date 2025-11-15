@@ -1,6 +1,6 @@
 # MovementAdapter::_refresh_label_index Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 46–63)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 108–125)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

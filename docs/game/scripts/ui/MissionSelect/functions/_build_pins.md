@@ -1,6 +1,6 @@
 # MissionSelect::_build_pins Function Reference
 
-*Defined at:* `scripts/ui/MissionSelect.gd` (lines 86–96)</br>
+*Defined at:* `scripts/ui/MissionSelect.gd` (lines 77–87)</br>
 *Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**

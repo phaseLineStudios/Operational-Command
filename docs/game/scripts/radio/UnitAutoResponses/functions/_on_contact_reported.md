@@ -1,6 +1,6 @@
 # UnitAutoResponses::_on_contact_reported Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 477–482)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 468–473)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

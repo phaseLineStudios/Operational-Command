@@ -1,6 +1,6 @@
 # TaskConfigDialog::_on_save Function Reference
 
-*Defined at:* `scripts/editors/TaskConfigDialog.gd` (lines 122–154)</br>
+*Defined at:* `scripts/editors/TaskConfigDialog.gd` (lines 126–159)</br>
 *Belongs to:* [TaskConfigDialog](../../TaskConfigDialog.md)
 
 **Signature**
@@ -33,6 +33,7 @@ func _on_save() -> void:
 
 	var after := instance.duplicate(true)
 	after.params = params
+	after.position_m = Vector2(pos_x_in.value, pos_y_in.value)
 
 	if editor and editor.history:
 		editor.history.push_res_edit_by_id(

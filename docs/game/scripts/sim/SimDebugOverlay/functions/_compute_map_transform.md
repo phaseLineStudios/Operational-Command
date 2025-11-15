@@ -1,6 +1,6 @@
 # SimDebugOverlay::_compute_map_transform Function Reference
 
-*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 133–143)</br>
+*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 146–156)</br>
 *Belongs to:* [SimDebugOverlay](../../SimDebugOverlay.md)
 
 **Signature**

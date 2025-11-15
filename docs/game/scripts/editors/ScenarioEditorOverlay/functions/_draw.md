@@ -1,6 +1,6 @@
 # ScenarioEditorOverlay::_draw Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 71–88)</br>
+*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 75–93)</br>
 *Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
@@ -17,6 +17,7 @@ Main overlay draw: links first, then glyphs, then active tool
 
 ```gdscript
 func _draw() -> void:
+	_draw_drawings()
 	_draw_task_links()
 	_draw_sync_links()
 	_draw_units()

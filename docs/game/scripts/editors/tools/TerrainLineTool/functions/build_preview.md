@@ -1,6 +1,6 @@
 # TerrainLineTool::build_preview Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 36–51)</br>
+*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 37–52)</br>
 *Belongs to:* [TerrainLineTool](../../TerrainLineTool.md)
 
 **Signature**

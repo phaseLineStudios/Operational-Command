@@ -1,6 +1,6 @@
 # ScenarioUnit::pause_move Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 137–143)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 169–175)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**

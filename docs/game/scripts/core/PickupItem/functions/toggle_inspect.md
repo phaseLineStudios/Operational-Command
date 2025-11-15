@@ -1,6 +1,6 @@
 # PickupItem::toggle_inspect Function Reference
 
-*Defined at:* `scripts/core/PickupItem.gd` (lines 86–92)</br>
+*Defined at:* `scripts/core/PickupItem.gd` (lines 114–120)</br>
 *Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**

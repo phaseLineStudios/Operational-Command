@@ -1,6 +1,6 @@
 # AmmoSystem::is_critical Function Reference
 
-*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 83–90)</br>
+*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 89–96)</br>
 *Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**

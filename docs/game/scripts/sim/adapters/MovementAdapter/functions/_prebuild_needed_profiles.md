@@ -1,6 +1,6 @@
 # MovementAdapter::_prebuild_needed_profiles Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 165–176)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 227–238)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # Game::fail_objective Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 97–100)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 103–106)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

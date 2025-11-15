@@ -1,6 +1,6 @@
 # ScenarioEditorOverlay::on_ctx_open Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 112–147)</br>
+*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 117–152)</br>
 *Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**

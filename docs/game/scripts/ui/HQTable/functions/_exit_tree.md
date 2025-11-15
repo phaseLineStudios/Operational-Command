@@ -1,6 +1,6 @@
 # HQTable::_exit_tree Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 216–220)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 257–261)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

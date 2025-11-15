@@ -1,6 +1,6 @@
 # TriggerEngine::_check_presence Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 92–112)</br>
+*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 146–166)</br>
 *Belongs to:* [TriggerEngine](../../TriggerEngine.md)
 
 **Signature**

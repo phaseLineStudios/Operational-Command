@@ -1,6 +1,6 @@
 # MissionSelect::_ready Function Reference
 
-*Defined at:* `scripts/ui/MissionSelect.gd` (lines 51–67)</br>
+*Defined at:* `scripts/ui/MissionSelect.gd` (lines 40–58)</br>
 *Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**
@@ -31,4 +31,6 @@ func _ready() -> void:
 		_map_rect.resized.connect(_update_pin_positions)
 	if not _card_start.pressed.is_connected(_on_start_pressed):
 		_card_start.pressed.connect(_on_start_pressed)
+	if not _card_close.pressed.is_connected(_close_card):
+		_card_close.pressed.connect(_close_card)
 ```

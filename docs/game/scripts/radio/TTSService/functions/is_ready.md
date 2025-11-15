@@ -1,6 +1,6 @@
 # TTSService::is_ready Function Reference
 
-*Defined at:* `scripts/radio/TTSService.gd` (lines 46–49)</br>
+*Defined at:* `scripts/radio/TTSService.gd` (lines 66–69)</br>
 *Belongs to:* [TTSService](../../TTSService.md)
 
 **Signature**
@@ -19,5 +19,5 @@ Check if TTS Service is ready.
 
 ```gdscript
 func is_ready() -> bool:
-	return _tts.is_stream_running()
+	return _initialization_complete and _tts.is_stream_running()
 ```

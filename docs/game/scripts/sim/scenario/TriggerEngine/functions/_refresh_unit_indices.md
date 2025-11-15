@@ -1,6 +1,6 @@
 # TriggerEngine::_refresh_unit_indices Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 48–64)</br>
+*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 88–104)</br>
 *Belongs to:* [TriggerEngine](../../TriggerEngine.md)
 
 **Signature**

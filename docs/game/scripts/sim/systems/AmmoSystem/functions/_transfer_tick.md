@@ -1,6 +1,6 @@
 # AmmoSystem::_transfer_tick Function Reference
 
-*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 216–258)</br>
+*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 222–266)</br>
 *Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**

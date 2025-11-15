@@ -1,6 +1,6 @@
 # UnitAutoResponses::_check_contact_changes Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 465–475)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 456–466)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

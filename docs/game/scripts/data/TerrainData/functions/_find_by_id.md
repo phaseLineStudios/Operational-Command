@@ -1,6 +1,6 @@
 # TerrainData::_find_by_id Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 472–479)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 478–485)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

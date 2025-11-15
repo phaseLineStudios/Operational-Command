@@ -1,6 +1,6 @@
 # PickupItem::_ready Function Reference
 
-*Defined at:* `scripts/core/PickupItem.gd` (lines 35–40)</br>
+*Defined at:* `scripts/core/PickupItem.gd` (lines 60–68)</br>
 *Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**
@@ -16,4 +16,7 @@ func _ready():
 	collision_layer = 2
 	origin_position = global_transform.origin
 	origin_rotation = global_rotation
+
+	if document_viewport:
+		set_process_unhandled_input(true)
 ```

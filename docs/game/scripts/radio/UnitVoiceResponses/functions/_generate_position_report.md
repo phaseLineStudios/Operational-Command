@@ -1,6 +1,6 @@
 # UnitVoiceResponses::_generate_position_report Function Reference
 
-*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 224–254)</br>
+*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 234–264)</br>
 *Belongs to:* [UnitVoiceResponses](../../UnitVoiceResponses.md)
 
 **Signature**

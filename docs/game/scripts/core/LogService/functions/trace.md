@@ -1,6 +1,6 @@
 # LogService::trace Function Reference
 
-*Defined at:* `scripts/core/LogService.gd` (lines 57–63)</br>
+*Defined at:* `scripts/core/LogService.gd` (lines 69–75)</br>
 *Belongs to:* [LogService](../../LogService.md)
 
 **Signature**

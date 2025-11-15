@@ -1,6 +1,6 @@
 # HQTable::_on_ammo_critical Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 182–186)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 223–227)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

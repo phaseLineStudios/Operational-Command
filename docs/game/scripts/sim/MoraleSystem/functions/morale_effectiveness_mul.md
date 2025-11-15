@@ -1,6 +1,6 @@
 # MoraleSystem::morale_effectiveness_mul Function Reference
 
-*Defined at:* `scripts/sim/MoraleSystem.gd` (lines 103–112)</br>
+*Defined at:* `scripts/sim/MoraleSystem.gd` (lines 110–119)</br>
 *Belongs to:* [MoraleSystem](../../MoraleSystem.md)
 
 **Signature**

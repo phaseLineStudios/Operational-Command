@@ -1,6 +1,6 @@
 # MovementAdapter::plan_and_start_to_label Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 132–141)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 194–203)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # HQTable::_init_enemy_ai Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 387–429)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 423–465)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

@@ -23,19 +23,7 @@ Path to unit select scene
 
 Size of each mission pin in pixels.
 
-Show title labels next to pins.
-
-Offset for the label relative to the pin's top-left (px).
-
-Label background color (with alpha).
-
-Label text color.
-
-Label font size.
-
-Label corner radius (px).
-
-Extra padding inside the label panel (px).
+Show title tooltip for pins.
 
 ## Public Member Functions
 
@@ -44,16 +32,12 @@ Extra padding inside the label panel (px).
 - [`func _build_pins() -> void`](MissionSelect/functions/_build_pins.md) — Create pins and position them (normalized coords).
 - [`func _make_pin(m: ScenarioData) -> BaseButton`](MissionSelect/functions/_make_pin.md) — Builds a pin control.
 - [`func _apply_transparent_button_style(btn: Button) -> void`](MissionSelect/functions/_apply_transparent_button_style.md) — Remove all button styleboxes so only icon/text remains.
-- [`func _attach_pin_label(pin_btn: BaseButton, title: String) -> void`](MissionSelect/functions/_attach_pin_label.md) — Create and attach a readable label to a pin button.
-- [`func _refresh_pin_labels() -> void`](MissionSelect/functions/_refresh_pin_labels.md) — Refresh label visibility on all pins.
 - [`func _update_pin_positions() -> void`](MissionSelect/functions/_update_pin_positions.md) — Reposition pins with letterbox awareness.
 - [`func _on_pin_pressed(mission: ScenarioData, pin_btn: BaseButton) -> void`](MissionSelect/functions/_on_pin_pressed.md) — Open the mission card; create/remove image node depending on presence.
 - [`func _on_start_pressed() -> void`](MissionSelect/functions/_on_start_pressed.md) — Start current mission.
 - [`func _on_back_pressed() -> void`](MissionSelect/functions/_on_back_pressed.md) — Return to campaign select.
 - [`func _on_backdrop_gui_input(event: InputEvent) -> void`](MissionSelect/functions/_on_backdrop_gui_input.md) — Decide if an overlay click should close the card.
 - [`func _point_over_any_pin(view_pt: Vector2) -> bool`](MissionSelect/functions/_point_over_any_pin.md) — True if the viewport point lies over any mission pin.
-- [`func _position_card_near_pin(pin_btn: BaseButton) -> void`](MissionSelect/functions/_position_card_near_pin.md) — Place the card near a pin and keep it on-screen.
-- [`func _prepare_card_for_float() -> void`](MissionSelect/functions/_prepare_card_for_float.md) — Prepare the card position.
 - [`func _close_card() -> void`](MissionSelect/functions/_close_card.md) — Hide card and clear selection.
 - [`func _clear_children(node: Node) -> void`](MissionSelect/functions/_clear_children.md) — Remove all children from a node.
 
@@ -64,16 +48,17 @@ Extra padding inside the label panel (px).
 - `CampaignData _campaign`
 - `Array[ScenarioData] _scenarios`
 - `BaseButton _card_pin_button`
-- `Panel _container`
-- `Button _btn_back`
+- `OCMenuContainer _container`
+- `OCMenuButton _btn_back`
 - `TextureRect _map_rect`
 - `Control _pins_layer`
-- `PanelContainer _card`
+- `OCMenuContainer _card`
 - `Label _card_title`
 - `RichTextLabel _card_desc`
 - `TextureRect _card_image`
 - `Label _card_diff`
-- `Button _card_start`
+- `OCMenuButton _card_start`
+- `OCMenuButton _card_close`
 - `Control _click_catcher`
 
 ## Member Function Documentation
@@ -117,22 +102,6 @@ func _apply_transparent_button_style(btn: Button) -> void
 ```
 
 Remove all button styleboxes so only icon/text remains.
-
-### _attach_pin_label
-
-```gdscript
-func _attach_pin_label(pin_btn: BaseButton, title: String) -> void
-```
-
-Create and attach a readable label to a pin button.
-
-### _refresh_pin_labels
-
-```gdscript
-func _refresh_pin_labels() -> void
-```
-
-Refresh label visibility on all pins.
 
 ### _update_pin_positions
 
@@ -181,22 +150,6 @@ func _point_over_any_pin(view_pt: Vector2) -> bool
 ```
 
 True if the viewport point lies over any mission pin.
-
-### _position_card_near_pin
-
-```gdscript
-func _position_card_near_pin(pin_btn: BaseButton) -> void
-```
-
-Place the card near a pin and keep it on-screen.
-
-### _prepare_card_for_float
-
-```gdscript
-func _prepare_card_for_float() -> void
-```
-
-Prepare the card position.
 
 ### _close_card
 
@@ -253,13 +206,13 @@ var _card_pin_button: BaseButton
 ### _container
 
 ```gdscript
-var _container: Panel
+var _container: OCMenuContainer
 ```
 
 ### _btn_back
 
 ```gdscript
-var _btn_back: Button
+var _btn_back: OCMenuButton
 ```
 
 ### _map_rect
@@ -277,7 +230,7 @@ var _pins_layer: Control
 ### _card
 
 ```gdscript
-var _card: PanelContainer
+var _card: OCMenuContainer
 ```
 
 ### _card_title
@@ -307,7 +260,13 @@ var _card_diff: Label
 ### _card_start
 
 ```gdscript
-var _card_start: Button
+var _card_start: OCMenuButton
+```
+
+### _card_close
+
+```gdscript
+var _card_close: OCMenuButton
 ```
 
 ### _click_catcher

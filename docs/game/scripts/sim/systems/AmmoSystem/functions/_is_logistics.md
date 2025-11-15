@@ -1,6 +1,6 @@
 # AmmoSystem::_is_logistics Function Reference
 
-*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 151–165)</br>
+*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 157–171)</br>
 *Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # UnitVoiceResponses::_get_order_type_name Function Reference
 
-*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 133–152)</br>
+*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 141–160)</br>
 *Belongs to:* [UnitVoiceResponses](../../UnitVoiceResponses.md)
 
 **Signature**

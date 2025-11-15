@@ -1,6 +1,6 @@
 # OrdersParser::_order_type_to_string Function Reference
 
-*Defined at:* `scripts/radio/OrdersParser.gd` (lines 334–353)</br>
+*Defined at:* `scripts/radio/OrdersParser.gd` (lines 505–528)</br>
 *Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**
@@ -34,6 +34,10 @@ func _order_type_to_string(t: int) -> String:
 			return "REPORT"
 		OrderType.CANCEL:
 			return "CANCEL"
+		OrderType.ENGINEER:
+			return "ENGINEER"
+		OrderType.CUSTOM:
+			return "CUSTOM"
 		_:
 			return "UNKNOWN"
 ```

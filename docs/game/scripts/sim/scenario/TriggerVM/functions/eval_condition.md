@@ -1,16 +1,17 @@
 # TriggerVM::eval_condition Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerVM.gd` (lines 19–44)</br>
+*Defined at:* `scripts/sim/scenario/TriggerVM.gd` (lines 20–45)</br>
 *Belongs to:* [TriggerVM](../../TriggerVM.md)
 
 **Signature**
 
 ```gdscript
-func eval_condition(expr_src: String, ctx: Dictionary) -> bool
+func eval_condition(expr_src: String, ctx: Dictionary, debug_info: Dictionary = {}) -> bool
 ```
 
 - **expr_src**: Expression source.
 - **ctx**: becomes constants accessible in the expression.
+- **debug_info**: Optional debug info for error messages (trigger_id, expr_type).
 - **Return Value**: empty/"true" -> true.
 
 ## Description
@@ -20,7 +21,7 @@ Evaluate a condition expression.
 ## Source
 
 ```gdscript
-func eval_condition(expr_src: String, ctx: Dictionary) -> bool:
+func eval_condition(expr_src: String, ctx: Dictionary, debug_info: Dictionary = {}) -> bool:
 	var src := expr_src.strip_edges()
 	if src == "" or src == "true":
 		return true
@@ -28,7 +29,7 @@ func eval_condition(expr_src: String, ctx: Dictionary) -> bool:
 	var lines := _split_lines(src)
 	var last: Variant = true
 	for line in lines:
-		var compiled := _compile(line, ctx)
+		var compiled: Variant = _compile(line, ctx, debug_info)
 		if compiled == null:
 			return false
 

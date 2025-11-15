@@ -1,6 +1,6 @@
 # UnitVoiceResponses::_generate_contact_report Function Reference
 
-*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 259–317)</br>
+*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 269–327)</br>
 *Belongs to:* [UnitVoiceResponses](../../UnitVoiceResponses.md)
 
 **Signature**

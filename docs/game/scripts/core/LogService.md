@@ -17,6 +17,7 @@ extends Node
 - [`func info(msg: String, src := "")`](LogService/functions/info.md) — Log INFO level rich message
 - [`func warning(msg: String, src := "")`](LogService/functions/warning.md) — Log WARNING level rich message
 - [`func error(msg: String, src := "")`](LogService/functions/error.md) — Log ERROR level rich message
+- [`func debug(msg: String, src := "")`](LogService/functions/debug.md) — Log a DEBUG level rich message.
 - [`func trace(msg: String, src := "")`](LogService/functions/trace.md) — Log TRACE level rich message
 - [`func _get_fmt_time() -> String`](LogService/functions/_get_fmt_time.md) — get formatted time
 - [`func _fmt_msg(msg: String, lvl: LogLevel, src := "") -> String`](LogService/functions/_fmt_msg.md) — Get a formatted log message
@@ -80,6 +81,16 @@ func error(msg: String, src := "")
 ```
 
 Log ERROR level rich message
+
+### debug
+
+```gdscript
+func debug(msg: String, src := "")
+```
+
+Log a DEBUG level rich message.
+`msg` Message to log.
+`src` source of log message e.g. "LogService.gd:58"
 
 ### trace
 

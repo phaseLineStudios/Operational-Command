@@ -23,6 +23,7 @@ Start movement; will plan if needed or if dest is provided.
 - [`func _on_morale_state_changed(unit_id: String, prev: int, cur: int) -> void`](ScenarioUnit/functions/_on_morale_state_changed.md)
 - [`func bind_fuel_system(fs: FuelSystem) -> void`](ScenarioUnit/functions/bind_fuel_system.md) — Bind a FuelSystem instance at runtime.
 - [`func plan_move(grid: PathGrid, dest_m: Vector2) -> bool`](ScenarioUnit/functions/plan_move.md) — Plan a path from current position to dest_m using PathGrid.
+- [`func plan_direct_move(grid: PathGrid, dest_m: Vector2) -> bool`](ScenarioUnit/functions/plan_direct_move.md) — Plan a direct straight-line path without pathfinding.
 - [`func pause_move() -> void`](ScenarioUnit/functions/pause_move.md) — Pause.
 - [`func resume_move() -> void`](ScenarioUnit/functions/resume_move.md) — Resume.
 - [`func cancel_move() -> void`](ScenarioUnit/functions/cancel_move.md) — Cancel ongoing movement.
@@ -116,6 +117,17 @@ func plan_move(grid: PathGrid, dest_m: Vector2) -> bool
 ```
 
 Plan a path from current position to dest_m using PathGrid.
+
+### plan_direct_move
+
+```gdscript
+func plan_direct_move(grid: PathGrid, dest_m: Vector2) -> bool
+```
+
+Plan a direct straight-line path without pathfinding.
+`grid` PathGrid (used for ETA estimation only).
+`dest_m` Destination in terrain meters.
+[return] True if planned, false on error.
 
 ### pause_move
 

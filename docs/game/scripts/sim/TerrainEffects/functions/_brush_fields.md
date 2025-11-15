@@ -1,6 +1,6 @@
 # TerrainEffects::_brush_fields Function Reference
 
-*Defined at:* `scripts/sim/TerrainEffects.gd` (lines 155–168)</br>
+*Defined at:* `scripts/sim/TerrainEffects.gd` (lines 210–223)</br>
 *Belongs to:* [TerrainEffects](../../TerrainEffects.md)
 
 **Signature**
@@ -17,7 +17,7 @@ Brush field adapter for either TerrainRender or TerrainData (area features only)
 
 ```gdscript
 static func _brush_fields(renderer: TerrainRender, _terrain: TerrainData, p: Vector2) -> Dictionary:
-	if renderer != null and renderer.has_method("get_surface_at_terrain_position"):
+	if renderer != null:
 		var s := renderer.get_surface_at_terrain_position(p)
 		if typeof(s) == TYPE_DICTIONARY and s.has("brush"):
 			var b: TerrainBrush = s.get("brush")

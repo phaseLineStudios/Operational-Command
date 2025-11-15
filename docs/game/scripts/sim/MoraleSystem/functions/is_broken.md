@@ -1,6 +1,6 @@
 # MoraleSystem::is_broken Function Reference
 
-*Defined at:* `scripts/sim/MoraleSystem.gd` (lines 62–68)</br>
+*Defined at:* `scripts/sim/MoraleSystem.gd` (lines 63–69)</br>
 *Belongs to:* [MoraleSystem](../../MoraleSystem.md)
 
 **Signature**

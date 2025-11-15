@@ -1,6 +1,6 @@
 # TerrainPointTool::_draw Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 292–300)</br>
+*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 293–301)</br>
 *Belongs to:* [TerrainPointTool](../../TerrainPointTool.md)
 
 **Signature**

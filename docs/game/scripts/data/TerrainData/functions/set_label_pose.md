@@ -1,6 +1,6 @@
 # TerrainData::set_label_pose Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 304–312)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 310–318)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

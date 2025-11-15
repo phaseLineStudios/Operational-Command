@@ -1,6 +1,6 @@
 # TerrainData::serialize Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 489–563)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 495–570)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**
@@ -79,6 +79,7 @@ func serialize() -> Dictionary:
 		)
 
 	return {
+		"id": terrain_id,
 		"name": name,
 		"width_m": width_m,
 		"height_m": height_m,

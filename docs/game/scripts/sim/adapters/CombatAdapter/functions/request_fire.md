@@ -1,6 +1,6 @@
 # CombatAdapter::request_fire Function Reference
 
-*Defined at:* `scripts/sim/adapters/CombatAdapter.gd` (lines 25–38)</br>
+*Defined at:* `scripts/sim/adapters/CombatAdapter.gd` (lines 43–56)</br>
 *Belongs to:* [CombatAdapter](../../CombatAdapter.md)
 
 **Signature**

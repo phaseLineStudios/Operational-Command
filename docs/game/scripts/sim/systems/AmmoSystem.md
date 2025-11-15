@@ -44,6 +44,7 @@ using their transfer rate; emits resupply started/completed.
 - [`func _finish_link(dst_id: String) -> void`](AmmoSystem/functions/_finish_link.md) — Finish an active resupply link for `dst_id`.
 - [`func _transfer_tick(delta: float) -> void`](AmmoSystem/functions/_transfer_tick.md) — Transfer rounds for all active links using a fractional-rate accumulator so
 low rates still work at high frame rates (e.g., 20 rps @ 60 FPS).
+- [`func _init_ammunition_from_equipment(u: UnitData) -> void`](AmmoSystem/functions/_init_ammunition_from_equipment.md) — Initialize ammunition capacities from equipment.
 
 ## Public Attributes
 
@@ -209,6 +210,16 @@ func _transfer_tick(delta: float) -> void
 
 Transfer rounds for all active links using a fractional-rate accumulator so
 low rates still work at high frame rates (e.g., 20 rps @ 60 FPS).
+
+### _init_ammunition_from_equipment
+
+```gdscript
+func _init_ammunition_from_equipment(u: UnitData) -> void
+```
+
+Initialize ammunition capacities from equipment.
+Scans equipment.weapons and calculates ammo capacity for each AmmoTypes.
+`u` UnitData to initialize
 
 ## Member Data Documentation
 

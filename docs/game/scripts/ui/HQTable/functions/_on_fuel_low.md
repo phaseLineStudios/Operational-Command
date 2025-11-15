@@ -1,6 +1,6 @@
 # HQTable::_on_fuel_low Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 188–192)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 229–233)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

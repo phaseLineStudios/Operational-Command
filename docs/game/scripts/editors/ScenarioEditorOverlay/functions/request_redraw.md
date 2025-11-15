@@ -1,6 +1,6 @@
 # ScenarioEditorOverlay::request_redraw Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 90–93)</br>
+*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 95–98)</br>
 *Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**

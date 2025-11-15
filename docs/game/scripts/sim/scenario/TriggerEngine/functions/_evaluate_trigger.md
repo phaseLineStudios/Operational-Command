@@ -1,6 +1,6 @@
 # TriggerEngine::_evaluate_trigger Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 68–88)</br>
+*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 108–142)</br>
 *Belongs to:* [TriggerEngine](../../TriggerEngine.md)
 
 **Signature**
@@ -20,9 +20,17 @@ Evaluate a ScenarioTrigger.
 
 ```gdscript
 func _evaluate_trigger(t: ScenarioTrigger, dt: float) -> void:
+	# Skip evaluation if this is a run_once trigger that has already run
+	if t.run_once and t._has_run:
+		return
+
 	var presence_ok := _check_presence(t)
 	var ctx := _make_ctx(t, presence_ok)
-	var condition_ok := _vm.eval_condition(t.condition_expr, ctx)
+
+	# Build debug info for better error messages
+	var debug_info := {"trigger_id": t.id, "trigger_title": t.title, "expr_type": "condition_expr"}
+
+	var condition_ok := _vm.eval_condition(t.condition_expr, ctx, debug_info)
 	var combined := presence_ok and condition_ok
 
 	if combined:
@@ -34,8 +42,14 @@ func _evaluate_trigger(t: ScenarioTrigger, dt: float) -> void:
 
 	if not t._active and passed:
 		t._active = true
-		_vm.run(t.on_activate_expr, ctx)
+		debug_info["expr_type"] = "on_activate_expr"
+		_vm.run(t.on_activate_expr, ctx, debug_info)
+		emit_signal("trigger_activated", t.id)
+		# Mark as run if this is a run_once trigger
+		if t.run_once:
+			t._has_run = true
 	elif t._active and not combined:
 		t._active = false
-		_vm.run(t.on_deactivate_expr, ctx)
+		debug_info["expr_type"] = "on_deactivate_expr"
+		_vm.run(t.on_deactivate_expr, ctx, debug_info)
 ```

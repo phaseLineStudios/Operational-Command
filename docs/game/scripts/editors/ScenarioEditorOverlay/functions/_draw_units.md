@@ -1,6 +1,6 @@
 # ScenarioEditorOverlay::_draw_units Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 194–216)</br>
+*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 199–222)</br>
 *Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
@@ -29,6 +29,7 @@ func _draw_units() -> void:
 		var su: ScenarioUnit = editor.ctx.data.units[i]
 		if su == null or su.unit == null:
 			continue
+		_ensure_bound_for_unit(su.unit)
 		var tex := _get_scaled_icon_unit(su)
 		if tex == null:
 			continue

@@ -1,6 +1,6 @@
 # TTSService::_get_model_path Function Reference
 
-*Defined at:* `scripts/radio/TTSService.gd` (lines 161–174)</br>
+*Defined at:* `scripts/radio/TTSService.gd` (lines 187–205)</br>
 *Belongs to:* [TTSService](../../TTSService.md)
 
 **Signature**
@@ -29,6 +29,11 @@ func _get_model_path(mdl: Model) -> Dictionary:
 		return {
 			"model": VOICES_PATH + "/medium-en-us/ryan/en_US-norman-medium.onnx",
 			"config": VOICES_PATH + "/medium-en-us/ryan/en_US-norman-medium.onnx.json",
+		}
+	elif mdl == Model.EN_US_HIGH_RYAN:
+		return {
+			"model": VOICES_PATH + "/high-en-us/ryan/en_US-ryan-high.onnx",
+			"config": VOICES_PATH + "/high-en-us/ryan/en_US-ryan-high.onnx.json",
 		}
 	return {}
 ```

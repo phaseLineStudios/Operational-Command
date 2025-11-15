@@ -1,6 +1,6 @@
 # ScenarioEditor::_start_place_unit_tool Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 270–275)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 214–219)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # UnitVoiceResponses::_get_cardinal_direction Function Reference
 
-*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 356–387)</br>
+*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 366–397)</br>
 *Belongs to:* [UnitVoiceResponses](../../UnitVoiceResponses.md)
 
 **Signature**

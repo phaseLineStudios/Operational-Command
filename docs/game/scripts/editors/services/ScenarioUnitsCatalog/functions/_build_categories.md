@@ -1,6 +1,6 @@
 # ScenarioUnitsCatalog::_build_categories Function Reference
 
-*Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 19–44)</br>
+*Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 20–45)</br>
 *Belongs to:* [ScenarioUnitsCatalog](../../ScenarioUnitsCatalog.md)
 
 **Signature**

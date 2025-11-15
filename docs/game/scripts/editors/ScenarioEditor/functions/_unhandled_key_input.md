@@ -1,6 +1,6 @@
 # ScenarioEditor::_unhandled_key_input Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 427–447)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 379–399)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
@@ -19,7 +19,7 @@ Global key handling: delete, undo/redo, and tool input
 func _unhandled_key_input(event):
 	if event is InputEventKey and event.pressed and event.keycode == KEY_DELETE:
 		if not ctx.selected_pick.is_empty():
-			_delete_pick(ctx.selected_pick)
+			deletion_ops.delete_pick(ctx.selected_pick)
 			get_viewport().set_input_as_handled()
 			return
 	if event is InputEventKey and event.pressed:

@@ -19,6 +19,10 @@ extends RefCounted
 - [`func _setup_tree(ctx: ScenarioEditorContext) -> void`](ScenarioUnitsCatalog/functions/_setup_tree.md)
 - [`func _on_tree_item(ctx: ScenarioEditorContext) -> void`](ScenarioUnitsCatalog/functions/_on_tree_item.md)
 - [`func _refresh(ctx: ScenarioEditorContext) -> void`](ScenarioUnitsCatalog/functions/_refresh.md)
+- [`func _setup_unit_create(ctx: ScenarioEditorContext)`](ScenarioUnitsCatalog/functions/_setup_unit_create.md)
+- [`func _on_create_pressed(ctx: ScenarioEditorContext) -> void`](ScenarioUnitsCatalog/functions/_on_create_pressed.md)
+- [`func _on_unit_saved(ctx: ScenarioEditorContext, unit: UnitData, _path: String) -> void`](ScenarioUnitsCatalog/functions/_on_unit_saved.md)
+- [`func _get_selected_unit(ctx: ScenarioEditorContext) -> UnitData`](ScenarioUnitsCatalog/functions/_get_selected_unit.md) — Get the UnitData from the current selection.
 - [`func _used_unit_ids(ctx: ScenarioEditorContext) -> Dictionary`](ScenarioUnitsCatalog/functions/_used_unit_ids.md)
 
 ## Public Attributes
@@ -64,6 +68,32 @@ func _on_tree_item(ctx: ScenarioEditorContext) -> void
 ```gdscript
 func _refresh(ctx: ScenarioEditorContext) -> void
 ```
+
+### _setup_unit_create
+
+```gdscript
+func _setup_unit_create(ctx: ScenarioEditorContext)
+```
+
+### _on_create_pressed
+
+```gdscript
+func _on_create_pressed(ctx: ScenarioEditorContext) -> void
+```
+
+### _on_unit_saved
+
+```gdscript
+func _on_unit_saved(ctx: ScenarioEditorContext, unit: UnitData, _path: String) -> void
+```
+
+### _get_selected_unit
+
+```gdscript
+func _get_selected_unit(ctx: ScenarioEditorContext) -> UnitData
+```
+
+Get the UnitData from the current selection.
 
 ### _used_unit_ids
 

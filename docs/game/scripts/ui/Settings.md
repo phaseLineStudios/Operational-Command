@@ -52,7 +52,7 @@ Config path.
 - `HSlider _scale`
 - `Label _scale_val`
 - `SpinBox _fps`
-- `VBoxContainer _buses_list`
+- `GridContainer _buses_list`
 - `VBoxContainer _controls_list`
 - `Button _reset_bindings`
 - `Button _rebind_template`
@@ -317,7 +317,7 @@ var _fps: SpinBox
 ### _buses_list
 
 ```gdscript
-var _buses_list: VBoxContainer
+var _buses_list: GridContainer
 ```
 
 ### _controls_list

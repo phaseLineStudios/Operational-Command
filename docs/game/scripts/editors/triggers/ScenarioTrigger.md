@@ -36,6 +36,7 @@ Presence mode
 - `Vector2 area_size_m` — Area size in meters (width, height)
 - `PresenceMode presence` — Presence Mode
 - `float require_duration_s` — Time (seconds) the combined condition must stay true before activation
+- `bool run_once` — If true, trigger only fires once and then disables itself
 - `String condition_expr` — Extra condition (must be true along with presence), evaluated every frame
 - `String on_activate_expr` — Executed once on activation.
 - `String on_deactivate_expr` — Executed once when condition becomes false after being active
@@ -43,6 +44,7 @@ Presence mode
 - `Array[int] synced_tasks` — Synced editor tasks
 - `bool _active`
 - `float _accum_true`
+- `bool _has_run`
 
 ## Enumerations
 
@@ -144,6 +146,16 @@ Decorators: `@export`
 
 Time (seconds) the combined condition must stay true before activation
 
+### run_once
+
+```gdscript
+var run_once: bool
+```
+
+Decorators: `@export`
+
+If true, trigger only fires once and then disables itself
+
 ### condition_expr
 
 ```gdscript
@@ -204,6 +216,12 @@ var _active: bool
 
 ```gdscript
 var _accum_true: float
+```
+
+### _has_run
+
+```gdscript
+var _has_run: bool
 ```
 
 ## Enumeration Type Documentation

@@ -1,6 +1,6 @@
 # TriggerAPI::time_s Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 12–15)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 26–29)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

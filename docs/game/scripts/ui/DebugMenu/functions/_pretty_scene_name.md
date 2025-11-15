@@ -1,6 +1,6 @@
 # DebugMenu::_pretty_scene_name Function Reference
 
-*Defined at:* `scripts/ui/DebugMenu.gd` (lines 93–98)</br>
+*Defined at:* `scripts/ui/DebugMenu.gd` (lines 139–144)</br>
 *Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**

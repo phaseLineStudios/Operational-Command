@@ -1,6 +1,6 @@
 # TerrainRender::_debounce_relayout_and_push Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 221–232)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 228–240)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**
@@ -25,5 +25,6 @@ func _debounce_relayout_and_push() -> void:
 			_debounce_timer = null
 			_draw_map_size()
 			_push_data_to_layers()
+			_rebuild_surface_spatial_index()
 	)
 ```

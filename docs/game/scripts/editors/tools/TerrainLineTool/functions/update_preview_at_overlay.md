@@ -1,6 +1,6 @@
 # TerrainLineTool::update_preview_at_overlay Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 57–60)</br>
+*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 58–61)</br>
 *Belongs to:* [TerrainLineTool](../../TerrainLineTool.md)
 
 **Signature**

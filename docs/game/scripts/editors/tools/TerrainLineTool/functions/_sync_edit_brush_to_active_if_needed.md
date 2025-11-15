@@ -1,6 +1,6 @@
 # TerrainLineTool::_sync_edit_brush_to_active_if_needed Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 367–374)</br>
+*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 368–375)</br>
 *Belongs to:* [TerrainLineTool](../../TerrainLineTool.md)
 
 **Signature**

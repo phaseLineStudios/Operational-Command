@@ -31,6 +31,7 @@ Handles map interaction and applies terrain renderer as a texture
 - [`func _raycast_to_map_plane(screen_pos: Vector2) -> Variant`](MapController/functions/_raycast_to_map_plane.md) — World-space hit on the plane under a screen position; null if none
 - [`func _plane_hit_to_map_px(hit_world: Vector3) -> Variant`](MapController/functions/_plane_hit_to_map_px.md) — Convert a world hit on the plane to map pixels (0..viewport size)
 - [`func _update_mouse_grid_ui() -> void`](MapController/functions/_update_mouse_grid_ui.md) — Grid hover label update
+- [`func terrain_to_screen(terrain_pos: Vector2) -> Variant`](MapController/functions/terrain_to_screen.md) — Convert terrain position (meters) to screen position.
 - [`func refresh() -> void`](MapController/functions/refresh.md) — Force-refresh the texture and refit
 
 ## Public Attributes
@@ -162,6 +163,16 @@ func _update_mouse_grid_ui() -> void
 ```
 
 Grid hover label update
+
+### terrain_to_screen
+
+```gdscript
+func terrain_to_screen(terrain_pos: Vector2) -> Variant
+```
+
+Convert terrain position (meters) to screen position. Returns null if not visible
+`terrain_pos` Position in terrain meters
+[return] Screen position as Vector2, or null if position is not visible
 
 ### refresh
 

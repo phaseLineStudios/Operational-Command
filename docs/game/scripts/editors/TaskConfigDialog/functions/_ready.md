@@ -1,6 +1,6 @@
 # TaskConfigDialog::_ready Function Reference
 
-*Defined at:* `scripts/editors/TaskConfigDialog.gd` (lines 18–23)</br>
+*Defined at:* `scripts/editors/TaskConfigDialog.gd` (lines 20–25)</br>
 *Belongs to:* [TaskConfigDialog](../../TaskConfigDialog.md)
 
 **Signature**

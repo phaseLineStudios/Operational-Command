@@ -1,6 +1,6 @@
 # ScenarioEditorOverlay::on_dbl_click Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 149–165)</br>
+*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 154–170)</br>
 *Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
@@ -22,13 +22,13 @@ func on_dbl_click(event: InputEventMouseButton):
 	var pick := _pick_at(event.position)
 	match pick.get("type", &""):
 		&"slot":
-			editor._open_slot_config(pick["index"])
+			editor.menus.open_slot_config(pick["index"])
 		&"unit":
-			editor._open_unit_config(pick["index"])
+			editor.menus.open_unit_config(pick["index"])
 		&"task":
-			editor._open_task_config(pick["index"])
+			editor.menus.open_task_config(pick["index"])
 		&"trigger":
-			editor._open_trigger_config(pick["index"])
+			editor.menus.open_trigger_config(pick["index"])
 		_:
 			pass
 ```

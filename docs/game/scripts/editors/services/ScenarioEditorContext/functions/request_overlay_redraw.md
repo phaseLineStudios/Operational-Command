@@ -1,6 +1,6 @@
 # ScenarioEditorContext::request_overlay_redraw Function Reference
 
-*Defined at:* `scripts/editors/services/ScenarioEditorContext.gd` (lines 35–38)</br>
+*Defined at:* `scripts/editors/services/ScenarioEditorContext.gd` (lines 37–40)</br>
 *Belongs to:* [ScenarioEditorContext](../../ScenarioEditorContext.md)
 
 **Signature**

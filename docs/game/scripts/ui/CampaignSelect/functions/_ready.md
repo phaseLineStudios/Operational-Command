@@ -1,6 +1,6 @@
 # CampaignSelect::_ready Function Reference
 
-*Defined at:* `scripts/ui/CampaignSelect.gd` (lines 29–34)</br>
+*Defined at:* `scripts/ui/CampaignSelect.gd` (lines 31–36)</br>
 *Belongs to:* [CampaignSelect](../../CampaignSelect.md)
 
 **Signature**

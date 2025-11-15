@@ -1,6 +1,6 @@
 # TerrainPolygonTool::_queue_free_children Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 382–386)</br>
+*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 383–387)</br>
 *Belongs to:* [TerrainPolygonTool](../../TerrainPolygonTool.md)
 
 **Signature**

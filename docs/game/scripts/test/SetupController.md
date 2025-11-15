@@ -22,7 +22,8 @@ Wires TerrainRender, PathGrid, and a MovementAgent, then handles click-to-move.
 
 ## Public Attributes
 
-- `TerrainData terrain` — Terrain to load
+- `String terrain_path` — Terrain to load
+- `TerrainData terrain`
 - `TerrainRender renderer`
 - `Camera2D camera`
 - `MovementAgent unit`
@@ -44,15 +45,21 @@ func _input(e: InputEvent) -> void
 
 ## Member Data Documentation
 
+### terrain_path
+
+```gdscript
+var terrain_path: String
+```
+
+Decorators: `@export_file("*.json")`
+
+Terrain to load
+
 ### terrain
 
 ```gdscript
 var terrain: TerrainData
 ```
-
-Decorators: `@export`
-
-Terrain to load
 
 ### renderer
 

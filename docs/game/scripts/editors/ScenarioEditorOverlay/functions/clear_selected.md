@@ -1,6 +1,6 @@
 # ScenarioEditorOverlay::clear_selected Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 101–105)</br>
+*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 106–110)</br>
 *Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # TerrainEffects::_get_h Function Reference
 
-*Defined at:* `scripts/sim/TerrainEffects.gd` (lines 175–181)</br>
+*Defined at:* `scripts/sim/TerrainEffects.gd` (lines 230–236)</br>
 *Belongs to:* [TerrainEffects](../../TerrainEffects.md)
 
 **Signature**

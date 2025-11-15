@@ -1,6 +1,6 @@
 # UnitData::serialize Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 94–136)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 193–237)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**
@@ -20,13 +20,14 @@ func serialize() -> Dictionary:
 	return {
 		"id": id,
 		"title": title,
-		"icon_path":
-		icon.resource_path as Variant if icon and icon.resource_path != "" else null as Variant,
 		"role": role,
 		"allowed_slots": allowed_slots.duplicate(),
 		"cost": cost,
 		"size": int(size),
+		"type": int(type),
 		"strength": strength,
+		"is_engineer": is_engineer,
+		"is_medical": is_medical,
 		"equipment": equipment.duplicate(),
 		"experience": experience,
 		"stats":
@@ -48,6 +49,7 @@ func serialize() -> Dictionary:
 		"editor": {"unit_category": unit_category.id},
 		"throughput": throughput.duplicate(),
 		"equipment_tags": equipment_tags.duplicate(),
+		"movement_profile": int(movement_profile),
 		"doctrine": doctrine,
 		# --- Ammo + Logistics persistence ---
 		"ammunition": ammunition.duplicate(),

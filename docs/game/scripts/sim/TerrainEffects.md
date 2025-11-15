@@ -42,9 +42,9 @@ LOS test + integral attenuation via TerrainRender surfaces if available.
 - `float conceal_scale`
 - `float out_dmg`
 - `float out_spot`
+- `float max_r`
 - `float step_m`
-- `float h_line`
-- `float per_m`
+- `TerrainBrush b`
 
 ## Member Function Documentation
 
@@ -160,20 +160,20 @@ var out_dmg: float
 var out_spot: float
 ```
 
+### max_r
+
+```gdscript
+var max_r: float
+```
+
 ### step_m
 
 ```gdscript
 var step_m: float
 ```
 
-### h_line
+### b
 
 ```gdscript
-var h_line: float
-```
-
-### per_m
-
-```gdscript
-var per_m: float
+var b: TerrainBrush
 ```

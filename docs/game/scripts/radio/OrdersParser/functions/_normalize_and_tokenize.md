@@ -1,6 +1,6 @@
 # OrdersParser::_normalize_and_tokenize Function Reference
 
-*Defined at:* `scripts/radio/OrdersParser.gd` (lines 186–211)</br>
+*Defined at:* `scripts/radio/OrdersParser.gd` (lines 338–363)</br>
 *Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**

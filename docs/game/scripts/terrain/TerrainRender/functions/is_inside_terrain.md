@@ -1,6 +1,6 @@
 # TerrainRender::is_inside_terrain Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 292–295)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 364–367)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**
@@ -17,5 +17,5 @@ API to check if position is inside terrain
 
 ```gdscript
 func is_inside_terrain(pos: Vector2) -> bool:
-	return base_layer.get_global_rect().has_point(pos)
+	return base_layer.get_rect().has_point(pos)
 ```

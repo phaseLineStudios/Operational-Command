@@ -1,6 +1,6 @@
 # UnitCard::setup Function Reference
 
-*Defined at:* `scripts/ui/helpers/UnitCard.gd` (lines 41–72)</br>
+*Defined at:* `scripts/ui/helpers/UnitCard.gd` (lines 41–74)</br>
 *Belongs to:* [UnitCard](../../UnitCard.md)
 
 **Signature**
@@ -44,6 +44,8 @@ func setup(u: UnitData) -> void:
 	if tex == null and fallback_default_icon:
 		tex = fallback_default_icon
 	_icon.texture = tex
+
+	u.icons_ready.connect(func(): _icon.texture = u.icon)
 
 	_update_style()
 ```

@@ -1,6 +1,6 @@
 # TTSService::set_voice Function Reference
 
-*Defined at:* `scripts/radio/TTSService.gd` (lines 59–90)</br>
+*Defined at:* `scripts/radio/TTSService.gd` (lines 85–116)</br>
 *Belongs to:* [TTSService](../../TTSService.md)
 
 **Signature**

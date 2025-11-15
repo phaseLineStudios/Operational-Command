@@ -1,6 +1,6 @@
 # ScenarioEditorOverlay::on_mouse_move Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 167–172)</br>
+*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 172–177)</br>
 *Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**

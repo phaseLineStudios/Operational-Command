@@ -1,6 +1,6 @@
 # Game::get_replacement_pool Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 135–138)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 141–144)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

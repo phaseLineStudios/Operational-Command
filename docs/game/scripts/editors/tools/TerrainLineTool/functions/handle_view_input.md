@@ -1,6 +1,6 @@
 # TerrainLineTool::handle_view_input Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 199–302)</br>
+*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 200–303)</br>
 *Belongs to:* [TerrainLineTool](../../TerrainLineTool.md)
 
 **Signature**

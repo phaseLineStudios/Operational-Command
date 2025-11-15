@@ -1,6 +1,6 @@
 # ScenarioEditorOverlay::_scaled_cached Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 621–635)</br>
+*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 695–709)</br>
 *Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**

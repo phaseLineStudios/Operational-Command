@@ -1,6 +1,6 @@
 # TerrainEffects::_is_dug_in Function Reference
 
-*Defined at:* `scripts/sim/TerrainEffects.gd` (lines 214–215)</br>
+*Defined at:* `scripts/sim/TerrainEffects.gd` (lines 269–270)</br>
 *Belongs to:* [TerrainEffects](../../TerrainEffects.md)
 
 **Signature**
