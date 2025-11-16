@@ -48,7 +48,7 @@ func _resolve_profile(ammo_type: String, visited: Array) -> Dictionary:
 	if key == "" or visited.has(key):
 		return _DEFAULT_PROFILE.duplicate(true)
 
-	var entry := damage_by_type.get(key, null)
+	var entry: Variant = damage_by_type.get(key, null)
 	if entry == null:
 		return _DEFAULT_PROFILE.duplicate(true)
 
