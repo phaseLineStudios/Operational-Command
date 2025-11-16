@@ -319,3 +319,35 @@ static func deserialize(data: Variant) -> UnitData:
 			u.state_ammunition[k] = int(u.ammunition[k])
 
 	return u
+
+
+## Calculates the attack rating using equipment, ammo profiles, and strength.
+func compute_attack_power(ammo_damage_config: AmmoDamageConfig = null):
+	pass
+
+
+## Calculates the attack contribution for a single weapon entry.
+func _compute_weapon_attack_value(
+	weapon_name: String, weapon_entry: Dictionary, ammo_damage_config: AmmoDamageConfig = null
+):
+	pass
+
+
+## Returns the ammo types referenced by the unit's weapon equipment.
+func get_weapon_ammo_types():
+	pass
+
+
+## Returns true when the equipment loadout includes anti-vehicle weapons.
+func has_anti_vehicle_weapons():
+	pass
+
+
+## Helper to classify a weapon ammo enum index as anti-vehicle capable.
+func _is_anti_vehicle_ammo(ammo_type: int):
+	pass
+
+
+## Returns true when the unit should be treated as a vehicle target in combat.
+func is_vehicle_unit():
+	pass

@@ -22,6 +22,8 @@ signal debug_updated(data: Dictionary)
 ## TerrainEffectConfig reference
 @export
 var terrain_config: TerrainEffectsConfig = preload("res://assets/configs/terrain_effects.tres")
+## Lookup table for ammo type damage profiles.
+@export var ammo_damage_config: AmmoDamageConfig
 
 @export_group("Debug")
 @export_custom(PROPERTY_HINT_GROUP_ENABLE, "Enable Debug") var debug_enabled := false
@@ -455,3 +457,35 @@ func _set_debug_rate() -> void:
 func set_debug_enabled(v: bool) -> void:
 	debug_enabled = v
 	_set_debug_rate()
+
+
+## Computes the effective attack value for an attacker using equipment + ammo state.
+func _compute_dynamic_attack_power(attacker: ScenarioUnit):
+	pass
+
+
+## Computes the defender's mitigation modifier that scales incoming damage.
+func _compute_dynamic_defense_value(defender: ScenarioUnit):
+	pass
+
+
+## Applies the defense modifier to the pending damage value.
+func _apply_defense_modifier_to_damage(attack_value, defense_value):
+	pass
+
+
+## Returns true when the attacker has the means to harm armored vehicles.
+func _attacker_can_damage_vehicle(attacker: ScenarioUnit):
+	pass
+
+
+## Returns true when the defender should be treated as a vehicle for damage resolution.
+func _is_vehicle_target(defender: ScenarioUnit):
+	pass
+
+
+## Applies vehicle-specific damage/destruction logic when applicable.
+func _apply_vehicle_damage_resolution(
+	attacker: ScenarioUnit, defender: ScenarioUnit, damage_value
+):
+	pass
