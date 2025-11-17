@@ -167,7 +167,7 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 
 	# --- ammo gate + penalties ---
 	# returns {allow, attack_power_mult, attack_cycle_mult, suppression_mult, ...}
-	var ammo_meta := _select_ammo_profile_for_attack(attacker)
+		var ammo_meta := _select_ammo_profile_for_attack(attacker, defender)
 	var fire := _gate_and_consume(attacker.unit, ammo_meta.get("ammo_type", "SMALL_ARMS"), ammo_meta.get("rounds", 5))
 	if not bool(fire.get("allow", true)):
 		LogService.info("%s cannot fire: out of ammo" % attacker.unit.id, "Combat")
@@ -566,7 +566,7 @@ func _apply_vehicle_damage_resolution(
 
 
 ## Picks an ammo type + round count based on the attacker's current weapon mix.
-func _select_ammo_profile_for_attack(attacker: ScenarioUnit) -> Dictionary:
+func _select_ammo_profile_for_attack(attacker: ScenarioUnit, defender: ScenarioUnit) -> Dictionary:
 	var unit := attacker.unit
 	if unit == null:
 		return {"ammo_type": "SMALL_ARMS", "rounds": 5}
@@ -575,16 +575,50 @@ func _select_ammo_profile_for_attack(attacker: ScenarioUnit) -> Dictionary:
 	if unit.has_method("get_weapon_ammo_types"):
 		ammo_counts = unit.get_weapon_ammo_types()
 
+	if ammo_counts.is_empty():
+		return {"ammo_type": "SMALL_ARMS", "rounds": 5}
+
+	var prefer_anti_vehicle := _is_vehicle_target(defender)
 	var best_ammo := "SMALL_ARMS"
-	var best_score := 0
+	var best_score := -INF
+	var fallback_ammo := "SMALL_ARMS"
+	var fallback_score := -INF
 	for ammo_key in ammo_counts.keys():
 		var qty := int(ammo_counts.get(ammo_key, 0))
-		if qty > best_score:
-			best_score = qty
-			best_ammo = String(ammo_key)
+		if qty <= 0:
+			continue
+
+		var anti_capable := false
+		if ammo_damage_config:
+			anti_capable = ammo_damage_config.is_anti_vehicle(String(ammo_key))
+
+		var profile_bonus := 0.0
+		if ammo_damage_config:
+			profile_bonus = ammo_damage_config.get_vehicle_damage_for(String(ammo_key))
+
+		var score := float(qty)
+		if anti_capable:
+			score += profile_bonus
+
+		if prefer_anti_vehicle and anti_capable:
+			if score > best_score:
+				best_score = score
+				best_ammo = String(ammo_key)
+		else:
+			if score > fallback_score:
+				fallback_score = score
+				fallback_ammo = String(ammo_key)
+
+	if prefer_anti_vehicle:
+		if best_score == -INF:
+			best_ammo = fallback_ammo
+			best_score = fallback_score
+	else:
+		best_ammo = fallback_ammo
+		best_score = fallback_score
 
 	if best_score <= 0:
 		best_score = 5
 
-	var rounds := clamp(best_score, 1, 10)
+	var rounds := clamp(int(round(best_score)), 1, 10)
 	return {"ammo_type": best_ammo, "rounds": rounds}
