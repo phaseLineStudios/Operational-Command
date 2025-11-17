@@ -278,6 +278,17 @@ func print_unit_status(attacker: UnitData, defender: UnitData) -> void:
 ## - If `CombatAdapter.request_fire_with_penalty()` exists → use it.
 ## - Else fall back to `request_fire()` and map to a neutral response.
 func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> Dictionary:
+	if ammo_type == "" or rounds <= 0:
+		return {
+			"allow": true,
+			"state": "virtual",
+			"attack_power_mult": 1.0,
+			"attack_cycle_mult": 1.0,
+			"suppression_mult": 1.0,
+			"morale_delta": 0,
+			"ai_recommendation": "normal",
+		}
+
 	if combat_adapter == null:
 		return {
 			"allow": true,
@@ -580,7 +591,7 @@ func _select_ammo_profile_for_attack(attacker: ScenarioUnit, defender: ScenarioU
 		ammo_counts = unit.get_weapon_ammo_types()
 
 	if ammo_counts.is_empty():
-		return {"ammo_type": "SMALL_ARMS", "rounds": 5}
+		return {"ammo_type": "", "rounds": 0}
 
 	var prefer_anti_vehicle := _is_vehicle_target(defender)
 	var best_ammo := "SMALL_ARMS"
@@ -590,6 +601,14 @@ func _select_ammo_profile_for_attack(attacker: ScenarioUnit, defender: ScenarioU
 	for ammo_key in ammo_counts.keys():
 		var qty := int(ammo_counts.get(ammo_key, 0))
 		if qty <= 0:
+			continue
+
+		var has_stock := true
+		if unit.state_ammunition.has(ammo_key):
+			has_stock = int(unit.state_ammunition.get(ammo_key, 0)) > 0
+		elif unit.state_ammunition.has(ammo_key.to_lower()):
+			has_stock = int(unit.state_ammunition.get(ammo_key.to_lower(), 0)) > 0
+		if not has_stock:
 			continue
 
 		var anti_capable := ammo_damage_config != null and ammo_damage_config.is_anti_vehicle(
@@ -619,6 +638,9 @@ func _select_ammo_profile_for_attack(attacker: ScenarioUnit, defender: ScenarioU
 	else:
 		best_ammo = fallback_ammo
 		best_score = fallback_score
+
+	if best_score == -INF:
+		return {"ammo_type": "", "rounds": 0}
 
 	if best_score <= 0:
 		best_score = 5
