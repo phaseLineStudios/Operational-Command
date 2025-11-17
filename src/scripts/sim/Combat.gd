@@ -23,7 +23,7 @@ signal debug_updated(data: Dictionary)
 @export
 var terrain_config: TerrainEffectsConfig = preload("res://assets/configs/terrain_effects.tres")
 ## Lookup table for ammo type damage profiles.
-@export var ammo_damage_config: AmmoDamageConfig
+@export var ammo_damage_config: AmmoDamageConfig = preload("res://assets/configs/ammo_damage_config.tres")
 
 @export_group("Debug")
 @export_custom(PROPERTY_HINT_GROUP_ENABLE, "Enable Debug") var debug_enabled := false

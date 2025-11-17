@@ -1,0 +1,23 @@
+﻿[gd_resource type="AmmoDamageConfig" load_steps=2]
+
+[ext_resource type="Script" path="res://scripts/data/AmmoDamageConfig.gd" id="1_mxkwb"]
+
+[resource]
+script = ExtResource("1_mxkwb")
+damage_by_type = {
+"SMALL_ARMS": {"damage": 0.8},
+"HEAVY_WEAPONS": {"damage": 2.2, "vehicle_damage": 0.4, "tags": ["ap"]},
+"AUTOCANNON": {"damage": 3.5, "vehicle_damage": 4.5, "anti_vehicle": true},
+"TANK_GUN": {"damage": 6.0, "vehicle_damage": 9.0, "anti_vehicle": true},
+"AT_ROCKET": {"damage": 4.5, "vehicle_damage": 6.0, "anti_vehicle": true},
+"ATGM": {"damage": 7.0, "vehicle_damage": 10.0, "anti_vehicle": true},
+"MORTAR_AP": {"damage": 3.0, "vehicle_damage": 0.8},
+"MORTAR_SMOKE": {"damage": 0.2},
+"MORTAR_ILLUM": {"damage": 0.1},
+"ARTILLERY_AP": {"damage": 8.0, "vehicle_damage": 2.0},
+"ARTILLERY_SMOKE": {"damage": 0.3},
+"ARTILLERY_ILLUM": {"damage": 0.2},
+"ENGINEER_MINE": {"damage": 4.0, "vehicle_damage": 8.0, "anti_vehicle": true, "tags": ["mine"]},
+"ENGINEER_DEMO": {"damage": 4.5, "vehicle_damage": 7.0, "anti_vehicle": true},
+"ENGINEER_BRIDGE": {"damage": 0.0}
+}
