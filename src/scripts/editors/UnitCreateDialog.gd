@@ -11,6 +11,7 @@ signal canceled
 enum DialogMode { CREATE, EDIT }
 
 const AMMO_DAMAGE_CONFIG := preload("res://assets/configs/ammo_damage_config.tres")
+const ATTACK_TOOLTIP := "Attack is computed from weapons, ammunition, and strength."
 
 var _mode: DialogMode = DialogMode.CREATE
 var _working: UnitData
@@ -26,6 +27,7 @@ var _ammo_keys: Array[String] = []
 @onready var _role: LineEdit = %Role
 @onready var _cost: SpinBox = %Cost
 @onready var _strength: SpinBox = %Strength
+@onready var _attack_label: Label = %AttackLabel
 @onready var _attack_value: Label = %AttackValue
 @onready var _defense: SpinBox = %Defense
 @onready var _spot_m: SpinBox = %Spot
@@ -56,6 +58,7 @@ var _ammo_keys: Array[String] = []
 @onready var _equip_add: Button = %EquipmentAdd
 @onready var _equip_list: VBoxContainer = %EquipmentList
 @onready var _ammo_container: GridContainer = %AmmoContainer
+@onready var _stats_container: FoldableContainer = %StatsContainer
 
 @onready var _th_key: LineEdit = %ThroughputType
 @onready var _th_val: SpinBox = %ThroughputAmount
@@ -100,6 +103,12 @@ func _ready() -> void:
 
 	_size_ob.item_selected.connect(_generate_preview_icons)
 	_type_ob.item_selected.connect(_generate_preview_icons)
+	if _attack_label:
+		_attack_label.tooltip_text = ATTACK_TOOLTIP
+	if _attack_value:
+		_attack_value.tooltip_text = ATTACK_TOOLTIP
+	if _stats_container:
+		_stats_container.tooltip_text = ATTACK_TOOLTIP
 	_update_attack_preview()
 
 
