@@ -167,8 +167,12 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 
 	# --- ammo gate + penalties ---
 	# returns {allow, attack_power_mult, attack_cycle_mult, suppression_mult, ...}
-		var ammo_meta := _select_ammo_profile_for_attack(attacker, defender)
-	var fire := _gate_and_consume(attacker.unit, ammo_meta.get("ammo_type", "SMALL_ARMS"), ammo_meta.get("rounds", 5))
+	var ammo_meta := _select_ammo_profile_for_attack(attacker, defender)
+	var fire := _gate_and_consume(
+		attacker.unit,
+		ammo_meta.get("ammo_type", "SMALL_ARMS"),
+		int(ammo_meta.get("rounds", 5))
+	)
 	if not bool(fire.get("allow", true)):
 		LogService.info("%s cannot fire: out of ammo" % attacker.unit.id, "Combat")
 		return 0.0
@@ -580,24 +584,23 @@ func _select_ammo_profile_for_attack(attacker: ScenarioUnit, defender: ScenarioU
 
 	var prefer_anti_vehicle := _is_vehicle_target(defender)
 	var best_ammo := "SMALL_ARMS"
-	var best_score := -INF
+	var best_score: float = -INF
 	var fallback_ammo := "SMALL_ARMS"
-	var fallback_score := -INF
+	var fallback_score: float = -INF
 	for ammo_key in ammo_counts.keys():
 		var qty := int(ammo_counts.get(ammo_key, 0))
 		if qty <= 0:
 			continue
 
-		var anti_capable := false
-		if ammo_damage_config:
-			anti_capable = ammo_damage_config.is_anti_vehicle(String(ammo_key))
-
-		var profile_bonus := 0.0
-		if ammo_damage_config:
-			profile_bonus = ammo_damage_config.get_vehicle_damage_for(String(ammo_key))
+		var anti_capable := ammo_damage_config != null and ammo_damage_config.is_anti_vehicle(
+			String(ammo_key)
+		)
 
 		var score := float(qty)
 		if anti_capable:
+			var profile_bonus := 0.0
+			if ammo_damage_config:
+				profile_bonus = ammo_damage_config.get_vehicle_damage_for(String(ammo_key))
 			score += profile_bonus
 
 		if prefer_anti_vehicle and anti_capable:
@@ -620,5 +623,5 @@ func _select_ammo_profile_for_attack(attacker: ScenarioUnit, defender: ScenarioU
 	if best_score <= 0:
 		best_score = 5
 
-	var rounds := clamp(int(round(best_score)), 1, 10)
+	var rounds: int = clamp(int(round(best_score)), 1, 10)
 	return {"ammo_type": best_ammo, "rounds": rounds}

@@ -6,6 +6,7 @@ extends Node
 
 ## Cache loaded objects by absolute path.
 var _cache: Dictionary = {}
+const AMMO_DAMAGE_CONFIG: AmmoDamageConfig = preload("res://assets/configs/ammo_damage_config.tres")
 
 
 ## Normalize to res:// and remove trailing slash.
@@ -323,7 +324,10 @@ func get_unit(id: String) -> UnitData:
 	if d.is_empty():
 		push_warning("Unit not found: %s" % id)
 		return null
-	return UnitData.deserialize(d)
+	var u := UnitData.deserialize(d)
+	if u:
+		u.compute_attack_power(AMMO_DAMAGE_CONFIG)
+	return u
 
 
 ## Get units by IDs
@@ -346,6 +350,7 @@ func list_units() -> Array[UnitData]:
 	for item in camps:
 		var res := UnitData.deserialize(item)
 		if res != null:
+			res.compute_attack_power(AMMO_DAMAGE_CONFIG)
 			out.append(res)
 	return out
 
