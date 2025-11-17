@@ -167,7 +167,8 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 
 	# --- ammo gate + penalties ---
 	# returns {allow, attack_power_mult, attack_cycle_mult, suppression_mult, ...}
-	var fire := _gate_and_consume(attacker.unit, "small_arms", 5)
+	var ammo_meta := _select_ammo_profile_for_attack(attacker)
+	var fire := _gate_and_consume(attacker.unit, ammo_meta.get("ammo_type", "SMALL_ARMS"), ammo_meta.get("rounds", 5))
 	if not bool(fire.get("allow", true)):
 		LogService.info("%s cannot fire: out of ammo" % attacker.unit.id, "Combat")
 		return 0.0
@@ -562,3 +563,28 @@ func _apply_vehicle_damage_resolution(
 	if defender.unit.state_equipment <= 0.05:
 		var catastrophic_loss: int = int(max(1.0, floor(vehicle_damage * 0.02)))
 		_apply_casualties(defender.unit, catastrophic_loss)
+
+
+## Picks an ammo type + round count based on the attacker's current weapon mix.
+func _select_ammo_profile_for_attack(attacker: ScenarioUnit) -> Dictionary:
+	var unit := attacker.unit
+	if unit == null:
+		return {"ammo_type": "SMALL_ARMS", "rounds": 5}
+
+	var ammo_counts: Dictionary = {}
+	if unit.has_method("get_weapon_ammo_types"):
+		ammo_counts = unit.get_weapon_ammo_types()
+
+	var best_ammo := "SMALL_ARMS"
+	var best_score := 0
+	for ammo_key in ammo_counts.keys():
+		var qty := int(ammo_counts.get(ammo_key, 0))
+		if qty > best_score:
+			best_score = qty
+			best_ammo = String(ammo_key)
+
+	if best_score <= 0:
+		best_score = 5
+
+	var rounds := clamp(best_score, 1, 10)
+	return {"ammo_type": best_ammo, "rounds": rounds}
