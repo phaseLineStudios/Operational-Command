@@ -42,6 +42,33 @@ enum AmmoTypes {
 	ENGINEER_BRIDGE
 }
 
+const _BASE_PERSONNEL_DAMAGE_PER_SOLDIER := 0.08
+const _DEFAULT_AMMO_DAMAGE := {
+	"SMALL_ARMS": 0.8,
+	"HEAVY_WEAPONS": 2.2,
+	"AUTOCANNON": 3.5,
+	"TANK_GUN": 6.0,
+	"AT_ROCKET": 4.5,
+	"ATGM": 7.0,
+	"MORTAR_AP": 3.2,
+	"MORTAR_SMOKE": 0.2,
+	"MORTAR_ILLUM": 0.1,
+	"ARTILLERY_AP": 8.0,
+	"ARTILLERY_SMOKE": 0.3,
+	"ARTILLERY_ILLUM": 0.2,
+	"ENGINEER_MINE": 4.0,
+	"ENGINEER_DEMO": 4.5,
+	"ENGINEER_BRIDGE": 0.0
+}
+const _ANTI_VEHICLE_AMMO_TYPES := [
+	AmmoTypes.TANK_GUN,
+	AmmoTypes.AT_ROCKET,
+	AmmoTypes.ATGM,
+	AmmoTypes.AUTOCANNON,
+	AmmoTypes.ENGINEER_MINE,
+	AmmoTypes.ENGINEER_DEMO
+]
+
 ## Unique identifier for the unit
 @export var id: String
 ## Human-readable title of the unit
@@ -320,33 +347,6 @@ static func deserialize(data: Variant) -> UnitData:
 
 	return u
 
-const _BASE_PERSONNEL_DAMAGE_PER_SOLDIER := 0.08
-const _DEFAULT_AMMO_DAMAGE := {
-	"SMALL_ARMS": 0.8,
-	"HEAVY_WEAPONS": 2.2,
-	"AUTOCANNON": 3.5,
-	"TANK_GUN": 6.0,
-	"AT_ROCKET": 4.5,
-	"ATGM": 7.0,
-	"MORTAR_AP": 3.2,
-	"MORTAR_SMOKE": 0.2,
-	"MORTAR_ILLUM": 0.1,
-	"ARTILLERY_AP": 8.0,
-	"ARTILLERY_SMOKE": 0.3,
-	"ARTILLERY_ILLUM": 0.2,
-	"ENGINEER_MINE": 4.0,
-	"ENGINEER_DEMO": 4.5,
-	"ENGINEER_BRIDGE": 0.0
-}
-const _ANTI_VEHICLE_AMMO_TYPES := [
-	AmmoTypes.TANK_GUN,
-	AmmoTypes.AT_ROCKET,
-	AmmoTypes.ATGM,
-	AmmoTypes.AUTOCANNON,
-	AmmoTypes.ENGINEER_MINE,
-	AmmoTypes.ENGINEER_DEMO
-]
-
 
 ## Calculates the attack rating using equipment, ammo profiles, and strength.
 func compute_attack_power(ammo_damage_config: AmmoDamageConfig = null) -> float:
@@ -358,9 +358,7 @@ func compute_attack_power(ammo_damage_config: AmmoDamageConfig = null) -> float:
 		if typeof(weapon_data) != TYPE_DICTIONARY:
 			continue
 		var weapon_entry: Dictionary = weapon_data
-		total_weapon_power += _compute_weapon_attack_value(
-			String(weapon_name), weapon_entry, ammo_damage_config
-		)
+		total_weapon_power += _compute_weapon_attack_value(weapon_entry, ammo_damage_config)
 
 	var effective_strength: float = state_strength
 	if effective_strength <= 0.0:
@@ -372,9 +370,7 @@ func compute_attack_power(ammo_damage_config: AmmoDamageConfig = null) -> float:
 		total_weapon_power *= ratio
 
 	# Always give personnel a baseline small-arms contribution so support units aren't helpless.
-	var manpower_component: float = (
-		effective_strength * _BASE_PERSONNEL_DAMAGE_PER_SOLDIER
-	)
+	var manpower_component: float = effective_strength * _BASE_PERSONNEL_DAMAGE_PER_SOLDIER
 	var computed: float = max(total_weapon_power + manpower_component, 0.0)
 	attack = computed
 	return computed
@@ -382,8 +378,8 @@ func compute_attack_power(ammo_damage_config: AmmoDamageConfig = null) -> float:
 
 ## Calculates the attack contribution for a single weapon entry.
 func _compute_weapon_attack_value(
-	weapon_name: String, weapon_entry: Dictionary, ammo_damage_config: AmmoDamageConfig = null
-	) -> float:
+	weapon_entry: Dictionary, ammo_damage_config: AmmoDamageConfig = null
+) -> float:
 	if typeof(weapon_entry) != TYPE_DICTIONARY:
 		return 0.0
 
@@ -396,10 +392,7 @@ func _compute_weapon_attack_value(
 		base_damage = _default_ammo_damage(ammo_key)
 
 	var qty: float = float(
-		weapon_entry.get(
-			"type",
-			weapon_entry.get("count", weapon_entry.get("quantity", 1.0))
-		)
+		weapon_entry.get("type", weapon_entry.get("count", weapon_entry.get("quantity", 1.0)))
 	)
 	if qty <= 0.0:
 		qty = 1.0
@@ -434,10 +427,7 @@ func get_weapon_ammo_types() -> Dictionary:
 		if ammo_key == "":
 			continue
 		var qty: int = int(
-			weapon_entry.get(
-				"type",
-				weapon_entry.get("count", weapon_entry.get("quantity", 1))
-			)
+			weapon_entry.get("type", weapon_entry.get("count", weapon_entry.get("quantity", 1)))
 		)
 		if qty <= 0:
 			qty = 1
@@ -486,7 +476,10 @@ func is_vehicle_unit() -> bool:
 		_:
 			pass
 
-	if type in [MilSymbol.UnitType.ARMOR, MilSymbol.UnitType.MECHANIZED, MilSymbol.UnitType.MOTORIZED]:
+	if (
+		type
+		in [MilSymbol.UnitType.ARMOR, MilSymbol.UnitType.MECHANIZED, MilSymbol.UnitType.MOTORIZED]
+	):
 		return true
 
 	for slot in allowed_slots:
@@ -517,10 +510,7 @@ func _ensure_ammunition_from_equipment() -> void:
 			continue
 
 		var qty: int = int(
-			weapon_entry.get(
-				"type",
-				weapon_entry.get("count", weapon_entry.get("quantity", 1))
-			)
+			weapon_entry.get("type", weapon_entry.get("count", weapon_entry.get("quantity", 1)))
 		)
 		if qty <= 0:
 			qty = 1

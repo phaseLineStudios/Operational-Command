@@ -5,8 +5,8 @@ extends Node
 ## with basic validation and helpful error messages.
 
 ## Cache loaded objects by absolute path.
-var _cache: Dictionary = {}
 const AMMO_DAMAGE_CONFIG: AmmoDamageConfig = preload("res://assets/configs/ammo_damage_config.tres")
+var _cache: Dictionary = {}
 
 
 ## Normalize to res:// and remove trailing slash.

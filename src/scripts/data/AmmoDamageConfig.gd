@@ -2,24 +2,13 @@ class_name AmmoDamageConfig
 extends Resource
 ## Resource that maps ammo type identifiers to their damage metadata.
 
+const _DEFAULT_PROFILE := {"damage": 0.0, "vehicle_damage": 0.0, "anti_vehicle": false, "tags": []}
+const _ANTI_VEHICLE_TAGS := [
+	"anti_vehicle", "anti_tank", "antitank", "armor_piercing", "armour_piercing", "ap", "at"
+]
+
 ## Dictionary of ammo type -> damage data (float or Dictionary).
 @export var damage_by_type: Dictionary = {}
-
-const _DEFAULT_PROFILE := {
-	"damage": 0.0,
-	"vehicle_damage": 0.0,
-	"anti_vehicle": false,
-	"tags": []
-}
-const _ANTI_VEHICLE_TAGS := [
-	"anti_vehicle",
-	"anti_tank",
-	"antitank",
-	"armor_piercing",
-	"armour_piercing",
-	"ap",
-	"at"
-]
 
 
 ## Returns the configured damage value for the provided ammo type.
@@ -69,10 +58,14 @@ func _normalize_entry(entry: Variant) -> Dictionary:
 		TYPE_DICTIONARY:
 			profile["damage"] = float(entry.get("damage", profile.get("damage", 0.0)))
 			profile["vehicle_damage"] = float(
-				entry.get("vehicle_damage", entry.get("armor_damage", profile.get("vehicle_damage", 0.0)))
+				entry.get(
+					"vehicle_damage", entry.get("armor_damage", profile.get("vehicle_damage", 0.0))
+				)
 			)
 			profile["anti_vehicle"] = bool(
-				entry.get("anti_vehicle", entry.get("is_anti_vehicle", profile.get("anti_vehicle", false)))
+				entry.get(
+					"anti_vehicle", entry.get("is_anti_vehicle", profile.get("anti_vehicle", false))
+				)
 			)
 			var tags: Variant = entry.get("tags", null)
 			if typeof(tags) == TYPE_ARRAY:

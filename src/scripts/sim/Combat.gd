@@ -23,7 +23,8 @@ signal debug_updated(data: Dictionary)
 @export
 var terrain_config: TerrainEffectsConfig = preload("res://assets/configs/terrain_effects.tres")
 ## Lookup table for ammo type damage profiles.
-@export var ammo_damage_config: AmmoDamageConfig = preload("res://assets/configs/ammo_damage_config.tres")
+@export
+var ammo_damage_config: AmmoDamageConfig = preload("res://assets/configs/ammo_damage_config.tres")
 
 @export_group("Debug")
 @export_custom(PROPERTY_HINT_GROUP_ENABLE, "Enable Debug") var debug_enabled := false
@@ -169,9 +170,7 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 	# returns {allow, attack_power_mult, attack_cycle_mult, suppression_mult, ...}
 	var ammo_meta := _select_ammo_profile_for_attack(attacker, defender)
 	var fire := _gate_and_consume(
-		attacker.unit,
-		ammo_meta.get("ammo_type", "SMALL_ARMS"),
-		int(ammo_meta.get("rounds", 5))
+		attacker.unit, ammo_meta.get("ammo_type", "SMALL_ARMS"), int(ammo_meta.get("rounds", 5))
 	)
 	if not bool(fire.get("allow", true)):
 		LogService.info("%s cannot fire: out of ammo" % attacker.unit.id, "Combat")
@@ -551,9 +550,7 @@ func _is_vehicle_target(defender: ScenarioUnit) -> bool:
 
 
 ## Applies vehicle-specific damage/destruction logic when applicable.
-func _apply_vehicle_damage_resolution(
-	attacker: ScenarioUnit, defender: ScenarioUnit, damage_value
-):
+func _apply_vehicle_damage_resolution(attacker: ScenarioUnit, defender: ScenarioUnit, damage_value):
 	if damage_value <= 0.0:
 		return
 	if not _is_vehicle_target(defender):
@@ -611,8 +608,8 @@ func _select_ammo_profile_for_attack(attacker: ScenarioUnit, defender: ScenarioU
 		if not has_stock:
 			continue
 
-		var anti_capable := ammo_damage_config != null and ammo_damage_config.is_anti_vehicle(
-			String(ammo_key)
+		var anti_capable := (
+			ammo_damage_config != null and ammo_damage_config.is_anti_vehicle(String(ammo_key))
 		)
 
 		var score := float(qty)
