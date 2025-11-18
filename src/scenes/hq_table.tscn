@@ -1,4 +1,4 @@
-[gd_scene load_steps=110 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=121 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -172,9 +172,58 @@ metadata/_custom_type_script = "uid://dnnu3w3b3j5rk"
 script = ExtResource("24_jjp33")
 metadata/_custom_type_script = "uid://ch73kyybwrkb8"
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_018ci"]
+noise_type = 3
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_os6q3"]
+noise = SubResource("FastNoiseLite_018ci")
+seamless = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ehjqo"]
+noise_type = 3
+seed = 42
+frequency = 0.02
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_4hx2p"]
+noise = SubResource("FastNoiseLite_ehjqo")
+seamless = true
+
+[sub_resource type="Gradient" id="Gradient_xqlrs"]
+colors = PackedColorArray(0.6, 0.7, 0.9, 1, 0.2, 0.4, 0.9, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_r1wnv"]
+gradient = SubResource("Gradient_xqlrs")
+width = 256
+height = 256
+fill_to = Vector2(1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_8iaup"]
+noise_type = 3
+frequency = 0.1
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_tw4w3"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_8iaup")
+seamless = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_5yowr"]
+noise_type = 2
+frequency = 0.1
+cellular_return_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_66gqg"]
+width = 2048
+height = 2048
+noise = SubResource("FastNoiseLite_5yowr")
+seamless = true
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_66gqg"]
 shader = ExtResource("36_66gqg")
 shader_parameter/base_color = Color(0.204346, 0.344014, 0.5625, 1)
+shader_parameter/scattering_lut = SubResource("GradientTexture2D_r1wnv")
 shader_parameter/scatter_color = Color(1, 1, 1, 1)
 shader_parameter/scatter_color_2 = Color(1, 1, 1, 1)
 shader_parameter/b_anim_clouds = true
@@ -183,7 +232,7 @@ shader_parameter/sun_radius = 0.0003
 shader_parameter/sun_edge_blur = 3600.0
 shader_parameter/sun_disc_color = Color(0.737255, 0.694118, 0.603922, 1)
 shader_parameter/sun_glow_color = Color(1, 0.955033, 0.827864, 1)
-shader_parameter/sunlight_color = Vector3(0, 0, 0)
+shader_parameter/sunlight_color = Color(0.996078, 0.996078, 1, 1)
 shader_parameter/sun_glow_intensity = 0.45
 shader_parameter/moon_radius = 0.0003
 shader_parameter/moon_edge_blur = 10000.0
@@ -191,12 +240,16 @@ shader_parameter/moon_glow_color = Color(1, 1, 1, 0)
 shader_parameter/moon_glow_intensity = 0.8
 shader_parameter/base_cloud_color = Color(1, 1, 1, 1)
 shader_parameter/cloud_density = 4.25
+shader_parameter/cloud_texture = SubResource("NoiseTexture2D_os6q3")
+shader_parameter/cloud_texture_2 = SubResource("NoiseTexture2D_4hx2p")
 shader_parameter/mg_size = 0.92
 shader_parameter/cloud_alpha = 1.0
 shader_parameter/cloud_speed = 0.0003
 shader_parameter/horizon_fog_color = Color(0.82882583, 0.9191148, 0.9999997, 1)
 shader_parameter/horizon_alpha = 1.0
 shader_parameter/horizon_size = 3.0
+shader_parameter/star_texture = SubResource("NoiseTexture2D_66gqg")
+shader_parameter/star_noise = SubResource("NoiseTexture2D_tw4w3")
 shader_parameter/star_color = Color(0.43, 0.55, 0.91, 1)
 shader_parameter/star_brightness = 0.2
 shader_parameter/twinkle_speed = 0.025
@@ -306,8 +359,34 @@ point_count = 4
 
 [sub_resource type="Resource" id="Resource_g6xw8"]
 script = ExtResource("44_hovgm")
+sun_radius = null
+sun_edge_blur = null
 sun_light_intensity = SubResource("Curve_66gqg")
+sun_glow_intensity = null
+moon_radius = null
+moon_edge_blur = null
 moon_light_intensity = SubResource("Curve_xqlrs")
+moon_glow_intensity = null
+scatter_color = null
+scatter_color_2 = null
+horizon_size = null
+horizon_alpha = null
+cloud_speed = null
+cloud_direction = null
+cloud_density = null
+cloud_alpha = null
+cloud_glow = null
+cloud_light_absorbtion = null
+cloud_brightness = null
+cloud_uv_curvature = null
+cloud_edge = null
+anisotropy = null
+star_color = null
+star_brightness = null
+star_resolution = null
+twinkle_speed = null
+twinkle_scale = null
+star_speed = null
 base_sky_color = SubResource("GradientTexture1D_018ci")
 base_cloud_color = SubResource("GradientTexture1D_3g2ag")
 overcast_sky_color = SubResource("GradientTexture1D_r1wnv")
@@ -751,16 +830,16 @@ terrain_renderer_path = NodePath("../../MapController/TerrainViewport/TerrainRen
 unique_name_in_owner = true
 script = ExtResource("45_ai")
 sim_world_ref = NodePath("../WorldController")
-sim_world_path = NodePath("../WorldController")
 movement_adapter_ref = NodePath("../WorldController/MovementAdapter")
-movement_adapter_path = NodePath("../WorldController/MovementAdapter")
 combat_adapter_ref = NodePath("../CombatController/CombatAdapter")
-combat_adapter_path = NodePath("../CombatController/CombatAdapter")
 los_adapter_ref = NodePath("../LOSController/LOSAdapter")
-los_adapter_path = NodePath("../LOSController/LOSAdapter")
 orders_router_ref = NodePath("../RadioController/OrdersRouter")
-orders_router_path = NodePath("../RadioController/OrdersRouter")
 agents_root_ref = NodePath("Agents")
+sim_world_path = NodePath("../WorldController")
+movement_adapter_path = NodePath("../WorldController/MovementAdapter")
+combat_adapter_path = NodePath("../CombatController/CombatAdapter")
+los_adapter_path = NodePath("../LOSController/LOSAdapter")
+orders_router_path = NodePath("../RadioController/OrdersRouter")
 agents_root_path = NodePath("Agents")
 
 [node name="Agents" type="Node" parent="Controllers/AIController"]

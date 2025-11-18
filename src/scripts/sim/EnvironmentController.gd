@@ -40,7 +40,79 @@ var sun_position: float = 0.0
 var moon_position: float = 0.0
 var sun_pos_alpha: float = 0.0
 
+# Procedural placeholder textures
+var _scattering_lut: GradientTexture2D = null
+var _cloud_texture: NoiseTexture2D = null
+var _cloud_texture_2: NoiseTexture2D = null
+var _star_texture: NoiseTexture2D = null
+var _star_noise: NoiseTexture2D = null
+
 @onready var sky: WorldEnvironment = self
+
+
+## Initialize procedural placeholder textures
+func _init_placeholder_textures() -> void:
+	# Scattering LUT - atmospheric scattering gradient
+	_scattering_lut = GradientTexture2D.new()
+	var gradient = Gradient.new()
+	gradient.set_color(0, Color(0.6, 0.7, 0.9, 1.0))  # Horizon - light blue
+	gradient.set_color(1, Color(0.2, 0.4, 0.9, 1.0))  # Zenith - deep blue
+	_scattering_lut.gradient = gradient
+	_scattering_lut.fill = GradientTexture2D.FILL_LINEAR
+	_scattering_lut.fill_from = Vector2(0, 0)
+	_scattering_lut.fill_to = Vector2(1, 1)
+	_scattering_lut.width = 256
+	_scattering_lut.height = 256
+
+	# Cloud texture - main cloud shapes
+	_cloud_texture = NoiseTexture2D.new()
+	var cloud_noise = FastNoiseLite.new()
+	cloud_noise.noise_type = FastNoiseLite.TYPE_PERLIN
+	cloud_noise.frequency = 0.01
+	cloud_noise.fractal_octaves = 4
+	_cloud_texture.noise = cloud_noise
+	_cloud_texture.width = 512
+	_cloud_texture.height = 512
+	_cloud_texture.seamless = true  # Enable seamless tiling
+	_cloud_texture.seamless_blend_skirt = 0.1
+
+	# Cloud texture 2 - cloud detail
+	_cloud_texture_2 = NoiseTexture2D.new()
+	var cloud_noise_2 = FastNoiseLite.new()
+	cloud_noise_2.noise_type = FastNoiseLite.TYPE_PERLIN
+	cloud_noise_2.frequency = 0.02
+	cloud_noise_2.fractal_octaves = 3
+	cloud_noise_2.seed = 42
+	_cloud_texture_2.noise = cloud_noise_2
+	_cloud_texture_2.width = 512
+	_cloud_texture_2.height = 512
+	_cloud_texture_2.seamless = true  # Enable seamless tiling
+	_cloud_texture_2.seamless_blend_skirt = 0.1
+
+	# Star texture - starfield (use cellular noise for star points)
+	_star_texture = NoiseTexture2D.new()
+	var star_noise_gen = FastNoiseLite.new()
+	star_noise_gen.noise_type = FastNoiseLite.TYPE_CELLULAR
+	star_noise_gen.frequency = 0.1  # Density of stars
+	star_noise_gen.cellular_distance_function = FastNoiseLite.DISTANCE_EUCLIDEAN
+	star_noise_gen.cellular_return_type = FastNoiseLite.RETURN_CELL_VALUE  # Cell value for stars
+	star_noise_gen.cellular_jitter = 1.0  # Randomize star positions
+	_star_texture.noise = star_noise_gen
+	_star_texture.width = 2048  # Higher resolution for sharper stars
+	_star_texture.height = 2048
+	_star_texture.seamless = true  # Enable seamless tiling
+	_star_texture.seamless_blend_skirt = 0.1
+
+	# Star noise - twinkling
+	_star_noise = NoiseTexture2D.new()
+	var twinkle_noise = FastNoiseLite.new()
+	twinkle_noise.noise_type = FastNoiseLite.TYPE_PERLIN
+	twinkle_noise.frequency = 0.1
+	_star_noise.noise = twinkle_noise
+	_star_noise.width = 256
+	_star_noise.height = 256
+	_star_noise.seamless = true  # Enable seamless tiling
+	_star_noise.seamless_blend_skirt = 0.1
 
 
 ## Check if simulating day/night cycle, determine rate of time, and increase time
@@ -82,12 +154,26 @@ func _update_sky() -> void:
 		cloud_coverage
 	)
 
+	# Assign placeholder textures if they exist
+	if _scattering_lut:
+		sky_material.set_shader_parameter("scattering_lut", _scattering_lut)
+	if _cloud_texture:
+		sky_material.set_shader_parameter("cloud_texture", _cloud_texture)
+	if _cloud_texture_2:
+		sky_material.set_shader_parameter("cloud_texture_2", _cloud_texture_2)
+	if _star_texture:
+		sky_material.set_shader_parameter("star_texture", _star_texture)
+	if _star_noise:
+		sky_material.set_shader_parameter("star_noise", _star_noise)
+
 	sky_material.set_shader_parameter("b_anim_stars", animate_star_map)
 	sky_material.set_shader_parameter("b_anim_clouds", animate_clouds)
 
 	sky_material.set_shader_parameter(
 		"base_color", sky_preset.base_sky_color.gradient.sample(sun_position)
 	)
+	sky_material.set_shader_parameter("scatter_color", sky_preset.scatter_color)
+	sky_material.set_shader_parameter("scatter_color_2", sky_preset.scatter_color_2)
 	sky_material.set_shader_parameter("base_cloud_color", cloud_color)
 	sky_material.set_shader_parameter("horizon_size", sky_preset.horizon_size)
 	sky_material.set_shader_parameter("horizon_alpha", sky_preset.horizon_alpha)
@@ -96,21 +182,14 @@ func _update_sky() -> void:
 	)
 
 	sky_material.set_shader_parameter("cloud_density", sky_preset.cloud_density)
+	sky_material.set_shader_parameter("cloud_alpha", sky_preset.cloud_alpha)
 	sky_material.set_shader_parameter("mg_size", sky_preset.cloud_glow)
 	sky_material.set_shader_parameter("cloud_speed", sky_preset.cloud_speed)
-	sky_material.set_shader_parameter("cloud_direction", sky_preset.cloud_direction)
-	sky_material.set_shader_parameter("cloud_coverage", cloud_coverage)
-	sky_material.set_shader_parameter("absorption", sky_preset.cloud_light_absorbtion)
-	sky_material.set_shader_parameter("henyey_greenstein_level", sky_preset.anisotropy)
-	sky_material.set_shader_parameter("cloud_edge", sky_preset.cloud_edge)
-	sky_material.set_shader_parameter("dynamic_cloud_brightness", sky_preset.cloud_brightness)
-	sky_material.set_shader_parameter("horizon_uv_curve", sky_preset.cloud_uv_curvature)
 
 	sky_material.set_shader_parameter("sun_radius", sky_preset.sun_radius)
 	sky_material.set_shader_parameter(
 		"sun_disc_color", sky_preset.sun_disc_color.gradient.sample(sun_position)
 	)
-	sky_material.set_shader_parameter("sun_glow_color", sky_preset.sun_glow)
 	sky_material.set_shader_parameter(
 		"sun_glow_color", sky_preset.sun_glow.gradient.sample(sun_position)
 	)
@@ -126,9 +205,6 @@ func _update_sky() -> void:
 	)
 	sky_material.set_shader_parameter("moon_edge_blur", sky_preset.moon_edge_blur)
 	sky_material.set_shader_parameter("moon_glow_intensity", sky_preset.moon_glow_intensity)
-	sky_material.set_shader_parameter(
-		"moon_light_color", sky_preset.moon_light_color.gradient.sample(sun_position)
-	)
 
 	sky_material.set_shader_parameter("star_color", sky_preset.star_color)
 	sky_material.set_shader_parameter("star_brightness", sky_preset.star_brightness)
@@ -156,6 +232,7 @@ func tick(dt: float) -> void:
 
 func _ready() -> void:
 	set_process(Engine.is_editor_hint())
+	_init_placeholder_textures()
 	_update_environment()
 
 

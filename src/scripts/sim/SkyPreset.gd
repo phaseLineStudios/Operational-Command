@@ -22,6 +22,12 @@ extends Resource
 ## Intensity of moon glow
 @export_range(0, 1, 0.01) var moon_glow_intensity: float = 0.8
 
+@export_group("Scattering")
+## Sun scattering color multiplier
+@export var scatter_color: Color = Color(1.0, 1.0, 1.0)
+## Moon scattering color multiplier
+@export var scatter_color_2: Color = Color(1.0, 1.0, 1.0)
+
 @export_group("Horizon Adjustments")
 ## Size of horizon
 @export_range(1.0, 7.0, 0.1) var horizon_size: float = 3.0
@@ -35,6 +41,8 @@ extends Resource
 @export var cloud_direction: Vector2 = Vector2(1.0, 1.0)
 ## Density of clouds
 @export_range(0.0, 8.0, 0.05) var cloud_density: float = 4.25
+## Opacity of clouds
+@export_range(0.0, 1.0, 0.01) var cloud_alpha: float = 1.0
 ## Glow of clouds
 @export_range(0.5, 0.99, 0.01) var cloud_glow: float = 0.92
 ## Light absorbtion of clouds
