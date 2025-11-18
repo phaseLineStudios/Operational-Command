@@ -1,69 +1,66 @@
 shader_type sky;
 render_mode use_half_res_pass, use_quarter_res_pass;
 
-uniform vec4 baseColor : source_color = vec4(0.052192,0.101373,0.192708,1.0);
-uniform sampler2D scatteringLUT;
-uniform vec3 scatterColor : source_color = vec3(1.0);
-uniform vec3 scatterColor2 : source_color = vec3(1.0);
+uniform vec4 base_color : source_color = vec4(0.052192, 0.101373, 0.192708, 1.0);
+uniform sampler2D scattering_lut;
+uniform vec3 scatter_color : source_color = vec3(1.0);
+uniform vec3 scatter_color_2 : source_color = vec3(1.0);
 
 // Bools
-uniform bool bAnimClouds = true;
-//uniform bool bStaticClouds = true; *DEPRECATED*
-uniform bool bAnimStars = true;
-uniform int cloudType = 0;
+uniform bool b_anim_clouds = true;
+uniform bool b_anim_stars = true;
+uniform int cloud_type = 0;
 
 // Sun
-uniform float sunRadius;
-uniform float sunEdgeBlur;
-uniform vec3 sunDiscColor : source_color;
-uniform vec4 sunGlowColor : source_color;
-uniform vec3 sunlightColor;
-uniform float sunGlowIntensity;
+uniform float sun_radius;
+uniform float sun_edge_blur;
+uniform vec3 sun_disc_color : source_color;
+uniform vec4 sun_glow_color : source_color;
+uniform vec3 sunlight_color;
+uniform float sun_glow_intensity;
 
 // Moon
-uniform float moonRadius;
-uniform float moonEdgeBlur;
-uniform vec4 moonGlowColor : source_color;
-uniform vec3 moonLightColor;
-uniform float moonGlowIntensity;
+uniform float moon_radius;
+uniform float moon_edge_blur;
+uniform vec4 moon_glow_color : source_color;
+uniform vec3 moon_light_color;
+uniform float moon_glow_intensity;
 
 // 2D Clouds
-uniform vec3 baseCloudColor : source_color = vec3(1.0);
-uniform float cloudDensity : hint_range(5.0, 10.0, 0.05) = 7.0;
-uniform float cloudEdge : hint_range(0.0, 1.0, 0.01) = 0.0;
-uniform float cloudCoverage : hint_range(-1.0,1.0,0.01) = 0.0;
-uniform vec2 cloudDirection = vec2(1.0,1.0);
-uniform sampler2D cloudTexture;
-uniform sampler2D cloudTexture2;
-uniform sampler2D cloudNoise;
-uniform sampler2D weatherMap;
-uniform float mgSize : hint_range(0.5, 0.99, 0.01) = 0.92;
-uniform float cloudAlpha : hint_range(0.0, 1.0, 0.1) = 1.0;
-uniform float cloudSpeed = 0.001;
+uniform vec3 base_cloud_color : source_color = vec3(1.0);
+uniform float cloud_density : hint_range(5.0, 10.0, 0.05) = 7.0;
+uniform float cloud_edge : hint_range(0.0, 1.0, 0.01) = 0.0;
+uniform float cloud_coverage : hint_range(-1.0, 1.0, 0.01) = 0.0;
+uniform vec2 cloud_direction = vec2(1.0, 1.0);
+uniform sampler2D cloud_texture;
+uniform sampler2D cloud_texture_2;
+uniform sampler2D cloud_noise;
+uniform sampler2D weather_map;
+uniform float mg_size : hint_range(0.5, 0.99, 0.01) = 0.92;
+uniform float cloud_alpha : hint_range(0.0, 1.0, 0.1) = 1.0;
+uniform float cloud_speed = 0.001;
 uniform float absorption : hint_range(0.0, 5.0, 0.1) = 5.0;
-uniform float henyeyGreensteinLevel : hint_range(0.5, 0.75, 0.01) = 0.69;
-uniform float dynamicCloudBrightness : hint_range(0.5, 1.0, 0.01) = 0.9;
-uniform float horizonUVCurve : hint_range(0.5, 1.0, 0.01);
+uniform float henyey_greenstein_level : hint_range(0.5, 0.75, 0.01) = 0.69;
+uniform float dynamic_cloud_brightness : hint_range(0.5, 1.0, 0.01) = 0.9;
+uniform float horizon_uv_curve : hint_range(0.5, 1.0, 0.01);
 
 // Horizon
-uniform vec4 horizonFogColor : source_color;
-uniform float horizonAlpha : hint_range(0.0, 1.0, 0.1) = 1.0;
-uniform float horizonSize : hint_range(1.0, 7.0, 0.1);
+uniform vec4 horizon_fog_color : source_color;
+uniform float horizon_alpha : hint_range(0.0, 1.0, 0.1) = 1.0;
+uniform float horizon_size : hint_range(1.0, 7.0, 0.1);
 
 // Stars
-uniform sampler2D starTexture;
-uniform sampler2D starNoise;
-uniform vec3 starColor : source_color;
-uniform float starBrightness : hint_range(0.0, 0.5, 0.01) = 0.2;
-uniform float twinkleSpeed : hint_range(0.0, 0.05, 0.001) = 0.025;
-uniform float twinkleScale : hint_range(0.5, 5.0, 0.1) = 4.0;
-uniform float starResolution : hint_range(-1.0, 3.0, 1.0) = 2.0;
-uniform float starSpeed = 0.002;
+uniform sampler2D star_texture;
+uniform sampler2D star_noise;
+uniform vec3 star_color : source_color;
+uniform float star_brightness : hint_range(0.0, 0.5, 0.01) = 0.2;
+uniform float twinkle_speed : hint_range(0.0, 0.05, 0.001) = 0.025;
+uniform float twinkle_scale : hint_range(0.5, 5.0, 0.1) = 4.0;
+uniform float star_resolution : hint_range(-1.0, 3.0, 1.0) = 2.0;
+uniform float star_speed = 0.002;
 
-const vec3 camPos = vec3(0.0,1.0,0.0); 
-
-float remap(float v, float minOld, float maxOld, float minNew, float maxNew) {
-    return minNew + (v-minOld) * (maxNew - minNew) / (maxOld-minOld);
+float remap(float v, float min_old, float max_old, float min_new, float max_new) {
+	return min_new + (v - min_old) * (max_new - min_new) / (max_old - min_old);
 }
 
 // Phase function
@@ -73,231 +70,231 @@ float henyey_greenstein(float cos_theta, float g) {
 }
 
 // Create sun and moon discs based on the directional lights
-vec3 createSunMoonDisc(vec3 dir, vec3 sunDir, vec3 color, float r, float edgeBlur) {
+vec3 create_sun_moon_disc(vec3 dir, vec3 sun_dir, vec3 color, float r, float edge_blur) {
 	float disc = 0.0;
-	float discSizeCheck = (1.0 - (r * 2.0));
-	if (dot(dir,sunDir) > discSizeCheck) {
-		disc = pow((dot(dir,sunDir) - discSizeCheck) * edgeBlur,5.0);
+	float disc_size_check = (1.0 - (r * 2.0));
+	if (dot(dir, sun_dir) > disc_size_check) {
+		disc = pow((dot(dir, sun_dir) - disc_size_check) * edge_blur, 5.0);
 	}
-	vec3 discColored;
-	discColored = clamp(vec3(disc) * color,0.0,1.0);
-	return discColored;
+	vec3 disc_colored;
+	disc_colored = clamp(vec3(disc) * color, 0.0, 1.0);
+	return disc_colored;
 }
 
-vec3 createSunGlow(vec3 dir, vec3 sunDir, float r) {
-	float sunGlow = 0.0;
-	float glowSize = (1.0 - ((0.0003 * 800.0) * 2.0));
-	if (dot(dir,sunDir) > glowSize) {
-		sunGlow = mix(0.0,(dot(dir,sunDir) - glowSize * 1.05) * (1.0 - dir.y),sunGlowIntensity);
+vec3 create_sun_glow(vec3 dir, vec3 sun_dir) {
+	float sun_glow = 0.0;
+	float glow_size = (1.0 - ((0.0003 * 800.0) * 2.0));
+	if (dot(dir, sun_dir) > glow_size) {
+		sun_glow = mix(0.0, (dot(dir, sun_dir) - glow_size * 1.05) * (1.0 - dir.y), sun_glow_intensity);
 	}
-	vec3 sunGlowFinal = clamp((pow(sunGlow - 0.1,1.0) * sunGlowColor.rgb),0.0,1.0) * sunGlowColor.a;
-	return sunGlowFinal;
+	vec3 sun_glow_final = clamp((pow(sun_glow - 0.1, 1.0) * sun_glow_color.rgb), 0.0, 1.0) * sun_glow_color.a;
+	return sun_glow_final;
 }
 
-vec3 createMoonGlow(vec3 dir, vec3 moonDir, float r) {
-	float moonGlow = 0.0;
-	float glowSize = (1.0 - ((0.0003 * 400.0) * 2.0));
-	if (dot(dir,moonDir) > glowSize) {
-		moonGlow = mix(0.0,(dot(dir,moonDir) - glowSize),moonGlowIntensity);
+vec3 create_moon_glow(vec3 dir, vec3 moon_dir) {
+	float moon_glow = 0.0;
+	float glow_size = (1.0 - ((0.0003 * 400.0) * 2.0));
+	if (dot(dir, moon_dir) > glow_size) {
+		moon_glow = mix(0.0, (dot(dir, moon_dir) - glow_size), moon_glow_intensity);
 	}
-	vec3 moonGlowFinal = pow(vec3(moonGlow),vec3(3.0)) * moonGlowColor.rgb * moonGlowColor.a;
-	return moonGlowFinal;
+	vec3 moon_glow_final = pow(vec3(moon_glow), vec3(3.0)) * moon_glow_color.rgb * moon_glow_color.a;
+	return moon_glow_final;
 }
 
-float createHorizonFog(vec3 vertexColor) {
-	float clampedVertexColor = 0.0;
-	if (vertexColor.y < 0.0) {
-		clampedVertexColor = 1.0;
+float create_horizon_fog(vec3 vertex_color) {
+	float clamped_vertex_color = 0.0;
+	if (vertex_color.y < 0.0) {
+		clamped_vertex_color = 1.0;
 	}
-	else { 
-		clampedVertexColor = vertexColor.y;
+	else {
+		clamped_vertex_color = vertex_color.y;
 	}
-	float fogAlpha = clamp(pow((1.0 - clampedVertexColor),horizonSize) - (1.0 - horizonAlpha),0.0,1.0) * horizonFogColor.a ;
-	return fogAlpha;
+	float fog_alpha = clamp(pow((1.0 - clamped_vertex_color), horizon_size) - (1.0 - horizon_alpha), 0.0, 1.0) * horizon_fog_color.a;
+	return fog_alpha;
 }
 
 // Setup base light scattering with day and night
-vec3 scatterLight(vec3 vertexColor, vec2 skyUV) {
+vec3 scatter_light(vec3 vertex_color, vec2 sky_uv) {
 
 	// Clamp lower hemisphere vertex normal Y (creates solid lower hemisphere color)
-	float clampedVertexColor = 0.0;
-	if (vertexColor.y < 0.0) { clampedVertexColor = 0.0001; }
-	else { clampedVertexColor = vertexColor.y; }
-	
-	float vertexSlope = pow((1.0 - vertexColor.y),2.0);
-	
+	float clamped_vertex_color = 0.0;
+	if (vertex_color.y < 0.0) { clamped_vertex_color = 0.0001; }
+	else { clamped_vertex_color = vertex_color.y; }
+
+	float vertex_slope = pow((1.0 - vertex_color.y), 2.0);
+
 	// Calculate SUN X and Y position on scattering LUT texture UV
 	// Sun
-	float UVx = mix(vertexSlope,1.0,0.5);
-	float UVy = clamp(LIGHT0_DIRECTION.y / -2.0,-0.495,0.495) + 0.5;
-	
+	float uv_x = mix(vertex_slope, 1.0, 0.5);
+	float uv_y = clamp(LIGHT0_DIRECTION.y / -2.0, -0.495, 0.495) + 0.5;
+
 	// Moon
-	float UVx2 = mix(vertexSlope,1.0,0.1);
-	float UVy2 = clamp(LIGHT1_DIRECTION.y / 2.0,-0.495,0.495) + 0.5;
-	
+	float uv_x2 = mix(vertex_slope, 1.0, 0.1);
+	float uv_y2 = clamp(LIGHT1_DIRECTION.y / 2.0, -0.495, 0.495) + 0.5;
+
 	// Sample scattering LUT lexture and apply scattercolor adjustment
-	vec3 sunLightScattered = texture(scatteringLUT,vec2(UVx,UVy)).rgb * scatterColor;
-	vec3 moonLightScattered = texture(scatteringLUT,vec2(UVx2,UVy2)).rgb * scatterColor2 + 0.15;
-	vec3 lightScattered = sunLightScattered + moonLightScattered;
-	lightScattered = lightScattered * baseColor.rgb;
-	
-	vec3 baseSkyColor = lightScattered;
-	
+	vec3 sun_light_scattered = texture(scattering_lut, vec2(uv_x, uv_y)).rgb * scatter_color;
+	vec3 moon_light_scattered = texture(scattering_lut, vec2(uv_x2, uv_y2)).rgb * scatter_color_2 + 0.15;
+	vec3 light_scattered = sun_light_scattered + moon_light_scattered;
+	light_scattered = light_scattered * base_color.rgb;
+
+	vec3 base_sky_color = light_scattered;
+
 	float a1 = 0.0;
-	if (bAnimStars == true) {
-		a1 = (TIME * starSpeed);
+	if (b_anim_stars == true) {
+		a1 = (TIME * star_speed);
 	}
 	else {
 		a1 = 0.0;
 	}
-	vec3 starMap = textureLod(starTexture, vec2(skyUV.x + a1,skyUV.y), starResolution).rgb;
-	vec3 starMap2 = textureLod(starTexture, vec2(skyUV.x + a1,skyUV.y), starResolution + 1.0).rgb;
-	
-	vec2 animUV = vec2(vertexColor.x,vertexColor.z) * twinkleScale + (TIME * twinkleSpeed);
+	vec3 star_map = textureLod(star_texture, vec2(sky_uv.x + a1, sky_uv.y), star_resolution).rgb;
+	vec3 star_map_2 = textureLod(star_texture, vec2(sky_uv.x + a1, sky_uv.y), star_resolution + 1.0).rgb;
 
-	starMap = min(starMap,starMap2 * 0.3) + ((clamp(starMap - (starMap2 * 1.3),0.0,1.0)) * (texture(starNoise,animUV / 4.0).r * 10.0 ));
-	
-	baseSkyColor += starMap * starColor * starBrightness; // Add stars
-	
-	return baseSkyColor;
+	vec2 anim_uv = vec2(vertex_color.x, vertex_color.z) * twinkle_scale + (TIME * twinkle_speed);
+
+	star_map = min(star_map, star_map_2 * 0.3) + ((clamp(star_map - (star_map_2 * 1.3), 0.0, 1.0)) * (texture(star_noise, anim_uv / 4.0).r * 10.0));
+
+	base_sky_color += star_map * star_color * star_brightness; // Add stars
+
+	return base_sky_color;
 }
 
-vec3 generateStaticClouds(vec3 dir, vec3 pos, vec2 skyUV, vec3 sunDir, vec3 moonDir) {
-	vec4 xyMask = vec4(0.0);
-	float zMask = 0.0;
-	
-	float sR = clamp(sunDir.x * -1.0,0.0,1.0);
-	float sG = clamp(sunDir.x,0.0,1.0);
-	float sB = clamp(sunDir.z,0.0,1.0);
-	float sA = clamp(sunDir.z * -1.0,0.0,1.0);
-	float sZ = clamp(sunDir.y * -1.0,0.0,1.0);
-	
-	float mR = clamp(moonDir.x * -1.0,0.0,1.0);
-	float mG = clamp(moonDir.x,0.0,1.0);
-	float mB = clamp(moonDir.z,0.0,1.0);
-	float mA = clamp(moonDir.z * -1.0,0.0,1.0);
-	float mZ = clamp(moonDir.y * -1.0,0.0,1.0);
-	
-	xyMask = mix(vec4(sR,sG,sB,sA), vec4(mR,mG,mB,mA), clamp(sunDir.y * 6.0,0.0,1.0)) * 0.7;
-	zMask =  mix(sZ,mZ,clamp(sunDir.y * 6.0,0.0,1.0)) * 0.7;
-	
+vec3 generate_static_clouds(vec3 dir, vec2 sky_uv, vec3 sun_dir, vec3 moon_dir) {
+	vec4 xy_mask = vec4(0.0);
+	float z_mask = 0.0;
+
+	float s_r = clamp(sun_dir.x * -1.0, 0.0, 1.0);
+	float s_g = clamp(sun_dir.x, 0.0, 1.0);
+	float s_b = clamp(sun_dir.z, 0.0, 1.0);
+	float s_a = clamp(sun_dir.z * -1.0, 0.0, 1.0);
+	float s_z = clamp(sun_dir.y * -1.0, 0.0, 1.0);
+
+	float m_r = clamp(moon_dir.x * -1.0, 0.0, 1.0);
+	float m_g = clamp(moon_dir.x, 0.0, 1.0);
+	float m_b = clamp(moon_dir.z, 0.0, 1.0);
+	float m_a = clamp(moon_dir.z * -1.0, 0.0, 1.0);
+	float m_z = clamp(moon_dir.y * -1.0, 0.0, 1.0);
+
+	xy_mask = mix(vec4(s_r, s_g, s_b, s_a), vec4(m_r, m_g, m_b, m_a), clamp(sun_dir.y * 6.0, 0.0, 1.0)) * 0.7;
+	z_mask =  mix(s_z, m_z, clamp(sun_dir.y * 6.0, 0.0, 1.0)) * 0.7;
+
 	float a1 = 0.0;
-	if (bAnimClouds == true) {
-		a1 = (TIME * cloudSpeed);
+	if (b_anim_clouds == true) {
+		a1 = (TIME * cloud_speed);
 	}
 	else {
 		a1 = 0.0;
 	}
-	
-	float cloudsAlpha = textureLod(cloudTexture,vec2(skyUV.x + a1,skyUV.y), -1.0).r;
-	float cloudAlpha2 = textureLod(cloudTexture,vec2(skyUV.x + a1,skyUV.y), -1.0).g * zMask;
-	vec4 cloudShading = xyMask * textureLod(cloudTexture2,vec2(skyUV.x + a1,skyUV.y), -1.0);
-	float cloudShading2 = (cloudShading.r + cloudShading.g) + (cloudShading.b + cloudShading.a);
-	float cloudMainShadingMask = pow(cloudAlpha2 + cloudShading2,1.2);
-	
-	float cloudShine = ((1.0 - cloudsAlpha) + pow(cloudAlpha2 + cloudShading2,2.5)) * 17.0 * createSunGlow(dir,sunDir, 0.5).r;
-	
-	vec3 clouds = vec3(cloudMainShadingMask,cloudShine,cloudsAlpha);
-	
+
+	float clouds_alpha = textureLod(cloud_texture, vec2(sky_uv.x + a1, sky_uv.y), -1.0).r;
+	float cloud_alpha_2 = textureLod(cloud_texture, vec2(sky_uv.x + a1, sky_uv.y), -1.0).g * z_mask;
+	vec4 cloud_shading = xy_mask * textureLod(cloud_texture_2, vec2(sky_uv.x + a1, sky_uv.y), -1.0);
+	float cloud_shading_2 = (cloud_shading.r + cloud_shading.g) + (cloud_shading.b + cloud_shading.a);
+	float cloud_main_shading_mask = pow(cloud_alpha_2 + cloud_shading_2, 1.2);
+
+	float cloud_shine = ((1.0 - clouds_alpha) + pow(cloud_alpha_2 + cloud_shading_2, 2.5)) * 17.0 * create_sun_glow(dir, sun_dir).r;
+
+	vec3 clouds = vec3(cloud_main_shading_mask, cloud_shine, clouds_alpha);
+
 	return clouds;
 }
 
-vec2 generate2DClouds(vec3 dir, vec3 sunDir, vec3 moonDir) {
-	float cloudsFinal = 0.0;
-	
-	float horizonCurve = dir.y / horizonUVCurve;
-	float clouds = texture(cloudNoise,vec2(dir.x / horizonCurve, dir.z / horizonCurve) / 5.0 + (TIME * 4.0 * cloudSpeed * cloudDirection)).r;
-	float density = remap(cloudDensity,0.0,8.0,0.0,1.0);
-	clouds *= textureLod(cloudNoise,vec2(dir.x / horizonCurve, dir.z / horizonCurve) / 10.0 + (TIME * 4.0 * cloudSpeed * cloudDirection),-2.0).r;
-	clouds = clamp(mix(cloudCoverage,cloudCoverage + 1.0,clouds),cloudCoverage,1.0);
-	clouds = clamp(pow(clouds,1.0 + cloudEdge),0.0,1.0);
-	float weather = texture(weatherMap,vec2(dir.x / horizonCurve, dir.z / horizonCurve) / 20.0 + (TIME * 6.0 * cloudSpeed * cloudDirection)).r + 0.5;
-	float cloudFade = clamp(dir.y,0.0,1.0);
-	cloudsFinal = clamp(clouds - (clamp(weather + 0.5,0.0,1.0) * (1.0 - cloudCoverage / 2.0)),0.0,1.0);
-	float cloudsFinal2 = cloudsFinal * mix(5.0,cloudDensity,dir.y) * (cloudFade * 2.0);
-	float transmittance = exp(-cloudsFinal2);
-	return vec2(transmittance,weather);
+vec2 generate_2d_clouds(vec3 dir, vec3 sun_dir, vec3 moon_dir) {
+	float clouds_final = 0.0;
+
+	float horizon_curve = dir.y / horizon_uv_curve;
+	float clouds = texture(cloud_noise, vec2(dir.x / horizon_curve, dir.z / horizon_curve) / 5.0 + (TIME * 4.0 * cloud_speed * cloud_direction)).r;
+	float density = remap(cloud_density, 0.0, 8.0, 0.0, 1.0);
+	clouds *= textureLod(cloud_noise, vec2(dir.x / horizon_curve, dir.z / horizon_curve) / 10.0 + (TIME * 4.0 * cloud_speed * cloud_direction), -2.0).r;
+	clouds = clamp(mix(cloud_coverage, cloud_coverage + 1.0, clouds), cloud_coverage, 1.0);
+	clouds = clamp(pow(clouds, 1.0 + cloud_edge), 0.0, 1.0);
+	float weather = texture(weather_map, vec2(dir.x / horizon_curve, dir.z / horizon_curve) / 20.0 + (TIME * 6.0 * cloud_speed * cloud_direction)).r + 0.5;
+	float cloud_fade = clamp(dir.y, 0.0, 1.0);
+	clouds_final = clamp(clouds - (clamp(weather + 0.5, 0.0, 1.0) * (1.0 - cloud_coverage / 2.0)), 0.0, 1.0);
+	float clouds_final_2 = clouds_final * mix(5.0, cloud_density, dir.y) * (cloud_fade * 2.0);
+	float transmittance = exp(-clouds_final_2);
+	return vec2(transmittance, weather);
 }
 
-vec3 generateSky(vec3 dir, vec3 pos, vec2 skyUV, vec3 sunDir, float sunEnergy, vec3 sunColor, vec3 moonDir, vec3 moonColor, float moonEnergy) {
-	vec3 skyColor = vec3(0.0);
-	vec3 cloudColors = vec3(0.0);
-	vec3 cloudMask = vec3(0.0);
-	vec2 dynClouds = vec2(0.0);
-	float dynCloudAlpha = 1.0 - dynClouds.x;
-	
-	float horizonCurve = dir.y / horizonUVCurve;
-	
-	float fogA = createHorizonFog(dir);
-	vec3 atmos = scatterLight(dir,skyUV);
-	
-	if (cloudType == 0) {
-		cloudMask = generateStaticClouds(dir,pos,skyUV,sunDir,moonDir);
+vec3 generate_sky(vec3 dir, vec2 sky_uv, vec3 sun_dir, float sun_energy, vec3 sun_color, vec3 moon_dir, vec3 moon_color, float moon_energy) {
+	vec3 sky_color = vec3(0.0);
+	vec3 cloud_colors = vec3(0.0);
+	vec3 cloud_mask = vec3(0.0);
+	vec2 dyn_clouds = vec2(0.0);
+	float dyn_cloud_alpha = 1.0 - dyn_clouds.x;
+
+	float horizon_curve = dir.y / horizon_uv_curve;
+
+	float fog_a = create_horizon_fog(dir);
+	vec3 atmos = scatter_light(dir, sky_uv);
+
+	if (cloud_type == 0) {
+		cloud_mask = generate_static_clouds(dir, sky_uv, sun_dir, moon_dir);
 	}
-	
-	if (cloudType == 1) {
-		dynClouds = generate2DClouds(dir,sunDir,moonDir);
-		dynCloudAlpha = 1.0 - dynClouds.x;
-		cloudMask = clamp(vec3(dynCloudAlpha * 7.0),0.0,1.0);
+
+	if (cloud_type == 1) {
+		dyn_clouds = generate_2d_clouds(dir, sun_dir, moon_dir);
+		dyn_cloud_alpha = 1.0 - dyn_clouds.x;
+		cloud_mask = clamp(vec3(dyn_cloud_alpha * 7.0), 0.0, 1.0);
 	}
-	
-	skyColor += atmos;
-	skyColor += createSunMoonDisc(dir,sunDir,sunColor,sunRadius,sunEdgeBlur) * (1.0 - cloudMask.z * cloudAlpha);
-	skyColor += createSunMoonDisc(dir,moonDir,moonColor,moonRadius,moonEdgeBlur) * (1.0 - cloudMask.z * cloudAlpha);
-	
-	if (cloudType == 0) {
-		float density = clamp((cloudDensity) / 5.0,0.0,1.0);
-		vec3 cloudColor = mix(atmos * mix(dir.y,1.15,0.5),vec3(0.0),density);
-		vec3 cloudLight = sunlightColor * 1.4 * cloudColor;
-		vec3 cloudShading = pow((cloudLight + (cloudLight * cloudMask.y)) * cloudMask.x,vec3(1.2));
-		vec3 cloudFinal = mix(cloudShading,baseCloudColor,0.1);
-		
-		cloudColors = baseCloudColor * cloudMask.z * cloudMask.x;
-		if (dot(dir,sunDir) > mgSize) {
-			float cloudGlow = remap(dot(dir,sunDir),mgSize,1.0,0.0,1.0);
-			vec3 cloudGlow2 = mix(vec3(1.0),sunlightColor * 5.0,pow(cloudGlow, 3.0));
-			float cloudGlow3 = 1.0 - cloudMask.z * 0.9 + cloudMask.x * 0.25;
-			cloudColors = baseCloudColor * cloudGlow2 * cloudMask.z * cloudMask.x;
+
+	sky_color += atmos;
+	sky_color += create_sun_moon_disc(dir, sun_dir, sun_color, sun_radius, sun_edge_blur) * (1.0 - cloud_mask.z * cloud_alpha);
+	sky_color += create_sun_moon_disc(dir, moon_dir, moon_color, moon_radius, moon_edge_blur) * (1.0 - cloud_mask.z * cloud_alpha);
+
+	if (cloud_type == 0) {
+		float density = clamp((cloud_density) / 5.0, 0.0, 1.0);
+		vec3 cloud_color = mix(atmos * mix(dir.y, 1.15, 0.5), vec3(0.0), density);
+		vec3 cloud_light = sunlight_color * 1.4 * cloud_color;
+		vec3 cloud_shading = pow((cloud_light + (cloud_light * cloud_mask.y)) * cloud_mask.x, vec3(1.2));
+		vec3 cloud_final = mix(cloud_shading, base_cloud_color, 0.1);
+
+		cloud_colors = base_cloud_color * cloud_mask.z * cloud_mask.x;
+		if (dot(dir, sun_dir) > mg_size) {
+			float cloud_glow = remap(dot(dir, sun_dir), mg_size, 1.0, 0.0, 1.0);
+			vec3 cloud_glow_2 = mix(vec3(1.0), sunlight_color * 5.0, pow(cloud_glow, 3.0));
+			float cloud_glow_3 = 1.0 - cloud_mask.z * 0.9 + cloud_mask.x * 0.25;
+			cloud_colors = base_cloud_color * cloud_glow_2 * cloud_mask.z * cloud_mask.x;
 		}
-		if (dot(dir,moonDir) > mgSize) {
-			float cloudGlow = remap(dot(dir,moonDir),mgSize,1.0,0.0,1.0);
-			vec3 cloudGlow2 = mix(vec3(1.0),vec3(1.0) * 10.0,pow(cloudGlow, 4.0));
-			float cloudGlow3 = 1.0 - cloudMask.z * 0.9 + cloudMask.x * 0.25;
-			cloudColors = baseCloudColor * cloudGlow2 * cloudMask.z * cloudMask.x;
+		if (dot(dir, moon_dir) > mg_size) {
+			float cloud_glow = remap(dot(dir, moon_dir), mg_size, 1.0, 0.0, 1.0);
+			vec3 cloud_glow_2 = mix(vec3(1.0), vec3(1.0) * 10.0, pow(cloud_glow, 4.0));
+			float cloud_glow_3 = 1.0 - cloud_mask.z * 0.9 + cloud_mask.x * 0.25;
+			cloud_colors = base_cloud_color * cloud_glow_2 * cloud_mask.z * cloud_mask.x;
 		}
-		
-		skyColor *= clamp((1.0 - pow(cloudMask.z,3.0) * cloudAlpha),0.0,1.0) ;
-		skyColor += (cloudFinal * (pow(cloudMask.z,3.0) * (1.0 - clamp((1.0 - 1.25) * 2.0,0.0,1.0))) + cloudColors) * cloudAlpha;
+
+		sky_color *= clamp((1.0 - pow(cloud_mask.z, 3.0) * cloud_alpha), 0.0, 1.0);
+		sky_color += (cloud_final * (pow(cloud_mask.z, 3.0) * (1.0 - clamp((1.0 - 1.25) * 2.0, 0.0, 1.0))) + cloud_colors) * cloud_alpha;
 	}
-	
-	if (cloudType == 1) {
+
+	if (cloud_type == 1) {
 		float sun = dot(normalize(LIGHT0_DIRECTION), dir);
 		float moon = dot(normalize(LIGHT1_DIRECTION), dir);
-		skyColor = skyColor * dynClouds.x + (baseCloudColor * dynamicCloudBrightness * dynCloudAlpha);
-		float hg = max(henyey_greenstein(sun,henyeyGreensteinLevel - 0.15),henyey_greenstein(moon,henyeyGreensteinLevel + 0.05));
-		skyColor = skyColor + ((baseCloudColor * ((dynClouds.x) * hg * absorption)) * dynCloudAlpha);
-		skyColor -= (clamp(texture(cloudNoise,vec2(dir.x / horizonCurve, dir.z / horizonCurve) / 5.0 + (TIME * 4.0 * cloudSpeed  * cloudDirection)).r - 0.5,0.0,1.0) *  baseCloudColor) * dynCloudAlpha;
+		sky_color = sky_color * dyn_clouds.x + (base_cloud_color * dynamic_cloud_brightness * dyn_cloud_alpha);
+		float hg = max(henyey_greenstein(sun, henyey_greenstein_level - 0.15), henyey_greenstein(moon, henyey_greenstein_level + 0.05));
+		sky_color = sky_color + ((base_cloud_color * ((dyn_clouds.x) * hg * absorption)) * dyn_cloud_alpha);
+		sky_color -= (clamp(texture(cloud_noise, vec2(dir.x / horizon_curve, dir.z / horizon_curve) / 5.0 + (TIME * 4.0 * cloud_speed * cloud_direction)).r - 0.5, 0.0, 1.0) * base_cloud_color) * dyn_cloud_alpha;
 	}
-	
-	skyColor = mix(skyColor,horizonFogColor.rgb * horizonFogColor.a,fogA) + createSunMoonDisc(dir,sunDir,sunColor,sunRadius,sunEdgeBlur) * (1.0 - cloudMask.z * cloudAlpha) + createSunMoonDisc(dir,moonDir,moonColor,moonRadius,moonEdgeBlur) * (1.0 - cloudMask.z * cloudAlpha);
+
+	sky_color = mix(sky_color, horizon_fog_color.rgb * horizon_fog_color.a, fog_a) + create_sun_moon_disc(dir, sun_dir, sun_color, sun_radius, sun_edge_blur) * (1.0 - cloud_mask.z * cloud_alpha) + create_sun_moon_disc(dir, moon_dir, moon_color, moon_radius, moon_edge_blur) * (1.0 - cloud_mask.z * cloud_alpha);
 	if (dir.y < 0.0) {
-		skyColor = horizonFogColor.rgb;
+		sky_color = horizon_fog_color.rgb;
 	}
-	skyColor += createSunGlow(dir,sunDir,sunRadius);
-	skyColor += createMoonGlow(dir,moonDir,moonRadius);
-	
-	return skyColor;
+	sky_color += create_sun_glow(dir, sun_dir);
+	sky_color += create_moon_glow(dir, moon_dir);
+
+	return sky_color;
 }
 
 void sky() {
-	vec3 rayDirection = EYEDIR;
-	
-	vec3 background = horizonFogColor.rgb * horizonFogColor.a;
-	
-	if (rayDirection.y > 0.0) {
-		background = generateSky(rayDirection, camPos, SKY_COORDS, LIGHT0_DIRECTION, LIGHT0_ENERGY, sunDiscColor, LIGHT1_DIRECTION, LIGHT1_COLOR, LIGHT1_ENERGY);
+	vec3 ray_direction = EYEDIR;
+
+	vec3 background = horizon_fog_color.rgb * horizon_fog_color.a;
+
+	if (ray_direction.y > 0.0) {
+		background = generate_sky(ray_direction, SKY_COORDS, LIGHT0_DIRECTION, LIGHT0_ENERGY, sun_disc_color, LIGHT1_DIRECTION, LIGHT1_COLOR, LIGHT1_ENERGY);
 	}
-	
+
 	if (AT_QUARTER_RES_PASS && AT_CUBEMAP_PASS) {
 		COLOR = background.rgb;
 	} else if (AT_HALF_RES_PASS && !AT_CUBEMAP_PASS) {

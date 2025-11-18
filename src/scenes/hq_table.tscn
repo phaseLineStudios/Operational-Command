@@ -177,11 +177,11 @@ metadata/_custom_type_script = "uid://dnnu3w3b3j5rk"
 script = ExtResource("24_jjp33")
 metadata/_custom_type_script = "uid://ch73kyybwrkb8"
 
-[sub_resource type="Gradient" id="Gradient_idixg"]
+[sub_resource type="Gradient" id="Gradient_r1wnv"]
 interpolation_mode = 2
 offsets = PackedFloat32Array(0.125, 0.95)
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_g6xw8"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_8iaup"]
 noise_type = 2
 frequency = 0.021
 fractal_octaves = 4
@@ -197,17 +197,17 @@ domain_warp_fractal_octaves = 7
 domain_warp_fractal_lacunarity = 5.0
 domain_warp_fractal_gain = 2.0
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_5bsee"]
-noise = SubResource("FastNoiseLite_g6xw8")
-color_ramp = SubResource("Gradient_idixg")
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_tw4w3"]
+noise = SubResource("FastNoiseLite_8iaup")
+color_ramp = SubResource("Gradient_r1wnv")
 seamless = true
 invert = true
 seamless_blend_skirt = 0.401
 
-[sub_resource type="Gradient" id="Gradient_rio5r"]
+[sub_resource type="Gradient" id="Gradient_5yowr"]
 interpolation_mode = 2
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_gvjko"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_66gqg"]
 noise_type = 4
 seed = 34
 frequency = 0.042
@@ -216,59 +216,57 @@ fractal_lacunarity = 1.605
 fractal_gain = 2.397
 fractal_weighted_strength = 1.0
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_hovgm"]
-noise = SubResource("FastNoiseLite_gvjko")
-color_ramp = SubResource("Gradient_rio5r")
-seamless = true
-seamless_blend_skirt = 0.061
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_idixg"]
+noise = SubResource("FastNoiseLite_66gqg")
+color_ramp = SubResource("Gradient_5yowr")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_66gqg"]
 shader = ExtResource("36_66gqg")
-shader_parameter/baseColor = Color(0.204346, 0.344014, 0.5625, 1)
-shader_parameter/scatteringLUT = ExtResource("41_tw4w3")
-shader_parameter/scatterColor = Color(1, 1, 1, 1)
-shader_parameter/scatterColor2 = Color(1, 1, 1, 1)
-shader_parameter/bAnimClouds = true
-shader_parameter/bAnimStars = true
-shader_parameter/cloudType = 1
-shader_parameter/sunRadius = 0.0003
-shader_parameter/sunEdgeBlur = 3600.0
-shader_parameter/sunDiscColor = Color(0.737255, 0.694118, 0.603922, 1)
-shader_parameter/sunGlowColor = Color(1, 0.955033, 0.827864, 1)
-shader_parameter/sunlightColor = Vector3(0, 0, 0)
-shader_parameter/sunGlowIntensity = 0.45
-shader_parameter/moonRadius = 0.0003
-shader_parameter/moonEdgeBlur = 10000.0
-shader_parameter/moonGlowColor = Color(1, 1, 1, 0)
-shader_parameter/moonLightColor = Vector3(0, 0, 0)
-shader_parameter/moonGlowIntensity = 0.8
-shader_parameter/baseCloudColor = Color(1, 1, 1, 1)
-shader_parameter/cloudDensity = 4.25
-shader_parameter/cloudEdge = 0.0
-shader_parameter/cloudCoverage = 0.5
-shader_parameter/cloudDirection = Vector2(1, 1)
-shader_parameter/cloudTexture = ExtResource("39_r1wnv")
-shader_parameter/cloudTexture2 = ExtResource("40_8iaup")
-shader_parameter/cloudNoise = SubResource("NoiseTexture2D_5bsee")
-shader_parameter/weatherMap = SubResource("NoiseTexture2D_hovgm")
-shader_parameter/mgSize = 0.92
-shader_parameter/cloudAlpha = 1.0
-shader_parameter/cloudSpeed = 0.0003
+shader_parameter/base_color = Color(0.204346, 0.344014, 0.5625, 1)
+shader_parameter/scattering_lut = ExtResource("41_tw4w3")
+shader_parameter/scatter_color = Color(1, 1, 1, 1)
+shader_parameter/scatter_color_2 = Color(1, 1, 1, 1)
+shader_parameter/b_anim_clouds = true
+shader_parameter/b_anim_stars = true
+shader_parameter/cloud_type = 1
+shader_parameter/sun_radius = 0.0003
+shader_parameter/sun_edge_blur = 3600.0
+shader_parameter/sun_disc_color = Color(0.737255, 0.694118, 0.603922, 1)
+shader_parameter/sun_glow_color = Color(1, 0.955033, 0.827864, 1)
+shader_parameter/sunlight_color = Vector3(0, 0, 0)
+shader_parameter/sun_glow_intensity = 0.45
+shader_parameter/moon_radius = 0.0003
+shader_parameter/moon_edge_blur = 10000.0
+shader_parameter/moon_glow_color = Color(1, 1, 1, 0)
+shader_parameter/moon_light_color = Vector3(0, 0, 0)
+shader_parameter/moon_glow_intensity = 0.8
+shader_parameter/base_cloud_color = Color(1, 1, 1, 1)
+shader_parameter/cloud_density = 4.25
+shader_parameter/cloud_edge = 0.0
+shader_parameter/cloud_coverage = 0.5
+shader_parameter/cloud_direction = Vector2(1, 1)
+shader_parameter/cloud_texture = ExtResource("39_r1wnv")
+shader_parameter/cloud_texture_2 = ExtResource("40_8iaup")
+shader_parameter/cloud_noise = SubResource("NoiseTexture2D_tw4w3")
+shader_parameter/weather_map = SubResource("NoiseTexture2D_idixg")
+shader_parameter/mg_size = 0.92
+shader_parameter/cloud_alpha = 1.0
+shader_parameter/cloud_speed = 0.0003
 shader_parameter/absorption = 5.0
-shader_parameter/henyeyGreensteinLevel = 0.69
-shader_parameter/dynamicCloudBrightness = 0.9
-shader_parameter/horizonUVCurve = 0.5
-shader_parameter/horizonFogColor = Color(0.82882583, 0.9191148, 0.9999997, 1)
-shader_parameter/horizonAlpha = 1.0
-shader_parameter/horizonSize = 3.0
-shader_parameter/starTexture = ExtResource("43_66gqg")
-shader_parameter/starNoise = ExtResource("42_5yowr")
-shader_parameter/starColor = Color(0.43, 0.55, 0.91, 1)
-shader_parameter/starBrightness = 0.2
-shader_parameter/twinkleSpeed = 0.025
-shader_parameter/twinkleScale = 4.0
-shader_parameter/starResolution = 1.0
-shader_parameter/starSpeed = 0.002
+shader_parameter/henyey_greenstein_level = 0.69
+shader_parameter/dynamic_cloud_brightness = 0.9
+shader_parameter/horizon_uv_curve = 0.5
+shader_parameter/horizon_fog_color = Color(0.82882583, 0.9191148, 0.9999997, 1)
+shader_parameter/horizon_alpha = 1.0
+shader_parameter/horizon_size = 3.0
+shader_parameter/star_texture = ExtResource("43_66gqg")
+shader_parameter/star_noise = ExtResource("42_5yowr")
+shader_parameter/star_color = Color(0.43, 0.55, 0.91, 1)
+shader_parameter/star_brightness = 0.2
+shader_parameter/twinkle_speed = 0.025
+shader_parameter/twinkle_scale = 4.0
+shader_parameter/star_resolution = 1.0
+shader_parameter/star_speed = 0.002
 
 [sub_resource type="Sky" id="Sky_nq7cy"]
 sky_material = SubResource("ShaderMaterial_66gqg")
