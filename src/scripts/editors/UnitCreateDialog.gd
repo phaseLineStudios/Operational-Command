@@ -10,6 +10,9 @@ signal canceled
 ## Dialog mode.
 enum DialogMode { CREATE, EDIT }
 
+const AMMO_DAMAGE_CONFIG := preload("res://assets/configs/ammo_damage_config.tres")
+const ATTACK_TOOLTIP := "Attack is computed from weapons, ammunition, and strength."
+
 var _mode: DialogMode = DialogMode.CREATE
 var _working: UnitData
 var _slots: Array[String] = []
@@ -24,7 +27,8 @@ var _ammo_keys: Array[String] = []
 @onready var _role: LineEdit = %Role
 @onready var _cost: SpinBox = %Cost
 @onready var _strength: SpinBox = %Strength
-@onready var _attack: SpinBox = %Attack
+@onready var _attack_label: Label = %AttackLabel
+@onready var _attack_value: Label = %AttackValue
 @onready var _defense: SpinBox = %Defense
 @onready var _spot_m: SpinBox = %Spot
 @onready var _range_m: SpinBox = %Range
@@ -54,6 +58,7 @@ var _ammo_keys: Array[String] = []
 @onready var _equip_add: Button = %EquipmentAdd
 @onready var _equip_list: VBoxContainer = %EquipmentList
 @onready var _ammo_container: GridContainer = %AmmoContainer
+@onready var _stats_container: FoldableContainer = %StatsContainer
 
 @onready var _th_key: LineEdit = %ThroughputType
 @onready var _th_val: SpinBox = %ThroughputAmount
@@ -89,6 +94,8 @@ func _ready() -> void:
 	_slot_add.pressed.connect(_on_add_slot)
 	_equip_add.pressed.connect(_on_add_equip)
 	_th_add.pressed.connect(_on_add_throughput)
+	_strength.value_changed.connect(func(_value): _update_attack_preview())
+	_morale.value_changed.connect(func(_value): _update_attack_preview())
 
 	_save_btn.pressed.connect(_on_save_pressed)
 	_cancel_btn.pressed.connect(_on_cancel_pressed)
@@ -96,6 +103,13 @@ func _ready() -> void:
 
 	_size_ob.item_selected.connect(_generate_preview_icons)
 	_type_ob.item_selected.connect(_generate_preview_icons)
+	if _attack_label:
+		_attack_label.tooltip_text = ATTACK_TOOLTIP
+	if _attack_value:
+		_attack_value.tooltip_text = ATTACK_TOOLTIP
+	if _stats_container:
+		_stats_container.tooltip_text = ATTACK_TOOLTIP
+	_update_attack_preview()
 
 
 ## Open dialog (CREATE if unit == null).
@@ -132,7 +146,6 @@ func _load_from_working() -> void:
 	_role.text = String(_working.role)
 	_cost.value = _working.cost
 	_strength.value = _working.strength
-	_attack.value = _working.attack
 	_defense.value = _working.defense
 	_spot_m.value = _working.spot_m
 	_range_m.value = _working.range_m
@@ -187,6 +200,7 @@ func _load_from_working() -> void:
 		_thru[k] = _working.throughput[k]
 
 	_load_ammo_from_working()
+	_update_attack_preview()
 
 
 ## Load ammo amounts from _working.ammo into the SpinBoxes.
@@ -218,7 +232,6 @@ func _collect_into_working() -> void:
 	_working.cost = int(_cost.value)
 	_working.strength = int(_strength.value)
 	_working.state_strength = int(_strength.value)
-	_working.attack = float(_attack.value)
 	_working.defense = float(_defense.value)
 	_working.spot_m = float(_spot_m.value)
 	_working.range_m = float(_range_m.value)
@@ -244,11 +257,29 @@ func _collect_into_working() -> void:
 
 ## Collect ammo amounts from SpinBoxes into _working.ammo.
 func _collect_ammo_into_working() -> void:
+	_working.ammunition = _gather_ammo_from_inputs()
+
+
+func _gather_ammo_from_inputs() -> Dictionary:
 	var out := {}
 	for i in _ammo_spinners.size():
-		var val := int(_ammo_spinners[i].value)
-		out[_ammo_keys[i]] = val
-	_working.ammunition = out
+		out[_ammo_keys[i]] = int(_ammo_spinners[i].value)
+	return out
+
+
+func _update_attack_preview() -> void:
+	if _attack_value == null:
+		return
+	var base_unit: UnitData = _working if _working != null else UnitData.new()
+	var preview := base_unit.duplicate(true) as UnitData
+	preview.strength = int(_strength.value)
+	preview.state_strength = float(_strength.value)
+	preview.morale = clamp(float(_morale.value), 0.0, 1.0)
+	preview.equipment = _equip.duplicate(true)
+	preview.ammunition = _gather_ammo_from_inputs()
+	preview.state_ammunition = preview.ammunition.duplicate(true)
+	preview.compute_attack_power(AMMO_DAMAGE_CONFIG)
+	_attack_value.text = "%.1f" % preview.attack
 
 
 ## Emit save signal.
@@ -368,6 +399,7 @@ func _populate_ammo() -> void:
 
 		_ammo_keys.append(ammo_name)
 		_ammo_spinners.append(amt)
+		amt.value_changed.connect(func(_value): _update_attack_preview())
 
 
 ## Select unit size.
@@ -461,6 +493,7 @@ func _on_add_equip() -> void:
 	_equip[c_str.to_lower()][k] = {"type": v, "ammo": a}
 	_equip_key.text = ""
 	_equip_val.value = 0
+	_update_attack_preview()
 
 
 ## Delete equipment from list
@@ -471,6 +504,7 @@ func _on_delete_equip_row(key: String, row: HBoxContainer) -> void:
 	else:
 		_equip.erase(key)
 	row.queue_free()
+	_update_attack_preview()
 
 
 ## Add throughput to list.
@@ -591,16 +625,7 @@ func _reset_ui() -> void:
 			le.text = ""
 
 	for sb in [
-		_cost,
-		_strength,
-		_attack,
-		_defense,
-		_spot_m,
-		_range_m,
-		_morale,
-		_speed_kph,
-		_equip_val,
-		_th_val
+		_cost, _strength, _defense, _spot_m, _range_m, _morale, _speed_kph, _equip_val, _th_val
 	]:
 		if sb:
 			sb.value = 0
@@ -626,6 +651,8 @@ func _reset_ui() -> void:
 	_equip_ammo_container.visible = false
 	_is_engineer.set_pressed_no_signal(false)
 	_is_medical.set_pressed_no_signal(false)
+	if _attack_value:
+		_attack_value.text = "0.0"
 
 
 ## Reset equipment dictionary.
