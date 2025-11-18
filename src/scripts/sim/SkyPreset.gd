@@ -73,7 +73,7 @@ extends Resource
 @export_group("Color Curves")
 @export var base_sky_color: GradientTexture1D
 @export var base_cloud_color: GradientTexture1D
-@export var overcast_sky_color: GradientTexture1D
+@export var overcast_cloud_color: GradientTexture1D
 @export var horizon_fog_color: GradientTexture1D
 @export var sun_light_color: GradientTexture1D
 @export var sun_disc_color: GradientTexture1D

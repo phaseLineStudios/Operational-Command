@@ -146,72 +146,54 @@ func _update_rotation() -> void:
 ## Update colors based on current time of day
 func _update_sky() -> void:
 	sun_position = sun_root.global_position.y / 2.0 + 0.5
-
+	
 	var sky_material = self.environment.sky.get_material()
-	var cloud_color = lerp(
-		sky_preset.base_cloud_color.gradient.sample(sun_position),
-		sky_preset.overcast_sky_color.gradient.sample(sun_position),
-		cloud_coverage
-	)
+	var cloud_color = lerp(sky_preset.base_cloud_color.gradient.sample(sun_position),sky_preset.overcast_cloud_color.gradient.sample(sun_position), cloud_coverage)
+	
+	sky_material.set_shader_parameter("bAnimStars", animate_star_map)
+	sky_material.set_shader_parameter("bAnimClouds", animate_clouds)
+	#sky_material.set_shader_parameter("bStaticClouds",staticClouds) *DEPRECATED*
+	
+	sky_material.set_shader_parameter("baseColor", sky_preset.base_sky_color.gradient.sample(sun_position))
+	sky_material.set_shader_parameter("baseCloudColor", cloud_color)
+	sky_material.set_shader_parameter("horizonSize",sky_preset.horizon_size)
+	sky_material.set_shader_parameter("horizonAlpha",sky_preset.horizon_alpha)
+	sky_material.set_shader_parameter("horizonFogColor", sky_preset.horizon_fog_color.gradient.sample(sun_position))
 
-	# Assign placeholder textures if they exist
-	if _scattering_lut:
-		sky_material.set_shader_parameter("scattering_lut", _scattering_lut)
-	if _cloud_texture:
-		sky_material.set_shader_parameter("cloud_texture", _cloud_texture)
-	if _cloud_texture_2:
-		sky_material.set_shader_parameter("cloud_texture_2", _cloud_texture_2)
-	if _star_texture:
-		sky_material.set_shader_parameter("star_texture", _star_texture)
-	if _star_noise:
-		sky_material.set_shader_parameter("star_noise", _star_noise)
-
-	sky_material.set_shader_parameter("b_anim_stars", animate_star_map)
-	sky_material.set_shader_parameter("b_anim_clouds", animate_clouds)
-
-	sky_material.set_shader_parameter(
-		"base_color", sky_preset.base_sky_color.gradient.sample(sun_position)
-	)
-	sky_material.set_shader_parameter("scatter_color", sky_preset.scatter_color)
-	sky_material.set_shader_parameter("scatter_color_2", sky_preset.scatter_color_2)
-	sky_material.set_shader_parameter("base_cloud_color", cloud_color)
-	sky_material.set_shader_parameter("horizon_size", sky_preset.horizon_size)
-	sky_material.set_shader_parameter("horizon_alpha", sky_preset.horizon_alpha)
-	sky_material.set_shader_parameter(
-		"horizon_fog_color", sky_preset.horizon_fog_color.gradient.sample(sun_position)
-	)
-
-	sky_material.set_shader_parameter("cloud_density", sky_preset.cloud_density)
-	sky_material.set_shader_parameter("cloud_alpha", sky_preset.cloud_alpha)
-	sky_material.set_shader_parameter("mg_size", sky_preset.cloud_glow)
-	sky_material.set_shader_parameter("cloud_speed", sky_preset.cloud_speed)
-
-	sky_material.set_shader_parameter("sun_radius", sky_preset.sun_radius)
-	sky_material.set_shader_parameter(
-		"sun_disc_color", sky_preset.sun_disc_color.gradient.sample(sun_position)
-	)
-	sky_material.set_shader_parameter(
-		"sun_glow_color", sky_preset.sun_glow.gradient.sample(sun_position)
-	)
-	sky_material.set_shader_parameter("sun_edge_blur", sky_preset.sun_edge_blur)
-	sky_material.set_shader_parameter("sun_glow_intensity", sky_preset.sun_glow_intensity)
-	sky_material.set_shader_parameter(
-		"sunlight_color", sky_preset.sun_light_color.gradient.sample(sun_position)
-	)
-
-	sky_material.set_shader_parameter("moon_radius", sky_preset.moon_radius)
-	sky_material.set_shader_parameter(
-		"moon_glow_color", sky_preset.moon_glow_color.gradient.sample(sun_position)
-	)
-	sky_material.set_shader_parameter("moon_edge_blur", sky_preset.moon_edge_blur)
-	sky_material.set_shader_parameter("moon_glow_intensity", sky_preset.moon_glow_intensity)
-
-	sky_material.set_shader_parameter("star_color", sky_preset.star_color)
-	sky_material.set_shader_parameter("star_brightness", sky_preset.star_brightness)
-	sky_material.set_shader_parameter("twinkle_speed", sky_preset.twinkle_speed)
-	sky_material.set_shader_parameter("twinkle_scale", sky_preset.twinkle_scale)
-	sky_material.set_shader_parameter("star_resolution", sky_preset.star_resolution)
-	sky_material.set_shader_parameter("star_speed", sky_preset.star_speed)
+	sky_material.set_shader_parameter("cloudType",1)
+	self.environment.volumetric_fog_density = remap(cloud_coverage,0.5,1.0,0.0,0.024)
+	
+	sky_material.set_shader_parameter("cloudDensity",sky_preset.cloud_density)
+	sky_material.set_shader_parameter("mgSize",sky_preset.cloud_glow)
+	sky_material.set_shader_parameter("cloudSpeed",sky_preset.cloud_speed)
+	sky_material.set_shader_parameter("cloudDirection",sky_preset.cloud_direction)
+	sky_material.set_shader_parameter("cloudCoverage",cloud_coverage)
+	sky_material.set_shader_parameter("absorption",sky_preset.cloud_light_absorbtion)
+	sky_material.set_shader_parameter("henyeyGreensteinLevel",sky_preset.anisotropy)
+	sky_material.set_shader_parameter("cloudEdge",sky_preset.cloud_edge)
+	sky_material.set_shader_parameter("dynamicCloudBrightness",sky_preset.cloud_brightness)
+	sky_material.set_shader_parameter("horizonUVCurve",sky_preset.cloud_uv_curvature)
+	
+	sky_material.set_shader_parameter("sunRadius",sky_preset.sun_radius)
+	sky_material.set_shader_parameter("sunDiscColor", sky_preset.sun_disc_color.gradient.sample(sun_position))
+	sky_material.set_shader_parameter("sunGlowColor",sky_preset.sun_glow)
+	sky_material.set_shader_parameter("sunGlowColor", sky_preset.sun_glow.gradient.sample(sun_position))
+	sky_material.set_shader_parameter("sunEdgeBlur",sky_preset.sun_edge_blur)
+	sky_material.set_shader_parameter("sunGlowIntensity",sky_preset.sun_glow_intensity)
+	sky_material.set_shader_parameter("sunlightColor", sky_preset.sun_light_color.gradient.sample(sun_position))
+	
+	sky_material.set_shader_parameter("moonRadius",sky_preset.moon_radius)
+	sky_material.set_shader_parameter("moonGlowColor", sky_preset.moon_glow_color.gradient.sample(sun_position))
+	sky_material.set_shader_parameter("moonEdgeBlur",sky_preset.moon_edge_blur)
+	sky_material.set_shader_parameter("moonGlowIntensity",sky_preset.moon_glow_intensity)
+	sky_material.set_shader_parameter("moonLightColor", sky_preset.moon_light_color.gradient.sample(sun_position))
+	
+	sky_material.set_shader_parameter("starColor",sky_preset.star_color)
+	sky_material.set_shader_parameter("starBrightness",sky_preset.star_brightness)
+	sky_material.set_shader_parameter("twinkleSpeed",sky_preset.twinkle_speed)
+	sky_material.set_shader_parameter("twinkleScale",sky_preset.twinkle_scale)
+	sky_material.set_shader_parameter("starResolution",sky_preset.star_resolution)
+	sky_material.set_shader_parameter("starSpeed",sky_preset.star_speed)
 
 
 func _update_environment() -> void:
