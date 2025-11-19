@@ -46,13 +46,11 @@ func _process(_dt: float) -> void:
 func popup() -> void:
 	visible = true
 	move_to_front()
-	grab_focus()
 
 ## Show dialog centered in parent Control or viewport.
 func popup_centered() -> void:
 	visible = true
 	move_to_front()
-	grab_focus()
 
 	var ref_size := _get_reference_rect_size()
 	var current_size := size
@@ -72,7 +70,6 @@ func popup_centered_ratio(ratio: float = 0.75) -> void:
 
 	visible = true
 	move_to_front()
-	grab_focus()
 
 	var ref_size := _get_reference_rect_size()
 	var new_size := ref_size * ratio
