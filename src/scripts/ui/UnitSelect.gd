@@ -681,7 +681,7 @@ func _on_reinforcement_committed(plan: Dictionary) -> void:
 			continue
 
 		var current := int(scenario_unit.state_strength)
-		var capacity := int(unit.size_strength)
+		var capacity := int(unit.strength)
 		var missing: int = max(0, capacity - current)
 		var actual: int = min(add, missing, remaining_pool)
 
@@ -729,7 +729,7 @@ func _get_scenario_unit_for_id(unit_id: String) -> ScenarioUnit:
 	if Game.current_save:
 		var saved_state := Game.current_save.get_unit_state(unit_id)
 		if not saved_state.is_empty():
-			su.state_strength = saved_state.get("state_strength", unit.size_strength)
+			su.state_strength = saved_state.get("state_strength", unit.strength)
 			su.state_injured = saved_state.get("state_injured", 0.0)
 			su.state_equipment = saved_state.get("state_equipment", 1.0)
 			su.cohesion = saved_state.get("cohesion", 1.0)
@@ -747,7 +747,7 @@ func _get_scenario_unit_for_id(unit_id: String) -> ScenarioUnit:
 			su.state_ammunition = unit.ammunition.duplicate()
 	else:
 		# No save, use template defaults
-		su.state_strength = unit.size_strength
+		su.state_strength = unit.strength
 		su.state_injured = 0.0
 		su.state_equipment = 1.0
 		su.cohesion = 1.0

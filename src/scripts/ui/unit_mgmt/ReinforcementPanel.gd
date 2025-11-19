@@ -186,12 +186,12 @@ func _build_rows() -> void:
 		max_lbl.text = "/ %d" % missing
 		controls_row.add_child(max_lbl)
 
-		# Slider on its own row below
+		# Slider on its own row below (shows total strength from 0, blocks below current)
 		var slider := HSlider.new()
 		slider.step = slider_step
 		slider.min_value = 0.0
-		slider.max_value = float(missing)
-		slider.value = float(_pending.get(uid, 0))
+		slider.max_value = float(cap)
+		slider.value = float(current + _pending.get(uid, 0))
 		slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		unit_vbox.add_child(slider)
 
@@ -203,7 +203,17 @@ func _build_rows() -> void:
 
 		minus.pressed.connect(func() -> void: _nudge(uid, -1))
 		plus.pressed.connect(func() -> void: _nudge(uid, +1))
-		slider.value_changed.connect(func(v: float) -> void: _set_amount(uid, int(round(v))))
+		slider.value_changed.connect(
+			func(v: float) -> void:
+				var cur_str: int = int(round(_unit_strength.get(uid, 0.0)))
+				var target_total: int = int(round(v))
+				# Block slider from going below current strength
+				if target_total < cur_str:
+					slider.value = float(cur_str)
+					return
+				var reinforcements: int = target_total - cur_str
+				_set_amount(uid, reinforcements)
+		)
 
 	_update_all_rows_state()
 
@@ -228,8 +238,13 @@ func _update_all_rows_state() -> void:
 		var req: int = int(_pending.get(uid, 0))
 
 		w.value.text = str(req)
-		w.slider.max_value = float(missing)
-		w.slider.value = float(req)
+		w.slider.min_value = 0.0
+		w.slider.max_value = float(cap)
+		# Ensure slider value doesn't go below current strength
+		var target_value: float = float(cur + req)
+		if target_value < float(cur):
+			target_value = float(cur)
+		w.slider.value = target_value
 		w.max_lbl.text = "/ %d" % missing
 		w.current_max_label.text = "Personnel: %d / %d" % [cur, cap]
 

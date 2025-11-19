@@ -250,11 +250,10 @@ func show_add_mission_dialog(parent: Node, save: CampaignSave) -> void:
 		status_label.text = "All %d missions already completed" % total_scenarios
 		status_label.add_theme_color_override("font_color", Color.YELLOW)
 	else:
-		status_label.text = "%d available / %d completed / %d total" % [
-			item_list.item_count,
-			save.completed_missions.size(),
-			total_scenarios
-		]
+		status_label.text = (
+			"%d available / %d completed / %d total"
+			% [item_list.item_count, save.completed_missions.size(), total_scenarios]
+		)
 		status_label.add_theme_color_override("font_color", Color.GREEN)
 	vbox.add_child(status_label)
 
