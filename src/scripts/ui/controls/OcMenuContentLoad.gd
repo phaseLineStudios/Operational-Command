@@ -1,6 +1,6 @@
 @tool
-class_name OcMenuContentLoad
-extends OcMenuWindow
+class_name OCMenuContentLoad
+extends OCMenuWindow
 
 signal content_selected(index: int)
 

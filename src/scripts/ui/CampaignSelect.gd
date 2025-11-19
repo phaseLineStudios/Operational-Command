@@ -25,11 +25,11 @@ var _selected_campaign: CampaignData
 @onready var btn_back: OCMenuButton = %BackToMainMenu
 @onready var campaign_poster: TextureRect = %CampaignPoster
 @onready var campaign_desc: RichTextLabel = %CampaignDescription
-@onready var select_save: OcMenuContentLoad = %SelectSaveDialog
-@onready var new_save: OcMenuWindow = %NewSaveDialog
+@onready var select_save: OCMenuContentLoad = %SelectSaveDialog
+@onready var new_save: OCMenuWindow = %NewSaveDialog
 @onready var new_save_name: LineEdit = %NewSaveName
 @onready var delete_save: OCMenuButton = %SaveDeleteButton
-@onready var confirm_dialog: OcMenuConfirmation = %ConfirmationDialog
+@onready var confirm_dialog: OCMenuConfirmation = %ConfirmationDialog
 
 
 ## Init UI, populate list, connect signals.
@@ -203,6 +203,7 @@ func _select_save_delete() -> void:
 	_select_save_close()
 
 
+## Delete save by save id
 func _delete_save(save_id: String) -> void:
 	Game.delete_save(save_id)
 	confirm_dialog.hide()

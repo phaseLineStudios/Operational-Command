@@ -1,6 +1,6 @@
 @tool
-class_name OcMenuConfirmation
-extends OcMenuWindow
+class_name OCMenuConfirmation
+extends OCMenuWindow
 
 ## Confirmation Description (BBCode)
 @export var description: String = ""

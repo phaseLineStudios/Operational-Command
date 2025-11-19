@@ -1,5 +1,5 @@
 @tool
-class_name OcMenuWindow
+class_name OCMenuWindow
 extends Control
 
 ## Emitted when the ok button is pressed.
