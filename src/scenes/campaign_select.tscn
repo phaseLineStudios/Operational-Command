@@ -1,10 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://b450blou0jxup"]
+[gd_scene load_steps=14 format=3 uid="uid://b450blou0jxup"]
 
 [ext_resource type="Theme" uid="uid://dy2ly8e3tggi0" path="res://assets/themes/menu.theme" id="1_7x48x"]
 [ext_resource type="Script" uid="uid://ccx4nsxahdjds" path="res://scripts/ui/CampaignSelect.gd" id="1_kfgox"]
 [ext_resource type="Script" uid="uid://nobo2pvlx00b" path="res://scripts/ui/controls/OcMenuContainer.gd" id="3_oafh1"]
 [ext_resource type="Script" uid="uid://boc05sevt2wad" path="res://scripts/ui/controls/OcMenuButton.gd" id="4_oxcbj"]
 [ext_resource type="PackedScene" uid="uid://djy0d70ocjtl1" path="res://scenes/controls/oc_menu_content_load.tscn" id="5_fymsp"]
+[ext_resource type="PackedScene" uid="uid://o5jmbsvwhdf4" path="res://scenes/controls/oc_menu_window.tscn" id="6_4j2fw"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m1w60"]
 content_margin_left = 30.0
@@ -67,6 +68,18 @@ corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3vl2t"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.24379024, 0.043995634, 0.051930428, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.224, 0.255, 0.271, 1)
 
 [node name="CampaignSelect" type="Control"]
 layout_mode = 3
@@ -184,3 +197,38 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 1
 window_title = "Select Save"
+
+[node name="Title" parent="SelectSaveDialog/DialogPanel/DialogRoot/DragBar" index="1"]
+text = "Select Save"
+
+[node name="SaveDeleteButton" type="Button" parent="SelectSaveDialog/DialogPanel/DialogRoot/Content/VBox/ButtonContainer" index="2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+theme_override_styles/hover = SubResource("StyleBoxFlat_3vl2t")
+disabled = true
+text = "DELETE"
+script = ExtResource("4_oxcbj")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
+
+[node name="NewSaveDialog" parent="." instance=ExtResource("6_4j2fw")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+grow_horizontal = 1
+grow_vertical = 1
+window_title = "Create New Save"
+
+[node name="Title" parent="NewSaveDialog/DialogPanel/DialogRoot/DragBar" index="1"]
+text = "Create New Save"
+
+[node name="NewSaveName" type="LineEdit" parent="NewSaveDialog/DialogPanel/DialogRoot/Content/VBox/Slot" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "My Savegame"
+placeholder_text = "Save name"
+
+[editable path="SelectSaveDialog"]
+[editable path="NewSaveDialog"]

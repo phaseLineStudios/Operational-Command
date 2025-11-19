@@ -6,10 +6,10 @@
 [ext_resource type="Script" uid="uid://boc05sevt2wad" path="res://scripts/ui/controls/OcMenuButton.gd" id="3_d5npo"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_54v6i"]
-content_margin_left = 1.0
-content_margin_top = 1.0
-content_margin_right = 1.0
-content_margin_bottom = 1.0
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
 bg_color = Color(0.067, 0.082, 0.098, 1)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
@@ -42,8 +42,6 @@ thickness = 2
 [node name="OcMenuWindow" type="Control"]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 600.0
-offset_bottom = 300.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -51,10 +49,10 @@ script = ExtResource("1_lv51l")
 
 [node name="DialogPanel" type="PanelContainer" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(600, 300)
+custom_minimum_size = Vector2(600, 0)
 layout_mode = 0
 offset_right = 600.0
-offset_bottom = 300.0
+offset_bottom = 123.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_54v6i")
 script = ExtResource("1_jkhkq")
 padding = Vector4i(0, 0, 0, 0)

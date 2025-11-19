@@ -7,8 +7,7 @@ extends Node
 ## Base directory for saves.
 const SAVE_DIR := "user://saves"
 
-## Cache of loaded saves to avoid repeated disk reads.
-var _save_cache: Dictionary = {}  ## save_id -> CampaignSave
+var _save_cache: Dictionary = {}
 
 
 func _ready() -> void:

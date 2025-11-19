@@ -9,6 +9,8 @@ extends Node
 signal campaign_selected(campaign_id: StringName)
 ## Emitted when a save is selected.
 signal save_selected(save_id: StringName)
+## Emitted when a save is deleted.
+signal save_deleted(save_id: StringName)
 ## Emitted when a mission is selected.
 signal scenario_selected(mission_id: StringName)
 ## Emitted when a mission loadout is selected
@@ -58,13 +60,23 @@ func select_save(save_id: StringName) -> void:
 	current_save = Persistence.load_save(save_id)
 
 	if current_save:
-		# Restore replacement pool from save
 		campaign_replacement_pool = current_save.replacement_pool
 		LogService.info("Loaded save: %s" % current_save.save_name, "Game")
 	else:
 		push_warning("Failed to load save: %s" % save_id)
 
 	emit_signal("save_selected", save_id)
+
+
+func delete_save(save_id: StringName) -> void:
+	var success := Persistence.delete_save(save_id)
+	
+	if success:
+		LogService.info("Deleted save: %s" % save_id, "Game")
+	else:
+		push_warning("Failed to delete save: %s" % save_id)
+
+	emit_signal("save_deleted", save_id)
 
 
 ## Set current mission and emit [signal mission_selected].
