@@ -20,6 +20,7 @@ var _selected_mission: ScenarioData
 var _campaign: CampaignData
 var _scenarios: Array[ScenarioData] = []
 var _card_pin_button: BaseButton
+var _mission_locked: Dictionary = {}  ## scenario_id -> bool
 
 @onready var _container: OCMenuContainer = $"Container"
 @onready var _btn_back: OCMenuButton = $"BackToCampaign"
@@ -76,11 +77,27 @@ func _load_campaign_and_map() -> void:
 ## Create pins and position them (normalized coords).
 func _build_pins() -> void:
 	_clear_children(_pins_layer)
+	_update_mission_locked_states()
+
 	for m in _scenarios:
 		var pin := _make_pin(m)
 		pin.set_meta("pos_norm", m.map_position)
 		pin.set_meta("title", m.title)
 		pin.pressed.connect(func(): _on_pin_pressed(m, pin))
+
+		# Disable locked missions
+		var is_locked: bool = _mission_locked.get(m.id, false)
+		pin.disabled = is_locked
+
+		# Visual feedback for locked missions
+		if is_locked:
+			pin.modulate = Color(0.5, 0.5, 0.5, 0.7)
+			if show_pin_tooltips:
+				if pin is Button:
+					pin.tooltip_text = m.title + " (Locked)"
+				elif pin is TextureButton:
+					pin.tooltip_text = m.title + " (Locked)"
+
 		_pins_layer.add_child(pin)
 	_update_pin_positions()
 
@@ -148,12 +165,21 @@ func _on_pin_pressed(mission: ScenarioData, pin_btn: BaseButton) -> void:
 	_selected_mission = mission
 	_card_pin_button = pin_btn
 
-	_card_title.text = mission.title
+	var is_locked: bool = _mission_locked.get(mission.id, false)
+
+	_card_title.text = mission.title + (" [LOCKED]" if is_locked else "")
 	_card_image.texture = mission.preview
 	_card_desc.text = mission.description
 	_card_diff.text = (
 		"Difficulty: %s" % [ScenarioData.ScenarioDifficulty.keys()[mission.difficulty]]
 	)
+
+	# Disable start button if mission is locked
+	_card_start.disabled = is_locked
+	if is_locked:
+		_card_start.text = "Locked - Complete previous missions"
+	else:
+		_card_start.text = "Start Mission"
 
 	_card.visible = false
 	_click_catcher.visible = false
@@ -164,6 +190,14 @@ func _on_pin_pressed(mission: ScenarioData, pin_btn: BaseButton) -> void:
 
 ## Start current mission.
 func _on_start_pressed() -> void:
+	if not _selected_mission:
+		return
+
+	# Safety check: don't start locked missions
+	if _mission_locked.get(_selected_mission.id, false):
+		push_warning("Cannot start locked mission: %s" % _selected_mission.id)
+		return
+
 	Game.select_scenario(_selected_mission)
 	Game.goto_scene(SCENE_BRIEFING)
 
@@ -199,6 +233,36 @@ func _close_card() -> void:
 	_click_catcher.visible = false
 	_selected_mission = null
 	_card_pin_button = null
+
+
+## Update which missions are locked based on campaign progression.
+## First mission is always unlocked; subsequent missions require previous mission completion.
+func _update_mission_locked_states() -> void:
+	_mission_locked.clear()
+
+	if not Game.current_save:
+		# No save loaded - lock all missions except the first
+		for i in range(_scenarios.size()):
+			_mission_locked[_scenarios[i].id] = (i > 0)
+		return
+
+	# Check each mission's prerequisites
+	for i in range(_scenarios.size()):
+		var mission := _scenarios[i]
+
+		if i == 0:
+			# First mission is always unlocked
+			_mission_locked[mission.id] = false
+		else:
+			# Check if previous mission is completed
+			var prev_mission := _scenarios[i - 1]
+			var is_prev_completed := Game.current_save.is_mission_completed(prev_mission.id)
+			_mission_locked[mission.id] = not is_prev_completed
+
+
+## Check if a mission is available to play.
+func is_mission_available(mission: ScenarioData) -> bool:
+	return not _mission_locked.get(mission.id, true)
 
 
 ## Remove all children from a node.

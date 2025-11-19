@@ -154,7 +154,9 @@ func _capture_baseline() -> void:
 func _reset_to_baseline() -> void:
 	# Restore unit strengths
 	for u: UnitData in _units:
-		var base: int = int(_baseline_strengths.get(u.id, int(round(_unit_strength.get(u.id, 0.0)))))
+		var base: int = int(
+			_baseline_strengths.get(u.id, int(round(_unit_strength.get(u.id, 0.0))))
+		)
 		_unit_strength[u.id] = float(base)
 
 	# Restore pool (Game + panel)
@@ -290,7 +292,13 @@ func _test_casualties() -> void:
 		_unit_strength[su.unit.id] = su.state_strength
 
 	for u: UnitData in _units:
-		prints("[after casualties]", u.id, int(round(_unit_strength.get(u.id, 0.0))), "/", int(u.strength))
+		prints(
+			"[after casualties]",
+			u.id,
+			int(round(_unit_strength.get(u.id, 0.0))),
+			"/",
+			int(u.strength)
+		)
 	_panel.set_units(_units, _unit_strength)
 	_panel.set_pool(_pool)
 

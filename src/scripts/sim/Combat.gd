@@ -367,10 +367,12 @@ func _emit_debug_snapshot(
 	var f := TerrainEffects.compute_terrain_factors(attacker, defender, env)
 
 	var atk_str: float = max(
-		0.0, (attacker.state_strength if attacker.state_strength > 0.0 else float(attacker.unit.strength))
+		0.0,
+		attacker.state_strength if attacker.state_strength > 0.0 else float(attacker.unit.strength)
 	)
 	var def_str: float = max(
-		0.0, (defender.state_strength if defender.state_strength > 0.0 else float(defender.unit.strength))
+		0.0,
+		defender.state_strength if defender.state_strength > 0.0 else float(defender.unit.strength)
 	)
 
 	var base_attack := _compute_dynamic_attack_power(attacker)

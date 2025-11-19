@@ -339,7 +339,8 @@ func serialize() -> Dictionary:
 		"combat_mode": int(combat_mode),
 		"behaviour": int(behaviour),
 		"playable": playable,
-		"state": {
+		"state":
+		{
 			"state_strength": state_strength,
 			"state_injured": state_injured,
 			"state_equipment": state_equipment,

@@ -7,6 +7,8 @@ extends Control
 ## 2) Details placeholder updates and action buttons become visible.
 ## 3) "Create new save" creates/selects a save and advances to Mission Select.
 
+const CampaignSave := preload("res://scripts/data/CampaignSave.gd")
+
 ## Path to Mission Select Scene
 const MISSION_SELECT_SCENE := "res://scenes/mission_select.tscn"
 
@@ -29,7 +31,6 @@ var _selected_campaign: CampaignData
 
 ## Init UI, populate list, connect signals.
 func _ready() -> void:
-	_set_action_buttons_visible(false)
 	_populate_campaigns()
 	_connect_signals()
 
@@ -63,7 +64,7 @@ func _populate_campaigns() -> void:
 func _on_campaign_selected(index: int) -> void:
 	_selected_campaign = _campaign_rows[index]
 	_update_details(_selected_campaign)
-	_set_action_buttons_visible(true)
+	_update_action_buttons()
 
 
 ## Placeholder details update (to be replaced later).
@@ -75,11 +76,34 @@ func _update_details(campaign: CampaignData) -> void:
 	campaign_desc.text = campaign.description
 
 
-## Show/hide the three action buttons.
-func _set_action_buttons_visible(state: bool) -> void:
-	btn_continue_last.visible = state
-	btn_select_save.visible = state
-	btn_new_save.visible = state
+## Update action button visibility and states based on existing saves.
+func _update_action_buttons() -> void:
+	if not _selected_campaign:
+		btn_continue_last.visible = false
+		btn_select_save.visible = false
+		btn_new_save.visible = false
+		return
+
+	# Check if saves exist for this campaign
+	var saves := Persistence.list_saves_for_campaign(_selected_campaign.id)
+	var has_saves := not saves.is_empty()
+
+	# Show all buttons
+	btn_continue_last.visible = true
+	btn_select_save.visible = true
+	btn_new_save.visible = true
+
+	# Enable/disable based on save existence
+	btn_continue_last.disabled = not has_saves
+	btn_select_save.disabled = not has_saves
+
+	# Update button text to show state
+	if has_saves:
+		btn_continue_last.text = "Continue Last Save"
+		btn_select_save.text = "Load Save (%d)" % saves.size()
+	else:
+		btn_continue_last.text = "Continue (No Saves)"
+		btn_select_save.text = "Load Save (No Saves)"
 
 
 ## Create/select new save and go to Mission Select.
@@ -112,8 +136,53 @@ func _on_continue_last_pressed() -> void:
 func _on_select_save_pressed() -> void:
 	if not _selected_campaign:
 		return
-	# TODO Open a save picker dialog/scene filtered by campaign
-	push_warning("Save selection UI not implemented yet.")
+
+	var saves := Persistence.list_saves_for_campaign(_selected_campaign.id)
+	if saves.is_empty():
+		push_warning("No saves found for this campaign.")
+		return
+
+	_show_save_picker(saves)
+
+
+## Show save picker dialog.
+func _show_save_picker(saves: Array[CampaignSave]) -> void:
+	var dialog := ConfirmationDialog.new()
+	dialog.title = "Select Save"
+	dialog.dialog_text = "Choose a save to load:"
+	dialog.min_size = Vector2i(400, 300)
+
+	var list := ItemList.new()
+	list.custom_minimum_size = Vector2(380, 200)
+
+	for save in saves:
+		var created := Time.get_datetime_string_from_unix_time(save.created_timestamp)
+		var last_played := Time.get_datetime_string_from_unix_time(save.last_played_timestamp)
+		var progress := (
+			"%d/%d missions" % [save.completed_missions.size(), _selected_campaign.scenarios.size()]
+		)
+
+		var item_text := "%s\n%s\nLast played: %s" % [save.save_name, progress, last_played]
+		list.add_item(item_text)
+		list.set_item_metadata(list.item_count - 1, save.save_id)
+
+	dialog.add_child(list)
+
+	dialog.confirmed.connect(
+		func():
+			var selected := list.get_selected_items()
+			if selected.size() > 0:
+				var save_id: String = list.get_item_metadata(selected[0])
+				Game.select_campaign(_selected_campaign)
+				Game.select_save(save_id)
+				Game.goto_scene(MISSION_SELECT_SCENE)
+			dialog.queue_free()
+	)
+
+	dialog.canceled.connect(func(): dialog.queue_free())
+
+	add_child(dialog)
+	dialog.popup_centered()
 
 
 ## Back to main menu.

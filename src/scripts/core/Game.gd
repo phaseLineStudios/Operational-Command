@@ -21,6 +21,7 @@ var debug_display: CanvasLayer
 
 var current_campaign: CampaignData
 var current_save_id: StringName = &""
+var current_save: CampaignSave = null
 var current_scenario: ScenarioData
 var current_scenario_loadout: Dictionary = {}
 var current_scenario_summary: Dictionary = {}
@@ -54,6 +55,15 @@ func select_campaign(campaign: CampaignData) -> void:
 ## Set current save and emit [signal save_selected].
 func select_save(save_id: StringName) -> void:
 	current_save_id = save_id
+	current_save = Persistence.load_save(save_id)
+
+	if current_save:
+		# Restore replacement pool from save
+		campaign_replacement_pool = current_save.replacement_pool
+		LogService.info("Loaded save: %s" % current_save.save_name, "Game")
+	else:
+		push_warning("Failed to load save: %s" % save_id)
+
 	emit_signal("save_selected", save_id)
 
 
@@ -163,5 +173,36 @@ func get_current_units() -> Array:
 
 
 func save_campaign_state() -> void:
-	# TODO: implement persistence
-	pass
+	if not current_save:
+		push_warning("Cannot save campaign state: no active save")
+		return
+
+	# Update replacement pool
+	current_save.replacement_pool = campaign_replacement_pool
+
+	# Update current mission
+	if current_scenario:
+		current_save.current_mission = current_scenario.id
+
+		# Mark mission as completed if successful
+		if current_scenario_summary.has("outcome"):
+			var outcome = current_scenario_summary.get("outcome")
+			if outcome == "success" or outcome == MissionResolution.MissionOutcome.SUCCESS:
+				current_save.complete_mission(current_scenario.id)
+				LogService.info("Marked mission %s as completed" % current_scenario.id, "Game")
+
+	# Update unit states from scenario units
+	if current_scenario and current_scenario.units:
+		for su in current_scenario.units:
+			if su is ScenarioUnit and su.unit:
+				var state := {
+					"state_strength": su.state_strength,
+					"state_injured": su.state_injured,
+					"state_equipment": su.state_equipment,
+					"cohesion": su.cohesion,
+					"state_ammunition": su.state_ammunition.duplicate(),
+				}
+				current_save.update_unit_state(su.unit.id, state)
+
+	# Save to disk
+	Persistence.save_to_file(current_save)

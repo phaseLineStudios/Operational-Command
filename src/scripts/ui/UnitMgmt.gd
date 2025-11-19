@@ -135,7 +135,9 @@ func _on_committed(plan: Dictionary) -> void:
 
 		_unit_strength[uid] = float(cur + give)
 		remaining -= give
-		emit_signal("unit_strength_changed", uid, int(round(_unit_strength[uid])), _status_string(uid))
+		emit_signal(
+			"unit_strength_changed", uid, int(round(_unit_strength[uid])), _status_string(uid)
+		)
 
 	# Persist pool and refresh UI
 	_set_pool(remaining)
