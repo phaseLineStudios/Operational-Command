@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://b450blou0jxup"]
+[gd_scene load_steps=12 format=3 uid="uid://b450blou0jxup"]
 
 [ext_resource type="Theme" uid="uid://dy2ly8e3tggi0" path="res://assets/themes/menu.theme" id="1_7x48x"]
 [ext_resource type="Script" uid="uid://ccx4nsxahdjds" path="res://scripts/ui/CampaignSelect.gd" id="1_kfgox"]
 [ext_resource type="Script" uid="uid://nobo2pvlx00b" path="res://scripts/ui/controls/OcMenuContainer.gd" id="3_oafh1"]
 [ext_resource type="Script" uid="uid://boc05sevt2wad" path="res://scripts/ui/controls/OcMenuButton.gd" id="4_oxcbj"]
+[ext_resource type="PackedScene" uid="uid://djy0d70ocjtl1" path="res://scenes/controls/oc_menu_content_load.tscn" id="5_fymsp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m1w60"]
 content_margin_left = 30.0
@@ -177,3 +178,9 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 130)
 layout_mode = 2
 bbcode_enabled = true
+
+[node name="SelectSaveDialog" parent="." instance=ExtResource("5_fymsp")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+window_title = "Select Save"

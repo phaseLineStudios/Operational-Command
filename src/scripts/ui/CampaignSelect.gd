@@ -7,8 +7,6 @@ extends Control
 ## 2) Details placeholder updates and action buttons become visible.
 ## 3) "Create new save" creates/selects a save and advances to Mission Select.
 
-const CampaignSave := preload("res://scripts/data/CampaignSave.gd")
-
 ## Path to Mission Select Scene
 const MISSION_SELECT_SCENE := "res://scenes/mission_select.tscn"
 
@@ -27,6 +25,7 @@ var _selected_campaign: CampaignData
 @onready var btn_back: OCMenuButton = %BackToMainMenu
 @onready var campaign_poster: TextureRect = %CampaignPoster
 @onready var campaign_desc: RichTextLabel = %CampaignDescription
+@onready var select_save: OcMenuContentLoad = %SelectSaveDialog
 
 
 ## Init UI, populate list, connect signals.
@@ -42,6 +41,9 @@ func _connect_signals() -> void:
 	btn_continue_last.pressed.connect(_on_continue_last_pressed)
 	btn_select_save.pressed.connect(_on_select_save_pressed)
 	btn_back.pressed.connect(_on_back_pressed)
+	select_save.ok_pressed.connect(_select_save_load)
+	select_save.cancel_pressed.connect(_select_save_close)
+	select_save.close_pressed.connect(_select_save_close)
 
 
 ## Fill ItemList from ContentDB.
@@ -147,42 +149,31 @@ func _on_select_save_pressed() -> void:
 
 ## Show save picker dialog.
 func _show_save_picker(saves: Array[CampaignSave]) -> void:
-	var dialog := ConfirmationDialog.new()
-	dialog.title = "Select Save"
-	dialog.dialog_text = "Choose a save to load:"
-	dialog.min_size = Vector2i(400, 300)
-
-	var list := ItemList.new()
-	list.custom_minimum_size = Vector2(380, 200)
+	select_save.popup_centered()
 
 	for save in saves:
-		var created := Time.get_datetime_string_from_unix_time(save.created_timestamp)
 		var last_played := Time.get_datetime_string_from_unix_time(save.last_played_timestamp)
 		var progress := (
 			"%d/%d missions" % [save.completed_missions.size(), _selected_campaign.scenarios.size()]
 		)
 
 		var item_text := "%s\n%s\nLast played: %s" % [save.save_name, progress, last_played]
-		list.add_item(item_text)
-		list.set_item_metadata(list.item_count - 1, save.save_id)
+		select_save.content_list.add_item(item_text)
+		select_save.content_list.set_item_metadata(select_save.content_list.item_count - 1, save.save_id)
 
-	dialog.add_child(list)
+func _select_save_load() -> void:
+	var selected := select_save.content_list.get_selected_items()
+	if selected.size() > 0:
+		var save_id: String = select_save.content_list.get_item_metadata(selected[0])
+		Game.select_campaign(_selected_campaign)
+		Game.select_save(save_id)
+		Game.goto_scene(MISSION_SELECT_SCENE)
+	_select_save_close()
 
-	dialog.confirmed.connect(
-		func():
-			var selected := list.get_selected_items()
-			if selected.size() > 0:
-				var save_id: String = list.get_item_metadata(selected[0])
-				Game.select_campaign(_selected_campaign)
-				Game.select_save(save_id)
-				Game.goto_scene(MISSION_SELECT_SCENE)
-			dialog.queue_free()
-	)
 
-	dialog.canceled.connect(func(): dialog.queue_free())
-
-	add_child(dialog)
-	dialog.popup_centered()
+func _select_save_close() -> void:
+	select_save.hide()
+	select_save.content_list.clear()
 
 
 ## Back to main menu.

@@ -1,0 +1,194 @@
+[gd_scene load_steps=13 format=3 uid="uid://djy0d70ocjtl1"]
+
+[ext_resource type="Script" uid="uid://blsqo02rfhhgf" path="res://scripts/ui/controls/OcMenuContentLoad.gd" id="1_8rp37"]
+[ext_resource type="Script" uid="uid://nobo2pvlx00b" path="res://scripts/ui/controls/OcMenuContainer.gd" id="2_u3bud"]
+[ext_resource type="FontFile" uid="uid://b7vlkovyvotx8" path="res://assets/fonts/ibm_plex_sans/IBMPlexSans.ttf" id="3_at0yy"]
+[ext_resource type="Script" uid="uid://boc05sevt2wad" path="res://scripts/ui/controls/OcMenuButton.gd" id="4_oy2un"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_54v6i"]
+content_margin_left = 1.0
+content_margin_top = 1.0
+content_margin_right = 1.0
+content_margin_bottom = 1.0
+bg_color = Color(0.067, 0.082, 0.098, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_1fktu"]
+color = Color(0.49803922, 0.49803922, 0.49803922, 1)
+thickness = 2
+vertical = true
+
+[sub_resource type="FontVariation" id="FontVariation_0dxfp"]
+base_font = ExtResource("3_at0yy")
+spacing_top = -4
+spacing_bottom = -5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2ih15"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0)
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8rp37"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_16e86"]
+color = Color(0.49803922, 0.49803922, 0.49803922, 1)
+thickness = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c3gjt"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.101960786, 0.101960786, 0.101960786, 0.25490198)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.49803922, 0.49803922, 0.49803922, 1)
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4ho52"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0)
+corner_detail = 5
+
+[node name="OcMenuContentLoad" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 600.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_8rp37")
+
+[node name="DialogPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(600, 300)
+layout_mode = 0
+offset_right = 600.0
+offset_bottom = 300.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_54v6i")
+script = ExtResource("2_u3bud")
+padding = Vector4i(0, 0, 0, 0)
+inner_padding = Vector4i(2, 2, 2, 2)
+border_color = Color(0.49803922, 0.49803922, 0.49803922, 1)
+grid_enabled = false
+noise_enabled = true
+noise_opacity = 0.02
+noise_grain = 1.0
+metadata/_custom_type_script = "uid://nobo2pvlx00b"
+
+[node name="DialogRoot" type="VBoxContainer" parent="DialogPanel"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="DragBar" type="HBoxContainer" parent="DialogPanel/DialogRoot"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Spacer" type="Control" parent="DialogPanel/DialogRoot/DragBar"]
+custom_minimum_size = Vector2(36, 0)
+layout_mode = 2
+
+[node name="Title" type="Label" parent="DialogPanel/DialogRoot/DragBar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Load Content"
+horizontal_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="DialogPanel/DialogRoot/DragBar"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_1fktu")
+
+[node name="CloseButton" type="Button" parent="DialogPanel/DialogRoot/DragBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(35, 35)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_fonts/font = SubResource("FontVariation_0dxfp")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_2ih15")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_8rp37")
+text = "×"
+
+[node name="HSeparator" type="HSeparator" parent="DialogPanel/DialogRoot"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_16e86")
+
+[node name="Content" type="MarginContainer" parent="DialogPanel/DialogRoot"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="DialogPanel/DialogRoot/Content"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Slot" type="VBoxContainer" parent="DialogPanel/DialogRoot/Content/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="DialogPanel/DialogRoot/Content/VBox/Slot"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_c3gjt")
+
+[node name="ContentList" type="ItemList" parent="DialogPanel/DialogRoot/Content/VBox/Slot/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_4ho52")
+
+[node name="ButtonContainer" type="HBoxContainer" parent="DialogPanel/DialogRoot/Content/VBox"]
+layout_mode = 2
+
+[node name="CancelButton" type="Button" parent="DialogPanel/DialogRoot/Content/VBox/ButtonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+text = "CANCEL"
+script = ExtResource("4_oy2un")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
+
+[node name="Control" type="Control" parent="DialogPanel/DialogRoot/Content/VBox/ButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="OkButton" type="Button" parent="DialogPanel/DialogRoot/Content/VBox/ButtonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+text = "LOAD"
+script = ExtResource("4_oy2un")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
