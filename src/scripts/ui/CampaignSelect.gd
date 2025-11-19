@@ -29,6 +29,7 @@ var _selected_campaign: CampaignData
 @onready var new_save: OcMenuWindow = %NewSaveDialog
 @onready var new_save_name: LineEdit = %NewSaveName
 @onready var delete_save: OCMenuButton = %SaveDeleteButton
+@onready var confirm_dialog: OcMenuConfirmation = %ConfirmationDialog
 
 
 ## Init UI, populate list, connect signals.
@@ -52,6 +53,8 @@ func _connect_signals() -> void:
 	new_save.ok_pressed.connect(_on_new_save_created)
 	new_save.cancel_pressed.connect(_on_new_save_cancelled)
 	new_save.close_pressed.connect(_on_new_save_cancelled)
+	confirm_dialog.close_pressed.connect(func(): confirm_dialog.hide())
+	confirm_dialog.cancel_pressed.connect(func(): confirm_dialog.hide())
 
 
 ## Fill ItemList from ContentDB.
@@ -192,10 +195,18 @@ func _select_save_delete() -> void:
 	var selected := select_save.content_list.get_selected_items()
 	if selected.size() > 0:
 		var save_id: String = select_save.content_list.get_item_metadata(selected[0])
-		Game.delete_save(save_id)
-	_update_action_buttons()
+		var save_name: String = Persistence.load_save(save_id).save_name
+		confirm_dialog.window_title = "Delete Save"
+		confirm_dialog.description = "Are you sure you want to delete %s?" % save_name
+		confirm_dialog.ok_pressed.connect(func(): _delete_save(save_id), CONNECT_ONE_SHOT)
+		confirm_dialog.popup_centered()
 	_select_save_close()
 
+
+func _delete_save(save_id: String) -> void:
+	Game.delete_save(save_id)
+	confirm_dialog.hide()
+	_update_action_buttons()
 
 ## Handle closing of select save dialog
 func _select_save_close() -> void:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://b450blou0jxup"]
+[gd_scene load_steps=15 format=3 uid="uid://b450blou0jxup"]
 
 [ext_resource type="Theme" uid="uid://dy2ly8e3tggi0" path="res://assets/themes/menu.theme" id="1_7x48x"]
 [ext_resource type="Script" uid="uid://ccx4nsxahdjds" path="res://scripts/ui/CampaignSelect.gd" id="1_kfgox"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://boc05sevt2wad" path="res://scripts/ui/controls/OcMenuButton.gd" id="4_oxcbj"]
 [ext_resource type="PackedScene" uid="uid://djy0d70ocjtl1" path="res://scenes/controls/oc_menu_content_load.tscn" id="5_fymsp"]
 [ext_resource type="PackedScene" uid="uid://o5jmbsvwhdf4" path="res://scenes/controls/oc_menu_window.tscn" id="6_4j2fw"]
+[ext_resource type="PackedScene" uid="uid://drao3h6n2fnva" path="res://scenes/controls/oc_menu_confirmation.tscn" id="7_owva7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m1w60"]
 content_margin_left = 30.0
@@ -229,6 +230,11 @@ size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "My Savegame"
 placeholder_text = "Save name"
+
+[node name="ConfirmationDialog" parent="." instance=ExtResource("7_owva7")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
 
 [editable path="SelectSaveDialog"]
 [editable path="NewSaveDialog"]
