@@ -30,7 +30,7 @@ extends Resource
 @export var unit_states: Dictionary = {}
 
 @export_category("Resources")
-## Personnel replacement pool
+## Personnel replacement pool (campaign-wide)
 @export var replacement_pool: int = 0
 
 

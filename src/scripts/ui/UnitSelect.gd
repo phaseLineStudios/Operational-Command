@@ -10,6 +10,9 @@ const SCENE_BRIEFING := "res://scenes/briefing.tscn"
 ## Path to hq table scene
 const SCENE_HQ_TABLE := "res://scenes/hq_table.tscn"
 
+## ReinforcementPanel scene
+const REINFORCEMENT_PANEL_SCENE := preload("res://scenes/ui/unit_mgmt/reinforcement_panel.tscn")
+
 ## Default fallback icon for units.
 @export var default_unit_icon: Texture2D
 ## Scene used for unit cards
@@ -25,6 +28,13 @@ var _assigned_by_unit: Dictionary = {}
 var _used_points: int = 0
 
 var _selected_card: UnitCard = null
+var _selected_unit_for_supply: UnitData = null
+var _current_equipment_pool: int = 0
+var _current_ammo_pools: Dictionary = {}
+var _reinforcement_panel: ReinforcementPanel = null
+
+## Temporary ScenarioUnit instances for state management during loadout configuration
+var _temp_scenario_units: Dictionary = {}  # unit_id -> ScenarioUnit
 
 @onready var _lbl_title: Label = %Title
 @onready var _lbl_points: Label = %Points
@@ -60,6 +70,9 @@ var _selected_card: UnitCard = null
 @onready var _lbl_speed: Label = %UnitStats/GroundSpeed
 @onready var _lbl_coh: Label = %UnitStats/Cohesion
 
+@onready var _supply_vbox: VBoxContainer = %Supply
+@onready var _replacements_vbox: VBoxContainer = %Replacements
+
 
 ## Build UI, load mission
 func _ready() -> void:
@@ -69,6 +82,7 @@ func _ready() -> void:
 	_refresh_filters()
 	_update_deploy_enabled()
 	_update_logistics_labels(0, 0, 0, 0)
+	_init_supply_pools()
 
 
 ## Connect UI actions to methods
@@ -345,6 +359,9 @@ func _update_logistics_labels(equipment: int, fuel: int, medical: int, repair: i
 func _on_card_selected(unit: UnitData) -> void:
 	_show_unit_stats(unit)
 	_update_card_selection(unit)
+	_selected_unit_for_supply = unit
+	_populate_supply_ui(unit)
+	_populate_replacements_ui(unit)
 
 
 ## Highlight the selected card in the pool
@@ -363,6 +380,9 @@ func _update_card_selection(unit: UnitData) -> void:
 func _on_request_inspect_from_tree(unit: UnitData) -> void:
 	_show_unit_stats(unit)
 	_update_card_selection(unit)
+	_selected_unit_for_supply = unit
+	_populate_supply_ui(unit)
+	_populate_replacements_ui(unit)
 
 
 ## Update stats panel with selected unit data
@@ -394,6 +414,10 @@ func _on_deploy_pressed() -> void:
 	# Only when all slots filled
 	if _assigned_by_unit.size() != _total_slots:
 		return
+
+	# Save temp unit states back to save file
+	_save_temp_unit_states()
+
 	var loadout := _export_loadout()
 	Game.set_scenario_loadout(loadout)
 	Game.goto_scene(SCENE_HQ_TABLE)
@@ -412,3 +436,302 @@ func _export_loadout() -> Dictionary:
 		var unit_id: StringName = _slot_data[sid]["assigned"]
 		arr.append({"slot_id": sid, "slot_key": _slot_data[sid]["key"], "unit_id": String(unit_id)})
 	return {"mission_id": Game.current_scenario.id, "points_used": _used_points, "assignments": arr}
+
+
+## Initialize supply pools from scenario
+func _init_supply_pools() -> void:
+	if not Game.current_scenario:
+		return
+
+	_current_equipment_pool = Game.current_scenario.equipment_pool
+	_current_ammo_pools = Game.current_scenario.ammo_pools.duplicate()
+
+
+## Populate supply UI with ammo and equipment resupply options
+func _populate_supply_ui(unit: UnitData) -> void:
+	# Clear existing children
+	for child in _supply_vbox.get_children():
+		child.queue_free()
+
+	if not unit:
+		return
+
+	var scenario_unit := _get_scenario_unit_for_id(unit.id)
+	if not scenario_unit:
+		return
+
+	# Add equipment resupply row
+	_add_equipment_row(unit, scenario_unit)
+
+	# Add ammo resupply rows for each ammo type the unit has
+	for ammo_type in unit.ammunition.keys():
+		var capacity: int = int(unit.ammunition.get(ammo_type, 0))
+		if capacity > 0:
+			_add_ammo_row(unit, scenario_unit, ammo_type, capacity)
+
+
+## Add equipment resupply row
+func _add_equipment_row(unit: UnitData, scenario_unit: ScenarioUnit) -> void:
+	var row := HBoxContainer.new()
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_supply_vbox.add_child(row)
+
+	var label := Label.new()
+	label.text = "Equipment:"
+	label.custom_minimum_size = Vector2(140, 0)
+	row.add_child(label)
+
+	var current_label := Label.new()
+	var current_pct := int(scenario_unit.state_equipment * 100.0)
+	current_label.text = "%d%%" % current_pct
+	current_label.custom_minimum_size = Vector2(60, 0)
+	row.add_child(current_label)
+
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(spacer)
+
+	var pool_label := Label.new()
+	pool_label.text = "Pool: %d" % _current_equipment_pool
+	pool_label.custom_minimum_size = Vector2(80, 0)
+	row.add_child(pool_label)
+
+	var resupply_btn := Button.new()
+	resupply_btn.text = "Resupply (+10%)"
+	resupply_btn.disabled = _current_equipment_pool < 10 or scenario_unit.state_equipment >= 1.0
+	resupply_btn.pressed.connect(func(): _resupply_equipment(unit, scenario_unit, current_label, pool_label, resupply_btn))
+	row.add_child(resupply_btn)
+
+
+## Add ammo resupply row
+func _add_ammo_row(unit: UnitData, scenario_unit: ScenarioUnit, ammo_type: String, capacity: int) -> void:
+	var row := HBoxContainer.new()
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_supply_vbox.add_child(row)
+
+	var label := Label.new()
+	label.text = ammo_type.capitalize() + ":"
+	label.custom_minimum_size = Vector2(140, 0)
+	row.add_child(label)
+
+	var current := int(scenario_unit.state_ammunition.get(ammo_type, 0))
+	var current_label := Label.new()
+	current_label.text = "%d/%d" % [current, capacity]
+	current_label.custom_minimum_size = Vector2(60, 0)
+	row.add_child(current_label)
+
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(spacer)
+
+	var pool_available := int(_current_ammo_pools.get(ammo_type, 0))
+	var pool_label := Label.new()
+	pool_label.text = "Pool: %d" % pool_available
+	pool_label.custom_minimum_size = Vector2(80, 0)
+	row.add_child(pool_label)
+
+	var resupply_amount := int(capacity * 0.1)  # 10% of capacity
+	var resupply_btn := Button.new()
+	resupply_btn.text = "Resupply (+%d)" % resupply_amount
+	resupply_btn.disabled = pool_available < resupply_amount or current >= capacity
+	resupply_btn.pressed.connect(func(): _resupply_ammo(unit, scenario_unit, ammo_type, resupply_amount, current_label, pool_label, resupply_btn))
+	row.add_child(resupply_btn)
+
+
+## Resupply equipment
+func _resupply_equipment(unit: UnitData, scenario_unit: ScenarioUnit, current_label: Label, pool_label: Label, btn: Button) -> void:
+	var cost := 10
+	if _current_equipment_pool < cost:
+		return
+
+	if scenario_unit.state_equipment >= 1.0:
+		return
+
+	# Apply resupply
+	_current_equipment_pool -= cost
+	scenario_unit.state_equipment = min(1.0, scenario_unit.state_equipment + 0.1)
+
+	# Update labels
+	var current_pct := int(scenario_unit.state_equipment * 100.0)
+	current_label.text = "%d%%" % current_pct
+	pool_label.text = "Pool: %d" % _current_equipment_pool
+
+	# Update button state
+	btn.disabled = _current_equipment_pool < cost or scenario_unit.state_equipment >= 1.0
+
+	LogService.info("Resupplied %s equipment to %d%%" % [unit.id, current_pct], "UnitSelect")
+
+
+## Resupply ammunition
+func _resupply_ammo(unit: UnitData, scenario_unit: ScenarioUnit, ammo_type: String, amount: int, current_label: Label, pool_label: Label, btn: Button) -> void:
+	var pool_available := int(_current_ammo_pools.get(ammo_type, 0))
+	if pool_available < amount:
+		return
+
+	var capacity := int(unit.ammunition.get(ammo_type, 0))
+	var current := int(scenario_unit.state_ammunition.get(ammo_type, 0))
+
+	if current >= capacity:
+		return
+
+	# Apply resupply
+	var actual_amount: int = min(amount, pool_available, capacity - current)
+	_current_ammo_pools[ammo_type] = pool_available - actual_amount
+	scenario_unit.state_ammunition[ammo_type] = current + actual_amount
+
+	# Update labels
+	var new_current := int(scenario_unit.state_ammunition.get(ammo_type, 0))
+	current_label.text = "%d/%d" % [new_current, capacity]
+	pool_label.text = "Pool: %d" % int(_current_ammo_pools.get(ammo_type, 0))
+
+	# Update button state
+	var new_pool := int(_current_ammo_pools.get(ammo_type, 0))
+	btn.disabled = new_pool < amount or new_current >= capacity
+
+	LogService.info("Resupplied %s %s ammo: +%d (now %d/%d)" % [unit.id, ammo_type, actual_amount, new_current, capacity], "UnitSelect")
+
+
+## Populate replacements UI with ReinforcementPanel
+func _populate_replacements_ui(unit: UnitData) -> void:
+	if not unit:
+		# Clear all children when no unit selected
+		for child in _replacements_vbox.get_children():
+			child.queue_free()
+		return
+
+	var scenario_unit := _get_scenario_unit_for_id(unit.id)
+	if not scenario_unit:
+		# Clear all children when no scenario unit found
+		for child in _replacements_vbox.get_children():
+			child.queue_free()
+		return
+
+	# Instantiate ReinforcementPanel if needed
+	if not _reinforcement_panel:
+		_reinforcement_panel = REINFORCEMENT_PANEL_SCENE.instantiate() as ReinforcementPanel
+		_reinforcement_panel.reinforcement_committed.connect(_on_reinforcement_committed)
+
+	# Add to replacements vbox if not already added
+	if _reinforcement_panel.get_parent() != _replacements_vbox:
+		if _reinforcement_panel.get_parent():
+			_reinforcement_panel.get_parent().remove_child(_reinforcement_panel)
+		_replacements_vbox.add_child(_reinforcement_panel)
+
+	# Get unit strength from scenario unit
+	var unit_strengths: Dictionary[String, float] = {}
+	unit_strengths[unit.id] = scenario_unit.state_strength
+
+	# Set up panel with single unit
+	_reinforcement_panel.set_units([unit], unit_strengths)
+	_reinforcement_panel.set_pool(Game.current_scenario.replacement_pool)
+	_reinforcement_panel.reset_pending()
+
+
+## Handle reinforcement committed
+func _on_reinforcement_committed(plan: Dictionary) -> void:
+	var remaining_pool: int = Game.current_scenario.replacement_pool
+
+	for unit_id in plan.keys():
+		var add := int(plan[unit_id])
+		var unit := _units_by_id.get(unit_id) as UnitData
+		if not unit:
+			continue
+
+		var scenario_unit := _get_scenario_unit_for_id(unit_id)
+		if not scenario_unit:
+			continue
+
+		# Don't reinforce wiped out units
+		if scenario_unit.state_strength <= 0.0:
+			continue
+
+		var current := int(scenario_unit.state_strength)
+		var capacity := int(unit.size_strength)
+		var missing: int = max(0, capacity - current)
+		var actual: int = min(add, missing, remaining_pool)
+
+		if actual > 0:
+			scenario_unit.state_strength += float(actual)
+			remaining_pool -= actual
+			LogService.info("Reinforced %s: +%d personnel (now %d/%d)" % [unit_id, actual, int(scenario_unit.state_strength), capacity], "UnitSelect")
+
+	# Update pool
+	Game.current_scenario.replacement_pool = remaining_pool
+
+	# Refresh UI
+	if _selected_unit_for_supply:
+		_populate_replacements_ui(_selected_unit_for_supply)
+
+
+## Get or create temporary ScenarioUnit for a unit ID
+func _get_scenario_unit_for_id(unit_id: String) -> ScenarioUnit:
+	# Check if we already have a temp instance
+	if _temp_scenario_units.has(unit_id):
+		return _temp_scenario_units[unit_id]
+
+	# Check scenario.units (pre-placed units)
+	if Game.current_scenario:
+		for su in Game.current_scenario.units:
+			if su and su.unit and su.unit.id == unit_id:
+				return su
+
+	# Create temporary ScenarioUnit for recruitable unit
+	var unit := _units_by_id.get(unit_id) as UnitData
+	if not unit:
+		return null
+
+	var su := ScenarioUnit.new()
+	su.unit = unit
+	su.affiliation = ScenarioUnit.Affiliation.FRIEND
+
+	# Initialize with saved state if available, otherwise use defaults
+	if Game.current_save:
+		var saved_state := Game.current_save.get_unit_state(unit_id)
+		if not saved_state.is_empty():
+			su.state_strength = saved_state.get("state_strength", unit.size_strength)
+			su.state_injured = saved_state.get("state_injured", 0.0)
+			su.state_equipment = saved_state.get("state_equipment", 1.0)
+			su.cohesion = saved_state.get("cohesion", 1.0)
+			var saved_ammo = saved_state.get("state_ammunition", {})
+			if saved_ammo is Dictionary and not saved_ammo.is_empty():
+				su.state_ammunition = saved_ammo.duplicate()
+			else:
+				su.state_ammunition = unit.ammunition.duplicate()
+		else:
+			# No saved state, use template defaults
+			su.state_strength = unit.strength
+			su.state_injured = 0.0
+			su.state_equipment = 1.0
+			su.cohesion = 1.0
+			su.state_ammunition = unit.ammunition.duplicate()
+	else:
+		# No save, use template defaults
+		su.state_strength = unit.size_strength
+		su.state_injured = 0.0
+		su.state_equipment = 1.0
+		su.cohesion = 1.0
+		su.state_ammunition = unit.ammunition.duplicate()
+
+	_temp_scenario_units[unit_id] = su
+	return su
+
+
+## Save temporary unit states back to campaign save
+func _save_temp_unit_states() -> void:
+	if not Game.current_save:
+		return
+
+	for unit_id in _temp_scenario_units.keys():
+		var su: ScenarioUnit = _temp_scenario_units[unit_id]
+		if su and su.unit:
+			var state := {
+				"state_strength": su.state_strength,
+				"state_injured": su.state_injured,
+				"state_equipment": su.state_equipment,
+				"cohesion": su.cohesion,
+				"state_ammunition": su.state_ammunition.duplicate(),
+			}
+			Game.current_save.update_unit_state(su.unit.id, state)
+
+	# Persist to disk
+	Persistence.save_to_file(Game.current_save)

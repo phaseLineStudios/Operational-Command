@@ -691,6 +691,15 @@
           "x": 2489.6591796875,
           "y": 1834.85302734375
         },
+        "state": {
+          "cohesion": 1.0,
+          "state_ammunition": {
+
+          },
+          "state_equipment": 0.0,
+          "state_injured": 0.0,
+          "state_strength": 0.0
+        },
         "unit_id": "infantry_plt_1"
       },
       {
@@ -703,6 +712,15 @@
         "position": {
           "x": 2618.93310546875,
           "y": 1735.966796875
+        },
+        "state": {
+          "cohesion": 1.0,
+          "state_ammunition": {
+
+          },
+          "state_equipment": 0.0,
+          "state_injured": 0.0,
+          "state_strength": 0.0
         },
         "unit_id": "infantry_plt_2"
       },
@@ -717,6 +735,15 @@
           "x": 2060.09741210938,
           "y": 1244.36572265625
         },
+        "state": {
+          "cohesion": 1.0,
+          "state_ammunition": {
+
+          },
+          "state_equipment": 0.0,
+          "state_injured": 0.0,
+          "state_strength": 0.0
+        },
         "unit_id": "frg_bw_opfor"
       },
       {
@@ -729,6 +756,15 @@
         "position": {
           "x": 2244.26245117188,
           "y": 1720.39587402344
+        },
+        "state": {
+          "cohesion": 1.0,
+          "state_ammunition": {
+
+          },
+          "state_equipment": 0.0,
+          "state_injured": 0.0,
+          "state_strength": 0.0
         },
         "unit_id": "frg_opfor_2_bundeswehr"
       }
@@ -753,6 +789,14 @@
   "terrain_id": "wildflecken_training_area",
   "title": "Crested Cap Checkride",
   "units": {
+    "ammo_pools": {
+      "ARTILLERY_SMOKE": 50,
+      "ATGM": 10,
+      "SMALL_ARMS": 10000,
+      "TANK_GUN": 30
+    },
+    "equipment_pool": 100,
+    "replacement_pool": 100,
     "unit_points": 500,
     "unit_recruits_ids": [
       "scout_plt_1a111_acr",

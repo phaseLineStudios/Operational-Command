@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://vwwe2bp0x2mn"]
+[gd_scene load_steps=9 format=3 uid="uid://vwwe2bp0x2mn"]
 
 [ext_resource type="Script" uid="uid://cm7asjegw28oe" path="res://scripts/ui/Settings.gd" id="1_5p8wc"]
 [ext_resource type="Theme" uid="uid://dy2ly8e3tggi0" path="res://assets/themes/menu.theme" id="1_f4mfi"]
@@ -27,17 +27,6 @@ content_margin_right = 5.0
 content_margin_bottom = 5.0
 bg_color = Color(0.11365, 0.1279, 0.1431, 1)
 border_color = Color(0.224, 0.255, 0.271, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gis3k"]
-content_margin_left = 1.0
-content_margin_top = 1.0
-content_margin_right = 1.0
-content_margin_bottom = 1.0
-bg_color = Color(0.23529412, 0.26666668, 0.28235295, 1)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
 
 [node name="Settings" type="Control"]
 layout_mode = 3
@@ -163,14 +152,10 @@ custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_constants/tick_offset = -5
-theme_override_styles/slider = SubResource("StyleBoxFlat_gis3k")
 min_value = 50.0
 max_value = 200.0
 step = 5.0
 value = 100.0
-tick_count = 10
-ticks_on_borders = true
 
 [node name="ScaleValue" type="Label" parent="OCMenuContainer/Root/Tabs/Video/GridContainer/RowScale"]
 unique_name_in_owner = true

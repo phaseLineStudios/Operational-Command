@@ -85,8 +85,6 @@ func _build_audio_ui() -> void:
 		sli.max_value = 1.0
 		sli.step = 0.01
 		sli.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		sli.tick_count = 20
-		sli.ticks_on_borders = true
 		var val := Label.new()
 		val.text = "0%"
 		var mute := CheckBox.new()
