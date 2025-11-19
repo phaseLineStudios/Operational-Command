@@ -3,50 +3,50 @@
     "LOGI"
   ],
   "ammunition": {
-    "ARTILLERY_AP": 0,
-    "ARTILLERY_ILLUM": 0,
-    "ARTILLERY_SMOKE": 0,
-    "ATGM": 0,
-    "AT_ROCKET": 0,
-    "AUTOCANNON": 0,
-    "ENGINEER_MUN": 0,
-    "HEAVY_WEAPONS": 0,
-    "MORTAR_AP": 0,
-    "MORTAR_ILLUM": 0,
-    "MORTAR_SMOKE": 0,
-    "SMALL_ARMS": 0,
-    "TANK_GUN": 0
+	"ARTILLERY_AP": 0,
+	"ARTILLERY_ILLUM": 0,
+	"ARTILLERY_SMOKE": 0,
+	"ATGM": 0,
+	"AT_ROCKET": 0,
+	"AUTOCANNON": 0,
+	"ENGINEER_MUN": 0,
+	"HEAVY_WEAPONS": 0,
+	"MORTAR_AP": 0,
+	"MORTAR_ILLUM": 0,
+	"MORTAR_SMOKE": 0,
+	"SMALL_ARMS": 0,
+	"TANK_GUN": 0
   },
   "ammunition_critical_threshold": 0.1,
   "ammunition_low_threshold": 0.25,
   "cost": 40,
   "doctrine": "nato_inf_1983",
   "editor": {
-    "unit_category": "us_army"
+	"unit_category": "us_army"
   },
   "equipment": {
-    "radios": {
-      "AN/VRC-46": {
-        "ammo": -1,
-        "type": 1
-      }
-    },
-    "vehicles": {
-      "Cargo Truck": {
-        "ammo": -1,
-        "type": 2
-      },
-      "Fuel Truck": {
-        "ammo": -1,
-        "type": 2
-      }
-    },
-    "weapons": {
-      "M16A1": {
-        "ammo": 0,
-        "type": 10
-      }
-    }
+	"radios": {
+	  "AN/VRC-46": {
+		"ammo": -1,
+		"type": 1
+	  }
+	},
+	"vehicles": {
+	  "Cargo Truck": {
+		"ammo": -1,
+		"type": 2
+	  },
+	  "Fuel Truck": {
+		"ammo": -1,
+		"type": 2
+	  }
+	},
+	"weapons": {
+	  "M16A1": {
+		"ammo": 0,
+		"type": 10
+	  }
+	}
   },
   "equipment_tags": [],
   "experience": 0.0,
@@ -55,40 +55,40 @@
   "role": "LOGI",
   "size": 2,
   "state": {
-    "cohesion": 0.0,
-    "state_equipment": 0.0,
-    "state_injured": 0.0,
-    "state_strength": 10.0
+	"cohesion": 0.0,
+	"state_equipment": 0.0,
+	"state_injured": 0.0,
+	"state_strength": 10.0
   },
   "state_ammunition": {
-    "ARTILLERY_AP": 0,
-    "ARTILLERY_ILLUM": 0,
-    "ARTILLERY_SMOKE": 0,
-    "ATGM": 0,
-    "AT_ROCKET": 0,
-    "AUTOCANNON": 0,
-    "ENGINEER_MUN": 0,
-    "HEAVY_WEAPONS": 0,
-    "MORTAR_AP": 0,
-    "MORTAR_ILLUM": 0,
-    "MORTAR_SMOKE": 0,
-    "SMALL_ARMS": 0,
-    "TANK_GUN": 0
+	"ARTILLERY_AP": 0,
+	"ARTILLERY_ILLUM": 0,
+	"ARTILLERY_SMOKE": 0,
+	"ATGM": 0,
+	"AT_ROCKET": 0,
+	"AUTOCANNON": 0,
+	"ENGINEER_MUN": 0,
+	"HEAVY_WEAPONS": 0,
+	"MORTAR_AP": 0,
+	"MORTAR_ILLUM": 0,
+	"MORTAR_SMOKE": 0,
+	"SMALL_ARMS": 0,
+	"TANK_GUN": 0
   },
   "stats": {
-    "attack": 6.0,
-    "defense": 12.0,
-    "morale": 1.0,
-    "range_m": 300.0,
-    "speed_kph": 49.0,
-    "spot_m": 600.0
+	"attack": 6.0,
+	"defense": 12.0,
+	"morale": 0.9,
+	"range_m": 300.0,
+	"speed_kph": 49.0,
+	"spot_m": 600.0
   },
   "strength": 10,
   "supply_transfer_radius_m": 30.0,
   "supply_transfer_rate": 10.0,
   "throughput": {
-    "ammo": 200.0,
-    "fuel": 200.0
+	"ammo": 200.0,
+	"fuel": 200.0
   },
   "title": "Field Trains Section - RSS, 11th ACR",
   "type": 11
