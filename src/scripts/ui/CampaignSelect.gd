@@ -119,7 +119,7 @@ func _update_action_buttons() -> void:
 func _on_new_save_pressed() -> void:
 	if not _selected_campaign:
 		return
-	
+
 	new_save.popup_centered()
 
 
@@ -176,7 +176,9 @@ func _show_save_picker(saves: Array[CampaignSave]) -> void:
 
 		var item_text := "%s (Last played: %s)" % [save.save_name, last_played.replace("T", " ")]
 		select_save.content_list.add_item(item_text)
-		select_save.content_list.set_item_metadata(select_save.content_list.item_count - 1, save.save_id)
+		select_save.content_list.set_item_metadata(
+			select_save.content_list.item_count - 1, save.save_id
+		)
 
 
 ## Load selected save
@@ -208,6 +210,7 @@ func _delete_save(save_id: String) -> void:
 	Game.delete_save(save_id)
 	confirm_dialog.hide()
 	_update_action_buttons()
+
 
 ## Handle closing of select save dialog
 func _select_save_close() -> void:

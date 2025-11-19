@@ -195,7 +195,9 @@ func _build_rows() -> void:
 		slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		unit_vbox.add_child(slider)
 
-		var widgets := RowWidgets.new(unit_vbox, title, badge, current_max_label, minus, val, plus, slider, max_lbl)
+		var widgets := RowWidgets.new(
+			unit_vbox, title, badge, current_max_label, minus, val, plus, slider, max_lbl
+		)
 		widgets.base_title = base_title
 		_rows[uid] = widgets
 

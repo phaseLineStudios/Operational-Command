@@ -70,7 +70,7 @@ func select_save(save_id: StringName) -> void:
 
 func delete_save(save_id: StringName) -> void:
 	var success := Persistence.delete_save(save_id)
-	
+
 	if success:
 		LogService.info("Deleted save: %s" % save_id, "Game")
 	else:
@@ -234,9 +234,10 @@ func restore_unit_states_from_save(scenario: ScenarioData) -> void:
 
 		restored_count += 1
 		LogService.debug(
-			"Restored state for %s: strength=%.1f, injured=%.1f, cohesion=%.2f" % [
-				unit_id, su.state_strength, su.state_injured, su.cohesion
-			],
+			(
+				"Restored state for %s: strength=%.1f, injured=%.1f, cohesion=%.2f"
+				% [unit_id, su.state_strength, su.state_injured, su.cohesion]
+			),
 			"Game"
 		)
 

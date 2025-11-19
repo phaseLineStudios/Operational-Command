@@ -85,7 +85,8 @@ func _build_pins() -> void:
 
 	for m in _scenarios:
 		var is_locked: bool = _mission_locked.get(m.id, false)
-		if is_locked: continue
+		if is_locked:
+			continue
 		var pin := _make_pin(m)
 		pin.set_meta("pos_norm", m.map_position)
 		pin.set_meta("title", m.title)
@@ -212,9 +213,9 @@ func _on_pin_mouse_exited(pin: Control) -> void:
 	var state := str(pin.get_meta("highlight_state", "dim"))
 
 	if state == "current":
-		pin.modulate = Color(1.0, 1.0, 1.0, 1.0)
-	else:
 		pin.modulate = Color(1.0, 1.0, 1.0, 0.5)
+	else:
+		pin.modulate = Color(1.0, 1.0, 1.0, 1.0)
 
 
 ## Open the mission card; create/remove image node depending on presence.
@@ -315,6 +316,7 @@ func _update_mission_locked_states() -> void:
 func is_mission_available(mission: ScenarioData) -> bool:
 	return not _mission_locked.get(mission.id, true)
 
+
 ## Draw mission path between pins in campaign order.
 func _on_pins_layer_draw() -> void:
 	if _scenarios.size() < 2:
@@ -357,7 +359,7 @@ func _on_pins_layer_draw() -> void:
 		var to_pt: Vector2 = to_center - dir * gap
 
 		var to_idx := i + 1
-		var is_to_unplayed := (to_idx == latest_unplayed_idx)
+		var is_to_unplayed := to_idx == latest_unplayed_idx
 		var color := color_to_unplayed if is_to_unplayed else color_default
 
 		_pins_layer.draw_line(from_pt, to_pt, color, width, antialias)

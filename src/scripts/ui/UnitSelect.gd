@@ -499,12 +499,16 @@ func _add_equipment_row(unit: UnitData, scenario_unit: ScenarioUnit) -> void:
 	var resupply_btn := Button.new()
 	resupply_btn.text = "Resupply (+10%)"
 	resupply_btn.disabled = _current_equipment_pool < 10 or scenario_unit.state_equipment >= 1.0
-	resupply_btn.pressed.connect(func(): _resupply_equipment(unit, scenario_unit, current_label, pool_label, resupply_btn))
+	resupply_btn.pressed.connect(
+		func(): _resupply_equipment(unit, scenario_unit, current_label, pool_label, resupply_btn)
+	)
 	row.add_child(resupply_btn)
 
 
 ## Add ammo resupply row
-func _add_ammo_row(unit: UnitData, scenario_unit: ScenarioUnit, ammo_type: String, capacity: int) -> void:
+func _add_ammo_row(
+	unit: UnitData, scenario_unit: ScenarioUnit, ammo_type: String, capacity: int
+) -> void:
 	var row := HBoxContainer.new()
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_supply_vbox.add_child(row)
@@ -534,12 +538,29 @@ func _add_ammo_row(unit: UnitData, scenario_unit: ScenarioUnit, ammo_type: Strin
 	var resupply_btn := Button.new()
 	resupply_btn.text = "Resupply (+%d)" % resupply_amount
 	resupply_btn.disabled = pool_available < resupply_amount or current >= capacity
-	resupply_btn.pressed.connect(func(): _resupply_ammo(unit, scenario_unit, ammo_type, resupply_amount, current_label, pool_label, resupply_btn))
+	resupply_btn.pressed.connect(
+		func():
+			_resupply_ammo(
+				unit,
+				scenario_unit,
+				ammo_type,
+				resupply_amount,
+				current_label,
+				pool_label,
+				resupply_btn
+			)
+	)
 	row.add_child(resupply_btn)
 
 
 ## Resupply equipment
-func _resupply_equipment(unit: UnitData, scenario_unit: ScenarioUnit, current_label: Label, pool_label: Label, btn: Button) -> void:
+func _resupply_equipment(
+	unit: UnitData,
+	scenario_unit: ScenarioUnit,
+	current_label: Label,
+	pool_label: Label,
+	btn: Button
+) -> void:
 	var cost := 10
 	if _current_equipment_pool < cost:
 		return
@@ -563,7 +584,15 @@ func _resupply_equipment(unit: UnitData, scenario_unit: ScenarioUnit, current_la
 
 
 ## Resupply ammunition
-func _resupply_ammo(unit: UnitData, scenario_unit: ScenarioUnit, ammo_type: String, amount: int, current_label: Label, pool_label: Label, btn: Button) -> void:
+func _resupply_ammo(
+	unit: UnitData,
+	scenario_unit: ScenarioUnit,
+	ammo_type: String,
+	amount: int,
+	current_label: Label,
+	pool_label: Label,
+	btn: Button
+) -> void:
 	var pool_available := int(_current_ammo_pools.get(ammo_type, 0))
 	if pool_available < amount:
 		return
@@ -588,7 +617,13 @@ func _resupply_ammo(unit: UnitData, scenario_unit: ScenarioUnit, ammo_type: Stri
 	var new_pool := int(_current_ammo_pools.get(ammo_type, 0))
 	btn.disabled = new_pool < amount or new_current >= capacity
 
-	LogService.info("Resupplied %s %s ammo: +%d (now %d/%d)" % [unit.id, ammo_type, actual_amount, new_current, capacity], "UnitSelect")
+	LogService.info(
+		(
+			"Resupplied %s %s ammo: +%d (now %d/%d)"
+			% [unit.id, ammo_type, actual_amount, new_current, capacity]
+		),
+		"UnitSelect"
+	)
 
 
 ## Populate replacements UI with ReinforcementPanel
@@ -653,7 +688,13 @@ func _on_reinforcement_committed(plan: Dictionary) -> void:
 		if actual > 0:
 			scenario_unit.state_strength += float(actual)
 			remaining_pool -= actual
-			LogService.info("Reinforced %s: +%d personnel (now %d/%d)" % [unit_id, actual, int(scenario_unit.state_strength), capacity], "UnitSelect")
+			LogService.info(
+				(
+					"Reinforced %s: +%d personnel (now %d/%d)"
+					% [unit_id, actual, int(scenario_unit.state_strength), capacity]
+				),
+				"UnitSelect"
+			)
 
 	# Update pool
 	Game.current_scenario.replacement_pool = remaining_pool

@@ -7,9 +7,11 @@ extends OCMenuWindow
 
 var _description_box: RichTextLabel
 
+
 func _ready() -> void:
 	super._ready()
 	_description_box = %DialogText
+
 
 func _process(dt: float) -> void:
 	super._process(dt)

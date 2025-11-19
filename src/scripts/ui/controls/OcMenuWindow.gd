@@ -3,11 +3,11 @@ class_name OCMenuWindow
 extends Control
 
 ## Emitted when the ok button is pressed.
-signal ok_pressed()
+signal ok_pressed
 ## Emitted when the cancel button is pressed.
-signal cancel_pressed()
+signal cancel_pressed
 ## Emitted when the close button is pressed.
-signal close_pressed()
+signal close_pressed
 
 ## Title of window
 @export var window_title: String = ""
@@ -22,6 +22,7 @@ var _title: Label
 var _is_dragging: bool = false
 var _drag_offset: Vector2 = Vector2.ZERO
 
+
 func _ready() -> void:
 	window = %DialogPanel
 	close_button = %CloseButton
@@ -29,13 +30,14 @@ func _ready() -> void:
 	ok_button = %OkButton
 	_dragbar = %DragBar
 	_title = %Title
-	
+
 	_title.text = window_title
-	
+
 	close_button.pressed.connect(_close_pressed)
 	cancel_button.pressed.connect(_cancel_pressed)
 	ok_button.pressed.connect(_ok_pressed)
 	_dragbar.gui_input.connect(_on_dragbar_gui_input)
+
 
 func _process(_dt: float) -> void:
 	if Engine.is_editor_hint():
@@ -46,6 +48,7 @@ func _process(_dt: float) -> void:
 func popup() -> void:
 	visible = true
 	move_to_front()
+
 
 ## Show dialog centered in parent Control or viewport.
 func popup_centered() -> void:
@@ -77,20 +80,24 @@ func popup_centered_ratio(ratio: float = 0.75) -> void:
 	size = new_size
 	position = ((ref_size - new_size) * 0.5).round()
 
+
 ## Emitts ok pressed event
 func _ok_pressed() -> void:
 	LogService.trace("OK Pressed", "OcMenuWindow.gd: 43")
 	emit_signal("ok_pressed")
+
 
 ## Emitts ok pressed event
 func _cancel_pressed() -> void:
 	LogService.trace("Cancel Pressed", "OcMenuWindow.gd: 43")
 	emit_signal("cancel_pressed")
 
+
 ## Emitts ok pressed event
 func _close_pressed() -> void:
 	LogService.trace("Close Pressed", "OcMenuWindow.gd: 43")
 	emit_signal("close_pressed")
+
 
 ## Handles mouse input on the drag bar to drag the window.
 ## [param event] GUI input event from the drag bar.
