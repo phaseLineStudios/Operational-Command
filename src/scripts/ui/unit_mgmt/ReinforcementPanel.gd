@@ -15,6 +15,8 @@ var _pool_total: int = 0
 var _pool_remaining: int = 0
 var _pending: Dictionary[String, int] = {}
 var _rows: Dictionary[String, RowWidgets] = {}
+## Temporary: tracks current strength per unit for campaign persistence (to be replaced)
+var _unit_strength: Dictionary[String, float] = {}
 
 @onready var _lbl_pool: Label = %PoolLabel
 @onready var _rows_box: VBoxContainer = %RowsBox
@@ -64,14 +66,20 @@ func _ready() -> void:
 
 
 ## Provide the list of units to display. Rebuild rows and clear any plan.
-func set_units(units: Array[UnitData]) -> void:
+## [param units] Array of UnitData templates.
+## [param unit_strengths] Optional dictionary mapping unit_id -> current_strength (for campaign).
+func set_units(units: Array[UnitData], unit_strengths: Dictionary = {}) -> void:
 	_units = []
 	_rows.clear()
 	_pending.clear()
+	_unit_strength.clear()
 	_clear_children(_rows_box)
 	for u: UnitData in units:
 		if u != null:
 			_units.append(u)
+			# Initialize strength (from campaign state or default to full strength)
+			var uid := u.id
+			_unit_strength[uid] = float(unit_strengths.get(uid, float(u.strength)))
 	_build_rows()
 	_update_pool_labels()
 	_update_commit_enabled()
@@ -105,7 +113,8 @@ func commit() -> void:
 	# strip any zero/negative or wiped-out entries (if units list is present)
 	for uid in plan.keys():
 		var u := _find_unit(uid)
-		if u == null or u.state_strength <= 0.0 or int(plan[uid]) <= 0:
+		var cur_strength: float = _unit_strength.get(uid, 0.0)
+		if u == null or cur_strength <= 0.0 or int(plan[uid]) <= 0:
 			plan.erase(uid)
 	emit_signal("reinforcement_committed", plan)
 
@@ -114,7 +123,7 @@ func commit() -> void:
 func _build_rows() -> void:
 	for u: UnitData in _units:
 		var uid: String = u.id
-		var current: int = int(round(u.state_strength))
+		var current: int = int(round(_unit_strength.get(uid, 0.0)))
 		var cap: int = int(max(0, u.strength))
 		var missing: int = max(0, cap - current)
 
@@ -135,7 +144,8 @@ func _build_rows() -> void:
 			if u.understrength_threshold > 0.0
 			else understrength_threshold
 		)
-		badge.set_unit(u, thr)
+		var cur_strength: float = _unit_strength.get(uid, 0.0)
+		badge.set_unit(u, cur_strength, thr)
 		row.add_child(badge)
 
 		var spacer := Control.new()
@@ -193,7 +203,7 @@ func _update_all_rows_state() -> void:
 		var w: RowWidgets = _rows.get(uid, null)
 		if w == null:
 			continue
-		var cur: int = int(round(u.state_strength))
+		var cur: int = int(round(_unit_strength.get(uid, 0.0)))
 		var cap: int = int(max(0, u.strength))
 		var missing: int = max(0, cap - cur)
 		var req: int = int(_pending.get(uid, 0))
@@ -221,7 +231,8 @@ func _update_all_rows_state() -> void:
 			if u.understrength_threshold > 0.0
 			else understrength_threshold
 		)
-		w.badge.set_unit(u, thr)
+		var cur_strength: float = _unit_strength.get(uid, 0.0)
+		w.badge.set_unit(u, cur_strength, thr)
 
 	_update_pool_labels()
 
@@ -258,7 +269,7 @@ func _set_amount(uid: String, target: int) -> void:
 	var u: UnitData = _find_unit(uid)
 	if u == null:
 		return
-	var cur: int = int(round(u.state_strength))
+	var cur: int = int(round(_unit_strength.get(uid, 0.0)))
 	var cap: int = int(max(0, u.strength))
 	var missing: int = max(0, cap - cur)
 	var already: int = int(_pending.get(uid, 0))

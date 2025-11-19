@@ -129,18 +129,8 @@ const _ANTI_VEHICLE_AMMO_TYPES := [
 @export_range(0.0, 1.0, 0.05) var morale: float = 0.9
 ## Movement speed in kilometers per hour
 @export var speed_kph: float = 50
-
-@export_category("state")
-## Current strength
-@export var state_strength: float
-## Current injured
-@export var state_injured: float
-## per-unit understrength threshold
+## Per-unit understrength threshold (0.0-1.0)
 @export var understrength_threshold: float = 0.8
-## Current remaining equipment
-@export var state_equipment: float
-## Current cohesion level (0.0–1.0).
-@export_range(0.0, 1.0, 0.01) var cohesion: float
 
 @export_category("Supply")
 ## Supply throughput { "supply_type": (int)amount }
@@ -238,14 +228,8 @@ func serialize() -> Dictionary:
 			"spot_m": spot_m,
 			"range_m": range_m,
 			"morale": morale,
-			"speed_kph": speed_kph
-		},
-		"state":
-		{
-			"state_strength": state_strength,
-			"state_injured": state_injured,
-			"state_equipment": state_equipment,
-			"cohesion": cohesion
+			"speed_kph": speed_kph,
+			"understrength_threshold": understrength_threshold
 		},
 		"editor": {"unit_category": unit_category.id},
 		"throughput": throughput.duplicate(),
@@ -299,13 +283,9 @@ static func deserialize(data: Variant) -> UnitData:
 		u.range_m = float(stats.get("range_m", u.range_m))
 		u.morale = float(stats.get("morale", u.morale))
 		u.speed_kph = float(stats.get("speed_kph", u.speed_kph))
-
-	var state: Dictionary = data.get("state", {})
-	if typeof(state) == TYPE_DICTIONARY:
-		u.state_strength = float(state.get("state_strength", u.state_strength))
-		u.state_injured = float(state.get("state_injured", u.state_injured))
-		u.state_equipment = float(state.get("state_equipment", u.state_equipment))
-		u.cohesion = float(state.get("cohesion", u.cohesion))
+		u.understrength_threshold = float(
+			stats.get("understrength_threshold", u.understrength_threshold)
+		)
 
 	var editor: Dictionary = data.get("editor", {})
 	if typeof(editor) == TYPE_DICTIONARY:
@@ -349,7 +329,11 @@ static func deserialize(data: Variant) -> UnitData:
 
 
 ## Calculates the attack rating using equipment, ammo profiles, and strength.
-func compute_attack_power(ammo_damage_config: AmmoDamageConfig = null) -> float:
+## [param ammo_damage_config] Optional ammo damage configuration.
+## [param current_strength] Optional current strength override (defaults to full strength).
+func compute_attack_power(
+	ammo_damage_config: AmmoDamageConfig = null, current_strength: float = -1.0
+) -> float:
 	_ensure_ammunition_from_equipment()
 	var weapons: Dictionary = _get_equipment_category("weapons")
 	var total_weapon_power: float = 0.0
@@ -360,8 +344,8 @@ func compute_attack_power(ammo_damage_config: AmmoDamageConfig = null) -> float:
 		var weapon_entry: Dictionary = weapon_data
 		total_weapon_power += _compute_weapon_attack_value(weapon_entry, ammo_damage_config)
 
-	var effective_strength: float = state_strength
-	if effective_strength <= 0.0:
+	var effective_strength: float = current_strength
+	if effective_strength < 0.0:
 		effective_strength = float(strength)
 	effective_strength = max(effective_strength, 0.0)
 

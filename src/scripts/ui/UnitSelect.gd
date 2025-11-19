@@ -374,7 +374,7 @@ func _show_unit_stats(unit: UnitData) -> void:
 	_lbl_range.text = "Engagement Range: %dm" % unit.range_m
 	_lbl_morale.text = "Morale: %d%%" % unit.morale
 	_lbl_speed.text = "Ground Speed: %dkm/h" % unit.speed_kph
-	_lbl_coh.text = "Cohesion: %d%%" % unit.cohesion
+	_lbl_coh.text = "Cohesion: 100%%"  # Cohesion is per-mission state, starts at 100%
 
 
 ## Go back to briefing scene

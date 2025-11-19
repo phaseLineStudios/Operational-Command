@@ -44,6 +44,16 @@ const ARRIVE_EPSILON := 1.0
 ## Is unit playable.
 @export var playable: bool = false
 
+@export_category("State")
+## Current strength
+@export var state_strength: float = 0.0
+## Current injured
+@export var state_injured: float = 0.0
+## Current remaining equipment
+@export var state_equipment: float = 0.0
+## Current cohesion level (0.0–1.0).
+@export_range(0.0, 1.0, 0.01) var cohesion: float = 1.0
+
 var _move_state: MoveState = MoveState.IDLE
 var _move_dest_m: Vector2 = Vector2.ZERO
 var _move_path: PackedVector2Array = []
@@ -58,7 +68,9 @@ var _fuel: FuelSystem = null
 ## Check if unit is dead.
 ## [return] True if unit is destroyed.
 func is_dead() -> bool:
-	return float(unit.state_strength / unit.strength) <= 0.0
+	if unit == null:
+		return true
+	return float(state_strength / unit.strength) <= 0.0
 
 
 #initializing moraleSystem
@@ -324,7 +336,13 @@ func serialize() -> Dictionary:
 		"affiliation": int(affiliation),
 		"combat_mode": int(combat_mode),
 		"behaviour": int(behaviour),
-		"playable": playable
+		"playable": playable,
+		"state": {
+			"state_strength": state_strength,
+			"state_injured": state_injured,
+			"state_equipment": state_equipment,
+			"cohesion": cohesion
+		}
 	}
 
 
@@ -339,4 +357,12 @@ static func deserialize(d: Dictionary) -> ScenarioUnit:
 	u.combat_mode = int(d.get("combat_mode")) as CombatMode
 	u.behaviour = int(d.get("behaviour")) as Behaviour
 	u.playable = d.get("playable", u.playable)
+
+	var state: Dictionary = d.get("state", {})
+	if typeof(state) == TYPE_DICTIONARY:
+		u.state_strength = float(state.get("state_strength", u.state_strength))
+		u.state_injured = float(state.get("state_injured", u.state_injured))
+		u.state_equipment = float(state.get("state_equipment", u.state_equipment))
+		u.cohesion = float(state.get("cohesion", u.cohesion))
+
 	return u

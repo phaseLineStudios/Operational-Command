@@ -231,7 +231,6 @@ func _collect_into_working() -> void:
 	_working.role = _role.text.strip_edges()
 	_working.cost = int(_cost.value)
 	_working.strength = int(_strength.value)
-	_working.state_strength = int(_strength.value)
 	_working.defense = float(_defense.value)
 	_working.spot_m = float(_spot_m.value)
 	_working.range_m = float(_range_m.value)
@@ -273,12 +272,12 @@ func _update_attack_preview() -> void:
 	var base_unit: UnitData = _working if _working != null else UnitData.new()
 	var preview := base_unit.duplicate(true) as UnitData
 	preview.strength = int(_strength.value)
-	preview.state_strength = float(_strength.value)
 	preview.morale = clamp(float(_morale.value), 0.0, 1.0)
 	preview.equipment = _equip.duplicate(true)
 	preview.ammunition = _gather_ammo_from_inputs()
 	preview.state_ammunition = preview.ammunition.duplicate(true)
-	preview.compute_attack_power(AMMO_DAMAGE_CONFIG)
+	var current_strength := float(_strength.value)
+	preview.compute_attack_power(AMMO_DAMAGE_CONFIG, current_strength)
 	_attack_value.text = "%.1f" % preview.attack
 
 

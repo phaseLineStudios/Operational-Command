@@ -181,7 +181,7 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 	if dynamic_attack <= 0.0:
 		return 0.0
 	var defensepower: float = _compute_dynamic_defense_value(defender)
-	var def_str: float = max(0.0, defender.unit.state_strength)
+	var def_str: float = max(0.0, defender.state_strength)
 
 	# --- apply terrain multipliers ---
 	var dmg_mul: float = float(f.get("damage_mul", 1.0))
@@ -207,7 +207,7 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 	var raw_loss: int = int(floor(mitigated_attack * 0.1 / denom))
 	if raw_loss <= 0:
 		raw_loss = 1
-	var applied := _apply_casualties(defender.unit, raw_loss)
+	var applied := _apply_casualties(defender, raw_loss)
 	if defender.unit.morale > 0.0 and applied > 0:
 		defender.unit.morale = max(0.0, defender.unit.morale - 0.05)
 	elif attacker.unit.morale > 0.0 and applied <= 0:
@@ -222,7 +222,7 @@ func check_abort_condition(attacker: ScenarioUnit, defender: ScenarioUnit) -> vo
 	if defender == null or defender.unit == null or attacker == null or attacker.unit == null:
 		return
 
-	if defender.unit.strength / defender.unit.state_strength <= 0.5:
+	if defender.unit.strength / defender.state_strength <= 0.5:
 		LogService.info(defender.unit.id + " is [b]destroyed[/b]", "Combat.gd:62")
 		if attacker.unit.morale <= 0.8:
 			attacker._morale_sys.apply_morale_delta(0.2, "enemy surrendered")
@@ -317,26 +317,26 @@ func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> Di
 
 
 ## Apply casualties to runtime state. Returns actual KIA + WIA applied
-func _apply_casualties(u: UnitData, raw_losses: int) -> int:
-	if u == null or raw_losses <= 0:
+func _apply_casualties(su: ScenarioUnit, raw_losses: int) -> int:
+	if su == null or su.unit == null or raw_losses <= 0:
 		return 0
-	var before := int(round(u.state_strength))
+	var before := int(round(su.state_strength))
 	var loss: int = clamp(raw_losses, 0, before)
-	u.state_strength = float(before - loss)
+	su.state_strength = float(before - loss)
 
 	# Record for debrief summary (does NOT re-apply at debrief unless change policy)
 	var game := get_tree().get_root().get_node_or_null("/root/Game")
 	if game and game.has_node("resolution"):
-		game.resolution.add_unit_losses(u.id, loss)
+		game.resolution.add_unit_losses(su.unit.id, loss)
 
 	var wia_ratio := 0.6
-	u.state_injured = max(0.0, u.state_injured + float(round(loss * wia_ratio)))
+	su.state_injured = max(0.0, su.state_injured + float(round(loss * wia_ratio)))
 
 	var coh_per_cas := 0.01
-	u.cohesion = clamp(u.cohesion - float(loss) * coh_per_cas, 0.0, 1.0)
+	su.cohesion = clamp(su.cohesion - float(loss) * coh_per_cas, 0.0, 1.0)
 
 	var eqp_per_cas := 0.01
-	u.state_equipment = max(0.0, u.state_equipment - float(loss) * eqp_per_cas)
+	su.state_equipment = max(0.0, su.state_equipment - float(loss) * eqp_per_cas)
 	return loss
 
 
@@ -367,20 +367,10 @@ func _emit_debug_snapshot(
 	var f := TerrainEffects.compute_terrain_factors(attacker, defender, env)
 
 	var atk_str: float = max(
-		0.0,
-		(
-			attacker.unit.state_strength
-			if attacker.unit.state_strength > 0.0
-			else float(attacker.unit.strength)
-		)
+		0.0, (attacker.state_strength if attacker.state_strength > 0.0 else float(attacker.unit.strength))
 	)
 	var def_str: float = max(
-		0.0,
-		(
-			defender.unit.state_strength
-			if defender.unit.state_strength > 0.0
-			else float(defender.unit.strength)
-		)
+		0.0, (defender.state_strength if defender.state_strength > 0.0 else float(defender.unit.strength))
 	)
 
 	var base_attack := _compute_dynamic_attack_power(attacker)
@@ -410,8 +400,8 @@ func _emit_debug_snapshot(
 			"pos_m": attacker.position_m,
 			"morale": attacker.unit.morale,
 			"strength": atk_str,
-			"cohesion": attacker.unit.cohesion,
-			"equip": attacker.unit.state_equipment,
+			"cohesion": attacker.cohesion,
+			"equip": attacker.state_equipment,
 			"moving": bool(env.get("attacker_moving", false))
 		},
 		"defender":
@@ -421,8 +411,8 @@ func _emit_debug_snapshot(
 			"pos_m": defender.position_m,
 			"morale": defender.unit.morale,
 			"strength": def_str,
-			"cohesion": defender.unit.cohesion,
-			"equip": defender.unit.state_equipment
+			"cohesion": defender.cohesion,
+			"equip": defender.state_equipment
 		},
 		"components": f.get("debug", {}),
 		"mitigated_attack": mitigated_power
@@ -491,8 +481,8 @@ func _compute_dynamic_attack_power(attacker: ScenarioUnit) -> float:
 	base_attack = max(base_attack, 0.0)
 
 	var morale_factor: float = clamp(unit.morale, 0.1, 1.25)
-	var cohesion_factor: float = lerp(0.35, 1.0, clamp(unit.cohesion, 0.0, 1.0))
-	var equipment_factor: float = lerp(0.4, 1.0, clamp(unit.state_equipment, 0.0, 1.0))
+	var cohesion_factor: float = lerp(0.35, 1.0, clamp(attacker.cohesion, 0.0, 1.0))
+	var equipment_factor: float = lerp(0.4, 1.0, clamp(attacker.state_equipment, 0.0, 1.0))
 	var movement_factor: float = 1.0
 	if attacker.move_state() == ScenarioUnit.MoveState.MOVING:
 		movement_factor = 0.9
@@ -508,8 +498,8 @@ func _compute_dynamic_defense_value(defender: ScenarioUnit) -> float:
 	var unit: UnitData = defender.unit
 	var base_defense: float = max(unit.defense, 0.0)
 	var morale_factor: float = lerp(0.4, 1.0, clamp(unit.morale, 0.0, 1.0))
-	var cohesion_factor: float = lerp(0.4, 1.0, clamp(unit.cohesion, 0.0, 1.0))
-	var equipment_factor: float = lerp(0.35, 1.0, clamp(unit.state_equipment, 0.0, 1.0))
+	var cohesion_factor: float = lerp(0.4, 1.0, clamp(defender.cohesion, 0.0, 1.0))
+	var equipment_factor: float = lerp(0.35, 1.0, clamp(defender.state_equipment, 0.0, 1.0))
 	var movement_factor: float = 1.0
 	if defender.move_state() == ScenarioUnit.MoveState.MOVING:
 		movement_factor = 0.75
@@ -570,11 +560,11 @@ func _apply_vehicle_damage_resolution(attacker: ScenarioUnit, defender: Scenario
 			vehicle_damage *= clamp(highest_profile * 0.05, 0.25, 3.0)
 
 	var equipment_loss: float = clamp(vehicle_damage * 0.01, 0.0, 1.0)
-	defender.unit.state_equipment = max(defender.unit.state_equipment - equipment_loss, 0.0)
+	defender.state_equipment = max(defender.state_equipment - equipment_loss, 0.0)
 
-	if defender.unit.state_equipment <= 0.05:
+	if defender.state_equipment <= 0.05:
 		var catastrophic_loss: int = int(max(1.0, floor(vehicle_damage * 0.02)))
-		_apply_casualties(defender.unit, catastrophic_loss)
+		_apply_casualties(defender, catastrophic_loss)
 
 
 ## Picks an ammo type + round count based on the attacker's current weapon mix.
