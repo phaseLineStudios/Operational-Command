@@ -728,7 +728,7 @@ func _register_logistics_units() -> void:
 
 	if ammo_system:
 		for su: ScenarioUnit in _friendlies + _enemies:
-			ammo_system.register_unit(su.unit)
+			ammo_system.register_unit(su)
 			ammo_system.set_unit_position(su.id, _v3_from_m(su.position_m))
 
 	if artillery_controller:
@@ -736,13 +736,13 @@ func _register_logistics_units() -> void:
 		if los_adapter:
 			artillery_controller.bind_los_adapter(los_adapter)
 		for su: ScenarioUnit in _friendlies + _enemies:
-			artillery_controller.register_unit(su.id, su.unit)
+			artillery_controller.register_unit(su.id, su)
 			artillery_controller.set_unit_position(su.id, su.position_m)
 
 	if engineer_controller:
 		engineer_controller.bind_ammo_system(ammo_system)
 		for su: ScenarioUnit in _friendlies + _enemies:
-			engineer_controller.register_unit(su.id, su.unit)
+			engineer_controller.register_unit(su.id, su)
 			engineer_controller.set_unit_position(su.id, su.position_m)
 
 

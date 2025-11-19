@@ -275,7 +275,6 @@ func _update_attack_preview() -> void:
 	preview.morale = clamp(float(_morale.value), 0.0, 1.0)
 	preview.equipment = _equip.duplicate(true)
 	preview.ammunition = _gather_ammo_from_inputs()
-	preview.state_ammunition = preview.ammunition.duplicate(true)
 	var current_strength := float(_strength.value)
 	preview.compute_attack_power(AMMO_DAMAGE_CONFIG, current_strength)
 	_attack_value.text = "%.1f" % preview.attack

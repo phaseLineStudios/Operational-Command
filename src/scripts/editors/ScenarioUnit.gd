@@ -53,6 +53,8 @@ const ARRIVE_EPSILON := 1.0
 @export var state_equipment: float = 0.0
 ## Current cohesion level (0.0–1.0).
 @export_range(0.0, 1.0, 0.01) var cohesion: float = 1.0
+## Current ammo per type for this unit, same keys as unit.ammunition.
+@export var state_ammunition: Dictionary = {}
 
 var _move_state: MoveState = MoveState.IDLE
 var _move_dest_m: Vector2 = Vector2.ZERO
@@ -341,7 +343,8 @@ func serialize() -> Dictionary:
 			"state_strength": state_strength,
 			"state_injured": state_injured,
 			"state_equipment": state_equipment,
-			"cohesion": cohesion
+			"cohesion": cohesion,
+			"state_ammunition": state_ammunition.duplicate()
 		}
 	}
 
@@ -364,5 +367,8 @@ static func deserialize(d: Dictionary) -> ScenarioUnit:
 		u.state_injured = float(state.get("state_injured", u.state_injured))
 		u.state_equipment = float(state.get("state_equipment", u.state_equipment))
 		u.cohesion = float(state.get("cohesion", u.cohesion))
+		var ammo_state = state.get("state_ammunition", null)
+		if typeof(ammo_state) == TYPE_DICTIONARY:
+			u.state_ammunition = ammo_state
 
 	return u

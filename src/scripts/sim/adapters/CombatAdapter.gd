@@ -43,12 +43,12 @@ func _process(dt: float) -> void:
 func request_fire(unit_id: String, ammo_type: String, rounds: int = 1) -> bool:
 	if _ammo == null:
 		return true
-	var u := _ammo.get_unit(unit_id)
-	if u == null:
+	var su := _ammo.get_unit(unit_id)
+	if su == null:
 		return true
-	if not u.state_ammunition.has(ammo_type):
+	if not su.state_ammunition.has(ammo_type):
 		return true
-	if _ammo.is_empty(u, ammo_type):
+	if _ammo.is_empty(su, ammo_type):
 		emit_signal("fire_blocked_empty", unit_id, ammo_type)
 		return false
 	return _ammo.consume(unit_id, ammo_type, max(1, rounds))
@@ -82,12 +82,12 @@ func get_ammo_penalty(unit_id: String, ammo_type: String) -> Dictionary:
 
 	if _ammo == null:
 		return res
-	var u := _ammo.get_unit(unit_id)
-	if u == null or not u.state_ammunition.has(ammo_type):
+	var su := _ammo.get_unit(unit_id)
+	if su == null or not su.state_ammunition.has(ammo_type):
 		return res
 
-	var cur: int = int(u.state_ammunition.get(ammo_type, 0))
-	var cap: int = int(u.ammunition.get(ammo_type, 0))
+	var cur: int = int(su.state_ammunition.get(ammo_type, 0))
+	var cap: int = int(su.unit.ammunition.get(ammo_type, 0))
 	if cap <= 0:
 		return res
 
@@ -102,14 +102,14 @@ func get_ammo_penalty(unit_id: String, ammo_type: String) -> Dictionary:
 
 	var ratio: float = float(cur) / float(cap)
 
-	if ratio <= u.ammunition_critical_threshold:
+	if ratio <= su.unit.ammunition_critical_threshold:
 		res.state = "critical"
 		res.attack_power_mult = 0.5
 		res.attack_cycle_mult = 1.5
 		res.suppression_mult = 0.0
 		res.morale_delta = -20
 		res.ai_recommendation = "defensive"
-	elif ratio <= u.ammunition_low_threshold:
+	elif ratio <= su.unit.ammunition_low_threshold:
 		res.state = "low"
 		res.attack_power_mult = 0.8
 		res.attack_cycle_mult = 1.25

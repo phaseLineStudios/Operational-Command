@@ -149,9 +149,7 @@ const _ANTI_VEHICLE_AMMO_TYPES := [
 @export_category("Ammunition")
 ## Ammo capacity per type, e.g. `{ "small_arms": 30, "he": 10 }`.
 @export var ammunition: Dictionary = {}  # {type: cap}
-## Current ammo per type for this unit, same keys as `ammunition`.
-@export var state_ammunition: Dictionary = {}  # {type: current}
-## Ratio (0..1): when `current/capacity <= ammunition_low_threshold` emit “Bingo ammo”.
+## Ratio (0..1): when `current/capacity <= ammunition_low_threshold` emit "Bingo ammo".
 @export_range(0.0, 1.0, 0.01) var ammunition_low_threshold: float = 0.25
 ## Ratio (0..1): when `current/capacity <= ammunition_critical_threshold` emit “Ammo critical”.
 @export_range(0.0, 1.0, 0.01) var ammunition_critical_threshold: float = 0.1
@@ -238,7 +236,6 @@ func serialize() -> Dictionary:
 		"doctrine": doctrine,
 		# --- Ammo + Logistics persistence ---
 		"ammunition": ammunition.duplicate(),
-		"state_ammunition": state_ammunition.duplicate(),
 		"ammunition_low_threshold": ammunition_low_threshold,
 		"ammunition_critical_threshold": ammunition_critical_threshold,
 		"supply_transfer_rate": supply_transfer_rate,
@@ -305,10 +302,6 @@ static func deserialize(data: Variant) -> UnitData:
 	if typeof(am_caps) == TYPE_DICTIONARY:
 		u.ammunition = am_caps
 
-	var am_state = data.get("state_ammunition", null)
-	if typeof(am_state) == TYPE_DICTIONARY:
-		u.state_ammunition = am_state
-
 	u.ammunition_low_threshold = float(
 		data.get("ammunition_low_threshold", u.ammunition_low_threshold)
 	)
@@ -319,11 +312,6 @@ static func deserialize(data: Variant) -> UnitData:
 	u.supply_transfer_radius_m = float(
 		data.get("supply_transfer_radius_m", u.supply_transfer_radius_m)
 	)
-
-	# Backfill ammo state if missing (for older saves)
-	if u.state_ammunition.is_empty() and not u.ammunition.is_empty():
-		for k in u.ammunition.keys():
-			u.state_ammunition[k] = int(u.ammunition[k])
 
 	return u
 
@@ -381,16 +369,9 @@ func _compute_weapon_attack_value(
 	if qty <= 0.0:
 		qty = 1.0
 
+	# Note: ammo_ratio is always 1.0 since UnitData is a template without state.
+	# Actual combat calculations use ScenarioUnit.state_ammunition for current ammo.
 	var ammo_ratio: float = 1.0
-	if ammo_key != "":
-		var cap := _get_ammo_amount(ammunition, ammo_key)
-		var cur := _get_ammo_amount(state_ammunition, ammo_key)
-		if cur <= 0.0 and cap > 0.0 and not _has_ammo_key(state_ammunition, ammo_key):
-			cur = cap
-		if cap > 0.0:
-			ammo_ratio = clamp(cur / cap, 0.0, 1.0)
-		elif _has_ammo_key(ammunition, ammo_key):
-			ammo_ratio = 0.0
 
 	return base_damage * qty * ammo_ratio
 
@@ -505,14 +486,10 @@ func _ensure_ammunition_from_equipment() -> void:
 
 	if typeof(ammunition) != TYPE_DICTIONARY or ammunition == null:
 		ammunition = {}
-	if typeof(state_ammunition) != TYPE_DICTIONARY or state_ammunition == null:
-		state_ammunition = {}
 
 	for ammo_key in ammo_caps.keys():
 		if not ammunition.has(ammo_key):
 			ammunition[ammo_key] = ammo_caps[ammo_key]
-		if not state_ammunition.has(ammo_key):
-			state_ammunition[ammo_key] = ammo_caps[ammo_key]
 
 
 ## Lookup an equipment category while tolerating mixed-case keys.

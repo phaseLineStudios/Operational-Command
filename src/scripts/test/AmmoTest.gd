@@ -9,8 +9,8 @@ var adapter: CombatAdapter
 var profile: AmmoProfile
 
 # ---- test units ----
-var shooter: UnitData
-var logi: UnitData
+var shooter: ScenarioUnit
+var logi: ScenarioUnit
 
 # Local position caches (don’t peek into AmmoSystem internals)
 var _pos_shooter: Vector3 = Vector3.ZERO
@@ -89,8 +89,8 @@ func _ready() -> void:
 	_print_tick.timeout.connect(
 		func() -> void:
 			var cur := int(shooter.state_ammunition.get(AMMO_TYPE, 0))
-			var cap := int(shooter.ammunition.get(AMMO_TYPE, 0))
-			var stock := int(logi.throughput.get(AMMO_TYPE, 0))
+			var cap := int(shooter.unit.ammunition.get(AMMO_TYPE, 0))
+			var stock := int(logi.unit.throughput.get(AMMO_TYPE, 0))
 			print("[TICK] shooter %d/%d  stock %d" % [cur, cap, stock])
 			_update_hud()
 	)
@@ -116,20 +116,26 @@ func _enable_log() -> void:
 
 func _spawn_units() -> void:
 	# Shooter
-	shooter = UnitData.new()
+	var shooter_data := UnitData.new()
+	shooter_data.id = "alpha"
+	shooter_data.title = "Alpha"
+	shooter_data.ammunition = {AMMO_TYPE: _init_shooter_cap}
+	shooter = ScenarioUnit.new()
 	shooter.id = "alpha"
-	shooter.title = "Alpha"
-	shooter.ammunition = {AMMO_TYPE: _init_shooter_cap}
+	shooter.unit = shooter_data
 	shooter.state_ammunition = {AMMO_TYPE: _init_shooter_cap}
 
 	# Logistics unit
-	logi = UnitData.new()
+	var logi_data := UnitData.new()
+	logi_data.id = "logi1"
+	logi_data.title = "Logistics Truck"
+	logi_data.throughput = {AMMO_TYPE: _init_logi_stock}
+	logi_data.supply_transfer_rate = _rate
+	logi_data.supply_transfer_radius_m = _radius
+	logi_data.equipment_tags = ["LOGISTICS"]
+	logi = ScenarioUnit.new()
 	logi.id = "logi1"
-	logi.title = "Logistics Truck"
-	logi.throughput = {AMMO_TYPE: _init_logi_stock}
-	logi.supply_transfer_rate = _rate
-	logi.supply_transfer_radius_m = _radius
-	logi.equipment_tags = ["LOGISTICS"]
+	logi.unit = logi_data
 
 	ammo.register_unit(shooter)
 	ammo.register_unit(logi)
@@ -187,9 +193,9 @@ func _on_move_far() -> void:
 
 
 func _on_reset() -> void:
-	shooter.ammunition[AMMO_TYPE] = _init_shooter_cap
+	shooter.unit.ammunition[AMMO_TYPE] = _init_shooter_cap
 	shooter.state_ammunition[AMMO_TYPE] = _init_shooter_cap
-	logi.throughput[AMMO_TYPE] = _init_logi_stock
+	logi.unit.throughput[AMMO_TYPE] = _init_logi_stock
 	_print("[RESET] ammo and stock restored")
 	_update_hud()
 	_update_link_status()
@@ -200,18 +206,18 @@ func _on_reset() -> void:
 
 func _update_hud() -> void:
 	var scur := int(shooter.state_ammunition.get(AMMO_TYPE, 0))
-	var scap := int(shooter.ammunition.get(AMMO_TYPE, 0))
-	var stock := int(logi.throughput.get(AMMO_TYPE, 0))
+	var scap := int(shooter.unit.ammunition.get(AMMO_TYPE, 0))
+	var stock := int(logi.unit.throughput.get(AMMO_TYPE, 0))
 	_lbl_shooter.text = "Shooter %s: %d/%d" % [shooter.id, scur, scap]
 	_lbl_logi.text = "Logi %s stock(%s): %d" % [logi.id, AMMO_TYPE, stock]
 
 
 func _update_link_status() -> void:
 	var d: float = _pos_shooter.distance_to(_pos_logi)
-	var in_range: bool = d <= max(logi.supply_transfer_radius_m, 0.0)
+	var in_range: bool = d <= max(logi.unit.supply_transfer_radius_m, 0.0)
 	var status := "IN RANGE" if in_range else "OUT OF RANGE"
 	_lbl_link.text = (
-		"Link: distance=%.1fm  (radius=%.1fm)  %s" % [d, logi.supply_transfer_radius_m, status]
+		"Link: distance=%.1fm  (radius=%.1fm)  %s" % [d, logi.unit.supply_transfer_radius_m, status]
 	)
 
 
