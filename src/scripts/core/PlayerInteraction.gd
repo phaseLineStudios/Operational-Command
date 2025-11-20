@@ -19,6 +19,7 @@ func _ready():
 	bounds.transparency = 1
 	_half_x = bounds.mesh.size.x * 0.5
 	_half_z = bounds.mesh.size.y * 0.5
+	add_to_group("interaction_controllers")
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -140,6 +141,13 @@ func _drop_held() -> void:
 			_held.call("on_drop")
 	_held = null
 	_have_valid_plane_point = false
+
+
+func cancel_hold() -> void:
+	if _held != null:
+		if _held.is_inspecting():
+			_held.end_inspect()
+		_drop_held()
 
 
 func _project_mouse_to_finite_plane(mouse_pos: Vector2) -> Variant:
