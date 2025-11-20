@@ -26,6 +26,18 @@ func _unhandled_input(event: InputEvent) -> void:
 		var handled := _held.handle_inspect_input(event)
 		if handled:
 			get_viewport().set_input_as_handled()
+			# Only drop when inspect mode was closed (ESC / right-click). Regular page clicks keep holding.
+			var esc_close: bool = (
+				event is InputEventKey
+				and event.pressed
+				and not event.echo
+				and event.keycode == KEY_ESCAPE
+			)
+			var rmb_close: bool = (
+				event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT
+			)
+			if esc_close or rmb_close:
+				_drop_held()
 		return
 
 	if event is InputEventMouseButton and event.is_pressed():
