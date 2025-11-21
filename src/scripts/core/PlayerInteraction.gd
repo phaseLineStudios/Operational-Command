@@ -10,6 +10,7 @@ var _last_valid_plane_point := Vector3.ZERO
 var _have_valid_plane_point := false
 var _half_x := 0.0
 var _half_z := 0.0
+var _resume_drag_after_inspect := false
 
 @onready var camera: Camera3D = %CameraController/CameraBounds/Camera
 @onready var bounds: MeshInstance3D = $InteractionBounds
@@ -27,18 +28,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		var handled := _held.handle_inspect_input(event)
 		if handled:
 			get_viewport().set_input_as_handled()
-			# Only drop when inspect mode was closed (ESC / right-click). Regular page clicks keep holding.
-			var esc_close: bool = (
-				event is InputEventKey
-				and event.pressed
-				and not event.echo
-				and event.keycode == KEY_ESCAPE
-			)
-			var rmb_close: bool = (
-				event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT
-			)
-			if esc_close or rmb_close:
-				_drop_held()
+			if _held != null and not _held.is_inspecting():
+				if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+					_resume_drag_after_inspect = true
+				else:
+					_resume_drag_after_inspect = false
 		return
 
 	if event is InputEventMouseButton and event.is_pressed():
@@ -66,6 +60,13 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	if event is InputEventMouseButton and event.is_released():
 		if event.button_index == MOUSE_BUTTON_LEFT and _held != null and not _held.pick_toggle:
+			if _held.is_inspecting():
+				get_viewport().set_input_as_handled()
+				return
+			if _resume_drag_after_inspect:
+				_resume_drag_after_inspect = false
+				get_viewport().set_input_as_handled()
+				return
 			_drop_held()
 			get_viewport().set_input_as_handled()
 			return
@@ -141,6 +142,7 @@ func _drop_held() -> void:
 			_held.call("on_drop")
 	_held = null
 	_have_valid_plane_point = false
+	_resume_drag_after_inspect = false
 
 
 func cancel_hold() -> void:
