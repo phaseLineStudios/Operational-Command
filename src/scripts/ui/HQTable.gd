@@ -285,6 +285,33 @@ func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]:
 				su.callsign = slot.callsign
 				su.position_m = slot.start_position
 				su.playable = true
+
+				# Restore saved state from campaign save if available
+				if Game.current_save:
+					var saved_state := Game.current_save.get_unit_state(unit_id)
+					if not saved_state.is_empty():
+						su.state_strength = saved_state.get("state_strength", unit_data.strength)
+						su.state_injured = saved_state.get("state_injured", 0.0)
+						su.state_equipment = saved_state.get("state_equipment", 1.0)
+						su.cohesion = saved_state.get("cohesion", 1.0)
+						var saved_ammo = saved_state.get("state_ammunition", {})
+						if saved_ammo is Dictionary and not saved_ammo.is_empty():
+							su.state_ammunition = saved_ammo.duplicate()
+						else:
+							su.state_ammunition = unit_data.ammunition.duplicate()
+					else:
+						su.state_strength = unit_data.strength
+						su.state_injured = 0.0
+						su.state_equipment = 1.0
+						su.cohesion = 1.0
+						su.state_ammunition = unit_data.ammunition.duplicate()
+				else:
+					su.state_strength = unit_data.strength
+					su.state_injured = 0.0
+					su.state_equipment = 1.0
+					su.cohesion = 1.0
+					su.state_ammunition = unit_data.ammunition.duplicate()
+
 				units.append(su)
 				callsigns.append(slot.callsign)
 
