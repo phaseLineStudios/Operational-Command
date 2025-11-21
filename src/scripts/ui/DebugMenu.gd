@@ -13,6 +13,7 @@ var _log_lines: Array = []
 var _scene_options_discovered: Array = []
 var _is_scanning: bool = false
 var _save_editor: DebugMenuSaveEditor
+var _mission_editor: DebugMenuMission
 
 @onready var metrics_display: DebugMetricsDisplay = %MetricsDisplay
 @onready var metrics_visibility: OptionButton = $TabContainer/General/Column/MetricsVisibility
@@ -33,6 +34,10 @@ var _save_editor: DebugMenuSaveEditor
 @onready var save_editor_refresh: Button = %Refresh
 @onready var save_editor_content: GridContainer = %EditorContent
 @onready var save_editor_tab: VBoxContainer = %SaveEditor
+@onready var mission_status: Label = %MissionStatus
+@onready var mission_refresh: Button = %MissionRefresh
+@onready var mission_content: GridContainer = %MissionContent
+@onready var mission_tab: VBoxContainer = %Mission
 
 
 func _ready():
@@ -59,8 +64,15 @@ func _ready():
 	save_editor_refresh.pressed.connect(func(): _save_editor.refresh(self))
 	save_editor_tab.name = "Save Editor"
 
+	# Initialize mission editor (if Mission tab UI exists in scene)
+	if mission_status and mission_content and mission_refresh and mission_tab:
+		_mission_editor = DebugMenuMission.new(mission_status, mission_content)
+		mission_refresh.pressed.connect(func(): _mission_editor.refresh(self))
+		mission_tab.name = "Mission"
+
 	_refresh_scene_options()
 	_save_editor.refresh(self)
+	_update_mission_tab_visibility()
 
 
 ## Set visibility for metrics display
@@ -596,9 +608,27 @@ func _process(_dt: float) -> void:
 		if not visible:
 			popup_centered_ratio(0.5)
 			grab_focus()
+			_update_mission_tab_visibility()
+			if mission_tab.visible:
+				_mission_editor.refresh(self)
 		else:
 			hide()
 
 
 func _close():
 	hide()
+
+
+## Update Mission tab visibility based on whether HQ Table scene is active
+func _update_mission_tab_visibility() -> void:
+	if not is_inside_tree():
+		return
+
+	# Check if SimWorld exists in the scene tree (indicates HQ Table is active)
+	var root := get_tree().root
+	var sim_world := root.find_child("SimWorld", true, false)
+
+	if sim_world and mission_tab:
+		mission_tab.visible = true
+	elif mission_tab:
+		mission_tab.visible = false
