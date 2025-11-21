@@ -33,6 +33,16 @@ var _current_equipment_pool: int = 0
 var _current_ammo_pools: Dictionary = {}
 var _reinforcement_panel: ReinforcementPanel = null
 
+## Pending resupply changes (staged before commit)
+var _pending_equipment: int = 0  # Target equipment percentage
+var _pending_ammo: Dictionary = {}  # ammo_type -> target amount
+
+## Original state tracking (for reset to undo all changes) - per unit
+var _original_equipment: Dictionary = {}  # unit_id -> int (equipment %)
+var _original_ammo: Dictionary = {}  # unit_id -> { ammo_type -> amount }
+var _original_equipment_pool: Dictionary = {}  # unit_id -> int (pool at time of selection)
+var _original_ammo_pools: Dictionary = {}  # unit_id -> { ammo_type -> amount }
+
 ## Temporary ScenarioUnit instances for state management during loadout configuration
 var _temp_scenario_units: Dictionary = {}  # unit_id -> ScenarioUnit
 
@@ -454,9 +464,10 @@ func _init_supply_pools() -> void:
 
 
 ## Populate supply UI with ammo and equipment resupply options
-func _populate_supply_ui(unit: UnitData) -> void:
-	# Clear existing children
+func _populate_supply_ui(unit: UnitData, reset_pending: bool = true) -> void:
+	# Clear existing children immediately
 	for child in _supply_vbox.get_children():
+		_supply_vbox.remove_child(child)
 		child.queue_free()
 
 	if not unit:
@@ -466,97 +477,208 @@ func _populate_supply_ui(unit: UnitData) -> void:
 	if not scenario_unit:
 		return
 
+	# Sync pool values from scenario (in case they were updated)
+	_current_equipment_pool = Game.current_scenario.equipment_pool
+	_current_ammo_pools = Game.current_scenario.ammo_pools.duplicate()
+
+	# Initialize pending values to current values (only if reset_pending is true)
+	if reset_pending:
+		_pending_equipment = int(scenario_unit.state_equipment * 100.0)
+		_pending_ammo.clear()
+		for ammo_type in unit.ammunition.keys():
+			_pending_ammo[ammo_type] = int(scenario_unit.state_ammunition.get(ammo_type, 0))
+
+		# Capture original state ONLY on first selection of this unit
+		if not _original_equipment.has(unit.id):
+			_original_equipment[unit.id] = int(scenario_unit.state_equipment * 100.0)
+			var unit_ammo: Dictionary = {}
+			for ammo_type in unit.ammunition.keys():
+				unit_ammo[ammo_type] = int(scenario_unit.state_ammunition.get(ammo_type, 0))
+			_original_ammo[unit.id] = unit_ammo
+			_original_equipment_pool[unit.id] = _current_equipment_pool
+			_original_ammo_pools[unit.id] = _current_ammo_pools.duplicate()
+			LogService.debug(
+				(
+					"Captured original state for %s: equipment=%d%%, pool=%d"
+					% [
+						unit.id,
+						int(_original_equipment[unit.id]),
+						int(_original_equipment_pool[unit.id])
+					]
+				),
+				"UnitSelect"
+			)
+
+	LogService.debug(
+		(
+			"Populate supply UI: pool=%d, current=%d%%, pending=%d%%"
+			% [
+				_current_equipment_pool,
+				int(scenario_unit.state_equipment * 100.0),
+				_pending_equipment
+			]
+		),
+		"UnitSelect"
+	)
+
+	# Create ScrollContainer for supply items
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_supply_vbox.add_child(scroll)
+
+	# Create VBoxContainer inside scroll for items
+	var items_vbox := VBoxContainer.new()
+	items_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(items_vbox)
+
 	# Add equipment resupply row
-	_add_equipment_row(unit, scenario_unit)
+	_add_equipment_row(scenario_unit, items_vbox)
 
 	# Add ammo resupply rows for each ammo type the unit has
 	for ammo_type in unit.ammunition.keys():
 		var capacity: int = int(unit.ammunition.get(ammo_type, 0))
 		if capacity > 0:
-			_add_ammo_row(unit, scenario_unit, ammo_type, capacity)
+			_add_ammo_row(scenario_unit, ammo_type, capacity, items_vbox)
+
+	# Add spacer
+	var spacer := Control.new()
+	spacer.custom_minimum_size = Vector2(0, 10)
+	_supply_vbox.add_child(spacer)
+
+	# Add commit/reset buttons row (outside scroll container)
+	var button_row := HBoxContainer.new()
+	button_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button_row.alignment = BoxContainer.ALIGNMENT_END
+	_supply_vbox.add_child(button_row)
+
+	var reset_btn := Button.new()
+	reset_btn.text = "Reset"
+	reset_btn.pressed.connect(func(): _reset_resupply_pending(unit))
+	button_row.add_child(reset_btn)
+
+	var commit_btn := Button.new()
+	commit_btn.text = "Commit Resupply"
+	commit_btn.pressed.connect(func(): _commit_resupply(unit))
+	button_row.add_child(commit_btn)
 
 
 ## Add equipment resupply row
-func _add_equipment_row(unit: UnitData, scenario_unit: ScenarioUnit) -> void:
-	var row := HBoxContainer.new()
-	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_supply_vbox.add_child(row)
+func _add_equipment_row(scenario_unit: ScenarioUnit, container: VBoxContainer) -> void:
+	var current_pct := int(scenario_unit.state_equipment * 100.0)
+
+	# Row 1: Type, Pool, Current/Max
+	var row1 := HBoxContainer.new()
+	row1.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	container.add_child(row1)
 
 	var label := Label.new()
 	label.text = "Equipment:"
-	label.custom_minimum_size = Vector2(140, 0)
-	row.add_child(label)
-
-	var current_label := Label.new()
-	var current_pct := int(scenario_unit.state_equipment * 100.0)
-	current_label.text = "%d%%" % current_pct
-	current_label.custom_minimum_size = Vector2(60, 0)
-	row.add_child(current_label)
-
-	var spacer := Control.new()
-	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(spacer)
+	label.custom_minimum_size = Vector2(100, 0)
+	row1.add_child(label)
 
 	var pool_label := Label.new()
 	pool_label.text = "Pool: %d" % _current_equipment_pool
 	pool_label.custom_minimum_size = Vector2(80, 0)
-	row.add_child(pool_label)
+	row1.add_child(pool_label)
 
-	var resupply_btn := Button.new()
-	resupply_btn.text = "Resupply (+10%)"
-	resupply_btn.disabled = _current_equipment_pool < 10 or scenario_unit.state_equipment >= 1.0
-	resupply_btn.pressed.connect(
-		func(): _resupply_equipment(unit, scenario_unit, current_label, pool_label, resupply_btn)
+	var current_label := Label.new()
+	current_label.text = "%d%%" % current_pct
+	current_label.custom_minimum_size = Vector2(60, 0)
+	row1.add_child(current_label)
+
+	# Row 2: Slider only
+	var row2 := HBoxContainer.new()
+	row2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	container.add_child(row2)
+
+	var slider := HSlider.new()
+	slider.min_value = 0.0
+	slider.max_value = 100.0
+	slider.step = 1.0
+	slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	slider.value_changed.connect(
+		func(v: float) -> void:
+			var target_pct := int(round(v))
+			# Block slider from going below current value
+			if target_pct < current_pct:
+				slider.value = float(current_pct)
+				return
+			var cost := target_pct - current_pct
+			var pool_after := _current_equipment_pool - cost
+			if pool_after < 0:
+				slider.value = float(current_pct + _current_equipment_pool)
+				return
+			# Update pending value only
+			_pending_equipment = target_pct
+			# Update labels to show preview
+			current_label.text = "%d%%" % target_pct
+			pool_label.text = "Pool: %d" % pool_after
 	)
-	row.add_child(resupply_btn)
+	row2.add_child(slider)
+	# Set value after adding to tree to ensure it updates visually
+	slider.set_value_no_signal(float(_pending_equipment))
 
 
 ## Add ammo resupply row
 func _add_ammo_row(
-	unit: UnitData, scenario_unit: ScenarioUnit, ammo_type: String, capacity: int
+	scenario_unit: ScenarioUnit, ammo_type: String, capacity: int, container: VBoxContainer
 ) -> void:
-	var row := HBoxContainer.new()
-	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_supply_vbox.add_child(row)
+	var current := int(scenario_unit.state_ammunition.get(ammo_type, 0))
+	var pool_available := int(_current_ammo_pools.get(ammo_type, 0))
+	var pending := int(_pending_ammo.get(ammo_type, current))
+
+	# Row 1: Type, Pool, Current/Max
+	var row1 := HBoxContainer.new()
+	row1.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	container.add_child(row1)
 
 	var label := Label.new()
 	label.text = ammo_type.capitalize() + ":"
-	label.custom_minimum_size = Vector2(140, 0)
-	row.add_child(label)
+	label.custom_minimum_size = Vector2(100, 0)
+	row1.add_child(label)
 
-	var current := int(scenario_unit.state_ammunition.get(ammo_type, 0))
-	var current_label := Label.new()
-	current_label.text = "%d/%d" % [current, capacity]
-	current_label.custom_minimum_size = Vector2(60, 0)
-	row.add_child(current_label)
-
-	var spacer := Control.new()
-	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(spacer)
-
-	var pool_available := int(_current_ammo_pools.get(ammo_type, 0))
 	var pool_label := Label.new()
 	pool_label.text = "Pool: %d" % pool_available
 	pool_label.custom_minimum_size = Vector2(80, 0)
-	row.add_child(pool_label)
+	row1.add_child(pool_label)
 
-	var resupply_amount := int(capacity * 0.1)  # 10% of capacity
-	var resupply_btn := Button.new()
-	resupply_btn.text = "Resupply (+%d)" % resupply_amount
-	resupply_btn.disabled = pool_available < resupply_amount or current >= capacity
-	resupply_btn.pressed.connect(
-		func():
-			_resupply_ammo(
-				unit,
-				scenario_unit,
-				ammo_type,
-				resupply_amount,
-				current_label,
-				pool_label,
-				resupply_btn
-			)
+	var current_label := Label.new()
+	current_label.text = "%d/%d" % [current, capacity]
+	current_label.custom_minimum_size = Vector2(60, 0)
+	row1.add_child(current_label)
+
+	# Row 2: Slider only
+	var row2 := HBoxContainer.new()
+	row2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	container.add_child(row2)
+
+	var slider := HSlider.new()
+	slider.min_value = 0.0
+	slider.max_value = float(capacity)
+	slider.step = 1.0
+	slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	slider.value_changed.connect(
+		func(v: float) -> void:
+			var target := int(round(v))
+			# Block slider from going below current value
+			if target < current:
+				slider.value = float(current)
+				return
+			var needed := target - current
+			var pool_after := pool_available - needed
+			if pool_after < 0:
+				slider.value = float(current + pool_available)
+				return
+			# Update pending value only
+			_pending_ammo[ammo_type] = target
+			# Update labels to show preview
+			current_label.text = "%d/%d" % [target, capacity]
+			pool_label.text = "Pool: %d" % pool_after
 	)
-	row.add_child(resupply_btn)
+	row2.add_child(slider)
+	# Set value after adding to tree to ensure it updates visually
+	slider.set_value_no_signal(float(pending))
 
 
 ## Resupply equipment
@@ -578,8 +700,8 @@ func _resupply_equipment(
 	_current_equipment_pool -= cost
 	scenario_unit.state_equipment = min(1.0, scenario_unit.state_equipment + 0.1)
 
-	# Persist to campaign pool
-	Game.set_equipment_pool(_current_equipment_pool)
+	# Update scenario pool
+	Game.current_scenario.equipment_pool = _current_equipment_pool
 
 	# Update labels
 	var current_pct := int(scenario_unit.state_equipment * 100.0)
@@ -590,6 +712,36 @@ func _resupply_equipment(
 	btn.disabled = _current_equipment_pool < cost or scenario_unit.state_equipment >= 1.0
 
 	LogService.info("Resupplied %s equipment to %d%%" % [unit.id, current_pct], "UnitSelect")
+
+
+## Resupply equipment (slider version)
+func _resupply_equipment_slider(
+	unit: UnitData, scenario_unit: ScenarioUnit, target_pct: int, pool_label: Label, slider: HSlider
+) -> void:
+	var current_pct := int(scenario_unit.state_equipment * 100.0)
+	var cost := target_pct - current_pct
+
+	if cost <= 0:
+		return
+
+	if _current_equipment_pool < cost:
+		return
+
+	# Apply resupply
+	_current_equipment_pool -= cost
+	scenario_unit.state_equipment = clamp(float(target_pct) / 100.0, 0.0, 1.0)
+
+	# Update scenario pool
+	Game.current_scenario.equipment_pool = _current_equipment_pool
+
+	# Update pool label
+	pool_label.text = "Pool: %d" % _current_equipment_pool
+
+	# Update slider max (can't go higher than pool allows now)
+	var new_current_pct := int(scenario_unit.state_equipment * 100.0)
+	slider.value = float(new_current_pct)
+
+	LogService.info("Resupplied %s equipment to %d%%" % [unit.id, new_current_pct], "UnitSelect")
 
 
 ## Resupply ammunition
@@ -617,8 +769,8 @@ func _resupply_ammo(
 	_current_ammo_pools[ammo_type] = pool_available - actual_amount
 	scenario_unit.state_ammunition[ammo_type] = current + actual_amount
 
-	# Persist to campaign pool
-	Game.set_ammo_pools(_current_ammo_pools)
+	# Update scenario pool
+	Game.current_scenario.ammo_pools = _current_ammo_pools.duplicate()
 
 	# Update labels
 	var new_current := int(scenario_unit.state_ammunition.get(ammo_type, 0))
@@ -636,6 +788,139 @@ func _resupply_ammo(
 		),
 		"UnitSelect"
 	)
+
+
+## Resupply ammunition (slider version)
+func _resupply_ammo_slider(
+	unit: UnitData,
+	scenario_unit: ScenarioUnit,
+	ammo_type: String,
+	target: int,
+	pool_label: Label,
+	slider: HSlider
+) -> void:
+	var current := int(scenario_unit.state_ammunition.get(ammo_type, 0))
+	var needed := target - current
+
+	if needed <= 0:
+		return
+
+	var pool_available := int(_current_ammo_pools.get(ammo_type, 0))
+	if pool_available < needed:
+		return
+
+	# Apply resupply
+	_current_ammo_pools[ammo_type] = pool_available - needed
+	scenario_unit.state_ammunition[ammo_type] = target
+
+	# Update scenario pool
+	Game.current_scenario.ammo_pools = _current_ammo_pools.duplicate()
+
+	# Update pool label
+	pool_label.text = "Pool: %d" % int(_current_ammo_pools.get(ammo_type, 0))
+
+	# Update slider value
+	slider.value = float(target)
+
+	LogService.info(
+		"Resupplied %s %s ammo: +%d (now %d)" % [unit.id, ammo_type, needed, target], "UnitSelect"
+	)
+
+
+## Commit pending resupply changes
+func _commit_resupply(unit: UnitData) -> void:
+	if not unit:
+		return
+
+	var scenario_unit := _get_scenario_unit_for_id(unit.id)
+	if not scenario_unit:
+		return
+
+	var current_equipment_pct := int(scenario_unit.state_equipment * 100.0)
+	var equipment_cost := _pending_equipment - current_equipment_pct
+
+	# Apply equipment resupply
+	if equipment_cost > 0:
+		if _current_equipment_pool >= equipment_cost:
+			_current_equipment_pool -= equipment_cost
+			scenario_unit.state_equipment = clamp(float(_pending_equipment) / 100.0, 0.0, 1.0)
+			Game.current_scenario.equipment_pool = _current_equipment_pool
+			LogService.info(
+				"Committed equipment resupply for %s: %d%%" % [unit.id, _pending_equipment],
+				"UnitSelect"
+			)
+
+	# Apply ammo resupply
+	for ammo_type in _pending_ammo.keys():
+		var target := int(_pending_ammo[ammo_type])
+		var current := int(scenario_unit.state_ammunition.get(ammo_type, 0))
+		var needed := target - current
+
+		if needed > 0:
+			var pool_available := int(_current_ammo_pools.get(ammo_type, 0))
+			if pool_available >= needed:
+				_current_ammo_pools[ammo_type] = pool_available - needed
+				scenario_unit.state_ammunition[ammo_type] = target
+				LogService.info(
+					(
+						"Committed ammo resupply for %s %s: +%d (now %d)"
+						% [unit.id, ammo_type, needed, target]
+					),
+					"UnitSelect"
+				)
+
+	# Update scenario ammo pools
+	Game.current_scenario.ammo_pools = _current_ammo_pools.duplicate()
+
+	# Refresh the UI with the new committed values
+	_populate_supply_ui(unit, true)
+
+
+## Reset pending resupply changes to original values (undo all changes including commits)
+func _reset_resupply_pending(unit: UnitData) -> void:
+	if not unit:
+		return
+
+	var scenario_unit := _get_scenario_unit_for_id(unit.id)
+	if not scenario_unit:
+		return
+
+	# Check if we have original state for this unit
+	if not _original_equipment.has(unit.id):
+		LogService.warn("No original state captured for unit %s" % unit.id, "UnitSelect")
+		return
+
+	# Get this unit's original state
+	var original_eq: int = int(_original_equipment.get(unit.id, 0))
+	var original_ammo_dict: Dictionary = _original_ammo.get(unit.id, {})
+	var original_eq_pool: int = int(_original_equipment_pool.get(unit.id, 0))
+	var original_ammo_pool_dict: Dictionary = _original_ammo_pools.get(unit.id, {})
+
+	# Restore scenario unit to original state
+	scenario_unit.state_equipment = float(original_eq) / 100.0
+	for ammo_type in original_ammo_dict.keys():
+		scenario_unit.state_ammunition[ammo_type] = original_ammo_dict[ammo_type]
+
+	# Restore pools to original state
+	_current_equipment_pool = original_eq_pool
+	_current_ammo_pools = original_ammo_pool_dict.duplicate()
+	Game.current_scenario.equipment_pool = original_eq_pool
+	Game.current_scenario.ammo_pools = original_ammo_pool_dict.duplicate()
+
+	# Reset pending values to original values
+	_pending_equipment = original_eq
+	_pending_ammo = original_ammo_dict.duplicate()
+
+	LogService.info(
+		(
+			"Reset resupply to original for %s: equipment=%d%%, pool=%d"
+			% [unit.id, original_eq, original_eq_pool]
+		),
+		"UnitSelect"
+	)
+
+	# Refresh UI to show original state
+	_populate_supply_ui(unit, false)
 
 
 ## Populate replacements UI with ReinforcementPanel
@@ -710,7 +995,6 @@ func _on_reinforcement_committed(plan: Dictionary) -> void:
 
 	# Update pool
 	Game.current_scenario.replacement_pool = remaining_pool
-	Game.set_replacement_pool(remaining_pool)
 
 	# Refresh UI
 	if _selected_unit_for_supply:

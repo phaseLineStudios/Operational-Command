@@ -38,25 +38,19 @@ func _ready() -> void:
 	_unit_strength["BRAVO"] = 0.0  # wiped out
 	_unit_strength["CHARLIE"] = 27.0
 
-	# Seed Game's pool first (if autoload exists)
+	# Seed Game's scenario pool first (if autoload exists and scenario is loaded)
 	var g: Node = get_tree().get_root().get_node_or_null("/root/Game")
-	if g:
-		if g.has_method("set_replacement_pool"):
-			g.set_replacement_pool(START_POOL)
-		elif g.has_variable("campaign_replacement_pool"):
-			g.campaign_replacement_pool = START_POOL
+	if g and g.current_scenario:
+		g.current_scenario.replacement_pool = START_POOL
 
 	# Build panel and wait a frame so onready nodes exist
 	_panel = PANEL_SCENE.instantiate() as ReinforcementPanel
 	add_child(_panel)
 	await get_tree().process_frame
 
-	# Initial pool (prefer Game's value)
-	if g:
-		if g.has_method("get_replacement_pool"):
-			_pool = int(g.get_replacement_pool())
-		elif g.has_variable("campaign_replacement_pool"):
-			_pool = int(g.campaign_replacement_pool)
+	# Initial pool (prefer Game scenario's value)
+	if g and g.current_scenario:
+		_pool = int(g.current_scenario.replacement_pool)
 	else:
 		_pool = START_POOL
 
@@ -121,13 +115,10 @@ func _on_committed(plan: Dictionary) -> void:
 		_unit_strength[uid] = float(cur + applied)
 		remaining -= applied
 
-	# Persist remaining to Game (if present) and mirror to panel
+	# Persist remaining to Game scenario (if present) and mirror to panel
 	var g: Node = get_tree().get_root().get_node_or_null("/root/Game")
-	if g:
-		if g.has_method("set_replacement_pool"):
-			g.set_replacement_pool(remaining)
-		elif g.has_variable("campaign_replacement_pool"):
-			g.campaign_replacement_pool = remaining
+	if g and g.current_scenario:
+		g.current_scenario.replacement_pool = remaining
 
 	_pool = remaining
 	_panel.set_units(_units, _unit_strength)  # refresh rows/badges/missing caps
@@ -159,14 +150,11 @@ func _reset_to_baseline() -> void:
 		)
 		_unit_strength[u.id] = float(base)
 
-	# Restore pool (Game + panel)
+	# Restore pool (Game scenario + panel)
 	_pool = _baseline_pool
 	var g: Node = get_tree().get_root().get_node_or_null("/root/Game")
-	if g:
-		if g.has_method("set_replacement_pool"):
-			g.set_replacement_pool(_pool)
-		elif g.has_variable("campaign_replacement_pool"):
-			g.campaign_replacement_pool = _pool
+	if g and g.current_scenario:
+		g.current_scenario.replacement_pool = _pool
 
 	_panel.set_units(_units, _unit_strength)
 	_panel.set_pool(_pool)

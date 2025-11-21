@@ -195,6 +195,8 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="LeftTray" type="PanelContainer" parent="OCMenuContainer/VBoxContainer/Main"]
+clip_contents = true
+custom_minimum_size = Vector2(315, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.6
@@ -324,6 +326,8 @@ script = ExtResource("4_lkfvs")
 slot_item_scene = ExtResource("6_qiiyt")
 
 [node name="RightTray" type="PanelContainer" parent="OCMenuContainer/VBoxContainer/Main"]
+clip_contents = true
+custom_minimum_size = Vector2(315, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.6

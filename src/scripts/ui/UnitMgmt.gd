@@ -1,9 +1,9 @@
 extends Control
 ## Unit Management screen controller. Integrates ReinforcementPanel with unit list.
-## This scene expects a Game singleton with current_scenario and an integer
-## Game.campaign_replacement_pool for the shared personnel pool.
+## This scene expects a Game singleton with current_scenario containing the
+## scenario's replacement_pool for the shared personnel pool.
 ## When the player commits a plan, this applies the allocations to UnitData
-## and emits unit_strength_changed for each modified unit.to UnitData.
+## and emits unit_strength_changed for each modified unit.
 
 signal unit_strength_changed(unit_id: String, current: int, status: String)
 
@@ -87,21 +87,17 @@ func _collect_units_from_game() -> Array[UnitData]:
 	return out
 
 
-## Read the replacement pool from Game (placeholder persistence).
+## Read the replacement pool from Game scenario.
 func _get_pool() -> int:
-	if Game and Game.has_method("get_replacement_pool"):
-		return int(Game.call("get_replacement_pool"))
-	if Game and Game.has_variable("campaign_replacement_pool"):
-		return int(Game.campaign_replacement_pool)
+	if Game and Game.current_scenario:
+		return int(Game.current_scenario.replacement_pool)
 	return 0
 
 
-## Write the replacement pool to Game (placeholder persistence).
+## Write the replacement pool to Game scenario.
 func _set_pool(v: int) -> void:
-	if Game and Game.has_method("set_replacement_pool"):
-		Game.call("set_replacement_pool", v)
-	elif Game and Game.has_variable("campaign_replacement_pool"):
-		Game.campaign_replacement_pool = v
+	if Game and Game.current_scenario:
+		Game.current_scenario.replacement_pool = v
 
 
 ## Live preview hook from panel (visual-only here).
