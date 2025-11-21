@@ -31,6 +31,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			if _held != null and not _held.is_inspecting():
 				if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 					_resume_drag_after_inspect = true
+				elif event is InputEventKey and event.keycode == KEY_ESCAPE:
+					_resume_drag_after_inspect = false
+					_drop_held()
 				else:
 					_resume_drag_after_inspect = false
 		return
