@@ -146,6 +146,12 @@ func _build_pool() -> void:
 
 	var units: Array[UnitData] = ContentDB.list_recruitable_units(Game.current_scenario.id)
 	for u in units:
+		# Restore experience from campaign save if available
+		if Game.current_save:
+			var saved_state := Game.current_save.get_unit_state(u.id)
+			if not saved_state.is_empty():
+				u.experience = saved_state.get("experience", u.experience)
+
 		_units_by_id[u.id] = u
 
 		var card: UnitCard = unit_card_scene.instantiate() as UnitCard
@@ -740,6 +746,7 @@ func _get_scenario_unit_for_id(unit_id: String) -> ScenarioUnit:
 			su.state_injured = saved_state.get("state_injured", 0.0)
 			su.state_equipment = saved_state.get("state_equipment", 1.0)
 			su.cohesion = saved_state.get("cohesion", 1.0)
+			unit.experience = saved_state.get("experience", unit.experience)
 			var saved_ammo = saved_state.get("state_ammunition", {})
 			if saved_ammo is Dictionary and not saved_ammo.is_empty():
 				su.state_ammunition = saved_ammo.duplicate()
@@ -778,6 +785,7 @@ func _save_temp_unit_states() -> void:
 				"state_equipment": su.state_equipment,
 				"cohesion": su.cohesion,
 				"state_ammunition": su.state_ammunition.duplicate(),
+				"experience": su.unit.experience,
 			}
 			Game.current_save.update_unit_state(su.unit.id, state)
 

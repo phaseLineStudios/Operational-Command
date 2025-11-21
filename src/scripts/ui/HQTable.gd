@@ -294,6 +294,7 @@ func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]:
 						su.state_injured = saved_state.get("state_injured", 0.0)
 						su.state_equipment = saved_state.get("state_equipment", 1.0)
 						su.cohesion = saved_state.get("cohesion", 1.0)
+						unit_data.experience = saved_state.get("experience", unit_data.experience)
 						var saved_ammo = saved_state.get("state_ammunition", {})
 						if saved_ammo is Dictionary and not saved_ammo.is_empty():
 							su.state_ammunition = saved_ammo.duplicate()
