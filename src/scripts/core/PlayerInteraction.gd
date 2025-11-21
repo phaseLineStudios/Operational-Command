@@ -10,6 +10,7 @@ var _last_valid_plane_point := Vector3.ZERO
 var _have_valid_plane_point := false
 var _half_x := 0.0
 var _half_z := 0.0
+var _resume_drag_after_inspect := false
 
 @onready var camera: Camera3D = %CameraController/CameraBounds/Camera
 @onready var bounds: MeshInstance3D = $InteractionBounds
@@ -19,6 +20,7 @@ func _ready():
 	bounds.transparency = 1
 	_half_x = bounds.mesh.size.x * 0.5
 	_half_z = bounds.mesh.size.y * 0.5
+	add_to_group("interaction_controllers")
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -26,6 +28,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		var handled := _held.handle_inspect_input(event)
 		if handled:
 			get_viewport().set_input_as_handled()
+			if _held != null and not _held.is_inspecting():
+				if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+					_resume_drag_after_inspect = true
+				elif event is InputEventKey and event.keycode == KEY_ESCAPE:
+					_resume_drag_after_inspect = false
+					_drop_held()
+				else:
+					_resume_drag_after_inspect = false
 		return
 
 	if event is InputEventMouseButton and event.is_pressed():
@@ -53,6 +63,13 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	if event is InputEventMouseButton and event.is_released():
 		if event.button_index == MOUSE_BUTTON_LEFT and _held != null and not _held.pick_toggle:
+			if _held.is_inspecting():
+				get_viewport().set_input_as_handled()
+				return
+			if _resume_drag_after_inspect:
+				_resume_drag_after_inspect = false
+				get_viewport().set_input_as_handled()
+				return
 			_drop_held()
 			get_viewport().set_input_as_handled()
 			return
@@ -128,6 +145,14 @@ func _drop_held() -> void:
 			_held.call("on_drop")
 	_held = null
 	_have_valid_plane_point = false
+	_resume_drag_after_inspect = false
+
+
+func cancel_hold() -> void:
+	if _held != null:
+		if _held.is_inspecting():
+			_held.end_inspect()
+		_drop_held()
 
 
 func _project_mouse_to_finite_plane(mouse_pos: Vector2) -> Variant:
