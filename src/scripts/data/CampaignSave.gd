@@ -32,6 +32,10 @@ extends Resource
 @export_category("Resources")
 ## Personnel replacement pool (campaign-wide)
 @export var replacement_pool: int = 0
+## Equipment pool for resupply (campaign-wide)
+@export var equipment_pool: int = 0
+## Ammunition pools for resupply (campaign-wide) - ammo_type -> amount
+@export var ammo_pools: Dictionary = {}
 
 
 ## Create a new campaign save with initial values.
@@ -50,6 +54,8 @@ static func create_new(p_campaign_id: String, p_save_name: String = "") -> Resou
 	save.set("total_playtime_seconds", 0.0)
 	save.set("unit_states", {})
 	save.set("replacement_pool", 0)
+	save.set("equipment_pool", 0)
+	save.set("ammo_pools", {})
 	return save
 
 
@@ -95,6 +101,8 @@ func serialize() -> Dictionary:
 		"total_playtime_seconds": total_playtime_seconds,
 		"unit_states": unit_states.duplicate(true),
 		"replacement_pool": replacement_pool,
+		"equipment_pool": equipment_pool,
+		"ammo_pools": ammo_pools.duplicate(),
 	}
 
 
@@ -112,6 +120,11 @@ static func deserialize(data: Variant) -> Resource:
 	save.current_mission = data.get("current_mission", "")
 	save.total_playtime_seconds = float(data.get("total_playtime_seconds", 0.0))
 	save.replacement_pool = int(data.get("replacement_pool", 0))
+	save.equipment_pool = int(data.get("equipment_pool", 0))
+
+	var ammo_data = data.get("ammo_pools", {})
+	if typeof(ammo_data) == TYPE_DICTIONARY:
+		save.ammo_pools = ammo_data.duplicate()
 
 	var missions = data.get("completed_missions", [])
 	if typeof(missions) == TYPE_ARRAY:

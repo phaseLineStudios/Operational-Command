@@ -572,6 +572,9 @@ func _resupply_equipment(
 	_current_equipment_pool -= cost
 	scenario_unit.state_equipment = min(1.0, scenario_unit.state_equipment + 0.1)
 
+	# Persist to campaign pool
+	Game.set_equipment_pool(_current_equipment_pool)
+
 	# Update labels
 	var current_pct := int(scenario_unit.state_equipment * 100.0)
 	current_label.text = "%d%%" % current_pct
@@ -607,6 +610,9 @@ func _resupply_ammo(
 	var actual_amount: int = min(amount, pool_available, capacity - current)
 	_current_ammo_pools[ammo_type] = pool_available - actual_amount
 	scenario_unit.state_ammunition[ammo_type] = current + actual_amount
+
+	# Persist to campaign pool
+	Game.set_ammo_pools(_current_ammo_pools)
 
 	# Update labels
 	var new_current := int(scenario_unit.state_ammunition.get(ammo_type, 0))
@@ -698,6 +704,7 @@ func _on_reinforcement_committed(plan: Dictionary) -> void:
 
 	# Update pool
 	Game.current_scenario.replacement_pool = remaining_pool
+	Game.set_replacement_pool(remaining_pool)
 
 	# Refresh UI
 	if _selected_unit_for_supply:

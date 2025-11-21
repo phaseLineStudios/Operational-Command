@@ -19,6 +19,10 @@ signal scenario_loadout_selected(loadout: Dictionary)
 @export var debug_display_scene: PackedScene = preload("res://scenes/system/debug_display.tscn")
 ## Personnel replacements available for pre-mission reinforcement
 @export var campaign_replacement_pool: int = 0
+## Equipment pool available for pre-mission resupply
+@export var campaign_equipment_pool: int = 0
+## Ammunition pools available for pre-mission resupply (ammo_type -> amount)
+@export var campaign_ammo_pools: Dictionary = {}
 var debug_display: CanvasLayer
 
 var current_campaign: CampaignData
@@ -61,6 +65,8 @@ func select_save(save_id: StringName) -> void:
 
 	if current_save:
 		campaign_replacement_pool = current_save.replacement_pool
+		campaign_equipment_pool = current_save.equipment_pool
+		campaign_ammo_pools = current_save.ammo_pools.duplicate()
 		LogService.info("Loaded save: %s" % current_save.save_name, "Game")
 	else:
 		push_warning("Failed to load save: %s" % save_id)
@@ -86,6 +92,12 @@ func select_scenario(scenario: ScenarioData) -> void:
 	# Restore unit states from save if available
 	if current_save:
 		restore_unit_states_from_save(scenario)
+
+	# Initialize scenario pools from campaign pools
+	if current_save:
+		scenario.replacement_pool = get_replacement_pool()
+		scenario.equipment_pool = get_equipment_pool()
+		scenario.ammo_pools = get_ammo_pools()
 
 	LogService.trace("Set Scenario: %s" % current_scenario.id)
 	emit_signal("scenario_selected", scenario.id)
@@ -174,6 +186,26 @@ func set_replacement_pool(v: int) -> void:
 	campaign_replacement_pool = max(0, int(v))
 
 
+## Return available equipment pool
+func get_equipment_pool() -> int:
+	return int(campaign_equipment_pool)
+
+
+## Set equipment pool
+func set_equipment_pool(v: int) -> void:
+	campaign_equipment_pool = max(0, int(v))
+
+
+## Return available ammo pools
+func get_ammo_pools() -> Dictionary:
+	return campaign_ammo_pools.duplicate()
+
+
+## Set ammo pools
+func set_ammo_pools(pools: Dictionary) -> void:
+	campaign_ammo_pools = pools.duplicate()
+
+
 ## Return current units in context for screens that need them.
 ## Prefer Scenario.units entries, but fall back to unit_recruits.
 func get_current_units() -> Array:
@@ -251,6 +283,10 @@ func save_campaign_state() -> void:
 
 	# Update replacement pool
 	current_save.replacement_pool = campaign_replacement_pool
+	# Update equipment pool
+	current_save.equipment_pool = campaign_equipment_pool
+	# Update ammo pools
+	current_save.ammo_pools = campaign_ammo_pools.duplicate()
 
 	# Update current mission
 	if current_scenario:
