@@ -263,9 +263,9 @@ func save_campaign_state() -> void:
 				current_save.complete_mission(current_scenario.id)
 				LogService.info("Marked mission %s as completed" % current_scenario.id, "Game")
 
-	# Update unit states from scenario units
-	if current_scenario and current_scenario.units:
-		for su in current_scenario.units:
+	# Update unit states from scenario playable units
+	if current_scenario and current_scenario.playable_units:
+		for su in current_scenario.playable_units:
 			if su is ScenarioUnit and su.unit:
 				var state := {
 					"state_strength": su.state_strength,
