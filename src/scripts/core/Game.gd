@@ -388,6 +388,7 @@ func save_campaign_state() -> void:
 					"state_equipment": su.state_equipment,
 					"cohesion": su.cohesion,
 					"state_ammunition": su.state_ammunition.duplicate(),
+					"experience": su.unit.experience,
 				}
 				current_save.update_unit_state(su.unit.id, state)
 
