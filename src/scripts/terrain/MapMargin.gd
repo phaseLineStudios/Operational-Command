@@ -145,11 +145,7 @@ func _draw() -> void:
 		var center_x := 0.5 * (map_left + map_right)
 		# Use title font metrics for proper sizing
 		var title_ascent := label_font.get_ascent(title_size)
-		var title_height := label_font.get_height(title_size)
 
-		# Calculate where grid labels will be drawn (top of their text)
-		# Grid label baseline is at: map_top - grid_label_ascent + offset_top_px
-		# Top of grid label text is: baseline - grid_label_ascent
 		var grid_label_top := map_top - grid_label_ascent + offset_top_px - grid_label_ascent
 
 		# Center the title vertically between margin top (0) and top of grid labels
