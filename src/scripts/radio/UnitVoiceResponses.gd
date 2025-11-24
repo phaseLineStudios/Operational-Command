@@ -202,7 +202,7 @@ func _generate_status_report(unit: ScenarioUnit, callsign: String) -> String:
 	# Status (health/strength)
 	var strength_pct := 0.0
 	if unit.unit and unit.unit.strength > 0:
-		strength_pct = (float(unit.unit.state_strength) / float(unit.unit.strength)) * 100.0
+		strength_pct = (float(unit.state_strength) / float(unit.unit.strength)) * 100.0
 	var status := "nominal"
 	if strength_pct <= 0:
 		status = "destroyed"

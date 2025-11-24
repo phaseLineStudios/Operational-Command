@@ -33,6 +33,22 @@ var _selected_units: Array[UnitData] = []
 @onready var unit_add: Button = %UnitAdd
 @onready var unit_remove: Button = %UnitRemove
 
+@onready var replacement_pool_spin: SpinBox = %ReplacementPool
+@onready var equipment_pool_spin: SpinBox = %EquipmentPool
+@onready var small_arms_spin: SpinBox = %SmallArms
+@onready var tank_gun_spin: SpinBox = %TankGun
+@onready var atgm_spin: SpinBox = %ATGM
+@onready var at_rocket_spin: SpinBox = %ATRocket
+@onready var heavy_weapons_spin: SpinBox = %HeavyWeapons
+@onready var autocannon_spin: SpinBox = %Autocannon
+@onready var mortar_ap_spin: SpinBox = %MortarAP
+@onready var mortar_smoke_spin: SpinBox = %MortarSmoke
+@onready var mortar_illum_spin: SpinBox = %MortarIllum
+@onready var artillery_ap_spin: SpinBox = %ArtilleryAP
+@onready var artillery_smoke_spin: SpinBox = %ArtillerySmoke
+@onready var artillery_illum_spin: SpinBox = %ArtilleryIllum
+@onready var engineer_mun_spin: SpinBox = %EngineerMun
+
 
 func _ready():
 	create_btn.pressed.connect(_on_primary_pressed)
@@ -61,6 +77,7 @@ func _on_primary_pressed() -> void:
 			sd.preview = thumbnail
 			sd.terrain = terrain
 			sd.unit_recruits = _selected_units.duplicate()
+			_apply_pools_to_scenario(sd)
 			emit_signal("request_create", sd)
 		DialogMode.EDIT:
 			if not working:
@@ -72,6 +89,7 @@ func _on_primary_pressed() -> void:
 			working.preview = thumbnail
 			working.terrain = terrain
 			working.unit_recruits = _selected_units.duplicate()
+			_apply_pools_to_scenario(working)
 			emit_signal("request_update", working)
 	show_dialog(false)
 
@@ -146,6 +164,7 @@ func _reset_values() -> void:
 	working = null
 	dialog_mode = DialogMode.CREATE
 	_title_button_from_mode()
+	_reset_pool_values()
 
 
 ## Preload fields from existing ScenarioData.
@@ -166,6 +185,7 @@ func _load_from_data(d: ScenarioData) -> void:
 			if u is UnitData:
 				_selected_units.append(u)
 	_refresh_unit_lists()
+	_load_pools_from_scenario(d)
 
 
 ## Update window title and primary button text to reflect mode.
@@ -328,3 +348,76 @@ func _remove_units_by_ids(ids: Array[String]) -> void:
 	_selected_units = keep
 	if need_refresh:
 		_refresh_unit_lists()
+
+
+## Apply pool values from UI to ScenarioData.
+func _apply_pools_to_scenario(sd: ScenarioData) -> void:
+	sd.replacement_pool = int(replacement_pool_spin.value)
+	sd.equipment_pool = int(equipment_pool_spin.value)
+
+	sd.ammo_pools = {}
+	if small_arms_spin.value > 0:
+		sd.ammo_pools["SMALL_ARMS"] = int(small_arms_spin.value)
+	if tank_gun_spin.value > 0:
+		sd.ammo_pools["TANK_GUN"] = int(tank_gun_spin.value)
+	if atgm_spin.value > 0:
+		sd.ammo_pools["ATGM"] = int(atgm_spin.value)
+	if at_rocket_spin.value > 0:
+		sd.ammo_pools["AT_ROCKET"] = int(at_rocket_spin.value)
+	if heavy_weapons_spin.value > 0:
+		sd.ammo_pools["HEAVY_WEAPONS"] = int(heavy_weapons_spin.value)
+	if autocannon_spin.value > 0:
+		sd.ammo_pools["AUTOCANNON"] = int(autocannon_spin.value)
+	if mortar_ap_spin.value > 0:
+		sd.ammo_pools["MORTAR_AP"] = int(mortar_ap_spin.value)
+	if mortar_smoke_spin.value > 0:
+		sd.ammo_pools["MORTAR_SMOKE"] = int(mortar_smoke_spin.value)
+	if mortar_illum_spin.value > 0:
+		sd.ammo_pools["MORTAR_ILLUM"] = int(mortar_illum_spin.value)
+	if artillery_ap_spin.value > 0:
+		sd.ammo_pools["ARTILLERY_AP"] = int(artillery_ap_spin.value)
+	if artillery_smoke_spin.value > 0:
+		sd.ammo_pools["ARTILLERY_SMOKE"] = int(artillery_smoke_spin.value)
+	if artillery_illum_spin.value > 0:
+		sd.ammo_pools["ARTILLERY_ILLUM"] = int(artillery_illum_spin.value)
+	if engineer_mun_spin.value > 0:
+		sd.ammo_pools["ENGINEER_MUN"] = int(engineer_mun_spin.value)
+
+
+## Load pool values from ScenarioData to UI.
+func _load_pools_from_scenario(d: ScenarioData) -> void:
+	replacement_pool_spin.value = float(d.replacement_pool)
+	equipment_pool_spin.value = float(d.equipment_pool)
+
+	small_arms_spin.value = float(d.ammo_pools.get("SMALL_ARMS", 0))
+	tank_gun_spin.value = float(d.ammo_pools.get("TANK_GUN", 0))
+	atgm_spin.value = float(d.ammo_pools.get("ATGM", 0))
+	at_rocket_spin.value = float(d.ammo_pools.get("AT_ROCKET", 0))
+	heavy_weapons_spin.value = float(d.ammo_pools.get("HEAVY_WEAPONS", 0))
+	autocannon_spin.value = float(d.ammo_pools.get("AUTOCANNON", 0))
+	mortar_ap_spin.value = float(d.ammo_pools.get("MORTAR_AP", 0))
+	mortar_smoke_spin.value = float(d.ammo_pools.get("MORTAR_SMOKE", 0))
+	mortar_illum_spin.value = float(d.ammo_pools.get("MORTAR_ILLUM", 0))
+	artillery_ap_spin.value = float(d.ammo_pools.get("ARTILLERY_AP", 0))
+	artillery_smoke_spin.value = float(d.ammo_pools.get("ARTILLERY_SMOKE", 0))
+	artillery_illum_spin.value = float(d.ammo_pools.get("ARTILLERY_ILLUM", 0))
+	engineer_mun_spin.value = float(d.ammo_pools.get("ENGINEER_MUN", 0))
+
+
+## Reset pool values to defaults.
+func _reset_pool_values() -> void:
+	replacement_pool_spin.value = 0.0
+	equipment_pool_spin.value = 100.0
+	small_arms_spin.value = 0.0
+	tank_gun_spin.value = 0.0
+	atgm_spin.value = 0.0
+	at_rocket_spin.value = 0.0
+	heavy_weapons_spin.value = 0.0
+	autocannon_spin.value = 0.0
+	mortar_ap_spin.value = 0.0
+	mortar_smoke_spin.value = 0.0
+	mortar_illum_spin.value = 0.0
+	artillery_ap_spin.value = 0.0
+	artillery_smoke_spin.value = 0.0
+	artillery_illum_spin.value = 0.0
+	engineer_mun_spin.value = 0.0

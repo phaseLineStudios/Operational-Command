@@ -60,7 +60,7 @@ class FireMission:
 @export var ap_damage_per_round: float = 10.0  ## Base damage per AP/HE round
 @export var ap_damage_radius_m: float = 50.0  ## Damage radius for AP rounds
 
-var _units: Dictionary = {}  ## unit_id -> UnitData
+var _units: Dictionary = {}  ## unit_id -> ScenarioUnit
 var _positions: Dictionary = {}  ## unit_id -> Vector2 (terrain meters)
 var _artillery_units: Dictionary = {}  ## unit_id -> bool (is artillery capable)
 var _active_missions: Array[FireMission] = []
@@ -74,10 +74,10 @@ func _ready() -> void:
 
 ## Register a unit and check if it's artillery-capable.
 ## [param unit_id] The ScenarioUnit ID (with SLOT suffix if applicable).
-## [param u] The UnitData to register.
-func register_unit(unit_id: String, u: UnitData) -> void:
-	_units[unit_id] = u
-	var is_arty: bool = _is_artillery_unit(u)
+## [param su] The ScenarioUnit to register.
+func register_unit(unit_id: String, su: ScenarioUnit) -> void:
+	_units[unit_id] = su
+	var is_arty: bool = _is_artillery_unit(su)
 	_artillery_units[unit_id] = is_arty
 
 
@@ -113,26 +113,26 @@ func is_artillery_unit(unit_id: String) -> bool:
 
 ## Get available artillery ammunition types for a unit
 func get_available_ammo_types(unit_id: String) -> Array[String]:
-	var u: UnitData = _units.get(unit_id)
-	if not u:
+	var su: ScenarioUnit = _units.get(unit_id)
+	if not su:
 		return []
 
 	var types: Array[String] = []
 
 	# Check for mortar ammo
-	if u.state_ammunition.get("MORTAR_AP", 0) > 0:
+	if su.state_ammunition.get("MORTAR_AP", 0) > 0:
 		types.append("MORTAR_AP")
-	if u.state_ammunition.get("MORTAR_SMOKE", 0) > 0:
+	if su.state_ammunition.get("MORTAR_SMOKE", 0) > 0:
 		types.append("MORTAR_SMOKE")
-	if u.state_ammunition.get("MORTAR_ILLUM", 0) > 0:
+	if su.state_ammunition.get("MORTAR_ILLUM", 0) > 0:
 		types.append("MORTAR_ILLUM")
 
 	# Check for artillery ammo
-	if u.state_ammunition.get("ARTILLERY_AP", 0) > 0:
+	if su.state_ammunition.get("ARTILLERY_AP", 0) > 0:
 		types.append("ARTILLERY_AP")
-	if u.state_ammunition.get("ARTILLERY_SMOKE", 0) > 0:
+	if su.state_ammunition.get("ARTILLERY_SMOKE", 0) > 0:
 		types.append("ARTILLERY_SMOKE")
-	if u.state_ammunition.get("ARTILLERY_ILLUM", 0) > 0:
+	if su.state_ammunition.get("ARTILLERY_ILLUM", 0) > 0:
 		types.append("ARTILLERY_ILLUM")
 
 	return types
@@ -143,8 +143,8 @@ func get_available_ammo_types(unit_id: String) -> Array[String]:
 func request_fire_mission(
 	unit_id: String, target_pos: Vector2, ammo_type: String, rounds: int = 1
 ) -> bool:
-	var u: UnitData = _units.get(unit_id)
-	if not u:
+	var su: ScenarioUnit = _units.get(unit_id)
+	if not su:
 		LogService.warning("Fire mission failed: unit not found", "ArtilleryController")
 		return false
 
@@ -153,7 +153,7 @@ func request_fire_mission(
 		return false
 
 	# Check if unit has ammo
-	var current_ammo: int = u.state_ammunition.get(ammo_type, 0)
+	var current_ammo: int = su.state_ammunition.get(ammo_type, 0)
 	if current_ammo < rounds:
 		LogService.warning(
 			"Fire mission failed: insufficient ammo (%d/%d)" % [current_ammo, rounds],
@@ -165,9 +165,10 @@ func request_fire_mission(
 	# AmmoSystem uses UnitData IDs (without SLOT suffix)
 	if _ammo_system:
 		for i in rounds:
-			if not _ammo_system.consume(u.id, ammo_type, 1):
+			if not _ammo_system.consume(su.unit.id, ammo_type, 1):
 				LogService.warning(
-					"Fire mission ammo consumption failed for %s" % u.id, "ArtilleryController"
+					"Fire mission ammo consumption failed for %s" % su.unit.id,
+					"ArtilleryController"
 				)
 				return false
 
@@ -259,8 +260,8 @@ func _generate_bda(mission: FireMission) -> void:
 	# Find friendly units near the impact point that can observe
 	# Uses distance-based checks (artillery impacts are highly visible)
 	for unit_id in _units.keys():
-		var u: UnitData = _units[unit_id]
-		if not u:
+		var su: ScenarioUnit = _units[unit_id]
+		if not su:
 			continue
 
 		# Skip the firing unit
@@ -273,7 +274,7 @@ func _generate_bda(mission: FireMission) -> void:
 
 		# Check if within spotting range (artillery impacts are visible at distance)
 		var distance: float = pos.distance_to(mission.target_pos)
-		if distance > u.spot_m:
+		if distance > su.unit.spot_m:
 			continue
 
 		# Generate BDA from first observer in range
@@ -295,11 +296,11 @@ func _generate_bda_description(mission: FireMission) -> String:
 
 
 ## Check if unit has artillery/mortar ammunition
-func _is_artillery_unit(u: UnitData) -> bool:
-	if not u.equipment or not u.equipment.has("weapons"):
+func _is_artillery_unit(su: ScenarioUnit) -> bool:
+	if not su.unit.equipment or not su.unit.equipment.has("weapons"):
 		return false
 
-	var weapons: Dictionary = u.equipment.get("weapons", {})
+	var weapons: Dictionary = su.unit.equipment.get("weapons", {})
 	for weapon_name in weapons.keys():
 		var weapon_data: Dictionary = weapons[weapon_name]
 		var ammo_type_index: int = int(weapon_data.get("ammo", -1))

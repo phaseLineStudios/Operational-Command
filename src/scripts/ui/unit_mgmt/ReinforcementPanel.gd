@@ -1,5 +1,5 @@
 class_name ReinforcementPanel
-extends Control
+extends VBoxContainer
 ## Panel to allocate pre-mission personnel reinforcements from a shared pool.
 
 signal reinforcement_preview_changed(unit_id: String, new_amount: int)
@@ -15,6 +15,8 @@ var _pool_total: int = 0
 var _pool_remaining: int = 0
 var _pending: Dictionary[String, int] = {}
 var _rows: Dictionary[String, RowWidgets] = {}
+## Temporary: tracks current strength per unit for campaign persistence (to be replaced)
+var _unit_strength: Dictionary[String, float] = {}
 
 @onready var _lbl_pool: Label = %PoolLabel
 @onready var _rows_box: VBoxContainer = %RowsBox
@@ -23,9 +25,10 @@ var _rows: Dictionary[String, RowWidgets] = {}
 
 
 class RowWidgets:
-	var box: HBoxContainer
+	var box: VBoxContainer
 	var title: Label
 	var badge: UnitStrengthBadge
+	var current_max_label: Label
 	var minus: Button
 	var value: Label
 	var plus: Button
@@ -34,9 +37,10 @@ class RowWidgets:
 	var base_title: String
 
 	func _init(
-		b: HBoxContainer,
+		b: VBoxContainer,
 		t: Label,
 		badge_n: UnitStrengthBadge,
+		cml: Label,
 		m: Button,
 		v: Label,
 		p: Button,
@@ -46,6 +50,7 @@ class RowWidgets:
 		box = b
 		title = t
 		badge = badge_n
+		current_max_label = cml
 		minus = m
 		value = v
 		plus = p
@@ -64,14 +69,20 @@ func _ready() -> void:
 
 
 ## Provide the list of units to display. Rebuild rows and clear any plan.
-func set_units(units: Array[UnitData]) -> void:
+## [param units] Array of UnitData templates.
+## [param unit_strengths] Optional dictionary mapping unit_id -> current_strength (for campaign).
+func set_units(units: Array[UnitData], unit_strengths: Dictionary = {}) -> void:
 	_units = []
 	_rows.clear()
 	_pending.clear()
+	_unit_strength.clear()
 	_clear_children(_rows_box)
 	for u: UnitData in units:
 		if u != null:
 			_units.append(u)
+			# Initialize strength (from campaign state or default to full strength)
+			var uid := u.id
+			_unit_strength[uid] = float(unit_strengths.get(uid, float(u.strength)))
 	_build_rows()
 	_update_pool_labels()
 	_update_commit_enabled()
@@ -105,7 +116,8 @@ func commit() -> void:
 	# strip any zero/negative or wiped-out entries (if units list is present)
 	for uid in plan.keys():
 		var u := _find_unit(uid)
-		if u == null or u.state_strength <= 0.0 or int(plan[uid]) <= 0:
+		var cur_strength: float = _unit_strength.get(uid, 0.0)
+		if u == null or cur_strength <= 0.0 or int(plan[uid]) <= 0:
 			plan.erase(uid)
 	emit_signal("reinforcement_committed", plan)
 
@@ -114,19 +126,26 @@ func commit() -> void:
 func _build_rows() -> void:
 	for u: UnitData in _units:
 		var uid: String = u.id
-		var current: int = int(round(u.state_strength))
+		var current: int = int(round(_unit_strength.get(uid, 0.0)))
 		var cap: int = int(max(0, u.strength))
 		var missing: int = max(0, cap - current)
 
-		var row := HBoxContainer.new()
-		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		_rows_box.add_child(row)
+		# Main container for this unit (vertical stack)
+		var unit_vbox := VBoxContainer.new()
+		unit_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		unit_vbox.add_theme_constant_override("separation", 6)
+		_rows_box.add_child(unit_vbox)
+
+		# Top row: Title and Badge
+		var top_row := HBoxContainer.new()
+		top_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		unit_vbox.add_child(top_row)
 
 		var title := Label.new()
-		title.custom_minimum_size = Vector2(row_label_min_w, 0.0)
 		var base_title := u.title if u.title != "" else uid
 		title.text = base_title
-		row.add_child(title)
+		title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		top_row.add_child(title)
 
 		var badge := UnitStrengthBadge.new()
 		badge.custom_minimum_size = Vector2(60, 0)
@@ -135,46 +154,66 @@ func _build_rows() -> void:
 			if u.understrength_threshold > 0.0
 			else understrength_threshold
 		)
-		badge.set_unit(u, thr)
-		row.add_child(badge)
+		var cur_strength: float = _unit_strength.get(uid, 0.0)
+		badge.set_unit(u, cur_strength, thr)
+		top_row.add_child(badge)
 
-		var spacer := Control.new()
-		spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.add_child(spacer)
+		# Middle row: Current/Max label
+		var current_max_label := Label.new()
+		current_max_label.text = "Personnel: %d / %d" % [current, cap]
+		unit_vbox.add_child(current_max_label)
+
+		# Bottom row: Controls
+		var controls_row := HBoxContainer.new()
+		controls_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		unit_vbox.add_child(controls_row)
 
 		var minus := Button.new()
 		minus.text = "-"
-		row.add_child(minus)
+		controls_row.add_child(minus)
 
 		var val := Label.new()
 		val.custom_minimum_size = Vector2(value_label_min_w, 0.0)
 		val.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		val.text = str(int(_pending.get(uid, 0)))
-		row.add_child(val)
+		controls_row.add_child(val)
 
 		var plus := Button.new()
 		plus.text = "+"
-		row.add_child(plus)
-
-		var slider := HSlider.new()
-		slider.step = slider_step
-		slider.min_value = 0.0
-		slider.max_value = float(missing)
-		slider.value = float(_pending.get(uid, 0))
-		slider.custom_minimum_size = Vector2(120, 0)
-		row.add_child(slider)
+		controls_row.add_child(plus)
 
 		var max_lbl := Label.new()
 		max_lbl.text = "/ %d" % missing
-		row.add_child(max_lbl)
+		controls_row.add_child(max_lbl)
 
-		var widgets := RowWidgets.new(row, title, badge, minus, val, plus, slider, max_lbl)
+		# Slider on its own row below (shows total strength from 0, blocks below current)
+		var slider := HSlider.new()
+		slider.step = slider_step
+		slider.min_value = 0.0
+		slider.max_value = float(cap)
+		slider.value = float(current + _pending.get(uid, 0))
+		slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		unit_vbox.add_child(slider)
+
+		var widgets := RowWidgets.new(
+			unit_vbox, title, badge, current_max_label, minus, val, plus, slider, max_lbl
+		)
 		widgets.base_title = base_title
 		_rows[uid] = widgets
 
 		minus.pressed.connect(func() -> void: _nudge(uid, -1))
 		plus.pressed.connect(func() -> void: _nudge(uid, +1))
-		slider.value_changed.connect(func(v: float) -> void: _set_amount(uid, int(round(v))))
+		slider.value_changed.connect(
+			func(v: float) -> void:
+				var cur_str: int = int(round(_unit_strength.get(uid, 0.0)))
+				var target_total: int = int(round(v))
+				# Block slider from going below current strength
+				if target_total < cur_str:
+					slider.value = float(cur_str)
+					return
+				var reinforcements: int = target_total - cur_str
+				_set_amount(uid, reinforcements)
+		)
 
 	_update_all_rows_state()
 
@@ -193,15 +232,21 @@ func _update_all_rows_state() -> void:
 		var w: RowWidgets = _rows.get(uid, null)
 		if w == null:
 			continue
-		var cur: int = int(round(u.state_strength))
+		var cur: int = int(round(_unit_strength.get(uid, 0.0)))
 		var cap: int = int(max(0, u.strength))
 		var missing: int = max(0, cap - cur)
 		var req: int = int(_pending.get(uid, 0))
 
 		w.value.text = str(req)
-		w.slider.max_value = float(missing)
-		w.slider.value = float(req)
+		w.slider.min_value = 0.0
+		w.slider.max_value = float(cap)
+		# Ensure slider value doesn't go below current strength
+		var target_value: float = float(cur + req)
+		if target_value < float(cur):
+			target_value = float(cur)
+		w.slider.value = target_value
 		w.max_lbl.text = "/ %d" % missing
+		w.current_max_label.text = "Personnel: %d / %d" % [cur, cap]
 
 		var wiped: bool = cur <= 0
 		_disable_row(w, wiped or (_pool_remaining <= 0 and req <= 0))
@@ -221,7 +266,8 @@ func _update_all_rows_state() -> void:
 			if u.understrength_threshold > 0.0
 			else understrength_threshold
 		)
-		w.badge.set_unit(u, thr)
+		var cur_strength: float = _unit_strength.get(uid, 0.0)
+		w.badge.set_unit(u, cur_strength, thr)
 
 	_update_pool_labels()
 
@@ -258,7 +304,7 @@ func _set_amount(uid: String, target: int) -> void:
 	var u: UnitData = _find_unit(uid)
 	if u == null:
 		return
-	var cur: int = int(round(u.state_strength))
+	var cur: int = int(round(_unit_strength.get(uid, 0.0)))
 	var cap: int = int(max(0, u.strength))
 	var missing: int = max(0, cap - cur)
 	var already: int = int(_pending.get(uid, 0))

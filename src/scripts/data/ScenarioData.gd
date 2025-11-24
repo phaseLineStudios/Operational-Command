@@ -63,6 +63,14 @@ enum ScenarioDifficulty { EASY, NORMAL, HARD }
 ## Enemy Callsign List
 @export var enemy_callsigns: Array[String]
 
+@export_category("Pre-Mission Pools")
+## Personnel replacements available for reinforcement
+@export var replacement_pool: int = 0
+## Equipment pool for resupply (shared across all units)
+@export var equipment_pool: int = 100
+## Ammunition pools per type (e.g., {"small_arms": 1000, "at": 50})
+@export var ammo_pools: Dictionary = {}
+
 @export_group("Content")
 ## List of units placed in this scenario
 @export var units: Array[ScenarioUnit] = []
@@ -130,7 +138,10 @@ func serialize() -> Dictionary:
 			"unit_points": unit_points,
 			"unit_slots": _serialize_unit_slots(unit_slots),
 			"unit_recruits_ids": recruit_ids,
-			"unit_reserves": _serialize_unit_slots(unit_reserves)
+			"unit_reserves": _serialize_unit_slots(unit_reserves),
+			"replacement_pool": replacement_pool,
+			"equipment_pool": equipment_pool,
+			"ammo_pools": ammo_pools.duplicate()
 		},
 		"content":
 		{
@@ -187,6 +198,12 @@ static func deserialize(json: Variant) -> ScenarioData:
 		s.unit_points = int(um.get("unit_points", s.unit_points))
 		s.unit_slots = _deserialize_unit_slots(um.get("unit_slots", []))
 		s.unit_reserves = _deserialize_unit_slots(um.get("unit_reserves", []))
+		s.replacement_pool = int(um.get("replacement_pool", 0))
+		s.equipment_pool = int(um.get("equipment_pool", 100))
+
+		var ammo_pools_data = um.get("ammo_pools", {})
+		if typeof(ammo_pools_data) == TYPE_DICTIONARY:
+			s.ammo_pools = ammo_pools_data.duplicate()
 
 		var recruit_ids: Array = um.get("unit_recruits_ids", [])
 		if typeof(recruit_ids) == TYPE_ARRAY:

@@ -158,3 +158,10 @@ expand_mode = 1
 [node name="ItemsLayer" type="Control" parent="OCMenuContainer/Column/MarginContainer2/BoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="Placeholder" type="CenterContainer" parent="OCMenuContainer/Column/MarginContainer2/BoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="OCMenuContainer/Column/MarginContainer2/BoxContainer/Placeholder"]
+layout_mode = 2
+text = "PLACEHOLDER BRIEFING UI"

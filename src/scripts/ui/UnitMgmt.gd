@@ -1,15 +1,17 @@
 extends Control
 ## Unit Management screen controller. Integrates ReinforcementPanel with unit list.
-## This scene expects a Game singleton with current_scenario and an integer
-## Game.campaign_replacement_pool for the shared personnel pool.
+## This scene expects a Game singleton with current_scenario containing the
+## scenario's replacement_pool for the shared personnel pool.
 ## When the player commits a plan, this applies the allocations to UnitData
-## and emits unit_strength_changed for each modified unit.to UnitData.
+## and emits unit_strength_changed for each modified unit.
 
 signal unit_strength_changed(unit_id: String, current: int, status: String)
 
 # --- regular vars first (to satisfy gdlint class-definitions-order) ---
 var _units: Array[UnitData] = []
 var _uid_to_index: Dictionary = {}  ## unit_id -> array index (kept for future lookups)
+## Temporary: tracks current strength per unit for campaign persistence (to be replaced)
+var _unit_strength: Dictionary[String, float] = {}
 
 # --- onready vars after regular vars ---
 @onready var _list_box: VBoxContainer = %UnitListBox
@@ -29,6 +31,7 @@ func _ready() -> void:
 func _refresh_from_game() -> void:
 	_units = _collect_units_from_game()
 	_uid_to_index.clear()
+	_unit_strength.clear()
 
 	# Rebuild list with title + strength badge per row
 	for c in _list_box.get_children():
@@ -36,8 +39,12 @@ func _refresh_from_game() -> void:
 
 	var idx := 0
 	for u: UnitData in _units:
-		_uid_to_index[u.id] = idx
+		var uid := u.id
+		_uid_to_index[uid] = idx
 		idx += 1
+
+		# Initialize strength to full (campaign persistence will override this later)
+		_unit_strength[uid] = float(u.strength)
 
 		var row := HBoxContainer.new()
 		_list_box.add_child(row)
@@ -47,12 +54,12 @@ func _refresh_from_game() -> void:
 		row.add_child(title)
 
 		var badge: UnitStrengthBadge = UnitStrengthBadge.new()
-		# Pass per-unit threshold if set; fall back to panel default inside the badge
-		badge.set_unit(u, _panel.understrength_threshold)
+		var cur_strength: float = _unit_strength.get(uid, float(u.strength))
+		badge.set_unit(u, cur_strength, _panel.understrength_threshold)
 		row.add_child(badge)
 
 	# Keep panel updated
-	_panel.set_units(_units)
+	_panel.set_units(_units, _unit_strength)
 	_panel.set_pool(_get_pool())
 
 
@@ -73,28 +80,24 @@ func _collect_units_from_game() -> Array[UnitData]:
 
 	# Fallback: read directly from Game.current_scenario if present
 	if Game and Game.current_scenario:
-		for su in Game.current_scenario.units:
+		for su in Game.current_scenario.playable_units:
 			if su and su.unit:
 				out.append(su.unit)
 
 	return out
 
 
-## Read the replacement pool from Game (placeholder persistence).
+## Read the replacement pool from Game scenario.
 func _get_pool() -> int:
-	if Game and Game.has_method("get_replacement_pool"):
-		return int(Game.call("get_replacement_pool"))
-	if Game and Game.has_variable("campaign_replacement_pool"):
-		return int(Game.campaign_replacement_pool)
+	if Game and Game.current_scenario:
+		return int(Game.current_scenario.replacement_pool)
 	return 0
 
 
-## Write the replacement pool to Game (placeholder persistence).
+## Write the replacement pool to Game scenario.
 func _set_pool(v: int) -> void:
-	if Game and Game.has_method("set_replacement_pool"):
-		Game.call("set_replacement_pool", v)
-	elif Game and Game.has_variable("campaign_replacement_pool"):
-		Game.campaign_replacement_pool = v
+	if Game and Game.current_scenario:
+		Game.current_scenario.replacement_pool = v
 
 
 ## Live preview hook from panel (visual-only here).
@@ -116,19 +119,21 @@ func _on_committed(plan: Dictionary) -> void:
 			continue
 
 		# Authoritative gate: skip wiped-out units here
-		if not _can_reinforce(u):
+		if not _can_reinforce(uid):
 			continue
 
-		var cur: int = int(round(u.state_strength))
+		var cur: int = int(round(_unit_strength.get(uid, 0.0)))
 		var cap: int = int(max(0, u.strength))
 		var missing: int = max(0, cap - cur)
 		var give: int = min(add, missing, remaining)
 		if give <= 0:
 			continue
 
-		u.state_strength = float(cur + give)
+		_unit_strength[uid] = float(cur + give)
 		remaining -= give
-		emit_signal("unit_strength_changed", uid, int(round(u.state_strength)), _status_string(u))
+		emit_signal(
+			"unit_strength_changed", uid, int(round(_unit_strength[uid])), _status_string(uid)
+		)
 
 	# Persist pool and refresh UI
 	_set_pool(remaining)
@@ -145,12 +150,17 @@ func _find_unit(uid: String) -> UnitData:
 
 
 ## Derive a status string for external consumers.
-func _status_string(u: UnitData) -> String:
-	if u.state_strength <= 0.0:
+func _status_string(uid: String) -> String:
+	var cur_strength: float = _unit_strength.get(uid, 0.0)
+	if cur_strength <= 0.0:
 		return "WIPED_OUT"
 
+	var u := _find_unit(uid)
+	if u == null:
+		return "UNKNOWN"
+
 	var cap: float = float(max(1, u.strength))
-	var pct: float = clamp(u.state_strength / cap, 0.0, 1.0)
+	var pct: float = clamp(cur_strength / cap, 0.0, 1.0)
 	var thr: float = (
 		u.understrength_threshold
 		if u.understrength_threshold > 0.0
@@ -163,5 +173,6 @@ func _status_string(u: UnitData) -> String:
 
 
 ## Test if a unit can be reinforced (this screen cannot reinforce wiped-out units).
-func _can_reinforce(u: UnitData) -> bool:
-	return u != null and u.state_strength > 0.0
+func _can_reinforce(uid: String) -> bool:
+	var cur_strength: float = _unit_strength.get(uid, 0.0)
+	return cur_strength > 0.0

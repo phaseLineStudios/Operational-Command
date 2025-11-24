@@ -331,12 +331,12 @@ func _resolve_combat() -> void:
 
 		if typeof(dmg) == TYPE_DICTIONARY:
 			dmg_value = float(dmg.get("damage", 0.0))
-			var f := int(d.unit.strength * d.unit.state_strength)
-			var e := int(a.unit.strength * a.unit.state_strength)
+			var f := int(d.unit.strength * d.state_strength)
+			var e := int(a.unit.strength * a.state_strength)
 			if f != 0 or e != 0:
 				Game.resolution.add_casualties(f, e)
 
-			if bool(d.unit.state_strength == 0):
+			if bool(d.state_strength == 0):
 				if d.affiliation == ScenarioUnit.Affiliation.FRIEND:
 					Game.resolution.add_units_lost(1)
 		else:
@@ -580,7 +580,7 @@ func get_rng_seed() -> int:
 func _snapshot_unit(su: ScenarioUnit) -> Dictionary:
 	if su == null:
 		return {}
-	var strength := su.unit.strength * su.unit.state_strength
+	var strength := su.unit.strength * su.state_strength
 	var destroyed := su.is_dead()
 
 	return {
@@ -728,7 +728,7 @@ func _register_logistics_units() -> void:
 
 	if ammo_system:
 		for su: ScenarioUnit in _friendlies + _enemies:
-			ammo_system.register_unit(su.unit)
+			ammo_system.register_unit(su)
 			ammo_system.set_unit_position(su.id, _v3_from_m(su.position_m))
 
 	if artillery_controller:
@@ -736,13 +736,13 @@ func _register_logistics_units() -> void:
 		if los_adapter:
 			artillery_controller.bind_los_adapter(los_adapter)
 		for su: ScenarioUnit in _friendlies + _enemies:
-			artillery_controller.register_unit(su.id, su.unit)
+			artillery_controller.register_unit(su.id, su)
 			artillery_controller.set_unit_position(su.id, su.position_m)
 
 	if engineer_controller:
 		engineer_controller.bind_ammo_system(ammo_system)
 		for su: ScenarioUnit in _friendlies + _enemies:
-			engineer_controller.register_unit(su.id, su.unit)
+			engineer_controller.register_unit(su.id, su)
 			engineer_controller.set_unit_position(su.id, su.position_m)
 
 
