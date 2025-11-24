@@ -80,7 +80,7 @@ func _collect_units_from_game() -> Array[UnitData]:
 
 	# Fallback: read directly from Game.current_scenario if present
 	if Game and Game.current_scenario:
-		for su in Game.current_scenario.units:
+		for su in Game.current_scenario.playable_units:
 			if su and su.unit:
 				out.append(su.unit)
 

@@ -152,7 +152,7 @@ func end_scenario_and_go_to_debrief() -> void:
 
 	if not losses.is_empty():
 		# Apply to campaign units so UnitMgmt reflects new strengths
-		resolution.apply_casualties_to_units(Game.current_scenario.units, losses)
+		resolution.apply_casualties_to_units(Game.current_scenario.playable_units, losses)
 
 	# Award experience to surviving units
 	_award_experience_to_units()
@@ -230,11 +230,11 @@ func on_medal_assigned(medal: String, recipient_name: String) -> void:
 
 
 ## Return current units in context for screens that need them.
-## Prefer Scenario.units entries, but fall back to unit_recruits.
+## Prefer Scenario.playable_units entries, but fall back to unit_recruits.
 func get_current_units() -> Array:
 	var out: Array = []
 	if current_scenario:
-		for su in current_scenario.units:
+		for su in current_scenario.playable_units:
 			if su and su.unit:
 				out.append(su)
 		if out.is_empty():
@@ -311,13 +311,13 @@ func restore_unit_states_from_save(scenario: ScenarioData) -> void:
 		LogService.debug("No save to restore from", "Game")
 		return
 
-	if not scenario or not scenario.units:
-		LogService.debug("No scenario units to restore", "Game")
+	if not scenario or not scenario.playable_units:
+		LogService.debug("No scenario playable units to restore", "Game")
 		return
 
 	var restored_count := 0
 
-	for su in scenario.units:
+	for su in scenario.playable_units:
 		if not (su is ScenarioUnit) or not su.unit:
 			continue
 
