@@ -31,6 +31,18 @@ signal labels_changed(kind: String, ids: PackedInt32Array)
 @export var elevation_resolution_m: int = 20:
 	set = _set_resolution
 
+@export_group("Map Metadata")
+## Country or region
+@export var country: String = ""
+## Map scale (always 1:25,000)
+@export var map_scale: String = "1:25,000"
+## Map edition number
+@export var edition: String = ""
+## Map series identifier
+@export var series: String = ""
+## Map sheet identifier
+@export var sheet: String = ""
+
 @export_group("Grid")
 ## Starting number on X axis labels.
 @export var grid_start_x: int = 100:
@@ -562,6 +574,14 @@ func serialize() -> Dictionary:
 		"height_m": height_m,
 		"elevation_resolution_m": elevation_resolution_m,
 		"grid": {"start_x": grid_start_x, "start_y": grid_start_y},
+		"metadata":
+		{
+			"country": country,
+			"map_scale": map_scale,
+			"edition": edition,
+			"series": series,
+			"sheet": sheet
+		},
 		"elevation": {"raw": elev_raw},
 		"elev_meta":
 		{"base_elevation_m": base_elevation_m, "contour_interval_m": contour_interval_m},
@@ -586,6 +606,14 @@ static func deserialize(d: Variant) -> TerrainData:
 	if typeof(grid) == TYPE_DICTIONARY:
 		t.grid_start_x = int(grid.get("start_x", t.grid_start_x))
 		t.grid_start_y = int(grid.get("start_y", t.grid_start_y))
+
+	var metadata: Dictionary = d.get("metadata", {})
+	if typeof(metadata) == TYPE_DICTIONARY:
+		t.country = str(metadata.get("country", t.country))
+		t.map_scale = str(metadata.get("map_scale", t.map_scale))
+		t.edition = str(metadata.get("edition", t.edition))
+		t.series = str(metadata.get("series", t.series))
+		t.sheet = str(metadata.get("sheet", t.sheet))
 
 	var em: Dictionary = d.get("elev_meta", {})
 	if typeof(em) == TYPE_DICTIONARY:

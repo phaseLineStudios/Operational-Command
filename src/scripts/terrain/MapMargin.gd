@@ -140,21 +140,79 @@ func _draw() -> void:
 
 	# Calculate grid label metrics first (needed for title positioning)
 	var grid_label_ascent := label_font.get_ascent(label_size)
-
+	
+	var grid_label_top: float
+	var available_space_center: float
 	if data.name != "":
 		var center_x := 0.5 * (map_left + map_right)
-		# Use title font metrics for proper sizing
 		var title_ascent := label_font.get_ascent(title_size)
 
-		var grid_label_top := map_top - grid_label_ascent + offset_top_px - grid_label_ascent
+		grid_label_top = map_top - grid_label_ascent + offset_top_px - grid_label_ascent
 
-		# Center the title vertically between margin top (0) and top of grid labels
-		var available_space_center := (0 + grid_label_top) * 0.5
+		available_space_center = (0 + grid_label_top) * 0.5
 
-		# Calculate baseline for vertically centered text
 		var baseline_y := available_space_center + title_ascent * 0.5
 
-		_draw_text_center(str(data.name), Vector2(center_x, baseline_y), title_size)
+		_draw_text_center(str(data.name), Vector2(center_x, baseline_y), title_size, true)
+
+	var metadata_size := int(title_size * 0.75)
+	var metadata_ascent := label_font.get_ascent(metadata_size)
+	var left_x := map_left
+
+	# Center metadata vertically between margin top and grid labels (same as title)
+	grid_label_top = map_top - grid_label_ascent + offset_top_px - grid_label_ascent
+	available_space_center = (0 + grid_label_top) * 0.5
+	var top_y := available_space_center + metadata_ascent * 0.5
+
+	var left_parts: Array[String] = []
+	if data.country != "":
+		left_parts.append(str(data.country).to_upper())
+	if data.map_scale != "":
+		left_parts.append("SCALE " + str(data.map_scale))
+
+	if not left_parts.is_empty():
+		var left_text := "  ".join(left_parts)
+		_draw_text_left(left_text, Vector2(left_x, top_y), metadata_size, true)
+
+	var right_x := map_right
+
+	var label_size_small := int(metadata_size * 0.6)
+	var label_offset_y := -metadata_size * 0.3
+
+	var current_x := right_x
+	var parts_to_draw: Array = []
+
+	if data.sheet != "":
+		parts_to_draw.append(["SHEET ", label_size_small, label_offset_y, false])
+		parts_to_draw.append([str(data.sheet), metadata_size, 0.0, true])
+
+	if data.series != "":
+		if not parts_to_draw.is_empty():
+			parts_to_draw.append(["  ", metadata_size, 0.0, false])
+		parts_to_draw.append(["SERIES ", label_size_small, label_offset_y, false])
+		parts_to_draw.append([str(data.series), metadata_size, 0.0, true])
+
+	if data.edition != "":
+		if not parts_to_draw.is_empty():
+			parts_to_draw.append(["  ", metadata_size, 0.0, false])
+		parts_to_draw.append(["EDITION ", label_size_small, label_offset_y, false])
+		parts_to_draw.append([str(data.edition), metadata_size, 0.0, true])
+
+	# Draw from right to left
+	for i in range(parts_to_draw.size() - 1, -1, -1):
+		var part = parts_to_draw[i]
+		var part_text: String = part[0]
+		var part_size: int = part[1]
+		var part_offset_y: float = part[2]
+		var part_is_bold: bool = part[3]
+		var text_width := label_font.get_string_size(
+			part_text, HORIZONTAL_ALIGNMENT_LEFT, -1, part_size
+		).x
+
+		current_x -= text_width
+		_draw_text_left(
+			part_text, Vector2(current_x, top_y + part_offset_y), part_size, part_is_bold
+		)
 
 	var start_x := 0
 	var start_y := 0
@@ -235,18 +293,27 @@ func _draw() -> void:
 
 
 ## Helper function to draw horizontally centered text
-func _draw_text_center(text: String, pos: Vector2, font_size: int = label_size) -> void:
+func _draw_text_center(
+	text: String, pos: Vector2, font_size: int = label_size, is_bold: bool = false
+) -> void:
 	var s := font_size
 	var fm := label_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, s)
-	draw_string(
-		label_font,
-		pos - Vector2(fm.x * 0.5, 0),
-		text,
-		HORIZONTAL_ALIGNMENT_LEFT,
-		-1,
-		s,
-		label_color
-	)
+	var base_pos := pos - Vector2(fm.x * 0.5, 0)
+
+	if is_bold:
+		# Draw text with slight horizontal offsets to create subtle bold effect
+		for offset_x in [0.0, 0.6, 1.2]:
+			draw_string(
+				label_font,
+				base_pos + Vector2(offset_x, 0),
+				text,
+				HORIZONTAL_ALIGNMENT_LEFT,
+				-1,
+				s,
+				label_color
+			)
+	else:
+		draw_string(label_font, base_pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, s, label_color)
 
 
 ## Helper function to draw horizontally centered text with optional bold styling
@@ -321,3 +388,47 @@ func _draw_text_middle_styled(
 			)
 	else:
 		draw_string(label_font, base_pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, s, label_color)
+
+
+## Helper function to draw left-aligned text
+func _draw_text_left(
+	text: String, pos: Vector2, font_size: int = label_size, is_bold: bool = false
+) -> void:
+	var s := font_size
+	if is_bold:
+		# Draw text with slight horizontal offsets to create subtle bold effect
+		for offset_x in [0.0, 0.6, 1.2]:
+			draw_string(
+				label_font,
+				pos + Vector2(offset_x, 0),
+				text,
+				HORIZONTAL_ALIGNMENT_LEFT,
+				-1,
+				s,
+				label_color
+			)
+	else:
+		draw_string(label_font, pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, s, label_color)
+
+
+## Helper function to draw right-aligned text
+func _draw_text_right(
+	text: String, pos: Vector2, font_size: int = label_size, is_bold: bool = false
+) -> void:
+	var s := font_size
+	var fm := label_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, s)
+	var draw_pos := pos - Vector2(fm.x, 0)
+	if is_bold:
+		# Draw text with slight horizontal offsets to create subtle bold effect
+		for offset_x in [0.0, 0.6, 1.2]:
+			draw_string(
+				label_font,
+				draw_pos + Vector2(offset_x, 0),
+				text,
+				HORIZONTAL_ALIGNMENT_LEFT,
+				-1,
+				s,
+				label_color
+			)
+	else:
+		draw_string(label_font, draw_pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, s, label_color)

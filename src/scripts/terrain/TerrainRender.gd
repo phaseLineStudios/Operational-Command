@@ -212,7 +212,9 @@ func _on_data_changed() -> void:
 
 ## Emit render_ready signal after waiting for layers to draw
 func _emit_render_ready() -> void:
-	# Wait 2 frames to ensure all layers have completed their initial draw
+	if not is_inside_tree():
+		return
+
 	await get_tree().process_frame
 	await get_tree().process_frame
 	render_ready.emit()
