@@ -518,6 +518,62 @@ func png_b64_to_image(b64: Variant) -> Image:
 	return img if err == OK else Image.new()
 
 
+## Serialize a floating-point image to Base 64 (lossless raw format)
+func image_to_raw_b64(img: Image) -> Dictionary:
+	if img == null or img.is_empty():
+		return {}
+	# Store raw float data directly - more efficient than EXR for single-channel data
+	var width := img.get_width()
+	var height := img.get_height()
+	var data := PackedFloat32Array()
+	data.resize(width * height)
+
+	var idx := 0
+	for y in height:
+		for x in width:
+			data[idx] = img.get_pixel(x, y).r
+			idx += 1
+
+	return {
+		"width": width,
+		"height": height,
+		"data": Marshalls.raw_to_base64(data.to_byte_array())
+	}
+
+
+## Deserialize a floating-point image from raw Base 64 format
+func raw_b64_to_image(raw_dict: Variant) -> Image:
+	if typeof(raw_dict) != TYPE_DICTIONARY:
+		return Image.new()
+
+	var width: int = raw_dict.get("width", 0)
+	var height: int = raw_dict.get("height", 0)
+	var b64: String = raw_dict.get("data", "")
+
+	if width <= 0 or height <= 0 or b64 == "":
+		return Image.new()
+
+	var bytes := Marshalls.base64_to_raw(b64)
+	var data := PackedFloat32Array()
+	data.resize(width * height)
+
+	# Convert bytes back to float array
+	for i in data.size():
+		var offset := i * 4  # 4 bytes per float32
+		if offset + 3 < bytes.size():
+			data[i] = bytes.decode_float(offset)
+
+	# Create image and populate with float data
+	var img := Image.create(width, height, false, Image.FORMAT_RF)
+	var idx := 0
+	for y in height:
+		for x in width:
+			img.set_pixel(x, y, Color(data[idx], 0, 0, 1))
+			idx += 1
+
+	return img
+
+
 ## Serialize resources to IDs
 func ids_from_resources(arr: Array, id_prop: String = "id") -> Array:
 	var out: Array = []

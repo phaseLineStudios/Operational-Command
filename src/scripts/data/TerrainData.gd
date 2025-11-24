@@ -493,9 +493,10 @@ func _queue_emit(bucket: Array, kind: String, ids: PackedInt32Array, sig_name: S
 
 ## Serialize terrain to JSON
 func serialize() -> Dictionary:
-	var elev_b64: Variant = null
+	var elev_raw: Variant = null
 	if elevation and not elevation.is_empty():
-		elev_b64 = ContentDB.image_to_png_b64(elevation)
+		# Store raw float data to preserve full precision for elevation data
+		elev_raw = ContentDB.image_to_raw_b64(elevation)
 
 	var srf_out: Array = []
 	for s in surfaces:
@@ -561,7 +562,7 @@ func serialize() -> Dictionary:
 		"height_m": height_m,
 		"elevation_resolution_m": elevation_resolution_m,
 		"grid": {"start_x": grid_start_x, "start_y": grid_start_y},
-		"elevation": {"png_b64": elev_b64},
+		"elevation": {"raw": elev_raw},
 		"elev_meta":
 		{"base_elevation_m": base_elevation_m, "contour_interval_m": contour_interval_m},
 		"content": {"surfaces": srf_out, "lines": ln_out, "points": pt_out, "labels": lab_out}
@@ -593,13 +594,26 @@ static func deserialize(d: Variant) -> TerrainData:
 
 	var elev: Dictionary = d.get("elevation", {})
 	if typeof(elev) == TYPE_DICTIONARY:
-		var b64: String = elev.get("png_b64", null)
-		if b64 != null and typeof(b64) == TYPE_STRING and b64 != "":
-			var img := ContentDB.png_b64_to_image(b64)
+		# Try raw format first (new lossless format)
+		var raw_data: Variant = elev.get("raw", null)
+		if raw_data != null and typeof(raw_data) == TYPE_DICTIONARY:
+			var img := ContentDB.raw_b64_to_image(raw_data)
 			if not img.is_empty():
 				t.elevation = img
 				t._resample_or_resize()
 				t._update_scale()
+		else:
+			# Fall back to PNG format for backwards compatibility with old terrains
+			var png_b64: Variant = elev.get("png_b64", null)
+			if png_b64 != null and typeof(png_b64) == TYPE_STRING and png_b64 != "":
+				var img := ContentDB.png_b64_to_image(png_b64)
+				if not img.is_empty():
+					# Convert PNG to FORMAT_RF for elevation data
+					if img.get_format() != Image.FORMAT_RF:
+						img.convert(Image.FORMAT_RF)
+					t.elevation = img
+					t._resample_or_resize()
+					t._update_scale()
 
 	var content: Dictionary = d.get("content", {})
 	if typeof(content) == TYPE_DICTIONARY:
