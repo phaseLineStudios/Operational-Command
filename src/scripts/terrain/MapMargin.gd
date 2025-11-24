@@ -140,7 +140,7 @@ func _draw() -> void:
 
 	# Calculate grid label metrics first (needed for title positioning)
 	var grid_label_ascent := label_font.get_ascent(label_size)
-	
+
 	var grid_label_top: float
 	var available_space_center: float
 	if data.name != "":
@@ -205,9 +205,9 @@ func _draw() -> void:
 		var part_size: int = part[1]
 		var part_offset_y: float = part[2]
 		var part_is_bold: bool = part[3]
-		var text_width := label_font.get_string_size(
-			part_text, HORIZONTAL_ALIGNMENT_LEFT, -1, part_size
-		).x
+		var text_width := (
+			label_font.get_string_size(part_text, HORIZONTAL_ALIGNMENT_LEFT, -1, part_size).x
+		)
 
 		current_x -= text_width
 		_draw_text_left(
