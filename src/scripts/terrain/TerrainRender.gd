@@ -5,6 +5,8 @@ extends Control
 
 ## Emits when the map is resized
 signal map_resize
+## Emits when initial rendering is complete (after data set and first draw)
+signal render_ready
 
 ## Grid cell size in meters
 const GRID_SIZE_M = 100
@@ -91,7 +93,8 @@ const GRID_SIZE_M = 100
 @export var contour_label_padding_px: float = 3.0
 ## Contour label font
 @export var contour_label_font: Font
-## Contour label font size as percentage of map's smaller dimension. If > 0, overrides contour_label_size.
+## Contour label font size as percentage of map's smaller dimension.
+## If > 0, overrides contour_label_size.
 @export_range(0.0, 0.05, 0.0001) var contour_label_size_percent: float = 0.006
 ## Contour label font size (used when contour_label_size_percent = 0)
 @export var contour_label_size: int = 12
@@ -169,6 +172,7 @@ func _set_data(d: TerrainData):
 	call_deferred("_draw_map_size")
 	call_deferred("_push_data_to_layers")
 	call_deferred("_mark_all_dirty")
+	call_deferred("_emit_render_ready")
 
 
 ## Push exports to their respective layers
@@ -204,6 +208,14 @@ func _on_data_changed() -> void:
 	_debounce_relayout_and_push()
 	if path_grid and nav_auto_build:
 		path_grid.rebuild(nav_default_profile)
+
+
+## Emit render_ready signal after waiting for layers to draw
+func _emit_render_ready() -> void:
+	# Wait 2 frames to ensure all layers have completed their initial draw
+	await get_tree().process_frame
+	await get_tree().process_frame
+	render_ready.emit()
 
 
 ## Show a render error

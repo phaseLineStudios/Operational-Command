@@ -1,4 +1,4 @@
-[gd_scene load_steps=110 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=111 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -751,16 +751,16 @@ terrain_renderer_path = NodePath("../../MapController/TerrainViewport/TerrainRen
 unique_name_in_owner = true
 script = ExtResource("45_ai")
 sim_world_ref = NodePath("../WorldController")
-sim_world_path = NodePath("../WorldController")
 movement_adapter_ref = NodePath("../WorldController/MovementAdapter")
-movement_adapter_path = NodePath("../WorldController/MovementAdapter")
 combat_adapter_ref = NodePath("../CombatController/CombatAdapter")
-combat_adapter_path = NodePath("../CombatController/CombatAdapter")
 los_adapter_ref = NodePath("../LOSController/LOSAdapter")
-los_adapter_path = NodePath("../LOSController/LOSAdapter")
 orders_router_ref = NodePath("../RadioController/OrdersRouter")
-orders_router_path = NodePath("../RadioController/OrdersRouter")
 agents_root_ref = NodePath("Agents")
+sim_world_path = NodePath("../WorldController")
+movement_adapter_path = NodePath("../WorldController/MovementAdapter")
+combat_adapter_path = NodePath("../CombatController/CombatAdapter")
+los_adapter_path = NodePath("../LOSController/LOSAdapter")
+orders_router_path = NodePath("../RadioController/OrdersRouter")
 agents_root_path = NodePath("Agents")
 
 [node name="Agents" type="Node" parent="Controllers/AIController"]
