@@ -85,32 +85,38 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_nu5ig")
 
 [node name="SurfaceLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
+clip_contents = true
 layout_mode = 2
 script = ExtResource("3_utooi")
 
 [node name="LineLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
+clip_contents = true
 layout_mode = 2
 script = ExtResource("4_uopel")
 
 [node name="PointLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
+clip_contents = true
 layout_mode = 2
 script = ExtResource("5_c2fte")
 
 [node name="ContourLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
+clip_contents = true
 layout_mode = 2
 script = ExtResource("4_utooi")
 smooth_iterations = 5
 
 [node name="GridLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
+clip_contents = true
 layout_mode = 2
 script = ExtResource("2_llqno")
 
 [node name="LabelLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
+clip_contents = true
 layout_mode = 2
 script = ExtResource("8_tecap")
 text_color = Color(0.27451, 0.219608, 0.219608, 1)
@@ -118,10 +124,12 @@ font = SubResource("FontVariation_tecap")
 
 [node name="StampLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
+clip_contents = true
 layout_mode = 2
 script = ExtResource("10_stamp")
 
 [node name="PathGridDebugLayer" type="Control" parent="MapMargin/TerrainBase" node_paths=PackedStringArray("grid")]
+clip_contents = true
 layout_mode = 2
 script = ExtResource("9_4od0y")
 grid = NodePath("../PathGrid")
