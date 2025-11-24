@@ -137,12 +137,26 @@ func _draw() -> void:
 
 	var ascent: float
 	var height: float
+
+	# Calculate grid label metrics first (needed for title positioning)
+	var grid_label_ascent := label_font.get_ascent(label_size)
+
 	if data.name != "":
 		var center_x := 0.5 * (map_left + map_right)
-		ascent = label_font.get_ascent(label_size)
-		height = label_font.get_height(label_size)
-		var y_mid := 0.5 + height
-		var baseline_y := y_mid + (ascent - 0.5 * height)
+		# Use title font metrics for proper sizing
+		var title_ascent := label_font.get_ascent(title_size)
+		var title_height := label_font.get_height(title_size)
+
+		# Calculate where grid labels will be drawn (top of their text)
+		# Grid label baseline is at: map_top - grid_label_ascent + offset_top_px
+		# Top of grid label text is: baseline - grid_label_ascent
+		var grid_label_top := map_top - grid_label_ascent + offset_top_px - grid_label_ascent
+
+		# Center the title vertically between margin top (0) and top of grid labels
+		var available_space_center := (0 + grid_label_top) * 0.5
+
+		# Calculate baseline for vertically centered text
+		var baseline_y := available_space_center + title_ascent * 0.5
 
 		_draw_text_center(str(data.name), Vector2(center_x, baseline_y), title_size)
 
@@ -166,11 +180,26 @@ func _draw() -> void:
 			if m > map_w:
 				break
 			var screen_x := map_left + m
-			var num := str(start_x + i)
+			var grid_num := start_x + i
+			var num := str(grid_num)
+			var is_tenth := (grid_num % 10) == 0
+			var extra_offset := 5.0 if is_tenth else 0.0
+			var font_size := int(label_size * 1.15) if is_tenth else label_size
+
 			if show_top:
-				_draw_text_center(num, Vector2(screen_x, map_top - ascent + offset_top_px))
+				_draw_text_center_styled(
+					num,
+					Vector2(screen_x, map_top - ascent + offset_top_px - extra_offset),
+					is_tenth,
+					font_size
+				)
 			if show_bottom:
-				_draw_text_center(num, Vector2(screen_x, map_bottom + ascent + offset_bottom_px))
+				_draw_text_center_styled(
+					num,
+					Vector2(screen_x, map_bottom + ascent + offset_bottom_px + extra_offset),
+					is_tenth,
+					font_size
+				)
 			i += 1
 
 	if every > 0.0 and (show_left or show_right):
@@ -180,14 +209,31 @@ func _draw() -> void:
 			if m2 > map_h:
 				break
 			var screen_y := map_top + m2
-			var num2 := str(start_y + j)
+			var grid_num_y := start_y + j
+			var num2 := str(grid_num_y)
+			var is_tenth_y := (grid_num_y % 10) == 0
+			var extra_offset_y := 5.0 if is_tenth_y else 0.0
+			var font_size_y := int(label_size * 1.15) if is_tenth_y else label_size
+
 			if show_left:
-				_draw_text_middle(
-					num2, Vector2(map_left + offset_left_px, screen_y), true, ascent, height
+				_draw_text_middle_styled(
+					num2,
+					Vector2(map_left + offset_left_px - extra_offset_y, screen_y),
+					true,
+					ascent,
+					height,
+					is_tenth_y,
+					font_size_y
 				)
 			if show_right:
-				_draw_text_middle(
-					num2, Vector2(map_right + offset_right_px, screen_y), false, ascent, height
+				_draw_text_middle_styled(
+					num2,
+					Vector2(map_right + offset_right_px + extra_offset_y, screen_y),
+					false,
+					ascent,
+					height,
+					is_tenth_y,
+					font_size_y
 				)
 			j += 1
 
@@ -207,6 +253,30 @@ func _draw_text_center(text: String, pos: Vector2, font_size: int = label_size) 
 	)
 
 
+## Helper function to draw horizontally centered text with optional bold styling
+func _draw_text_center_styled(
+	text: String, pos: Vector2, is_bold: bool = false, font_size: int = label_size
+) -> void:
+	var s := font_size
+	var fm := label_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, s)
+	var base_pos := pos - Vector2(fm.x * 0.5, 0)
+
+	if is_bold:
+		# Draw text with slight horizontal offsets to create subtle bold effect
+		for offset_x in [0.0, 0.6, 1.2]:
+			draw_string(
+				label_font,
+				base_pos + Vector2(offset_x, 0),
+				text,
+				HORIZONTAL_ALIGNMENT_LEFT,
+				-1,
+				s,
+				label_color
+			)
+	else:
+		draw_string(label_font, base_pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, s, label_color)
+
+
 ## Helper function to draw vertically centered text
 func _draw_text_middle(
 	text: String,
@@ -223,3 +293,35 @@ func _draw_text_middle(
 	draw_string(
 		label_font, Vector2(draw_x, baseline_y), text, HORIZONTAL_ALIGNMENT_LEFT, -1, s, label_color
 	)
+
+
+## Helper function to draw vertically centered text with optional bold styling
+func _draw_text_middle_styled(
+	text: String,
+	pos: Vector2,
+	align_right: bool,
+	ascent: float,
+	height: float,
+	is_bold: bool = false,
+	font_size: int = label_size
+) -> void:
+	var s := font_size
+	var fm := label_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, s)
+	var baseline_y := pos.y + (height - ascent)
+	var draw_x := pos.x - fm.x if align_right else pos.x
+	var base_pos := Vector2(draw_x, baseline_y)
+
+	if is_bold:
+		# Draw text with slight horizontal offsets to create subtle bold effect
+		for offset_x in [0.0, 0.6, 1.2]:
+			draw_string(
+				label_font,
+				base_pos + Vector2(offset_x, 0),
+				text,
+				HORIZONTAL_ALIGNMENT_LEFT,
+				-1,
+				s,
+				label_color
+			)
+	else:
+		draw_string(label_font, base_pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, s, label_color)
