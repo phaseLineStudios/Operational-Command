@@ -36,6 +36,12 @@ func _ready() -> void:
 	var playable_units := generate_playable_units(scenario.unit_slots)
 	scenario.playable_units = playable_units
 
+	# Set up signal connection before initializing terrain
+	var ready_state := {"map_ready": false}
+	var on_map_ready := func(): ready_state["map_ready"] = true
+	if renderer and not renderer.is_connected("render_ready", on_map_ready):
+		renderer.render_ready.connect(on_map_ready, CONNECT_ONE_SHOT)
+
 	map.init_terrain(scenario)
 	trigger_engine.bind_scenario(scenario)
 	trigger_engine.bind_dialog(mission_dialog)
@@ -65,13 +71,20 @@ func _ready() -> void:
 	radio.radio_result.connect(_on_radio_result)
 
 	_update_subtitle_suggestions(scenario)
-	_create_initial_unit_counters(playable_units)
+	await _create_initial_unit_counters(playable_units)
 
 	# Initialize the AI
 	_init_enemy_ai()
 
+	# Wait for map to finish rendering
+	while not ready_state["map_ready"]:
+		await get_tree().process_frame
+
 	# All initialization complete - hide loading screen
 	loading_screen.hide_loading()
+
+	# Start the simulation now that everything is ready
+	sim.start()
 
 
 ## Initialize the drawing controller and bind to trigger API
@@ -342,6 +355,9 @@ func _create_initial_unit_counters(playable_units: Array[ScenarioUnit]) -> void:
 		counter.symbol_size = unit.unit.size
 
 		%PhysicsObjects.add_child(counter)
+
+		# Wait for counter texture to finish generating
+		await counter.texture_ready
 
 		# Convert unit terrain position to 3D world position
 		var world_pos: Variant = _terrain_pos_to_world(unit.position_m)

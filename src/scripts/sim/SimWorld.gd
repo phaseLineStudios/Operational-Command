@@ -497,6 +497,12 @@ func resume() -> void:
 		_transition(_state, State.RUNNING)
 
 
+## Start simulation from INIT state.
+func start() -> void:
+	if _state == State.INIT:
+		_transition(_state, State.RUNNING)
+
+
 ## Set simulation time scale (1.0 = normal, 2.0 = 2x speed).
 func set_time_scale(scale: float) -> void:
 	_time_scale = max(0.0, scale)
