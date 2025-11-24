@@ -68,9 +68,7 @@ func _ready() -> void:
 		# Update mipmaps when renderer redraws (only when terrain changes)
 		if (
 			renderer.data
-			and not renderer.data.is_connected(
-				"changed", Callable(self, "_on_terrain_changed")
-			)
+			and not renderer.data.is_connected("changed", Callable(self, "_on_terrain_changed"))
 		):
 			renderer.data.changed.connect(_on_terrain_changed, CONNECT_DEFERRED)
 

@@ -534,11 +534,7 @@ func image_to_raw_b64(img: Image) -> Dictionary:
 			data[idx] = img.get_pixel(x, y).r
 			idx += 1
 
-	return {
-		"width": width,
-		"height": height,
-		"data": Marshalls.raw_to_base64(data.to_byte_array())
-	}
+	return {"width": width, "height": height, "data": Marshalls.raw_to_base64(data.to_byte_array())}
 
 
 ## Deserialize a floating-point image from raw Base 64 format
