@@ -19,14 +19,66 @@ extends Resource
 func compute_visibility_score(
 	terrain_renderer: Variant, pos_m: Vector2, scenario_weather: Variant, behaviour: int
 ) -> float:
-	pass
+	var score := 1.0
+
+	# Terrain concealment
+	if terrain_renderer and terrain_renderer.has_method("get_surface_at_terrain_position"):
+		var surf: Dictionary = terrain_renderer.get_surface_at_terrain_position(pos_m)
+		if typeof(surf) == TYPE_DICTIONARY and surf.has("brush"):
+			var brush := surf.get("brush")
+			if brush and brush.has_method("get"):
+				var conceal := clamp(float(brush.get("concealment", 0.0)), 0.0, 1.0)
+				score *= (1.0 - conceal)
+
+	# Weather and night
+	var weather_severity := weather_severity_from_scenario(scenario_weather)
+	score *= (1.0 - weather_severity * fog_visibility_penalty)
+
+	var hour := 12
+	if typeof(scenario_weather) == TYPE_DICTIONARY:
+		hour = int(scenario_weather.get("hour", hour))
+	elif scenario_weather != null and "hour" in scenario_weather:
+		hour = int(scenario_weather.hour)
+	var night_mult := 1.0
+	if hour < 6 or hour > 19:
+		night_mult = 1.0 - night_visibility_penalty
+	score *= night_mult
+
+	# Behaviour
+	score *= behaviour_visibility_multiplier(behaviour)
+
+	return clamp(score, 0.0, 1.0)
 
 
 ## Optional helper to derive weather severity from a ScenarioData.
 func weather_severity_from_scenario(scenario_weather: Variant) -> float:
-	pass
+	var fog_m := 8000.0
+	var rain := 0.0
+	if typeof(scenario_weather) == TYPE_DICTIONARY:
+		fog_m = float(scenario_weather.get("fog_m", fog_m))
+		rain = float(scenario_weather.get("rain", rain))
+	elif scenario_weather != null:
+		if "fog_m" in scenario_weather:
+			fog_m = float(scenario_weather.fog_m)
+		if "rain" in scenario_weather:
+			rain = float(scenario_weather.rain)
+	var fog_sev := clamp(1.0 - fog_m / 8000.0, 0.0, 1.0)
+	var rain_sev := clamp(rain / 50.0, 0.0, 1.0)
+	return max(fog_sev, rain_sev)
 
 
 ## Optional helper to apply behaviour-based modifiers.
 func behaviour_visibility_multiplier(behaviour: int) -> float:
-	pass
+	match behaviour:
+		0:  # CARELESS
+			return 1.1
+		1:  # SAFE
+			return 1.0
+		2:  # AWARE
+			return 0.9
+		3:  # COMBAT
+			return 0.85
+		4:  # STEALTH
+			return 0.7
+		_:
+			return 1.0
