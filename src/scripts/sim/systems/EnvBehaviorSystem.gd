@@ -157,6 +157,9 @@ func _update_slowdown_state(
 
 	# Recover from bogged/slowed over time.
 	if nav.nav_state in [UnitNavigationState.NavState.SLOWED, UnitNavigationState.NavState.BOGGED]:
+		if nav.nav_state == UnitNavigationState.NavState.BOGGED and nav.bogged_timer_s > 20.0:
+			_set_stuck_soft(uid, nav)
+			return
 		if nav.bogged_timer_s > 10.0 and rng.randf() < 0.25:
 			nav.set_nav_state(UnitNavigationState.NavState.NORMAL)
 			nav.bogged_timer_s = 0.0
@@ -175,6 +178,7 @@ func _update_slowdown_state(
 		nav.bogged_timer_s = 0.0
 		_emit_speed_change(uid, default_speed_mult_bogged)
 		_request_repath(uid)
+		LogService.info("Unit %s bogged down" % uid, "EnvBehaviorSystem.gd")
 		emit_signal("unit_bogged", uid)
 
 
@@ -249,6 +253,13 @@ func _request_repath(unit_id: String) -> void:
 	if su == null:
 		return
 	movement_adapter.request_env_repath(su)
+
+
+func _set_stuck_soft(unit_id: String, nav: UnitNavigationState) -> void:
+	nav.set_nav_state(UnitNavigationState.NavState.STUCK_SOFT)
+	_emit_speed_change(unit_id, 0.0)
+	LogService.warning("Unit %s stuck in soft ground; engineer required" % unit_id, "EnvBehaviorSystem.gd")
+	emit_signal("unit_bogged", unit_id)
 
 
 func _apply_drift(unit_id: String, drift: Vector2) -> void:
