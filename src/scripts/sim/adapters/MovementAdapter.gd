@@ -523,34 +523,65 @@ func _advance_patrol_leg() -> bool:
 
 ## Set an external environment speed multiplier for a unit (placeholder).
 func set_env_speed_multiplier(_su: ScenarioUnit, _mult: float) -> void:
-	pass
+	if _su == null:
+		return
+	_su.set_meta("env_speed_mult", float(_mult))
 
 
 ## Clear environment speed multiplier (placeholder).
 func clear_env_speed_multiplier(_su: ScenarioUnit) -> void:
-	pass
+	if _su == null:
+		return
+	if _su.has_meta("env_speed_mult"):
+		_su.remove_meta("env_speed_mult")
 
 
 ## Apply an external drift vector while lost (placeholder).
 func set_env_drift(_su: ScenarioUnit, _drift: Vector2) -> void:
-	pass
+	if _su == null:
+		return
+	_su.set_meta("env_drift", _drift)
 
 
 ## Clear drift vector (placeholder).
 func clear_env_drift(_su: ScenarioUnit) -> void:
-	pass
+	if _su == null:
+		return
+	if _su.has_meta("env_drift"):
+		_su.remove_meta("env_drift")
 
 
 ## Request a repath due to environment state change (placeholder).
 func request_env_repath(_su: ScenarioUnit) -> void:
-	pass
+	if _su == null:
+		return
+	_su.set_meta("env_repath_requested", true)
 
 
 ## Set navigation bias (roads/cover/shortest) (placeholder).
 func set_navigation_bias(_su: ScenarioUnit, _bias: StringName) -> void:
-	pass
+	if _su == null:
+		return
+	_su.set_meta("env_navigation_bias", _bias)
 
 
 ## Optional helper to surface path complexity to env system (placeholder).
 func path_complexity_for(_su: ScenarioUnit) -> float:
-	pass
+	if _su == null or not _su.has_method("current_path"):
+		return 0.0
+	var path: PackedVector2Array = _su.current_path()
+	if path.is_empty():
+		return 0.0
+	var total_len := 0.0
+	var turn_sum := 0.0
+	for i in range(1, path.size()):
+		total_len += path[i - 1].distance_to(path[i])
+		if i >= 2:
+			var a := (path[i - 1] - path[i - 2]).normalized()
+			var b := (path[i] - path[i - 1]).normalized()
+			var dot := clamp(a.dot(b), -1.0, 1.0)
+			var turn := acos(dot)
+			turn_sum += turn
+	var norm_len := clamp(total_len / 1000.0, 0.0, 1.0)
+	var norm_turns := clamp(turn_sum / PI, 0.0, 1.0)
+	return clamp((norm_len * 0.6) + (norm_turns * 0.4), 0.0, 1.0)
