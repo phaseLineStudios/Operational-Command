@@ -55,7 +55,7 @@ func tick_units(units: Array, dt: float, scenario: Variant, rng: RandomNumberGen
 
 		nav.tick_timers(dt)
 
-		var vis := _compute_visibility_score(su, scenario)
+		var vis: float = _compute_visibility_score(su, scenario)
 		_update_lost_state(su, nav, vis, rng)
 		_update_slowdown_state(su, nav, rng)
 
@@ -75,7 +75,7 @@ func set_navigation_bias(unit_id: String, bias: StringName) -> void:
 
 ## Compute visibility at a position for loss calculations.
 func _compute_visibility_score(unit: Variant, scenario: Variant) -> float:
-	var pos_m := unit.position_m if "position_m" in unit else Vector2.ZERO
+	var pos_m: Vector2 = unit.position_m if "position_m" in unit else Vector2.ZERO
 	if visibility_profile and movement_adapter and movement_adapter.renderer:
 		return visibility_profile.compute_visibility_score(
 			movement_adapter.renderer, pos_m, scenario, int(unit.behaviour)
@@ -95,26 +95,26 @@ func _estimate_path_complexity(unit: Variant) -> float:
 	if path.is_empty():
 		return 0.0
 	# Simple heuristic: longer paths and more turns increase complexity.
-	var total_len := 0.0
-	var turn_sum := 0.0
+	var total_len: float = 0.0
+	var turn_sum: float = 0.0
 	for i in range(1, path.size()):
 		total_len += path[i - 1].distance_to(path[i])
 		if i >= 2:
 			var a := (path[i - 1] - path[i - 2]).normalized()
 			var b := (path[i] - path[i - 1]).normalized()
-			var dot := clamp(a.dot(b), -1.0, 1.0)
-			var turn := acos(dot)
+			var dot: float = clamp(a.dot(b), -1.0, 1.0)
+			var turn: float = acos(dot)
 			turn_sum += turn
-	var norm_len := clamp(total_len / 1000.0, 0.0, 1.0)
-	var norm_turns := clamp(turn_sum / PI, 0.0, 1.0)
+	var norm_len: float = clamp(total_len / 1000.0, 0.0, 1.0)
+	var norm_turns: float = clamp(turn_sum / PI, 0.0, 1.0)
 	return clamp((norm_len * 0.6) + (norm_turns * 0.4), 0.0, 1.0)
 
 
 ## Evaluate and update lost state for a unit.
 func _update_lost_state(unit: Variant, nav: UnitNavigationState, visibility: float, rng: RandomNumberGenerator) -> void:
 	var uid := String(unit.id)
-	var path_complexity := _estimate_path_complexity(unit)
-	var threshold := loss_threshold
+	var path_complexity: float = _estimate_path_complexity(unit)
+	var threshold: float = loss_threshold
 
 	# Recovery: regain when visibility improves or after some time.
 	if nav.is_lost:
@@ -127,7 +127,7 @@ func _update_lost_state(unit: Variant, nav: UnitNavigationState, visibility: flo
 		return
 
 	# Chance to become lost when visibility is low and path is complex.
-	var loss_risk := clamp((threshold - visibility), 0.0, 1.0) * (0.5 + path_complexity * 0.5)
+	var loss_risk: float = clamp((threshold - visibility), 0.0, 1.0) * (0.5 + path_complexity * 0.5)
 	if loss_risk <= 0.0:
 		return
 	if rng.randf() < loss_risk:
@@ -189,6 +189,6 @@ func _find_unit_by_id(unit_id: String) -> ScenarioUnit:
 
 
 func _random_drift(rng: RandomNumberGenerator) -> Vector2:
-	var angle := rng.randf_range(0.0, PI * 2.0)
-	var magnitude := rng.randf_range(0.5, 2.0)
+	var angle: float = rng.randf_range(0.0, PI * 2.0)
+	var magnitude: float = rng.randf_range(0.5, 2.0)
 	return Vector2.RIGHT.rotated(angle) * magnitude

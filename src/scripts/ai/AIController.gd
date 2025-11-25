@@ -43,6 +43,7 @@ var _orders_router: OrdersRouter
 var _agents_root: Node
 ## ScenarioUnit id -> index cache for quick lookup.
 var _unit_index_cache: Dictionary = {}
+var _env_behavior_system: Node = null
 
 
 ## Initialize controller and subscribe to sim engagement events for RETURN_FIRE.

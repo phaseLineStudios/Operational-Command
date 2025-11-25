@@ -43,7 +43,7 @@ func set_nav_state(state: NavState) -> void:
 
 ## Advance timers for lost/bogged state.
 func tick_timers(dt: float) -> void:
-	var clamped_dt := max(dt, 0.0)
+	var clamped_dt: float = max(dt, 0.0)
 	if is_lost:
 		lost_timer_s += clamped_dt
 	if nav_state in [NavState.SLOWED, NavState.BOGGED, NavState.STUCK_SOFT]:

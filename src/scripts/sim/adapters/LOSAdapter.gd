@@ -184,7 +184,7 @@ func sample_visibility_at(_pos_m: Vector2) -> float:
 		return 1.0
 	# Derive a local concealment penalty by sampling spotting_mul at zero range,
 	# then invert it to represent visibility (1.0 = clear, lower = obscured).
-	var spot_mul := spotting_mul(_pos_m, 0.0, _current_weather_severity())
+	var spot_mul: float = spotting_mul(_pos_m, 0.0, _current_weather_severity())
 	return clamp(spot_mul, 0.0, 1.0)
 
 
@@ -193,9 +193,9 @@ func _current_weather_severity() -> float:
 	# Fallback to 0 severity.
 	if Game.current_scenario != null:
 		var scen: ScenarioData = Game.current_scenario
-		var fog_m := float(scen.fog_m)
-		var rain := float(scen.rain)
-		var fog_sev := clamp(1.0 - fog_m / 8000.0, 0.0, 1.0)
-		var rain_sev := clamp(rain / 50.0, 0.0, 1.0)
+		var fog_m: float = float(scen.fog_m)
+		var rain: float = float(scen.rain)
+		var fog_sev: float = clamp(1.0 - fog_m / 8000.0, 0.0, 1.0)
+		var rain_sev: float = clamp(rain / 50.0, 0.0, 1.0)
 		return max(fog_sev, rain_sev)
 	return 0.0

@@ -19,27 +19,27 @@ extends Resource
 func compute_visibility_score(
 	terrain_renderer: Variant, pos_m: Vector2, scenario_weather: Variant, behaviour: int
 ) -> float:
-	var score := 1.0
+	var score: float = 1.0
 
 	# Terrain concealment
 	if terrain_renderer and terrain_renderer.has_method("get_surface_at_terrain_position"):
 		var surf: Dictionary = terrain_renderer.get_surface_at_terrain_position(pos_m)
 		if typeof(surf) == TYPE_DICTIONARY and surf.has("brush"):
-			var brush := surf.get("brush")
+			var brush: Variant = surf.get("brush")
 			if brush and brush.has_method("get"):
-				var conceal := clamp(float(brush.get("concealment", 0.0)), 0.0, 1.0)
+				var conceal: float = clamp(float(brush.get("concealment", 0.0)), 0.0, 1.0)
 				score *= (1.0 - conceal)
 
 	# Weather and night
-	var weather_severity := weather_severity_from_scenario(scenario_weather)
+	var weather_severity: float = weather_severity_from_scenario(scenario_weather)
 	score *= (1.0 - weather_severity * fog_visibility_penalty)
 
-	var hour := 12
+	var hour: int = 12
 	if typeof(scenario_weather) == TYPE_DICTIONARY:
 		hour = int(scenario_weather.get("hour", hour))
 	elif scenario_weather != null and "hour" in scenario_weather:
 		hour = int(scenario_weather.hour)
-	var night_mult := 1.0
+	var night_mult: float = 1.0
 	if hour < 6 or hour > 19:
 		night_mult = 1.0 - night_visibility_penalty
 	score *= night_mult
@@ -52,8 +52,8 @@ func compute_visibility_score(
 
 ## Optional helper to derive weather severity from a ScenarioData.
 func weather_severity_from_scenario(scenario_weather: Variant) -> float:
-	var fog_m := 8000.0
-	var rain := 0.0
+	var fog_m: float = 8000.0
+	var rain: float = 0.0
 	if typeof(scenario_weather) == TYPE_DICTIONARY:
 		fog_m = float(scenario_weather.get("fog_m", fog_m))
 		rain = float(scenario_weather.get("rain", rain))
@@ -62,8 +62,8 @@ func weather_severity_from_scenario(scenario_weather: Variant) -> float:
 			fog_m = float(scenario_weather.fog_m)
 		if "rain" in scenario_weather:
 			rain = float(scenario_weather.rain)
-	var fog_sev := clamp(1.0 - fog_m / 8000.0, 0.0, 1.0)
-	var rain_sev := clamp(rain / 50.0, 0.0, 1.0)
+	var fog_sev: float = clamp(1.0 - fog_m / 8000.0, 0.0, 1.0)
+	var rain_sev: float = clamp(rain / 50.0, 0.0, 1.0)
 	return max(fog_sev, rain_sev)
 
 

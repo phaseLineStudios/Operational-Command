@@ -577,18 +577,18 @@ func path_complexity_for(_su: ScenarioUnit) -> float:
 	var path: PackedVector2Array = _su.current_path()
 	if path.is_empty():
 		return 0.0
-	var total_len := 0.0
-	var turn_sum := 0.0
+	var total_len: float = 0.0
+	var turn_sum: float = 0.0
 	for i in range(1, path.size()):
 		total_len += path[i - 1].distance_to(path[i])
 		if i >= 2:
 			var a := (path[i - 1] - path[i - 2]).normalized()
 			var b := (path[i] - path[i - 1]).normalized()
-			var dot := clamp(a.dot(b), -1.0, 1.0)
-			var turn := acos(dot)
+			var dot: float = clamp(a.dot(b), -1.0, 1.0)
+			var turn: float = acos(dot)
 			turn_sum += turn
-	var norm_len := clamp(total_len / 1000.0, 0.0, 1.0)
-	var norm_turns := clamp(turn_sum / PI, 0.0, 1.0)
+	var norm_len: float = clamp(total_len / 1000.0, 0.0, 1.0)
+	var norm_turns: float = clamp(turn_sum / PI, 0.0, 1.0)
 	return clamp((norm_len * 0.6) + (norm_turns * 0.4), 0.0, 1.0)
 
 
@@ -608,8 +608,8 @@ func _with_navigation_bias(su: ScenarioUnit, action: Callable) -> void:
 	if _grid == null:
 		action.call()
 		return
-	var prev := _grid.road_bias_weight
-	var bias_weight := _desired_bias_weight(su)
+	var prev: float = _grid.road_bias_weight
+	var bias_weight: float = _desired_bias_weight(su)
 	_grid.road_bias_weight = bias_weight
 	action.call()
 	_grid.road_bias_weight = prev
@@ -618,7 +618,7 @@ func _with_navigation_bias(su: ScenarioUnit, action: Callable) -> void:
 func _desired_bias_weight(su: ScenarioUnit) -> float:
 	if su == null or not su.has_meta("env_navigation_bias"):
 		return _grid.road_bias_weight
-	var bias: StringName = su.get_meta("env_navigation_bias")
+	var bias: StringName = StringName(su.get_meta("env_navigation_bias"))
 	match String(bias):
 		"roads":
 			return 0.5
