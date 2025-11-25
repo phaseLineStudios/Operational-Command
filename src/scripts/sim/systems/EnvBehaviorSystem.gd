@@ -75,10 +75,16 @@ func set_navigation_bias(unit_id: String, bias: StringName) -> void:
 
 ## Compute visibility at a position for loss calculations.
 func _compute_visibility_score(unit: Variant, scenario: Variant) -> float:
-	if visibility_profile == null:
-		return 1.0
 	var pos_m := unit.position_m if "position_m" in unit else Vector2.ZERO
-	return visibility_profile.compute_visibility_score(los_adapter, pos_m, scenario, int(unit.behaviour))
+	if visibility_profile and movement_adapter and movement_adapter.renderer:
+		return visibility_profile.compute_visibility_score(
+			movement_adapter.renderer, pos_m, scenario, int(unit.behaviour)
+		)
+	if visibility_profile and los_adapter:
+		return visibility_profile.compute_visibility_score(los_adapter, pos_m, scenario, int(unit.behaviour))
+	if los_adapter and los_adapter.has_method("sample_visibility_at"):
+		return los_adapter.sample_visibility_at(pos_m)
+	return 1.0
 
 
 ## Determine path complexity/risk for a unit.

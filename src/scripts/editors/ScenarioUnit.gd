@@ -231,6 +231,11 @@ func tick(dt: float, grid: PathGrid) -> void:
 			remain = 0.0
 
 	position_m = cur
+	# Apply optional environmental drift after base movement
+	if has_meta("env_drift"):
+		var drift: Vector2 = get_meta("env_drift")
+		position_m += drift * max(dt, 0.0)
+
 	_move_last_eta_s = estimate_eta_s(grid)
 	emit_signal("move_progress", position_m, _move_last_eta_s)
 
@@ -282,7 +287,10 @@ func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 		var beh_mult := 1.0
 		if has_meta("behaviour_speed_mult"):
 			beh_mult = float(get_meta("behaviour_speed_mult"))
-		return speed * beh_mult
+		var env_mult := 1.0
+		if has_meta("env_speed_mult"):
+			env_mult = float(get_meta("env_speed_mult"))
+		return speed * beh_mult * env_mult
 
 	var c := grid.world_to_cell(p_m)
 	if not grid._in_bounds(c):
@@ -292,7 +300,10 @@ func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 		var beh_mult := 1.0
 		if has_meta("behaviour_speed_mult"):
 			beh_mult = float(get_meta("behaviour_speed_mult"))
-		return speed * beh_mult
+		var env_mult := 1.0
+		if has_meta("env_speed_mult"):
+			env_mult = float(get_meta("env_speed_mult"))
+		return speed * beh_mult * env_mult
 
 	if grid._astar.is_in_boundsv(c) and grid._astar.is_point_solid(c):
 		return 0.0
@@ -303,6 +314,8 @@ func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 		v *= _fuel.speed_mult(id)
 	if has_meta("behaviour_speed_mult"):
 		v *= float(get_meta("behaviour_speed_mult"))
+	if has_meta("env_speed_mult"):
+		v *= float(get_meta("env_speed_mult"))
 	return v
 
 

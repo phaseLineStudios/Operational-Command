@@ -257,6 +257,7 @@ func tick_units(units: Array[ScenarioUnit], dt: float) -> void:
 		if _grid.ensure_profile(p):
 			_grid.use_profile(p)
 			for u in groups[p]:
+				_repath_if_requested(u)
 				u.tick(dt, _grid)
 
 
@@ -283,7 +284,11 @@ func plan_and_start(su: ScenarioUnit, dest_m: Vector2) -> bool:
 		su.set_meta("_pending_start_profile", p)
 		return true
 	_grid.use_profile(p)
-	if su.plan_move(_grid, dest_m):
+	var planned := false
+	_with_navigation_bias(su, func():
+		planned = su.plan_move(_grid, dest_m)
+	)
+	if planned:
 		su.start_move(_grid)
 		return true
 	LogService.warning("plan_move failed", "MovementAdapter.gd:163")
@@ -585,3 +590,41 @@ func path_complexity_for(_su: ScenarioUnit) -> float:
 	var norm_len := clamp(total_len / 1000.0, 0.0, 1.0)
 	var norm_turns := clamp(turn_sum / PI, 0.0, 1.0)
 	return clamp((norm_len * 0.6) + (norm_turns * 0.4), 0.0, 1.0)
+
+
+func _repath_if_requested(su: ScenarioUnit) -> void:
+	if su == null:
+		return
+	if not su.has_meta("env_repath_requested"):
+		return
+	su.remove_meta("env_repath_requested")
+	var dest: Vector2 = su.destination_m()
+	if not dest.is_finite():
+		return
+	plan_and_start(su, dest)
+
+
+func _with_navigation_bias(su: ScenarioUnit, action: Callable) -> void:
+	if _grid == null:
+		action.call()
+		return
+	var prev := _grid.road_bias_weight
+	var bias_weight := _desired_bias_weight(su)
+	_grid.road_bias_weight = bias_weight
+	action.call()
+	_grid.road_bias_weight = prev
+
+
+func _desired_bias_weight(su: ScenarioUnit) -> float:
+	if su == null or not su.has_meta("env_navigation_bias"):
+		return _grid.road_bias_weight
+	var bias: StringName = su.get_meta("env_navigation_bias")
+	match String(bias):
+		"roads":
+			return 0.5
+		"cover":
+			return 1.2
+		"shortest":
+			return 1.0
+		_:
+			return _grid.road_bias_weight

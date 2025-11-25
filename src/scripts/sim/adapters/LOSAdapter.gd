@@ -182,5 +182,20 @@ func sample_visibility_for_unit(_unit: ScenarioUnit) -> float:
 func sample_visibility_at(_pos_m: Vector2) -> float:
 	if _renderer == null:
 		return 1.0
-	# Treat range as zero and weather severity as zero for a local visibility metric.
-	return spotting_mul(_pos_m, 0.0, 0.0)
+	# Derive a local concealment penalty by sampling spotting_mul at zero range,
+	# then invert it to represent visibility (1.0 = clear, lower = obscured).
+	var spot_mul := spotting_mul(_pos_m, 0.0, _current_weather_severity())
+	return clamp(spot_mul, 0.0, 1.0)
+
+
+func _current_weather_severity() -> float:
+	# If a terrain renderer data is attached, try to fetch ScenarioData weather if present.
+	# Fallback to 0 severity.
+	if Game.current_scenario != null:
+		var scen: ScenarioData = Game.current_scenario
+		var fog_m := float(scen.fog_m)
+		var rain := float(scen.rain)
+		var fog_sev := clamp(1.0 - fog_m / 8000.0, 0.0, 1.0)
+		var rain_sev := clamp(rain / 50.0, 0.0, 1.0)
+		return max(fog_sev, rain_sev)
+	return 0.0

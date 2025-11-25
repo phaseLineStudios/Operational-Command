@@ -100,6 +100,7 @@ func apply(order: Dictionary) -> bool:
 ## [param order] Order dictionary.
 ## [return] `true` if movement was planned/started, else `false`.
 func _apply_move(unit: ScenarioUnit, order: Dictionary) -> bool:
+	_apply_navigation_bias(unit, order)
 	var dest: Variant = _compute_destination(unit, order)
 	if dest == null:
 		emit_signal("order_failed", order, "move_missing_destination")
@@ -158,6 +159,7 @@ func _apply_attack(unit: ScenarioUnit, order: Dictionary) -> bool:
 ## [param order] Order dictionary.
 ## [return] `true` if applied.
 func _apply_defend(unit: ScenarioUnit, order: Dictionary) -> bool:
+	_apply_navigation_bias(unit, order)
 	if combat_controller and combat_controller.has_method("set_posture"):
 		combat_controller.set_posture(unit, "defend")
 	var dest: Variant = _compute_destination(unit, order)
@@ -172,6 +174,7 @@ func _apply_defend(unit: ScenarioUnit, order: Dictionary) -> bool:
 ## [param order] Order dictionary.
 ## [return] `true` if applied, `false` if missing destination.
 func _apply_recon(unit: ScenarioUnit, order: Dictionary) -> bool:
+	_apply_navigation_bias(unit, order)
 	if combat_controller and combat_controller.has_method("set_posture"):
 		combat_controller.set_posture(unit, "recon")
 	var dest: Variant = _compute_destination(unit, order)
@@ -477,3 +480,13 @@ func _quantity_to_meters(qty: int, zone: String) -> float:
 			return float(qty) * 50.0
 		_:
 			return float(qty)
+
+
+## Apply navigation bias metadata to movement adapter if present.
+func _apply_navigation_bias(unit: ScenarioUnit, order: Dictionary) -> void:
+	if unit == null or order == null:
+		return
+	if not order.has("navigation_bias"):
+		return
+	if movement_adapter and movement_adapter.has_method("set_navigation_bias"):
+		movement_adapter.set_navigation_bias(unit, order.navigation_bias)

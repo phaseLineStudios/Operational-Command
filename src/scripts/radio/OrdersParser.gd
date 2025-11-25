@@ -32,6 +32,7 @@ const ORDER_KEYS := {
 
 var _tables: Dictionary
 var _custom_commands: Dictionary = {}
+var _nav_bias_phrases: Dictionary = {}  ## normalized phrase -> bias StringName
 
 
 func _ready() -> void:
@@ -530,9 +531,27 @@ func _order_type_to_string(t: int) -> String:
 
 ## Register navigation bias phrase (placeholder).
 func register_navigation_bias_phrase(_phrase: String, _bias: StringName) -> void:
-	pass
+	var norm := _normalize_phrase(_phrase)
+	if norm == "":
+		return
+	_nav_bias_phrases[norm] = _bias
 
 
 ## Annotate parsed orders with navigation bias metadata (placeholder).
 func apply_navigation_bias_metadata(_orders: Array) -> Array:
-	pass
+	if _orders.is_empty() or _nav_bias_phrases.is_empty():
+		return _orders
+	for i in _orders.size():
+		var order: Dictionary = _orders[i]
+		var raw_tokens: PackedStringArray = order.get("raw", PackedStringArray())
+		var combined := " ".join(raw_tokens)
+		for phrase in _nav_bias_phrases.keys():
+			if combined.find(phrase) != -1:
+				order["navigation_bias"] = _nav_bias_phrases[phrase]
+				_orders[i] = order
+				break
+	return _orders
+
+
+func _normalize_phrase(p: String) -> String:
+	return p.strip_edges().to_lower()
