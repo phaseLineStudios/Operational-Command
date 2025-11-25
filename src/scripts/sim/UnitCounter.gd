@@ -2,6 +2,9 @@
 class_name UnitCounter
 extends Node3D
 
+## Emitted when the counter texture has been generated and is ready for display
+signal texture_ready
+
 enum CounterAffiliation { PLAYER, FRIEND, ENEMY, NEUTRAL, UNKNOWN }
 
 @export var affiliation: CounterAffiliation = CounterAffiliation.PLAYER
@@ -36,6 +39,9 @@ func _ready() -> void:
 
 	var face := await _generate_face(color)
 	_ensure_mesh_materials(color, face)
+
+	# Emit signal when texture generation is complete
+	texture_ready.emit()
 
 
 func _ensure_mesh_materials(color: Color, face: Texture2D) -> void:

@@ -165,13 +165,6 @@ func init_world(scenario: ScenarioData) -> void:
 	# Initialize custom commands for this mission
 	_init_custom_commands(scenario)
 
-	# Start paused so player can review before beginning
-	_transition(State.INIT, State.PAUSED)
-
-	# Set Start time
-	var start_s := scenario.second + scenario.minute * 60 + scenario.hour * 60 * 60
-	environment_controller.time_of_day = start_s
-
 
 ## Initialize mission resolution and connect state changes.
 ## [param primary_ids] Objective IDs.
@@ -495,6 +488,15 @@ func pause() -> void:
 func resume() -> void:
 	if _state == State.PAUSED:
 		_transition(_state, State.RUNNING)
+
+
+## Start simulation from INIT state.
+func start() -> void:
+	if _state == State.INIT:
+		_transition(_state, State.RUNNING)
+
+		var start_s := _scenario.second + _scenario.minute * 60 + _scenario.hour * 60 * 60
+		environment_controller.time_of_day = start_s
 
 
 ## Set simulation time scale (1.0 = normal, 2.0 = 2x speed).

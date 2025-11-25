@@ -36,6 +36,12 @@ func _ready() -> void:
 	var playable_units := generate_playable_units(scenario.unit_slots)
 	scenario.playable_units = playable_units
 
+	# Set up signal connection before initializing terrain
+	var ready_state := {"map_ready": false}
+	var on_map_ready := func(): ready_state["map_ready"] = true
+	if renderer and not renderer.is_connected("render_ready", on_map_ready):
+		renderer.render_ready.connect(on_map_ready, CONNECT_ONE_SHOT)
+
 	map.init_terrain(scenario)
 	trigger_engine.bind_scenario(scenario)
 	trigger_engine.bind_dialog(mission_dialog)
@@ -65,13 +71,22 @@ func _ready() -> void:
 	radio.radio_result.connect(_on_radio_result)
 
 	_update_subtitle_suggestions(scenario)
-	_create_initial_unit_counters(playable_units)
 
 	# Initialize the AI
 	_init_enemy_ai()
 
+	# Wait for map to finish rendering
+	while not ready_state["map_ready"]:
+		await get_tree().process_frame
+
+	# Create unit counters after map is ready (so position conversion works)
+	await _create_initial_unit_counters(playable_units)
+
 	# All initialization complete - hide loading screen
 	loading_screen.hide_loading()
+
+	# Start the simulation now that everything is ready
+	sim.start()
 
 
 ## Initialize the drawing controller and bind to trigger API
@@ -364,21 +379,21 @@ func _update_subtitle_suggestions(scenario: ScenarioData) -> void:
 func _create_initial_unit_counters(playable_units: Array[ScenarioUnit]) -> void:
 	for unit in playable_units:
 		var counter := preload("res://scenes/system/unit_counter.tscn").instantiate()
-		counter.affiliation = UnitCounter.CounterAffiliation.PLAYER
-		counter.callsign = unit.callsign
-		counter.symbol_type = unit.unit.type
-		counter.symbol_size = unit.unit.size
 
+		counter.setup(
+			MilSymbol.UnitAffiliation.FRIEND, unit.unit.type, unit.unit.size, unit.callsign
+		)
 		%PhysicsObjects.add_child(counter)
 
-		# Convert unit terrain position to 3D world position
+		# Set position immediately (before awaiting texture)
 		var world_pos: Variant = _terrain_pos_to_world(unit.position_m)
 		if world_pos != null:
-			# Place counter slightly above the map surface
-			counter.global_position = world_pos + Vector3(0, 0.05, 0)
+			counter.global_position = world_pos + Vector3(0, 0.25, 0)
 		else:
-			# Fallback to spawn location if conversion fails
 			counter.global_position = %CounterSpawnLocation.global_position
+
+		# Wait for texture generation to complete (for loading screen)
+		await counter.texture_ready
 
 
 ## Convert terrain 2D position to 3D world position on the map.
@@ -398,20 +413,17 @@ func _terrain_pos_to_world(pos_m: Vector2) -> Variant:
 	else:
 		return null
 
-	var terrain_data := map.renderer.data
-	if terrain_data == null:
+	# Convert terrain meters to map pixels (includes margins and borders)
+	var map_px := renderer.terrain_to_map(pos_m)
+
+	# Get total map size in pixels (includes margins)
+	var map_size := renderer.size
+	if map_size.x == 0 or map_size.y == 0:
 		return null
 
-	var terrain_width_m := float(terrain_data.width_m)
-	var terrain_height_m := float(terrain_data.height_m)
-
-	if terrain_width_m == 0 or terrain_height_m == 0:
-		return null
-
-	# Normalize terrain position to -0.5..0.5 range (mesh local space)
-	var t_pos_m := renderer.terrain_to_map(pos_m)
-	var normalized_x := (t_pos_m.x / terrain_width_m) - 0.5
-	var normalized_z := (t_pos_m.y / terrain_height_m) - 0.5
+	# Normalize to -0.5..0.5 range (mesh local space)
+	var normalized_x := (map_px.x / map_size.x) - 0.5
+	var normalized_z := (map_px.y / map_size.y) - 0.5
 
 	# Scale to mesh size
 	var local_pos := Vector3(normalized_x * mesh_size.x, 0, normalized_z * mesh_size.y)

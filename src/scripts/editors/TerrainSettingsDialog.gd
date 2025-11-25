@@ -16,6 +16,10 @@ var _target_data: TerrainData = null
 @onready var terrain_grid_x: SpinBox = %GridStart/X
 @onready var terrain_grid_y: SpinBox = %GridStart/Y
 @onready var base_elevation: SpinBox = %BaseElevation
+@onready var meta_country: LineEdit = %MetaCountry
+@onready var meta_edition: LineEdit = %MetaEdition
+@onready var meta_series: LineEdit = %MetaSeries
+@onready var meta_sheet: LineEdit = %MetaSheet
 @onready var create_btn: Button = %Create
 @onready var cancel_btn: Button = %Cancel
 
@@ -71,6 +75,11 @@ func _on_primary_pressed():
 		_target_data.grid_start_x = int(terrain_grid_x.value)
 		_target_data.grid_start_y = int(terrain_grid_y.value)
 		_target_data.base_elevation_m = int(base_elevation.value)
+		_target_data.country = meta_country.text
+		_target_data.map_scale = "1:25,000"
+		_target_data.edition = meta_edition.text
+		_target_data.series = meta_series.text
+		_target_data.sheet = meta_sheet.text
 
 		show_dialog(false)
 		emit_signal("request_edit", _target_data)
@@ -82,6 +91,11 @@ func _on_primary_pressed():
 		data.grid_start_x = int(terrain_grid_x.value)
 		data.grid_start_y = int(terrain_grid_y.value)
 		data.base_elevation_m = int(base_elevation.value)
+		data.country = meta_country.text
+		data.map_scale = "1:25,000"
+		data.edition = meta_edition.text
+		data.series = meta_series.text
+		data.sheet = meta_sheet.text
 
 		show_dialog(false)
 		emit_signal("request_create", data)
@@ -110,6 +124,10 @@ func _fill_fields_from_data(data: TerrainData) -> void:
 	terrain_grid_x.value = int(data.grid_start_x)
 	terrain_grid_y.value = int(data.grid_start_y)
 	base_elevation.value = float(data.base_elevation_m)
+	meta_country.text = data.country
+	meta_edition.text = data.edition
+	meta_series.text = data.series
+	meta_sheet.text = data.sheet
 
 
 func _window_title_and_cta() -> void:
@@ -125,6 +143,10 @@ func _reset_values():
 	terrain_grid_x.value = 100
 	terrain_grid_y.value = 100
 	base_elevation.value = 110
+	meta_country.text = ""
+	meta_edition.text = ""
+	meta_series.text = ""
+	meta_sheet.text = ""
 
 
 ## Show/hide dialog
