@@ -122,10 +122,11 @@ func _update_lost_state(
 
 	# Recovery: regain when visibility improves or after some time.
 	if nav.is_lost:
-		if visibility >= threshold or nav.lost_timer_s > 30.0:
+		if visibility >= threshold or nav.lost_timer_s > 30.0 or _has_friendly_los(unit):
 			nav.set_lost(false)
 			_apply_drift(uid, Vector2.ZERO)
 			_emit_speed_change(uid, 1.0)
+			_request_repath(uid)
 			emit_signal("unit_recovered", uid)
 			return
 		nav.set_lost(true, nav.drift_vector)  # keep timer running
@@ -140,6 +141,7 @@ func _update_lost_state(
 		nav.set_lost(true, _random_drift(rng))
 		_apply_drift(uid, nav.drift_vector)
 		_emit_speed_change(uid, default_speed_mult_slowed)
+		_request_repath(uid)
 		emit_signal("unit_lost", uid)
 
 
@@ -159,6 +161,7 @@ func _update_slowdown_state(
 			nav.set_nav_state(UnitNavigationState.NavState.NORMAL)
 			nav.bogged_timer_s = 0.0
 			_emit_speed_change(uid, 1.0)
+			_request_repath(uid)
 			emit_signal("unit_unbogged", uid)
 		return
 
@@ -170,6 +173,7 @@ func _update_slowdown_state(
 		nav.set_nav_state(UnitNavigationState.NavState.BOGGED)
 		nav.bogged_timer_s = 0.0
 		_emit_speed_change(uid, default_speed_mult_bogged)
+		_request_repath(uid)
 		emit_signal("unit_bogged", uid)
 
 
@@ -201,6 +205,33 @@ func _random_drift(rng: RandomNumberGenerator) -> Vector2:
 	var angle: float = rng.randf_range(0.0, PI * 2.0)
 	var magnitude: float = rng.randf_range(0.5, 2.0)
 	return Vector2.RIGHT.rotated(angle) * magnitude
+
+
+func _has_friendly_los(unit: ScenarioUnit) -> bool:
+	if los_adapter == null or Game.current_scenario == null or unit == null:
+		return false
+	var all_units: Array = []
+	all_units.append_array(Game.current_scenario.units)
+	all_units.append_array(Game.current_scenario.playable_units)
+	for other in all_units:
+		if other == null or other == unit or other.is_dead():
+			continue
+		if other.affiliation != unit.affiliation:
+			continue
+		if los_adapter.has_los(other, unit) or los_adapter.has_los(unit, other):
+			return true
+	return false
+
+
+func _request_repath(unit_id: String) -> void:
+	if movement_adapter == null:
+		return
+	if not movement_adapter.has_method("request_env_repath"):
+		return
+	var su := _find_unit_by_id(unit_id)
+	if su == null:
+		return
+	movement_adapter.request_env_repath(su)
 
 
 func _apply_drift(unit_id: String, drift: Vector2) -> void:
