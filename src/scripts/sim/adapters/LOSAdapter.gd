@@ -172,9 +172,15 @@ func _behaviour_spotting_mult(target: ScenarioUnit) -> float:
 
 ## Fast local visibility query placeholder for EnvBehaviorSystem.
 func sample_visibility_for_unit(_unit: ScenarioUnit) -> float:
-	pass
+	if _unit == null:
+		return 1.0
+	var pos_m: Vector2 = _unit.position_m if "position_m" in _unit else Vector2.ZERO
+	return sample_visibility_at(pos_m)
 
 
 ## Visibility sampling at a position placeholder.
 func sample_visibility_at(_pos_m: Vector2) -> float:
-	pass
+	if _renderer == null:
+		return 1.0
+	# Treat range as zero and weather severity as zero for a local visibility metric.
+	return spotting_mul(_pos_m, 0.0, 0.0)
