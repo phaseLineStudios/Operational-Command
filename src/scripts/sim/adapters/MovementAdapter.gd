@@ -452,7 +452,11 @@ func _step_move(dt: float) -> void:
 		if flat.length() > 0.001:
 			_actor.look_at(_actor.global_position + flat, Vector3.UP)
 
-	_actor.global_position = pos + dir * speed * dt
+	var step_vec := dir * speed * dt
+	if _actor and _actor.has_meta("env_drift3"):
+		var drift3: Vector3 = _actor.get_meta("env_drift3")
+		step_vec += drift3 * dt
+	_actor.global_position = pos + step_vec
 
 
 func _tick_hold(dt: float) -> void:
@@ -544,6 +548,9 @@ func set_env_drift(_su: ScenarioUnit, _drift: Vector2) -> void:
 	if _su == null:
 		return
 	_su.set_meta("env_drift", _drift)
+	# Mirror drift into actor metadata for 3D movement if available
+	if _actor != null:
+		_actor.set_meta("env_drift3", Vector3(_drift.x, 0.0, _drift.y))
 
 
 ## Clear drift vector (placeholder).
@@ -552,6 +559,8 @@ func clear_env_drift(_su: ScenarioUnit) -> void:
 		return
 	if _su.has_meta("env_drift"):
 		_su.remove_meta("env_drift")
+	if _actor != null and _actor.has_meta("env_drift3"):
+		_actor.remove_meta("env_drift3")
 
 
 ## Request a repath due to environment state change (placeholder).

@@ -17,6 +17,7 @@ signal navigation_bias_changed(unit_id: String, bias: StringName)
 @export var default_speed_mult_slowed: float = 0.8
 @export var default_speed_mult_bogged: float = 0.4
 @export var loss_threshold: float = 0.5
+@export var regroup_recovery_bonus: float = 0.2  ## bonus visibility when Hold/Regroup is active
 
 var _nav_state_by_id: Dictionary = {}  ## unit_id -> UnitNavigationState
 var _speed_mult_cache: Dictionary = {}  ## unit_id -> float
@@ -119,6 +120,8 @@ func _update_lost_state(
 	var uid := String(unit.id)
 	var path_complexity: float = _estimate_path_complexity(unit)
 	var threshold: float = loss_threshold
+	if _has_hold_regroup_order(unit):
+		visibility += regroup_recovery_bonus
 
 	# Recovery: regain when visibility improves or after some time.
 	if nav.is_lost:
@@ -135,6 +138,7 @@ func _update_lost_state(
 
 	# Chance to become lost when visibility is low and path is complex.
 	var loss_risk: float = clamp(threshold - visibility, 0.0, 1.0) * (0.5 + path_complexity * 0.5)
+	loss_risk *= _terrain_loss_factor(unit)
 	if loss_risk <= 0.0:
 		return
 	if rng.randf() < loss_risk:
@@ -142,6 +146,7 @@ func _update_lost_state(
 		_apply_drift(uid, nav.drift_vector)
 		_emit_speed_change(uid, default_speed_mult_slowed)
 		_request_repath(uid)
+		LogService.info("Unit %s lost (risk=%.2f vis=%.2f)" % [uid, loss_risk, visibility], "EnvBehaviorSystem.gd")
 		emit_signal("unit_lost", uid)
 
 
@@ -226,6 +231,27 @@ func _terrain_bog_factor(unit: ScenarioUnit) -> float:
 		# Heavier weights (mud/soft ground) increase bog risk; roads (w<1) reduce it.
 		return clamp(w, 0.5, 2.0)
 	return 1.0
+
+
+func _terrain_loss_factor(unit: ScenarioUnit) -> float:
+	if movement_adapter == null or movement_adapter.renderer == null:
+		return 1.0
+	var pg: PathGrid = movement_adapter.renderer.path_grid
+	if pg == null:
+		return 1.0
+	var c := pg.world_to_cell(unit.position_m)
+	if not pg._in_bounds(c):
+		return 1.0
+	if pg._astar and pg._astar.is_in_boundsv(c):
+		var w: float = max(pg._astar.get_point_weight_scale(c), 0.001)
+		# Dense/rough terrain increases loss risk slightly; roads reduce it.
+		return clamp(0.8 + (w - 1.0) * 0.2, 0.5, 1.5)
+	return 1.0
+
+
+func _has_hold_regroup_order(unit: ScenarioUnit) -> bool:
+	# Placeholder: detect a meta flag set by orders/AI for "Hold/Regroup" acceleration.
+	return unit != null and unit.has_meta("hold_regroup")
 
 
 func _has_friendly_los(unit: ScenarioUnit) -> bool:

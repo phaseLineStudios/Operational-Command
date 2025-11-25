@@ -514,6 +514,16 @@ func bind_env_behavior_system(_env_sys: Node) -> void:
 	if not _env_sys.is_connected("unit_unbogged", Callable(self, "_on_unit_unbogged")):
 		_env_sys.unit_unbogged.connect(_on_unit_unbogged)
 	_env_behavior_system = _env_sys
+	# Relay env signals to orders router for radio/log feedback if available
+	if _orders_router and _orders_router.has_signal("radio_message"):
+		if not _env_sys.is_connected("unit_lost", Callable(_orders_router, "_on_unit_lost")):
+			_env_sys.unit_lost.connect(func(uid): _emit_radio("info", "%s lost orientation" % uid))
+		if not _env_sys.is_connected("unit_recovered", Callable(_orders_router, "_on_unit_recovered")):
+			_env_sys.unit_recovered.connect(func(uid): _emit_radio("info", "%s regained orientation" % uid))
+		if not _env_sys.is_connected("unit_bogged", Callable(_orders_router, "_on_unit_bogged")):
+			_env_sys.unit_bogged.connect(func(uid): _emit_radio("warn", "%s bogged down" % uid))
+		if not _env_sys.is_connected("unit_unbogged", Callable(_orders_router, "_on_unit_unbogged")):
+			_env_sys.unit_unbogged.connect(func(uid): _emit_radio("info", "%s moving again" % uid))
 
 
 ## Handle unit lost event (placeholder).
@@ -577,3 +587,14 @@ func _request_engineer_if_available(unit_index: int) -> void:
 			)
 			return
 	LogService.info("Engineer support requested for %s (none available)" % su.id, "AIController.gd")
+
+
+func _emit_radio(level: String, msg: String) -> void:
+	# Emit via OrdersRouter if it supports radio_message, else log only.
+	if _orders_router and _orders_router.has_signal("radio_message"):
+		_orders_router.emit_signal("radio_message", level, msg)
+	else:
+		if level == "warn":
+			LogService.warning(msg, "AIController.gd")
+		else:
+			LogService.info(msg, "AIController.gd")
