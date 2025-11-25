@@ -526,3 +526,13 @@ func _order_type_to_string(t: int) -> String:
 			return "CUSTOM"
 		_:
 			return "UNKNOWN"
+
+
+## Register navigation bias phrase (placeholder).
+func register_navigation_bias_phrase(_phrase: String, _bias: StringName) -> void:
+	pass
+
+
+## Annotate parsed orders with navigation bias metadata (placeholder).
+func apply_navigation_bias_metadata(_orders: Array) -> Array:
+	pass

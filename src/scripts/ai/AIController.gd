@@ -498,3 +498,33 @@ func bind_trigger_engine(engine: TriggerEngine) -> void:
 		return
 	if not engine.trigger_activated.is_connected(_on_trigger_activated):
 		engine.trigger_activated.connect(_on_trigger_activated)
+
+
+## Bind environment behaviour system signals (placeholder).
+func bind_env_behavior_system(_env_sys: Node) -> void:
+	pass
+
+
+## Handle unit lost event (placeholder).
+func _on_unit_lost(_unit_id: String) -> void:
+	pass
+
+
+## Handle unit recovered event (placeholder).
+func _on_unit_recovered(_unit_id: String) -> void:
+	pass
+
+
+## Handle unit bogged event (placeholder).
+func _on_unit_bogged(_unit_id: String) -> void:
+	pass
+
+
+## Handle unit unbogged event (placeholder).
+func _on_unit_unbogged(_unit_id: String) -> void:
+	pass
+
+
+## Apply navigation bias intent from orders (placeholder).
+func apply_navigation_bias_from_order(_unit_id: String, _bias: StringName) -> void:
+	pass

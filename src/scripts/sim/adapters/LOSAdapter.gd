@@ -168,3 +168,13 @@ func _behaviour_spotting_mult(target: ScenarioUnit) -> float:
 			return 0.6
 		_:
 			return 1.0
+
+
+## Fast local visibility query placeholder for EnvBehaviorSystem.
+func sample_visibility_for_unit(_unit: ScenarioUnit) -> float:
+	pass
+
+
+## Visibility sampling at a position placeholder.
+func sample_visibility_at(_pos_m: Vector2) -> float:
+	pass

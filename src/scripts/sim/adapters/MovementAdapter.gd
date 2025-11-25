@@ -519,3 +519,38 @@ func _advance_patrol_leg() -> bool:
 	_moving = true
 	_patrol_segments_remaining -= 1
 	return true
+
+
+## Set an external environment speed multiplier for a unit (placeholder).
+func set_env_speed_multiplier(_su: ScenarioUnit, _mult: float) -> void:
+	pass
+
+
+## Clear environment speed multiplier (placeholder).
+func clear_env_speed_multiplier(_su: ScenarioUnit) -> void:
+	pass
+
+
+## Apply an external drift vector while lost (placeholder).
+func set_env_drift(_su: ScenarioUnit, _drift: Vector2) -> void:
+	pass
+
+
+## Clear drift vector (placeholder).
+func clear_env_drift(_su: ScenarioUnit) -> void:
+	pass
+
+
+## Request a repath due to environment state change (placeholder).
+func request_env_repath(_su: ScenarioUnit) -> void:
+	pass
+
+
+## Set navigation bias (roads/cover/shortest) (placeholder).
+func set_navigation_bias(_su: ScenarioUnit, _bias: StringName) -> void:
+	pass
+
+
+## Optional helper to surface path complexity to env system (placeholder).
+func path_complexity_for(_su: ScenarioUnit) -> float:
+	pass
