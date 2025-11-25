@@ -285,9 +285,7 @@ func plan_and_start(su: ScenarioUnit, dest_m: Vector2) -> bool:
 		return true
 	_grid.use_profile(p)
 	var planned := false
-	_with_navigation_bias(su, func():
-		planned = su.plan_move(_grid, dest_m)
-	)
+	_with_navigation_bias(su, func(): planned = su.plan_move(_grid, dest_m))
 	if planned:
 		su.start_move(_grid)
 		return true

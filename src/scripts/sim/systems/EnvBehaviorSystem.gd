@@ -81,7 +81,9 @@ func _compute_visibility_score(unit: Variant, scenario: Variant) -> float:
 			movement_adapter.renderer, pos_m, scenario, int(unit.behaviour)
 		)
 	if visibility_profile and los_adapter:
-		return visibility_profile.compute_visibility_score(los_adapter, pos_m, scenario, int(unit.behaviour))
+		return visibility_profile.compute_visibility_score(
+			los_adapter, pos_m, scenario, int(unit.behaviour)
+		)
 	if los_adapter and los_adapter.has_method("sample_visibility_at"):
 		return los_adapter.sample_visibility_at(pos_m)
 	return 1.0
@@ -111,7 +113,9 @@ func _estimate_path_complexity(unit: Variant) -> float:
 
 
 ## Evaluate and update lost state for a unit.
-func _update_lost_state(unit: Variant, nav: UnitNavigationState, visibility: float, rng: RandomNumberGenerator) -> void:
+func _update_lost_state(
+	unit: Variant, nav: UnitNavigationState, visibility: float, rng: RandomNumberGenerator
+) -> void:
 	var uid := String(unit.id)
 	var path_complexity: float = _estimate_path_complexity(unit)
 	var threshold: float = loss_threshold
@@ -127,7 +131,7 @@ func _update_lost_state(unit: Variant, nav: UnitNavigationState, visibility: flo
 		return
 
 	# Chance to become lost when visibility is low and path is complex.
-	var loss_risk: float = clamp((threshold - visibility), 0.0, 1.0) * (0.5 + path_complexity * 0.5)
+	var loss_risk: float = clamp(threshold - visibility, 0.0, 1.0) * (0.5 + path_complexity * 0.5)
 	if loss_risk <= 0.0:
 		return
 	if rng.randf() < loss_risk:
@@ -137,7 +141,9 @@ func _update_lost_state(unit: Variant, nav: UnitNavigationState, visibility: flo
 
 
 ## Evaluate and update slowdown/bog states for a unit.
-func _update_slowdown_state(unit: Variant, nav: UnitNavigationState, rng: RandomNumberGenerator) -> void:
+func _update_slowdown_state(
+	unit: Variant, nav: UnitNavigationState, rng: RandomNumberGenerator
+) -> void:
 	var uid := String(unit.id)
 
 	# If stuck soft, leave handling to engineer flow; do not auto-recover here.
