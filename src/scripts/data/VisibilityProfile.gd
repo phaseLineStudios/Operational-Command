@@ -51,6 +51,7 @@ func compute_visibility_score(
 
 
 ## Optional helper to derive weather severity from a ScenarioData.
+## Convert fog/rain into a 0..1 severity used by loss/visibility logic.
 func weather_severity_from_scenario(scenario_weather: Variant) -> float:
 	var fog_m: float = 8000.0
 	var rain: float = 0.0

@@ -577,6 +577,7 @@ func _uid_to_index(uid: String) -> int:
 	return idx
 
 
+## Locate an engineer-capable unit and log a support request.
 func _request_engineer_if_available(unit_index: int) -> void:
 	if Game.current_scenario == null:
 		return

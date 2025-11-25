@@ -209,8 +209,8 @@ func _emit_speed_change(unit_id: String, mult: float) -> void:
 	emit_signal("speed_modifier_changed", unit_id, mult)
 
 
+## Find a ScenarioUnit by id in the current scenario.
 func _find_unit_by_id(unit_id: String) -> ScenarioUnit:
-	# Helper to find a ScenarioUnit in the current scenario if available.
 	if Game.current_scenario == null:
 		return null
 	for su in Game.current_scenario.units:
@@ -228,6 +228,7 @@ func _random_drift(rng: RandomNumberGenerator) -> Vector2:
 	return Vector2.RIGHT.rotated(angle) * magnitude
 
 
+## Terrain multiplier for bog risk based on path grid weight.
 func _terrain_bog_factor(unit: ScenarioUnit) -> float:
 	if movement_adapter == null or movement_adapter.renderer == null:
 		return 1.0
@@ -261,10 +262,10 @@ func _terrain_loss_factor(unit: ScenarioUnit) -> float:
 
 
 func _has_hold_regroup_order(unit: ScenarioUnit) -> bool:
-	# Placeholder: detect a meta flag set by orders/AI for "Hold/Regroup" acceleration.
 	return unit != null and unit.has_meta("hold_regroup")
 
 
+## Behaviour profile influence on getting lost.
 func _behaviour_loss_factor(unit: ScenarioUnit) -> float:
 	if unit == null:
 		return 1.0
@@ -283,6 +284,7 @@ func _behaviour_loss_factor(unit: ScenarioUnit) -> float:
 			return 1.0
 
 
+## Weather severity influence on loss risk.
 func _weather_loss_factor(scenario: Variant) -> float:
 	if visibility_profile == null:
 		return 1.0
@@ -290,6 +292,7 @@ func _weather_loss_factor(scenario: Variant) -> float:
 	return clamp(1.0 + sev * 0.5, 0.5, 1.5)
 
 
+## Recovery helper: detect nearby map labels as landmarks.
 func _near_landmark(unit: ScenarioUnit) -> bool:
 	if movement_adapter == null or movement_adapter.renderer == null:
 		return false
@@ -309,6 +312,7 @@ func _near_landmark(unit: ScenarioUnit) -> bool:
 	return false
 
 
+## True if any friendly has LOS to this unit.
 func _has_friendly_los(unit: ScenarioUnit) -> bool:
 	if los_adapter == null or Game.current_scenario == null or unit == null:
 		return false
@@ -325,6 +329,7 @@ func _has_friendly_los(unit: ScenarioUnit) -> bool:
 	return false
 
 
+## Ask movement adapter to rebuild the path for a unit.
 func _request_repath(unit_id: String) -> void:
 	if movement_adapter == null:
 		return
@@ -336,6 +341,7 @@ func _request_repath(unit_id: String) -> void:
 	movement_adapter.request_env_repath(su)
 
 
+## Mark a unit as stuck and halt movement until engineers assist.
 func _set_stuck_soft(unit_id: String, nav: UnitNavigationState) -> void:
 	nav.set_nav_state(UnitNavigationState.NavState.STUCK_SOFT)
 	_emit_speed_change(unit_id, 0.0)
@@ -345,6 +351,7 @@ func _set_stuck_soft(unit_id: String, nav: UnitNavigationState) -> void:
 	emit_signal("unit_bogged", unit_id)
 
 
+## Apply or clear drift metadata on the movement adapter.
 func _apply_drift(unit_id: String, drift: Vector2) -> void:
 	if movement_adapter == null:
 		return

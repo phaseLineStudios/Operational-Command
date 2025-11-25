@@ -544,6 +544,7 @@ func clear_env_speed_multiplier(_su: ScenarioUnit) -> void:
 
 
 ## Apply an external drift vector while lost (placeholder).
+## Store drift for 2D pathing and mirror to actor for 3D motion.
 func set_env_drift(_su: ScenarioUnit, _drift: Vector2) -> void:
 	if _su == null:
 		return
@@ -564,6 +565,7 @@ func clear_env_drift(_su: ScenarioUnit) -> void:
 
 
 ## Request a repath due to environment state change (placeholder).
+## Flag a repath request; processed on the next tick group.
 func request_env_repath(_su: ScenarioUnit) -> void:
 	if _su == null:
 		return

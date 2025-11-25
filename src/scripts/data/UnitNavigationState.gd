@@ -33,7 +33,7 @@ func set_lost(state: bool, drift: Vector2 = Vector2.ZERO) -> void:
 		lost_timer_s = 0.0
 
 
-## Set bogged/slow state and timers.
+## Set bogged/slow state and timers; resets when back to NORMAL.
 func set_nav_state(state: NavState) -> void:
 	if nav_state != state:
 		if state == NavState.NORMAL:
