@@ -118,6 +118,8 @@ func _apply_move(unit: ScenarioUnit, order: Dictionary) -> bool:
 			success = movement_adapter.plan_and_start_direct(unit, dest)
 		else:
 			success = movement_adapter.plan_and_start(unit, dest)
+		if order.has("navigation_bias") and order.navigation_bias == StringName("roads"):
+			LogService.info("Order applied with road bias for %s" % unit.id, "OrdersRouter.gd")
 
 	if success:
 		emit_signal("order_applied", order)

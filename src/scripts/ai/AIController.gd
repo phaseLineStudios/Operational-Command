@@ -535,6 +535,7 @@ func _on_unit_bogged(_unit_id: String) -> void:
 	var idx := _uid_to_index(_unit_id)
 	if idx >= 0:
 		pause_unit(idx)
+		_request_engineer_if_available(idx)
 
 
 ## Handle unit unbogged event (placeholder).
@@ -558,3 +559,13 @@ func _uid_to_index(uid: String) -> int:
 		refresh_unit_index_cache()
 		idx = int(_unit_index_cache.get(uid, -1))
 	return idx
+
+
+func _request_engineer_if_available(unit_index: int) -> void:
+	if Game.current_scenario == null:
+		return
+	var su: ScenarioUnit = Game.current_scenario.units[unit_index]
+	if su == null:
+		return
+	# For now, just log the intent; actual engineer dispatch would be handled elsewhere.
+	LogService.info("Engineer support requested for %s" % su.id, "AIController.gd")
