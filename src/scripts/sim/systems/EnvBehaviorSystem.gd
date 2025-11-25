@@ -124,10 +124,12 @@ func _update_lost_state(
 	if nav.is_lost:
 		if visibility >= threshold or nav.lost_timer_s > 30.0:
 			nav.set_lost(false)
+			_apply_drift(uid, Vector2.ZERO)
 			_emit_speed_change(uid, 1.0)
 			emit_signal("unit_recovered", uid)
 			return
 		nav.set_lost(true, nav.drift_vector)  # keep timer running
+		_apply_drift(uid, nav.drift_vector)
 		return
 
 	# Chance to become lost when visibility is low and path is complex.
@@ -136,6 +138,7 @@ func _update_lost_state(
 		return
 	if rng.randf() < loss_risk:
 		nav.set_lost(true, _random_drift(rng))
+		_apply_drift(uid, nav.drift_vector)
 		_emit_speed_change(uid, default_speed_mult_slowed)
 		emit_signal("unit_lost", uid)
 
@@ -198,3 +201,17 @@ func _random_drift(rng: RandomNumberGenerator) -> Vector2:
 	var angle: float = rng.randf_range(0.0, PI * 2.0)
 	var magnitude: float = rng.randf_range(0.5, 2.0)
 	return Vector2.RIGHT.rotated(angle) * magnitude
+
+
+func _apply_drift(unit_id: String, drift: Vector2) -> void:
+	if movement_adapter == null:
+		return
+	var su := _find_unit_by_id(unit_id)
+	if su == null:
+		return
+	if drift == Vector2.ZERO:
+		if movement_adapter.has_method("clear_env_drift"):
+			movement_adapter.clear_env_drift(su)
+	else:
+		if movement_adapter.has_method("set_env_drift"):
+			movement_adapter.set_env_drift(su, drift)
