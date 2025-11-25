@@ -37,6 +37,10 @@ var _nav_bias_phrases: Dictionary = {}  ## normalized phrase -> bias StringName
 
 func _ready() -> void:
 	_tables = NARules.get_parser_tables()
+	# Register a couple of common navigation-bias phrases
+	register_navigation_bias_phrase("stick to roads", StringName("roads"))
+	register_navigation_bias_phrase("proceed cautiously", StringName("cover"))
+	register_navigation_bias_phrase("shortest route", StringName("shortest"))
 
 
 ## Register a custom command keyword for this mission.
@@ -79,7 +83,7 @@ func parse(text: String) -> Array:
 			return [custom_order]
 
 	# Fall back to standard order parsing
-	var orders := _extract_orders(tokens)
+	var orders := apply_navigation_bias_metadata(_extract_orders(tokens))
 	if orders.is_empty():
 		emit_signal("parse_error", "No orders found.")
 	else:

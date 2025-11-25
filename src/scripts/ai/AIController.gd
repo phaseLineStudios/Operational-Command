@@ -567,5 +567,13 @@ func _request_engineer_if_available(unit_index: int) -> void:
 	var su: ScenarioUnit = Game.current_scenario.units[unit_index]
 	if su == null:
 		return
-	# For now, just log the intent; actual engineer dispatch would be handled elsewhere.
-	LogService.info("Engineer support requested for %s" % su.id, "AIController.gd")
+	# Look for an engineer unit to assist; simply log the intent for now.
+	for helper in Game.current_scenario.units:
+		if helper == null or helper.is_dead():
+			continue
+		if helper.unit and helper.unit.is_engineer:
+			LogService.info(
+				"Engineer %s requested to assist %s" % [helper.id, su.id], "AIController.gd"
+			)
+			return
+	LogService.info("Engineer support requested for %s (none available)" % su.id, "AIController.gd")
