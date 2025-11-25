@@ -18,6 +18,7 @@ signal navigation_bias_changed(unit_id: String, bias: StringName)
 @export var default_speed_mult_bogged: float = 0.4
 @export var loss_threshold: float = 0.5
 @export var regroup_recovery_bonus: float = 0.2  ## bonus visibility when Hold/Regroup is active
+@export var landmark_recovery_radius_m: float = 25.0
 
 var _nav_state_by_id: Dictionary = {}  ## unit_id -> UnitNavigationState
 var _speed_mult_cache: Dictionary = {}  ## unit_id -> float
@@ -125,7 +126,12 @@ func _update_lost_state(
 
 	# Recovery: regain when visibility improves or after some time.
 	if nav.is_lost:
-		if visibility >= threshold or nav.lost_timer_s > 30.0 or _has_friendly_los(unit):
+		if (
+			visibility >= threshold
+			or nav.lost_timer_s > 30.0
+			or _has_friendly_los(unit)
+			or _near_landmark(unit)
+		):
 			nav.set_lost(false)
 			_apply_drift(uid, Vector2.ZERO)
 			_emit_speed_change(uid, 1.0)
@@ -139,6 +145,8 @@ func _update_lost_state(
 	# Chance to become lost when visibility is low and path is complex.
 	var loss_risk: float = clamp(threshold - visibility, 0.0, 1.0) * (0.5 + path_complexity * 0.5)
 	loss_risk *= _terrain_loss_factor(unit)
+	loss_risk *= _behaviour_loss_factor(unit)
+	loss_risk *= _weather_loss_factor(scenario)
 	if loss_risk <= 0.0:
 		return
 	if rng.randf() < loss_risk:
@@ -252,6 +260,50 @@ func _terrain_loss_factor(unit: ScenarioUnit) -> float:
 func _has_hold_regroup_order(unit: ScenarioUnit) -> bool:
 	# Placeholder: detect a meta flag set by orders/AI for "Hold/Regroup" acceleration.
 	return unit != null and unit.has_meta("hold_regroup")
+
+
+func _behaviour_loss_factor(unit: ScenarioUnit) -> float:
+	if unit == null:
+		return 1.0
+	match unit.behaviour:
+		ScenarioUnit.Behaviour.CARELESS:
+			return 1.25
+		ScenarioUnit.Behaviour.SAFE:
+			return 1.0
+		ScenarioUnit.Behaviour.AWARE:
+			return 0.9
+		ScenarioUnit.Behaviour.COMBAT:
+			return 0.85
+		ScenarioUnit.Behaviour.STEALTH:
+			return 0.7
+		_:
+			return 1.0
+
+
+func _weather_loss_factor(scenario: Variant) -> float:
+	if visibility_profile == null:
+		return 1.0
+	var sev := visibility_profile.weather_severity_from_scenario(scenario)
+	return clamp(1.0 + sev * 0.5, 0.5, 1.5)
+
+
+func _near_landmark(unit: ScenarioUnit) -> bool:
+	if movement_adapter == null or movement_adapter.renderer == null:
+		return false
+	if unit == null:
+		return false
+	var data := movement_adapter.renderer.data
+	if data == null or data.labels == null:
+		return false
+	for lab in data.labels:
+		if typeof(lab) != TYPE_DICTIONARY:
+			continue
+		var pos: Variant = lab.get("pos", null)
+		if typeof(pos) != TYPE_VECTOR2:
+			continue
+		if (pos as Vector2).distance_to(unit.position_m) <= landmark_recovery_radius_m:
+			return true
+	return false
 
 
 func _has_friendly_los(unit: ScenarioUnit) -> bool:
