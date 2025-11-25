@@ -154,7 +154,10 @@ func _update_lost_state(
 		_apply_drift(uid, nav.drift_vector)
 		_emit_speed_change(uid, default_speed_mult_slowed)
 		_request_repath(uid)
-		LogService.info("Unit %s lost (risk=%.2f vis=%.2f)" % [uid, loss_risk, visibility], "EnvBehaviorSystem.gd")
+		LogService.info(
+			"Unit %s lost (risk=%.2f vis=%.2f)" % [uid, loss_risk, visibility],
+			"EnvBehaviorSystem.gd"
+		)
 		emit_signal("unit_lost", uid)
 
 
@@ -336,7 +339,9 @@ func _request_repath(unit_id: String) -> void:
 func _set_stuck_soft(unit_id: String, nav: UnitNavigationState) -> void:
 	nav.set_nav_state(UnitNavigationState.NavState.STUCK_SOFT)
 	_emit_speed_change(unit_id, 0.0)
-	LogService.warning("Unit %s stuck in soft ground; engineer required" % unit_id, "EnvBehaviorSystem.gd")
+	LogService.warning(
+		"Unit %s stuck in soft ground; engineer required" % unit_id, "EnvBehaviorSystem.gd"
+	)
 	emit_signal("unit_bogged", unit_id)
 
 

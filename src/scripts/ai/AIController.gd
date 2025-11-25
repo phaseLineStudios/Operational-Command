@@ -518,11 +518,17 @@ func bind_env_behavior_system(_env_sys: Node) -> void:
 	if _orders_router and _orders_router.has_signal("radio_message"):
 		if not _env_sys.is_connected("unit_lost", Callable(_orders_router, "_on_unit_lost")):
 			_env_sys.unit_lost.connect(func(uid): _emit_radio("info", "%s lost orientation" % uid))
-		if not _env_sys.is_connected("unit_recovered", Callable(_orders_router, "_on_unit_recovered")):
-			_env_sys.unit_recovered.connect(func(uid): _emit_radio("info", "%s regained orientation" % uid))
+		if not _env_sys.is_connected(
+			"unit_recovered", Callable(_orders_router, "_on_unit_recovered")
+		):
+			_env_sys.unit_recovered.connect(
+				func(uid): _emit_radio("info", "%s regained orientation" % uid)
+			)
 		if not _env_sys.is_connected("unit_bogged", Callable(_orders_router, "_on_unit_bogged")):
 			_env_sys.unit_bogged.connect(func(uid): _emit_radio("warn", "%s bogged down" % uid))
-		if not _env_sys.is_connected("unit_unbogged", Callable(_orders_router, "_on_unit_unbogged")):
+		if not _env_sys.is_connected(
+			"unit_unbogged", Callable(_orders_router, "_on_unit_unbogged")
+		):
 			_env_sys.unit_unbogged.connect(func(uid): _emit_radio("info", "%s moving again" % uid))
 
 
