@@ -8,6 +8,12 @@ extends WorldEnvironment
 @export_range(0.0, 86400.0, 1.0) var time_of_day: float = 43200.0
 ## Environment scene
 @export var environment_scene: PackedScene = preload("res://scenes/environments/env_forest.tscn")
+## Scenario
+@export var scenario: ScenarioData : 
+	set(val):
+		scenario = val
+		if env_scene: 
+			env_scene.get_sound_controller().init_env_sounds(val)
 
 @export_group("Nodes")
 ## Parent of the sun and moon nodes
@@ -36,6 +42,7 @@ extends WorldEnvironment
 ## Animate stars
 @export var animate_star_map: bool = true
 
+var env_scene: SceneEnvironment
 var sun_position: float = 0.0
 var moon_position: float = 0.0
 var sun_pos_alpha: float = 0.0
@@ -48,6 +55,9 @@ func _update_time(dt: float) -> void:
 	time_of_day += dt
 	if time_of_day > 86400.0:
 		time_of_day = 0.0
+	
+	if env_scene:
+			env_scene.get_sound_controller().update_time(int(time_of_day))
 
 
 ## Update sun and moon based on current time of day
@@ -142,6 +152,7 @@ func _update_environment() -> void:
 	if env_anchor == null:
 		return
 	var env := environment_scene.instantiate() as SceneEnvironment
+	env_scene = env
 	env_anchor.add_child(env)
 
 

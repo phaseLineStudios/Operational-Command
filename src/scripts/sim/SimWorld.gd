@@ -158,6 +158,8 @@ func init_world(scenario: ScenarioData) -> void:
 		if su.playable:
 			_playable_by_callsign[su.callsign] = su.id
 	_router.bind_units(_units_by_id, _units_by_callsign)
+	if environment_controller:
+		environment_controller.scenario = scenario
 	if artillery_controller:
 		_router.artillery_controller = artillery_controller
 	_register_logistics_units()

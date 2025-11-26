@@ -20,7 +20,7 @@ extends Node3D
 @onready var document_controller: DocumentController = %DocumentController
 @onready var unit_voices: UnitVoiceResponses = %UnitVoiceResponses
 @onready var unit_auto_voices: UnitAutoResponses = %UnitAutoResponses
-@onready var tts_player: AudioStreamPlayer = %TTSPlayer
+@onready var tts_player: AudioStreamPlayer3D = %TTSPlayer
 @onready var ai_controller: AIController = %AIController
 
 

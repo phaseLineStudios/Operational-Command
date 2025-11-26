@@ -790,10 +790,10 @@
   "title": "Crested Cap Checkride",
   "units": {
     "ammo_pools": {
-      "ARTILLERY_SMOKE": 50,
-      "ATGM": 10,
-      "SMALL_ARMS": 10000,
-      "TANK_GUN": 30
+      "ARTILLERY_SMOKE": 50.0,
+      "ATGM": 10.0,
+      "SMALL_ARMS": 10000.0,
+      "TANK_GUN": 30.0
     },
     "equipment_pool": 100,
     "replacement_pool": 100,
@@ -897,8 +897,8 @@
   },
   "weather": {
     "fog_m": 8000.0,
-    "rain": 0.0,
-    "wind_dir": 0.0,
-    "wind_speed_m": 1.0
+    "rain": 2.6,
+    "wind_dir": 67.0,
+    "wind_speed_m": 4.0
   }
 }

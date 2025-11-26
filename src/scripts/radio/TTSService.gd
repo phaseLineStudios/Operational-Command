@@ -124,7 +124,7 @@ func register_playback(playback: AudioStreamGeneratorPlayback) -> void:
 
 ## Register by passing the player's node (sets stream & plays).
 ## [param player] The player to register for playback.
-func register_player(player: AudioStreamPlayer) -> void:
+func register_player(player: AudioStreamPlayer3D) -> void:
 	player.stream = _gen
 	player.play()
 	LogService.trace("Registered player.", "TTSService.gd:register_player")

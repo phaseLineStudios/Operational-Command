@@ -35,6 +35,10 @@ TTSService="*res://scripts/radio/TTSService.gd"
 
 settings/stdout/log_level=5
 
+[display]
+
+window/vsync/vsync_mode=0
+
 [gui]
 
 theme/default_font_multichannel_signed_distance_field=true

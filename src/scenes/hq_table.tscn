@@ -675,8 +675,9 @@ metadata/_custom_type_script = "uid://ckdlg61462pgb"
 unique_name_in_owner = true
 script = ExtResource("30_voices")
 
-[node name="TTSPlayer" type="AudioStreamPlayer" parent="Controllers/RadioController/UnitVoiceResponses"]
+[node name="TTSPlayer" type="AudioStreamPlayer3D" parent="Controllers/RadioController/UnitVoiceResponses"]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.31213963, 0.80743265, -0.14403522)
 bus = &"Radio"
 
 [node name="RadioSignalModulator" type="Node" parent="Controllers/RadioController"]
