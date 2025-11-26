@@ -44,10 +44,6 @@ extends WorldEnvironment
 
 var env_scene: SceneEnvironment
 var sun_position: float = 0.0
-var moon_position: float = 0.0
-var sun_pos_alpha: float = 0.0
-
-@onready var sky: WorldEnvironment = self
 
 
 ## Check if simulating day/night cycle, determine rate of time, and increase time
@@ -63,7 +59,6 @@ func _update_time(dt: float) -> void:
 ## Update sun and moon based on current time of day
 func _update_lights() -> void:
 	sun_position = sun_root.global_position.y + 0.5
-	moon_position = moon_root.global_position.y + 0.5
 	sun.light_color = sky_preset.sun_light_color.gradient.sample(sun_position)
 	sun.shadow_enabled = sun_shadow
 
@@ -88,7 +83,7 @@ func _update_sky() -> void:
 	var sky_material = self.environment.sky.get_material()
 	var cloud_color = lerp(
 		sky_preset.base_cloud_color.gradient.sample(sun_position),
-		sky_preset.overcast_sky_color.gradient.sample(sun_position),
+		sky_preset.overcast_cloud_color.gradient.sample(sun_position),
 		cloud_coverage
 	)
 
@@ -105,6 +100,9 @@ func _update_sky() -> void:
 		"horizon_fog_color", sky_preset.horizon_fog_color.gradient.sample(sun_position)
 	)
 
+	sky_material.set_shader_parameter("cloud_type", 1)
+	self.environment.volumetric_fog_density = remap(cloud_coverage, 0.5, 1.0, 0.0, 0.024)
+
 	sky_material.set_shader_parameter("cloud_density", sky_preset.cloud_density)
 	sky_material.set_shader_parameter("mg_size", sky_preset.cloud_glow)
 	sky_material.set_shader_parameter("cloud_speed", sky_preset.cloud_speed)
@@ -120,7 +118,6 @@ func _update_sky() -> void:
 	sky_material.set_shader_parameter(
 		"sun_disc_color", sky_preset.sun_disc_color.gradient.sample(sun_position)
 	)
-	sky_material.set_shader_parameter("sun_glow_color", sky_preset.sun_glow)
 	sky_material.set_shader_parameter(
 		"sun_glow_color", sky_preset.sun_glow.gradient.sample(sun_position)
 	)
@@ -167,7 +164,6 @@ func tick(dt: float) -> void:
 
 func _ready() -> void:
 	set_process(Engine.is_editor_hint())
-	_update_environment()
 
 
 func _process(_dt: float) -> void:
