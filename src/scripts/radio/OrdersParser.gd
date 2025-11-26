@@ -167,15 +167,32 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 				# Default ammo type is AP
 				cur.ammo_type = "ap"
 				cur.rounds = 1
+				LogService.debug("Parsing FIRE order, scanning from token %d: %s" % [i, tokens.slice(i)], "OrdersParser")
 				# Scan ahead for ammo type and rounds keywords
 				# But stop early if we hit grid/position keywords
 				var j := i + 1
 				while j < tokens.size():
 					var next := tokens[j]
-					# Stop IMMEDIATELY if we hit grid/position keywords
-					# (don't consume them, let normal parsing handle them)
-					if qty_labels.has(next) or directions.has(next):
-						break
+
+					# Detect rounds count FIRST (before position keywords break the loop)
+					if next in ["round", "rounds"]:
+						# Look for number before "round/rounds"
+						if j > i + 1:
+							var prev := tokens[j - 1]
+							LogService.debug("Found 'rounds' at %d, prev token: '%s'" % [j, prev], "OrdersParser")
+							if _is_int_literal(prev):
+								cur.rounds = int(prev)
+								LogService.debug("Parsed rounds as int literal: %d" % cur.rounds, "OrdersParser")
+							elif number_words.has(prev):
+								cur.rounds = int(number_words[prev])
+								LogService.debug("Parsed rounds from word: %d" % cur.rounds, "OrdersParser")
+							else:
+								LogService.debug("Prev token not recognized as number", "OrdersParser")
+						else:
+							LogService.debug("Found 'rounds' but j <= i+1", "OrdersParser")
+						j += 1
+						continue
+
 					# Detect ammo type
 					if next in ["ap", "he", "frag", "antipersonnel"]:
 						cur.ammo_type = "ap"
@@ -189,20 +206,15 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 						cur.ammo_type = "illum"
 						j += 1
 						continue
-					# Detect rounds count
-					elif next in ["round", "rounds"]:
-						# Look for number before "round/rounds"
-						if j > i + 1:
-							var prev := tokens[j - 1]
-							if _is_int_literal(prev):
-								cur.rounds = int(prev)
-							elif number_words.has(prev):
-								cur.rounds = int(number_words[prev])
-						j += 1
-						continue
-					# Stop if we hit callsigns or other actions
-					elif callsigns.has(next) or actions.has(next):
+
+					# Stop if we hit grid/position keywords (after checking for rounds/ammo)
+					if qty_labels.has(next) or directions.has(next):
 						break
+
+					# Stop if we hit callsigns or other actions
+					if callsigns.has(next) or actions.has(next):
+						break
+
 					# Otherwise skip this token
 					j += 1
 				# Don't update i - let normal parsing handle position/grid

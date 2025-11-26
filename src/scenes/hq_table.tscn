@@ -1,4 +1,4 @@
-[gd_scene load_steps=122 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=126 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -36,9 +36,13 @@
 [ext_resource type="PackedScene" uid="uid://b7u4ajeh13tpn" path="res://scenes/ui/loading_screen.tscn" id="28_loading"]
 [ext_resource type="Script" uid="uid://cldkj080ext62" path="res://scripts/sim/UnitCounterController.gd" id="28_wrosp"]
 [ext_resource type="PackedScene" uid="uid://db2miy3a6hjke" path="res://scenes/ui/mission_dialog.tscn" id="29_dialog"]
+[ext_resource type="Script" uid="uid://do2w5t45qvy04" path="res://scripts/audio/CombatSoundController.gd" id="30_66gqg"]
 [ext_resource type="Script" uid="uid://bnus1tqft6rms" path="res://scripts/radio/UnitVoiceResponses.gd" id="30_voices"]
 [ext_resource type="Script" uid="uid://cpcrrfahha6bx" path="res://scripts/radio/UnitAutoResponses.gd" id="31_auto_voices"]
+[ext_resource type="AudioStream" uid="uid://crfoxkxk0olx" path="res://audio/sfx/sfx_distant_artillery_outgoing.wav" id="31_idixg"]
+[ext_resource type="AudioStream" uid="uid://chbwl6b8ltbmk" path="res://audio/sfx/sfx_distant_artillery_impact.wav" id="32_g6xw8"]
 [ext_resource type="Script" uid="uid://d1c2ojsjf1fws" path="res://scripts/audio/RadioSignalModulator.gd" id="32_modulator"]
+[ext_resource type="AudioStream" uid="uid://c66d1772ak7jv" path="res://audio/sfx/sfx_distant_combat.wav" id="33_5bsee"]
 [ext_resource type="Script" uid="uid://0xd5ojxkkl4q" path="res://scripts/sim/systems/ArtilleryController.gd" id="33_66vc6"]
 [ext_resource type="PackedScene" uid="uid://bnexhgtx3llph" path="res://scenes/ui/counter_config_dialog.tscn" id="33_bsy1h"]
 [ext_resource type="Script" uid="uid://ckqvusamktt4" path="res://scripts/sim/systems/EngineerController.gd" id="34_1yvtb"]
@@ -829,6 +833,24 @@ orders_router_path = NodePath("../RadioController/OrdersRouter")
 agents_root_path = NodePath("Agents")
 
 [node name="Agents" type="Node" parent="Controllers/AIController"]
+
+[node name="SoundController" type="Node" parent="Controllers"]
+
+[node name="CombatSoundController" type="Node" parent="Controllers/SoundController"]
+unique_name_in_owner = true
+script = ExtResource("30_66gqg")
+sound_artillery_outgoing = Array[AudioStream]([ExtResource("31_idixg")])
+sound_artillery_impact = Array[AudioStream]([ExtResource("32_g6xw8")])
+sound_distant_combat = Array[AudioStream]([ExtResource("33_5bsee")])
+
+[node name="SfxArtilleryOutgoing" type="AudioStreamPlayer" parent="Controllers/SoundController/CombatSoundController"]
+bus = &"Environment"
+
+[node name="SfxArtilleryImpact" type="AudioStreamPlayer" parent="Controllers/SoundController/CombatSoundController"]
+bus = &"Environment"
+
+[node name="SfxCombat" type="AudioStreamPlayer" parent="Controllers/SoundController/CombatSoundController"]
+bus = &"Environment"
 
 [node name="TimerController" type="Node" parent="Controllers" node_paths=PackedStringArray("timer", "sim_world", "camera")]
 script = ExtResource("3_2llyq")

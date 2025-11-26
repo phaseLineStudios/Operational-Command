@@ -22,6 +22,7 @@ extends Node3D
 @onready var unit_auto_voices: UnitAutoResponses = %UnitAutoResponses
 @onready var tts_player: AudioStreamPlayer3D = %TTSPlayer
 @onready var ai_controller: AIController = %AIController
+@onready var combat_sound: CombatSoundController = %CombatSoundController
 
 
 ## Initialize mission systems and bind services.
@@ -183,6 +184,12 @@ func _init_combat_controllers() -> void:
 
 		if sim.engineer_controller:
 			trigger_engine._api._bind_engineer_controller(sim.engineer_controller)
+
+	# Wire up combat sound controller
+	if combat_sound and sim:
+		combat_sound.bind_sim_world(sim)
+		if sim.artillery_controller:
+			combat_sound.bind_artillery_controller(sim.artillery_controller)
 
 
 ## Initialize TTS service and wire up unit voice responses
