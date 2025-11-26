@@ -12,6 +12,12 @@ signal unit_selected(unit: Dictionary)
 ## Selected Style
 @export var selected_style: StyleBox
 
+@export_group("Card Sounds")
+## Sound to play when hovering over a card
+@export var hover_sound: AudioStream = preload("res://audio/ui/sfx_button_hover.wav")
+## Sound to play when clicking a card
+@export var click_sound: AudioStream = preload("res://audio/ui/sfx_button_click.wav")
+
 var unit: UnitData
 var unit_id: String
 var default_icon: Texture2D
@@ -93,6 +99,8 @@ func _update_style() -> void:
 ## Click to inspect the unit.
 func _gui_input(e: InputEvent) -> void:
 	if e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_LEFT and e.pressed:
+		if click_sound:
+			AudioManager.play_ui_sound(click_sound)
 		emit_signal("unit_selected", unit)
 
 
@@ -108,6 +116,8 @@ func _notification(what: int) -> void:
 func _on_mouse_entered() -> void:
 	_is_hovered = true
 	_update_style()
+	if hover_sound:
+		AudioManager.play_ui_sound(hover_sound)
 
 
 ## Hover-out visual feedback.
