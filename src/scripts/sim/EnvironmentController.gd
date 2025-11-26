@@ -7,7 +7,10 @@ extends WorldEnvironment
 ## Current time (in seconds)
 @export_range(0.0, 86400.0, 1.0) var time_of_day: float = 43200.0
 ## Environment scene
-@export var environment_scene: PackedScene = preload("res://scenes/environments/env_forest.tscn")
+@export var environment_scene: PackedScene = preload("res://scenes/environments/env_forest.tscn") :
+	set(val):
+		environment_scene = val
+		_update_environment()
 ## Scenario
 @export var scenario: ScenarioData : 
 	set(val):
@@ -164,6 +167,7 @@ func tick(dt: float) -> void:
 
 func _ready() -> void:
 	set_process(Engine.is_editor_hint())
+	_update_environment()
 
 
 func _process(_dt: float) -> void:
@@ -180,3 +184,6 @@ func _process(_dt: float) -> void:
 	_update_rotation()
 	_update_sky()
 	_update_lights()
+	
+	if not env_scene:
+		_update_environment()
