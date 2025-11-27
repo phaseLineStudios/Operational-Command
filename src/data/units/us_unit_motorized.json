@@ -1,0 +1,76 @@
+{
+  "allowed_slots": [
+    "INF"
+  ],
+  "ammunition": {
+    "ARTILLERY_AP": 0,
+    "ARTILLERY_ILLUM": 0,
+    "ARTILLERY_SMOKE": 0,
+    "ATGM": 0,
+    "AT_ROCKET": 0,
+    "AUTOCANNON": 0,
+    "ENGINEER_BRIDGE": 0,
+    "ENGINEER_DEMO": 0,
+    "ENGINEER_MINE": 0,
+    "HEAVY_WEAPONS": 4,
+    "MORTAR_AP": 0,
+    "MORTAR_ILLUM": 0,
+    "MORTAR_SMOKE": 0,
+    "SMALL_ARMS": 36,
+    "TANK_GUN": 0
+  },
+  "ammunition_critical_threshold": 0.1,
+  "ammunition_low_threshold": 0.25,
+  "cost": 50,
+  "doctrine": "nato_inf_1983",
+  "editor": {
+    "unit_category": "us_army"
+  },
+  "equipment": {
+    "radios": {
+
+    },
+    "vehicles": {
+      "Car": {
+        "ammo": -1,
+        "type": 3
+      }
+    },
+    "weapons": {
+
+    }
+  },
+  "equipment_tags": [],
+  "experience": 0.0,
+  "id": "us_unit_motorized",
+  "is_engineer": false,
+  "is_medical": false,
+  "movement_profile": 2,
+  "role": "INF",
+  "size": 3,
+  "state": {
+    "cohesion": 0.0,
+    "state_equipment": 0.0,
+    "state_injured": 0.0,
+    "state_strength": 36.0
+  },
+  "state_ammunition": {
+
+  },
+  "stats": {
+    "attack": 40.0,
+    "defense": 15.0,
+    "morale": 1.0,
+    "range_m": 500.0,
+    "speed_kph": 50.0,
+    "spot_m": 600.0
+  },
+  "strength": 36,
+  "supply_transfer_radius_m": 30.0,
+  "supply_transfer_rate": 10.0,
+  "throughput": {
+
+  },
+  "title": "Motorized unit",
+  "type": 0
+}

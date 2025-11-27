@@ -1,0 +1,299 @@
+{
+  "briefing": {
+    "admin_logi": "",
+    "execution": "main priority is completing objectives. especially time essential objectives.",
+    "id": "capture_rhine_bridge_brief",
+    "intel_board": {
+      "board_texture_path": null,
+      "items": []
+    },
+    "mission": {
+      "objectives": [
+        {
+          "id": "capture_bridge",
+          "score": 100,
+          "success": "capture bridge",
+          "title": "capture bridge"
+        },
+        {
+          "id": "remove_enemies",
+          "score": 80,
+          "success": "all enemy troop must be either deafeated or retreating",
+          "title": "defeat enemies"
+        }
+      ],
+      "statement": "capture the bridge before the enemies can blow it up\n\nand make sure no enemies are left to defend the bridge."
+    },
+    "situation": {
+      "enemy": "the enemies will have guardposts guarding the bridge and backup nearby, how much is unknown.",
+      "friendly": "Allys are moving into germany at mass and therefore should have enough resources to capture the bridge.\nproblem is doing it in  time",
+      "start_time": "",
+      "terrain": "the River runs throught the center of the map east to west.\nforest to the south west, and a hill north east overlooking the bridge.\nA Main road runs thru the center of the map and over the bridge, perfect advantage spot for defense.",
+      "weather": ""
+    },
+    "title": "Capturing Rhine Bridge"
+  },
+  "content": {
+    "custom_commands": [],
+    "drawings": [],
+    "tasks": [
+      {
+        "id": "task_patrol_1",
+        "next_index": 1,
+        "params": {
+          "dwell_s": 0.0,
+          "radius_m": 150.0
+        },
+        "position_m": {
+          "x": 980.996887207031,
+          "y": 1458.86999511719
+        },
+        "prev_index": -1,
+        "task_type": "patrol",
+        "unit_index": 0
+      },
+      {
+        "id": "task_patrol_3",
+        "next_index": -1,
+        "params": {
+          "dwell_s": 0.0,
+          "radius_m": 150.0
+        },
+        "position_m": {
+          "x": 945.552490234375,
+          "y": 1158.5712890625
+        },
+        "prev_index": 0,
+        "task_type": "patrol",
+        "unit_index": 0
+      },
+      {
+        "id": "task_defend_1",
+        "next_index": -1,
+        "params": {
+          "hold_time_s": 0.0,
+          "radius_m": 100.0
+        },
+        "position_m": {
+          "x": 927.361450195313,
+          "y": 1080.5986328125
+        },
+        "prev_index": -1,
+        "task_type": "defend",
+        "unit_index": 1
+      }
+    ],
+    "triggers": [
+      {
+        "area_center_m": {
+          "x": 941.0,
+          "y": 841.0
+        },
+        "condition_expr": "true",
+        "id": "bridge_captured",
+        "on_activate_expr": "complete_objective(\"capture_bridge\")\nset_global(\"bridge_cap\", true)",
+        "on_deactivate_expr": "",
+        "presence": 1,
+        "require_duration_s": 0.0,
+        "run_once": true,
+        "shape": 0,
+        "size_m": {
+          "x": 100.0,
+          "y": 100.0
+        },
+        "synced_tasks": [],
+        "synced_units": [],
+        "title": "bridge_captured"
+      },
+      {
+        "area_center_m": {
+          "x": 21.0,
+          "y": 141.0
+        },
+        "condition_expr": "time_s()>60*10\nget_global(\"bridge_cap\") != true",
+        "id": "timer_trigger",
+        "on_activate_expr": "fail_objective(\"capture_bridge\")",
+        "on_deactivate_expr": "",
+        "presence": 0,
+        "require_duration_s": 0.0,
+        "run_once": true,
+        "shape": 0,
+        "size_m": {
+          "x": 100.0,
+          "y": 100.0
+        },
+        "synced_tasks": [],
+        "synced_units": [],
+        "title": "timer_trigger"
+      }
+    ],
+    "units": [
+      {
+        "affiliation": 1,
+        "behaviour": 2,
+        "callsign": "VICTOR",
+        "combat_mode": 2,
+        "id": "ger_Unit_Patrol_1",
+        "playable": false,
+        "position": {
+          "x": 971.0,
+          "y": 1231.0
+        },
+        "unit_id": "ger_Unit_Patrol"
+      },
+      {
+        "affiliation": 1,
+        "behaviour": 2,
+        "callsign": "BORIS",
+        "combat_mode": 2,
+        "id": "ger_unit_GuardPost_1",
+        "playable": false,
+        "position": {
+          "x": 891.0,
+          "y": 1111.0
+        },
+        "unit_id": "ger_unit_GuardPost"
+      },
+      {
+        "affiliation": 1,
+        "behaviour": 1,
+        "callsign": "IVAN",
+        "combat_mode": 2,
+        "id": "ger_unit_artillery_1",
+        "playable": false,
+        "position": {
+          "x": 1551.0,
+          "y": 731.0
+        },
+        "unit_id": "ger_unit_artillery"
+      },
+      {
+        "affiliation": 1,
+        "behaviour": 1,
+        "callsign": "SERGEI",
+        "combat_mode": 2,
+        "id": "ger_guardpost_North_1",
+        "playable": false,
+        "position": {
+          "x": 921.0,
+          "y": 851.0
+        },
+        "unit_id": "ger_guardpost_North"
+      },
+      {
+        "affiliation": 0,
+        "behaviour": 1,
+        "callsign": "HOTEL",
+        "combat_mode": 2,
+        "id": "Ally_Scout_1",
+        "playable": false,
+        "position": {
+          "x": 764.64501953125,
+          "y": 1944.64978027344
+        },
+        "unit_id": "Ally_Scout"
+      }
+    ]
+  },
+  "datetime": {
+    "day": 1,
+    "hour": 12,
+    "minute": 0,
+    "month": 1,
+    "year": 1983
+  },
+  "description": "The Rhine River stands as the last great natural barrier protecting the heart of Germany. Allied forces have advanced rapidly,\n but the enemy is determined to destroy every crossing to halt our momentum.\nIntelligence reports confirm that the Ludendorff Bridge at Remagen is still intact—though rigged with explosives and heavily defended.\n Capturing it could change the course of the war, allowing our forces to pour into the German heartland before they can regroup.",
+  "difficulty": 1,
+  "id": "Rhine_Bridge",
+  "map_position": {
+    "x": 0.310000002384186,
+    "y": 0.52700001001358
+  },
+  "preview_path": "res://assets/textures/scenarios/rhine_Bridge_thumb.png",
+  "scenario_order": 0,
+  "terrain_id": "Rhine_Bridge",
+  "title": "Capture Rhine bridge",
+  "units": {
+    "unit_points": 500,
+    "unit_recruits_ids": [],
+    "unit_reserves": [],
+    "unit_slots": [
+      {
+        "allowed_roles": [],
+        "callsign": "ALPHA",
+        "key": "SLOT_1",
+        "start_position": {
+          "x": 759.828063964844,
+          "y": 1941.04333496094
+        },
+        "title": "ALPHA"
+      },
+      {
+        "allowed_roles": [],
+        "callsign": "BRAVO",
+        "key": "SLOT_2",
+        "start_position": {
+          "x": 840.103942871094,
+          "y": 1954.42272949219
+        },
+        "title": "BRAVO"
+      },
+      {
+        "allowed_roles": [],
+        "callsign": "CHARLIE",
+        "key": "SLOT_3",
+        "start_position": {
+          "x": 840.103942871094,
+          "y": 1954.42272949219
+        },
+        "title": "CHARLIE"
+      },
+      {
+        "allowed_roles": [],
+        "callsign": "DELTA",
+        "key": "SLOT_4",
+        "start_position": {
+          "x": 639.414367675781,
+          "y": 1946.39514160156
+        },
+        "title": "DELTA"
+      },
+      {
+        "allowed_roles": [],
+        "callsign": "ECHO",
+        "key": "SLOT_5",
+        "start_position": {
+          "x": 703.635070800781,
+          "y": 1949.07092285156
+        },
+        "title": "ECHO"
+      },
+      {
+        "allowed_roles": [],
+        "callsign": "FOXTROT",
+        "key": "SLOT_6",
+        "start_position": {
+          "x": 912.352111816406,
+          "y": 1951.74670410156
+        },
+        "title": "FOXTROT"
+      },
+      {
+        "allowed_roles": [],
+        "callsign": "GOLF",
+        "key": "SLOT_7",
+        "start_position": {
+          "x": 559.138488769531,
+          "y": 1949.07092285156
+        },
+        "title": "GOLF"
+      }
+    ]
+  },
+  "weather": {
+    "fog_m": 8000.0,
+    "rain": 0.0,
+    "wind_dir": 0.0,
+    "wind_speed_m": 1.0
+  }
+}
