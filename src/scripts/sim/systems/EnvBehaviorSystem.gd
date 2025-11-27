@@ -58,7 +58,7 @@ func tick_units(units: Array, dt: float, scenario: Variant, rng: RandomNumberGen
 		nav.tick_timers(dt)
 
 		var vis: float = _compute_visibility_score(su, scenario)
-		_update_lost_state(su, nav, vis, rng)
+		_update_lost_state(su, nav, vis, rng, scenario)
 		_update_slowdown_state(su, nav, rng)
 
 
@@ -116,7 +116,7 @@ func _estimate_path_complexity(unit: Variant) -> float:
 
 ## Evaluate and update lost state for a unit.
 func _update_lost_state(
-	unit: Variant, nav: UnitNavigationState, visibility: float, rng: RandomNumberGenerator
+	unit: Variant, nav: UnitNavigationState, visibility: float, rng: RandomNumberGenerator, scenario: Variant
 ) -> void:
 	var uid := String(unit.id)
 	var path_complexity: float = _estimate_path_complexity(unit)
