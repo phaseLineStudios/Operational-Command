@@ -1,6 +1,6 @@
 # SimDebugOverlay::_on_order_applied Function Reference
 
-*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 160–167)</br>
+*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 173–180)</br>
 *Belongs to:* [SimDebugOverlay](../../SimDebugOverlay.md)
 
 **Signature**

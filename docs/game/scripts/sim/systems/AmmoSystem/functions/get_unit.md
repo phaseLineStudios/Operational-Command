@@ -1,6 +1,6 @@
 # AmmoSystem::get_unit Function Reference
 
-*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 66–69)</br>
+*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 72–75)</br>
 *Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**

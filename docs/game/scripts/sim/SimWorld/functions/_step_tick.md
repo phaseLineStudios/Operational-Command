@@ -1,6 +1,6 @@
 # SimWorld::_step_tick Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 167–182)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 213–229)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -24,6 +24,7 @@ func _step_tick(dt: float) -> void:
 	_update_movement(dt)
 	_update_logistics(dt)
 	_update_los()
+	_update_time(dt)
 	_resolve_combat()
 	_update_morale()
 	_emit_events()

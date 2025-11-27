@@ -9,13 +9,15 @@
     "ATGM": 0,
     "AT_ROCKET": 0,
     "AUTOCANNON": 0,
-    "ENGINEER_MUN": 0,
-    "HEAVY_WEAPONS": 0,
+    "ENGINEER_BRIDGE": 0,
+    "ENGINEER_DEMO": 0,
+    "ENGINEER_MINE": 0,
+    "HEAVY_WEAPONS": 2400,
     "MORTAR_AP": 0,
     "MORTAR_ILLUM": 0,
     "MORTAR_SMOKE": 0,
-    "SMALL_ARMS": 0,
-    "TANK_GUN": 0
+    "SMALL_ARMS": 300,
+    "TANK_GUN": 60
   },
   "ammunition_critical_threshold": 0.1,
   "ammunition_low_threshold": 0.25,
@@ -59,25 +61,19 @@
   "equipment_tags": [],
   "experience": 0.0,
   "id": "us_11acr_a_trp_2plt_tank_m60a3",
+  "is_engineer": false,
+  "is_medical": false,
   "movement_profile": 0,
   "role": "ARMOR",
   "size": 3,
-  "state": {
-    "cohesion": 0.0,
-    "state_equipment": 0.0,
-    "state_injured": 0.0,
-    "state_strength": 16.0
-  },
-  "state_ammunition": {
-
-  },
   "stats": {
-    "attack": 70.0,
+    "attack": 41.28,
     "defense": 60.0,
     "morale": 1.0,
     "range_m": 600.0,
     "speed_kph": 48.0,
-    "spot_m": 1800.0
+    "spot_m": 1800.0,
+    "understrength_threshold": 0.8
   },
   "strength": 16,
   "supply_transfer_radius_m": 30.0,

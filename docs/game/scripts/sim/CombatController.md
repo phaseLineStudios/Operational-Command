@@ -151,6 +151,8 @@ func _within_engagement_envelope(attacker: ScenarioUnit, dist_m: float) -> bool
 ```
 
 True if attacker is permitted to fire at defender at distance 'dist_m'.
+Note: LOS/spotting is already checked via LOSAdapter before combat resolution.
+This only checks if target is within weapon engagement range.
 
 ### _set_debug_rate
 

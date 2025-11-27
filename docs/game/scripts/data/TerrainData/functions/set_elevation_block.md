@@ -1,6 +1,6 @@
 # TerrainData::set_elevation_block Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 349–366)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 355–372)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

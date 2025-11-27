@@ -1,6 +1,6 @@
 # TerrainRender::_apply_base_style_if_needed Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 125–133)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 132–140)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**

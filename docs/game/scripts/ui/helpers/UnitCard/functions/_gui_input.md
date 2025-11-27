@@ -1,6 +1,6 @@
 # UnitCard::_gui_input Function Reference
 
-*Defined at:* `scripts/ui/helpers/UnitCard.gd` (lines 92–96)</br>
+*Defined at:* `scripts/ui/helpers/UnitCard.gd` (lines 94–98)</br>
 *Belongs to:* [UnitCard](../../UnitCard.md)
 
 **Signature**

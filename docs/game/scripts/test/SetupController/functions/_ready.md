@@ -1,6 +1,6 @@
 # SetupController::_ready Function Reference
 
-*Defined at:* `scripts/test/PathTest.gd` (lines 15–46)</br>
+*Defined at:* `scripts/test/PathTest.gd` (lines 17–54)</br>
 *Belongs to:* [SetupController](../../SetupController.md)
 
 **Signature**
@@ -13,9 +13,15 @@ func _ready() -> void
 
 ```gdscript
 func _ready() -> void:
-	if renderer == null or renderer.data == null:
-		push_warning("Setup: TerrainRender or TerrainData missing.")
+	if terrain_path == "":
+		push_warning("Setup: Terrain path missing")
 		return
+	if renderer == null:
+		push_warning("Setup: TerrainRender missing.")
+		return
+
+	terrain = TerrainData.deserialize(terrain_path)
+	renderer.data = terrain
 	if renderer.path_grid == null:
 		push_warning("Setup: Assign PathGrid to TerrainRender.path_grid in the Inspector.")
 		return

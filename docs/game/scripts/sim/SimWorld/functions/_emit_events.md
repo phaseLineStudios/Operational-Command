@@ -1,6 +1,6 @@
 # SimWorld::_emit_events Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 279–282)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 412–415)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

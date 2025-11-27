@@ -11,21 +11,12 @@ class_name ScenarioEditor
 extends Control
 ```
 
-## Brief
-
-Path to return to main menu scene
-
 ## Public Member Functions
 
 - [`func _ready()`](ScenarioEditor/functions/_ready.md) — Initialize context, services, signals, UI, and dialogs
-- [`func _init_file_dialogs() -> void`](ScenarioEditor/functions/_init_file_dialogs.md) — Create and configure FileDialog instances
 - [`func _setup_scene_tree_signals() -> void`](ScenarioEditor/functions/_setup_scene_tree_signals.md) — Connect scene tree selection to selection service
 - [`func _rebuild_scene_tree() -> void`](ScenarioEditor/functions/_rebuild_scene_tree.md) — Rebuild the left scene tree and restore selection
 - [`func _on_ctx_selection_changed(payload: Dictionary) -> void`](ScenarioEditor/functions/_on_ctx_selection_changed.md) — Handle palette selections (units, tasks, triggers)
-- [`func _open_slot_config(index: int) -> void`](ScenarioEditor/functions/_open_slot_config.md) — Open slot configuration dialog for a slot index
-- [`func _open_unit_config(index: int) -> void`](ScenarioEditor/functions/_open_unit_config.md) — Open unit configuration dialog for a unit index
-- [`func _open_task_config(task_index: int) -> void`](ScenarioEditor/functions/_open_task_config.md) — Open task configuration dialog for a task index
-- [`func _open_trigger_config(index: int) -> void`](ScenarioEditor/functions/_open_trigger_config.md) — Open trigger configuration dialog for a trigger index
 - [`func _start_place_task_tool(task: UnitBaseTask) -> void`](ScenarioEditor/functions/_start_place_task_tool.md) — Begin Task placement tool with a given task prototype
 - [`func _start_place_unit_tool(payload: Variant) -> void`](ScenarioEditor/functions/_start_place_unit_tool.md) — Begin Unit/Slot placement tool with a given payload
 - [`func _start_place_trigger_tool(proto: ScenarioTrigger) -> void`](ScenarioEditor/functions/_start_place_trigger_tool.md) — Begin Trigger placement tool with a trigger prototype
@@ -37,19 +28,6 @@ Path to return to main menu scene
 - [`func _clear_hint() -> void`](ScenarioEditor/functions/_clear_hint.md) — Remove all hint widgets from the hint bar
 - [`func _on_overlay_gui_input(event: InputEvent) -> void`](ScenarioEditor/functions/_on_overlay_gui_input.md) — Handle overlay input: hover, drag, link, select, and tool input
 - [`func _unhandled_key_input(event)`](ScenarioEditor/functions/_unhandled_key_input.md) — Global key handling: delete, undo/redo, and tool input
-- [`func _delete_pick(pick: Dictionary) -> void`](ScenarioEditor/functions/_delete_pick.md) — Route deletion to the correct entity handler
-- [`func _delete_unit(unit_index: int) -> void`](ScenarioEditor/functions/_delete_unit.md) — Delete a unit and all its tasks; reindex references; push history
-- [`func _delete_slot(slot_index: int) -> void`](ScenarioEditor/functions/_delete_slot.md) — Delete a slot; push history and refresh
-- [`func _delete_task(task_index: int) -> void`](ScenarioEditor/functions/_delete_task.md) — Delete a task; repair chain links and reindex; push history
-- [`func _delete_trigger(trigger_index: int) -> void`](ScenarioEditor/functions/_delete_trigger.md) — Delete a trigger; push history and refresh
-- [`func _on_filemenu_pressed(id: int)`](ScenarioEditor/functions/_on_filemenu_pressed.md) — File menu actions (New/Open/Save/Save As/Back)
-- [`func _on_attributemenu_pressed(id: int)`](ScenarioEditor/functions/_on_attributemenu_pressed.md) — Attributes menu actions (Edit Scenario/Briefing/Weather)
-- [`func _cmd_save() -> void`](ScenarioEditor/functions/_cmd_save.md) — Save to current path or fallback to Save As
-- [`func _cmd_save_as() -> void`](ScenarioEditor/functions/_cmd_save_as.md) — Show Save As dialog with suggested filename
-- [`func _cmd_open() -> void`](ScenarioEditor/functions/_cmd_open.md) — Show Open dialog (asks to discard if dirty)
-- [`func _on_open_file_selected(path: String) -> void`](ScenarioEditor/functions/_on_open_file_selected.md) — Handle file selection to open a scenario
-- [`func _on_save_file_selected(path: String) -> void`](ScenarioEditor/functions/_on_save_file_selected.md) — Handle file selection to save a scenario
-- [`func _on_new_scenario(d: ScenarioData) -> void`](ScenarioEditor/functions/_on_new_scenario.md) — Apply brand-new scenario data from dialog
 - [`func _on_update_scenario(_d: ScenarioData) -> void`](ScenarioEditor/functions/_on_update_scenario.md) — Apply edits to current scenario data from dialog
 - [`func _on_briefing_update(new_brief: BriefData) -> void`](ScenarioEditor/functions/_on_briefing_update.md) — Apply briefing change via history (undoable).
 - [`func _on_data_changed() -> void`](ScenarioEditor/functions/_on_data_changed.md) — Refresh UI/overlay/tree after data changes
@@ -65,13 +43,15 @@ Path to return to main menu scene
 - [`func _show_info(msg: String) -> void`](ScenarioEditor/functions/_show_info.md) — Show a non-blocking info toast/dialog with a message
 - [`func _snapshot_arrays() -> Dictionary`](ScenarioEditor/functions/_snapshot_arrays.md) — Deep-copy key arrays for history operations
 - [`func _queue_free_children(node: Control)`](ScenarioEditor/functions/_queue_free_children.md) — Utility: queue_free all children of a UI container
+- [`func _rebuild_command_list() -> void`](ScenarioEditor/functions/_rebuild_command_list.md) — Rebuild the custom commands list from scenario data
+- [`func _on_new_command() -> void`](ScenarioEditor/functions/_on_new_command.md) — Create a new custom command
+- [`func _on_edit_command() -> void`](ScenarioEditor/functions/_on_edit_command.md) — Edit the selected custom command
+- [`func _on_delete_command() -> void`](ScenarioEditor/functions/_on_delete_command.md) — Delete the selected custom command
 
 ## Public Attributes
 
 - `ScenarioData data` — Active scenario data resource bound to the editor UI
 - `ScenarioHistory history` — Global undo/redo history stack for scenario edits
-- `FileDialog _open_dlg`
-- `FileDialog _save_dlg`
 - `MenuButton file_menu`
 - `MenuButton attribute_menu`
 - `Label title_label`
@@ -89,18 +69,37 @@ Path to return to main menu scene
 - `OptionButton unit_category_opt`
 - `LineEdit unit_search`
 - `Tree unit_list`
+- `Button units_add_btn`
+- `UnitCreateDialog unit_create_dialog`
 - `ItemList task_list`
 - `ItemList trigger_list`
-- `SlotConfigDialog _slot_cfg`
-- `UnitConfigDialog _unit_cfg`
-- `TaskConfigDialog _task_cfg`
-- `TriggerConfigDialog _trigger_cfg`
+- `ItemList command_list`
+- `Button new_command_btn`
+- `Button edit_command_btn`
+- `Button delete_command_btn`
+- `Button draw_toolbar_freehand`
+- `Button draw_toolbar_stamp`
+- `Button draw_toolbar_eraser`
+- `GridContainer fh_settings`
+- `ColorPickerButton fh_color`
+- `SpinBox fh_width`
+- `HSlider fh_opacity`
+- `GridContainer st_settings`
+- `HSeparator st_seperator`
+- `ColorPickerButton st_color`
+- `SpinBox st_scale`
+- `SpinBox st_rotation`
+- `HSlider st_opacity`
+- `LineEdit st_label_text`
+- `Label st_label`
+- `ItemList st_list`
+- `Button st_load_btn`
+- `SlotConfigDialog slot_cfg`
+- `UnitConfigDialog unit_cfg`
+- `TaskConfigDialog task_cfg`
+- `TriggerConfigDialog trigger_cfg`
+- `CustomCommandConfigDialog command_cfg`
 - `TabContainer _tab_container1`
-
-## Public Constants
-
-- `const DEFAULT_FRIENDLY_CALLSIGNS: Array[String]` — Default NATO-style callsigns used for friendly units when none provided
-- `const DEFAULT_ENEMY_CALLSIGNS: Array[String]` — Default adversary callsigns used for enemy units when none provided
 
 ## Member Function Documentation
 
@@ -111,14 +110,6 @@ func _ready()
 ```
 
 Initialize context, services, signals, UI, and dialogs
-
-### _init_file_dialogs
-
-```gdscript
-func _init_file_dialogs() -> void
-```
-
-Create and configure FileDialog instances
 
 ### _setup_scene_tree_signals
 
@@ -143,38 +134,6 @@ func _on_ctx_selection_changed(payload: Dictionary) -> void
 ```
 
 Handle palette selections (units, tasks, triggers)
-
-### _open_slot_config
-
-```gdscript
-func _open_slot_config(index: int) -> void
-```
-
-Open slot configuration dialog for a slot index
-
-### _open_unit_config
-
-```gdscript
-func _open_unit_config(index: int) -> void
-```
-
-Open unit configuration dialog for a unit index
-
-### _open_task_config
-
-```gdscript
-func _open_task_config(task_index: int) -> void
-```
-
-Open task configuration dialog for a task index
-
-### _open_trigger_config
-
-```gdscript
-func _open_trigger_config(index: int) -> void
-```
-
-Open trigger configuration dialog for a trigger index
 
 ### _start_place_task_tool
 
@@ -263,110 +222,6 @@ func _unhandled_key_input(event)
 ```
 
 Global key handling: delete, undo/redo, and tool input
-
-### _delete_pick
-
-```gdscript
-func _delete_pick(pick: Dictionary) -> void
-```
-
-Route deletion to the correct entity handler
-
-### _delete_unit
-
-```gdscript
-func _delete_unit(unit_index: int) -> void
-```
-
-Delete a unit and all its tasks; reindex references; push history
-
-### _delete_slot
-
-```gdscript
-func _delete_slot(slot_index: int) -> void
-```
-
-Delete a slot; push history and refresh
-
-### _delete_task
-
-```gdscript
-func _delete_task(task_index: int) -> void
-```
-
-Delete a task; repair chain links and reindex; push history
-
-### _delete_trigger
-
-```gdscript
-func _delete_trigger(trigger_index: int) -> void
-```
-
-Delete a trigger; push history and refresh
-
-### _on_filemenu_pressed
-
-```gdscript
-func _on_filemenu_pressed(id: int)
-```
-
-File menu actions (New/Open/Save/Save As/Back)
-
-### _on_attributemenu_pressed
-
-```gdscript
-func _on_attributemenu_pressed(id: int)
-```
-
-Attributes menu actions (Edit Scenario/Briefing/Weather)
-
-### _cmd_save
-
-```gdscript
-func _cmd_save() -> void
-```
-
-Save to current path or fallback to Save As
-
-### _cmd_save_as
-
-```gdscript
-func _cmd_save_as() -> void
-```
-
-Show Save As dialog with suggested filename
-
-### _cmd_open
-
-```gdscript
-func _cmd_open() -> void
-```
-
-Show Open dialog (asks to discard if dirty)
-
-### _on_open_file_selected
-
-```gdscript
-func _on_open_file_selected(path: String) -> void
-```
-
-Handle file selection to open a scenario
-
-### _on_save_file_selected
-
-```gdscript
-func _on_save_file_selected(path: String) -> void
-```
-
-Handle file selection to save a scenario
-
-### _on_new_scenario
-
-```gdscript
-func _on_new_scenario(d: ScenarioData) -> void
-```
-
-Apply brand-new scenario data from dialog
 
 ### _on_update_scenario
 
@@ -488,6 +343,38 @@ func _queue_free_children(node: Control)
 
 Utility: queue_free all children of a UI container
 
+### _rebuild_command_list
+
+```gdscript
+func _rebuild_command_list() -> void
+```
+
+Rebuild the custom commands list from scenario data
+
+### _on_new_command
+
+```gdscript
+func _on_new_command() -> void
+```
+
+Create a new custom command
+
+### _on_edit_command
+
+```gdscript
+func _on_edit_command() -> void
+```
+
+Edit the selected custom command
+
+### _on_delete_command
+
+```gdscript
+func _on_delete_command() -> void
+```
+
+Delete the selected custom command
+
 ## Member Data Documentation
 
 ### data
@@ -509,18 +396,6 @@ var history: ScenarioHistory
 Decorators: `@export`
 
 Global undo/redo history stack for scenario edits
-
-### _open_dlg
-
-```gdscript
-var _open_dlg: FileDialog
-```
-
-### _save_dlg
-
-```gdscript
-var _save_dlg: FileDialog
-```
 
 ### file_menu
 
@@ -624,6 +499,18 @@ var unit_search: LineEdit
 var unit_list: Tree
 ```
 
+### units_add_btn
+
+```gdscript
+var units_add_btn: Button
+```
+
+### unit_create_dialog
+
+```gdscript
+var unit_create_dialog: UnitCreateDialog
+```
+
 ### task_list
 
 ```gdscript
@@ -636,28 +523,160 @@ var task_list: ItemList
 var trigger_list: ItemList
 ```
 
-### _slot_cfg
+### command_list
 
 ```gdscript
-var _slot_cfg: SlotConfigDialog
+var command_list: ItemList
 ```
 
-### _unit_cfg
+### new_command_btn
 
 ```gdscript
-var _unit_cfg: UnitConfigDialog
+var new_command_btn: Button
 ```
 
-### _task_cfg
+### edit_command_btn
 
 ```gdscript
-var _task_cfg: TaskConfigDialog
+var edit_command_btn: Button
 ```
 
-### _trigger_cfg
+### delete_command_btn
 
 ```gdscript
-var _trigger_cfg: TriggerConfigDialog
+var delete_command_btn: Button
+```
+
+### draw_toolbar_freehand
+
+```gdscript
+var draw_toolbar_freehand: Button
+```
+
+### draw_toolbar_stamp
+
+```gdscript
+var draw_toolbar_stamp: Button
+```
+
+### draw_toolbar_eraser
+
+```gdscript
+var draw_toolbar_eraser: Button
+```
+
+### fh_settings
+
+```gdscript
+var fh_settings: GridContainer
+```
+
+### fh_color
+
+```gdscript
+var fh_color: ColorPickerButton
+```
+
+### fh_width
+
+```gdscript
+var fh_width: SpinBox
+```
+
+### fh_opacity
+
+```gdscript
+var fh_opacity: HSlider
+```
+
+### st_settings
+
+```gdscript
+var st_settings: GridContainer
+```
+
+### st_seperator
+
+```gdscript
+var st_seperator: HSeparator
+```
+
+### st_color
+
+```gdscript
+var st_color: ColorPickerButton
+```
+
+### st_scale
+
+```gdscript
+var st_scale: SpinBox
+```
+
+### st_rotation
+
+```gdscript
+var st_rotation: SpinBox
+```
+
+### st_opacity
+
+```gdscript
+var st_opacity: HSlider
+```
+
+### st_label_text
+
+```gdscript
+var st_label_text: LineEdit
+```
+
+### st_label
+
+```gdscript
+var st_label: Label
+```
+
+### st_list
+
+```gdscript
+var st_list: ItemList
+```
+
+### st_load_btn
+
+```gdscript
+var st_load_btn: Button
+```
+
+### slot_cfg
+
+```gdscript
+var slot_cfg: SlotConfigDialog
+```
+
+### unit_cfg
+
+```gdscript
+var unit_cfg: UnitConfigDialog
+```
+
+### task_cfg
+
+```gdscript
+var task_cfg: TaskConfigDialog
+```
+
+### trigger_cfg
+
+```gdscript
+var trigger_cfg: TriggerConfigDialog
+```
+
+### command_cfg
+
+```gdscript
+var command_cfg: CustomCommandConfigDialog
 ```
 
 ### _tab_container1
@@ -665,21 +684,3 @@ var _trigger_cfg: TriggerConfigDialog
 ```gdscript
 var _tab_container1: TabContainer
 ```
-
-## Constant Documentation
-
-### DEFAULT_FRIENDLY_CALLSIGNS
-
-```gdscript
-const DEFAULT_FRIENDLY_CALLSIGNS: Array[String]
-```
-
-Default NATO-style callsigns used for friendly units when none provided
-
-### DEFAULT_ENEMY_CALLSIGNS
-
-```gdscript
-const DEFAULT_ENEMY_CALLSIGNS: Array[String]
-```
-
-Default adversary callsigns used for enemy units when none provided

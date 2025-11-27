@@ -1,6 +1,6 @@
 # TriggerAPI::radio Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 19–23)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 73–77)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

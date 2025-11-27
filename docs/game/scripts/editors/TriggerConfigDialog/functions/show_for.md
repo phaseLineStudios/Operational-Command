@@ -1,6 +1,6 @@
 # TriggerConfigDialog::show_for Function Reference
 
-*Defined at:* `scripts/editors/TriggerConfigDialog.gd` (lines 30–57)</br>
+*Defined at:* `scripts/editors/TriggerConfigDialog.gd` (lines 53–84)</br>
 *Belongs to:* [TriggerConfigDialog](../../TriggerConfigDialog.md)
 
 **Signature**
@@ -21,7 +21,10 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 	var trig: ScenarioTrigger = editor.ctx.data.triggers[trigger_index]
 	_before = trig.duplicate(true)
 
+	trig_id.text = trig.id
 	trig_title.text = trig.title
+	pos_x_in.value = trig.area_center_m.x
+	pos_y_in.value = trig.area_center_m.y
 	trig_presence.clear()
 	for i in ScenarioTrigger.PresenceMode.size():
 		trig_presence.add_item(str(ScenarioTrigger.PresenceMode.keys()[i]).capitalize(), i)
@@ -33,9 +36,10 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 	trig_size_x.value = trig.area_size_m.x
 	trig_size_y.value = trig.area_size_m.y
 	trig_duration.value = trig.require_duration_s
+	run_once.set_pressed_no_signal(trig.run_once)
 	trig_condition.text = trig.condition_expr
 	trig_on_activate.text = trig.on_activate_expr
 	trig_on_deactivate.text = trig.on_deactivate_expr
 
-	visible = true
+	popup_centered_ratio(0.35)
 ```

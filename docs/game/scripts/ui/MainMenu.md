@@ -42,12 +42,12 @@ Labels for submenu buttons
 - `VBoxContainer _editor_wrapper`
 - `VBoxContainer _submenu_holder`
 - `VBoxContainer menu_hbox`
-- `Button btn_campaign`
-- `Button btn_scenarios`
-- `Button btn_multiplayer`
-- `Button btn_editor`
-- `Button btn_settings`
-- `Button btn_quit`
+- `OCMenuButton btn_campaign`
+- `OCMenuButton btn_scenarios`
+- `OCMenuButton btn_multiplayer`
+- `OCMenuButton btn_editor`
+- `OCMenuButton btn_settings`
+- `OCMenuButton btn_quit`
 
 ## Enumerations
 
@@ -172,37 +172,37 @@ var menu_hbox: VBoxContainer
 ### btn_campaign
 
 ```gdscript
-var btn_campaign: Button
+var btn_campaign: OCMenuButton
 ```
 
 ### btn_scenarios
 
 ```gdscript
-var btn_scenarios: Button
+var btn_scenarios: OCMenuButton
 ```
 
 ### btn_multiplayer
 
 ```gdscript
-var btn_multiplayer: Button
+var btn_multiplayer: OCMenuButton
 ```
 
 ### btn_editor
 
 ```gdscript
-var btn_editor: Button
+var btn_editor: OCMenuButton
 ```
 
 ### btn_settings
 
 ```gdscript
-var btn_settings: Button
+var btn_settings: OCMenuButton
 ```
 
 ### btn_quit
 
 ```gdscript
-var btn_quit: Button
+var btn_quit: OCMenuButton
 ```
 
 ## Enumeration Type Documentation

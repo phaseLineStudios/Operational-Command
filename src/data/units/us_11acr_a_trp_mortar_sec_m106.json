@@ -1,53 +1,55 @@
 {
   "allowed_slots": [
-	"MORTAR",
+    "MORTAR",
     "FIRES"
   ],
   "ammunition": {
-	"ARTILLERY_AP": 0,
-	"ARTILLERY_ILLUM": 0,
-	"ARTILLERY_SMOKE": 0,
-	"ATGM": 0,
-	"AT_ROCKET": 0,
-	"AUTOCANNON": 0,
-	"ENGINEER_MUN": 0,
-	"HEAVY_WEAPONS": 0,
-	"MORTAR_AP": 30,
-	"MORTAR_ILLUM": 3,
-	"MORTAR_SMOKE": 5,
-	"SMALL_ARMS": 0,
-	"TANK_GUN": 0
+    "ARTILLERY_AP": 0,
+    "ARTILLERY_ILLUM": 0,
+    "ARTILLERY_SMOKE": 0,
+    "ATGM": 0,
+    "AT_ROCKET": 0,
+    "AUTOCANNON": 0,
+    "ENGINEER_BRIDGE": 0,
+    "ENGINEER_DEMO": 0,
+    "ENGINEER_MINE": 0,
+    "HEAVY_WEAPONS": 0,
+    "MORTAR_AP": 30,
+    "MORTAR_ILLUM": 3,
+    "MORTAR_SMOKE": 5,
+    "SMALL_ARMS": 900,
+    "TANK_GUN": 0
   },
   "ammunition_critical_threshold": 0.1,
   "ammunition_low_threshold": 0.25,
   "cost": 49,
   "doctrine": "nato_inf_1983",
   "editor": {
-	"unit_category": "us_army"
+    "unit_category": "us_army"
   },
   "equipment": {
-	"radios": {
-	  "AN/VRC-46": {
-		"ammo": -1,
-		"type": 2
-	  }
-	},
-	"vehicles": {
-	  "M106": {
-		"ammo": -1,
-		"type": 2
-	  }
-	},
-	"weapons": {
-	  "M30 106mm Mortar": {
-		"ammo": 6,
-		"type": 2
-	  },
-	  "M30 4.2in Mortar": {
-		"ammo": -1,
-		"type": 2
-	  }
-	}
+    "radios": {
+      "AN/VRC-46": {
+        "ammo": -1,
+        "type": 2
+      }
+    },
+    "vehicles": {
+      "M106": {
+        "ammo": -1,
+        "type": 2
+      }
+    },
+    "weapons": {
+      "M30 106mm Mortar": {
+        "ammo": 6,
+        "type": 2
+      },
+      "M30 4.2in Mortar": {
+        "ammo": -1,
+        "type": 2
+      }
+    }
   },
   "equipment_tags": [],
   "experience": 0.0,
@@ -57,34 +59,14 @@
   "movement_profile": 0,
   "role": "MORTAR",
   "size": 2,
-  "state": {
-	"cohesion": 0.0,
-	"state_equipment": 0.0,
-	"state_injured": 0.0,
-	"state_strength": 10.0
-  },
-  "state_ammunition": {
-	"ARTILLERY_AP": 0.0,
-	"ARTILLERY_ILLUM": 0.0,
-	"ARTILLERY_SMOKE": 0.0,
-	"ATGM": 0.0,
-	"AT_ROCKET": 0.0,
-	"AUTOCANNON": 0.0,
-	"ENGINEER_MUN": 0.0,
-	"HEAVY_WEAPONS": 0.0,
-	"MORTAR_AP": 30.0,
-	"MORTAR_ILLUM": 3.0,
-	"MORTAR_SMOKE": 5.0,
-	"SMALL_ARMS": 0.0,
-	"TANK_GUN": 0.0
-  },
   "stats": {
-	"attack": 22.0,
-	"defense": 12.0,
-	"morale": 1.0,
-	"range_m": 498.0,
-	"speed_kph": 47.0,
-	"spot_m": 900.0
+    "attack": 8.8,
+    "defense": 12.0,
+    "morale": 1.0,
+    "range_m": 498.0,
+    "speed_kph": 47.0,
+    "spot_m": 900.0,
+    "understrength_threshold": 0.8
   },
   "strength": 10,
   "supply_transfer_radius_m": 30.0,

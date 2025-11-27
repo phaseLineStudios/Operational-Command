@@ -1,6 +1,6 @@
 # SlotItem::_update_icon Function Reference
 
-*Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 111–120)</br>
+*Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 111–125)</br>
 *Belongs to:* [SlotItem](../../SlotItem.md)
 
 **Signature**
@@ -22,6 +22,11 @@ func _update_icon() -> void:
 		if _assigned_unit.icon:
 			tex = _assigned_unit.icon
 	if tex == null:
-		tex = default_icon
+		tex = await MilSymbol.create_frame_symbol(
+			MilSymbol.UnitAffiliation.FRIEND,
+			MilSymbol.UnitType.NONE,
+			MilSymbolConfig.Size.MEDIUM,
+			MilSymbol.UnitSize.NONE
+		)
 	_icon.texture = tex
 ```

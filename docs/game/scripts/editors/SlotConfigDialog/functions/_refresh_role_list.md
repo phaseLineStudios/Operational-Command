@@ -1,6 +1,6 @@
 # SlotConfigDialog::_refresh_role_list Function Reference
 
-*Defined at:* `scripts/editors/SlotConfigDialog.gd` (lines 87–103)</br>
+*Defined at:* `scripts/editors/SlotConfigDialog.gd` (lines 92–108)</br>
 *Belongs to:* [SlotConfigDialog](../../SlotConfigDialog.md)
 
 **Signature**

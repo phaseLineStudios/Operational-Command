@@ -1,6 +1,6 @@
 # NewScenarioDialog::_ready Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 28–36)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 37–50)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**
@@ -19,4 +19,9 @@ func _ready():
 	terrain_btn.pressed.connect(_on_terrain_select)
 	thumb_btn.pressed.connect(_on_thumbnail_select)
 	thumb_clear.pressed.connect(_on_thumbnail_clear)
+
+	unit_add.pressed.connect(_on_unit_add_pressed)
+	unit_remove.pressed.connect(_on_unit_remove_pressed)
+	_load_units_pool()
+	_refresh_unit_lists()
 ```

@@ -1,6 +1,6 @@
 # SimWorld::_update_logistics Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 258–267)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 362–381)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -26,4 +26,14 @@ func _update_logistics(dt: float) -> void:
 
 	if fuel_system:
 		fuel_system.tick(dt)
+
+	if artillery_controller:
+		for su: ScenarioUnit in _friendlies + _enemies:
+			artillery_controller.set_unit_position(su.id, su.position_m)
+		artillery_controller.tick(dt)
+
+	if engineer_controller:
+		for su: ScenarioUnit in _friendlies + _enemies:
+			engineer_controller.set_unit_position(su.id, su.position_m)
+		engineer_controller.tick(dt)
 ```

@@ -1,6 +1,6 @@
 # SimWorld::_on_state_change_for_resolution Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 480–484)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 752–756)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

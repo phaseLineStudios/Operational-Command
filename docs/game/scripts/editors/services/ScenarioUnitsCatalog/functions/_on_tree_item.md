@@ -1,6 +1,6 @@
 # ScenarioUnitsCatalog::_on_tree_item Function Reference
 
-*Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 60–68)</br>
+*Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 61–69)</br>
 *Belongs to:* [ScenarioUnitsCatalog](../../ScenarioUnitsCatalog.md)
 
 **Signature**

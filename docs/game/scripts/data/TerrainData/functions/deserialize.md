@@ -1,6 +1,6 @@
 # TerrainData::deserialize Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 565–670)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 572–678)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**
@@ -23,6 +23,7 @@ static func deserialize(d: Variant) -> TerrainData:
 	var t := TerrainData.new()
 
 	t.name = d.get("name", t.name)
+	t.terrain_id = d.get("id", t.terrain_id)
 	t.width_m = int(d.get("width_m", t.width_m))
 	t.height_m = int(d.get("height_m", t.height_m))
 	t.elevation_resolution_m = int(d.get("elevation_resolution_m", t.elevation_resolution_m))

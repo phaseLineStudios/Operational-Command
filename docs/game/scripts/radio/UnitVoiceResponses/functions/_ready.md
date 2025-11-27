@@ -1,6 +1,6 @@
 # UnitVoiceResponses::_ready Function Reference
 
-*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 74–80)</br>
+*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 79–85)</br>
 *Belongs to:* [UnitVoiceResponses](../../UnitVoiceResponses.md)
 
 **Signature**

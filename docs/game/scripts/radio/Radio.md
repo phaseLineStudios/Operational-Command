@@ -13,6 +13,13 @@ extends Node
 
 ## Brief
 
+Simulated field radio: PTT state, audio FX, and routing to STT.
+
+## Detailed Description
+
+Plays squelch/static, shows UI state, and opens/closes the mic path to the
+speech recognizer while PTT is active.
+
 Turn on/off the radio stream
 
 ## Public Member Functions
@@ -30,10 +37,11 @@ Turn on/off the radio stream
 
 ## Signals
 
-- `signal radio_on` — Simulated field radio: PTT state, audio FX, and routing to STT.
-- `signal radio_off`
-- `signal radio_partial(text: String)`
-- `signal radio_result(text: String)`
+- `signal radio_on` — Emitted when PTT is pressed (radio transmission starts).
+- `signal radio_off` — Emitted when PTT is released (radio transmission ends).
+- `signal radio_partial(text: String)` — Emitted during recognition with partial/interim transcription.
+- `signal radio_result(text: String)` — Emitted when recognition completes with final transcription.
+- `signal radio_raw_command(text: String)` — Emitted with raw command text before parsing (for custom trigger matching).
 
 ## Member Function Documentation
 
@@ -102,10 +110,7 @@ var parser: OrdersParser
 signal radio_on
 ```
 
-Simulated field radio: PTT state, audio FX, and routing to STT.
-
-Plays squelch/static, shows UI state, and opens/closes the mic path to the
-speech recognizer while PTT is active.
+Emitted when PTT is pressed (radio transmission starts).
 
 ### radio_off
 
@@ -113,14 +118,30 @@ speech recognizer while PTT is active.
 signal radio_off
 ```
 
+Emitted when PTT is released (radio transmission ends).
+
 ### radio_partial
 
 ```gdscript
 signal radio_partial(text: String)
 ```
 
+Emitted during recognition with partial/interim transcription.
+
 ### radio_result
 
 ```gdscript
 signal radio_result(text: String)
 ```
+
+Emitted when recognition completes with final transcription.
+
+### radio_raw_command
+
+```gdscript
+signal radio_raw_command(text: String)
+```
+
+Emitted with raw command text before parsing (for custom trigger matching).
+Connected to [TriggerEngine] via `method TriggerEngine.bind_radio` to make
+text available in trigger conditions via `method TriggerAPI.last_radio_command`.

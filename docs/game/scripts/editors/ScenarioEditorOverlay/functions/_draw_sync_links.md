@@ -1,6 +1,6 @@
 # ScenarioEditorOverlay::_draw_sync_links Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 345–367)</br>
+*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 351–373)</br>
 *Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**

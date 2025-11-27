@@ -1,4 +1,4 @@
-[gd_scene load_steps=109 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=111 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -31,6 +31,7 @@
 [ext_resource type="Texture2D" uid="uid://g1tchqqnd2wx" path="res://assets/textures/ui/button_play.png" id="25_k8ks5"]
 [ext_resource type="Texture2D" uid="uid://c5ch0odwq6o64" path="res://assets/textures/ui/button_skip.png" id="26_4ip4k"]
 [ext_resource type="Script" uid="uid://7o20krixdmt5" path="res://scripts/core/DrawingController.gd" id="27_cdjkm"]
+[ext_resource type="Script" uid="uid://b10rt82a0da05" path="res://scripts/core/DocumentController.gd" id="27_docctrl"]
 [ext_resource type="PackedScene" uid="uid://0v7ebxx3jxi2" path="res://scenes/ui/radio_subtitles.tscn" id="27_subtitles"]
 [ext_resource type="PackedScene" uid="uid://b7u4ajeh13tpn" path="res://scenes/ui/loading_screen.tscn" id="28_loading"]
 [ext_resource type="Script" uid="uid://cldkj080ext62" path="res://scripts/sim/UnitCounterController.gd" id="28_wrosp"]
@@ -46,6 +47,7 @@
 [ext_resource type="Script" uid="uid://mjmvtp2w61ri" path="res://scripts/ui/PostProcessController.gd" id="36_yef6r"]
 [ext_resource type="Shader" uid="uid://csoyxm10cdmqn" path="res://assets/shaders/general.gdshader" id="37_gaccj"]
 [ext_resource type="Script" uid="uid://d33v0jsmojsg1" path="res://scripts/sim/SkyPreset.gd" id="44_hovgm"]
+[ext_resource type="Script" uid="uid://qvbcqwk2gyo1" path="res://scripts/ai/AIController.gd" id="45_ai"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qevx8"]
 size = Vector3(1, 0.75, 0.7)
@@ -745,6 +747,24 @@ script = ExtResource("14_415kk")
 los_node_path = NodePath("..")
 terrain_renderer_path = NodePath("../../MapController/TerrainViewport/TerrainRender")
 
+[node name="AIController" type="Node" parent="Controllers" node_paths=PackedStringArray("sim_world_ref", "movement_adapter_ref", "combat_adapter_ref", "los_adapter_ref", "orders_router_ref", "agents_root_ref")]
+unique_name_in_owner = true
+script = ExtResource("45_ai")
+sim_world_ref = NodePath("../WorldController")
+movement_adapter_ref = NodePath("../WorldController/MovementAdapter")
+combat_adapter_ref = NodePath("../CombatController/CombatAdapter")
+los_adapter_ref = NodePath("../LOSController/LOSAdapter")
+orders_router_ref = NodePath("../RadioController/OrdersRouter")
+agents_root_ref = NodePath("Agents")
+sim_world_path = NodePath("../WorldController")
+movement_adapter_path = NodePath("../WorldController/MovementAdapter")
+combat_adapter_path = NodePath("../CombatController/CombatAdapter")
+los_adapter_path = NodePath("../LOSController/LOSAdapter")
+orders_router_path = NodePath("../RadioController/OrdersRouter")
+agents_root_path = NodePath("Agents")
+
+[node name="Agents" type="Node" parent="Controllers/AIController"]
+
 [node name="TimerController" type="Node" parent="Controllers" node_paths=PackedStringArray("timer", "sim_world", "camera")]
 script = ExtResource("3_2llyq")
 timer = NodePath("../../StaticObjects/Timer")
@@ -767,6 +787,10 @@ unique_name_in_owner = true
 script = ExtResource("28_wrosp")
 drawer = NodePath("../../StaticObjects/UnitCounterDrawer")
 counter_dialog = NodePath("../../UI/CounterConfigDialog")
+
+[node name="DocumentController" type="Node" parent="Controllers"]
+unique_name_in_owner = true
+script = ExtResource("27_docctrl")
 
 [node name="EnvironmentController" type="WorldEnvironment" parent="Controllers" node_paths=PackedStringArray("sun_moon_parent", "sun_root", "moon_root", "sun", "moon", "env_anchor")]
 unique_name_in_owner = true

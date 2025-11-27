@@ -1,6 +1,6 @@
 # TriggerEngine::set_global Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 328–331)</br>
+*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 331–334)</br>
 *Belongs to:* [TriggerEngine](../../TriggerEngine.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # TerrainPolygonTool::_find_edit_index_by_id Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 294–303)</br>
+*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 295–304)</br>
 *Belongs to:* [TerrainPolygonTool](../../TerrainPolygonTool.md)
 
 **Signature**

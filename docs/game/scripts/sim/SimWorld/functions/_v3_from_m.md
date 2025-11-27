@@ -1,6 +1,6 @@
 # SimWorld::_v3_from_m Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 460–463)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 620–623)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

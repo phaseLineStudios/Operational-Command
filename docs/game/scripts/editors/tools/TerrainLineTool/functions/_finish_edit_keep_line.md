@@ -1,6 +1,6 @@
 # TerrainLineTool::_finish_edit_keep_line Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 359–366)</br>
+*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 360–367)</br>
 *Belongs to:* [TerrainLineTool](../../TerrainLineTool.md)
 
 **Signature**

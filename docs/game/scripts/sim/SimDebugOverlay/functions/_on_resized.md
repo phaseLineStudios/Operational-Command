@@ -1,6 +1,6 @@
 # SimDebugOverlay::_on_resized Function Reference
 
-*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 127–131)</br>
+*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 140–144)</br>
 *Belongs to:* [SimDebugOverlay](../../SimDebugOverlay.md)
 
 **Signature**

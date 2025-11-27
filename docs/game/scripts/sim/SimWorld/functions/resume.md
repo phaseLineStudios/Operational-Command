@@ -1,6 +1,6 @@
 # SimWorld::resume Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 355–359)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 495–499)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

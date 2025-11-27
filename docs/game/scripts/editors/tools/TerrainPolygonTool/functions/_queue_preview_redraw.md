@@ -1,6 +1,6 @@
 # TerrainPolygonTool::_queue_preview_redraw Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 388–392)</br>
+*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 389–393)</br>
 *Belongs to:* [TerrainPolygonTool](../../TerrainPolygonTool.md)
 
 **Signature**

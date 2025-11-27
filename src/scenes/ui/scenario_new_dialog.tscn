@@ -66,11 +66,9 @@ text = "Select"
 
 [node name="MetaContainer" type="FoldableContainer" parent="Root/ScrollContainer/VBox"]
 layout_mode = 2
-folded = true
 title = "Scenario Meta"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Root/ScrollContainer/VBox/MetaContainer"]
-visible = false
 layout_mode = 2
 
 [node name="DescriptionLabel" type="Label" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer"]
@@ -120,11 +118,194 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Select"
 
+[node name="ResourcePoolsContainer" type="FoldableContainer" parent="Root/ScrollContainer/VBox"]
+layout_mode = 2
+folded = true
+title = "Resource Pools"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer"]
+visible = false
+layout_mode = 2
+
+[node name="ReplacementPoolLabel" type="Label" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer"]
+layout_mode = 2
+text = "Personnel Replacement Pool"
+
+[node name="ReplacementPool" type="SpinBox" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 10000.0
+suffix = "personnel"
+
+[node name="EquipmentPoolLabel" type="Label" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer"]
+layout_mode = 2
+text = "Equipment Pool"
+
+[node name="EquipmentPool" type="SpinBox" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 10000.0
+value = 100.0
+suffix = "points"
+
+[node name="AmmoPoolsLabel" type="Label" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer"]
+layout_mode = 2
+text = "Ammunition Pools"
+
+[node name="AmmoGrid" type="GridContainer" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="SmallArmsLabel" type="Label" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+layout_mode = 2
+text = "Small Arms:"
+
+[node name="SmallArms" type="SpinBox" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100000.0
+step = 10.0
+
+[node name="TankGunLabel" type="Label" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+layout_mode = 2
+text = "Tank Gun:"
+
+[node name="TankGun" type="SpinBox" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100000.0
+step = 10.0
+
+[node name="ATGMLabel" type="Label" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+layout_mode = 2
+text = "ATGM:"
+
+[node name="ATGM" type="SpinBox" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100000.0
+step = 10.0
+
+[node name="ATRocketLabel" type="Label" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+layout_mode = 2
+text = "AT Rocket:"
+
+[node name="ATRocket" type="SpinBox" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100000.0
+step = 10.0
+
+[node name="HeavyWeaponsLabel" type="Label" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+layout_mode = 2
+text = "Heavy Weapons:"
+
+[node name="HeavyWeapons" type="SpinBox" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100000.0
+step = 10.0
+
+[node name="AutocannonLabel" type="Label" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+layout_mode = 2
+text = "Autocannon:"
+
+[node name="Autocannon" type="SpinBox" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100000.0
+step = 10.0
+
+[node name="MortarAPLabel" type="Label" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+layout_mode = 2
+text = "Mortar AP:"
+
+[node name="MortarAP" type="SpinBox" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100000.0
+step = 10.0
+
+[node name="MortarSmokeLabel" type="Label" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+layout_mode = 2
+text = "Mortar Smoke:"
+
+[node name="MortarSmoke" type="SpinBox" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100000.0
+step = 10.0
+
+[node name="MortarIllumLabel" type="Label" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+layout_mode = 2
+text = "Mortar Illum:"
+
+[node name="MortarIllum" type="SpinBox" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100000.0
+step = 10.0
+
+[node name="ArtilleryAPLabel" type="Label" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+layout_mode = 2
+text = "Artillery AP:"
+
+[node name="ArtilleryAP" type="SpinBox" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100000.0
+step = 10.0
+
+[node name="ArtillerySmokeLabel" type="Label" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+layout_mode = 2
+text = "Artillery Smoke:"
+
+[node name="ArtillerySmoke" type="SpinBox" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100000.0
+step = 10.0
+
+[node name="ArtilleryIllumLabel" type="Label" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+layout_mode = 2
+text = "Artillery Illum:"
+
+[node name="ArtilleryIllum" type="SpinBox" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100000.0
+step = 10.0
+
+[node name="EngineerMunLabel" type="Label" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+layout_mode = 2
+text = "Engineer Munitions:"
+
+[node name="EngineerMun" type="SpinBox" parent="Root/ScrollContainer/VBox/ResourcePoolsContainer/VBoxContainer/AmmoGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100000.0
+step = 10.0
+
 [node name="UnitContainer" type="FoldableContainer" parent="Root/ScrollContainer/VBox"]
 layout_mode = 2
+folded = true
 title = "Player unit pool"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Root/ScrollContainer/VBox/UnitContainer"]
+visible = false
 custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 

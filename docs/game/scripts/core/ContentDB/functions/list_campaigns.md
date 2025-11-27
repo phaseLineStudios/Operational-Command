@@ -1,6 +1,6 @@
 # ContentDB::list_campaigns Function Reference
 
-*Defined at:* `scripts/core/ContentDB.gd` (lines 130–154)</br>
+*Defined at:* `scripts/core/ContentDB.gd` (lines 129–153)</br>
 *Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**

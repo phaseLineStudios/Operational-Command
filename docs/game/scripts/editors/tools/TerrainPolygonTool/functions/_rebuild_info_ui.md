@@ -1,6 +1,6 @@
 # TerrainPolygonTool::_rebuild_info_ui Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 231–278)</br>
+*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 232–279)</br>
 *Belongs to:* [TerrainPolygonTool](../../TerrainPolygonTool.md)
 
 **Signature**

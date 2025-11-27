@@ -1,6 +1,6 @@
 # UnitConfigDialog::_ready Function Reference
 
-*Defined at:* `scripts/editors/UnitConfigDialog.gd` (lines 20–41)</br>
+*Defined at:* `scripts/editors/UnitConfigDialog.gd` (lines 22–43)</br>
 *Belongs to:* [UnitConfigDialog](../../UnitConfigDialog.md)
 
 **Signature**

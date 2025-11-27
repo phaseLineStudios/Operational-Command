@@ -1,6 +1,6 @@
 # HQTable::_init_counter_controller Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 86–94)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 88–96)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # DebugMenu::_ready Function Reference
 
-*Defined at:* `scripts/ui/DebugMenu.gd` (lines 20–36)</br>
+*Defined at:* `scripts/ui/DebugMenu.gd` (lines 52–74)</br>
 *Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**
@@ -26,5 +26,11 @@ func _ready():
 	event_log_filter_warning.pressed.connect(_refresh_log)
 	event_log_filter_error.pressed.connect(_refresh_log)
 	event_log_filter_trace.pressed.connect(_refresh_log)
+	event_log_filter_debug.pressed.connect(_refresh_log)
 	event_log_clear.pressed.connect(_clear_log)
+
+	scene_options_refresh.pressed.connect(_refresh_scene_options)
+
+	# Start initial scan
+	_refresh_scene_options()
 ```

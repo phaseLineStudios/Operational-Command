@@ -1,6 +1,6 @@
 # SimDebugOverlay::_norm_ratio Function Reference
 
-*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 336–339)</br>
+*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 349–352)</br>
 *Belongs to:* [SimDebugOverlay](../../SimDebugOverlay.md)
 
 **Signature**

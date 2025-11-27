@@ -31,6 +31,8 @@ extends RefCounted
 - `LineEdit unit_search`
 - `Button unit_faction_friend`
 - `Button unit_faction_enemy`
+- `Button unit_create_btn`
+- `UnitCreateDialog unit_create_dlg`
 - `ItemList task_list`
 - `ItemList trigger_list`
 - `Dictionary selected_pick`
@@ -135,6 +137,18 @@ var unit_faction_friend: Button
 
 ```gdscript
 var unit_faction_enemy: Button
+```
+
+### unit_create_btn
+
+```gdscript
+var unit_create_btn: Button
+```
+
+### unit_create_dlg
+
+```gdscript
+var unit_create_dlg: UnitCreateDialog
 ```
 
 ### task_list

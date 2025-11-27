@@ -1,6 +1,6 @@
 # TerrainPolygonTool::_draw Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 411–430)</br>
+*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 412–431)</br>
 *Belongs to:* [TerrainPolygonTool](../../TerrainPolygonTool.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # ScenarioEditor::_on_data_changed Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 755–766)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 417–429)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
@@ -24,6 +24,7 @@ func _on_data_changed() -> void:
 		mouse_position_label.text = ""
 	ctx.request_overlay_redraw()
 	_rebuild_scene_tree()
+	_rebuild_command_list()
 	_on_history_changed([], [])
 	units._refresh(ctx)
 ```

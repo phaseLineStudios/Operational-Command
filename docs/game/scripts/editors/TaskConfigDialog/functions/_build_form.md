@@ -1,6 +1,6 @@
 # TaskConfigDialog::_build_form Function Reference
 
-*Defined at:* `scripts/editors/TaskConfigDialog.gd` (lines 32–121)</br>
+*Defined at:* `scripts/editors/TaskConfigDialog.gd` (lines 36–125)</br>
 *Belongs to:* [TaskConfigDialog](../../TaskConfigDialog.md)
 
 **Signature**

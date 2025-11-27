@@ -12,13 +12,14 @@ signal map_unhandled_mouse(event, map_pos: Vector2, terrain_pos: Vector2)
 ## Pixel offset from the mouse to place the label
 @export var grid_label_offset: Vector2 = Vector2(16, 16)
 ## Render the TerrainViewport at N× resolution for anti-aliasing (1=off)
-@export var viewport_oversample: int = 2
+@export var viewport_oversample: int = 4
 
 var _start_world_max: Vector2
 var _mat: StandardMaterial3D
 var _plane: PlaneMesh
 var _camera: Camera3D
 var _scenario: ScenarioData
+var _mipmap_texture: ImageTexture
 
 @onready var terrain_viewport: SubViewport = %TerrainViewport
 @onready var renderer: TerrainRender = %TerrainRender
@@ -37,7 +38,19 @@ func _ready() -> void:
 	_start_world_max = Vector2(_plane.size.x * sx, _plane.size.y * sz)
 
 	_mat = map.get_active_material(0)
-	_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	# Use anisotropic filtering for better quality at extreme angles
+	_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	# Disable texture repeat to avoid edge artifacts
+	_mat.uv1_triplanar = false
+
+	# Enable automatic updates
+	terrain_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+
+	# Enable 2X MSAA for line smoothing without too much blur
+	terrain_viewport.msaa_2d = Viewport.MSAA_2X
+	# Disable screen space AA to keep text sharp
+	terrain_viewport.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
+
 	_apply_viewport_texture()
 
 	if not terrain_viewport.is_connected(
@@ -50,6 +63,14 @@ func _ready() -> void:
 			renderer.connect("map_resize", Callable(self, "_on_renderer_map_resize"))
 		if not renderer.is_connected("resized", Callable(self, "_on_renderer_map_resize")):
 			renderer.connect("resized", Callable(self, "_on_renderer_map_resize"))
+		if not renderer.is_connected("render_ready", Callable(self, "_on_renderer_ready")):
+			renderer.connect("render_ready", Callable(self, "_on_renderer_ready"))
+		# Update mipmaps when renderer redraws (only when terrain changes)
+		if (
+			renderer.data
+			and not renderer.data.is_connected("changed", Callable(self, "_on_terrain_changed"))
+		):
+			renderer.data.changed.connect(_on_terrain_changed, CONNECT_DEFERRED)
 
 	_update_viewport_to_renderer()
 	_update_mesh_fit()
@@ -100,7 +121,36 @@ func _unhandled_input(event: InputEvent) -> void:
 
 ## Assign the terrain viewport as the map texture
 func _apply_viewport_texture() -> void:
+	# Temporarily use viewport texture directly
 	_mat.albedo_texture = terrain_viewport.get_texture()
+	# Create an ImageTexture that will hold mipmaps
+	if _mipmap_texture == null:
+		_mipmap_texture = ImageTexture.new()
+	# Don't generate mipmaps yet - wait for render_ready signal
+
+
+## Update the mipmap texture from the viewport
+func _update_mipmap_texture() -> void:
+	# Get the viewport's rendered image
+	var img := terrain_viewport.get_texture().get_image()
+	if img == null or img.is_empty():
+		return
+
+	# Generate mipmaps for the image
+	img.generate_mipmaps()
+
+	# Update the texture (this replaces the texture data while keeping the same reference)
+	if (
+		_mipmap_texture.get_width() != img.get_width()
+		or _mipmap_texture.get_height() != img.get_height()
+	):
+		_mipmap_texture.set_image(img)
+	else:
+		_mipmap_texture.update(img)
+
+	# Switch material to use mipmap texture now that we have content
+	if _mat.albedo_texture != _mipmap_texture:
+		_mat.albedo_texture = _mipmap_texture
 
 
 ## Resize the Viewport to match the renderer's pixel size (including margins)
@@ -148,11 +198,25 @@ func _update_mesh_fit() -> void:
 func _on_viewport_size_changed() -> void:
 	_apply_viewport_texture()
 	_update_mesh_fit()
+	call_deferred("_update_mipmap_texture")
 
 
 ## Renderer callback: sync viewport to new map pixel size
 func _on_renderer_map_resize() -> void:
 	_update_viewport_to_renderer()
+
+
+## Terrain data changed callback: update mipmaps when terrain changes
+func _on_terrain_changed() -> void:
+	# Use call_deferred to batch multiple changes
+	if not is_inside_tree():
+		return
+	call_deferred("_update_mipmap_texture")
+
+
+## Renderer ready callback: generate mipmaps after initial render completes
+func _on_renderer_ready() -> void:
+	_update_mipmap_texture()
 
 
 ## Helper: from screen pos to map pixels & terrain meters. Returns null if not on map

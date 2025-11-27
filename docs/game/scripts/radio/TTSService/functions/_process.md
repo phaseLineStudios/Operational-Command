@@ -1,6 +1,6 @@
 # TTSService::_process Function Reference
 
-*Defined at:* `scripts/radio/TTSService.gd` (lines 120–123)</br>
+*Defined at:* `scripts/radio/TTSService.gd` (lines 146–149)</br>
 *Belongs to:* [TTSService](../../TTSService.md)
 
 **Signature**

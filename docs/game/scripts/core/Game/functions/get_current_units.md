@@ -1,6 +1,6 @@
 # Game::get_current_units Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 146–158)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 152–164)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

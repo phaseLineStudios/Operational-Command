@@ -1,6 +1,6 @@
 # MissionSelect::_close_card Function Reference
 
-*Defined at:* `scripts/ui/MissionSelect.gd` (lines 309–317)</br>
+*Defined at:* `scripts/ui/MissionSelect.gd` (lines 197–203)</br>
 *Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**
@@ -19,8 +19,6 @@ Hide card and clear selection.
 func _close_card() -> void:
 	_card.visible = false
 	_click_catcher.visible = false
-	show_pin_labels = true
-	_refresh_pin_labels()
 	_selected_mission = null
 	_card_pin_button = null
 ```

@@ -1,6 +1,6 @@
 # UnitAutoResponses::_get_grid_from_position Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 634–640)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 627–633)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

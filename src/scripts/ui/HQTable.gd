@@ -17,9 +17,11 @@ extends Node3D
 @onready var mission_dialog: Control = %MissionDialog
 @onready var drawing_controller: DrawingController = %DrawingController
 @onready var counter_controller: UnitCounterController = %UnitCounterController
+@onready var document_controller: DocumentController = %DocumentController
 @onready var unit_voices: UnitVoiceResponses = %UnitVoiceResponses
 @onready var unit_auto_voices: UnitAutoResponses = %UnitAutoResponses
 @onready var tts_player: AudioStreamPlayer = %TTSPlayer
+@onready var ai_controller: AIController = %AIController
 
 
 ## Initialize mission systems and bind services.
@@ -34,42 +36,57 @@ func _ready() -> void:
 	var playable_units := generate_playable_units(scenario.unit_slots)
 	scenario.playable_units = playable_units
 
+	# Set up signal connection before initializing terrain
+	var ready_state := {"map_ready": false}
+	var on_map_ready := func(): ready_state["map_ready"] = true
+	if renderer and not renderer.is_connected("render_ready", on_map_ready):
+		renderer.render_ready.connect(on_map_ready, CONNECT_ONE_SHOT)
+
 	map.init_terrain(scenario)
 	trigger_engine.bind_scenario(scenario)
 	trigger_engine.bind_dialog(mission_dialog)
 	if trigger_engine and trigger_engine._api:
 		trigger_engine._api.map_controller = map
 	sim.init_world(scenario)
+
+	if radio and document_controller:
+		radio.radio_result.connect(_on_radio_transcript_player_early)
+
 	sim.bind_radio(%RadioController, %OrdersParser)
 	sim.init_resolution(scenario.briefing.frag_objectives)
 
-	# Initialize drawing controller
 	_init_drawing_controller()
 
-	# Load scenario drawings
 	if drawing_controller and map:
 		drawing_controller.load_scenario_drawings(scenario, renderer)
 
-	# Initialize counter controller
 	_init_counter_controller()
-
-	# Bind artillery and engineer controllers to trigger API
+	_init_document_controller(scenario)
 	_init_combat_controllers()
-
-	# Initialize TTS and unit voice responses
 	_init_tts_system()
 
-	# Connect radio signals to subtitle display
 	radio.radio_on.connect(_on_radio_on)
 	radio.radio_off.connect(_on_radio_off)
 	radio.radio_partial.connect(_on_radio_partial)
 	radio.radio_result.connect(_on_radio_result)
 
 	_update_subtitle_suggestions(scenario)
-	_create_initial_unit_counters(playable_units)
+
+	# Initialize the AI
+	_init_enemy_ai()
+
+	# Wait for map to finish rendering
+	while not ready_state["map_ready"]:
+		await get_tree().process_frame
+
+	# Create unit counters after map is ready (so position conversion works)
+	await _create_initial_unit_counters(playable_units)
 
 	# All initialization complete - hide loading screen
 	loading_screen.hide_loading()
+
+	# Start the simulation now that everything is ready
+	sim.start()
 
 
 ## Initialize the drawing controller and bind to trigger API
@@ -92,66 +109,109 @@ func _init_counter_controller() -> void:
 		trigger_engine._api._counter_controller = counter_controller
 
 
+## Initialize the document controller and render documents
+func _init_document_controller(scenario: ScenarioData) -> void:
+	if document_controller:
+		await document_controller.init(%IntelDoc, %TranscriptDoc, %BriefingDoc, scenario)
+
+		if sim:
+			sim.radio_message.connect(_on_radio_transcript_ai)
+
+		if unit_voices:
+			unit_voices.unit_response.connect(_on_unit_voice_transcript)
+
+		if unit_auto_voices:
+			unit_auto_voices.unit_auto_response.connect(_on_unit_voice_transcript)
+
+
+## Handle player radio result for transcript
+func _on_radio_transcript_player_early(text: String) -> void:
+	if document_controller and text != "":
+		await document_controller.add_transcript_entry("PLAYER", text)
+
+
+## Handle AI radio messages for transcript
+func _on_radio_transcript_ai(level: String, text: String) -> void:
+	if not document_controller or text == "":
+		return
+
+	if level == "debug":
+		return
+
+	await get_tree().process_frame
+
+	var speaker := _extract_speaker_from_message(text)
+	await document_controller.add_transcript_entry(speaker, text)
+
+
+## Handle unit voice responses for transcript (both acknowledgments and auto-responses)
+func _on_unit_voice_transcript(callsign: String, message: String) -> void:
+	if document_controller and message != "":
+		await document_controller.add_transcript_entry(callsign, message)
+
+
+## Extract speaker callsign from message text if present, otherwise return "HQ".
+## Handles formats: "ALPHA: message", "ALPHA message", or plain messages.
+func _extract_speaker_from_message(text: String) -> String:
+	# Check for "CALLSIGN: message" format
+	var colon_pos := text.find(":")
+	if colon_pos > 0:
+		var potential_callsign := text.substr(0, colon_pos).strip_edges()
+		# Verify it looks like a callsign (uppercase letters, possibly with numbers)
+		if potential_callsign.length() >= 2 and potential_callsign.length() <= 12:
+			if potential_callsign.to_upper() == potential_callsign:
+				return potential_callsign
+
+	# Check for "CALLSIGN message" format (first word is all caps)
+	var words := text.split(" ", false, 1)
+	if words.size() >= 2:
+		var first_word := words[0].strip_edges()
+		# Check if first word is uppercase and looks like a callsign
+		if first_word.length() >= 2 and first_word.length() <= 12:
+			if first_word.to_upper() == first_word and first_word.is_valid_identifier():
+				return first_word
+
+	# Default to HQ if no callsign detected
+	return "HQ"
+
+
 ## Bind artillery and engineer controllers to trigger API for tracking
 func _init_combat_controllers() -> void:
 	if trigger_engine and trigger_engine._api and sim:
 		if sim.artillery_controller:
 			trigger_engine._api._bind_artillery_controller(sim.artillery_controller)
-			LogService.trace(
-				"Artillery controller bound to TriggerAPI.", "HQTable.gd:_init_combat_controllers"
-			)
 
 		if sim.engineer_controller:
 			trigger_engine._api._bind_engineer_controller(sim.engineer_controller)
-			LogService.trace(
-				"Engineer controller bound to TriggerAPI.", "HQTable.gd:_init_combat_controllers"
-			)
 
 
 ## Initialize TTS service and wire up unit voice responses
 func _init_tts_system() -> void:
-	# Register the audio player with TTSService
 	if TTSService and tts_player:
 		TTSService.register_player(tts_player)
-		LogService.trace("TTS player registered in HQTable.", "HQTable.gd:_init_tts_system")
 
-	# Initialize UnitVoiceResponses with unit index, SimWorld, and terrain renderer
 	if unit_voices and sim and map:
 		unit_voices.init(sim._units_by_id, sim, map.renderer)
-		LogService.trace("Unit voice responses initialized.", "HQTable.gd:_init_tts_system")
 
-	# Initialize UnitAutoResponses for automatic unit event reporting
 	if unit_auto_voices and sim and map:
 		unit_auto_voices.init(
 			sim, sim._units_by_id, map.renderer, counter_controller, sim.artillery_controller
 		)
-		LogService.trace("Unit auto responses initialized.", "HQTable.gd:_init_tts_system")
-
-		# Wire up ammo/fuel warnings to auto-response system
 		_wire_logistics_warnings()
 
-	# Wire up OrdersRouter to UnitVoiceResponses
 	var orders_router := get_node_or_null("%RadioController/OrdersRouter")
 	if orders_router and unit_voices:
-		# Check if already connected to avoid duplicate connections
 		if not orders_router.order_applied.is_connected(unit_voices._on_order_applied):
 			orders_router.order_applied.connect(unit_voices._on_order_applied)
-			LogService.trace(
-				"Unit voice responses connected to OrdersRouter.", "HQTable.gd:_init_tts_system"
-			)
 		else:
 			LogService.warning(
 				"OrdersRouter already connected to UnitVoiceResponses!",
 				"HQTable.gd:_init_tts_system"
 			)
 
-	# Wire up SimWorld radio_message signal to TTS for trigger API radio() calls
 	if sim and TTSService:
 		if not sim.radio_message.is_connected(_on_radio_message):
 			sim.radio_message.connect(_on_radio_message)
-			LogService.trace(
-				"SimWorld radio_message connected to TTS.", "HQTable.gd:_init_tts_system"
-			)
 
 
 ## Wire up ammo/fuel warning signals to auto-response system.
@@ -159,17 +219,13 @@ func _wire_logistics_warnings() -> void:
 	if not sim:
 		return
 
-	# Connect ammo system warnings
 	if sim.ammo_system:
 		sim.ammo_system.ammo_low.connect(_on_ammo_low)
 		sim.ammo_system.ammo_critical.connect(_on_ammo_critical)
 
-	# Connect fuel system warnings
 	if sim.fuel_system:
 		sim.fuel_system.fuel_low.connect(_on_fuel_low)
 		sim.fuel_system.fuel_critical.connect(_on_fuel_critical)
-
-	LogService.trace("Logistics warnings wired to auto-response system.", "HQTable.gd")
 
 
 ## Handle ammo low warning.
@@ -244,10 +300,37 @@ func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]:
 				su.callsign = slot.callsign
 				su.position_m = slot.start_position
 				su.playable = true
+
+				# Restore saved state from campaign save if available
+				if Game.current_save:
+					var saved_state := Game.current_save.get_unit_state(unit_id)
+					if not saved_state.is_empty():
+						su.state_strength = saved_state.get("state_strength", unit_data.strength)
+						su.state_injured = saved_state.get("state_injured", 0.0)
+						su.state_equipment = saved_state.get("state_equipment", 1.0)
+						su.cohesion = saved_state.get("cohesion", 1.0)
+						unit_data.experience = saved_state.get("experience", unit_data.experience)
+						var saved_ammo = saved_state.get("state_ammunition", {})
+						if saved_ammo is Dictionary and not saved_ammo.is_empty():
+							su.state_ammunition = saved_ammo.duplicate()
+						else:
+							su.state_ammunition = unit_data.ammunition.duplicate()
+					else:
+						su.state_strength = unit_data.strength
+						su.state_injured = 0.0
+						su.state_equipment = 1.0
+						su.cohesion = 1.0
+						su.state_ammunition = unit_data.ammunition.duplicate()
+				else:
+					su.state_strength = unit_data.strength
+					su.state_injured = 0.0
+					su.state_equipment = 1.0
+					su.cohesion = 1.0
+					su.state_ammunition = unit_data.ammunition.duplicate()
+
 				units.append(su)
 				callsigns.append(slot.callsign)
 
-	LogService.trace("Generated playable units: %s" % str(callsigns), "HQTable.gd:42")
 	return units
 
 
@@ -296,21 +379,21 @@ func _update_subtitle_suggestions(scenario: ScenarioData) -> void:
 func _create_initial_unit_counters(playable_units: Array[ScenarioUnit]) -> void:
 	for unit in playable_units:
 		var counter := preload("res://scenes/system/unit_counter.tscn").instantiate()
-		counter.affiliation = UnitCounter.CounterAffiliation.PLAYER
-		counter.callsign = unit.callsign
-		counter.symbol_type = unit.unit.type
-		counter.symbol_size = unit.unit.size
 
+		counter.setup(
+			MilSymbol.UnitAffiliation.FRIEND, unit.unit.type, unit.unit.size, unit.callsign
+		)
 		%PhysicsObjects.add_child(counter)
 
-		# Convert unit terrain position to 3D world position
+		# Set position immediately (before awaiting texture)
 		var world_pos: Variant = _terrain_pos_to_world(unit.position_m)
 		if world_pos != null:
-			# Place counter slightly above the map surface
-			counter.global_position = world_pos + Vector3(0, 0.05, 0)
+			counter.global_position = world_pos + Vector3(0, 0.25, 0)
 		else:
-			# Fallback to spawn location if conversion fails
 			counter.global_position = %CounterSpawnLocation.global_position
+
+		# Wait for texture generation to complete (for loading screen)
+		await counter.texture_ready
 
 
 ## Convert terrain 2D position to 3D world position on the map.
@@ -330,20 +413,17 @@ func _terrain_pos_to_world(pos_m: Vector2) -> Variant:
 	else:
 		return null
 
-	var terrain_data := map.renderer.data
-	if terrain_data == null:
+	# Convert terrain meters to map pixels (includes margins and borders)
+	var map_px := renderer.terrain_to_map(pos_m)
+
+	# Get total map size in pixels (includes margins)
+	var map_size := renderer.size
+	if map_size.x == 0 or map_size.y == 0:
 		return null
 
-	var terrain_width_m := float(terrain_data.width_m)
-	var terrain_height_m := float(terrain_data.height_m)
-
-	if terrain_width_m == 0 or terrain_height_m == 0:
-		return null
-
-	# Normalize terrain position to -0.5..0.5 range (mesh local space)
-	var t_pos_m := renderer.terrain_to_map(pos_m)
-	var normalized_x := (t_pos_m.x / terrain_width_m) - 0.5
-	var normalized_z := (t_pos_m.y / terrain_height_m) - 0.5
+	# Normalize to -0.5..0.5 range (mesh local space)
+	var normalized_x := (map_px.x / map_size.x) - 0.5
+	var normalized_z := (map_px.y / map_size.y) - 0.5
 
 	# Scale to mesh size
 	var local_pos := Vector3(normalized_x * mesh_size.x, 0, normalized_z * mesh_size.y)
@@ -378,3 +458,48 @@ func _init_test_scenario() -> void:
 		"mission_id": "us_crested_cap",
 		"points_used": 319
 	}
+
+
+func _init_enemy_ai() -> void:
+	if ai_controller == null:
+		push_error("_init_enemy_ai(): AIController node is missing from the scene.")
+		return
+
+	var scenario := Game.current_scenario
+	if scenario == null:
+		return
+
+	if trigger_engine:
+		ai_controller.bind_trigger_engine(trigger_engine)
+
+	ai_controller.unregister_all_units()
+	ai_controller.refresh_unit_index_cache()
+
+	# Build per-unit queues from scenario JSON (normalize inside AIController)
+	var flat_tasks: Array = []
+	if scenario.tasks is Array:
+		flat_tasks = scenario.tasks
+	var normalized: Array = ai_controller.normalize_tasks(flat_tasks)
+	var per_unit: Dictionary = ai_controller.build_per_unit_queues(normalized)
+	ai_controller.apply_trigger_sync(per_unit, scenario.triggers)
+
+	# Create an agent per ENEMY unit in scenario.units
+	for i in scenario.units.size():
+		var u: ScenarioUnit = scenario.units[i]
+		if u == null or u.affiliation != ScenarioUnit.Affiliation.ENEMY:
+			continue
+		var agent := ai_controller.create_agent(i)
+		if agent == null:
+			continue
+
+		# Apply ScenarioUnit initial behaviour/ROE before queue starts
+		agent.set_behaviour(int(u.behaviour))
+		agent.set_combat_mode(int(u.combat_mode))
+
+		var ordered: Array = per_unit.get(i, [])
+		if ordered.is_empty():
+			agent.set_behaviour(ScenarioUnit.Behaviour.AWARE)
+			u.behaviour = ScenarioUnit.Behaviour.AWARE
+			agent.set_combat_mode(ScenarioUnit.CombatMode.DO_NOT_FIRE_UNLESS_FIRED_UPON)
+			u.combat_mode = ScenarioUnit.CombatMode.DO_NOT_FIRE_UNLESS_FIRED_UPON
+		ai_controller.register_unit(i, agent, ordered)

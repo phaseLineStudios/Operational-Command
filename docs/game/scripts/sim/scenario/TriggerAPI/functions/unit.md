@@ -1,6 +1,6 @@
 # TriggerAPI::unit Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 55–60)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 109–114)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

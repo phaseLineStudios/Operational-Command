@@ -1,6 +1,6 @@
 # TerrainData::set_line_brush Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 250–257)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 256–263)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

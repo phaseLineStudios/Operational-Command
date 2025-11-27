@@ -13,14 +13,49 @@ extends Resource
 
 ## Brief
 
-Ammunition variables
+Weapon Equipment Ammunition types
 
 ## Detailed Description
+
+Handheld weapons (5.56, 7.62, 9mm etc.)
+
+Heavy crew-served or non-manportable weapons (.50)
+
+20-40mm (IFVs, AAA Guns)
+
+90-125mm MBT main gun ammo
+
+HEAT weapons (M72, RPG-7, etc.)
+
+Guided Anti-Tank Missiles (TOW, MILAN, Konkurs, etc.)
+
+60/81/120 mm mortar (Anti-Personnel)
+
+60/81/120 mm mortar (Smoke)
+
+60/81/120 mm mortar (Flare)
+
+105/122/152/155 mm tube artillery (Anti-Personnel)
+
+105/122/152/155 mm tube artillery (Smoke)
+
+105/122/152/155 mm tube artillery (Flare)
+
+Engineer Munitions: Mines
+
+Engineer Munitions: Demolition charges
+
+Engineer Munitions: Bridge
+
+Ammunition variables
 
 Logistics variables, is part of ammunition and we can add stuff here later, like fuel
 
 ## Public Member Functions
 
+- [`func _init() -> void`](UnitData/functions/_init.md)
+- [`func _queue_icon_update() -> void`](UnitData/functions/_queue_icon_update.md) — Schedule an async icon refresh (debounced to next idle message).
+- [`func _update_icons_async(rev: int) -> void`](UnitData/functions/_update_icons_async.md) — Build both friend/enemy icons asynchronously.
 - [`func serialize() -> Dictionary`](UnitData/functions/serialize.md) — Serialize this unit to JSON
 - [`func deserialize(data: Variant) -> UnitData`](UnitData/functions/deserialize.md) — Deserialize Unit JSON
 
@@ -34,8 +69,11 @@ Logistics variables, is part of ammunition and we can add stuff here later, like
 - `Array[String] allowed_slots` — Allowed slot codes where this unit can be deployed
 - `int cost` — Deployment cost in points
 - `TerrainBrush.MoveProfile movement_profile` — Movement Profile for navigation
-- `UnitSize size` — Organizational size of the unit
+- `MilSymbol.UnitSize size` — Organizational size of the unit
+- `MilSymbol.UnitType type` — Organizational size of the unit
 - `int strength` — Number of personnel in the unit at full strength
+- `bool is_engineer` — Is unit an engineer unit (can repair).
+- `bool is_medical` — Is unit a medical unit (can medic injured).
 - `Dictionary equipment` — Dictionary of equipment definitions
 - `float experience` — Average experience level
 - `float attack` — Offensive rating of the unit
@@ -59,12 +97,40 @@ Logistics variables, is part of ammunition and we can add stuff here later, like
 - `float ammunition_critical_threshold` — Ratio (0..1): when `current/capacity <= ammunition_critical_threshold` emit “Ammo critical”.
 - `float supply_transfer_rate` — Transfer rate (rounds per second) a logistics unit can push to a recipient in range.
 - `float supply_transfer_radius_m` — Transfer radius in meters within which resupply is possible.
+- `int _icon_rev`
+
+## Signals
+
+- `signal icons_ready` — Emitted when icons were (re)generated successfully.
 
 ## Enumerations
 
-- `enum UnitSize` — Enumeration of unit sizes
+- `enum EquipCategory` — Equipment categories
 
 ## Member Function Documentation
+
+### _init
+
+```gdscript
+func _init() -> void
+```
+
+### _queue_icon_update
+
+```gdscript
+func _queue_icon_update() -> void
+```
+
+Schedule an async icon refresh (debounced to next idle message).
+
+### _update_icons_async
+
+```gdscript
+func _update_icons_async(rev: int) -> void
+```
+
+Build both friend/enemy icons asynchronously. Drops stale results.
+`rev` Internal version token to ignore out-of-date completions.
 
 ### serialize
 
@@ -167,7 +233,17 @@ Movement Profile for navigation
 ### size
 
 ```gdscript
-var size: UnitSize
+var size: MilSymbol.UnitSize
+```
+
+Decorators: `@export`
+
+Organizational size of the unit
+
+### type
+
+```gdscript
+var type: MilSymbol.UnitType
 ```
 
 Decorators: `@export`
@@ -183,6 +259,26 @@ var strength: int
 Decorators: `@export`
 
 Number of personnel in the unit at full strength
+
+### is_engineer
+
+```gdscript
+var is_engineer: bool
+```
+
+Decorators: `@export`
+
+Is unit an engineer unit (can repair).
+
+### is_medical
+
+```gdscript
+var is_medical: bool
+```
+
+Decorators: `@export`
+
+Is unit a medical unit (can medic injured).
 
 ### equipment
 
@@ -410,12 +506,28 @@ Decorators: `@export`
 
 Transfer radius in meters within which resupply is possible.
 
-## Enumeration Type Documentation
-
-### UnitSize
+### _icon_rev
 
 ```gdscript
-enum UnitSize
+var _icon_rev: int
 ```
 
-Enumeration of unit sizes
+## Signal Documentation
+
+### icons_ready
+
+```gdscript
+signal icons_ready
+```
+
+Emitted when icons were (re)generated successfully.
+
+## Enumeration Type Documentation
+
+### EquipCategory
+
+```gdscript
+enum EquipCategory
+```
+
+Equipment categories

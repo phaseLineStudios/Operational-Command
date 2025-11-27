@@ -5,6 +5,8 @@ extends Control
 
 ## Emits when the map is resized
 signal map_resize
+## Emits when initial rendering is complete (after data set and first draw)
+signal render_ready
 
 ## Grid cell size in meters
 const GRID_SIZE_M = 100
@@ -23,23 +25,35 @@ const GRID_SIZE_M = 100
 @export var terrain_border_px: int = 1
 
 @export_group("Margin")
-## Font size for map title
+## Title font size as percentage of map's smaller dimension. If > 0, overrides title_size.
+@export_range(0.0, 0.05, 0.0001) var title_size_percent: float = 0.018
+## Font size for map title (used when title_size_percent = 0)
 @export var title_size: int = 24
 ## Color of outer margin
 @export var margin_color: Color = Color(1.0, 1.0, 1.0)
-## Size of outer margin top
+## Top margin as percentage of map's smaller dimension (0.0-1.0). If > 0, overrides px value.
+@export_range(0.0, 0.5, 0.001) var margin_top_percent: float = 0.04
+## Bottom margin as percentage of map's smaller dimension (0.0-1.0). If > 0, overrides px value.
+@export_range(0.0, 0.5, 0.001) var margin_bottom_percent: float = 0.025
+## Left margin as percentage of map's smaller dimension (0.0-1.0). If > 0, overrides px value.
+@export_range(0.0, 0.5, 0.001) var margin_left_percent: float = 0.025
+## Right margin as percentage of map's smaller dimension (0.0-1.0). If > 0, overrides px value.
+@export_range(0.0, 0.5, 0.001) var margin_right_percent: float = 0.025
+## Size of outer margin top (used when margin_top_percent = 0)
 @export var margin_top_px: int = 50
-## Size of outer margin bottom
+## Size of outer margin bottom (used when margin_bottom_percent = 0)
 @export var margin_bottom_px: int = 50
-## Size of outer margin left
+## Size of outer margin left (used when margin_left_percent = 0)
 @export var margin_left_px: int = 50
-## Size of outer margin right
+## Size of outer margin right (used when margin_right_percent = 0)
 @export var margin_right_px: int = 50
 ## Color for text
 @export var label_color: Color = Color(0.05, 0.05, 0.05, 1.0)
 ## Font for text
 @export var label_font: Font
-## Font size of grid number text
+## Grid label font size as percentage of map's smaller dimension. If > 0, overrides label_size.
+@export_range(0.0, 0.05, 0.0001) var label_size_percent: float = 0.007
+## Font size of grid number text (used when label_size_percent = 0)
 @export var label_size: int = 14
 
 @export_group("Grid")
@@ -79,7 +93,10 @@ const GRID_SIZE_M = 100
 @export var contour_label_padding_px: float = 3.0
 ## Contour label font
 @export var contour_label_font: Font
-## Contour label font size
+## Contour label font size as percentage of map's smaller dimension.
+## If > 0, overrides contour_label_size.
+@export_range(0.0, 0.05, 0.0001) var contour_label_size_percent: float = 0.006
+## Contour label font size (used when contour_label_size_percent = 0)
 @export var contour_label_size: int = 12
 ## Extra space beyond plaque width
 @export var contour_label_gap_extra_px: float = 2.0
@@ -144,6 +161,8 @@ func _set_data(d: TerrainData):
 	if data:
 		data.changed.connect(_on_data_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
 		clear_render_error()
+		# Calculate scaled margins based on map size if margin_percent is set
+		_calculate_scaled_margins()
 		if path_grid:
 			path_grid.data = data
 			if nav_auto_build:
@@ -153,6 +172,7 @@ func _set_data(d: TerrainData):
 	call_deferred("_draw_map_size")
 	call_deferred("_push_data_to_layers")
 	call_deferred("_mark_all_dirty")
+	call_deferred("_emit_render_ready")
 
 
 ## Push exports to their respective layers
@@ -188,6 +208,16 @@ func _on_data_changed() -> void:
 	_debounce_relayout_and_push()
 	if path_grid and nav_auto_build:
 		path_grid.rebuild(nav_default_profile)
+
+
+## Emit render_ready signal after waiting for layers to draw
+func _emit_render_ready() -> void:
+	if not is_inside_tree():
+		return
+
+	await get_tree().process_frame
+	await get_tree().process_frame
+	render_ready.emit()
 
 
 ## Show a render error
@@ -236,6 +266,33 @@ func _debounce_relayout_and_push() -> void:
 			_push_data_to_layers()
 			_rebuild_surface_spatial_index()
 	)
+
+
+## Calculate margin sizes and font sizes based on map size and percentages
+func _calculate_scaled_margins() -> void:
+	if data == null:
+		return
+
+	# Calculate as percentage of the smaller dimension
+	var min_dimension: int = min(data.width_m, data.height_m)
+
+	# Apply margins to each side individually
+	if margin_top_percent > 0.0:
+		margin_top_px = int(round(min_dimension * margin_top_percent))
+	if margin_bottom_percent > 0.0:
+		margin_bottom_px = int(round(min_dimension * margin_bottom_percent))
+	if margin_left_percent > 0.0:
+		margin_left_px = int(round(min_dimension * margin_left_percent))
+	if margin_right_percent > 0.0:
+		margin_right_px = int(round(min_dimension * margin_right_percent))
+
+	# Scale font sizes
+	if title_size_percent > 0.0:
+		title_size = int(round(min_dimension * title_size_percent))
+	if label_size_percent > 0.0:
+		label_size = int(round(min_dimension * label_size_percent))
+	if contour_label_size_percent > 0.0:
+		contour_label_size = int(round(min_dimension * contour_label_size_percent))
 
 
 ## Resize the map to fit the terrain data
@@ -362,7 +419,14 @@ func is_inside_map(pos: Vector2) -> bool:
 
 ## API to check if position is inside terrain
 func is_inside_terrain(pos: Vector2) -> bool:
-	return base_layer.get_rect().has_point(pos)
+	if data == null:
+		return false
+	# Manually calculate terrain bounds based on margins
+	# Terrain starts at (margin_left_px, margin_top_px) and extends by terrain size
+	var terrain_rect := Rect2(
+		Vector2(margin_left_px, margin_top_px), Vector2(data.width_m, data.height_m)
+	)
+	return terrain_rect.has_point(pos)
 
 
 ## API to get grid number from terrain local position

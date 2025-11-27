@@ -1,6 +1,6 @@
 # MoraleSystem::apply_morale_delta Function Reference
 
-*Defined at:* `scripts/sim/MoraleSystem.gd` (lines 46–50)</br>
+*Defined at:* `scripts/sim/MoraleSystem.gd` (lines 47–51)</br>
 *Belongs to:* [MoraleSystem](../../MoraleSystem.md)
 
 **Signature**

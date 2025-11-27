@@ -44,6 +44,18 @@ const ARRIVE_EPSILON := 1.0
 ## Is unit playable.
 @export var playable: bool = false
 
+@export_category("State")
+## Current strength
+@export var state_strength: float = 0.0
+## Current injured
+@export var state_injured: float = 0.0
+## Current remaining equipment
+@export var state_equipment: float = 0.0
+## Current cohesion level (0.0–1.0).
+@export_range(0.0, 1.0, 0.01) var cohesion: float = 1.0
+## Current ammo per type for this unit, same keys as unit.ammunition.
+@export var state_ammunition: Dictionary = {}
+
 var _move_state: MoveState = MoveState.IDLE
 var _move_dest_m: Vector2 = Vector2.ZERO
 var _move_path: PackedVector2Array = []
@@ -58,7 +70,9 @@ var _fuel: FuelSystem = null
 ## Check if unit is dead.
 ## [return] True if unit is destroyed.
 func is_dead() -> bool:
-	return float(unit.state_strength / unit.strength) <= 0.0
+	if unit == null:
+		return true
+	return float(state_strength / unit.strength) <= 0.0
 
 
 #initializing moraleSystem
@@ -264,14 +278,21 @@ func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 		var speed := _kph_to_mps(unit.speed_kph)
 		if _fuel != null:
 			speed *= _fuel.speed_mult(id)
-		return speed
+		# Apply optional behaviour speed multiplier if present
+		var beh_mult := 1.0
+		if has_meta("behaviour_speed_mult"):
+			beh_mult = float(get_meta("behaviour_speed_mult"))
+		return speed * beh_mult
 
 	var c := grid.world_to_cell(p_m)
 	if not grid._in_bounds(c):
 		var speed := _kph_to_mps(unit.speed_kph)
 		if _fuel != null:
 			speed *= _fuel.speed_mult(id)
-		return speed
+		var beh_mult := 1.0
+		if has_meta("behaviour_speed_mult"):
+			beh_mult = float(get_meta("behaviour_speed_mult"))
+		return speed * beh_mult
 
 	if grid._astar.is_in_boundsv(c) and grid._astar.is_point_solid(c):
 		return 0.0
@@ -280,6 +301,8 @@ func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 	var v := _kph_to_mps(unit.speed_kph) / w
 	if _fuel != null:
 		v *= _fuel.speed_mult(id)
+	if has_meta("behaviour_speed_mult"):
+		v *= float(get_meta("behaviour_speed_mult"))
 	return v
 
 
@@ -315,7 +338,15 @@ func serialize() -> Dictionary:
 		"affiliation": int(affiliation),
 		"combat_mode": int(combat_mode),
 		"behaviour": int(behaviour),
-		"playable": playable
+		"playable": playable,
+		"state":
+		{
+			"state_strength": state_strength,
+			"state_injured": state_injured,
+			"state_equipment": state_equipment,
+			"cohesion": cohesion,
+			"state_ammunition": state_ammunition.duplicate()
+		}
 	}
 
 
@@ -330,4 +361,15 @@ static func deserialize(d: Dictionary) -> ScenarioUnit:
 	u.combat_mode = int(d.get("combat_mode")) as CombatMode
 	u.behaviour = int(d.get("behaviour")) as Behaviour
 	u.playable = d.get("playable", u.playable)
+
+	var state: Dictionary = d.get("state", {})
+	if typeof(state) == TYPE_DICTIONARY:
+		u.state_strength = float(state.get("state_strength", u.state_strength))
+		u.state_injured = float(state.get("state_injured", u.state_injured))
+		u.state_equipment = float(state.get("state_equipment", u.state_equipment))
+		u.cohesion = float(state.get("cohesion", u.cohesion))
+		var ammo_state = state.get("state_ammunition", null)
+		if typeof(ammo_state) == TYPE_DICTIONARY:
+			u.state_ammunition = ammo_state
+
 	return u

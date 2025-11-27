@@ -1,6 +1,6 @@
 # ScenarioEditorOverlay::_draw_slots Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 218–242)</br>
+*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 224–248)</br>
 *Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**

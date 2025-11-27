@@ -1,6 +1,6 @@
 # TerrainEffects::_is_moving Function Reference
 
-*Defined at:* `scripts/sim/TerrainEffects.gd` (lines 194–211)</br>
+*Defined at:* `scripts/sim/TerrainEffects.gd` (lines 249–266)</br>
 *Belongs to:* [TerrainEffects](../../TerrainEffects.md)
 
 **Signature**

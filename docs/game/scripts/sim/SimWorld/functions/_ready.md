@@ -1,6 +1,6 @@
 # SimWorld::_ready Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 67–101)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 77–133)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -46,6 +46,28 @@ func _ready() -> void:
 		)
 		fuel_system.fuel_empty.connect(
 			func(uid): emit_signal("radio_message", "error", "%s immobilized: fuel out." % uid)
+		)
+
+	if engineer_controller:
+		engineer_controller.task_confirmed.connect(
+			func(uid, task, _pos):
+				var su: ScenarioUnit = _units_by_id.get(uid)
+				var callsign: String = su.callsign if su else uid
+				emit_signal(
+					"radio_message", "info", "%s: roger, %s task acknowledged." % [callsign, task]
+				)
+		)
+		engineer_controller.task_started.connect(
+			func(uid, task, _pos):
+				var su: ScenarioUnit = _units_by_id.get(uid)
+				var callsign: String = su.callsign if su else uid
+				emit_signal("radio_message", "info", "%s: starting %s work." % [callsign, task])
+		)
+		engineer_controller.task_completed.connect(
+			func(uid, task, _pos):
+				var su: ScenarioUnit = _units_by_id.get(uid)
+				var callsign: String = su.callsign if su else uid
+				emit_signal("radio_message", "info", "%s: %s task complete." % [callsign, task])
 		)
 
 	set_process(true)

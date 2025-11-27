@@ -1,6 +1,6 @@
 # SlotConfigDialog::show_dialog Function Reference
 
-*Defined at:* `scripts/editors/SlotConfigDialog.gd` (lines 105–106)</br>
+*Defined at:* `scripts/editors/SlotConfigDialog.gd` (lines 110–111)</br>
 *Belongs to:* [SlotConfigDialog](../../SlotConfigDialog.md)
 
 **Signature**

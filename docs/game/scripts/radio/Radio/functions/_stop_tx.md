@@ -1,6 +1,6 @@
 # Radio::_stop_tx Function Reference
 
-*Defined at:* `scripts/radio/Radio.gd` (lines 58–66)</br>
+*Defined at:* `scripts/radio/Radio.gd` (lines 67–75)</br>
 *Belongs to:* [Radio](../../Radio.md)
 
 **Signature**

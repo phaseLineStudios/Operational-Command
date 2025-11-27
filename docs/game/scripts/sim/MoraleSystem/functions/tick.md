@@ -1,6 +1,6 @@
 # MoraleSystem::tick Function Reference
 
-*Defined at:* `scripts/sim/MoraleSystem.gd` (lines 70–82)</br>
+*Defined at:* `scripts/sim/MoraleSystem.gd` (lines 71–86)</br>
 *Belongs to:* [MoraleSystem](../../MoraleSystem.md)
 
 **Signature**
@@ -17,6 +17,9 @@ applies overtime moralechanges
 
 ```gdscript
 func tick(dt: float) -> void:
+	if not scenario:
+		return
+
 	#idle
 	if owner.move_state() == ScenarioUnit.MoveState.IDLE:
 		apply_morale_delta(-0.001 * dt, "idle_decay")

@@ -1,6 +1,6 @@
 # TerrainData::_init Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 115–118)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 121–124)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

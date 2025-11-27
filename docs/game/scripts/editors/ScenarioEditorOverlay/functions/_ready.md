@@ -1,6 +1,6 @@
 # ScenarioEditorOverlay::_ready Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 61–69)</br>
+*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 64–73)</br>
 *Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**
@@ -23,4 +23,5 @@ func _ready() -> void:
 	_ctx = PopupMenu.new()
 	add_child(_ctx)
 	_ctx.id_pressed.connect(_on_ctx_pressed)
+	call_deferred("refresh_icon_bindings")
 ```

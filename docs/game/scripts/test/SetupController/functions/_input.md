@@ -1,6 +1,6 @@
 # SetupController::_input Function Reference
 
-*Defined at:* `scripts/test/PathTest.gd` (lines 47–56)</br>
+*Defined at:* `scripts/test/PathTest.gd` (lines 55–64)</br>
 *Belongs to:* [SetupController](../../SetupController.md)
 
 **Signature**

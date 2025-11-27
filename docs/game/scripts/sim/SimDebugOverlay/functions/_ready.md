@@ -1,6 +1,6 @@
 # SimDebugOverlay::_ready Function Reference
 
-*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 85–109)</br>
+*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 94–122)</br>
 *Belongs to:* [SimDebugOverlay](../../SimDebugOverlay.md)
 
 **Signature**
@@ -17,6 +17,10 @@ Auto-wire references, build caches, connect signals, and set processing.
 
 ```gdscript
 func _ready() -> void:
+	# Ensure this overlay never blocks mouse/keyboard interaction with the scene
+	mouse_filter = MOUSE_FILTER_IGNORE
+	# Keep visibility aligned with the master toggle to avoid intercepting events
+	visible = debug_enabled
 	_terrain_base = terrain_renderer.get_node_or_null("MapMargin/TerrainBase") as Control
 
 	_rebuild_id_index()

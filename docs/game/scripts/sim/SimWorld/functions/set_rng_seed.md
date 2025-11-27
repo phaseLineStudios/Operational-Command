@@ -1,6 +1,6 @@
 # SimWorld::set_rng_seed Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 409–413)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 566–570)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

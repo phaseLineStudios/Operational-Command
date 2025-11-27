@@ -1,6 +1,6 @@
 # MoraleSystem::set_morale Function Reference
 
-*Defined at:* `scripts/sim/MoraleSystem.gd` (lines 32–44)</br>
+*Defined at:* `scripts/sim/MoraleSystem.gd` (lines 33–45)</br>
 *Belongs to:* [MoraleSystem](../../MoraleSystem.md)
 
 **Signature**

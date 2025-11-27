@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://rbcwabwc1v0o"]
+[gd_scene load_steps=19 format=3 uid="uid://rbcwabwc1v0o"]
 
 [ext_resource type="Script" uid="uid://bcbx6qa1jofhc" path="res://scripts/terrain/TerrainRender.gd" id="1_kobl6"]
 [ext_resource type="Script" uid="uid://cxbielgj0k7ei" path="res://scripts/terrain/GridLayer.gd" id="2_llqno"]
@@ -9,7 +9,7 @@
 [ext_resource type="Script" uid="uid://cm8auwtr4pxfp" path="res://scripts/terrain/PointLayer.gd" id="5_c2fte"]
 [ext_resource type="Script" uid="uid://bio2qt3p5m683" path="res://scripts/terrain/LabelLayer.gd" id="8_tecap"]
 [ext_resource type="Script" uid="uid://dqy52pwnjeeb1" path="res://scripts/terrain/PathGridDebugLayer.gd" id="9_4od0y"]
-[ext_resource type="Script" path="res://scripts/terrain/StampLayer.gd" id="10_stamp"]
+[ext_resource type="Script" uid="uid://syktp171o3s2" path="res://scripts/terrain/StampLayer.gd" id="10_stamp"]
 [ext_resource type="Script" uid="uid://bagvx400o1qwa" path="res://scripts/terrain/PathGrid.gd" id="11_xg8js"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ceejx"]
@@ -46,9 +46,14 @@ script = ExtResource("1_kobl6")
 base_color = Color(0.993332, 0.99162, 0.98202, 1)
 terrain_border_color = Color(0.27451, 0.219608, 0.219608, 1)
 terrain_border_px = 2
+margin_top_percent = 0.055
+margin_bottom_percent = 0.035
+margin_left_percent = 0.035
+margin_right_percent = 0.035
 margin_top_px = 75
 label_color = Color(0.27451, 0.219608, 0.219608, 1)
 label_font = SubResource("FontVariation_fvhov")
+label_size_percent = 0.01
 grid_100m_color = Color(0.275, 0.22, 0.22, 0.8)
 grid_1km_color = Color(0.27450982, 0.21960784, 0.21960784, 0.9098039)
 grid_line_px = 3.0
@@ -70,6 +75,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_llqno")
 script = ExtResource("3_ceejx")
+margin_top_px = 0
+margin_bottom_px = 0
+margin_left_px = 0
+margin_right_px = 0
 label_font = SubResource("FontVariation_ceejx")
 
 [node name="TerrainBase" type="PanelContainer" parent="MapMargin"]
@@ -80,32 +89,38 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_nu5ig")
 
 [node name="SurfaceLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
+clip_contents = true
 layout_mode = 2
 script = ExtResource("3_utooi")
 
 [node name="LineLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
+clip_contents = true
 layout_mode = 2
 script = ExtResource("4_uopel")
 
 [node name="PointLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
+clip_contents = true
 layout_mode = 2
 script = ExtResource("5_c2fte")
 
 [node name="ContourLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
+clip_contents = true
 layout_mode = 2
 script = ExtResource("4_utooi")
 smooth_iterations = 5
 
 [node name="GridLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
+clip_contents = true
 layout_mode = 2
 script = ExtResource("2_llqno")
 
 [node name="LabelLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
+clip_contents = true
 layout_mode = 2
 script = ExtResource("8_tecap")
 text_color = Color(0.27451, 0.219608, 0.219608, 1)
@@ -113,10 +128,12 @@ font = SubResource("FontVariation_tecap")
 
 [node name="StampLayer" type="Control" parent="MapMargin/TerrainBase"]
 unique_name_in_owner = true
+clip_contents = true
 layout_mode = 2
 script = ExtResource("10_stamp")
 
 [node name="PathGridDebugLayer" type="Control" parent="MapMargin/TerrainBase" node_paths=PackedStringArray("grid")]
+clip_contents = true
 layout_mode = 2
 script = ExtResource("9_4od0y")
 grid = NodePath("../PathGrid")

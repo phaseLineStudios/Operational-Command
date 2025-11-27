@@ -1,6 +1,6 @@
 # UnitAutoResponses::_spawn_contact_counter Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 643–679)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 636–672)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

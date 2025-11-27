@@ -41,6 +41,7 @@ extends Resource
 - `int day` — Day of the month
 - `int hour` — Hour of the day
 - `int minute` — Minute of the hour
+- `int second` — Seconds
 - `int unit_points` — Total points available to the player to deploy units
 - `Array[UnitSlotData] unit_slots` — Slots available for units to be placed into
 - `Array[UnitData] unit_recruits` — Recruitable units available at the start
@@ -52,6 +53,7 @@ extends Resource
 - `Array[ScenarioTrigger] triggers` — Triggers that define scripted events and conditions
 - `Array[ScenarioTask] tasks` — Tasks or objectives for the AI to complete
 - `Array drawings` — Drawings or map overlays associated with the scenario
+- `Array[CustomCommand] custom_commands` — Custom voice commands for this mission
 - `Texture2D preview`
 
 ## Enumerations
@@ -288,6 +290,16 @@ Decorators: `@export_range(0.0, 59.0, 1.0)`
 
 Minute of the hour
 
+### second
+
+```gdscript
+var second: int
+```
+
+Decorators: `@export_range(0.0, 59.0, 1.0)`
+
+Seconds
+
 ### unit_points
 
 ```gdscript
@@ -397,6 +409,16 @@ var drawings: Array
 Decorators: `@export`
 
 Drawings or map overlays associated with the scenario
+
+### custom_commands
+
+```gdscript
+var custom_commands: Array[CustomCommand]
+```
+
+Decorators: `@export`
+
+Custom voice commands for this mission
 
 ### preview
 

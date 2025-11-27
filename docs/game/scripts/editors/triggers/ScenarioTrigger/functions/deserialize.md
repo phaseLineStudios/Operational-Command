@@ -1,6 +1,6 @@
 # ScenarioTrigger::deserialize Function Reference
 
-*Defined at:* `scripts/editors/triggers/ScenarioTrigger.gd` (lines 69–96)</br>
+*Defined at:* `scripts/editors/triggers/ScenarioTrigger.gd` (lines 74–102)</br>
 *Belongs to:* [ScenarioTrigger](../../ScenarioTrigger.md)
 
 **Signature**
@@ -24,6 +24,7 @@ static func deserialize(d: Variant) -> ScenarioTrigger:
 	t.area_size_m = ContentDB.v2_from(d.get("size_m", Vector2.ZERO))
 	t.presence = int(d.get("presence", 0)) as PresenceMode
 	t.require_duration_s = float(d.get("require_duration_s", 0.0))
+	t.run_once = bool(d.get("run_once", false))
 	t.condition_expr = String(d.get("condition_expr", "true"))
 	t.on_activate_expr = String(d.get("on_activate_expr", ""))
 	t.on_deactivate_expr = String(d.get("on_deactivate_expr", ""))

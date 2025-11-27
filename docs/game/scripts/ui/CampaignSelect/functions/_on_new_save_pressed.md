@@ -1,6 +1,6 @@
 # CampaignSelect::_on_new_save_pressed Function Reference
 
-*Defined at:* `scripts/ui/CampaignSelect.gd` (lines 84–93)</br>
+*Defined at:* `scripts/ui/CampaignSelect.gd` (lines 86–95)</br>
 *Belongs to:* [CampaignSelect](../../CampaignSelect.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # TerrainLineTool::_cancel_edit_delete_line Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 342–358)</br>
+*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 343–359)</br>
 *Belongs to:* [TerrainLineTool](../../TerrainLineTool.md)
 
 **Signature**

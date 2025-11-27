@@ -1,6 +1,6 @@
 # TerrainRender::_mark_all_dirty Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 202–219)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 209–226)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**

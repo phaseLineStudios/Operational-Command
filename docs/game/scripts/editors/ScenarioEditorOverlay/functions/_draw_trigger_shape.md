@@ -1,6 +1,6 @@
 # ScenarioEditorOverlay::_draw_trigger_shape Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 312–343)</br>
+*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 318–349)</br>
 *Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**

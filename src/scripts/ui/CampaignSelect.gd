@@ -25,11 +25,15 @@ var _selected_campaign: CampaignData
 @onready var btn_back: OCMenuButton = %BackToMainMenu
 @onready var campaign_poster: TextureRect = %CampaignPoster
 @onready var campaign_desc: RichTextLabel = %CampaignDescription
+@onready var select_save: OCMenuContentLoad = %SelectSaveDialog
+@onready var new_save: OCMenuWindow = %NewSaveDialog
+@onready var new_save_name: LineEdit = %NewSaveName
+@onready var delete_save: OCMenuButton = %SaveDeleteButton
+@onready var confirm_dialog: OCMenuConfirmation = %ConfirmationDialog
 
 
 ## Init UI, populate list, connect signals.
 func _ready() -> void:
-	_set_action_buttons_visible(false)
 	_populate_campaigns()
 	_connect_signals()
 
@@ -41,6 +45,16 @@ func _connect_signals() -> void:
 	btn_continue_last.pressed.connect(_on_continue_last_pressed)
 	btn_select_save.pressed.connect(_on_select_save_pressed)
 	btn_back.pressed.connect(_on_back_pressed)
+	select_save.ok_pressed.connect(_select_save_load)
+	select_save.cancel_pressed.connect(_select_save_close)
+	select_save.close_pressed.connect(_select_save_close)
+	select_save.content_selected.connect(func(idx: int): delete_save.disabled = idx == -1)
+	delete_save.pressed.connect(_select_save_delete)
+	new_save.ok_pressed.connect(_on_new_save_created)
+	new_save.cancel_pressed.connect(_on_new_save_cancelled)
+	new_save.close_pressed.connect(_on_new_save_cancelled)
+	confirm_dialog.close_pressed.connect(func(): confirm_dialog.hide())
+	confirm_dialog.cancel_pressed.connect(func(): confirm_dialog.hide())
 
 
 ## Fill ItemList from ContentDB.
@@ -63,7 +77,7 @@ func _populate_campaigns() -> void:
 func _on_campaign_selected(index: int) -> void:
 	_selected_campaign = _campaign_rows[index]
 	_update_details(_selected_campaign)
-	_set_action_buttons_visible(true)
+	_update_action_buttons()
 
 
 ## Placeholder details update (to be replaced later).
@@ -75,11 +89,30 @@ func _update_details(campaign: CampaignData) -> void:
 	campaign_desc.text = campaign.description
 
 
-## Show/hide the three action buttons.
-func _set_action_buttons_visible(state: bool) -> void:
-	btn_continue_last.visible = state
-	btn_select_save.visible = state
-	btn_new_save.visible = state
+## Update action button visibility and states based on existing saves.
+func _update_action_buttons() -> void:
+	if not _selected_campaign:
+		btn_continue_last.visible = false
+		btn_select_save.visible = false
+		btn_new_save.visible = false
+		return
+
+	var saves := Persistence.list_saves_for_campaign(_selected_campaign.id)
+	var has_saves := not saves.is_empty()
+
+	btn_continue_last.visible = true
+	btn_select_save.visible = true
+	btn_new_save.visible = true
+
+	btn_continue_last.disabled = not has_saves
+	btn_select_save.disabled = not has_saves
+
+	if has_saves:
+		btn_continue_last.text = "Continue Last Save"
+		btn_select_save.text = "Load Save (%d)" % saves.size()
+	else:
+		btn_continue_last.text = "Continue (No Saves)"
+		btn_select_save.text = "Load Save (No Saves)"
 
 
 ## Create/select new save and go to Mission Select.
@@ -87,10 +120,21 @@ func _on_new_save_pressed() -> void:
 	if not _selected_campaign:
 		return
 
-	var save_id := Persistence.create_new_campaign_save(_selected_campaign.id)
+	new_save.popup_centered()
+
+
+## Create new save with entered name
+func _on_new_save_created() -> void:
+	var save_id := Persistence.create_new_campaign_save(_selected_campaign.id, new_save_name.text)
 	Game.select_campaign(_selected_campaign)
 	Game.select_save(save_id)
 	Game.goto_scene(MISSION_SELECT_SCENE)
+
+
+## Called when new save is cancelled
+func _on_new_save_cancelled() -> void:
+	new_save.hide()
+	new_save_name.text = "My Savegame"
 
 
 ## resolves last save for the current campaign (if any).
@@ -112,8 +156,65 @@ func _on_continue_last_pressed() -> void:
 func _on_select_save_pressed() -> void:
 	if not _selected_campaign:
 		return
-	# TODO Open a save picker dialog/scene filtered by campaign
-	push_warning("Save selection UI not implemented yet.")
+
+	var saves := Persistence.list_saves_for_campaign(_selected_campaign.id)
+	if saves.is_empty():
+		push_warning("No saves found for this campaign.")
+		return
+
+	_show_save_picker(saves)
+
+
+## Show save picker dialog.
+func _show_save_picker(saves: Array[CampaignSave]) -> void:
+	delete_save.disabled = true
+	select_save.content_list.clear()
+	select_save.popup_centered()
+
+	for save in saves:
+		var last_played := Time.get_datetime_string_from_unix_time(save.last_played_timestamp)
+
+		var item_text := "%s (Last played: %s)" % [save.save_name, last_played.replace("T", " ")]
+		select_save.content_list.add_item(item_text)
+		select_save.content_list.set_item_metadata(
+			select_save.content_list.item_count - 1, save.save_id
+		)
+
+
+## Load selected save
+func _select_save_load() -> void:
+	var selected := select_save.content_list.get_selected_items()
+	if selected.size() > 0:
+		var save_id: String = select_save.content_list.get_item_metadata(selected[0])
+		Game.select_campaign(_selected_campaign)
+		Game.select_save(save_id)
+		Game.goto_scene(MISSION_SELECT_SCENE)
+	_select_save_close()
+
+
+## Handle deletion of saves
+func _select_save_delete() -> void:
+	var selected := select_save.content_list.get_selected_items()
+	if selected.size() > 0:
+		var save_id: String = select_save.content_list.get_item_metadata(selected[0])
+		var save_name: String = Persistence.load_save(save_id).save_name
+		confirm_dialog.window_title = "Delete Save"
+		confirm_dialog.description = "Are you sure you want to delete %s?" % save_name
+		confirm_dialog.ok_pressed.connect(func(): _delete_save(save_id), CONNECT_ONE_SHOT)
+		confirm_dialog.popup_centered()
+	_select_save_close()
+
+
+## Delete save by save id
+func _delete_save(save_id: String) -> void:
+	Game.delete_save(save_id)
+	confirm_dialog.hide()
+	_update_action_buttons()
+
+
+## Handle closing of select save dialog
+func _select_save_close() -> void:
+	select_save.hide()
 
 
 ## Back to main menu.

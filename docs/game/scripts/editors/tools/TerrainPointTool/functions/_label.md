@@ -1,6 +1,6 @@
 # TerrainPointTool::_label Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 268–273)</br>
+*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 269–274)</br>
 *Belongs to:* [TerrainPointTool](../../TerrainPointTool.md)
 
 **Signature**

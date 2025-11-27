@@ -1,6 +1,6 @@
 # SimWorld::_update_movement Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 191–207)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 238–254)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

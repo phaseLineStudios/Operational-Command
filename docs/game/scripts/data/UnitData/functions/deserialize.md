@@ -1,6 +1,6 @@
 # UnitData::deserialize Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 138–220)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 239–321)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**
@@ -33,14 +33,14 @@ static func deserialize(data: Variant) -> UnitData:
 			tmp_slots.append(str(s))
 		u.allowed_slots = tmp_slots
 
-	var icon_path = data.get("icon_path", null)
-	if icon_path != null and typeof(icon_path) == TYPE_STRING and icon_path != "":
-		var tex := load(icon_path)
-		if tex is Texture2D:
-			u.icon = tex
-
-	u.size = int(data.get("size", u.size)) as UnitSize
+	u.size = int(data.get("size", u.size)) as MilSymbol.UnitSize
+	u.type = int(data.get("type", u.type)) as MilSymbol.UnitType
+	u.movement_profile = (
+		int(data.get("movement_profile", u.movement_profile)) as TerrainBrush.MoveProfile
+	)
 	u.strength = int(data.get("strength", u.strength))
+	u.is_engineer = bool(data.get("is_engineer", u.is_engineer))
+	u.is_medical = bool(data.get("is_medical", u.is_medical))
 	u.equipment = data.get("equipment", u.equipment)
 	u.experience = float(data.get("experience", u.experience))
 

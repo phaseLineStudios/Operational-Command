@@ -1,6 +1,6 @@
 # AmmoSystem::is_empty Function Reference
 
-*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 92–95)</br>
+*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 98–101)</br>
 *Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**

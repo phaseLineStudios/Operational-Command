@@ -1,6 +1,6 @@
 # NewScenarioDialog::_reset_values Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 112–124)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 138–150)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**

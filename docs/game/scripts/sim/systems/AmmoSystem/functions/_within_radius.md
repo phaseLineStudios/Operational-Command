@@ -1,6 +1,6 @@
 # AmmoSystem::_within_radius Function Reference
 
-*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 142–149)</br>
+*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 148–155)</br>
 *Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # ScenarioData::serialize Function Reference
 
-*Defined at:* `scripts/data/ScenarioData.gd` (lines 80–130)</br>
+*Defined at:* `scripts/data/ScenarioData.gd` (lines 84–145)</br>
 *Belongs to:* [ScenarioData](../../ScenarioData.md)
 
 **Signature**
@@ -37,12 +37,22 @@ func serialize() -> Dictionary:
 		if task is ScenarioTask:
 			placed_tasks.append(task.serialize())
 
+	var placed_drawings: Array = []
+	for d in drawings:
+		if d is ScenarioDrawing:
+			placed_drawings.append(d.serialize())
+
+	var placed_custom_commands: Array = []
+	for cmd in custom_commands:
+		if cmd is CustomCommand:
+			placed_custom_commands.append(cmd.serialize())
+
 	return {
 		"id": id,
 		"title": title,
 		"description": description,
 		"preview_path": preview_path,
-		"terrain_path": ContentDB.res_path_or_null(terrain),
+		"terrain_id": terrain.terrain_id,
 		"briefing": briefing.serialize() as Variant if briefing else null as Variant,
 		"difficulty": int(difficulty),
 		"map_position": _vec2_to_dict(map_position),
@@ -62,7 +72,8 @@ func serialize() -> Dictionary:
 			"units": placed_units,
 			"triggers": placed_triggers,
 			"tasks": placed_tasks,
-			"drawings": drawings
+			"drawings": placed_drawings,
+			"custom_commands": placed_custom_commands
 		}
 	}
 ```

@@ -25,6 +25,8 @@ extends Window
 - `OptionButton aff_in`
 - `OptionButton combat_in`
 - `OptionButton beh_in`
+- `SpinBox pos_x_in`
+- `SpinBox pos_y_in`
 - `Button save_btn`
 - `Button close_btn`
 
@@ -90,6 +92,18 @@ var combat_in: OptionButton
 
 ```gdscript
 var beh_in: OptionButton
+```
+
+### pos_x_in
+
+```gdscript
+var pos_x_in: SpinBox
+```
+
+### pos_y_in
+
+```gdscript
+var pos_y_in: SpinBox
 ```
 
 ### save_btn

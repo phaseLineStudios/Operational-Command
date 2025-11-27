@@ -8,7 +8,14 @@ extends Control
 ## @experimental
 
 ## Master toggle; when false the overlay does not process or draw.
-@export var debug_enabled: bool = false
+@export var debug_enabled: bool:
+	get:
+		return _debug_enabled
+	set(value):
+		_debug_enabled = value
+		visible = value
+		set_process(value)
+		queue_redraw()
 ## Terrain renderer used for map/terrain coordinate transforms.
 @export var terrain_renderer: TerrainRender
 ## Simulation world for unit snapshots and mission timing.
@@ -80,9 +87,15 @@ var _unit_by_id: Dictionary = {}
 var _last_order: Dictionary = {}
 var _recent_contact_until: Dictionary = {}
 
+var _debug_enabled: bool = false
+
 
 ## Auto-wire references, build caches, connect signals, and set processing.
 func _ready() -> void:
+	# Ensure this overlay never blocks mouse/keyboard interaction with the scene
+	mouse_filter = MOUSE_FILTER_IGNORE
+	# Keep visibility aligned with the master toggle to avoid intercepting events
+	visible = debug_enabled
 	_terrain_base = terrain_renderer.get_node_or_null("MapMargin/TerrainBase") as Control
 
 	_rebuild_id_index()
@@ -179,7 +192,7 @@ func _on_order_failed(order: Dictionary, _reason: String) -> void:
 ## Mark attacker/defender as “hot” for a short period after combat.
 ## [param attacker_id] Attacker unit id.
 ## [param defender_id] Defender unit id.
-func _on_contact(attacker_id: String, defender_id: String) -> void:
+func _on_contact(attacker_id: String, defender_id: String, _damage: float = 0.0) -> void:
 	if not show_combat_hot:
 		return
 	var now := _sim.get_mission_time_s() if _sim else Time.get_ticks_msec() / 1000.0
@@ -268,7 +281,7 @@ func _draw() -> void:
 			var order_txt: String = order if show_orders else ""
 			var beh := _enum_name(ScenarioUnit.Behaviour, unit.behaviour)
 			var cmb := _enum_name(ScenarioUnit.CombatMode, unit.combat_mode)
-			var s_ratio := _norm_ratio(unit.unit.state_strength, unit.unit.strength)
+			var s_ratio := _norm_ratio(unit.state_strength, unit.unit.strength)
 			var m_ratio := _norm_ratio(unit.unit.morale)
 			var fuel_ratio := (
 				_fuel.get_fuel_state(unit.id).ratio()

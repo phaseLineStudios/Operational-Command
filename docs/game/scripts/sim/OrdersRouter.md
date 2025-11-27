@@ -42,8 +42,10 @@ resolved through the movement adapter.
 - [`func _apply_attack(unit: ScenarioUnit, order: Dictionary) -> bool`](OrdersRouter/functions/_apply_attack.md) — ATTACK: prefer target_callsign; otherwise use movement fallback.
 - [`func _apply_defend(unit: ScenarioUnit, order: Dictionary) -> bool`](OrdersRouter/functions/_apply_defend.md) — DEFEND: move to destination if present; otherwise hold.
 - [`func _apply_recon(unit: ScenarioUnit, order: Dictionary) -> bool`](OrdersRouter/functions/_apply_recon.md) — RECON: move with recon posture if supported.
-- [`func _apply_fire(unit: ScenarioUnit, order: Dictionary) -> bool`](OrdersRouter/functions/_apply_fire.md) — FIRE: request fire mission if possible; else move to target unit.
+- [`func _apply_fire(unit: ScenarioUnit, order: Dictionary) -> bool`](OrdersRouter/functions/_apply_fire.md) — FIRE: artillery indirect fire only (no direct fire or movement fallback).
 - [`func _apply_report(_unit: ScenarioUnit, order: Dictionary) -> bool`](OrdersRouter/functions/_apply_report.md) — REPORT: informational pass-through.
+- [`func _apply_engineer(unit: ScenarioUnit, order: Dictionary) -> bool`](OrdersRouter/functions/_apply_engineer.md) — ENGINEER: engineer task orders (mines, demo, bridges).
+- [`func _apply_custom(_unit: ScenarioUnit, order: Dictionary) -> bool`](OrdersRouter/functions/_apply_custom.md) — CUSTOM: Emit signal for mission-specific handling.
 - [`func _resolve_target(order: Dictionary) -> ScenarioUnit`](OrdersRouter/functions/_resolve_target.md) — Resolve a unit from `target_callsign`.
 - [`func _is_label_name(l_name: String) -> bool`](OrdersRouter/functions/_is_label_name.md) — Test whether a string matches a TerrainData label (tolerant).
 - [`func _norm_label(s: String) -> String`](OrdersRouter/functions/_norm_label.md) — Normalize label text for matching (lowercase, strip punctuation, collapse spaces).
@@ -56,6 +58,8 @@ resolved through the movement adapter.
 - `MovementAdapter movement_adapter` — Movement adapter used to plan and start moves.
 - `LOSAdapter los_adapter` — LOS adapter used for visibility-related routing.
 - `CombatController combat_controller` — Combat controller used to set intent/targets and fire missions.
+- `ArtilleryController artillery_controller` — Artillery controller used for indirect fire missions.
+- `EngineerController engineer_controller` — Engineer controller used for engineer tasks (mines, demo, bridges).
 - `TerrainRender terrain_renderer` — Terrain renderer for grid/metric conversions.
 - `Dictionary _units_by_id`
 - `Dictionary _units_by_callsign`
@@ -64,6 +68,7 @@ resolved through the movement adapter.
 
 - `signal order_applied(order: Dictionary)` — Emitted when an order is applied to a unit.
 - `signal order_failed(order: Dictionary, reason: String)` — Emitted when an order cannot be applied.
+- `signal custom_order_received(order: Dictionary)` — Emitted when a CUSTOM order is received (for mission-specific handling).
 
 ## Member Function Documentation
 
@@ -148,7 +153,7 @@ RECON: move with recon posture if supported.
 func _apply_fire(unit: ScenarioUnit, order: Dictionary) -> bool
 ```
 
-FIRE: request fire mission if possible; else move to target unit.
+FIRE: artillery indirect fire only (no direct fire or movement fallback).
 `unit` Subject unit.
 `order` Order dictionary.
 [return] `true` if applied, otherwise `false`.
@@ -163,6 +168,41 @@ REPORT: informational pass-through.
 `_unit` Subject unit (unused).
 `order` Order dictionary.
 [return] Always `true`.
+
+### _apply_engineer
+
+```gdscript
+func _apply_engineer(unit: ScenarioUnit, order: Dictionary) -> bool
+```
+
+ENGINEER: engineer task orders (mines, demo, bridges).
+`unit` Subject unit.
+`order` Order dictionary.
+[return] `true` if applied, otherwise `false`.
+
+### _apply_custom
+
+```gdscript
+func _apply_custom(_unit: ScenarioUnit, order: Dictionary) -> bool
+```
+
+CUSTOM: Emit signal for mission-specific handling. Does not apply standard routing.
+Emits `signal custom_order_received` with full order dictionary for external handling.
+  
+  
+
+**Order dictionary contains:**
+  
+- `custom_keyword: String`
+  
+- `custom_full_text: String`
+  
+- `custom_metadata: Dictionary`
+  
+- `raw: PackedStringArray`
+`_unit` Subject unit (unused, but kept for consistency).
+`order` Custom order dictionary with custom_keyword and custom_metadata.
+[return] Always returns `true` (order is "accepted" but deferred to signal handlers).
 
 ### _resolve_target
 
@@ -257,6 +297,26 @@ Decorators: `@export`
 
 Combat controller used to set intent/targets and fire missions.
 
+### artillery_controller
+
+```gdscript
+var artillery_controller: ArtilleryController
+```
+
+Decorators: `@export`
+
+Artillery controller used for indirect fire missions.
+
+### engineer_controller
+
+```gdscript
+var engineer_controller: EngineerController
+```
+
+Decorators: `@export`
+
+Engineer controller used for engineer tasks (mines, demo, bridges).
+
 ### terrain_renderer
 
 ```gdscript
@@ -296,3 +356,16 @@ signal order_failed(order: Dictionary, reason: String)
 ```
 
 Emitted when an order cannot be applied.
+
+### custom_order_received
+
+```gdscript
+signal custom_order_received(order: Dictionary)
+```
+
+Emitted when a CUSTOM order is received (for mission-specific handling).
+  
+Order dictionary contains: `custom_keyword`, `custom_full_text`,
+`custom_metadata`.
+  
+Connect to this signal to handle mission-specific voice commands that route as orders.

@@ -1,6 +1,6 @@
 # MoraleSystem::_init Function Reference
 
-*Defined at:* `scripts/sim/MoraleSystem.gd` (lines 20–25)</br>
+*Defined at:* `scripts/sim/MoraleSystem.gd` (lines 20–26)</br>
 *Belongs to:* [MoraleSystem](../../MoraleSystem.md)
 
 **Signature**
@@ -20,4 +20,5 @@ func _init(u_id: String = "", u_owner: ScenarioUnit = null) -> void:
 	unit_id = u_id
 	morale_state = get_morale_state(morale)
 	owner = u_owner
+	scenario = Game.current_scenario
 ```

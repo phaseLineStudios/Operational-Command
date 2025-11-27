@@ -1,6 +1,6 @@
 # UnitVoiceResponses::_handle_report Function Reference
 
-*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 157–181)</br>
+*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 165–191)</br>
 *Belongs to:* [UnitVoiceResponses](../../UnitVoiceResponses.md)
 
 **Signature**
@@ -41,6 +41,8 @@ func _handle_report(order: Dictionary, callsign: String, unit_id: String) -> voi
 
 	if not report.is_empty():
 		tts_service.say(report)
+		# Emit signal for transcript logging
+		unit_response.emit(callsign, report)
 	else:
 		LogService.warning("Generated empty report", "UnitVoiceResponses.gd:_handle_report")
 ```

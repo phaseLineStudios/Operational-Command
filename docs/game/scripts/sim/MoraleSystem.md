@@ -30,7 +30,7 @@ extends RefCounted
 - `float morale`
 - `int morale_state`
 - `ScenarioUnit  ##unit connected to the script owner`
-- `ScenarioData scenario`
+- `ScenarioData  ##points to current scenario to check weather scenario`
 
 ## Signals
 
@@ -152,7 +152,7 @@ var owner: ScenarioUnit  ##unit connected to the script
 ### scenario
 
 ```gdscript
-var scenario: ScenarioData
+var scenario: ScenarioData  ##points to current scenario to check weather
 ```
 
 ## Signal Documentation

@@ -1,6 +1,6 @@
 # AmmoSystem::consume Function Reference
 
-*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 98–120)</br>
+*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 104–126)</br>
 *Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**

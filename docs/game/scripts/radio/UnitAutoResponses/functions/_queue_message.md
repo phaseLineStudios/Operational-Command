@@ -1,6 +1,6 @@
 # UnitAutoResponses::_queue_message Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 391–424)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 391–415)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**
@@ -22,16 +22,7 @@ func _queue_message(unit_id: String, event_type: EventType) -> void:
 	var last_trigger_time: float = _event_last_triggered.get(event_key, 0.0)
 	var cooldown: float = EVENT_CONFIG[event_type].get("cooldown_s", 10.0)
 
-	LogService.debug(
-		(
-			"_queue_message: %s, event=%s, cooldown_remaining=%.1f"
-			% [unit_id, EventType.keys()[event_type], cooldown - (current_time - last_trigger_time)]
-		),
-		"UnitAutoResponses.gd"
-	)
-
 	if current_time - last_trigger_time < cooldown:
-		LogService.debug("Message blocked by cooldown for %s" % unit_id, "UnitAutoResponses.gd")
 		return
 
 	var callsign: String = _id_to_callsign.get(unit_id, unit_id)

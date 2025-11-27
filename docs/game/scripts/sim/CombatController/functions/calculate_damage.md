@@ -1,6 +1,6 @@
 # CombatController::calculate_damage Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 119–208)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 119–210)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**
@@ -45,8 +45,10 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 	}
 
 	var f := TerrainEffects.compute_terrain_factors(attacker, defender, env)
-	if dist_m > attacker.unit.spot_m * float(f.get("spotting_mul", 1.0)):
-		return 0.0
+
+	# Note: Do NOT apply spotting_mul to range here - that creates a disconnect
+	# with the LOS system. If has_los() passed, the unit should be able to engage
+	# (within engagement_envelope). The spotting_mul affects accuracy/damage, not range.
 
 	var min_acc: float = terrain_config.min_accuracy
 	var acc_mul: float = float(f.get("accuracy_mul", 1.0))

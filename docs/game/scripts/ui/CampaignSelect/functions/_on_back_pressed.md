@@ -1,6 +1,6 @@
 # CampaignSelect::_on_back_pressed Function Reference
 
-*Defined at:* `scripts/ui/CampaignSelect.gd` (lines 118–119)</br>
+*Defined at:* `scripts/ui/CampaignSelect.gd` (lines 120–121)</br>
 *Belongs to:* [CampaignSelect](../../CampaignSelect.md)
 
 **Signature**

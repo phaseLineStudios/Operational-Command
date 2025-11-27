@@ -43,6 +43,10 @@ Acknowledgment phrases by order type.
 - `SimWorld sim_world` — Reference to SimWorld for contact data.
 - `TerrainRender terrain_render` — Reference to terrain renderer for grid conversions.
 
+## Signals
+
+- `signal unit_response(callsign: String, message: String)` — Emitted when a unit generates a voice response.
+
 ## Member Function Documentation
 
 ### _ready
@@ -199,3 +203,15 @@ var terrain_render: TerrainRender
 ```
 
 Reference to terrain renderer for grid conversions.
+
+## Signal Documentation
+
+### unit_response
+
+```gdscript
+signal unit_response(callsign: String, message: String)
+```
+
+Emitted when a unit generates a voice response.
+`callsign` The unit's callsign.
+`message` The full message text.

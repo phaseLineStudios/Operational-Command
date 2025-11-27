@@ -1,6 +1,6 @@
 # TerrainPointTool::build_options_ui Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 33–87)</br>
+*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 34–88)</br>
 *Belongs to:* [TerrainPointTool](../../TerrainPointTool.md)
 
 **Signature**

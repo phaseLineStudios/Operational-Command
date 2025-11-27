@@ -1,6 +1,6 @@
 # UnitConfigDialog::show_for Function Reference
 
-*Defined at:* `scripts/editors/UnitConfigDialog.gd` (lines 43–68)</br>
+*Defined at:* `scripts/editors/UnitConfigDialog.gd` (lines 45–73)</br>
 *Belongs to:* [UnitConfigDialog](../../UnitConfigDialog.md)
 
 **Signature**
@@ -38,6 +38,9 @@ func show_for(_editor: ScenarioEditor, index: int) -> void:
 		if beh_in.get_item_id(i) == int(su.behaviour):
 			beh_in.select(i)
 			break
+
+	pos_x_in.value = su.position_m.x
+	pos_y_in.value = su.position_m.y
 
 	visible = true
 ```

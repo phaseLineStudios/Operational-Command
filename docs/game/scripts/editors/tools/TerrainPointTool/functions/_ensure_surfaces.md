@@ -1,6 +1,6 @@
 # TerrainPointTool::_ensure_surfaces Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 204–210)</br>
+*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 205–211)</br>
 *Belongs to:* [TerrainPointTool](../../TerrainPointTool.md)
 
 **Signature**

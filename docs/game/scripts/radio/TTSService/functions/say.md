@@ -1,6 +1,6 @@
 # TTSService::say Function Reference
 
-*Defined at:* `scripts/radio/TTSService.gd` (lines 111–118)</br>
+*Defined at:* `scripts/radio/TTSService.gd` (lines 137–144)</br>
 *Belongs to:* [TTSService](../../TTSService.md)
 
 **Signature**

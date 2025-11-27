@@ -1,6 +1,6 @@
 # CombatAdapter::request_fire_with_penalty Function Reference
 
-*Defined at:* `scripts/sim/adapters/CombatAdapter.gd` (lines 113–124)</br>
+*Defined at:* `scripts/sim/adapters/CombatAdapter.gd` (lines 131–161)</br>
 *Belongs to:* [CombatAdapter](../../CombatAdapter.md)
 
 **Signature**
@@ -25,9 +25,26 @@ suppression *= r.suppression_mult
 ```gdscript
 func request_fire_with_penalty(unit_id: String, ammo_type: String, rounds: int = 1) -> Dictionary:
 	var pen := get_ammo_penalty(unit_id, ammo_type)
-	var allow := request_fire(unit_id, ammo_type, rounds)
+	var allow := false
+	match _roe:
+		0:
+			allow = false
+		1:
+			allow = _saw_hostile_shot
+		2:
+			allow = true
+	if not allow:
+		return {
+			"allow": false,
+			"state": "roe_blocked",
+			"attack_power_mult": 1.0,
+			"attack_cycle_mult": 1.0,
+			"suppression_mult": 1.0,
+			"morale_delta": 0,
+			"ai_recommendation": "hold"
+		}
 	return {
-		"allow": allow,
+		"allow": request_fire(unit_id, ammo_type, rounds),
 		"state": pen.state,
 		"attack_power_mult": pen.attack_power_mult,
 		"attack_cycle_mult": pen.attack_cycle_mult,

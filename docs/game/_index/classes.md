@@ -5,14 +5,21 @@
 ## A
 
 - [ActionRebindButton](../scripts/ui/helpers/ActionRebindButton.md) — 5 funcs · 1 vars · 0 signals — *inherits* `Button`
-- [AIController](../scripts/ai/AIController.md) — 0 funcs · 0 vars · 0 signals — *inherits* `Node`
+- [AIAgent](../scripts/ai/AIAgent.md) — 16 funcs · 10 vars · 2 signals — *inherits* `Node`
+- [AIController](../scripts/ai/AIController.md) — 23 funcs · 25 vars · 0 signals — *inherits* `Node`
 - [AmmoProfile](../scripts/data/AmmoProfile.md) — 3 funcs · 3 vars · 0 signals — *inherits* `Resource`
 - [AmmoRearmPanel](../scripts/ui/AmmoRearmPanel.md) — 11 funcs · 13 vars · 1 signals — *inherits* `Control`
-- [AmmoSystem](../scripts/sim/systems/AmmoSystem.md) — 18 funcs · 6 vars · 5 signals — *inherits* `Node`
+- [AmmoSystem](../scripts/sim/systems/AmmoSystem.md) — 19 funcs · 6 vars · 5 signals — *inherits* `Node`
 - [AmmoTest](../scripts/test/AmmoTest.md) — 17 funcs · 19 vars · 0 signals — *inherits* `Control`
+- [AntiAir](../scripts/utils/unit_symbols/icons/AntiAir.md) — 2 funcs · 0 vars · 0 signals — *inherits* `BaseMilSymbolIcon`
+- [AntiTank](../scripts/utils/unit_symbols/icons/AntiTank.md) — 5 funcs · 0 vars · 0 signals — *inherits* `BaseMilSymbolIcon`
+- [Armor](../scripts/utils/unit_symbols/icons/Armor.md) — 2 funcs · 0 vars · 0 signals — *inherits* `BaseMilSymbolIcon`
+- [Artillery](../scripts/utils/unit_symbols/icons/Artillery.md) — 2 funcs · 0 vars · 0 signals — *inherits* `BaseMilSymbolIcon`
+- [ArtilleryController](../scripts/sim/systems/ArtilleryController.md) — 13 funcs · 23 vars · 5 signals — *inherits* `Node`
 
 ## B
 
+- [BaseMilSymbolIcon](../scripts/utils/unit_symbols/icons/BaseMilSymbolIcon.md) — 7 funcs · 0 vars · 0 signals — *inherits* `RefCounted`
 - [BriefData](../scripts/data/BriefData.md) — 2 funcs · 13 vars · 0 signals — *inherits* `Resource`
 - [Briefing](../scripts/ui/Briefing.md) — 3 funcs · 7 vars · 0 signals — *inherits* `Control`
 - [BriefingDialog](../scripts/editors/BriefingDialog.md) — 11 funcs · 15 vars · 1 signals — *inherits* `Window`
@@ -22,19 +29,35 @@
 
 - [CampaignData](../scripts/data/CampaignData.md) — 2 funcs · 8 vars · 0 signals — *inherits* `Resource`
 - [CampaignEditor](../scripts/editors/CampaignEditor.md) — 2 funcs · 1 vars · 0 signals — *inherits* `Control`
-- [CampaignSelect](../scripts/ui/CampaignSelect.md) — 10 funcs · 8 vars · 0 signals — *inherits* `Control`
-- [CombatAdapter](../scripts/sim/adapters/CombatAdapter.md) — 4 funcs · 2 vars · 1 signals — *inherits* `Node`
+- [CampaignSelect](../scripts/ui/CampaignSelect.md) — 10 funcs · 10 vars · 0 signals — *inherits* `Control`
+- [CodeEditAutocomplete](../scripts/ui/CodeEditAutocomplete.md) — 10 funcs · 6 vars · 0 signals — *inherits* `RefCounted`
+- [CombatAdapter](../scripts/sim/adapters/CombatAdapter.md) — 8 funcs · 6 vars · 1 signals — *inherits* `Node`
 - [CombatController](../scripts/sim/CombatController.md) — 11 funcs · 16 vars · 5 signals — *inherits* `Node`
 - [CombatTest](../scripts/test/CombatTest.md) — 6 funcs · 9 vars · 0 signals — *inherits* `Node2D`
-- [ContentDB](../scripts/core/ContentDB.md) — 36 funcs · 1 vars · 0 signals — *inherits* `Node`
+- [ContentDB](../scripts/core/ContentDB.md) — 41 funcs · 1 vars · 0 signals — *inherits* `Node`
 - [ContourLayer](../scripts/terrain/ContourLayer.md) — 17 funcs · 24 vars · 0 signals — *inherits* `Control`
+- [CounterConfigDialog](../scripts/ui/CounterConfigDialog.md) — 5 funcs · 6 vars · 1 signals — *inherits* `Window`
+- [CustomCommand](../scripts/data/CustomCommand.md) — 2 funcs · 4 vars · 0 signals — *inherits* `Resource`
+- [CustomCommandConfigDialog](../scripts/editors/CustomCommandConfigDialog.md) — 3 funcs · 8 vars · 1 signals — *inherits* `Window`
 
 ## D
 
 - [Debrief](../scripts/ui/Debrief.md) — 22 funcs · 20 vars · 3 signals — *inherits* `Control`
-- [DebugMenu](../scripts/ui/DebugMenu.md) — 12 funcs · 12 vars · 0 signals — *inherits* `Window`
+- [DebugMenu](../scripts/ui/DebugMenu.md) — 23 funcs · 18 vars · 0 signals — *inherits* `Window`
 - [DebugMetricsDisplay](../scripts/ui/DebugMetricsDisplay.md) — 11 funcs · 30 vars · 0 signals — *inherits* `Control`
 - [DebugOverlay](../scripts/test/DebugOverlay.md) — 9 funcs · 4 vars · 0 signals — *inherits* `Control`
+- [DocumentController](../scripts/core/DocumentController.md) — 31 funcs · 27 vars · 0 signals — *inherits* `Node`
+- [DocumentFace](../scripts/ui/DocumentFace.md) — 8 funcs · 4 vars · 1 signals — *inherits* `PanelContainer`
+- [DrawEraserTool](../scripts/editors/tools/DrawEraserTool.md) — 10 funcs · 2 vars · 0 signals — *inherits* `ScenarioToolBase`
+- [DrawFreehandTool](../scripts/editors/tools/DrawFreehandTool.md) — 7 funcs · 5 vars · 0 signals — *inherits* `ScenarioToolBase`
+- [DrawingController](../scripts/core/DrawingController.md) — 20 funcs · 16 vars · 3 signals — *inherits* `Node`
+- [DrawTextureTool](../scripts/editors/tools/DrawTextureTool.md) — 7 funcs · 7 vars · 0 signals — *inherits* `ScenarioToolBase`
+
+## E
+
+- [Engineer](../scripts/utils/unit_symbols/icons/Engineer.md) — 2 funcs · 0 vars · 0 signals — *inherits* `BaseMilSymbolIcon`
+- [EngineerController](../scripts/sim/systems/EngineerController.md) — 20 funcs · 16 vars · 3 signals — *inherits* `Node`
+- [EnvironmentController](../scripts/sim/EnvironmentController.md) — 8 funcs · 19 vars · 0 signals — *inherits* `WorldEnvironment`
 
 ## F
 
@@ -45,16 +68,18 @@
 
 ## G
 
-- [Game](../scripts/core/Game.md) — 18 funcs · 9 vars · 4 signals — *inherits* `Node`
+- [Game](../scripts/core/Game.md) — 19 funcs · 9 vars · 4 signals — *inherits* `Node`
 - [GridLayer](../scripts/terrain/GridLayer.md) — 8 funcs · 4 vars · 0 signals — *inherits* `Control`
 
 ## H
 
-- [HQTable](../scripts/ui/HQTable.md) — 2 funcs · 6 vars · 0 signals — *inherits* `Node3D`
+- [HQ](../scripts/utils/unit_symbols/icons/HQ.md) — 5 funcs · 0 vars · 0 signals — *inherits* `BaseMilSymbolIcon`
+- [HQTable](../scripts/ui/HQTable.md) — 27 funcs · 17 vars · 0 signals — *inherits* `Node3D`
 - [HUD](../scripts/ui/HUD.md) — 0 funcs · 0 vars · 0 signals — *inherits* `Node`
 
 ## I
 
+- [Infantry](../scripts/utils/unit_symbols/icons/Infantry.md) — 5 funcs · 0 vars · 0 signals — *inherits* `BaseMilSymbolIcon`
 - [InputSchema](../scripts/core/InputSchema.md) — 0 funcs · 0 vars · 0 signals — *inherits* `Node`
 - [InteractionController](../scripts/core/InteractionController.md) — 6 funcs · 5 vars · 0 signals — *inherits* `Node`
 
@@ -62,34 +87,48 @@
 
 - [LabelLayer](../scripts/terrain/LabelLayer.md) — 12 funcs · 8 vars · 0 signals — *inherits* `Control`
 - [LineLayer](../scripts/terrain/LineLayer.md) — 13 funcs · 11 vars · 0 signals — *inherits* `Control`
-- [LogService](../scripts/core/LogService.md) — 10 funcs · 2 vars · 1 signals — *inherits* `Node`
+- [LoadingScreen](../scripts/ui/LoadingScreen.md) — 3 funcs · 5 vars · 0 signals — *inherits* `Control`
+- [LogService](../scripts/core/LogService.md) — 11 funcs · 2 vars · 1 signals — *inherits* `Node`
 - [LogTap](../scripts/core/LogTap.md) — 1 funcs · 0 vars · 1 signals — *inherits* `Logger`
 - [LOS](../scripts/sim/LOS.md) — 0 funcs · 2 vars · 0 signals — *inherits* `Node`
-- [LOSAdapter](../scripts/sim/adapters/LOSAdapter.md) — 4 funcs · 6 vars · 0 signals — *inherits* `Node`
+- [LOSAdapter](../scripts/sim/adapters/LOSAdapter.md) — 9 funcs · 14 vars · 0 signals — *inherits* `Node`
 
 ## M
 
 - [MainMenu](../scripts/ui/MainMenu.md) — 12 funcs · 10 vars · 0 signals — *inherits* `Control`
-- [MapController](../scripts/core/MapController.md) — 15 funcs · 11 vars · 3 signals — *inherits* `Node`
+- [MapController](../scripts/core/MapController.md) — 16 funcs · 11 vars · 3 signals — *inherits* `Node`
 - [MarginLayer](../scripts/terrain/MarginLayer.md) — 6 funcs · 20 vars · 0 signals — *inherits* `PanelContainer`
+- [Mechanized](../scripts/utils/unit_symbols/icons/Mechanized.md) — 4 funcs · 0 vars · 0 signals — *inherits* `BaseMilSymbolIcon`
+- [Medical](../scripts/utils/unit_symbols/icons/Medical.md) — 4 funcs · 0 vars · 0 signals — *inherits* `BaseMilSymbolIcon`
+- [MilSymbol](../scripts/utils/unit_symbols/MilSymbol.md) — 7 funcs · 3 vars · 0 signals — *inherits* `RefCounted`
+- [MilSymbolConfig](../scripts/utils/unit_symbols/MilSymbolConfig.md) — 7 funcs · 12 vars · 0 signals — *inherits* `Resource`
+- [MilSymbolGeometry](../scripts/utils/unit_symbols/MilSymbolGeometry.md) — 6 funcs · 5 vars · 0 signals — *inherits* `RefCounted`
+- [MilSymbolIcons](../scripts/utils/unit_symbols/MilSymbolIcons.md) — 2 funcs · 1 vars · 0 signals — *inherits* `RefCounted`
+- [MilSymbolRenderer](../scripts/utils/unit_symbols/MilSymbolRenderer.md) — 14 funcs · 8 vars · 0 signals — *inherits* `Node2D`
+- [MilSymbolTest](../scripts/test/MilSymbolTest.md) — 6 funcs · 11 vars · 0 signals — *inherits* `Control`
+- [MissionDialog](../scripts/ui/MissionDialog.md) — 6 funcs · 11 vars · 1 signals — *inherits* `Control`
 - [MissionResolution](../scripts/core/MissionResolution.md) — 13 funcs · 9 vars · 3 signals — *inherits* `Node`
-- [MissionSelect](../scripts/ui/MissionSelect.md) — 17 funcs · 16 vars · 0 signals — *inherits* `Control`
+- [MissionSelect](../scripts/ui/MissionSelect.md) — 13 funcs · 17 vars · 0 signals — *inherits* `Control`
 - [MoraleSystem](../scripts/sim/MoraleSystem.md) — 10 funcs · 5 vars · 2 signals — *inherits* `RefCounted`
-- [MovementAdapter](../scripts/sim/adapters/MovementAdapter.md) — 11 funcs · 4 vars · 0 signals — *inherits* `Node`
+- [Mortar](../scripts/utils/unit_symbols/icons/Mortar.md) — 2 funcs · 0 vars · 0 signals — *inherits* `BaseMilSymbolIcon`
+- [Motorized](../scripts/utils/unit_symbols/icons/Motorized.md) — 4 funcs · 0 vars · 0 signals — *inherits* `BaseMilSymbolIcon`
+- [MovementAdapter](../scripts/sim/adapters/MovementAdapter.md) — 25 funcs · 27 vars · 0 signals — *inherits* `Node`
 - [MovementAgent](../scripts/ai/MovementAgent.md) — 16 funcs · 10 vars · 4 signals — *inherits* `Node2D`
 
 ## N
 
-- [NARules](../scripts/radio/NARules.md) — 1 funcs · 4 vars · 0 signals — *inherits* `Node`
-- [NewScenarioDialog](../scripts/editors/NewScenarioDialog.md) — 9 funcs · 14 vars · 2 signals — *inherits* `Window`
+- [NARules](../scripts/radio/NARules.md) — 2 funcs · 6 vars · 0 signals — *inherits* `Node`
+- [NewScenarioDialog](../scripts/editors/NewScenarioDialog.md) — 17 funcs · 22 vars · 2 signals — *inherits* `Window`
 - [NewTerrainDialog](../scripts/editors/NewTerrainDialog.md) — 7 funcs · 10 vars · 2 signals — *inherits* `Window`
 
 ## O
 
 - [ObjectiveDialog](../scripts/editors/ObjectiveDialog.md) — 5 funcs · 8 vars · 3 signals — *inherits* `Window`
-- [OrdersParser](../scripts/radio/OrdersParser.md) — 13 funcs · 1 vars · 2 signals — *inherits* `Node`
+- [OCMenuButton](../scripts/ui/controls/OCMenuButton.md) — 4 funcs · 5 vars · 0 signals — *inherits* `Button`
+- [OCMenuContainer](../scripts/ui/controls/OCMenuContainer.md) — 8 funcs · 13 vars · 0 signals — *inherits* `PanelContainer`
+- [OrdersParser](../scripts/radio/OrdersParser.md) — 14 funcs · 3 vars · 2 signals — *inherits* `Node`
 - [OrdersQueue](../scripts/sim/OrdersQueue.md) — 6 funcs · 1 vars · 2 signals — *inherits* `RefCounted`
-- [OrdersRouter](../scripts/sim/OrdersRouter.md) — 15 funcs · 6 vars · 2 signals — *inherits* `Node`
+- [OrdersRouter](../scripts/sim/OrdersRouter.md) — 17 funcs · 8 vars · 3 signals — *inherits* `Node`
 
 ## P
 
@@ -97,59 +136,76 @@
 - [PathGridDebugLayer](../scripts/terrain/PathGridDebugLayer.md) — 2 funcs · 1 vars · 0 signals — *inherits* `Control`
 - [PauseMenu](../scripts/ui/PauseMenu.md) — 11 funcs · 10 vars · 2 signals — *inherits* `Control`
 - [Persistence](../scripts/core/Persistence.md) — 3 funcs · 0 vars · 0 signals — *inherits* `Node`
-- [PickupItem](../scripts/core/PickupItem.md) — 9 funcs · 13 vars · 0 signals — *inherits* `RigidBody3D`
+- [PickupItem](../scripts/core/PickupItem.md) — 13 funcs · 16 vars · 0 signals — *inherits* `RigidBody3D`
 - [PointLayer](../scripts/terrain/PointLayer.md) — 10 funcs · 5 vars · 0 signals — *inherits* `Control`
 - [PoolDropArea](../scripts/ui/helpers/PoolDropArea.md) — 3 funcs · 0 vars · 1 signals — *inherits* `VBoxContainer`
+- [PostProcessController](../scripts/ui/PostProcessController.md) — 3 funcs · 18 vars · 0 signals — *inherits* `CanvasLayer`
 
 ## R
 
-- [Radio](../scripts/radio/Radio.md) — 6 funcs · 1 vars · 4 signals — *inherits* `Node`
-- [RadioFeedback](../scripts/radio/RadioFeedback.md) — 16 funcs · 2 vars · 0 signals — *inherits* `Node`
+- [Radio](../scripts/radio/Radio.md) — 6 funcs · 1 vars · 5 signals — *inherits* `Node`
+- [RadioSignalModulator](../scripts/audio/RadioSignalModulator.md) — 2 funcs · 10 vars · 0 signals — *inherits* `Node`
+- [RadioSubtitles](../scripts/ui/RadioSubtitles.md) — 31 funcs · 10 vars · 0 signals — *inherits* `Control`
+- [Recon](../scripts/utils/unit_symbols/icons/Recon.md) — 2 funcs · 0 vars · 0 signals — *inherits* `BaseMilSymbolIcon`
 - [ReinforcementPanel](../scripts/ui/unit_mgmt/ReinforcementPanel.md) — 17 funcs · 22 vars · 2 signals — *inherits* `Control`
 - [ReinforcementTest](../scripts/test/ReinforcementTest.md) — 12 funcs · 9 vars · 0 signals — *inherits* `Node2D`
 
 ## S
 
-- [ScenarioData](../scripts/data/ScenarioData.md) — 7 funcs · 30 vars · 0 signals — *inherits* `Resource`
+- [ScenarioData](../scripts/data/ScenarioData.md) — 7 funcs · 32 vars · 0 signals — *inherits* `Resource`
 - [ScenarioDragLinkService](../scripts/editors/services/ScenarioDragLinkService.md) — 8 funcs · 5 vars · 0 signals — *inherits* `RefCounted`
-- [ScenarioEditor](../scripts/editors/ScenarioEditor.md) — 48 funcs · 28 vars · 0 signals — *inherits* `Control`
-- [ScenarioEditorContext](../scripts/editors/services/ScenarioEditorContext.md) — 3 funcs · 16 vars · 4 signals — *inherits* `RefCounted`
-- [ScenarioEditorOverlay](../scripts/editors/ScenarioEditorOverlay.md) — 36 funcs · 21 vars · 0 signals — *inherits* `Control`
+- [ScenarioDrawing](../scripts/editors/draw/ScenarioDrawing.md) — 3 funcs · 4 vars · 0 signals — *inherits* `Resource`
+- [ScenarioDrawingStamp](../scripts/editors/draw/ScenarioDrawingStamp.md) — 2 funcs · 7 vars · 0 signals — *inherits* `ScenarioDrawing`
+- [ScenarioDrawingStroke](../scripts/editors/draw/ScenarioDrawingStroke.md) — 2 funcs · 4 vars · 0 signals — *inherits* `ScenarioDrawing`
+- [ScenarioEditor](../scripts/editors/ScenarioEditor.md) — 34 funcs · 50 vars · 0 signals — *inherits* `Control`
+- [ScenarioEditorContext](../scripts/editors/services/ScenarioEditorContext.md) — 3 funcs · 18 vars · 4 signals — *inherits* `RefCounted`
+- [ScenarioEditorDeletionOps](../scripts/editors/helpers/ScenarioEditorDeletionOps.md) — 8 funcs · 1 vars · 0 signals — *inherits* `RefCounted`
+- [ScenarioEditorDrawTools](../scripts/editors/helpers/ScenarioEditorDrawTools.md) — 10 funcs · 3 vars · 0 signals — *inherits* `RefCounted`
+- [ScenarioEditorFileOps](../scripts/editors/helpers/ScenarioEditorFileOps.md) — 12 funcs · 3 vars · 0 signals — *inherits* `RefCounted`
+- [ScenarioEditorIDGenerator](../scripts/editors/helpers/ScenarioEditorIDGenerator.md) — 7 funcs · 1 vars · 0 signals — *inherits* `RefCounted`
+- [ScenarioEditorMenus](../scripts/editors/helpers/ScenarioEditorMenus.md) — 8 funcs · 1 vars · 0 signals — *inherits* `RefCounted`
+- [ScenarioEditorOverlay](../scripts/editors/ScenarioEditorOverlay.md) — 45 funcs · 23 vars · 0 signals — *inherits* `Control`
 - [ScenarioHistory](../scripts/editors/ScenarioHistory.md) — 11 funcs · 6 vars · 1 signals — *inherits* `Node`
 - [ScenarioObjectiveData](../scripts/data/ScenarioObjectiveData.md) — 2 funcs · 4 vars · 0 signals — *inherits* `Resource`
 - [ScenarioPersistenceService](../scripts/editors/services/ScenarioPersistenceService.md) — 4 funcs · 0 vars · 0 signals — *inherits* `RefCounted`
 - [ScenarioSceneTreeService](../scripts/editors/services/ScenarioSceneTreeService.md) — 2 funcs · 1 vars · 0 signals — *inherits* `RefCounted`
 - [ScenarioSelectionService](../scripts/editors/services/ScenarioSelectionService.md) — 6 funcs · 0 vars · 0 signals — *inherits* `RefCounted`
 - [ScenarioTask](../scripts/editors/ScenarioTask.md) — 4 funcs · 7 vars · 0 signals — *inherits* `Resource`
+- [ScenarioTaskRunner](../scripts/ai/tasks/ScenarioTaskRunner.md) — 9 funcs · 6 vars · 3 signals — *inherits* `Node`
 - [ScenarioTasksService](../scripts/editors/services/ScenarioTasksService.md) — 9 funcs · 4 vars · 0 signals — *inherits* `RefCounted`
 - [ScenarioToolBase](../scripts/editors/tools/ScenarioToolBase.md) — 10 funcs · 2 vars · 3 signals — *inherits* `Node`
-- [ScenarioTrigger](../scripts/editors/triggers/ScenarioTrigger.md) — 2 funcs · 15 vars · 0 signals — *inherits* `Resource`
+- [ScenarioTrigger](../scripts/editors/triggers/ScenarioTrigger.md) — 2 funcs · 17 vars · 0 signals — *inherits* `Resource`
 - [ScenarioTriggersService](../scripts/editors/services/ScenarioTriggersService.md) — 5 funcs · 0 vars · 0 signals — *inherits* `RefCounted`
 - [ScenarioTriggerTool](../scripts/editors/tools/ScenarioTriggerTool.md) — 9 funcs · 1 vars · 0 signals — *inherits* `ScenarioToolBase`
-- [ScenarioUnit](../scripts/editors/ScenarioUnit.md) — 20 funcs · 14 vars · 7 signals — *inherits* `Resource`
-- [ScenarioUnitsCatalog](../scripts/editors/services/ScenarioUnitsCatalog.md) — 7 funcs · 3 vars · 0 signals — *inherits* `RefCounted`
-- [ScenarioWeatherDialog](../scripts/editors/ScenarioWeatherDialog.md) — 4 funcs · 7 vars · 0 signals — *inherits* `Window`
+- [ScenarioUnit](../scripts/editors/ScenarioUnit.md) — 21 funcs · 14 vars · 7 signals — *inherits* `Resource`
+- [ScenarioUnitsCatalog](../scripts/editors/services/ScenarioUnitsCatalog.md) — 11 funcs · 3 vars · 0 signals — *inherits* `RefCounted`
+- [ScenarioWeatherDialog](../scripts/editors/ScenarioWeatherDialog.md) — 15 funcs · 16 vars · 0 signals — *inherits* `Window`
+- [SceneEnvironment](../scripts/sim/SceneEnvironment.md) — 2 funcs · 0 vars · 0 signals — *inherits* `Node3D`
+- [SerializeTerrain](../scripts/utils/SerializeTerrain.md) — 1 funcs · 2 vars · 0 signals — *inherits* `EditorScript`
 - [Settings](../scripts/ui/Settings.md) — 18 funcs · 18 vars · 1 signals — *inherits* `Control`
-- [SetupController](../scripts/test/SetupController.md) — 2 funcs · 5 vars · 0 signals — *inherits* `Node2D`
-- [SimDebugOverlay](../scripts/sim/SimDebugOverlay.md) — 15 funcs · 20 vars · 0 signals — *inherits* `Control`
+- [SetupController](../scripts/test/SetupController.md) — 2 funcs · 6 vars · 0 signals — *inherits* `Node2D`
+- [SimDebugOverlay](../scripts/sim/SimDebugOverlay.md) — 15 funcs · 21 vars · 0 signals — *inherits* `Control`
 - [SimEvent](../scripts/sim/SimEvent.md) — 1 funcs · 3 vars · 0 signals — *inherits* `Node`
-- [SimWorld](../scripts/sim/SimWorld.md) — 37 funcs · 20 vars · 5 signals — *inherits* `Node`
-- [SlotConfigDialog](../scripts/editors/SlotConfigDialog.md) — 7 funcs · 11 vars · 0 signals — *inherits* `Window`
+- [SimWorld](../scripts/sim/SimWorld.md) — 44 funcs · 24 vars · 5 signals — *inherits* `Node`
+- [SkyPreset](../scripts/sim/SkyPreset.md) — 0 funcs · 34 vars · 0 signals — *inherits* `Resource`
+- [SlotConfigDialog](../scripts/editors/SlotConfigDialog.md) — 7 funcs · 13 vars · 0 signals — *inherits* `Window`
 - [SlotItem](../scripts/ui/helpers/SlotItem.md) — 12 funcs · 15 vars · 2 signals — *inherits* `PanelContainer`
 - [SlotsList](../scripts/ui/helpers/SlotsList.md) — 4 funcs · 2 vars · 2 signals — *inherits* `VBoxContainer`
 - [SmokeCompile](../tools/ci/SmokeCompile.md) — 3 funcs · 4 vars · 0 signals — *inherits* `SceneTree`
-- [SpeechWordlistUpdater](../scripts/radio/SpeechWordlistUpdater.md) — 7 funcs · 3 vars · 1 signals — *inherits* `Node`
-- [STTService](../scripts/radio/STTService.md) — 14 funcs · 2 vars · 3 signals — *inherits* `Node`
+- [StampLayer](../scripts/terrain/StampLayer.md) — 7 funcs · 2 vars · 0 signals — *inherits* `Control`
+- [STTService](../scripts/radio/STTService.md) — 15 funcs · 2 vars · 3 signals — *inherits* `Node`
+- [Supply](../scripts/utils/unit_symbols/icons/Supply.md) — 5 funcs · 0 vars · 0 signals — *inherits* `BaseMilSymbolIcon`
 - [SurfaceLayer](../scripts/terrain/SurfaceLayer.md) — 30 funcs · 9 vars · 1 signals — *inherits* `Control`
+- [SymbolDrawingTool](../scripts/test/SymbolDrawingTool.md) — 20 funcs · 22 vars · 0 signals — *inherits* `Control`
 
 ## T
 
 - [TableCamera](../scripts/core/TableCamera.md) — 7 funcs · 7 vars · 0 signals — *inherits* `Node`
-- [TaskConfigDialog](../scripts/editors/TaskConfigDialog.md) — 4 funcs · 6 vars · 1 signals — *inherits* `Window`
+- [TaskConfigDialog](../scripts/editors/TaskConfigDialog.md) — 4 funcs · 8 vars · 1 signals — *inherits* `Window`
 - [TaskPlaceTool](../scripts/editors/tools/TaskPlaceTool.md) — 11 funcs · 1 vars · 0 signals — *inherits* `ScenarioToolBase`
 - [TerrainBrush](../scripts/terrain/TerrainBrush.md) — 4 funcs · 25 vars · 0 signals — *inherits* `Resource`
 - [TerrainCamera](../scripts/editors/TerrainCamera.md) — 4 funcs · 9 vars · 0 signals — *inherits* `Camera2D`
-- [TerrainData](../scripts/data/TerrainData.md) — 48 funcs · 18 vars · 5 signals — *inherits* `Resource`
+- [TerrainData](../scripts/data/TerrainData.md) — 48 funcs · 19 vars · 5 signals — *inherits* `Resource`
 - [TerrainEditor](../scripts/editors/TerrainEditor.md) — 33 funcs · 28 vars · 0 signals — *inherits* `Control`
 - [TerrainEffects](../scripts/sim/TerrainEffects.md) — 7 funcs · 13 vars · 0 signals — *inherits* `RefCounted`
 - [TerrainEffectsConfig](../scripts/sim/TerrainEffectsConfig.md) — 0 funcs · 13 vars · 0 signals — *inherits* `Resource`
@@ -159,22 +215,28 @@
 - [TerrainLineTool](../scripts/editors/tools/TerrainLineTool.md) — 22 funcs · 11 vars · 0 signals — *inherits* `TerrainToolBase`
 - [TerrainPointTool](../scripts/editors/tools/TerrainPointTool.md) — 19 funcs · 9 vars · 0 signals — *inherits* `TerrainToolBase`
 - [TerrainPolygonTool](../scripts/editors/tools/TerrainPolygonTool.md) — 21 funcs · 9 vars · 0 signals — *inherits* `TerrainToolBase`
-- [TerrainRender](../scripts/terrain/TerrainRender.md) — 25 funcs · 46 vars · 1 signals — *inherits* `Control`
+- [TerrainRender](../scripts/terrain/TerrainRender.md) — 26 funcs · 50 vars · 1 signals — *inherits* `Control`
 - [TerrainToolBase](../scripts/editors/tools/TerrainToolBase.md) — 12 funcs · 9 vars · 3 signals — *inherits* `RefCounted`
-- [TriggerAPI](../scripts/sim/scenario/TriggerAPI.md) — 7 funcs · 2 vars · 0 signals — *inherits* `RefCounted`
-- [TriggerConfigDialog](../scripts/editors/TriggerConfigDialog.md) — 3 funcs · 13 vars · 1 signals — *inherits* `Window`
-- [TriggerEngine](../scripts/sim/scenario/TriggerEngine.md) — 9 funcs · 7 vars · 0 signals — *inherits* `Node`
-- [TriggerVM](../scripts/sim/scenario/TriggerVM.md) — 7 funcs · 2 vars · 0 signals — *inherits* `RefCounted`
-- [TTSService](../scripts/radio/TTSService.md) — 13 funcs · 2 vars · 3 signals — *inherits* `Node`
+- [TimerController](../scripts/core/TimerController.md) — 18 funcs · 35 vars · 0 signals — *inherits* `Node`
+- [TriggerAPI](../scripts/sim/scenario/TriggerAPI.md) — 46 funcs · 15 vars · 0 signals — *inherits* `RefCounted`
+- [TriggerConfigDialog](../scripts/editors/TriggerConfigDialog.md) — 5 funcs · 20 vars · 1 signals — *inherits* `Window`
+- [TriggerEngine](../scripts/sim/scenario/TriggerEngine.md) — 20 funcs · 13 vars · 1 signals — *inherits* `Node`
+- [TriggerVM](../scripts/sim/scenario/TriggerVM.md) — 8 funcs · 2 vars · 0 signals — *inherits* `RefCounted`
+- [TTSService](../scripts/radio/TTSService.md) — 15 funcs · 4 vars · 3 signals — *inherits* `Node`
 - [TTSTest](../scripts/test/TTSTest.md) — 3 funcs · 4 vars · 0 signals — *inherits* `Control`
 
 ## U
 
+- [UnitAutoResponses](../scripts/radio/UnitAutoResponses.md) — 25 funcs · 21 vars · 1 signals — *inherits* `Node`
 - [UnitBaseTask](../scripts/editors/tasks/UnitBaseTask.md) — 2 funcs · 5 vars · 0 signals — *inherits* `Resource`
 - [UnitCard](../scripts/ui/helpers/UnitCard.md) — 10 funcs · 12 vars · 1 signals — *inherits* `PanelContainer`
 - [UnitCategoryData](../scripts/data/UnitCategoryData.md) — 2 funcs · 3 vars · 0 signals — *inherits* `Resource`
-- [UnitConfigDialog](../scripts/editors/UnitConfigDialog.md) — 3 funcs · 8 vars · 0 signals — *inherits* `Window`
-- [UnitData](../scripts/data/UnitData.md) — 2 funcs · 33 vars · 0 signals — *inherits* `Resource`
+- [UnitConfigDialog](../scripts/editors/UnitConfigDialog.md) — 3 funcs · 10 vars · 0 signals — *inherits* `Window`
+- [UnitCounter](../scripts/sim/UnitCounter.md) — 6 funcs · 9 vars · 0 signals — *inherits* `Node3D`
+- [UnitCounterController](../scripts/sim/UnitCounterController.md) — 5 funcs · 8 vars · 0 signals — *inherits* `Node`
+- [UnitCreateDialog](../scripts/editors/UnitCreateDialog.md) — 32 funcs · 45 vars · 2 signals — *inherits* `Window`
+- [UnitData](../scripts/data/UnitData.md) — 5 funcs · 37 vars · 1 signals — *inherits* `Resource`
+- [UnitDDItemList](../scripts/editors/helpers/UnitDDItemList.md) — 4 funcs · 3 vars · 0 signals — *inherits* `ItemList`
 - [UnitFuelState](../scripts/data/UnitFuelState.md) — 1 funcs · 6 vars · 0 signals — *inherits* `Resource`
 - [UnitMarkers](../scripts/ui/UnitMarkers.md) — 0 funcs · 0 vars · 0 signals — *inherits* `Node`
 - [UnitMgmt](../scripts/ui/UnitMgmt.md) — 10 funcs · 5 vars · 1 signals — *inherits* `Control`
@@ -188,3 +250,4 @@
 - [UnitTaskSetBehaviour](../scripts/editors/tasks/UnitTaskSetBehaviour.md) — 1 funcs · 1 vars · 0 signals — *inherits* `UnitBaseTask`
 - [UnitTaskSetCombatMode](../scripts/editors/tasks/UnitTaskSetCombatMode.md) — 1 funcs · 1 vars · 0 signals — *inherits* `UnitBaseTask`
 - [UnitTaskWait](../scripts/editors/tasks/UnitTaskWait.md) — 1 funcs · 2 vars · 0 signals — *inherits* `UnitBaseTask`
+- [UnitVoiceResponses](../scripts/radio/UnitVoiceResponses.md) — 12 funcs · 4 vars · 1 signals — *inherits* `Node`

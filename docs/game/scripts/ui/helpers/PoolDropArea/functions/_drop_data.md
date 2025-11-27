@@ -15,7 +15,7 @@ func _drop_data(_at_position: Vector2, data: Variant) -> void
 func _drop_data(_at_position: Vector2, data: Variant) -> void:
 	if not _can_drop_data(_at_position, data):
 		return
-	var unit: Dictionary = data.get("unit", {})
+	var unit: UnitData = data.get("unit", {})
 	var slot_id := String(data.get("slot_id", ""))
 	emit_signal("request_return_to_pool", slot_id, unit)
 ```

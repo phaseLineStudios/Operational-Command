@@ -1,6 +1,6 @@
 # NARules::get_parser_tables Function Reference
 
-*Defined at:* `scripts/radio/NARules.gd` (lines 9–170)</br>
+*Defined at:* `scripts/radio/NARules.gd` (lines 35–209)</br>
 *Belongs to:* [NARules](../../NARules.md)
 
 **Signature**
@@ -17,7 +17,7 @@ Build and return the parser table
 
 ```gdscript
 func get_parser_tables() -> Dictionary:
-	return {
+	var base_tables := {
 		"callsigns":
 		{
 			"alpha": "ALPHA",
@@ -69,9 +69,14 @@ func get_parser_tables() -> Dictionary:
 			"suppress": OrdersParser.OrderType.FIRE,
 			"shell": OrdersParser.OrderType.FIRE,
 			"report": OrdersParser.OrderType.REPORT,
-			"status": OrdersParser.OrderType.REPORT,
+			"sitrep": OrdersParser.OrderType.REPORT,
 			"cancel": OrdersParser.OrderType.CANCEL,
-			"abort": OrdersParser.OrderType.CANCEL
+			"abort": OrdersParser.OrderType.CANCEL,
+			"lay": OrdersParser.OrderType.ENGINEER,
+			"place": OrdersParser.OrderType.ENGINEER,
+			"build": OrdersParser.OrderType.ENGINEER,
+			"construct": OrdersParser.OrderType.ENGINEER,
+			"engineer": OrdersParser.OrderType.ENGINEER
 		},
 		"directions":
 		{
@@ -176,4 +181,12 @@ func get_parser_tables() -> Dictionary:
 			"rounds": "rounds"
 		}
 	}
+
+	# Merge mission overrides if present
+	if _mission_overrides.has("custom_actions"):
+		var custom_actions: Dictionary = _mission_overrides["custom_actions"]
+		for key in custom_actions.keys():
+			base_tables["action_synonyms"][key] = custom_actions[key]
+
+	return base_tables
 ```

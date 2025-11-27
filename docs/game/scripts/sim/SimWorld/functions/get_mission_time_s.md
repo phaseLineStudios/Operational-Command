@@ -1,6 +1,6 @@
 # SimWorld::get_mission_time_s Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 380–383)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 537–540)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

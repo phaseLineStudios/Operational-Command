@@ -1,6 +1,6 @@
 # MovementAdapter::_resolve_label_to_pos Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 107–127)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 169–189)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

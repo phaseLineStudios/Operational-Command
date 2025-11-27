@@ -1,6 +1,6 @@
 # SimWorld::bind_radio Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 334–347)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 467–487)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -31,4 +31,11 @@ func bind_radio(radio: Radio, parser: Node) -> void:
 		)
 	):
 		parser.parse_error.connect(func(msg): emit_signal("radio_message", "error", msg))
+
+	# Bind radio to trigger engine for raw command matching
+	if trigger_engine and radio:
+		trigger_engine.bind_radio(radio)
+		# Also listen for custom commands with trigger IDs
+		if not radio.radio_raw_command.is_connected(_on_radio_command_for_triggers):
+			radio.radio_raw_command.connect(_on_radio_command_for_triggers)
 ```

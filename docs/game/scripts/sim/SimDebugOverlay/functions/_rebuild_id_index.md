@@ -1,6 +1,6 @@
 # SimDebugOverlay::_rebuild_id_index Function Reference
 
-*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 145–157)</br>
+*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 158–170)</br>
 *Belongs to:* [SimDebugOverlay](../../SimDebugOverlay.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # ScenarioData::deserialize Function Reference
 
-*Defined at:* `scripts/data/ScenarioData.gd` (lines 132–214)</br>
+*Defined at:* `scripts/data/ScenarioData.gd` (lines 147–243)</br>
 *Belongs to:* [ScenarioData](../../ScenarioData.md)
 
 **Signature**
@@ -26,11 +26,9 @@ static func deserialize(json: Variant) -> ScenarioData:
 	s.description = json.get("description", s.description)
 	s.preview_path = json.get("preview_path", s.preview_path)
 
-	var terr_path: Variant = json.get("terrain_path", null)
-	if typeof(terr_path) == TYPE_STRING and terr_path != "":
-		var terr: Variant = ContentDB.load_res(String(terr_path))
-		if terr is TerrainData:
-			s.terrain = terr
+	var terr_id: Variant = json.get("terrain_id", null)
+	if typeof(terr_id) == TYPE_STRING and terr_id != "":
+		s.terrain = ContentDB.get_terrain(terr_id)
 
 	var brief_val: Variant = json.get("briefing", null)
 	if brief_val != null:
@@ -89,7 +87,23 @@ static func deserialize(json: Variant) -> ScenarioData:
 				scenario_tasks.append(ScenarioTask.deserialize(task))
 			s.tasks = scenario_tasks
 
-		s.drawings = content.get("drawings", s.drawings)
+		var placed_drawings: Array = content.get("drawings", [])
+		if typeof(placed_drawings) == TYPE_ARRAY:
+			var out: Array = []
+			for raw in placed_drawings:
+				var d := ScenarioDrawing.deserialize(raw)
+				if d != null:
+					out.append(d)
+			s.drawings = out
+
+		var placed_custom_commands: Array = content.get("custom_commands", [])
+		if typeof(placed_custom_commands) == TYPE_ARRAY:
+			var cmds: Array[CustomCommand] = []
+			for raw in placed_custom_commands:
+				var cmd := CustomCommand.deserialize(raw)
+				if cmd != null:
+					cmds.append(cmd)
+			s.custom_commands = cmds
 
 	if typeof(s.preview_path) == TYPE_STRING and s.preview_path != "":
 		var tex := load(s.preview_path)

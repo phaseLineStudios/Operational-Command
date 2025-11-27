@@ -1,6 +1,6 @@
 # ScenarioUnitsCatalog::_setup_tree Function Reference
 
-*Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 52–59)</br>
+*Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 53–60)</br>
 *Belongs to:* [ScenarioUnitsCatalog](../../ScenarioUnitsCatalog.md)
 
 **Signature**

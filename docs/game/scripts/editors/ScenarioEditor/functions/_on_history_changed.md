@@ -1,6 +1,6 @@
 # ScenarioEditor::_on_history_changed Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 773–797)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 436–461)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
@@ -39,4 +39,5 @@ func _on_history_changed(past: Array, future: Array) -> void:
 		row2.add_child(txt2)
 		history_list.add_child(row2)
 	units._refresh(ctx)
+	ctx.request_overlay_redraw()
 ```

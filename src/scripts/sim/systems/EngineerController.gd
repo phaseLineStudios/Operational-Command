@@ -30,7 +30,7 @@ enum TaskType { LAY_MINE, DEMO, BUILD_BRIDGE }
 ## TerrainRender reference.
 @export var terrain_renderer: TerrainRender
 
-var _units: Dictionary = {}
+var _units: Dictionary = {}  ## unit_id -> ScenarioUnit
 var _positions: Dictionary = {}
 var _engineer_units: Dictionary = {}
 var _active_tasks: Array[EngineerTask] = []
@@ -43,10 +43,10 @@ func _ready() -> void:
 
 ## Register a unit and check if it's engineer-capable.
 ## [param unit_id] The ScenarioUnit ID (with SLOT suffix if applicable).
-## [param u] The UnitData to register.
-func register_unit(unit_id: String, u: UnitData) -> void:
-	_units[unit_id] = u
-	var is_eng: bool = _is_engineer_unit(u)
+## [param su] The ScenarioUnit to register.
+func register_unit(unit_id: String, su: ScenarioUnit) -> void:
+	_units[unit_id] = su
+	var is_eng: bool = _is_engineer_unit(su)
 	_engineer_units[unit_id] = is_eng
 
 
@@ -78,17 +78,17 @@ func is_engineer_unit(unit_id: String) -> bool:
 
 ## Get available engineer ammunition types for a unit
 func get_available_engineer_ammo(unit_id: String) -> Array[String]:
-	var u: UnitData = _units.get(unit_id)
-	if not u:
+	var su: ScenarioUnit = _units.get(unit_id)
+	if not su:
 		return []
 
 	var types: Array[String] = []
 
-	if u.state_ammunition.get("ENGINEER_MINE", 0) > 0:
+	if su.state_ammunition.get("ENGINEER_MINE", 0) > 0:
 		types.append("ENGINEER_MINE")
-	if u.state_ammunition.get("ENGINEER_DEMO", 0) > 0:
+	if su.state_ammunition.get("ENGINEER_DEMO", 0) > 0:
 		types.append("ENGINEER_DEMO")
-	if u.state_ammunition.get("ENGINEER_BRIDGE", 0) > 0:
+	if su.state_ammunition.get("ENGINEER_BRIDGE", 0) > 0:
 		types.append("ENGINEER_BRIDGE")
 
 	return types
@@ -97,8 +97,8 @@ func get_available_engineer_ammo(unit_id: String) -> Array[String]:
 ## Request an engineer task
 ## Returns true if accepted, false if unable to comply
 func request_task(unit_id: String, task_type: String, target_pos: Vector2) -> bool:
-	var u: UnitData = _units.get(unit_id)
-	if not u:
+	var su: ScenarioUnit = _units.get(unit_id)
+	if not su:
 		LogService.warning("Engineer task failed: unit not found", "EngineerController")
 		return false
 
@@ -122,15 +122,15 @@ func request_task(unit_id: String, task_type: String, target_pos: Vector2) -> bo
 			LogService.warning("Engineer task failed: unknown task type", "EngineerController")
 			return false
 
-	var current_ammo: int = u.state_ammunition.get(ammo_type, 0)
+	var current_ammo: int = su.state_ammunition.get(ammo_type, 0)
 	if current_ammo < 1:
 		LogService.warning("Engineer task failed: no %s ammo" % ammo_type, "EngineerController")
 		return false
 
 	if _ammo_system:
-		if not _ammo_system.consume(u.id, ammo_type, 1):
+		if not _ammo_system.consume(su.unit.id, ammo_type, 1):
 			LogService.warning(
-				"Engineer task ammo consumption failed for %s" % u.id, "EngineerController"
+				"Engineer task ammo consumption failed for %s" % su.unit.id, "EngineerController"
 			)
 			return false
 
@@ -426,12 +426,12 @@ func _rebuild_pathfinding() -> void:
 
 
 ## Check if unit has engineer ammunition
-func _is_engineer_unit(u: UnitData) -> bool:
-	if u.state_ammunition.get("ENGINEER_MINE", 0) > 0:
+func _is_engineer_unit(su: ScenarioUnit) -> bool:
+	if su.state_ammunition.get("ENGINEER_MINE", 0) > 0:
 		return true
-	if u.state_ammunition.get("ENGINEER_DEMO", 0) > 0:
+	if su.state_ammunition.get("ENGINEER_DEMO", 0) > 0:
 		return true
-	if u.state_ammunition.get("ENGINEER_BRIDGE", 0) > 0:
+	if su.state_ammunition.get("ENGINEER_BRIDGE", 0) > 0:
 		return true
 
 	return false

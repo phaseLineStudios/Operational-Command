@@ -1,6 +1,6 @@
 # TerrainLineTool::build_hint_ui Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 141–150)</br>
+*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 142–151)</br>
 *Belongs to:* [TerrainLineTool](../../TerrainLineTool.md)
 
 **Signature**

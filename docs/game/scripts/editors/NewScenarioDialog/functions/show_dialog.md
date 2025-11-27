@@ -1,6 +1,6 @@
 # NewScenarioDialog::show_dialog Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 149–163)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 182–198)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**
@@ -18,7 +18,7 @@ Show/hide dialog.
 ```gdscript
 func show_dialog(state: bool, existing: ScenarioData = null) -> void:
 	if not state:
-		visible = false
+		hide()
 		_reset_values()
 		return
 
@@ -30,5 +30,5 @@ func show_dialog(state: bool, existing: ScenarioData = null) -> void:
 		dialog_mode = DialogMode.CREATE
 
 	_title_button_from_mode()
-	visible = true
+	popup_centered_ratio(0.55)
 ```

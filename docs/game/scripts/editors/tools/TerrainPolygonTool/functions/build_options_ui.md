@@ -1,6 +1,6 @@
 # TerrainPolygonTool::build_options_ui Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 39–71)</br>
+*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 40–72)</br>
 *Belongs to:* [TerrainPolygonTool](../../TerrainPolygonTool.md)
 
 **Signature**

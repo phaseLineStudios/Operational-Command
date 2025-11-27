@@ -24,6 +24,8 @@ extends Window
 - `ScenarioTask instance`
 - `ScenarioTask _before`
 - `VBoxContainer form`
+- `SpinBox pos_x_in`
+- `SpinBox pos_y_in`
 - `Button save_btn`
 - `Button close_btn`
 
@@ -81,6 +83,18 @@ var _before: ScenarioTask
 
 ```gdscript
 var form: VBoxContainer
+```
+
+### pos_x_in
+
+```gdscript
+var pos_x_in: SpinBox
+```
+
+### pos_y_in
+
+```gdscript
+var pos_y_in: SpinBox
 ```
 
 ### save_btn

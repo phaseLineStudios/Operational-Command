@@ -90,10 +90,10 @@ border_color = Color(0.22352941, 0.25490198, 0.27058825, 1)
 corner_detail = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rk4ed"]
-content_margin_left = 10.0
-content_margin_top = 4.0
-content_margin_right = 10.0
-content_margin_bottom = 4.0
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
 bg_color = Color(0.07450981, 0.09019608, 0.105882354, 0.6)
 border_width_left = 1
 border_width_top = 1
@@ -195,6 +195,8 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="LeftTray" type="PanelContainer" parent="OCMenuContainer/VBoxContainer/Main"]
+clip_contents = true
+custom_minimum_size = Vector2(315, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.6
@@ -324,12 +326,17 @@ script = ExtResource("4_lkfvs")
 slot_item_scene = ExtResource("6_qiiyt")
 
 [node name="RightTray" type="PanelContainer" parent="OCMenuContainer/VBoxContainer/Main"]
+clip_contents = true
+custom_minimum_size = Vector2(315, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.6
 theme_override_styles/panel = SubResource("StyleBoxFlat_g1oib")
 
-[node name="Stats" type="TabContainer" parent="OCMenuContainer/VBoxContainer/Main/RightTray"]
+[node name="VBox" type="VBoxContainer" parent="OCMenuContainer/VBoxContainer/Main/RightTray"]
+layout_mode = 2
+
+[node name="Stats" type="TabContainer" parent="OCMenuContainer/VBoxContainer/Main/RightTray/VBox"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -339,27 +346,37 @@ theme_override_styles/tab_selected = SubResource("StyleBoxFlat_ptsig")
 theme_override_styles/tab_focus = SubResource("StyleBoxFlat_ptsig")
 current_tab = 0
 
-[node name="Logistics" type="VBoxContainer" parent="OCMenuContainer/VBoxContainer/Main/RightTray/Stats"]
+[node name="Supply" type="VBoxContainer" parent="OCMenuContainer/VBoxContainer/Main/RightTray/VBox/Stats"]
+unique_name_in_owner = true
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="Ammo" type="Label" parent="OCMenuContainer/VBoxContainer/Main/RightTray/Stats/Logistics"]
+[node name="Replacements" type="VBoxContainer" parent="OCMenuContainer/VBoxContainer/Main/RightTray/VBox/Stats"]
 unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Fuel" type="Label" parent="OCMenuContainer/VBoxContainer/Main/RightTray/Stats/Logistics"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Medical" type="Label" parent="OCMenuContainer/VBoxContainer/Main/RightTray/Stats/Logistics"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Repair" type="Label" parent="OCMenuContainer/VBoxContainer/Main/RightTray/Stats/Logistics"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Replacements" type="VBoxContainer" parent="OCMenuContainer/VBoxContainer/Main/RightTray/Stats"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="OCMenuContainer/VBoxContainer/Main/RightTray/VBox"]
+custom_minimum_size = Vector2(0, 214)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jhwvw")
+
+[node name="Logistics" type="VBoxContainer" parent="OCMenuContainer/VBoxContainer/Main/RightTray/VBox/PanelContainer"]
+layout_mode = 2
+
+[node name="Ammo" type="Label" parent="OCMenuContainer/VBoxContainer/Main/RightTray/VBox/PanelContainer/Logistics"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Fuel" type="Label" parent="OCMenuContainer/VBoxContainer/Main/RightTray/VBox/PanelContainer/Logistics"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Medical" type="Label" parent="OCMenuContainer/VBoxContainer/Main/RightTray/VBox/PanelContainer/Logistics"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Repair" type="Label" parent="OCMenuContainer/VBoxContainer/Main/RightTray/VBox/PanelContainer/Logistics"]
+unique_name_in_owner = true
+layout_mode = 2

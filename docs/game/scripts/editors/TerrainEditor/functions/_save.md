@@ -1,6 +1,6 @@
 # TerrainEditor::_save Function Reference
 
-*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 368–384)</br>
+*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 368–390)</br>
 *Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**
@@ -22,9 +22,15 @@ func _save():
 	if _current_path == "":
 		_save_as()
 		return
-	var err := ResourceSaver.save(data, _current_path)
-	if err != OK:
-		push_error("Save failed: %s" % err)
+	var srl := JSON.stringify(data.serialize())
+	var f := FileAccess.open(_current_path, FileAccess.WRITE)
+	if f == null:
+		return false
+	var ok := f.store_string(srl)
+	f.flush()
+	f.close()
+	if not ok:
+		LogService.error("Save failed", "TerrainEditor.gd:382")
 	else:
 		_saved_history_index = _current_history_index
 		_dirty = false

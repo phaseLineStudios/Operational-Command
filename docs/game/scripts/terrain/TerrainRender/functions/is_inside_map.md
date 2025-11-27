@@ -1,6 +1,6 @@
 # TerrainRender::is_inside_map Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 287–290)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 359–362)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**
@@ -17,5 +17,5 @@ API to check if position is inside map
 
 ```gdscript
 func is_inside_map(pos: Vector2) -> bool:
-	return margin.get_global_rect().has_point(pos)
+	return margin.get_rect().has_point(pos)
 ```

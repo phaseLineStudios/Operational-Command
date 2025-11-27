@@ -1,6 +1,6 @@
 # ContentDB::list_recruitable_units Function Reference
 
-*Defined at:* `scripts/core/ContentDB.gd` (lines 350–380)</br>
+*Defined at:* `scripts/core/ContentDB.gd` (lines 413–443)</br>
 *Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MovementAdapter::_norm_label Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 68–101)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 130–163)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

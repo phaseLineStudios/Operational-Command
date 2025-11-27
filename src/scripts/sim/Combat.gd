@@ -22,6 +22,9 @@ signal debug_updated(data: Dictionary)
 ## TerrainEffectConfig reference
 @export
 var terrain_config: TerrainEffectsConfig = preload("res://assets/configs/terrain_effects.tres")
+## Lookup table for ammo type damage profiles.
+@export
+var ammo_damage_config: AmmoDamageConfig = preload("res://assets/configs/ammo_damage_config.tres")
 
 @export_group("Debug")
 @export_custom(PROPERTY_HINT_GROUP_ENABLE, "Enable Debug") var debug_enabled := false
@@ -165,24 +168,30 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 
 	# --- ammo gate + penalties ---
 	# returns {allow, attack_power_mult, attack_cycle_mult, suppression_mult, ...}
-	var fire := _gate_and_consume(attacker.unit, "small_arms", 5)
+	var ammo_meta := _select_ammo_profile_for_attack(attacker, defender)
+	var fire := _gate_and_consume(
+		attacker.unit, ammo_meta.get("ammo_type", "SMALL_ARMS"), int(ammo_meta.get("rounds", 5))
+	)
 	if not bool(fire.get("allow", true)):
 		LogService.info("%s cannot fire: out of ammo" % attacker.unit.id, "Combat")
 		return 0.0
 
-	# --- base strengths ---
-	var atk_str: float = max(0.0, attacker.unit.state_strength)
-	var def_str: float = max(0.0, defender.unit.state_strength)
-	var base_attack: float = atk_str * attacker.unit.morale * attacker.unit.attack
-	var base_defense: float = def_str * defender.unit.morale * defender.unit.defense
+	# --- base strengths via equipment-aware helpers ---
+	var dynamic_attack: float = _compute_dynamic_attack_power(attacker)
+	if dynamic_attack <= 0.0:
+		return 0.0
+	var defensepower: float = _compute_dynamic_defense_value(defender)
+	var def_str: float = max(0.0, defender.state_strength)
 
 	# --- apply terrain multipliers ---
 	var dmg_mul: float = float(f.get("damage_mul", 1.0))
-	var attackpower: float = base_attack * acc_mul * dmg_mul
-	var defensepower: float = base_defense
+	var attackpower: float = dynamic_attack * acc_mul * dmg_mul
 
 	# --- apply ammo penalties ---
 	attackpower *= float(fire.get("attack_power_mult", 1.0))
+
+	# --- defense mitigation ---
+	var mitigated_attack: float = _apply_defense_modifier_to_damage(attackpower, defensepower)
 
 	# --- apply ROF penalty as delay until next allowed shot ---
 	var cycle_mult := float(fire.get("attack_cycle_mult", 1.0))
@@ -194,18 +203,18 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 	# _apply_suppression(attacker, defender, sup_mult)
 
 	# --- outcome ---
-	if attackpower - defensepower > 0.0:
-		var denom: float = max(def_str, 1.0)
-		var raw_loss: int = int(floor((attackpower - defensepower) * 0.1 / denom))
-		var applied := _apply_casualties(defender.unit, max(raw_loss, 1))
-		if defender.unit.morale > 0.0 and applied > 0:
-			defender.unit.morale = max(0.0, defender.unit.morale - 0.05)
-		return raw_loss
-	else:
-		var applied2 := _apply_casualties(defender.unit, 1)
-		if attacker.unit.morale > 0.0 and applied2 == 0:
-			attacker.unit.morale = max(0.0, attacker.unit.morale - 0.02)
-		return 1.0
+	var denom: float = max(def_str, 1.0)
+	var raw_loss: int = int(floor(mitigated_attack * 0.1 / denom))
+	if raw_loss <= 0:
+		raw_loss = 1
+	var applied := _apply_casualties(defender, raw_loss)
+	if defender.unit.morale > 0.0 and applied > 0:
+		defender.unit.morale = max(0.0, defender.unit.morale - 0.05)
+	elif attacker.unit.morale > 0.0 and applied <= 0:
+		attacker.unit.morale = max(0.0, attacker.unit.morale - 0.02)
+
+	_apply_vehicle_damage_resolution(attacker, defender, mitigated_attack)
+	return raw_loss
 
 
 ## Check the various conditions for if the combat is finished
@@ -213,7 +222,7 @@ func check_abort_condition(attacker: ScenarioUnit, defender: ScenarioUnit) -> vo
 	if defender == null or defender.unit == null or attacker == null or attacker.unit == null:
 		return
 
-	if defender.unit.strength / defender.unit.state_strength <= 0.5:
+	if defender.unit.strength / defender.state_strength <= 0.5:
 		LogService.info(defender.unit.id + " is [b]destroyed[/b]", "Combat.gd:62")
 		if attacker.unit.morale <= 0.8:
 			attacker._morale_sys.apply_morale_delta(0.2, "enemy surrendered")
@@ -268,6 +277,17 @@ func print_unit_status(attacker: UnitData, defender: UnitData) -> void:
 ## - If `CombatAdapter.request_fire_with_penalty()` exists → use it.
 ## - Else fall back to `request_fire()` and map to a neutral response.
 func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> Dictionary:
+	if ammo_type == "" or rounds <= 0:
+		return {
+			"allow": true,
+			"state": "virtual",
+			"attack_power_mult": 1.0,
+			"attack_cycle_mult": 1.0,
+			"suppression_mult": 1.0,
+			"morale_delta": 0,
+			"ai_recommendation": "normal",
+		}
+
 	if combat_adapter == null:
 		return {
 			"allow": true,
@@ -297,26 +317,26 @@ func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> Di
 
 
 ## Apply casualties to runtime state. Returns actual KIA + WIA applied
-func _apply_casualties(u: UnitData, raw_losses: int) -> int:
-	if u == null or raw_losses <= 0:
+func _apply_casualties(su: ScenarioUnit, raw_losses: int) -> int:
+	if su == null or su.unit == null or raw_losses <= 0:
 		return 0
-	var before := int(round(u.state_strength))
+	var before := int(round(su.state_strength))
 	var loss: int = clamp(raw_losses, 0, before)
-	u.state_strength = float(before - loss)
+	su.state_strength = float(before - loss)
 
 	# Record for debrief summary (does NOT re-apply at debrief unless change policy)
 	var game := get_tree().get_root().get_node_or_null("/root/Game")
 	if game and game.has_node("resolution"):
-		game.resolution.add_unit_losses(u.id, loss)
+		game.resolution.add_unit_losses(su.unit.id, loss)
 
 	var wia_ratio := 0.6
-	u.state_injured = max(0.0, u.state_injured + float(round(loss * wia_ratio)))
+	su.state_injured = max(0.0, su.state_injured + float(round(loss * wia_ratio)))
 
 	var coh_per_cas := 0.01
-	u.cohesion = clamp(u.cohesion - float(loss) * coh_per_cas, 0.0, 1.0)
+	su.cohesion = clamp(su.cohesion - float(loss) * coh_per_cas, 0.0, 1.0)
 
 	var eqp_per_cas := 0.01
-	u.state_equipment = max(0.0, u.state_equipment - float(loss) * eqp_per_cas)
+	su.state_equipment = max(0.0, su.state_equipment - float(loss) * eqp_per_cas)
 	return loss
 
 
@@ -348,27 +368,20 @@ func _emit_debug_snapshot(
 
 	var atk_str: float = max(
 		0.0,
-		(
-			attacker.unit.state_strength
-			if attacker.unit.state_strength > 0.0
-			else float(attacker.unit.strength)
-		)
+		attacker.state_strength if attacker.state_strength > 0.0 else float(attacker.unit.strength)
 	)
 	var def_str: float = max(
 		0.0,
-		(
-			defender.unit.state_strength
-			if defender.unit.state_strength > 0.0
-			else float(defender.unit.strength)
-		)
+		defender.state_strength if defender.state_strength > 0.0 else float(defender.unit.strength)
 	)
 
-	var base_attack := atk_str * attacker.unit.morale * attacker.unit.attack
-	var base_defense := def_str * defender.unit.morale * defender.unit.defense
+	var base_attack := _compute_dynamic_attack_power(attacker)
+	var base_defense := _compute_dynamic_defense_value(defender)
 	var attackpower := (
 		base_attack * float(f.get("accuracy_mul", 1.0)) * float(f.get("damage_mul", 1.0))
 	)
 	var defensepower := base_defense
+	var mitigated_power := _apply_defense_modifier_to_damage(attackpower, defensepower)
 
 	var dbg := {
 		"time_s": float(Time.get_ticks_msec()) * 0.001,
@@ -389,8 +402,8 @@ func _emit_debug_snapshot(
 			"pos_m": attacker.position_m,
 			"morale": attacker.unit.morale,
 			"strength": atk_str,
-			"cohesion": attacker.unit.cohesion,
-			"equip": attacker.unit.state_equipment,
+			"cohesion": attacker.cohesion,
+			"equip": attacker.state_equipment,
 			"moving": bool(env.get("attacker_moving", false))
 		},
 		"defender":
@@ -400,10 +413,11 @@ func _emit_debug_snapshot(
 			"pos_m": defender.position_m,
 			"morale": defender.unit.morale,
 			"strength": def_str,
-			"cohesion": defender.unit.cohesion,
-			"equip": defender.unit.state_equipment
+			"cohesion": defender.cohesion,
+			"equip": defender.state_equipment
 		},
-		"components": f.get("debug", {})
+		"components": f.get("debug", {}),
+		"mitigated_attack": mitigated_power
 	}
 
 	if debug_log_console:
@@ -455,3 +469,170 @@ func _set_debug_rate() -> void:
 func set_debug_enabled(v: bool) -> void:
 	debug_enabled = v
 	_set_debug_rate()
+
+
+## Computes the effective attack value for an attacker using equipment + ammo state.
+func _compute_dynamic_attack_power(attacker: ScenarioUnit) -> float:
+	if attacker == null or attacker.unit == null:
+		return 0.0
+
+	var unit: UnitData = attacker.unit
+	var base_attack: float = float(unit.attack)
+	if unit.has_method("compute_attack_power"):
+		base_attack = float(unit.compute_attack_power(ammo_damage_config))
+	base_attack = max(base_attack, 0.0)
+
+	var morale_factor: float = clamp(unit.morale, 0.1, 1.25)
+	var cohesion_factor: float = lerp(0.35, 1.0, clamp(attacker.cohesion, 0.0, 1.0))
+	var equipment_factor: float = lerp(0.4, 1.0, clamp(attacker.state_equipment, 0.0, 1.0))
+	var movement_factor: float = 1.0
+	if attacker.move_state() == ScenarioUnit.MoveState.MOVING:
+		movement_factor = 0.9
+
+	return base_attack * morale_factor * cohesion_factor * equipment_factor * movement_factor
+
+
+## Computes the defender's mitigation modifier that scales incoming damage.
+func _compute_dynamic_defense_value(defender: ScenarioUnit) -> float:
+	if defender == null or defender.unit == null:
+		return 0.0
+
+	var unit: UnitData = defender.unit
+	var base_defense: float = max(unit.defense, 0.0)
+	var morale_factor: float = lerp(0.4, 1.0, clamp(unit.morale, 0.0, 1.0))
+	var cohesion_factor: float = lerp(0.4, 1.0, clamp(defender.cohesion, 0.0, 1.0))
+	var equipment_factor: float = lerp(0.35, 1.0, clamp(defender.state_equipment, 0.0, 1.0))
+	var movement_factor: float = 1.0
+	if defender.move_state() == ScenarioUnit.MoveState.MOVING:
+		movement_factor = 0.75
+
+	return base_defense * morale_factor * cohesion_factor * equipment_factor * movement_factor
+
+
+## Applies the defense modifier to the pending damage value.
+func _apply_defense_modifier_to_damage(attack_value: float, defense_value: float) -> float:
+	var atk: float = max(attack_value, 0.0)
+	if atk <= 0.0:
+		return 0.0
+	var reduction_ratio: float = 0.0
+	if defense_value > 0.0:
+		reduction_ratio = defense_value / (defense_value + atk)
+	var clamped: float = clamp(reduction_ratio, 0.0, 0.85)
+	var mitigated: float = atk * (1.0 - clamped)
+	# Always allow some minimal effect so defense never blocks 100% of the damage.
+	return max(mitigated, atk * 0.05)
+
+
+## Returns true when the attacker has the means to harm armored vehicles.
+func _attacker_can_damage_vehicle(attacker: ScenarioUnit) -> bool:
+	if attacker == null or attacker.unit == null:
+		return false
+	if attacker.unit.has_method("has_anti_vehicle_weapons"):
+		return attacker.unit.has_anti_vehicle_weapons()
+	return false
+
+
+## Returns true when the defender should be treated as a vehicle for damage resolution.
+func _is_vehicle_target(defender: ScenarioUnit) -> bool:
+	if defender == null or defender.unit == null:
+		return false
+	if defender.unit.has_method("is_vehicle_unit"):
+		return defender.unit.is_vehicle_unit()
+	return false
+
+
+## Applies vehicle-specific damage/destruction logic when applicable.
+func _apply_vehicle_damage_resolution(attacker: ScenarioUnit, defender: ScenarioUnit, damage_value):
+	if damage_value <= 0.0:
+		return
+	if not _is_vehicle_target(defender):
+		return
+	if not _attacker_can_damage_vehicle(attacker):
+		return
+
+	var vehicle_damage: float = damage_value
+	if ammo_damage_config and attacker and attacker.unit:
+		var weapon_ammo: Dictionary = attacker.unit.get_weapon_ammo_types()
+		var highest_profile: float = 0.0
+		for ammo_key in weapon_ammo.keys():
+			highest_profile = max(
+				highest_profile, ammo_damage_config.get_vehicle_damage_for(String(ammo_key))
+			)
+		if highest_profile > 0.0:
+			vehicle_damage *= clamp(highest_profile * 0.05, 0.25, 3.0)
+
+	var equipment_loss: float = clamp(vehicle_damage * 0.01, 0.0, 1.0)
+	defender.state_equipment = max(defender.state_equipment - equipment_loss, 0.0)
+
+	if defender.state_equipment <= 0.05:
+		var catastrophic_loss: int = int(max(1.0, floor(vehicle_damage * 0.02)))
+		_apply_casualties(defender, catastrophic_loss)
+
+
+## Picks an ammo type + round count based on the attacker's current weapon mix.
+func _select_ammo_profile_for_attack(attacker: ScenarioUnit, defender: ScenarioUnit) -> Dictionary:
+	var unit := attacker.unit
+	if unit == null:
+		return {"ammo_type": "SMALL_ARMS", "rounds": 5}
+
+	var ammo_counts: Dictionary = {}
+	if unit.has_method("get_weapon_ammo_types"):
+		ammo_counts = unit.get_weapon_ammo_types()
+
+	if ammo_counts.is_empty():
+		return {"ammo_type": "", "rounds": 0}
+
+	var prefer_anti_vehicle := _is_vehicle_target(defender)
+	var best_ammo := "SMALL_ARMS"
+	var best_score: float = -INF
+	var fallback_ammo := "SMALL_ARMS"
+	var fallback_score: float = -INF
+	for ammo_key in ammo_counts.keys():
+		var qty := int(ammo_counts.get(ammo_key, 0))
+		if qty <= 0:
+			continue
+
+		var has_stock := true
+		if attacker.state_ammunition.has(ammo_key):
+			has_stock = int(attacker.state_ammunition.get(ammo_key, 0)) > 0
+		elif attacker.state_ammunition.has(ammo_key.to_lower()):
+			has_stock = int(attacker.state_ammunition.get(ammo_key.to_lower(), 0)) > 0
+		if not has_stock:
+			continue
+
+		var anti_capable := (
+			ammo_damage_config != null and ammo_damage_config.is_anti_vehicle(String(ammo_key))
+		)
+
+		var score := float(qty)
+		if anti_capable:
+			var profile_bonus := 0.0
+			if ammo_damage_config:
+				profile_bonus = ammo_damage_config.get_vehicle_damage_for(String(ammo_key))
+			score += profile_bonus
+
+		if prefer_anti_vehicle and anti_capable:
+			if score > best_score:
+				best_score = score
+				best_ammo = String(ammo_key)
+		else:
+			if score > fallback_score:
+				fallback_score = score
+				fallback_ammo = String(ammo_key)
+
+	if prefer_anti_vehicle:
+		if best_score == -INF:
+			best_ammo = fallback_ammo
+			best_score = fallback_score
+	else:
+		best_ammo = fallback_ammo
+		best_score = fallback_score
+
+	if best_score == -INF:
+		return {"ammo_type": "", "rounds": 0}
+
+	if best_score <= 0:
+		best_score = 5
+
+	var rounds: int = clamp(int(round(best_score)), 1, 10)
+	return {"ammo_type": best_ammo, "rounds": rounds}

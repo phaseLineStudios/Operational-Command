@@ -20,5 +20,5 @@ func _emit_voice_message(msg: VoiceMessage) -> void:
 	var formatted := "%s, %s" % [msg.callsign, msg.text]
 	if TTSService:
 		TTSService.say(formatted)
-	LogService.debug("Unit voice: %s" % formatted, "UnitAutoResponses.gd")
+	unit_auto_response.emit(msg.callsign, formatted)
 ```

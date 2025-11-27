@@ -1,6 +1,6 @@
 # TriggerEngine::bind_scenario Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 35–38)</br>
+*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 50–53)</br>
 *Belongs to:* [TriggerEngine](../../TriggerEngine.md)
 
 **Signature**

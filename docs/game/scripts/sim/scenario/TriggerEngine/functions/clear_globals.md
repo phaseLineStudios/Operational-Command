@@ -1,6 +1,6 @@
 # TriggerEngine::clear_globals Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 340–343)</br>
+*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 343–346)</br>
 *Belongs to:* [TriggerEngine](../../TriggerEngine.md)
 
 **Signature**

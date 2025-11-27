@@ -1,6 +1,6 @@
 # ScenarioEditorContext::request_scene_tree_rebuild Function Reference
 
-*Defined at:* `scripts/editors/services/ScenarioEditorContext.gd` (lines 39–42)</br>
+*Defined at:* `scripts/editors/services/ScenarioEditorContext.gd` (lines 41–44)</br>
 *Belongs to:* [ScenarioEditorContext](../../ScenarioEditorContext.md)
 
 **Signature**

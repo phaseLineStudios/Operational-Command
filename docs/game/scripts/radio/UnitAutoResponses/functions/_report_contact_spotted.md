@@ -1,6 +1,6 @@
 # UnitAutoResponses::_report_contact_spotted Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 562–590)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 555–583)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

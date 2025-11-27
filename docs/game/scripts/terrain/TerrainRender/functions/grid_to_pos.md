@@ -1,6 +1,6 @@
 # TerrainRender::grid_to_pos Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 335–380)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 407–455)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**
@@ -58,6 +58,9 @@ func grid_to_pos(grid: String) -> Vector2:
 		var step := int(round(100 / pow(10.0, extra_len)))
 		x += (0 if sub_x_str.is_empty() else sub_x_str.to_int()) * step
 		y += (0 if sub_y_str.is_empty() else sub_y_str.to_int()) * step
+	else:
+		x += 50
+		y += 50
 
-	return Vector2i(x + 50, y + 50)
+	return Vector2i(x, y)
 ```

@@ -1,6 +1,6 @@
 # TerrainData::add_point Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 268–274)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 274–280)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

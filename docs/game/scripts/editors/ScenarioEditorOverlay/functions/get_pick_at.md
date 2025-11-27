@@ -1,6 +1,6 @@
 # ScenarioEditorOverlay::get_pick_at Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 107–110)</br>
+*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 112–115)</br>
 *Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**

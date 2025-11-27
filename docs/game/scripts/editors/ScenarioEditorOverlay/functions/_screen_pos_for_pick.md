@@ -1,6 +1,6 @@
 # ScenarioEditorOverlay::_screen_pos_for_pick Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 390–434)</br>
+*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 396–440)</br>
 *Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**

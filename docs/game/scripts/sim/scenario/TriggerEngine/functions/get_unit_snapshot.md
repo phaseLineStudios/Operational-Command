@@ -1,6 +1,6 @@
 # TriggerEngine::get_unit_snapshot Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 179–185)</br>
+*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 238–244)</br>
 *Belongs to:* [TriggerEngine](../../TriggerEngine.md)
 
 **Signature**

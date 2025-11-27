@@ -1,6 +1,6 @@
 # SimWorld::init_resolution Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 136–146)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 179–189)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

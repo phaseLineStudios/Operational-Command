@@ -7,30 +7,13 @@ extends Window
 ## - Log: Shows filtered log messages from LogService
 ## - General: General debug options and scene loader
 ## - Scene Options: Auto-discovered debug options from nodes in the active scene
-##
-## Debug options are automatically discovered in two ways:
-##
-## Method 1: @export variables (automatic detection)
-## - Any @export variable with "debug" in its name (e.g., @export var debug_speed: float)
-## - Any @export variable in a "Debug" category (@export_category("Debug"))
-## - Any @export variable in a "debug" group (@export_group("debug"))
-##
-## Method 2: Manual implementation (for buttons and complex cases)
-## Implement `get_debug_options()` which returns an Array of dictionaries:
-## {
-##   "name": String,        # Display name of the option
-##   "type": String,        # One of: "bool", "int", "float", "string", "enum", "button"
-##   "value": Variant,      # Current value (not used for "button" type)
-##   "callback": Callable,  # Called when value changes or button pressed
-##   "min": float,          # Optional: minimum value for int/float
-##   "max": float,          # Optional: maximum value for int/float
-##   "step": float,         # Optional: step size for int/float
-##   "options": Array,      # Optional: array of options for "enum" type
-## }
+## - Save Editor: Edit currently selected save
 
 var _log_lines: Array = []
 var _scene_options_discovered: Array = []
 var _is_scanning: bool = false
+var _save_editor: DebugMenuSaveEditor
+var _mission_editor: DebugMenuMission
 
 @onready var metrics_display: DebugMetricsDisplay = %MetricsDisplay
 @onready var metrics_visibility: OptionButton = $TabContainer/General/Column/MetricsVisibility
@@ -47,6 +30,14 @@ var _is_scanning: bool = false
 @onready var scene_options_container: GridContainer = $TabContainer/Scene/ScrollContainer/Column
 @onready var scene_options_refresh: Button = $TabContainer/Scene/RefreshRow/Refresh
 @onready var scene_options_status: Label = $TabContainer/Scene/RefreshRow/Status
+@onready var save_editor_save_name: Label = %SaveName
+@onready var save_editor_refresh: Button = %Refresh
+@onready var save_editor_content: GridContainer = %EditorContent
+@onready var save_editor_tab: VBoxContainer = %SaveEditor
+@onready var mission_status: Label = %MissionStatus
+@onready var mission_refresh: Button = %MissionRefresh
+@onready var mission_content: GridContainer = %MissionContent
+@onready var mission_tab: VBoxContainer = %Mission
 
 
 func _ready():
@@ -68,8 +59,20 @@ func _ready():
 
 	scene_options_refresh.pressed.connect(_refresh_scene_options)
 
-	# Start initial scan
+	# Initialize save editor
+	_save_editor = DebugMenuSaveEditor.new(save_editor_save_name, save_editor_content)
+	save_editor_refresh.pressed.connect(func(): _save_editor.refresh(self))
+	save_editor_tab.name = "Save Editor"
+
+	# Initialize mission editor (if Mission tab UI exists in scene)
+	if mission_status and mission_content and mission_refresh and mission_tab:
+		_mission_editor = DebugMenuMission.new(mission_status, mission_content)
+		mission_refresh.pressed.connect(func(): _mission_editor.refresh(self))
+		mission_tab.name = "Mission"
+
 	_refresh_scene_options()
+	_save_editor.refresh(self)
+	_update_mission_tab_visibility()
 
 
 ## Set visibility for metrics display
@@ -182,10 +185,8 @@ func _refresh_scene_options() -> void:
 	scene_options_status.text = "Scanning..."
 	scene_options_refresh.disabled = true
 
-	# Clear existing options
 	_clear_scene_options_ui()
 
-	# Start async scan
 	_scan_scene_for_options.call_deferred()
 
 
@@ -205,9 +206,8 @@ func _scan_scene_for_options() -> void:
 
 	var total_nodes := nodes_to_scan.size()
 	var scanned_count := 0
-	var batch_size := 50  # Process 50 nodes per frame to avoid lag
+	var batch_size := 50
 
-	# Process nodes in batches
 	while scanned_count < total_nodes:
 		var batch_end := mini(scanned_count + batch_size, total_nodes)
 
@@ -216,36 +216,29 @@ func _scan_scene_for_options() -> void:
 			if node == null or not is_instance_valid(node):
 				continue
 
-			# Skip nodes we don't want to scan
 			if _should_skip_node(node):
 				continue
 
 			var all_options: Array = []
 
-			# Method 1: Auto-detect @export variables with "debug" in name or category
 			var export_options := _extract_debug_exports(node)
 			all_options.append_array(export_options)
 
-			# Method 2: Check if node has get_debug_options method
 			if node.has_method("get_debug_options"):
 				var manual_options = node.get_debug_options()
 				if manual_options is Array:
 					all_options.append_array(manual_options)
 
-			# Only add if we actually found options
 			if all_options.size() > 0:
 				_scene_options_discovered.append({"node": node, "options": all_options})
 
 		scanned_count = batch_end
 
-		# Update status
 		var progress := float(scanned_count) / float(total_nodes) * 100.0
 		scene_options_status.text = "Scanning: %d%%" % int(progress)
 
-		# Yield to next frame
 		await get_tree().process_frame
 
-	# Build UI with discovered options
 	_build_scene_options_ui()
 
 	scene_options_status.text = (
@@ -257,24 +250,19 @@ func _scan_scene_for_options() -> void:
 
 ## Check if we should skip scanning this node
 func _should_skip_node(node: Node) -> bool:
-	# Skip the debug menu itself
 	if node == self or node == get_parent():
 		return true
 
-	# Skip Window nodes (like root window)
 	if node is Window:
 		return true
 
-	# Skip Collision nodes
 	if node is CollisionShape3D:
 		return true
 
-	# Skip common autoloads/singletons that shouldn't have debug options
 	var node_name := node.name
 	if node_name in ["Game", "ContentDB", "LogService", "Persistence", "STTService", "NARules"]:
 		return true
 
-	# Skip viewport internals
 	if node_name.begins_with("@"):
 		return true
 
@@ -283,15 +271,13 @@ func _should_skip_node(node: Node) -> bool:
 
 ## Check if we should skip this property
 func _should_skip_property(prop_name: String) -> bool:
-	# List of built-in properties that might contain "debug" but we don't want to expose
 	const SKIP_PROPERTIES := [
-		"debug_draw",  # Viewport/CanvasItem debug drawing mode
+		"debug_draw",
 		"physics_material_override",
 		"input_pickable",
 		"canvas_cull_mask",
 	]
 
-	# Also skip any property that starts with script_ or metadata_
 	if prop_name.begins_with("script_") or prop_name.begins_with("metadata_"):
 		return true
 
@@ -309,7 +295,6 @@ func _extract_debug_exports(node: Node) -> Array:
 		var prop_name: String = prop["name"]
 		var prop_usage: int = prop["usage"]
 
-		# Track categories and groups
 		if prop_usage & PROPERTY_USAGE_CATEGORY:
 			in_debug_category = prop_name.to_lower().contains("debug")
 			continue
@@ -318,15 +303,12 @@ func _extract_debug_exports(node: Node) -> Array:
 			in_debug_group = prop_name.to_lower().contains("debug")
 			continue
 
-		# Skip non-editor properties
 		if not (prop_usage & PROPERTY_USAGE_EDITOR):
 			continue
 
-		# Skip built-in properties
 		if prop_usage & PROPERTY_USAGE_CLASS_IS_BITFIELD:
 			continue
 
-		# Check if this is a debug property
 		var is_debug := false
 		if prop_name.to_lower().contains("debug"):
 			is_debug = true
@@ -336,11 +318,9 @@ func _extract_debug_exports(node: Node) -> Array:
 		if not is_debug:
 			continue
 
-		# Skip unwanted built-in properties
 		if _should_skip_property(prop_name):
 			continue
 
-		# Convert property to debug option
 		var option := _property_to_option(node, prop)
 		if option != null and not option.is_empty():
 			options.append(option)
@@ -358,24 +338,18 @@ func _get_property_doc_comment(node: Node, prop_name: String) -> String:
 	if source_code == "":
 		return ""
 
-	# Look for the property declaration
 	var lines := source_code.split("\n")
 	var doc_lines: Array[String] = []
 
 	for i in range(lines.size()):
 		var line := lines[i].strip_edges()
 
-		# Check if this line contains our exact property (not a substring)
-		# Match "var prop_name:" or "var prop_name =" or "var prop_name<space>"
 		var var_pattern := "var " + prop_name
 		if line.contains(var_pattern):
-			# Verify it's an exact match by checking what comes after the property name
 			var pos := line.find(var_pattern)
 			if pos >= 0:
 				var after_var := pos + var_pattern.length()
-				# Check if what follows is a valid separator (not part of another identifier)
 				if after_var >= line.length() or line[after_var] in [":", "=", " ", "\t"]:
-					# Look backward for doc comments (##)
 					var j := i - 1
 					var found_any_comment := false
 					var skip_empty_before_comment := true
@@ -384,24 +358,18 @@ func _get_property_doc_comment(node: Node, prop_name: String) -> String:
 						var prev_line := lines[j].strip_edges()
 
 						if prev_line.begins_with("##"):
-							# Collect comment line
 							doc_lines.push_front(prev_line.substr(2).strip_edges())
 							found_any_comment = true
 							skip_empty_before_comment = false
 							j -= 1
 
 						elif prev_line.begins_with("@export"):
-							# Skip over export annotations (only before finding comments)
 							if not found_any_comment:
 								j -= 1
 							else:
-								# Stop - we've gone past the comment block
 								break
 
 						elif prev_line == "":
-							# Empty line handling:
-							# - Before finding comments: skip one empty line (between @export and ##)
-							# - After finding comments: stop (end of comment block)
 							if found_any_comment:
 								break
 							elif skip_empty_before_comment:
@@ -411,7 +379,6 @@ func _get_property_doc_comment(node: Node, prop_name: String) -> String:
 								break
 
 						else:
-							# Hit other code, stop
 							break
 
 					break
@@ -426,13 +393,8 @@ func _property_to_option(node: Node, prop: Dictionary) -> Dictionary:
 	var prop_hint: int = prop.get("hint", 0)
 	var prop_hint_string: String = prop.get("hint_string", "")
 
-	# Get current value
 	var current_value = node.get(prop_name)
-
-	# Create pretty name (remove debug_ prefix, capitalize)
 	var display_name := prop_name.replace("debug_", "").replace("_", " ").capitalize()
-
-	# Extract doc comment for tooltip
 	var doc_comment := _get_property_doc_comment(node, prop_name)
 
 	var option := {
@@ -449,7 +411,6 @@ func _property_to_option(node: Node, prop: Dictionary) -> Dictionary:
 		TYPE_INT:
 			option["type"] = "int"
 			option["value"] = current_value
-			# Check for range hint
 			if prop_hint == PROPERTY_HINT_RANGE and prop_hint_string != "":
 				var parts := prop_hint_string.split(",")
 				if parts.size() >= 2:
@@ -457,7 +418,6 @@ func _property_to_option(node: Node, prop: Dictionary) -> Dictionary:
 					option["max"] = float(parts[1])
 					if parts.size() >= 3:
 						option["step"] = float(parts[2])
-			# Check for enum hint
 			elif prop_hint == PROPERTY_HINT_ENUM and prop_hint_string != "":
 				option["type"] = "enum"
 				option["options"] = prop_hint_string.split(",")
@@ -465,7 +425,6 @@ func _property_to_option(node: Node, prop: Dictionary) -> Dictionary:
 		TYPE_FLOAT:
 			option["type"] = "float"
 			option["value"] = current_value
-			# Check for range hint
 			if prop_hint == PROPERTY_HINT_RANGE and prop_hint_string != "":
 				var parts := prop_hint_string.split(",")
 				if parts.size() >= 2:
@@ -479,19 +438,16 @@ func _property_to_option(node: Node, prop: Dictionary) -> Dictionary:
 		TYPE_STRING:
 			option["type"] = "string"
 			option["value"] = current_value
-			# Check for enum hint
 			if prop_hint == PROPERTY_HINT_ENUM and prop_hint_string != "":
 				option["type"] = "enum"
 				option["options"] = prop_hint_string.split(",")
 
 		TYPE_VECTOR2, TYPE_VECTOR3, TYPE_COLOR:
-			# For complex types, show as string representation
 			option["type"] = "string"
 			option["value"] = str(current_value)
-			option["callback"] = func(_value): pass  # Read-only for now
+			option["callback"] = func(_value): pass
 
 		_:
-			# Unsupported type
 			return {}
 
 	return option
@@ -652,9 +608,27 @@ func _process(_dt: float) -> void:
 		if not visible:
 			popup_centered_ratio(0.5)
 			grab_focus()
+			_update_mission_tab_visibility()
+			if mission_tab.visible:
+				_mission_editor.refresh(self)
 		else:
 			hide()
 
 
 func _close():
 	hide()
+
+
+## Update Mission tab visibility based on whether HQ Table scene is active
+func _update_mission_tab_visibility() -> void:
+	if not is_inside_tree():
+		return
+
+	# Check if SimWorld exists in the scene tree (indicates HQ Table is active)
+	var root := get_tree().root
+	var sim_world := root.find_child("SimWorld", true, false)
+
+	if sim_world and mission_tab:
+		mission_tab.visible = true
+	elif mission_tab:
+		mission_tab.visible = false

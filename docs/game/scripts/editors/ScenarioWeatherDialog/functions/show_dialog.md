@@ -1,6 +1,6 @@
 # ScenarioWeatherDialog::show_dialog Function Reference
 
-*Defined at:* `scripts/editors/WeatherDialog.gd` (lines 37–45)</br>
+*Defined at:* `scripts/editors/WeatherDialog.gd` (lines 202–210)</br>
 *Belongs to:* [ScenarioWeatherDialog](../../ScenarioWeatherDialog.md)
 
 **Signature**
@@ -17,12 +17,12 @@ Show/hide dialog
 
 ```gdscript
 func show_dialog(state: bool):
-	if not editor.ctx.data:
-		LogService.warning("Must create a scenario first", "WeatherDialog.gd:35")
-		return
-
 	if state:
 		_reset_values()
-
-	visible = state
+		popup_centered()
+	else:
+		if not editor.ctx.data:
+			LogService.warning("Must create a scenario first", "WeatherDialog.gd:35")
+			return
+		hide()
 ```

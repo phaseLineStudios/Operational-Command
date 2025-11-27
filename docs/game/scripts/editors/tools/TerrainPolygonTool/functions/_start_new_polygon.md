@@ -1,6 +1,6 @@
 # TerrainPolygonTool::_start_new_polygon Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 305–326)</br>
+*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 306–327)</br>
 *Belongs to:* [TerrainPolygonTool](../../TerrainPolygonTool.md)
 
 **Signature**

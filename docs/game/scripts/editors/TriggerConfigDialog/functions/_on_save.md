@@ -1,6 +1,6 @@
 # TriggerConfigDialog::_on_save Function Reference
 
-*Defined at:* `scripts/editors/TriggerConfigDialog.gd` (lines 58–90)</br>
+*Defined at:* `scripts/editors/TriggerConfigDialog.gd` (lines 85–124)</br>
 *Belongs to:* [TriggerConfigDialog](../../TriggerConfigDialog.md)
 
 **Signature**
@@ -18,11 +18,14 @@ func _on_save() -> void:
 	var live: ScenarioTrigger = editor.ctx.data.triggers[trigger_index]
 
 	var after := live.duplicate(true)
+	after.id = trig_id.text
 	after.title = trig_title.text
+	after.area_center_m = Vector2(pos_x_in.value, pos_y_in.value)
 	after.area_shape = trig_shape.get_selected_id() as ScenarioTrigger.AreaShape
 	after.area_size_m = Vector2(trig_size_x.value, trig_size_y.value)
 	after.require_duration_s = trig_duration.value
 	after.presence = trig_presence.get_selected_id() as ScenarioTrigger.PresenceMode
+	after.run_once = run_once.button_pressed
 	after.condition_expr = trig_condition.text
 	after.on_activate_expr = trig_on_activate.text
 	after.on_deactivate_expr = trig_on_deactivate.text
@@ -33,11 +36,13 @@ func _on_save() -> void:
 			editor.ctx.data, "triggers", "id", String(live.id), _before, after, desc
 		)
 	else:
+		live.id = after.id
 		live.title = after.title
 		live.area_shape = after.area_shape
 		live.area_size_m = after.area_size_m
 		live.require_duration_s = after.require_duration_s
 		live.presence = after.presence
+		live.run_once = after.run_once
 		live.condition_expr = after.condition_expr
 		live.on_activate_expr = after.on_activate_expr
 		live.on_deactivate_expr = after.on_deactivate_expr

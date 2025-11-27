@@ -21,7 +21,6 @@ func _build_audio_ui() -> void:
 		var idx := AudioServer.get_bus_index(audio_name)
 		if idx == -1:
 			continue
-		var row := HBoxContainer.new()
 		var lab := Label.new()
 		lab.text = audio_name
 		var sli := HSlider.new()
@@ -29,15 +28,16 @@ func _build_audio_ui() -> void:
 		sli.max_value = 1.0
 		sli.step = 0.01
 		sli.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		sli.tick_count = 20
+		sli.ticks_on_borders = true
 		var val := Label.new()
 		val.text = "0%"
 		var mute := CheckBox.new()
 		mute.text = "Mute"
-		row.add_child(lab)
-		row.add_child(sli)
-		row.add_child(val)
-		row.add_child(mute)
-		_buses_list.add_child(row)
+		_buses_list.add_child(lab)
+		_buses_list.add_child(sli)
+		_buses_list.add_child(val)
+		_buses_list.add_child(mute)
 		_bus_rows[audio_name] = {"slider": sli, "label": val, "mute": mute}
 		# Live preview
 		sli.value_changed.connect(

@@ -1,6 +1,6 @@
 # MoraleSystem::safe_rest Function Reference
 
-*Defined at:* `scripts/sim/MoraleSystem.gd` (lines 114–130)</br>
+*Defined at:* `scripts/sim/MoraleSystem.gd` (lines 121–140)</br>
 *Belongs to:* [MoraleSystem](../../MoraleSystem.md)
 
 **Signature**
@@ -17,6 +17,9 @@ gains morale if no enemies nearby
 
 ```gdscript
 func safe_rest() -> void:
+	if not scenario or not scenario.units:
+		return
+
 	var min_distance = 2000
 	var safe = true
 

@@ -1,6 +1,6 @@
 # TerrainPolygonTool::_place_preview Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 103–107)</br>
+*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 104–108)</br>
 *Belongs to:* [TerrainPolygonTool](../../TerrainPolygonTool.md)
 
 **Signature**

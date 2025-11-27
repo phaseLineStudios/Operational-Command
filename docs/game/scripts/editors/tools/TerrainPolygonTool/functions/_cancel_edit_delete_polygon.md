@@ -1,6 +1,6 @@
 # TerrainPolygonTool::_cancel_edit_delete_polygon Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 328–345)</br>
+*Defined at:* `scripts/editors/tools/TerrainPolygonTool.gd` (lines 329–346)</br>
 *Belongs to:* [TerrainPolygonTool](../../TerrainPolygonTool.md)
 
 **Signature**

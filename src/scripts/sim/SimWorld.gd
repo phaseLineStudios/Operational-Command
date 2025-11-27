@@ -13,6 +13,8 @@ signal unit_updated(unit_id: String, snapshot: Dictionary)
 ## Emitted when LOS contact is reported (attacker->defender).
 signal contact_reported(attacker_id: String, defender_id: String)
 ## Emitted for radio/log feedback.
+## Levels: "debug" (internal), "info" (radio), "warn" (status), "error" (critical)
+## Only non-debug messages should appear in radio transcript.
 signal radio_message(level: String, text: String)
 ## Emitted when mission state transitions.
 signal mission_state_changed(prev: State, next: State)
@@ -162,13 +164,6 @@ func init_world(scenario: ScenarioData) -> void:
 
 	# Initialize custom commands for this mission
 	_init_custom_commands(scenario)
-
-	# Start paused so player can review before beginning
-	_transition(State.INIT, State.PAUSED)
-
-	# Set Start time
-	var start_s := scenario.second + scenario.minute * 60 + scenario.hour * 60 * 60
-	environment_controller.time_of_day = start_s
 
 
 ## Initialize mission resolution and connect state changes.
@@ -324,21 +319,35 @@ func _resolve_combat() -> void:
 			continue
 		if a.is_dead() or d.is_dead():
 			continue
-		var dmg := combat_controller.calculate_damage(a, d)
-		if dmg <= 0.0:
-			continue
-
-		emit_signal("engagement_reported", a.id, d.id)
+		var dmg: Variant = combat_controller.calculate_damage(a, d)
+		var dmg_value := 0.0
 
 		if typeof(dmg) == TYPE_DICTIONARY:
-			var f := int(d.unit.strength * d.unit.state_strength)
-			var e := int(a.unit.strength * a.unit.state_strength)
+			dmg_value = float(dmg.get("damage", 0.0))
+			var f := int(d.unit.strength * d.state_strength)
+			var e := int(a.unit.strength * a.state_strength)
 			if f != 0 or e != 0:
 				Game.resolution.add_casualties(f, e)
 
-			if bool(d.unit.state_strength == 0):
+			if bool(d.state_strength == 0):
 				if d.affiliation == ScenarioUnit.Affiliation.FRIEND:
 					Game.resolution.add_units_lost(1)
+		else:
+			dmg_value = float(dmg)
+
+		if dmg_value > 0.0:
+			emit_signal("engagement_reported", a.id, d.id, dmg_value)
+
+		# Also allow the defender to attack the attacker in the same contact tick
+		if not (a == null or d == null) and not (a.is_dead() or d.is_dead()):
+			var dmg2: Variant = combat_controller.calculate_damage(d, a)
+			var dmg_value2 := 0.0
+			if typeof(dmg2) == TYPE_DICTIONARY:
+				dmg_value2 = float(dmg2.get("damage", 0.0))
+			else:
+				dmg_value2 = float(dmg2)
+			if dmg_value2 > 0.0:
+				emit_signal("engagement_reported", d.id, a.id, dmg_value2)
 
 
 ## Ticks logistics systems and updates positions for proximity logic.
@@ -481,6 +490,15 @@ func resume() -> void:
 		_transition(_state, State.RUNNING)
 
 
+## Start simulation from INIT state.
+func start() -> void:
+	if _state == State.INIT:
+		_transition(_state, State.RUNNING)
+
+		var start_s := _scenario.second + _scenario.minute * 60 + _scenario.hour * 60 * 60
+		environment_controller.time_of_day = start_s
+
+
 ## Set simulation time scale (1.0 = normal, 2.0 = 2x speed).
 func set_time_scale(scale: float) -> void:
 	_time_scale = max(0.0, scale)
@@ -564,7 +582,7 @@ func get_rng_seed() -> int:
 func _snapshot_unit(su: ScenarioUnit) -> Dictionary:
 	if su == null:
 		return {}
-	var strength := su.unit.strength * su.unit.state_strength
+	var strength := su.unit.strength * su.state_strength
 	var destroyed := su.is_dead()
 
 	return {
@@ -712,7 +730,7 @@ func _register_logistics_units() -> void:
 
 	if ammo_system:
 		for su: ScenarioUnit in _friendlies + _enemies:
-			ammo_system.register_unit(su.unit)
+			ammo_system.register_unit(su)
 			ammo_system.set_unit_position(su.id, _v3_from_m(su.position_m))
 
 	if artillery_controller:
@@ -720,13 +738,13 @@ func _register_logistics_units() -> void:
 		if los_adapter:
 			artillery_controller.bind_los_adapter(los_adapter)
 		for su: ScenarioUnit in _friendlies + _enemies:
-			artillery_controller.register_unit(su.id, su.unit)
+			artillery_controller.register_unit(su.id, su)
 			artillery_controller.set_unit_position(su.id, su.position_m)
 
 	if engineer_controller:
 		engineer_controller.bind_ammo_system(ammo_system)
 		for su: ScenarioUnit in _friendlies + _enemies:
-			engineer_controller.register_unit(su.id, su.unit)
+			engineer_controller.register_unit(su.id, su)
 			engineer_controller.set_unit_position(su.id, su.position_m)
 
 
@@ -746,7 +764,7 @@ func _on_order_applied(order: Dictionary) -> void:
 	# (ENGINEER, FIRE have their own controller signals)
 	if order_type == OrdersParser.OrderType.ENGINEER or order_type == OrdersParser.OrderType.FIRE:
 		return
-	emit_signal("radio_message", "info", "Order applied: %s" % order.get("type", "?"))
+	emit_signal("radio_message", "debug", "Order applied: %s" % order.get("type", "?"))
 	var hr_order: String = OrdersParser.OrderType.keys()[order_type]
 	LogService.info("radio_message: %s" % {"Order applied": hr_order}, "SimWorld.gd:293")
 
@@ -755,5 +773,5 @@ func _on_order_applied(order: Dictionary) -> void:
 ## [param _order] Order dictionary (unused).
 ## [param reason] Failure reason.
 func _on_order_failed(_order: Dictionary, reason: String) -> void:
-	emit_signal("radio_message", "error", "Order failed (%s)." % reason)
+	emit_signal("radio_message", "debug", "Order failed (%s)." % reason)
 	LogService.warning("radio_message: %s" % {"Order failed": reason}, "SimWorld.gd:299")

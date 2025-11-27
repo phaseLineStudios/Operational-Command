@@ -1,6 +1,6 @@
 # TerrainLineTool::_draw Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 424–443)</br>
+*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 425–444)</br>
 *Belongs to:* [TerrainLineTool](../../TerrainLineTool.md)
 
 **Signature**

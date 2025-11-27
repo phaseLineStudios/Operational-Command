@@ -1,6 +1,6 @@
 # PickupItem::get_grab_offset Function Reference
 
-*Defined at:* `scripts/core/PickupItem.gd` (lines 44–50)</br>
+*Defined at:* `scripts/core/PickupItem.gd` (lines 53–59)</br>
 *Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**

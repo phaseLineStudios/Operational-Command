@@ -1,6 +1,6 @@
 # MoraleSystem::nearby_ally_morale_change Function Reference
 
-*Defined at:* `scripts/sim/MoraleSystem.gd` (lines 84–101)</br>
+*Defined at:* `scripts/sim/MoraleSystem.gd` (lines 88–108)</br>
 *Belongs to:* [MoraleSystem](../../MoraleSystem.md)
 
 **Signature**
@@ -17,6 +17,9 @@ applies morale boost to nearby units
 
 ```gdscript
 func nearby_ally_morale_change(amount: float = 0.0, source: String = "nearby victory") -> void:
+	if not scenario or not scenario.units:
+		return
+
 	var nearby: Array = []
 	var max_distance = 500
 

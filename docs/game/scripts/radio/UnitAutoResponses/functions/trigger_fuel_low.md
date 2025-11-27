@@ -1,6 +1,6 @@
 # UnitAutoResponses::trigger_fuel_low Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 534–537)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 527–530)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # AmmoSystem::is_low Function Reference
 
-*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 74–81)</br>
+*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 80–87)</br>
 *Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**

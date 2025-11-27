@@ -257,8 +257,24 @@ func _set_path(p: PackedVector2Array) -> void:
 
 
 func _on_grid_ready(ready_profile: int) -> void:
-	if ready_profile == profile and _moving == false and _path.size() > 0:
-		pass
+	if grid == null or ready_profile != profile:
+		return
+	if _moving or _path.is_empty():
+		return
+
+	var target := _path[_path.size() - 1]
+	if sim_pos_m.distance_to(target) <= arrival_threshold_m:
+		# Already effectively at destination; just treat as arrived.
+		_path.clear()
+		emit_signal("movement_arrived")
+		return
+
+	var replanned := grid.find_path_m(sim_pos_m, target)
+	if replanned.is_empty():
+		emit_signal("movement_blocked", "grid-rebuilt-no-path")
+		return
+
+	_set_path(replanned)
 
 
 ## Push current position into the breadcrumb list.

@@ -50,7 +50,9 @@ func _build_restart_dialog():
 
 ## Called on resume button pressed.
 func _on_resume_pressed() -> void:
+	_release_interactions()
 	menu_container.visible = false
+	visible = false
 	emit_signal("resume_requested")
 
 
@@ -93,3 +95,14 @@ func _on_main_menu_pressed() -> void:
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event.is_action("pause_menu") and event.is_pressed():
 		visible = !visible
+		if not visible:
+			menu_container.visible = true
+			_release_interactions()
+		else:
+			menu_container.visible = true
+
+
+func _release_interactions() -> void:
+	for controller in get_tree().get_nodes_in_group("interaction_controllers"):
+		if controller and controller.has_method("cancel_hold"):
+			controller.cancel_hold()

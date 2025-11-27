@@ -1,6 +1,6 @@
 # TerrainPointTool::_remove_point Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 236–247)</br>
+*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 237–248)</br>
 *Belongs to:* [TerrainPointTool](../../TerrainPointTool.md)
 
 **Signature**

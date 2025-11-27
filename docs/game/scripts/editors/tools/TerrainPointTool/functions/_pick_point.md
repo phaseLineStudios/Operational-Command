@@ -1,6 +1,6 @@
 # TerrainPointTool::_pick_point Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 248–267)</br>
+*Defined at:* `scripts/editors/tools/TerrainPointTool.gd` (lines 249–268)</br>
 *Belongs to:* [TerrainPointTool](../../TerrainPointTool.md)
 
 **Signature**

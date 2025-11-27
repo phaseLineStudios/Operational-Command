@@ -1,6 +1,6 @@
 # MovementAdapter::_on_grid_ready Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 233–252)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 318–349)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**
@@ -34,8 +34,18 @@ func _on_grid_ready(profile: int) -> void:
 			and int(su.get_meta("_pending_start_profile")) == profile
 		):
 			var dest_m: Vector2 = su.get_meta("_pending_start_dest")
-			su.erase_meta("_pending_start_profile")
-			su.erase_meta("_pending_start_dest")
-			if su.plan_move(_grid, dest_m):
+			var is_direct: bool = su.get_meta("_pending_start_direct", false)
+			su.remove_meta("_pending_start_profile")
+			su.remove_meta("_pending_start_dest")
+			su.remove_meta("_pending_start_direct")
+
+			# Use direct or normal pathfinding
+			var planned: bool = false
+			if is_direct:
+				planned = su.plan_direct_move(_grid, dest_m)
+			else:
+				planned = su.plan_move(_grid, dest_m)
+
+			if planned:
 				su.start_move(_grid)
 ```

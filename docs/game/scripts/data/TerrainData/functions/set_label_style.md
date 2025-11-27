@@ -1,6 +1,6 @@
 # TerrainData::set_label_style Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 314–321)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 320–327)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

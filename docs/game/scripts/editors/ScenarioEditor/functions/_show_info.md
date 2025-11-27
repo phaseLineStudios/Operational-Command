@@ -1,6 +1,6 @@
 # ScenarioEditor::_show_info Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 919–925)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 583–589)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

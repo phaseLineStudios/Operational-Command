@@ -1,6 +1,6 @@
 # CombatController::_apply_casualties Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 298–320)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 300–322)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**

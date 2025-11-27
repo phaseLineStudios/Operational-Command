@@ -1,6 +1,6 @@
 # SimWorld::_mission_complete_check Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 285–311)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 418–444)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

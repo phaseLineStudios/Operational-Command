@@ -1,6 +1,6 @@
 # NewScenarioDialog::_title_button_from_mode Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 139–147)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 172–180)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**

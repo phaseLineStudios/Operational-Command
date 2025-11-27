@@ -1,6 +1,6 @@
 # UnitAutoResponses::_check_movement_state Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 453–463)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 444–454)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

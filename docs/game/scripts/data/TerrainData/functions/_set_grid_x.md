@@ -1,6 +1,6 @@
 # TerrainData::_set_grid_x Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 139–143)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 145–149)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

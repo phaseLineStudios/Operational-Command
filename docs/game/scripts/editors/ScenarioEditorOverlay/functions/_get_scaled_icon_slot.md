@@ -1,6 +1,6 @@
 # ScenarioEditorOverlay::_get_scaled_icon_slot Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 589–593)</br>
+*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 663–667)</br>
 *Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**

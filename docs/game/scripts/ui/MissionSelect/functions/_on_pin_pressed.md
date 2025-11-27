@@ -1,6 +1,6 @@
 # MissionSelect::_on_pin_pressed Function Reference
 
-*Defined at:* `scripts/ui/MissionSelect.gd` (lines 212–239)</br>
+*Defined at:* `scripts/ui/MissionSelect.gd` (lines 147–164)</br>
 *Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**
@@ -27,19 +27,9 @@ func _on_pin_pressed(mission: ScenarioData, pin_btn: BaseButton) -> void:
 		"Difficulty: %s" % [ScenarioData.ScenarioDifficulty.keys()[mission.difficulty]]
 	)
 
-	_prepare_card_for_float()
-
 	_card.visible = false
 	_click_catcher.visible = false
 
-	show_pin_labels = false
-	_refresh_pin_labels()
-
-	_card.reset_size()
-	var min_size := _card.get_combined_minimum_size()
-	_card.size = min_size
-
-	_position_card_near_pin(pin_btn)
 	_card.visible = true
 	_click_catcher.visible = true
 ```

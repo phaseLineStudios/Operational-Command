@@ -1,6 +1,6 @@
 # TerrainLineTool::_find_edit_index_by_id Function Reference
 
-*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 332–341)</br>
+*Defined at:* `scripts/editors/tools/TerrainLineTool.gd` (lines 333–342)</br>
 *Belongs to:* [TerrainLineTool](../../TerrainLineTool.md)
 
 **Signature**

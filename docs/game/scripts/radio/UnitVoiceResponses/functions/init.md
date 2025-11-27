@@ -1,6 +1,6 @@
 # UnitVoiceResponses::init Function Reference
 
-*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 85–90)</br>
+*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 90–95)</br>
 *Belongs to:* [UnitVoiceResponses](../../UnitVoiceResponses.md)
 
 **Signature**

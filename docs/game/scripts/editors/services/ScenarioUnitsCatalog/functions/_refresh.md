@@ -1,6 +1,6 @@
 # ScenarioUnitsCatalog::_refresh Function Reference
 
-*Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 69–135)</br>
+*Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 70–136)</br>
 *Belongs to:* [ScenarioUnitsCatalog](../../ScenarioUnitsCatalog.md)
 
 **Signature**
@@ -72,7 +72,7 @@ func _refresh(ctx: ScenarioEditorContext) -> void:
 				as Texture2D
 			)
 		var img := icon.get_image()
-		img.resize(24, 24, Image.INTERPOLATE_LANCZOS)
+		img.resize(32, 32, Image.INTERPOLATE_LANCZOS)
 		var item := list.create_item(role_item)
 		item.set_text(0, unit.title)
 		item.set_icon(0, ImageTexture.create_from_image(img))

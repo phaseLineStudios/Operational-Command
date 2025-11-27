@@ -101,11 +101,7 @@ func _draw_unit_glyphs(su: ScenarioUnit, _idx: int) -> void:
 		if s_t == 0.0 and m_t == 0.0:
 			s_t = clamp(
 				(
-					(
-						su.unit.state_strength
-						if su.unit.state_strength > 0.0
-						else float(su.unit.strength)
-					)
+					(su.state_strength if su.state_strength > 0.0 else float(su.unit.strength))
 					/ float(max(su.unit.strength, 1))
 				),
 				0.0,

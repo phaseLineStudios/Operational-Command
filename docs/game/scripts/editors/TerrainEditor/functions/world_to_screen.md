@@ -1,6 +1,6 @@
 # TerrainEditor::world_to_screen Function Reference
 
-*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 474–477)</br>
+*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 493–496)</br>
 *Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**

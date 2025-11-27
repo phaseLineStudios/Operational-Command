@@ -1,6 +1,6 @@
 # ScenarioTrigger::serialize Function Reference
 
-*Defined at:* `scripts/editors/triggers/ScenarioTrigger.gd` (lines 52–68)</br>
+*Defined at:* `scripts/editors/triggers/ScenarioTrigger.gd` (lines 56–73)</br>
 *Belongs to:* [ScenarioTrigger](../../ScenarioTrigger.md)
 
 **Signature**
@@ -21,6 +21,7 @@ func serialize() -> Dictionary:
 		"size_m": ContentDB.v2(area_size_m),
 		"presence": int(presence),
 		"require_duration_s": require_duration_s,
+		"run_once": run_once,
 		"condition_expr": condition_expr,
 		"on_activate_expr": on_activate_expr,
 		"on_deactivate_expr": on_deactivate_expr,

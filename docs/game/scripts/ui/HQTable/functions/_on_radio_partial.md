@@ -1,6 +1,6 @@
 # HQTable::_on_radio_partial Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 265–268)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 305–308)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

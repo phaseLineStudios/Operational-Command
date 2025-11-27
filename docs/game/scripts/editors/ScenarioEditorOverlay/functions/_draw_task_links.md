@@ -1,6 +1,6 @@
 # ScenarioEditorOverlay::_draw_task_links Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 257–295)</br>
+*Defined at:* `scripts/editors/ScenarioEditorOverlay.gd` (lines 263–301)</br>
 *Belongs to:* [ScenarioEditorOverlay](../../ScenarioEditorOverlay.md)
 
 **Signature**

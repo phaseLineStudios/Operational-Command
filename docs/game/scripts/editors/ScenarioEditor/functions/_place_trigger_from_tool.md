@@ -1,6 +1,6 @@
 # ScenarioEditor::_place_trigger_from_tool Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 323–337)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 267–281)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
@@ -20,7 +20,7 @@ func _place_trigger_from_tool(inst: ScenarioTrigger, pos_m: Vector2) -> void:
 	if ctx.data == null:
 		push_warning("No active scenario")
 		return
-	inst.id = _generate_trigger_id()
+	inst.id = id_gen.generate_trigger_id()
 	inst.area_center_m = pos_m
 	if inst.title.strip_edges() == "":
 		inst.title = inst.id

@@ -31,6 +31,7 @@ tactical map → debrief → unit management.
 - [`func start_scenario(prim: Array[String]) -> void`](Game/functions/start_scenario.md) — Start mission
 - [`func update_loop(dt: float) -> void`](Game/functions/update_loop.md) — Call from mission tick.
 - [`func complete_objective(id: StringName) -> void`](Game/functions/complete_objective.md) — Complete objective
+- [`func set_objective_state(id: StringName, state: MissionResolution.ObjectiveState) -> void`](Game/functions/set_objective_state.md) — Set objective state wrapper
 - [`func fail_objective(id: StringName) -> void`](Game/functions/fail_objective.md) — Fail objective
 - [`func record_casualties(fr: int, en: int) -> void`](Game/functions/record_casualties.md) — Record casualties
 - [`func record_unit_lost(count: int = 1) -> void`](Game/functions/record_unit_lost.md) — record lost units
@@ -136,6 +137,14 @@ func complete_objective(id: StringName) -> void
 ```
 
 Complete objective
+
+### set_objective_state
+
+```gdscript
+func set_objective_state(id: StringName, state: MissionResolution.ObjectiveState) -> void
+```
+
+Set objective state wrapper
 
 ### fail_objective
 

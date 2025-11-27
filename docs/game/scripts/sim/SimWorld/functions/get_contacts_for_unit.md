@@ -1,6 +1,6 @@
 # SimWorld::get_contacts_for_unit Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 374–384)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 390–400)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

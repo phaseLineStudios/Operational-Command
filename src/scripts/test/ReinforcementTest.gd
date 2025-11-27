@@ -17,6 +17,8 @@ const RUN_CASUALTY_TEST := true  # exercise MissionResolution.apply_casualties_t
 var _units: Array[UnitData] = []
 var _panel: ReinforcementPanel
 var _pool: int = START_POOL
+## Temporary: tracks current strength per unit for testing
+var _unit_strength: Dictionary[String, float] = {}
 
 # Baseline snapshot taken AFTER initial setup
 var _baseline_strengths: Dictionary = {}  # { unit_id: int }
@@ -26,31 +28,34 @@ var _baseline_pool: int = START_POOL
 func _ready() -> void:
 	# Demo units
 	_units = _make_demo_units()
+	# Initialize strength dictionary from demo units (see _make_demo_units for values)
+	for u in _units:
+		# Values set in _make_demo_units: ALPHA=17, BRAVO=0 (wiped), CHARLIE=27
+		_unit_strength[u.id] = float(u.strength)  # Will be overridden below
 
-	# Seed Game's pool first (if autoload exists)
+	# Set test values explicitly
+	_unit_strength["ALPHA"] = 17.0
+	_unit_strength["BRAVO"] = 0.0  # wiped out
+	_unit_strength["CHARLIE"] = 27.0
+
+	# Seed Game's scenario pool first (if autoload exists and scenario is loaded)
 	var g: Node = get_tree().get_root().get_node_or_null("/root/Game")
-	if g:
-		if g.has_method("set_replacement_pool"):
-			g.set_replacement_pool(START_POOL)
-		elif g.has_variable("campaign_replacement_pool"):
-			g.campaign_replacement_pool = START_POOL
+	if g and g.current_scenario:
+		g.current_scenario.replacement_pool = START_POOL
 
 	# Build panel and wait a frame so onready nodes exist
 	_panel = PANEL_SCENE.instantiate() as ReinforcementPanel
 	add_child(_panel)
 	await get_tree().process_frame
 
-	# Initial pool (prefer Game's value)
-	if g:
-		if g.has_method("get_replacement_pool"):
-			_pool = int(g.get_replacement_pool())
-		elif g.has_variable("campaign_replacement_pool"):
-			_pool = int(g.campaign_replacement_pool)
+	# Initial pool (prefer Game scenario's value)
+	if g and g.current_scenario:
+		_pool = int(g.current_scenario.replacement_pool)
 	else:
 		_pool = START_POOL
 
 	# Configure panel (initial view)
-	_panel.set_units(_units)
+	_panel.set_units(_units, _unit_strength)
 	_panel.set_pool(_pool)
 	_panel.reset_pending()
 
@@ -62,7 +67,7 @@ func _ready() -> void:
 		_test_casualties()
 
 	# Ensure panel reflects any mutations from tests, then snapshot
-	_panel.set_units(_units)
+	_panel.set_units(_units, _unit_strength)
 	_panel.set_pool(_pool)
 	_panel.reset_pending()
 
@@ -96,35 +101,34 @@ func _on_committed(plan: Dictionary) -> void:
 		if u == null:
 			continue
 		# Business rule: don't reinforce wiped-out
-		if u.state_strength <= 0.0:
+		var cur_strength: float = _unit_strength.get(uid, 0.0)
+		if cur_strength <= 0.0:
 			continue
 
 		var give: int = int(plan[uid])
-		var cur: int = int(round(u.state_strength))
+		var cur: int = int(round(cur_strength))
 		var cap: int = int(max(0, u.strength))
 		var missing: int = max(0, cap - cur)
 		var applied: int = min(give, missing, remaining)
 		if applied <= 0:
 			continue
-		u.state_strength = float(cur + applied)
+		_unit_strength[uid] = float(cur + applied)
 		remaining -= applied
 
-	# Persist remaining to Game (if present) and mirror to panel
+	# Persist remaining to Game scenario (if present) and mirror to panel
 	var g: Node = get_tree().get_root().get_node_or_null("/root/Game")
-	if g:
-		if g.has_method("set_replacement_pool"):
-			g.set_replacement_pool(remaining)
-		elif g.has_variable("campaign_replacement_pool"):
-			g.campaign_replacement_pool = remaining
+	if g and g.current_scenario:
+		g.current_scenario.replacement_pool = remaining
 
 	_pool = remaining
-	_panel.set_units(_units)  # refresh rows/badges/missing caps
+	_panel.set_units(_units, _unit_strength)  # refresh rows/badges/missing caps
 	_panel.set_pool(_pool)
 	_panel.reset_pending()
 
 	print("Remaining pool:", _pool)
 	for u: UnitData in _units:
-		print(u.id, ": ", int(round(u.state_strength)), "/", int(u.strength))
+		var cur_strength: float = _unit_strength.get(u.id, 0.0)
+		print(u.id, ": ", int(round(cur_strength)), "/", int(u.strength))
 
 
 # ---- Baseline snapshot & Reset ----
@@ -133,7 +137,7 @@ func _on_committed(plan: Dictionary) -> void:
 func _capture_baseline() -> void:
 	_baseline_strengths.clear()
 	for u: UnitData in _units:
-		_baseline_strengths[u.id] = int(round(u.state_strength))
+		_baseline_strengths[u.id] = int(round(_unit_strength.get(u.id, 0.0)))
 	_baseline_pool = _pool
 
 
@@ -141,19 +145,18 @@ func _capture_baseline() -> void:
 func _reset_to_baseline() -> void:
 	# Restore unit strengths
 	for u: UnitData in _units:
-		var base: int = int(_baseline_strengths.get(u.id, int(round(u.state_strength))))
-		u.state_strength = float(base)
+		var base: int = int(
+			_baseline_strengths.get(u.id, int(round(_unit_strength.get(u.id, 0.0))))
+		)
+		_unit_strength[u.id] = float(base)
 
-	# Restore pool (Game + panel)
+	# Restore pool (Game scenario + panel)
 	_pool = _baseline_pool
 	var g: Node = get_tree().get_root().get_node_or_null("/root/Game")
-	if g:
-		if g.has_method("set_replacement_pool"):
-			g.set_replacement_pool(_pool)
-		elif g.has_variable("campaign_replacement_pool"):
-			g.campaign_replacement_pool = _pool
+	if g and g.current_scenario:
+		g.current_scenario.replacement_pool = _pool
 
-	_panel.set_units(_units)
+	_panel.set_units(_units, _unit_strength)
 	_panel.set_pool(_pool)
 	_panel.reset_pending()
 	print("Reset to initial baseline — Pool:", _pool)
@@ -261,10 +264,30 @@ func _test_casualties() -> void:
 		"CHARLIE": 2,
 		# BRAVO stays 0 unless reinforced first
 	}
-	res.apply_casualties_to_units(_units, losses)
+	# Create ScenarioUnits for casualty application
+	var scenario_units: Array = []
 	for u: UnitData in _units:
-		prints("[after casualties]", u.id, int(round(u.state_strength)), "/", int(u.strength))
-	_panel.set_units(_units)
+		var su := ScenarioUnit.new()
+		su.unit = u
+		su.id = u.id
+		su.state_strength = _unit_strength.get(u.id, 0.0)
+		scenario_units.append(su)
+
+	res.apply_casualties_to_units(scenario_units, losses)
+
+	# Copy state back
+	for su in scenario_units:
+		_unit_strength[su.unit.id] = su.state_strength
+
+	for u: UnitData in _units:
+		prints(
+			"[after casualties]",
+			u.id,
+			int(round(_unit_strength.get(u.id, 0.0))),
+			"/",
+			int(u.strength)
+		)
+	_panel.set_units(_units, _unit_strength)
 	_panel.set_pool(_pool)
 
 
@@ -279,21 +302,18 @@ func _make_demo_units() -> Array[UnitData]:
 	a.id = "ALPHA"
 	a.title = "Alpha"
 	a.strength = 30
-	a.state_strength = 17.0
 	a.understrength_threshold = 0.8
 
 	var b: UnitData = UnitData.new()
 	b.id = "BRAVO"
 	b.title = "Bravo"
 	b.strength = 30
-	b.state_strength = 0.0  # wiped out
 	b.understrength_threshold = 0.6
 
 	var c: UnitData = UnitData.new()
 	c.id = "CHARLIE"
 	c.title = "Charlie"
 	c.strength = 30
-	c.state_strength = 27.0
 	c.understrength_threshold = 0.9
 
 	return [a, b, c]

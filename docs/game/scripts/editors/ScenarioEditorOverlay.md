@@ -29,6 +29,12 @@ Context menu id: open trigger configuration
 
 Context menu id: delete picked entity
 
+Draw label text to the right of a stamp
+`text` Label text.
+`center` Stamp center position in pixels.
+`stamp_half_width` Half width of the stamp texture.
+`color` Color to draw the label in.
+
 ## Public Member Functions
 
 - [`func _ready() -> void`](ScenarioEditorOverlay/functions/_ready.md) — Initialize popup menu and mouse handling
@@ -53,6 +59,7 @@ Context menu id: delete picked entity
 - [`func end_link_preview() -> void`](ScenarioEditorOverlay/functions/end_link_preview.md) — End live link preview and clear state
 - [`func _screen_pos_for_pick(pick: Dictionary) -> Vector2`](ScenarioEditorOverlay/functions/_screen_pos_for_pick.md) — Return on-screen center of a given pick (fallback to hover pos)
 - [`func _is_highlighted(t: StringName, idx: int) -> bool`](ScenarioEditorOverlay/functions/_is_highlighted.md) — Check if a glyph of type/index is hovered or selected
+- [`func _draw_drawings() -> void`](ScenarioEditorOverlay/functions/_draw_drawings.md) — Draw scenario drawings (strokes and stamps).
 - [`func _draw_icon_with_hover(tex: Texture2D, center: Vector2, hovered: bool) -> void`](ScenarioEditorOverlay/functions/_draw_icon_with_hover.md) — Draw a texture centered, with hover scale/opacity feedback
 - [`func _draw_title(text: String, center: Vector2) -> void`](ScenarioEditorOverlay/functions/_draw_title.md) — Draw a small label next to a glyph
 - [`func _draw_task_glyph(inst: ScenarioTask, center: Vector2, hi: bool) -> void`](ScenarioEditorOverlay/functions/_draw_task_glyph.md) — Delegate task glyph drawing to the task resource
@@ -65,7 +72,15 @@ Context menu id: delete picked entity
 - [`func _get_scaled_icon_trigger(trig: ScenarioTrigger) -> Texture2D`](ScenarioEditorOverlay/functions/_get_scaled_icon_trigger.md) — Get (and cache) the scaled trigger center icon
 - [`func _scale_icon(tex: Texture2D, key: String, px: int) -> Texture2D`](ScenarioEditorOverlay/functions/_scale_icon.md) — Utility used by task glyphs to request scaled textures
 - [`func _scaled_cached(key: String, base: Texture2D, px: int) -> Texture2D`](ScenarioEditorOverlay/functions/_scaled_cached.md) — Scale and cache a texture by key and target pixel size
+- [`func _on_unit_icons_ready(u: UnitData) -> void`](ScenarioEditorOverlay/functions/_on_unit_icons_ready.md) — UnitData finished generating icons; drop scaled cache and redraw.
+- [`func _on_unit_changed(u: UnitData) -> void`](ScenarioEditorOverlay/functions/_on_unit_changed.md) — Generic change fallback (covers editor-time tweaks).
+- [`func _invalidate_unit_icon_cache(u: UnitData) -> void`](ScenarioEditorOverlay/functions/_invalidate_unit_icon_cache.md) — Remove all scaled entries for this unit (both affiliations/sizes).
+- [`func _get_tex(path: String) -> Texture2D`](ScenarioEditorOverlay/functions/_get_tex.md) — Load or fetch cached texture.
 - [`func _glyph_radius(kind: StringName, idx: int) -> float`](ScenarioEditorOverlay/functions/_glyph_radius.md) — Return approximate visual radius for a glyph kind/index
+- [`func refresh_icon_bindings() -> void`](ScenarioEditorOverlay/functions/refresh_icon_bindings.md) — (Re)bind overlay to all units in the current ctx.
+- [`func _bind_unit_icon_signals() -> void`](ScenarioEditorOverlay/functions/_bind_unit_icon_signals.md) — Connect to UnitData signals so we refresh when icons complete.
+- [`func _ensure_bound_for_unit(u: UnitData) -> void`](ScenarioEditorOverlay/functions/_ensure_bound_for_unit.md) — Ensure we are bound for this UnitData (idempotent).
+- [`func _clear_unit_icon_bindings() -> void`](ScenarioEditorOverlay/functions/_clear_unit_icon_bindings.md) — Disconnect everything we previously bound.
 - [`func _trim_segment(src: Vector2, dst: Vector2, src_trim: float, dst_trim: float) -> Array[Vector2]`](ScenarioEditorOverlay/functions/_trim_segment.md) — Shorten a segment at both ends by given trims (pixels)
 
 ## Public Attributes
@@ -85,12 +100,14 @@ Context menu id: delete picked entity
 - `Vector2 hover_title_offset` — Screen-space offset for hover title labels
 - `float link_gap_px` — Extra pixel gap between link line and glyph edge
 - `float arrow_head_len_px` — Arrow head length (pixels) for link arrows
+- `Dictionary _tex_cache`
 - `PopupMenu _ctx`
 - `Dictionary _last_pick`
 - `Dictionary _selected_pick`
 - `Dictionary _hover_pick`
 - `Vector2 _hover_pos`
 - `Dictionary _link_preview_src`
+- `Dictionary _unit_signal_handles`
 
 ## Member Function Documentation
 
@@ -270,6 +287,14 @@ func _is_highlighted(t: StringName, idx: int) -> bool
 
 Check if a glyph of type/index is hovered or selected
 
+### _draw_drawings
+
+```gdscript
+func _draw_drawings() -> void
+```
+
+Draw scenario drawings (strokes and stamps).
+
 ### _draw_icon_with_hover
 
 ```gdscript
@@ -366,6 +391,41 @@ func _scaled_cached(key: String, base: Texture2D, px: int) -> Texture2D
 
 Scale and cache a texture by key and target pixel size
 
+### _on_unit_icons_ready
+
+```gdscript
+func _on_unit_icons_ready(u: UnitData) -> void
+```
+
+UnitData finished generating icons; drop scaled cache and redraw.
+`u` UnitData whose icons changed.
+
+### _on_unit_changed
+
+```gdscript
+func _on_unit_changed(u: UnitData) -> void
+```
+
+Generic change fallback (covers editor-time tweaks).
+
+### _invalidate_unit_icon_cache
+
+```gdscript
+func _invalidate_unit_icon_cache(u: UnitData) -> void
+```
+
+Remove all scaled entries for this unit (both affiliations/sizes).
+
+### _get_tex
+
+```gdscript
+func _get_tex(path: String) -> Texture2D
+```
+
+Load or fetch cached texture.
+`path` res:// path.
+[return] Texture2D or null.
+
 ### _glyph_radius
 
 ```gdscript
@@ -373,6 +433,38 @@ func _glyph_radius(kind: StringName, idx: int) -> float
 ```
 
 Return approximate visual radius for a glyph kind/index
+
+### refresh_icon_bindings
+
+```gdscript
+func refresh_icon_bindings() -> void
+```
+
+(Re)bind overlay to all units in the current ctx.
+
+### _bind_unit_icon_signals
+
+```gdscript
+func _bind_unit_icon_signals() -> void
+```
+
+Connect to UnitData signals so we refresh when icons complete.
+
+### _ensure_bound_for_unit
+
+```gdscript
+func _ensure_bound_for_unit(u: UnitData) -> void
+```
+
+Ensure we are bound for this UnitData (idempotent).
+
+### _clear_unit_icon_bindings
+
+```gdscript
+func _clear_unit_icon_bindings() -> void
+```
+
+Disconnect everything we previously bound.
 
 ### _trim_segment
 
@@ -534,6 +626,12 @@ Decorators: `@export`
 
 Arrow head length (pixels) for link arrows
 
+### _tex_cache
+
+```gdscript
+var _tex_cache: Dictionary
+```
+
 ### _ctx
 
 ```gdscript
@@ -568,4 +666,10 @@ var _hover_pos: Vector2
 
 ```gdscript
 var _link_preview_src: Dictionary
+```
+
+### _unit_signal_handles
+
+```gdscript
+var _unit_signal_handles: Dictionary
 ```

@@ -1,6 +1,6 @@
 # HQTable::generate_playable_units Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 35–61)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 266–293)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**
@@ -45,6 +45,5 @@ func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]:
 				units.append(su)
 				callsigns.append(slot.callsign)
 
-	LogService.trace("Generated playable units: %s" % str(callsigns), "HQTable.gd:42")
 	return units
 ```

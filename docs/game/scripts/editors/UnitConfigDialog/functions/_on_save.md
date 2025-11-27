@@ -1,6 +1,6 @@
 # UnitConfigDialog::_on_save Function Reference
 
-*Defined at:* `scripts/editors/UnitConfigDialog.gd` (lines 69–92)</br>
+*Defined at:* `scripts/editors/UnitConfigDialog.gd` (lines 74–98)</br>
 *Belongs to:* [UnitConfigDialog](../../UnitConfigDialog.md)
 
 **Signature**
@@ -21,6 +21,7 @@ func _on_save() -> void:
 	after.affiliation = aff_in.get_selected_id() as ScenarioUnit.Affiliation
 	after.combat_mode = combat_in.get_selected_id() as ScenarioUnit.CombatMode
 	after.behaviour = beh_in.get_selected_id() as ScenarioUnit.Behaviour
+	after.position_m = Vector2(pos_x_in.value, pos_y_in.value)
 
 	if editor.history:
 		var desc := "Edit Unit %s" % String(_before.callsign)

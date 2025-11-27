@@ -1,6 +1,6 @@
 # TerrainEditor::_on_history_changed Function Reference
 
-*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 434–461)</br>
+*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 453–480)</br>
 *Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**

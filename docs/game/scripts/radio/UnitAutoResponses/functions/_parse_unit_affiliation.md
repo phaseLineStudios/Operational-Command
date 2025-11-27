@@ -1,6 +1,6 @@
 # UnitAutoResponses::_parse_unit_affiliation Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 683–692)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 676–685)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

@@ -19,7 +19,7 @@ extends VBoxContainer
 
 ## Signals
 
-- `signal request_return_to_pool(slot_id: String, unit: Dictionary)` — Vertical list that can live directly in a ScrollContainer.
+- `signal request_return_to_pool(slot_id: String, unit: UnitData)` — Vertical list that can live directly in a ScrollContainer.
 
 ## Member Function Documentation
 
@@ -46,7 +46,7 @@ func _drop_data(_at_position: Vector2, data: Variant) -> void
 ### request_return_to_pool
 
 ```gdscript
-signal request_return_to_pool(slot_id: String, unit: Dictionary)
+signal request_return_to_pool(slot_id: String, unit: UnitData)
 ```
 
 Vertical list that can live directly in a ScrollContainer.

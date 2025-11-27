@@ -1,6 +1,6 @@
 # UnitVoiceResponses::_get_acknowledgment Function Reference
 
-*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 122–129)</br>
+*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 130–137)</br>
 *Belongs to:* [UnitVoiceResponses](../../UnitVoiceResponses.md)
 
 **Signature**

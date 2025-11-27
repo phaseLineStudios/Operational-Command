@@ -1,6 +1,6 @@
 # SimDebugOverlay::_draw_bar Function Reference
 
-*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 325–331)</br>
+*Defined at:* `scripts/sim/SimDebugOverlay.gd` (lines 338–344)</br>
 *Belongs to:* [SimDebugOverlay](../../SimDebugOverlay.md)
 
 **Signature**
