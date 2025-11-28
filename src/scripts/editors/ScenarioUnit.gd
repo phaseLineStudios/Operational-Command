@@ -369,7 +369,12 @@ static func deserialize(d: Dictionary) -> ScenarioUnit:
 		u.cohesion = 1.0
 		u.state_ammunition = u.unit.ammunition.duplicate()
 	else:
-		push_warning("ScenarioUnit.deserialize: unit is null for id=%s, unit_id=%s" % [u.id, d.get("unit_id")])
+		push_warning(
+			(
+				"ScenarioUnit.deserialize: unit is null for id=%s, unit_id=%s"
+				% [u.id, d.get("unit_id")]
+			)
+		)
 		u.state_strength = 0.0
 		u.state_equipment = 0.0
 		u.cohesion = 0.0

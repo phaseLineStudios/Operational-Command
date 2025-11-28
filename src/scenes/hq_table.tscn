@@ -1,4 +1,4 @@
-[gd_scene load_steps=126 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=132 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -57,6 +57,7 @@
 [ext_resource type="Texture2D" uid="uid://c2t7qcox668w7" path="res://assets/textures/environment/starmap_8k.jpg" id="43_66gqg"]
 [ext_resource type="Script" uid="uid://d33v0jsmojsg1" path="res://scripts/sim/SkyPreset.gd" id="44_hovgm"]
 [ext_resource type="Script" uid="uid://qvbcqwk2gyo1" path="res://scripts/ai/AIController.gd" id="45_ai"]
+[ext_resource type="Texture2D" uid="uid://cxjjwb5ao85u7" path="res://assets/textures/tex_rain_circle.png" id="50_idixg"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qevx8"]
 size = Vector3(1, 0.75, 0.7)
@@ -226,7 +227,7 @@ color_ramp = SubResource("Gradient_5yowr")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_66gqg"]
 shader = ExtResource("36_66gqg")
-shader_parameter/base_color = Color(0.204346, 0.344014, 0.5625, 1)
+shader_parameter/base_color = Color(0.20024557, 0.3319268, 0.5379189, 0.966)
 shader_parameter/scattering_lut = ExtResource("41_tw4w3")
 shader_parameter/scatter_color = Color(1, 1, 1, 1)
 shader_parameter/scatter_color_2 = Color(1, 1, 1, 1)
@@ -247,20 +248,20 @@ shader_parameter/moon_glow_intensity = 0.8
 shader_parameter/base_cloud_color = Color(1, 1, 1, 1)
 shader_parameter/cloud_density = 4.25
 shader_parameter/cloud_edge = 0.0
-shader_parameter/cloud_coverage = 0.5
-shader_parameter/cloud_direction = Vector2(1, 1)
+shader_parameter/cloud_coverage = 1.0
+shader_parameter/cloud_direction = Vector2(1, -6.123032e-17)
 shader_parameter/cloud_texture = ExtResource("39_r1wnv")
 shader_parameter/cloud_texture_2 = ExtResource("40_8iaup")
 shader_parameter/cloud_noise = SubResource("NoiseTexture2D_tw4w3")
 shader_parameter/weather_map = SubResource("NoiseTexture2D_idixg")
 shader_parameter/mg_size = 0.92
 shader_parameter/cloud_alpha = 1.0
-shader_parameter/cloud_speed = 0.0003
+shader_parameter/cloud_speed = 0.02
 shader_parameter/absorption = 5.0
 shader_parameter/henyey_greenstein_level = 0.69
-shader_parameter/dynamic_cloud_brightness = 0.9
+shader_parameter/dynamic_cloud_brightness = 0.8748
 shader_parameter/horizon_uv_curve = 0.5
-shader_parameter/horizon_fog_color = Color(0.82882583, 0.9191148, 0.9999997, 1)
+shader_parameter/horizon_fog_color = Color(0.80064577, 0.88786495, 0.9659997, 0.966)
 shader_parameter/horizon_alpha = 1.0
 shader_parameter/horizon_size = 3.0
 shader_parameter/star_texture = ExtResource("43_66gqg")
@@ -293,8 +294,10 @@ sdfgi_min_cell_size = 1.953125
 glow_enabled = true
 glow_intensity = 0.6
 glow_bloom = 0.04
+fog_density = 4.725e-05
+fog_aerial_perspective = 0.0004725
 volumetric_fog_enabled = true
-volumetric_fog_density = 0.0
+volumetric_fog_density = 0.006
 adjustment_enabled = true
 adjustment_contrast = 1.05
 adjustment_saturation = 0.9
@@ -376,6 +379,8 @@ point_count = 4
 script = ExtResource("44_hovgm")
 sun_light_intensity = SubResource("Curve_66gqg")
 moon_light_intensity = SubResource("Curve_xqlrs")
+cloud_speed = 0.02
+cloud_direction = Vector2(1, -6.123032e-17)
 base_sky_color = SubResource("GradientTexture1D_018ci")
 base_cloud_color = SubResource("GradientTexture1D_3g2ag")
 overcast_cloud_color = SubResource("GradientTexture1D_r1wnv")
@@ -387,9 +392,45 @@ moon_light_color = SubResource("GradientTexture1D_4hx2p")
 moon_glow_color = SubResource("GradientTexture1D_ehjqo")
 metadata/_custom_type_script = "uid://d33v0jsmojsg1"
 
+[sub_resource type="Curve" id="Curve_idixg"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.04, 0.2), -0.4639839, -0.4639839, 0, 0, Vector2(0.10126583, 0.04193139), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
 [sub_resource type="SphereMesh" id="SphereMesh_5bsee"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_rio5r"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_66gqg"]
+emission_shape_scale = Vector3(3, 2, 3)
+emission_shape = 3
+emission_box_extents = Vector3(1, 1, 1)
+direction = Vector3(0, -0.4472136, -0.8944272)
+spread = 10.0
+initial_velocity_min = 5.4
+initial_velocity_max = 8.48
+gravity = Vector3(0, -10.208, 0)
+collision_mode = 1
+collision_friction = 0.0
+collision_bounce = 0.0
+
+[sub_resource type="Curve" id="Curve_g6xw8"]
+_limits = [0.0, 0.1, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.15584415, 0.007994756), -0.08618498, -0.08618498, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5bsee"]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.72567123, 0.87642777, 0.85557157, 0.7607843)
+albedo_texture = ExtResource("50_idixg")
+use_particle_trails = true
+
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_idixg"]
+material = SubResource("StandardMaterial3D_5bsee")
+sections = 2
+curve = SubResource("Curve_g6xw8")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yef6r"]
 shader = ExtResource("37_gaccj")
@@ -879,7 +920,7 @@ counter_dialog = NodePath("../../UI/CounterConfigDialog")
 unique_name_in_owner = true
 script = ExtResource("27_docctrl")
 
-[node name="EnvironmentController" type="WorldEnvironment" parent="Controllers" node_paths=PackedStringArray("sun_moon_parent", "sun_root", "moon_root", "sun", "moon", "env_anchor")]
+[node name="EnvironmentController" type="WorldEnvironment" parent="Controllers" node_paths=PackedStringArray("sun_moon_parent", "sun_root", "moon_root", "sun", "moon", "env_anchor", "weather", "rain_node")]
 unique_name_in_owner = true
 environment = SubResource("Environment_idixg")
 script = ExtResource("36_c0crp")
@@ -889,7 +930,14 @@ moon_root = NodePath("SunMoon/Moon")
 sun = NodePath("SunMoon/Sun/SunLight")
 moon = NodePath("SunMoon/Moon/MoonLight")
 env_anchor = NodePath("EnvironmentAnchor")
+weather = NodePath("Weather")
+rain_node = NodePath("Weather/Rain")
 sky_preset = SubResource("Resource_g6xw8")
+cloud_coverage = 1.0
+rain_intensity = 2.0
+wind_speed = 20.0
+wind_direction = 90.0
+fog_visibility_curve = SubResource("Curve_idixg")
 
 [node name="SunMoon" type="Node3D" parent="Controllers/EnvironmentController"]
 transform = Transform3D(1, 0, 0, 0, -0.9999995, 8.7422734e-08, 0, -8.7422734e-08, -0.9999995, 0, 0, 0)
@@ -904,6 +952,7 @@ metadata/_edit_lock_ = true
 [node name="SunLight" type="DirectionalLight3D" parent="Controllers/EnvironmentController/SunMoon/Sun"]
 transform = Transform3D(1, 0, 1.49012e-08, -1.49012e-08, -8.19564e-08, -1, 2.98023e-08, 1, -3.72529e-08, 0, 0, 0)
 light_color = Color(0.996078, 0.996078, 1, 1)
+light_energy = 0.974
 shadow_enabled = true
 metadata/_edit_lock_ = true
 
@@ -921,6 +970,18 @@ shadow_enabled = true
 metadata/_edit_lock_ = true
 
 [node name="EnvironmentAnchor" type="Node3D" parent="Controllers/EnvironmentController"]
+
+[node name="Weather" type="Node3D" parent="Controllers/EnvironmentController"]
+
+[node name="Rain" type="GPUParticles3D" parent="Controllers/EnvironmentController/Weather"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.739531, -4.871651)
+amount = 296
+lifetime = 1.952
+speed_scale = 0.8480000000000001
+randomness = 0.38
+trail_enabled = true
+process_material = SubResource("ParticleProcessMaterial_66gqg")
+draw_pass_1 = SubResource("RibbonTrailMesh_idixg")
 
 [node name="PostProcess" type="CanvasLayer" parent="."]
 script = ExtResource("36_yef6r")

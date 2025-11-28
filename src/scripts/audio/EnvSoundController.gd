@@ -139,7 +139,6 @@ func _update_weather_for_scenario() -> void:
 	_update_wind_for_scenario()
 
 
-
 ## Update precipitation (rain/snow) loop.
 func _update_precip_for_scenario() -> void:
 	var rain_level := _rain_level_from_mm(_scenario.rain)
@@ -253,9 +252,7 @@ func _crossfade_ambient(new_stream: AudioStream) -> void:
 	var tween := create_tween()
 	tween.tween_property(to_player, "volume_db", 0.0, crossfade_time)
 	tween.parallel().tween_property(from_player, "volume_db", -80.0, crossfade_time)
-	tween.finished.connect(func() -> void:
-		from_player.stop()
-	)
+	tween.finished.connect(func() -> void: from_player.stop())
 
 	_ambient_using_a = not _ambient_using_a
 
@@ -278,9 +275,7 @@ func _crossfade_precip(new_stream: AudioStream) -> void:
 	var tween := create_tween()
 	tween.tween_property(to_player, "volume_db", 0.0, crossfade_time)
 	tween.parallel().tween_property(from_player, "volume_db", -80.0, crossfade_time)
-	tween.finished.connect(func() -> void:
-		from_player.stop()
-	)
+	tween.finished.connect(func() -> void: from_player.stop())
 
 	_precip_using_a = not _precip_using_a
 
@@ -303,9 +298,7 @@ func _crossfade_wind(new_stream: AudioStream) -> void:
 	var tween := create_tween()
 	tween.tween_property(to_player, "volume_db", 0.0, crossfade_time)
 	tween.parallel().tween_property(from_player, "volume_db", -80.0, crossfade_time)
-	tween.finished.connect(func() -> void:
-		from_player.stop()
-	)
+	tween.finished.connect(func() -> void: from_player.stop())
 
 	_wind_using_a = not _wind_using_a
 

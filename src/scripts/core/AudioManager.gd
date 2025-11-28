@@ -4,7 +4,6 @@ extends Node
 ## This autoload persists across scene changes, ensuring sounds aren't cut off
 ## when transitioning between scenes.
 
-
 ## Number of polyphonic voices for UI sounds
 const UI_POLYPHONY := 32
 

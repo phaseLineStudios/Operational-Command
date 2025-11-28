@@ -63,6 +63,9 @@ metadata/_edit_lock_ = true
 size = Vector3(50, 0.001, 50)
 material = SubResource("StandardMaterial3D_fnomj")
 
+[node name="WeatherCollision" type="GPUParticlesCollisionBox3D" parent="Content/Ground"]
+size = Vector3(50, 0, 50)
+
 [node name="EnvSoundController" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("2_gotkl")

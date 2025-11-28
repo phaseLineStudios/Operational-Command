@@ -192,8 +192,7 @@ func request_fire_mission(
 		for i in rounds:
 			if not _ammo_system.consume(unit_id, ammo_type, 1):
 				LogService.warning(
-					"Fire mission ammo consumption failed for %s" % unit_id,
-					"ArtilleryController"
+					"Fire mission ammo consumption failed for %s" % unit_id, "ArtilleryController"
 				)
 				return false
 
@@ -246,8 +245,10 @@ func tick(delta: float) -> void:
 			if mission.time_elapsed >= round_shot_time:
 				# Emit shot signal for this round
 				LogService.debug(
-					"Emitting rounds_shot for %s (round %d/%d)"
-					% [mission.unit_id, mission.current_round + 1, mission.total_rounds],
+					(
+						"Emitting rounds_shot for %s (round %d/%d)"
+						% [mission.unit_id, mission.current_round + 1, mission.total_rounds]
+					),
 					"ArtilleryController"
 				)
 				emit_signal(
@@ -264,8 +265,10 @@ func tick(delta: float) -> void:
 		if (
 			not mission.splash_called
 			and mission.current_round > 0
-			and mission.time_elapsed
-			>= mission.shot_delay + mission.flight_time - splash_warning_time
+			and (
+				mission.time_elapsed
+				>= mission.shot_delay + mission.flight_time - splash_warning_time
+			)
 		):
 			emit_signal(
 				"rounds_splash",
@@ -291,8 +294,10 @@ func tick(delta: float) -> void:
 		if rounds_impacted > prev_impacted:
 			for round_idx in range(prev_impacted, rounds_impacted):
 				LogService.debug(
-					"Emitting rounds_impact for %s (round %d/%d)"
-					% [mission.unit_id, round_idx + 1, mission.total_rounds],
+					(
+						"Emitting rounds_impact for %s (round %d/%d)"
+						% [mission.unit_id, round_idx + 1, mission.total_rounds]
+					),
 					"ArtilleryController"
 				)
 				emit_signal(
