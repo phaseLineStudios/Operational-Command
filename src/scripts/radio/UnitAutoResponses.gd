@@ -329,6 +329,11 @@ func _emit_voice_message(msg: VoiceMessage) -> void:
 
 ## Queue a voice message for a unit.
 func _queue_message(unit_id: String, event_type: EventType) -> void:
+	# Only queue messages for playable units
+	var unit = _units_by_id.get(unit_id)
+	if not unit or not unit.playable:
+		return
+
 	var event_key := "%s:%d" % [unit_id, event_type]
 	var current_time := Time.get_ticks_msec() / 1000.0
 	var last_trigger_time: float = _event_last_triggered.get(event_key, 0.0)
@@ -545,11 +550,9 @@ func _trigger_casualties(unit_id: String, casualties: int, current_strength: int
 	var callsign: String = _id_to_callsign.get(unit_id, unit_id)
 	var message: String
 
-	# Use phrase from config if casualties are minor, or strength report for moderate
 	if casualties < 5:
 		_queue_message(unit_id, EventType.CASUALTIES_TAKEN)
 	else:
-		# Report current strength
 		message = "%s is %d men strong." % [callsign, current_strength]
 		_queue_custom_message(unit_id, callsign, message, Priority.HIGH)
 

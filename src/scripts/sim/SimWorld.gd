@@ -84,27 +84,8 @@ func _ready() -> void:
 	_router.order_applied.connect(_on_order_applied)
 	_router.order_failed.connect(_on_order_failed)
 
-	if ammo_system:
-		ammo_system.ammo_low.connect(
-			func(uid): emit_signal("radio_message", "warn", "%s low ammo." % uid)
-		)
-		ammo_system.ammo_critical.connect(
-			func(uid): emit_signal("radio_message", "warn", "%s critical ammo." % uid)
-		)
-		ammo_system.ammo_empty.connect(
-			func(uid): emit_signal("radio_message", "error", "%s winchester (out of ammo)." % uid)
-		)
-
-	if fuel_system:
-		fuel_system.fuel_low.connect(
-			func(uid): emit_signal("radio_message", "warn", "%s fuel low." % uid)
-		)
-		fuel_system.fuel_critical.connect(
-			func(uid): emit_signal("radio_message", "warn", "%s fuel critical." % uid)
-		)
-		fuel_system.fuel_empty.connect(
-			func(uid): emit_signal("radio_message", "error", "%s immobilized: fuel out." % uid)
-		)
+	# Note: Ammo/fuel warnings are handled by UnitAutoResponses via HQTable signal connections.
+	# SimWorld no longer emits radio_message for these to avoid duplicate transmissions.
 
 	if engineer_controller:
 		engineer_controller.task_confirmed.connect(

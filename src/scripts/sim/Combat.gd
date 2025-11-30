@@ -170,7 +170,10 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 	# returns {allow, attack_power_mult, attack_cycle_mult, suppression_mult, ...}
 	var ammo_meta := _select_ammo_profile_for_attack(attacker, defender)
 	var fire := _gate_and_consume(
-		attacker.unit, ammo_meta.get("ammo_type", "SMALL_ARMS"), int(ammo_meta.get("rounds", 5))
+		attacker.unit,
+		attacker.id,
+		ammo_meta.get("ammo_type", "SMALL_ARMS"),
+		int(ammo_meta.get("rounds", 5))
 	)
 	if not bool(fire.get("allow", true)):
 		LogService.info("%s cannot fire: out of ammo" % attacker.unit.id, "Combat")
@@ -276,7 +279,13 @@ func print_unit_status(attacker: UnitData, defender: UnitData) -> void:
 ## - If `_adapter` is null → allow=true with neutral multipliers (keeps tests running).
 ## - If `CombatAdapter.request_fire_with_penalty()` exists → use it.
 ## - Else fall back to `request_fire()` and map to a neutral response.
-func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> Dictionary:
+## [param attacker] UnitData of the attacking unit.
+## [param attacker_id] ScenarioUnit ID (with SLOT suffix if applicable).
+## [param ammo_type] Ammunition type string.
+## [param rounds] Number of rounds to consume.
+func _gate_and_consume(
+	attacker: UnitData, attacker_id: String, ammo_type: String, rounds: int
+) -> Dictionary:
 	if ammo_type == "" or rounds <= 0:
 		return {
 			"allow": true,
@@ -301,10 +310,10 @@ func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> Di
 
 	# Preferred path (penalties + consume)
 	if combat_adapter.has_method("request_fire_with_penalty"):
-		return combat_adapter.request_fire_with_penalty(attacker.id, ammo_type, rounds)
+		return combat_adapter.request_fire_with_penalty(attacker_id, ammo_type, rounds)
 
 	# Fallback: just block/consume via request_fire, no penalties
-	var ok := combat_adapter.request_fire(attacker.id, ammo_type, rounds)
+	var ok := combat_adapter.request_fire(attacker_id, ammo_type, rounds)
 	return {
 		"allow": ok,
 		"state": "normal" if ok else "empty",
