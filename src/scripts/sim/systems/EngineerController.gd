@@ -128,9 +128,9 @@ func request_task(unit_id: String, task_type: String, target_pos: Vector2) -> bo
 		return false
 
 	if _ammo_system:
-		if not _ammo_system.consume(su.unit.id, ammo_type, 1):
+		if not _ammo_system.consume(unit_id, ammo_type, 1):
 			LogService.warning(
-				"Engineer task ammo consumption failed for %s" % su.unit.id, "EngineerController"
+				"Engineer task ammo consumption failed for %s" % unit_id, "EngineerController"
 			)
 			return false
 
