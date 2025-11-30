@@ -262,8 +262,9 @@ func _on_radio_message(_level: String, text: String) -> void:
 	if text.contains("low ammo") or text.contains("winchester") or text.contains("low on fuel"):
 		return
 
-	if TTSService and TTSService.is_ready():
-		TTSService.say(text)
+	if unit_voices:
+		# Use system message method to get radio SFX
+		unit_voices.emit_system_message(text)
 
 
 ## Enable collision sounds for all PickupItems in the scene

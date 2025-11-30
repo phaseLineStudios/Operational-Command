@@ -417,3 +417,16 @@ func _on_tts_finished() -> void:
 	if _current_transmitter != "":
 		transmission_end.emit(_current_transmitter)
 		_current_transmitter = ""
+
+
+## Emit a system message (e.g., from TriggerAPI) with radio SFX.
+## [param message] Message text to speak.
+## [param callsign] Optional callsign (defaults to "Mission Control").
+func emit_system_message(message: String, callsign: String = "Mission Control") -> void:
+	_current_transmitter = callsign
+	transmission_start.emit(callsign)
+
+	if TTSService:
+		TTSService.say(message)
+
+	unit_response.emit(callsign, message)
