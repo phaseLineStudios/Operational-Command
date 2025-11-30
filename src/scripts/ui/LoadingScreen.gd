@@ -26,6 +26,10 @@ func set_card_details() -> void:
 	_card_desc.text = _scenario.description
 	_card_image.texture = _scenario.preview
 
+## Set the loading screen message
+func set_loading_message(message: String) -> void:
+	if _label:
+		_label.text = message
 
 ## Show the loading screen with optional custom message
 func show_loading(
