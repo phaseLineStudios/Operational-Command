@@ -900,6 +900,7 @@ sim_world = NodePath("../WorldController")
 camera = NodePath("../CameraController/CameraBounds/Camera")
 press_depth = 0.005
 collision_box_position = Vector3(0, 0.06, 0)
+button_sound_pitch_variation = 0.05
 lcd_font = ExtResource("23_nfu8j")
 lcd_letter_spacing = 2
 pause_icon = ExtResource("24_l12u7")
