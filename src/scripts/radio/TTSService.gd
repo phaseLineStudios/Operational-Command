@@ -9,6 +9,8 @@ signal stream_ready(stream: AudioStreamGenerator)
 signal stream_error(message: String)
 ## Emitted when a line is sent to Piper (best-effort).
 signal speaking_started(text: String)
+## Emitted when Piper finishes generating audio for a phrase.
+signal speaking_finished()
 
 ## Available speaker models.
 enum Model { EN_US_HIGH_RYAN, EN_US_MEDIUM_RYAN, EN_US_MEDIUM_NORMAN }
@@ -31,17 +33,19 @@ var _gen := AudioStreamGenerator.new()
 var _playback: AudioStreamGeneratorPlayback = null
 var _is_initializing: bool = false
 var _initialization_complete: bool = false
+var _is_speaking: bool = false
+var _audio_started: bool = false  # Track if audio generation has started
+var _last_buffer_fill: float = 0.0
+var _speaking_timeout: float = 1.0
 
 
 func _ready() -> void:
-	# Defer TTS initialization to avoid blocking game startup
 	_is_initializing = true
 	call_deferred("_initialize_async")
 
 
 ## Initialize TTS asynchronously to avoid blocking startup.
 func _initialize_async() -> void:
-	# Wait one frame to ensure UI has rendered
 	await get_tree().process_frame
 
 	_piper_path = _get_platform_binary()
@@ -138,6 +142,9 @@ func say(text: String) -> bool:
 	if not _tts.is_stream_running():
 		return false
 	emit_signal("speaking_started", text)
+	_is_speaking = true
+	_audio_started = false  # Reset, will be set when we detect audio generation
+	_last_buffer_fill = 0.0  # Don't start timer yet
 	LogService.trace("speaking started", "TTSService.gd:say")
 	return _tts.say_stream(text)
 
@@ -145,6 +152,28 @@ func say(text: String) -> bool:
 ## Pull bytes from the extension and push frames (if playback registered).
 func _process(_dt: float) -> void:
 	_tts.pump()
+
+	if _is_speaking and _playback:
+		var frames_available := _playback.get_frames_available()
+		var buffer_size := _gen.buffer_length * _sample_rate
+
+		# Detect when audio generation starts (buffer being filled)
+		if not _audio_started and frames_available < buffer_size * 0.9:
+			_audio_started = true
+			_last_buffer_fill = Time.get_ticks_msec() / 1000.0
+			LogService.trace("audio generation started", "TTSService.gd:_process")
+
+		# Only check for completion after audio has started
+		if _audio_started:
+			if frames_available < buffer_size * 0.5:
+				_last_buffer_fill = Time.get_ticks_msec() / 1000.0
+			else:
+				var current_time := Time.get_ticks_msec() / 1000.0
+				if current_time - _last_buffer_fill >= _speaking_timeout:
+					_is_speaking = false
+					_audio_started = false
+					emit_signal("speaking_finished")
+					LogService.trace("speaking finished", "TTSService.gd:_process")
 
 
 ## Stop stream thread to avoid hang on exit.

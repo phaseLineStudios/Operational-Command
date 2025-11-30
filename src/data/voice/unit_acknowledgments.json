@@ -1,0 +1,57 @@
+{
+  "MOVE": [
+	"Moving out.",
+	"Roger, moving.",
+	"On the way.",
+	"Wilco, moving to position.",
+    "Acknowledged, moving."
+  ],
+  "HOLD": [
+	"Holding position.",
+	"Roger, holding.",
+	"Holding here.",
+	"Copy, holding position.",
+    "Acknowledged, holding."
+  ],
+  "CANCEL": [
+	"Roger, canceling order.",
+	"Acknowledged, standing by.",
+	"Copy, canceling.",
+    "Order canceled."
+  ],
+  "ATTACK": [
+	"Engaging target.",
+	"Roger, engaging.",
+	"Attack confirmed.",
+	"Wilco, engaging hostile.",
+    "Copy, attacking."
+  ],
+  "DEFEND": [
+	"Roger, going defensive.",
+	"Copy, defensive position.",
+	"Acknowledged, defending.",
+    "Going defensive."
+  ],
+  "RECON": [
+	"Roger, moving to observe.",
+	"Copy, recon mission.",
+	"Acknowledged, reconnoitering.",
+    "Moving to recon position."
+  ],
+  "FIRE": [
+	"Fire mission acknowledged.",
+	"Roger, firing.",
+	"Copy, engaging target.",
+    "Fire mission, wilco."
+  ],
+  "REPORT": [
+	"Roger, sending report.",
+	"Copy, reporting.",
+    "Acknowledged."
+  ],
+  "CUSTOM": [
+	"Roger.",
+	"Acknowledged.",
+    "Copy."
+  ]
+}

@@ -1,17 +1,20 @@
 class_name UnitAutoResponses
 extends Node
 ## Generates automatic unit voice responses for simulation events.
-##
-## Monitors unit state changes and generates contextual voice reports like:
-## - "Contact spotted!" when enemy units detected
-## - "Position reached" when arriving at destination
-## - "Taking fire!" when under attack
-## - etc.
 
 ## Emitted when a unit generates an automatic voice response.
 ## [param callsign] The unit's callsign.
 ## [param message] The full message text.
 signal unit_auto_response(callsign: String, message: String)
+
+## Emitted when a unit starts transmitting on radio.
+## [param callsign] The unit's callsign.
+signal transmission_start(callsign: String)
+
+## Emitted when a unit requests to end transmission (before TTS finishes).
+## The parent controller will emit the actual transmission_end when TTS completes.
+## [param callsign] The unit's callsign.
+signal transmission_end_requested(callsign: String)
 
 ## Voice message priority levels
 enum Priority { LOW = 0, NORMAL = 1, HIGH = 2, URGENT = 3 }
@@ -34,8 +37,45 @@ enum EventType {
 	ROUNDS_SHOT,
 	ROUNDS_SPLASH,
 	ROUNDS_IMPACT,
-	BATTLE_DAMAGE_ASSESSMENT
+	BATTLE_DAMAGE_ASSESSMENT,
+	CASUALTIES_TAKEN,
+	COMMAND_CHANGE,
+	STRENGTH_REPORT,
+	COMBAT_INEFFECTIVE
 }
+
+## Path to auto responses data file.
+const AUTO_RESPONSES_PATH := "res://data/voice/unit_auto_responses.json"
+
+## Maximum messages in queue
+@export var max_queue_size: int = 10
+## Minimum time between messages from same unit (seconds)
+@export var per_unit_cooldown_s: float = 3.0
+## Minimum time between any voice messages (seconds)
+@export var global_cooldown_s: float = 1.0
+
+var event_config: Dictionary = {}
+var order_failure_phrases: Dictionary = {}
+var movement_blocked_phrases: Dictionary = {}
+var commander_names: Array = []
+
+var _sim_world: Node = null
+var _units_by_id: Dictionary = {}
+var _id_to_callsign: Dictionary = {}
+var _terrain_render: TerrainRender = null
+var _counter_controller: UnitCounterController = null
+var _artillery_controller: ArtilleryController = null
+
+var _unit_states: Dictionary = {}
+var _spotted_contacts: Dictionary = {}
+
+var _message_queue: Array[VoiceMessage] = []
+
+var _last_message_time: float = 0.0
+var _unit_last_message: Dictionary = {}
+var _event_last_triggered: Dictionary = {}
+
+var _rng := RandomNumberGenerator.new()
 
 
 ## Voice message in the queue
@@ -60,215 +100,111 @@ class VoiceMessage:
 		timestamp = p_timestamp
 
 
-## Event configuration - defines phrases and cooldowns for each event type
-const EVENT_CONFIG := {
-	EventType.MOVEMENT_STARTED:
-	{
-		"phrases": ["Moving out.", "On the move.", "Proceeding to waypoint.", "Roger, moving."],
-		"priority": Priority.NORMAL,
-		"cooldown_s": 10.0
-	},
-	EventType.POSITION_REACHED:
-	{
-		"phrases": ["Position reached.", "In position.", "Arrived at waypoint.", "We're here."],
-		"priority": Priority.NORMAL,
-		"cooldown_s": 5.0
-	},
-	EventType.CONTACT_SPOTTED:
-	{
-		"phrases": ["Contact!", "Enemy spotted!", "Eyes on hostile forces!", "We have contact!"],
-		"priority": Priority.HIGH,
-		"cooldown_s": 15.0
-	},
-	EventType.CONTACT_LOST:
-	{
-		"phrases": ["Contact lost.", "Lost visual.", "Target out of sight."],
-		"priority": Priority.LOW,
-		"cooldown_s": 20.0
-	},
-	EventType.TAKING_FIRE:
-	{
-		"phrases": ["Taking fire!", "We're under fire!", "Incoming fire!", "Contact, contact!"],
-		"priority": Priority.URGENT,
-		"cooldown_s": 20.0
-	},
-	EventType.ENGAGING_TARGET:
-	{
-		"phrases": ["Engaging!", "Firing!", "Engaging hostile forces!", "Opening fire!"],
-		"priority": Priority.HIGH,
-		"cooldown_s": 15.0
-	},
-	EventType.AMMO_LOW:
-	{
-		"phrases": ["Running low on ammo.", "Ammo running low.", "We're low on ammunition."],
-		"priority": Priority.HIGH,
-		"cooldown_s": 60.0
-	},
-	EventType.AMMO_CRITICAL:
-	{
-		"phrases": ["Critically low on ammo!", "Almost out of ammunition!", "We need resupply!"],
-		"priority": Priority.URGENT,
-		"cooldown_s": 60.0
-	},
-	EventType.FUEL_LOW:
-	{
-		"phrases": ["Fuel running low.", "Low on fuel.", "We need to refuel soon."],
-		"priority": Priority.HIGH,
-		"cooldown_s": 60.0
-	},
-	EventType.FUEL_CRITICAL:
-	{
-		"phrases": ["Fuel critical!", "Almost out of fuel!", "We're running on fumes!"],
-		"priority": Priority.URGENT,
-		"cooldown_s": 60.0
-	},
-	EventType.ORDER_FAILED:
-	{
-		"phrases": ["Unable to comply.", "Negative.", "Can't execute that order."],
-		"priority": Priority.NORMAL,
-		"cooldown_s": 5.0
-	},
-	EventType.MOVEMENT_BLOCKED:
-	{
-		"phrases": ["We're blocked!", "Can't proceed!", "Movement blocked!"],
-		"priority": Priority.HIGH,
-		"cooldown_s": 10.0
-	},
-	EventType.MISSION_CONFIRMED:
-	{
-		"phrases":
-		[
-			"Fire mission confirmed.",
-			"Roger, fire mission accepted.",
-			"Mission confirmed, preparing rounds.",
-			"Roger, fire mission acknowledged."
-		],
-		"priority": Priority.NORMAL,
-		"cooldown_s": 5.0
-	},
-	EventType.ROUNDS_SHOT:
-	{
-		"phrases": ["Shot!", "Rounds away!", "Shot, out!"],
-		"priority": Priority.HIGH,
-		"cooldown_s": 5.0
-	},
-	EventType.ROUNDS_SPLASH:
-	{
-		"phrases": ["Splash!", "Splash, out!", "Impact in 5 seconds!"],
-		"priority": Priority.HIGH,
-		"cooldown_s": 5.0
-	},
-	EventType.ROUNDS_IMPACT:
-	{
-		"phrases": ["Rounds on target.", "Impact confirmed.", "Rounds complete.", "Impact, out."],
-		"priority": Priority.NORMAL,
-		"cooldown_s": 5.0
-	},
-	EventType.BATTLE_DAMAGE_ASSESSMENT:  # Custom message per impact
-	{"phrases": [], "priority": Priority.HIGH, "cooldown_s": 10.0}
-}
-
-## Mapping of order failure reasons to specific response phrases
-const ORDER_FAILURE_PHRASES := {
-	"unknown_unit":
-	["Unable to comply, unit not found.", "Negative, unknown unit.", "Can't locate that unit."],
-	"dead_unit":
-	[
-		"Unable to comply, unit is down.",
-		"Negative, that unit is out of action.",
-		"Unit is no longer operational."
-	],
-	"unsupported_type":
-	[
-		"Unable to comply, invalid order type.",
-		"Negative, can't execute that order.",
-		"Order not recognized."
-	],
-	"move_missing_destination":
-	[
-		"Unable to comply, no destination specified.",
-		"Negative, where do you want us to go?",
-		"Need a destination."
-	],
-	"move_destination_zero":
-	[
-		"Unable to comply, invalid destination.",
-		"Negative, can't move there.",
-		"That's not a valid location."
-	],
-	"move_plan_failed":
-	[
-		"Unable to comply, can't find a route.",
-		"Negative, no path available.",
-		"Can't get there from here."
-	],
-	"recon_no_destination":
-	[
-		"Unable to comply, need a recon target.",
-		"Negative, where should we recon?",
-		"Need a location to scout."
-	],
-	"fire_missing_target":
-	["Unable to comply, no target.", "Negative, who do we engage?", "Need a target."],
-	"fire_not_artillery":
-	[
-		"Unable to comply, not an artillery unit.",
-		"Negative, we're not artillery.",
-		"We don't have indirect fire capability."
-	],
-	"fire_no_ammo":
-	[
-		"Unable to comply, no ammunition.",
-		"Negative, out of that ammo type.",
-		"We don't have that ammunition."
-	],
-	"fire_mission_rejected":
-	[
-		"Unable to comply, fire mission rejected.",
-		"Negative, can't execute fire mission.",
-		"Fire mission denied."
-	],
-	"fire_unhandled":
-	["Unable to comply, can't engage.", "Negative, unable to fire.", "Can't execute fire mission."]
-}
-
-## Mapping of movement blocked reasons to specific response phrases
-const MOVEMENT_BLOCKED_PHRASES := {
-	"no_path": ["Can't find a route!", "No path available!", "Unable to reach destination!"],
-	"blocked_cell": ["We're stuck!", "Terrain is impassable!", "Can't move through here!"],
-	"no_grid": ["Navigation error!", "Can't navigate!", "System error!"],
-	"no_unit": ["Unit error!", "Can't move!", "System error!"],
-	"no_speed": ["We're immobilized!", "Can't move, immobilized!", "Movement systems down!"]
-}
-
-## Maximum messages in queue
-@export var max_queue_size: int = 10
-## Minimum time between messages from same unit (seconds)
-@export var per_unit_cooldown_s: float = 3.0
-## Minimum time between any voice messages (seconds)
-@export var global_cooldown_s: float = 1.0
-
-var _sim_world: Node = null
-var _units_by_id: Dictionary = {}
-var _id_to_callsign: Dictionary = {}
-var _terrain_render: TerrainRender = null
-var _counter_controller: UnitCounterController = null
-var _artillery_controller: ArtilleryController = null
-
-var _unit_states: Dictionary = {}
-var _spotted_contacts: Dictionary = {}
-
-var _message_queue: Array[VoiceMessage] = []
-
-var _last_message_time: float = 0.0
-var _unit_last_message: Dictionary = {}
-var _event_last_triggered: Dictionary = {}
-
-var _rng := RandomNumberGenerator.new()
-
-
 func _ready() -> void:
 	_rng.randomize()
+	_load_auto_responses()
+
+
+## Load auto response phrases from JSON data file.
+func _load_auto_responses() -> void:
+	if not FileAccess.file_exists(AUTO_RESPONSES_PATH):
+		push_error("UnitAutoResponses: Auto responses file not found: %s" % AUTO_RESPONSES_PATH)
+		return
+
+	var file := FileAccess.open(AUTO_RESPONSES_PATH, FileAccess.READ)
+	if file == null:
+		push_error("UnitAutoResponses: Failed to open auto responses file: %s" % AUTO_RESPONSES_PATH)
+		return
+
+	var json_text := file.get_as_text()
+	file.close()
+
+	var json := JSON.new()
+	var error := json.parse(json_text)
+	if error != OK:
+		push_error(
+			(
+				"UnitAutoResponses: Failed to parse auto responses JSON at line %d: %s"
+				% [json.get_error_line(), json.get_error_message()]
+			)
+		)
+		return
+
+	var data: Dictionary = json.data
+
+	var events_json: Dictionary = data.get("events", {})
+	for event_name in events_json.keys():
+		var event_type := _event_name_to_enum(event_name)
+		if event_type != -1:
+			event_config[event_type] = events_json[event_name]
+
+	order_failure_phrases = data.get("order_failures", {})
+	movement_blocked_phrases = data.get("movement_blocked", {})
+	commander_names = data.get("commander_names", [])
+
+	LogService.info(
+		(
+			"Loaded %d event configs, %d order failure types, %d movement blocked types"
+			% [
+				event_config.size(),
+				order_failure_phrases.size(),
+				movement_blocked_phrases.size()
+			]
+		),
+		"UnitAutoResponses"
+	)
+
+
+## Convert event name string to EventType enum value.
+## [param name] Event name string (e.g., "MOVEMENT_STARTED").
+## [return] EventType enum value or -1 if not found.
+func _event_name_to_enum(event_name: String) -> int:
+	match event_name:
+		"MOVEMENT_STARTED":
+			return EventType.MOVEMENT_STARTED
+		"POSITION_REACHED":
+			return EventType.POSITION_REACHED
+		"CONTACT_SPOTTED":
+			return EventType.CONTACT_SPOTTED
+		"CONTACT_LOST":
+			return EventType.CONTACT_LOST
+		"TAKING_FIRE":
+			return EventType.TAKING_FIRE
+		"ENGAGING_TARGET":
+			return EventType.ENGAGING_TARGET
+		"AMMO_LOW":
+			return EventType.AMMO_LOW
+		"AMMO_CRITICAL":
+			return EventType.AMMO_CRITICAL
+		"FUEL_LOW":
+			return EventType.FUEL_LOW
+		"FUEL_CRITICAL":
+			return EventType.FUEL_CRITICAL
+		"ORDER_FAILED":
+			return EventType.ORDER_FAILED
+		"MOVEMENT_BLOCKED":
+			return EventType.MOVEMENT_BLOCKED
+		"MISSION_CONFIRMED":
+			return EventType.MISSION_CONFIRMED
+		"ROUNDS_SHOT":
+			return EventType.ROUNDS_SHOT
+		"ROUNDS_SPLASH":
+			return EventType.ROUNDS_SPLASH
+		"ROUNDS_IMPACT":
+			return EventType.ROUNDS_IMPACT
+		"BATTLE_DAMAGE_ASSESSMENT":
+			return EventType.BATTLE_DAMAGE_ASSESSMENT
+		"CASUALTIES_TAKEN":
+			return EventType.CASUALTIES_TAKEN
+		"COMMAND_CHANGE":
+			return EventType.COMMAND_CHANGE
+		"STRENGTH_REPORT":
+			return EventType.STRENGTH_REPORT
+		"COMBAT_INEFFECTIVE":
+			return EventType.COMBAT_INEFFECTIVE
+		_:
+			push_warning("UnitAutoResponses: Unknown event type: %s" % event_name)
+			return -1
 
 
 ## Initialize with simulation world reference.
@@ -320,7 +256,6 @@ func _connect_unit_signals() -> void:
 	for unit_id in _units_by_id.keys():
 		var unit = _units_by_id[unit_id]
 		if unit and unit is ScenarioUnit:
-			# Connect to move_blocked signal
 			if not unit.move_blocked.is_connected(_on_unit_move_blocked):
 				unit.move_blocked.connect(_on_unit_move_blocked.bind(unit_id))
 
@@ -382,9 +317,16 @@ func _compare_messages(a: VoiceMessage, b: VoiceMessage) -> bool:
 ## Emit voice message via TTSService.
 func _emit_voice_message(msg: VoiceMessage) -> void:
 	var formatted := "%s, %s" % [msg.callsign, msg.text]
+
+	# Emit transmission start for sound effects
+	transmission_start.emit(msg.callsign)
+
 	if TTSService:
 		TTSService.say(formatted)
 	unit_auto_response.emit(msg.callsign, formatted)
+
+	# Request transmission end (actual end happens when TTS finishes)
+	transmission_end_requested.emit(msg.callsign)
 
 
 ## Queue a voice message for a unit.
@@ -392,18 +334,18 @@ func _queue_message(unit_id: String, event_type: EventType) -> void:
 	var event_key := "%s:%d" % [unit_id, event_type]
 	var current_time := Time.get_ticks_msec() / 1000.0
 	var last_trigger_time: float = _event_last_triggered.get(event_key, 0.0)
-	var cooldown: float = EVENT_CONFIG[event_type].get("cooldown_s", 10.0)
+	var cooldown: float = event_config[event_type].get("cooldown_s", 10.0)
 
 	if current_time - last_trigger_time < cooldown:
 		return
 
 	var callsign: String = _id_to_callsign.get(unit_id, unit_id)
-	var phrases: Array = EVENT_CONFIG[event_type].get("phrases", [])
+	var phrases: Array = event_config[event_type].get("phrases", [])
 	if phrases.is_empty():
 		return
 	var phrase: String = phrases[_rng.randi() % phrases.size()]
 
-	var priority: Priority = EVENT_CONFIG[event_type].get("priority", Priority.NORMAL)
+	var priority: Priority = event_config[event_type].get("priority", Priority.NORMAL)
 	var msg := VoiceMessage.new(unit_id, callsign, phrase, priority, current_time)
 
 	if _message_queue.size() >= max_queue_size:
@@ -433,23 +375,38 @@ func _queue_custom_message(
 
 ## Handle unit state update - detect state changes.
 func _on_unit_updated(unit_id: String, snapshot: Dictionary) -> void:
+	var unit: ScenarioUnit = _units_by_id.get(unit_id)
+	if not unit or not unit.playable:
+		return
+
 	var prev_state: Dictionary = _unit_states.get(unit_id, {})
 
 	_check_movement_state(unit_id, prev_state, snapshot)
 	_check_contact_changes(unit_id, prev_state, snapshot)
+	_check_health_changes(unit_id, prev_state, snapshot)
 	_unit_states[unit_id] = snapshot.duplicate()
 
 
 ## Check for movement state changes.
 func _check_movement_state(unit_id: String, prev: Dictionary, current: Dictionary) -> void:
-	var prev_movement_state: String = prev.get("movement_state", "IDLE")
-	var curr_movement_state: String = current.get("movement_state", "IDLE")
+	var unit: ScenarioUnit = _units_by_id.get(unit_id)
+	if not unit:
+		return
 
-	if prev_movement_state == "IDLE" and curr_movement_state == "MOVING":
+	const IDLE = 0
+	const MOVING = 2
+	const ARRIVED = 5
+
+	var prev_movement_state: int = prev.get("movement_state", IDLE)
+	var curr_movement_state: int = unit.move_state()
+
+	if prev_movement_state == IDLE and curr_movement_state == MOVING:
 		_queue_message(unit_id, EventType.MOVEMENT_STARTED)
 
-	elif prev_movement_state == "MOVING" and curr_movement_state == "ARRIVED":
+	elif prev_movement_state == MOVING and curr_movement_state == ARRIVED:
 		_queue_message(unit_id, EventType.POSITION_REACHED)
+
+	current["movement_state"] = curr_movement_state
 
 
 ## Check for contact changes (enemies spotted/lost).
@@ -464,19 +421,54 @@ func _check_contact_changes(unit_id: String, prev: Dictionary, current: Dictiona
 		_queue_message(unit_id, EventType.CONTACT_LOST)
 
 
+## Check for health/casualty changes.
+func _check_health_changes(unit_id: String, prev: Dictionary, current: Dictionary) -> void:
+	var unit: ScenarioUnit = _units_by_id.get(unit_id)
+	if not unit or not unit.unit:
+		return
+
+	var prev_strength: int = prev.get("strength", unit.unit.strength)
+	var curr_strength: int = int(unit.state_strength)
+	var max_strength: int = unit.unit.strength
+
+	current["strength"] = curr_strength
+
+	if curr_strength >= prev_strength:
+		return
+
+	var casualties := prev_strength - curr_strength
+	var strength_pct := (float(curr_strength) / float(max_strength)) * 100.0
+
+	var prev_strength_pct := (float(prev_strength) / float(max_strength)) * 100.0
+	if prev_strength_pct >= 25.0 and strength_pct < 25.0:
+		_queue_message(unit_id, EventType.COMBAT_INEFFECTIVE)
+
+	var casualty_pct := (float(casualties) / float(max_strength)) * 100.0
+	if casualty_pct >= 25.0:
+		_trigger_command_change(unit_id)
+	else:
+		_trigger_casualties(unit_id, casualties, curr_strength)
+
+
 ## Handle contact reported signal.
 func _on_contact_reported(attacker_id: String, defender_id: String) -> void:
-	_report_contact_spotted(attacker_id, defender_id)
-
-	_spawn_contact_counter(defender_id)
+	var spotter: ScenarioUnit = _units_by_id.get(attacker_id)
+	if spotter and spotter.playable:
+		_report_contact_spotted(attacker_id, defender_id)
+		_spawn_contact_counter(defender_id)
 
 
 ## Handle engagement reported signal.
 func _on_engagement_reported(
 	attacker_id: String, defender_id: String, _damage: float = 0.0
 ) -> void:
-	_queue_message(attacker_id, EventType.ENGAGING_TARGET)
-	_queue_message(defender_id, EventType.TAKING_FIRE)
+	var attacker: ScenarioUnit = _units_by_id.get(attacker_id)
+	if attacker and attacker.playable:
+		_queue_message(attacker_id, EventType.ENGAGING_TARGET)
+
+	var defender: ScenarioUnit = _units_by_id.get(defender_id)
+	if defender and defender.playable:
+		_queue_message(defender_id, EventType.TAKING_FIRE)
 
 
 ## Handle order failure.
@@ -496,8 +488,8 @@ func _on_order_failed(order: Dictionary, reason: String) -> void:
 	if unit_id == "":
 		return
 
-	var default_phrases: Array = EVENT_CONFIG[EventType.ORDER_FAILED]["phrases"]
-	var phrases: Array = ORDER_FAILURE_PHRASES.get(reason, default_phrases)
+	var default_phrases: Array = event_config[EventType.ORDER_FAILED]["phrases"]
+	var phrases: Array = order_failure_phrases.get(reason, default_phrases)
 	var phrase: String = phrases[_rng.randi() % phrases.size()]
 
 	_queue_custom_message(unit_id, callsign, phrase, Priority.NORMAL)
@@ -540,13 +532,41 @@ func trigger_fuel_critical(unit_id: String) -> void:
 func trigger_movement_blocked(unit_id: String, reason: String) -> void:
 	var callsign: String = _id_to_callsign.get(unit_id, unit_id)
 
-	# Get specific phrase for this block reason
-	var default_phrases: Array = EVENT_CONFIG[EventType.MOVEMENT_BLOCKED]["phrases"]
-	var phrases: Array = MOVEMENT_BLOCKED_PHRASES.get(reason, default_phrases)
+	var default_phrases: Array = event_config[EventType.MOVEMENT_BLOCKED]["phrases"]
+	var phrases: Array = movement_blocked_phrases.get(reason, default_phrases)
 	var phrase: String = phrases[_rng.randi() % phrases.size()]
 
-	# Queue message with specific phrase
 	_queue_custom_message(unit_id, callsign, phrase, Priority.HIGH)
+
+
+## Trigger casualties report.
+## [param unit_id] Unit that took casualties.
+## [param casualties] Number of casualties.
+## [param current_strength] Current unit strength.
+func _trigger_casualties(unit_id: String, casualties: int, current_strength: int) -> void:
+	var callsign: String = _id_to_callsign.get(unit_id, unit_id)
+	var message: String
+
+	# Use phrase from config if casualties are minor, or strength report for moderate
+	if casualties < 5:
+		_queue_message(unit_id, EventType.CASUALTIES_TAKEN)
+	else:
+		# Report current strength
+		message = "%s is %d men strong." % [callsign, current_strength]
+		_queue_custom_message(unit_id, callsign, message, Priority.HIGH)
+
+
+## Trigger command change announcement.
+## [param unit_id] Unit experiencing command change.
+func _trigger_command_change(unit_id: String) -> void:
+	var callsign: String = _id_to_callsign.get(unit_id, unit_id)
+
+	var cmd_name := "Unknown"
+	if not commander_names.is_empty():
+		cmd_name = commander_names[_rng.randi() % commander_names.size()]
+
+	var message := "This is %s taking command of %s." % [cmd_name, callsign]
+	_queue_custom_message(unit_id, callsign, message, Priority.URGENT)
 
 
 ## Generate and queue descriptive contact report.
@@ -556,7 +576,7 @@ func _report_contact_spotted(spotter_id: String, contact_id: String) -> void:
 	var event_key := "%s:%d" % [spotter_id, EventType.CONTACT_SPOTTED]
 	var current_time := Time.get_ticks_msec() / 1000.0
 	var last_trigger_time: float = _event_last_triggered.get(event_key, 0.0)
-	var cooldown: float = EVENT_CONFIG[EventType.CONTACT_SPOTTED].get("cooldown_s", 15.0)
+	var cooldown: float = event_config[EventType.CONTACT_SPOTTED].get("cooldown_s", 15.0)
 
 	if current_time - last_trigger_time < cooldown:
 		return
@@ -571,7 +591,7 @@ func _report_contact_spotted(spotter_id: String, contact_id: String) -> void:
 	var grid_pos := _get_grid_from_position(contact_unit.position_m)
 
 	var message := "Contact! %s at grid %s." % [description, grid_pos]
-	var priority: Priority = EVENT_CONFIG[EventType.CONTACT_SPOTTED].get("priority", Priority.HIGH)
+	var priority: Priority = event_config[EventType.CONTACT_SPOTTED].get("priority", Priority.HIGH)
 	var msg := VoiceMessage.new(spotter_id, spotter_callsign, message, priority, current_time)
 
 	if _message_queue.size() >= max_queue_size:
@@ -691,6 +711,9 @@ func _parse_unit_affiliation(aff: ScenarioUnit.Affiliation) -> MilSymbol.UnitAff
 func _on_mission_confirmed(
 	unit_id: String, _target_pos: Vector2, _ammo_type: String, _rounds: int
 ) -> void:
+	var unit: ScenarioUnit = _units_by_id.get(unit_id)
+	if not unit or not unit.playable:
+		return
 	_queue_message(unit_id, EventType.MISSION_CONFIRMED)
 
 
@@ -702,6 +725,9 @@ func _on_mission_confirmed(
 func _on_rounds_shot(
 	unit_id: String, _target_pos: Vector2, _ammo_type: String, _rounds: int
 ) -> void:
+	var unit: ScenarioUnit = _units_by_id.get(unit_id)
+	if not unit or not unit.playable:
+		return
 	_queue_message(unit_id, EventType.ROUNDS_SHOT)
 
 
@@ -713,6 +739,9 @@ func _on_rounds_shot(
 func _on_rounds_splash(
 	unit_id: String, _target_pos: Vector2, _ammo_type: String, _rounds: int
 ) -> void:
+	var unit: ScenarioUnit = _units_by_id.get(unit_id)
+	if not unit or not unit.playable:
+		return
 	_queue_message(unit_id, EventType.ROUNDS_SPLASH)
 
 
@@ -725,6 +754,9 @@ func _on_rounds_splash(
 func _on_rounds_impact(
 	unit_id: String, _target_pos: Vector2, _ammo_type: String, _rounds: int, _damage: float
 ) -> void:
+	var unit: ScenarioUnit = _units_by_id.get(unit_id)
+	if not unit or not unit.playable:
+		return
 	_queue_message(unit_id, EventType.ROUNDS_IMPACT)
 
 
@@ -735,6 +767,10 @@ func _on_rounds_impact(
 func _on_battle_damage_assessment(
 	observer_id: String, target_pos: Vector2, description: String
 ) -> void:
+	var observer: ScenarioUnit = _units_by_id.get(observer_id)
+	if not observer or not observer.playable:
+		return
+
 	var observer_callsign: String = _id_to_callsign.get(observer_id, observer_id)
 	var grid_pos := " ".join(_get_grid_from_position(target_pos).split(""))
 	var message := "%s At grid %s." % [description, grid_pos]

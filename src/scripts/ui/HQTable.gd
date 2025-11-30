@@ -18,15 +18,20 @@ extends Node3D
 @onready var drawing_controller: DrawingController = %DrawingController
 @onready var counter_controller: UnitCounterController = %UnitCounterController
 @onready var document_controller: DocumentController = %DocumentController
-@onready var unit_voices: UnitVoiceResponses = %UnitVoiceResponses
-@onready var unit_auto_voices: UnitAutoResponses = %UnitAutoResponses
-@onready var tts_player: AudioStreamPlayer3D = %TTSPlayer
 @onready var ai_controller: AIController = %AIController
 @onready var combat_sound: CombatSoundController = %CombatSoundController
+
+# Accessed through radio node
+var unit_voices: UnitVoiceResponses = null
+var tts_player: AudioStreamPlayer3D = null
 
 
 ## Initialize mission systems and bind services.
 func _ready() -> void:
+	if radio:
+		unit_voices = radio.unit_responses
+		tts_player = radio.unit_responses.get_node_or_null("TTSPlayer")
+
 	if Game.current_scenario == null:
 		_init_test_scenario()
 
@@ -37,7 +42,6 @@ func _ready() -> void:
 	var playable_units := generate_playable_units(scenario.unit_slots)
 	scenario.playable_units = playable_units
 
-	# Set up signal connection before initializing terrain
 	var ready_state := {"map_ready": false}
 	var on_map_ready := func(): ready_state["map_ready"] = true
 	if renderer and not renderer.is_connected("render_ready", on_map_ready):
@@ -73,27 +77,21 @@ func _ready() -> void:
 
 	_update_subtitle_suggestions(scenario)
 
-	# Initialize the AI
 	_init_enemy_ai()
 
-	# Wait for map to finish rendering
 	while not ready_state["map_ready"]:
 		await get_tree().process_frame
 
-	# Create unit counters after map is ready (so position conversion works)
 	await _create_initial_unit_counters(playable_units)
 
-	# All initialization complete - hide loading screen
 	loading_screen.hide_loading()
 
-	# Start the simulation now that everything is ready
 	sim.start()
 
 
 ## Initialize the drawing controller and bind to trigger API
 func _init_drawing_controller() -> void:
 	if drawing_controller:
-		# Set the map mesh reference
 		drawing_controller.map_mesh = %Map
 
 	if trigger_engine and trigger_engine._api:
@@ -102,7 +100,6 @@ func _init_drawing_controller() -> void:
 
 ## Initialize the counter controller and bind to trigger API
 func _init_counter_controller() -> void:
-	# Initialize counter controller with map mesh and terrain render for coordinate conversion
 	if counter_controller and map:
 		counter_controller.init(%Map, map.renderer)
 
@@ -120,9 +117,6 @@ func _init_document_controller(scenario: ScenarioData) -> void:
 
 		if unit_voices:
 			unit_voices.unit_response.connect(_on_unit_voice_transcript)
-
-		if unit_auto_voices:
-			unit_auto_voices.unit_auto_response.connect(_on_unit_voice_transcript)
 
 
 ## Handle player radio result for transcript
@@ -154,25 +148,20 @@ func _on_unit_voice_transcript(callsign: String, message: String) -> void:
 ## Extract speaker callsign from message text if present, otherwise return "HQ".
 ## Handles formats: "ALPHA: message", "ALPHA message", or plain messages.
 func _extract_speaker_from_message(text: String) -> String:
-	# Check for "CALLSIGN: message" format
 	var colon_pos := text.find(":")
 	if colon_pos > 0:
 		var potential_callsign := text.substr(0, colon_pos).strip_edges()
-		# Verify it looks like a callsign (uppercase letters, possibly with numbers)
 		if potential_callsign.length() >= 2 and potential_callsign.length() <= 12:
 			if potential_callsign.to_upper() == potential_callsign:
 				return potential_callsign
 
-	# Check for "CALLSIGN message" format (first word is all caps)
 	var words := text.split(" ", false, 1)
 	if words.size() >= 2:
 		var first_word := words[0].strip_edges()
-		# Check if first word is uppercase and looks like a callsign
 		if first_word.length() >= 2 and first_word.length() <= 12:
 			if first_word.to_upper() == first_word and first_word.is_valid_identifier():
 				return first_word
 
-	# Default to HQ if no callsign detected
 	return "HQ"
 
 
@@ -185,7 +174,6 @@ func _init_combat_controllers() -> void:
 		if sim.engineer_controller:
 			trigger_engine._api._bind_engineer_controller(sim.engineer_controller)
 
-	# Wire up combat sound controller
 	if combat_sound and sim:
 		combat_sound.bind_sim_world(sim)
 		if sim.artillery_controller:
@@ -198,11 +186,12 @@ func _init_tts_system() -> void:
 		TTSService.register_player(tts_player)
 
 	if unit_voices and sim and map:
-		unit_voices.init(sim._units_by_id, sim, map.renderer)
-
-	if unit_auto_voices and sim and map:
-		unit_auto_voices.init(
-			sim, sim._units_by_id, map.renderer, counter_controller, sim.artillery_controller
+		unit_voices.init(
+			sim._units_by_id,
+			sim,
+			map.renderer,
+			counter_controller,
+			sim.artillery_controller
 		)
 		_wire_logistics_warnings()
 
@@ -237,40 +226,36 @@ func _wire_logistics_warnings() -> void:
 
 ## Handle ammo low warning.
 func _on_ammo_low(unit_id: String) -> void:
-	if unit_auto_voices:
-		unit_auto_voices.trigger_ammo_low(unit_id)
+	if unit_voices and unit_voices.auto_responses:
+		unit_voices.auto_responses.trigger_ammo_low(unit_id)
 
 
 ## Handle ammo critical warning.
 func _on_ammo_critical(unit_id: String) -> void:
-	if unit_auto_voices:
-		unit_auto_voices.trigger_ammo_critical(unit_id)
+	if unit_voices and unit_voices.auto_responses:
+		unit_voices.auto_responses.trigger_ammo_critical(unit_id)
 
 
 ## Handle fuel low warning.
 func _on_fuel_low(unit_id: String) -> void:
-	if unit_auto_voices:
-		unit_auto_voices.trigger_fuel_low(unit_id)
+	if unit_voices and unit_voices.auto_responses:
+		unit_voices.auto_responses.trigger_fuel_low(unit_id)
 
 
 ## Handle fuel critical warning.
 func _on_fuel_critical(unit_id: String) -> void:
-	if unit_auto_voices:
-		unit_auto_voices.trigger_fuel_critical(unit_id)
+	if unit_voices and unit_voices.auto_responses:
+		unit_voices.auto_responses.trigger_fuel_critical(unit_id)
 
 
 ## Handle radio messages from SimWorld (trigger API, ammo/fuel warnings, etc.)
 func _on_radio_message(_level: String, text: String) -> void:
-	# Skip "Order applied" and "Order failed" messages
-	# These are already handled by UnitVoiceResponses
 	if text.begins_with("Order applied") or text.begins_with("Order failed"):
 		return
 
-	# Skip ammo/fuel warnings - now handled by UnitAutoResponses
 	if text.contains("low ammo") or text.contains("winchester") or text.contains("low on fuel"):
 		return
 
-	# Speak the message via TTS
 	if TTSService and TTSService.is_ready():
 		TTSService.say(text)
 
@@ -348,7 +333,7 @@ func _on_radio_on() -> void:
 
 ## Handle radio PTT released
 func _on_radio_off() -> void:
-	pass  # Wait for result to show final text
+	pass
 
 
 ## Handle partial speech recognition
@@ -392,14 +377,12 @@ func _create_initial_unit_counters(playable_units: Array[ScenarioUnit]) -> void:
 		)
 		%PhysicsObjects.add_child(counter)
 
-		# Set position immediately (before awaiting texture)
 		var world_pos: Variant = _terrain_pos_to_world(unit.position_m)
 		if world_pos != null:
 			counter.global_position = world_pos + Vector3(0, 0.25, 0)
 		else:
 			counter.global_position = %CounterSpawnLocation.global_position
 
-		# Wait for texture generation to complete (for loading screen)
 		await counter.texture_ready
 
 
@@ -420,22 +403,17 @@ func _terrain_pos_to_world(pos_m: Vector2) -> Variant:
 	else:
 		return null
 
-	# Convert terrain meters to map pixels (includes margins and borders)
 	var map_px := renderer.terrain_to_map(pos_m)
 
-	# Get total map size in pixels (includes margins)
 	var map_size := renderer.size
 	if map_size.x == 0 or map_size.y == 0:
 		return null
 
-	# Normalize to -0.5..0.5 range (mesh local space)
 	var normalized_x := (map_px.x / map_size.x) - 0.5
 	var normalized_z := (map_px.y / map_size.y) - 0.5
 
-	# Scale to mesh size
 	var local_pos := Vector3(normalized_x * mesh_size.x, 0, normalized_z * mesh_size.y)
 
-	# Convert to world space
 	var world_pos := map_mesh.to_global(local_pos)
 
 	return world_pos
@@ -482,7 +460,6 @@ func _init_enemy_ai() -> void:
 	ai_controller.unregister_all_units()
 	ai_controller.refresh_unit_index_cache()
 
-	# Build per-unit queues from scenario JSON (normalize inside AIController)
 	var flat_tasks: Array = []
 	if scenario.tasks is Array:
 		flat_tasks = scenario.tasks
@@ -490,7 +467,6 @@ func _init_enemy_ai() -> void:
 	var per_unit: Dictionary = ai_controller.build_per_unit_queues(normalized)
 	ai_controller.apply_trigger_sync(per_unit, scenario.triggers)
 
-	# Create an agent per ENEMY unit in scenario.units
 	for i in scenario.units.size():
 		var u: ScenarioUnit = scenario.units[i]
 		if u == null or u.affiliation != ScenarioUnit.Affiliation.ENEMY:
@@ -499,7 +475,6 @@ func _init_enemy_ai() -> void:
 		if agent == null:
 			continue
 
-		# Apply ScenarioUnit initial behaviour/ROE before queue starts
 		agent.set_behaviour(int(u.behaviour))
 		agent.set_combat_mode(int(u.combat_mode))
 

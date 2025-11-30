@@ -499,6 +499,9 @@ func start() -> void:
 
 		var start_s := _scenario.second + _scenario.minute * 60 + _scenario.hour * 60 * 60
 		environment_controller.time_of_day = start_s
+		environment_controller.wind_direction = _scenario.wind_dir
+		environment_controller.wind_speed = _scenario.wind_dir
+		environment_controller.rain_intensity = _scenario.rain
 
 
 ## Set simulation time scale (1.0 = normal, 2.0 = 2x speed).

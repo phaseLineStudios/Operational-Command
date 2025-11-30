@@ -1,6 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://5wbc83x6ecek"]
+[gd_scene load_steps=9 format=3 uid="uid://5wbc83x6ecek"]
 
 [ext_resource type="Script" uid="uid://c2ou0jfby4bkd" path="res://scripts/radio/Radio.gd" id="1_ilbh7"]
+[ext_resource type="AudioStream" uid="uid://c5acokvamm14y" path="res://audio/sfx/sfx_radio_noise.wav" id="2_0wu01"]
+[ext_resource type="Script" uid="uid://bnus1tqft6rms" path="res://scripts/radio/UnitVoiceResponses.gd" id="3_voices"]
+[ext_resource type="Script" uid="uid://d1c2ojsjf1fws" path="res://scripts/audio/RadioSignalModulator.gd" id="4_modulator"]
+[ext_resource type="Script" uid="uid://b3scpf03uwuwg" path="res://scripts/radio/RadioSfx.gd" id="4_t3ewi"]
+[ext_resource type="Script" uid="uid://cpcrrfahha6bx" path="res://scripts/radio/UnitAutoResponses.gd" id="5_auto_voices"]
+[ext_resource type="AudioStream" uid="uid://cg65fal3ss8dr" path="res://audio/sfx/sfx_radio_end.wav" id="6_nvyg5"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_yxjyo"]
 
@@ -8,6 +14,40 @@
 script = ExtResource("1_ilbh7")
 
 [node name="Microphone" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
 stream = SubResource("AudioStreamMicrophone_yxjyo")
 autoplay = true
 bus = &"Capture"
+
+[node name="UnitResponses" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("3_voices")
+
+[node name="AutoResponses" type="Node" parent="UnitResponses"]
+unique_name_in_owner = true
+script = ExtResource("5_auto_voices")
+
+[node name="RadioResponsesSfx" type="Node" parent="UnitResponses" node_paths=PackedStringArray("unit_responses_node")]
+script = ExtResource("4_t3ewi")
+unit_responses_node = NodePath("..")
+transmission_noise_sound = ExtResource("2_0wu01")
+transmission_end_sound = ExtResource("6_nvyg5")
+
+[node name="TTSPlayer" type="AudioStreamPlayer3D" parent="UnitResponses"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.31213963, 0.80743265, -0.14403522)
+bus = &"Radio"
+
+[node name="Noise" type="AudioStreamPlayer3D" parent="UnitResponses"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.31213963, 0.80743265, -0.14403522)
+stream = ExtResource("2_0wu01")
+bus = &"Radio"
+
+[node name="Trigger" type="AudioStreamPlayer3D" parent="UnitResponses"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.31213963, 0.80743265, -0.14403522)
+bus = &"Radio"
+
+[node name="RadioSignalModulator" type="Node" parent="."]
+script = ExtResource("4_modulator")
