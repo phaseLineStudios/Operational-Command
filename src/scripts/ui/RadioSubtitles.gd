@@ -4,13 +4,13 @@ extends Control
 ## Shows partial speech recognition results and provides intelligent suggestions
 ## for completing valid radio commands using NARules tables.
 
+## Path to suggestions config file
+const SUGGESTIONS_PATH := "res://data/voice/radio_suggestions.json"
+
 ## Display time for result text after PTT release (in seconds)
 @export var result_display_time: float = 2.0
 ## Maximum number of suggestions to show
 @export var max_suggestions: int = 8
-
-## Path to suggestions config file
-const SUGGESTIONS_PATH := "res://data/voice/radio_suggestions.json"
 
 var _tables: Dictionary = {}
 var _suggestions_config: Dictionary = {}
@@ -54,8 +54,10 @@ func _load_suggestions_config() -> void:
 	var error := json.parse(json_text)
 	if error != OK:
 		push_error(
-			"RadioSubtitles: Failed to parse suggestions JSON at line %d: %s"
-			% [json.get_error_line(), json.get_error_message()]
+			(
+				"RadioSubtitles: Failed to parse suggestions JSON at line %d: %s"
+				% [json.get_error_line(), json.get_error_message()]
+			)
 		)
 		return
 
