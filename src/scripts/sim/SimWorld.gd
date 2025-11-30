@@ -495,7 +495,7 @@ func resume() -> void:
 ## Start simulation from INIT state.
 func start() -> void:
 	if _state == State.INIT:
-		_transition(_state, State.RUNNING)
+		_transition(_state, State.PAUSED)
 
 		var start_s := _scenario.second + _scenario.minute * 60 + _scenario.hour * 60 * 60
 		environment_controller.time_of_day = start_s

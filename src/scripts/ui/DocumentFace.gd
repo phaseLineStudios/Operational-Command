@@ -3,8 +3,13 @@ extends PanelContainer
 
 signal page_changed(page_index: int)
 
+## Page change sound effects to play randomly when changing pages
+@export var page_change_sounds: Array[AudioStream] = []
+
 var current_page := 0
 var total_pages := 1
+
+var _page_sound_player: AudioStreamPlayer
 
 @onready var paper_content: RichTextLabel = %PaperContent
 @onready var page_indicator: Label = %PageIndicator
@@ -13,6 +18,12 @@ var total_pages := 1
 
 
 func _ready() -> void:
+	# Setup page change sound player
+	if not page_change_sounds.is_empty():
+		_page_sound_player = AudioStreamPlayer.new()
+		_page_sound_player.bus = "SFX"
+		add_child(_page_sound_player)
+
 	# Connect button signals
 	if prev_button:
 		prev_button.pressed.connect(_on_prev_pressed)
@@ -55,9 +66,14 @@ func _on_next_pressed() -> void:
 ## Set the current page
 func set_page(page: int) -> void:
 	if page >= 0 and page < total_pages:
+		var old_page := current_page
 		current_page = page
 		update_page_indicator()
 		page_changed.emit(current_page)
+
+		# Play page change sound (but not on initial page set)
+		if old_page != current_page:
+			_play_page_change_sound()
 	else:
 		LogService.warning(
 			"Invalid page %d (total: %d), ignoring" % [page, total_pages], "DocumentFace.gd"
@@ -81,3 +97,13 @@ func next_page() -> void:
 func prev_page() -> void:
 	if current_page > 0:
 		set_page(current_page - 1)
+
+
+## Play a random page change sound
+func _play_page_change_sound() -> void:
+	if page_change_sounds.is_empty() or not _page_sound_player:
+		return
+
+	var sound := page_change_sounds[randi() % page_change_sounds.size()]
+	_page_sound_player.stream = sound
+	_page_sound_player.play()
