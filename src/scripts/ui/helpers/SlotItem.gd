@@ -59,7 +59,7 @@ func _ready() -> void:
 		func():
 			_is_hovered = true
 			_apply_style()
-			if hover_sound:
+			if hover_sound and _assigned_unit:
 				AudioManager.play_ui_sound(hover_sound)
 	)
 	mouse_exited.connect(
