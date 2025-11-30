@@ -93,6 +93,7 @@ func _ready() -> void:
 
 	loading_screen.hide_loading()
 
+	_enable_pickup_collision_sounds()
 	sim.start()
 
 
@@ -263,6 +264,25 @@ func _on_radio_message(_level: String, text: String) -> void:
 
 	if TTSService and TTSService.is_ready():
 		TTSService.say(text)
+
+
+## Enable collision sounds for all PickupItems in the scene
+func _enable_pickup_collision_sounds() -> void:
+	var pickup_items := _find_all_pickup_items(self)
+	for item in pickup_items:
+		if item.has_method("enable_collision_sounds"):
+			item.enable_collision_sounds()
+	LogService.info("Enabled collision sounds for %d pickup items" % pickup_items.size(), "HQTable")
+
+
+## Recursively find all PickupItem nodes in the tree
+func _find_all_pickup_items(node: Node) -> Array[PickupItem]:
+	var items: Array[PickupItem] = []
+	if node is PickupItem:
+		items.append(node)
+	for child in node.get_children():
+		items.append_array(_find_all_pickup_items(child))
+	return items
 
 
 ## Clean up when exiting (clears session drawings)
