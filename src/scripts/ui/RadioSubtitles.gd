@@ -9,7 +9,11 @@ extends Control
 ## Maximum number of suggestions to show
 @export var max_suggestions: int = 8
 
+## Path to suggestions config file
+const SUGGESTIONS_PATH := "res://data/voice/radio_suggestions.json"
+
 var _tables: Dictionary = {}
+var _suggestions_config: Dictionary = {}
 var _hide_timer: Timer = null
 var _current_text: String = ""
 var _is_transmitting: bool = false
@@ -22,6 +26,7 @@ var _unit_callsigns: Array[String] = []
 
 func _ready() -> void:
 	_tables = NARules.get_parser_tables()
+	_load_suggestions_config()
 	visible = false
 
 	# Create hide timer
@@ -29,6 +34,33 @@ func _ready() -> void:
 	_hide_timer.one_shot = true
 	_hide_timer.timeout.connect(_on_hide_timer_timeout)
 	add_child(_hide_timer)
+
+
+## Load suggestions configuration from JSON
+func _load_suggestions_config() -> void:
+	if not FileAccess.file_exists(SUGGESTIONS_PATH):
+		push_error("RadioSubtitles: Suggestions config not found: %s" % SUGGESTIONS_PATH)
+		return
+
+	var file := FileAccess.open(SUGGESTIONS_PATH, FileAccess.READ)
+	if file == null:
+		push_error("RadioSubtitles: Failed to open suggestions config: %s" % SUGGESTIONS_PATH)
+		return
+
+	var json_text := file.get_as_text()
+	file.close()
+
+	var json := JSON.new()
+	var error := json.parse(json_text)
+	if error != OK:
+		push_error(
+			"RadioSubtitles: Failed to parse suggestions JSON at line %d: %s"
+			% [json.get_error_line(), json.get_error_message()]
+		)
+		return
+
+	_suggestions_config = json.data
+	LogService.info("Loaded radio suggestions config", "RadioSubtitles")
 
 
 ## Show subtitle with current partial text
@@ -80,7 +112,7 @@ func _update_display() -> void:
 	_subtitle_label.text = display_text
 
 	# Update suggestions
-	if _is_transmitting and _current_text != "":
+	if _is_transmitting:
 		_update_suggestions()
 	else:
 		_clear_suggestions()
@@ -200,14 +232,22 @@ func _suggest_for_fire(state: Dictionary, last_token: String) -> Array[String]:
 
 	var last_is_direction := directions.has(last_token)
 	var last_is_number := last_token.is_valid_int() or _is_number_word(last_token)
+	var last_is_ammo_type := _is_ammo_type(last_token)
 
 	if last_is_number:
 		suggestions.append_array(["Meters", "Rounds"])
 	elif last_is_direction:
 		suggestions.append_array(["100", "200", "500", "1000"])
-	elif state.direction == "":
+	elif last_is_ammo_type or state.direction == "":
+		# After ammo type or at start, suggest directions and targets
 		suggestions.append_array(_get_direction_suggestions())
 		suggestions.append_array(_get_terrain_label_suggestions())
+	else:
+		# Suggest ammo types first
+		var ammo_types_config = _suggestions_config.get("ammo_types", {})
+		for ammo_type in ammo_types_config.keys():
+			if ammo_type not in ["he", "illumination"]:  # Skip duplicates
+				suggestions.append(str(ammo_type).to_upper())
 
 	return suggestions
 
@@ -232,8 +272,10 @@ func _suggest_for_defend_recon(state: Dictionary, last_token: String) -> Array[S
 ## Suggestions for REPORT command
 func _suggest_for_report(_state: Dictionary, _last_token: String) -> Array[String]:
 	var suggestions: Array[String] = []
-	# Suggest report types
-	suggestions.append_array(["Status", "Contact", "Position", "Ammunition", "Casualties"])
+	# Get report types from config
+	var report_types_config = _suggestions_config.get("report_types", {})
+	for report_type in report_types_config.keys():
+		suggestions.append(str(report_type).capitalize())
 	return suggestions
 
 
@@ -291,13 +333,10 @@ func _get_callsign_suggestions() -> Array[String]:
 ## Get action suggestions
 func _get_action_suggestions() -> Array[String]:
 	var suggestions: Array[String] = []
-	var actions: Dictionary = _tables.get("action_synonyms", {})
-	var seen := {}
-	for key in actions.keys():
-		var action_type: int = actions[key]
-		if not seen.has(action_type):
-			seen[action_type] = true
-			suggestions.append(str(key).capitalize())
+	# Use config to get actions in proper order
+	var actions_config = _suggestions_config.get("actions", {})
+	for action in actions_config.keys():
+		suggestions.append(str(action).capitalize())
 	return suggestions
 
 
@@ -353,6 +392,12 @@ func _get_grid_coordinate_suggestions() -> Array[String]:
 func _is_number_word(token: String) -> bool:
 	var number_words: Dictionary = _tables.get("number_words", {})
 	return number_words.has(token)
+
+
+## Check if a token is an ammo type
+func _is_ammo_type(token: String) -> bool:
+	var ammo_types_config = _suggestions_config.get("ammo_types", {})
+	return ammo_types_config.has(token)
 
 
 ## Normalize and tokenize text (same as OrdersParser)
