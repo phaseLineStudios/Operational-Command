@@ -38,9 +38,8 @@ enum TimeState { PAUSED, SPEED_1X, SPEED_2X }
 
 @export_group("Button Sounds")
 ## Button press sound effects to play randomly when button is pressed
-@export var button_press_sounds: Array[AudioStream] = [
-	preload("res://audio/sfx/sfx_timer_button.wav")
-]
+@export
+var button_press_sounds: Array[AudioStream] = [preload("res://audio/sfx/sfx_timer_button.wav")]
 ## Button release sound effects to play randomly when button is released
 @export var button_release_sounds: Array[AudioStream] = []
 ## Random pitch variation range (0.0 = no variation, 0.1 = ±10%, etc.)

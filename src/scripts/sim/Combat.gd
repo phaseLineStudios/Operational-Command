@@ -284,7 +284,7 @@ func print_unit_status(attacker: UnitData, defender: UnitData) -> void:
 ## [param ammo_type] Ammunition type string.
 ## [param rounds] Number of rounds to consume.
 func _gate_and_consume(
-	attacker: UnitData, attacker_id: String, ammo_type: String, rounds: int
+	_attacker: UnitData, attacker_id: String, ammo_type: String, rounds: int
 ) -> Dictionary:
 	if ammo_type == "" or rounds <= 0:
 		return {

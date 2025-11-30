@@ -224,10 +224,14 @@ func _wire_logistics_warnings() -> void:
 	if sim.ammo_system:
 		sim.ammo_system.ammo_low.connect(_on_ammo_low)
 		sim.ammo_system.ammo_critical.connect(_on_ammo_critical)
+		sim.ammo_system.resupply_started.connect(_on_resupply_started)
+		sim.ammo_system.supplier_exhausted.connect(_on_ammo_supplier_exhausted)
 
 	if sim.fuel_system:
 		sim.fuel_system.fuel_low.connect(_on_fuel_low)
 		sim.fuel_system.fuel_critical.connect(_on_fuel_critical)
+		sim.fuel_system.refuel_started.connect(_on_refuel_started)
+		sim.fuel_system.supplier_exhausted.connect(_on_fuel_supplier_exhausted)
 
 
 ## Handle ammo low warning.
@@ -252,6 +256,30 @@ func _on_fuel_low(unit_id: String) -> void:
 func _on_fuel_critical(unit_id: String) -> void:
 	if unit_voices and unit_voices.auto_responses:
 		unit_voices.auto_responses.trigger_fuel_critical(unit_id)
+
+
+## Handle resupply started.
+func _on_resupply_started(src_unit_id: String, dst_unit_id: String) -> void:
+	if unit_voices and unit_voices.auto_responses:
+		unit_voices.auto_responses.trigger_resupply_started(src_unit_id, dst_unit_id)
+
+
+## Handle ammo supplier exhausted.
+func _on_ammo_supplier_exhausted(src_unit_id: String) -> void:
+	if unit_voices and unit_voices.auto_responses:
+		unit_voices.auto_responses.trigger_resupply_exhausted(src_unit_id)
+
+
+## Handle refuel started.
+func _on_refuel_started(src_unit_id: String, dst_unit_id: String) -> void:
+	if unit_voices and unit_voices.auto_responses:
+		unit_voices.auto_responses.trigger_refuel_started(src_unit_id, dst_unit_id)
+
+
+## Handle fuel supplier exhausted.
+func _on_fuel_supplier_exhausted(src_unit_id: String) -> void:
+	if unit_voices and unit_voices.auto_responses:
+		unit_voices.auto_responses.trigger_refuel_exhausted(src_unit_id)
 
 
 ## Handle radio messages from SimWorld (trigger API, ammo/fuel warnings, etc.)

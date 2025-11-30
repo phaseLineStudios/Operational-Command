@@ -185,6 +185,34 @@
 	  ],
 	  "priority": 3,
 	  "cooldown_s": 120.0
+	},
+	"RESUPPLY_STARTED": {
+	  "phrases": [],
+	  "priority": 1,
+	  "cooldown_s": 30.0
+	},
+	"RESUPPLY_EXHAUSTED": {
+	  "phrases": [
+		"Out of ammunition stock.",
+		"Ammunition supply exhausted.",
+		"No more rounds to transfer."
+	  ],
+	  "priority": 2,
+	  "cooldown_s": 60.0
+	},
+	"REFUEL_STARTED": {
+	  "phrases": [],
+	  "priority": 1,
+	  "cooldown_s": 30.0
+	},
+	"REFUEL_EXHAUSTED": {
+	  "phrases": [
+		"Out of fuel stock.",
+		"Fuel supply exhausted.",
+		"No more fuel to transfer."
+	  ],
+	  "priority": 2,
+	  "cooldown_s": 60.0
 	}
   },
   "order_failures": {
