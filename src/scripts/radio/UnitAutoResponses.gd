@@ -113,7 +113,9 @@ func _load_auto_responses() -> void:
 
 	var file := FileAccess.open(AUTO_RESPONSES_PATH, FileAccess.READ)
 	if file == null:
-		push_error("UnitAutoResponses: Failed to open auto responses file: %s" % AUTO_RESPONSES_PATH)
+		push_error(
+			"UnitAutoResponses: Failed to open auto responses file: %s" % AUTO_RESPONSES_PATH
+		)
 		return
 
 	var json_text := file.get_as_text()
@@ -145,11 +147,7 @@ func _load_auto_responses() -> void:
 	LogService.info(
 		(
 			"Loaded %d event configs, %d order failure types, %d movement blocked types"
-			% [
-				event_config.size(),
-				order_failure_phrases.size(),
-				movement_blocked_phrases.size()
-			]
+			% [event_config.size(), order_failure_phrases.size(), movement_blocked_phrases.size()]
 		),
 		"UnitAutoResponses"
 	)

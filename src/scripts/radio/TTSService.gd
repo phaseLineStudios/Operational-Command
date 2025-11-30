@@ -10,7 +10,7 @@ signal stream_error(message: String)
 ## Emitted when a line is sent to Piper (best-effort).
 signal speaking_started(text: String)
 ## Emitted when Piper finishes generating audio for a phrase.
-signal speaking_finished()
+signal speaking_finished
 
 ## Available speaker models.
 enum Model { EN_US_HIGH_RYAN, EN_US_MEDIUM_RYAN, EN_US_MEDIUM_NORMAN }

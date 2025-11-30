@@ -25,12 +25,10 @@ var acknowledgments: Dictionary = {}
 var units_by_id: Dictionary = {}
 var sim_world: SimWorld = null
 var terrain_render: TerrainRender = null
+var _current_transmitter: String = ""
 
 ## Reference to auto responses controller.
 @onready var auto_responses: UnitAutoResponses = %AutoResponses
-
-## Track current transmitting unit for transmission_end signal
-var _current_transmitter: String = ""
 
 
 func _ready() -> void:
@@ -55,7 +53,9 @@ func _load_acknowledgments() -> void:
 
 	var file := FileAccess.open(ACKNOWLEDGMENTS_PATH, FileAccess.READ)
 	if file == null:
-		push_error("UnitVoiceResponses: Failed to open acknowledgments file: %s" % ACKNOWLEDGMENTS_PATH)
+		push_error(
+			"UnitVoiceResponses: Failed to open acknowledgments file: %s" % ACKNOWLEDGMENTS_PATH
+		)
 		return
 
 	var json_text := file.get_as_text()
@@ -73,15 +73,17 @@ func _load_acknowledgments() -> void:
 		return
 
 	acknowledgments = json.data
-	LogService.info("Loaded %d acknowledgment categories" % acknowledgments.size(), "UnitVoiceResponses")
+	LogService.info(
+		"Loaded %d acknowledgment categories" % acknowledgments.size(), "UnitVoiceResponses"
+	)
 
 
 ## Initialize with references to units and simulation world.
 ## [param id_index] Dictionary String->ScenarioUnit (by unit id).
 ## [param world] Reference to SimWorld for contact data.
 ## [param terrain_renderer] Reference to TerrainRender for grid conversions.
-## [param counter_controller] UnitCounterController for spawning counters (passed to auto responses).
-## [param artillery_controller] ArtilleryController for fire mission responses (passed to auto responses).
+## [param counter_controller] UnitCounterController for spawning counters.
+## [param artillery_controller] ArtilleryController for fire mission responses.
 func init(
 	id_index: Dictionary,
 	world: Node,
@@ -404,7 +406,7 @@ func _on_auto_transmission_start(callsign: String) -> void:
 ## Handle transmission end request from auto responses.
 ## Doesn't emit immediately - waits for TTS to finish.
 ## [param callsign] Unit callsign.
-func _on_auto_transmission_end_requested(callsign: String) -> void:
+func _on_auto_transmission_end_requested(_callsign: String) -> void:
 	# Just track who wants to end - actual emission happens when TTS finishes
 	pass
 

@@ -5,6 +5,9 @@ extends Node3D
 ## Sets up terrain, simulation world, radio pipeline, and speech word list.
 ## Generates playable units from scenario slots and binds controllers.
 
+var unit_voices: UnitVoiceResponses = null
+var tts_player: AudioStreamPlayer3D = null
+
 @onready var sim: SimWorld = %WorldController
 @onready var map: MapController = %MapController
 @onready var renderer: TerrainRender = %TerrainRender
@@ -20,10 +23,6 @@ extends Node3D
 @onready var document_controller: DocumentController = %DocumentController
 @onready var ai_controller: AIController = %AIController
 @onready var combat_sound: CombatSoundController = %CombatSoundController
-
-# Accessed through radio node
-var unit_voices: UnitVoiceResponses = null
-var tts_player: AudioStreamPlayer3D = null
 
 
 ## Initialize mission systems and bind services.
@@ -46,7 +45,7 @@ func _ready() -> void:
 	var on_map_ready := func(): ready_state["map_ready"] = true
 	if renderer and not renderer.is_connected("render_ready", on_map_ready):
 		renderer.render_ready.connect(on_map_ready, CONNECT_ONE_SHOT)
-	
+
 	loading_screen.set_loading_message("Initializing terrain")
 	map.init_terrain(scenario)
 	trigger_engine.bind_scenario(scenario)
@@ -57,19 +56,19 @@ func _ready() -> void:
 
 	if radio and document_controller:
 		radio.radio_result.connect(_on_radio_transcript_player_early)
-	
+
 	loading_screen.set_loading_message("Initializing radio")
 	sim.bind_radio(%RadioController, %OrdersParser)
-	
+
 	loading_screen.set_loading_message("Initializing documents")
 	sim.init_resolution(scenario.briefing.frag_objectives)
-	
+
 	loading_screen.set_loading_message("Initializing drawing")
 	_init_drawing_controller()
 
 	if drawing_controller and map:
 		drawing_controller.load_scenario_drawings(scenario, renderer)
-	
+
 	loading_screen.set_loading_message("Initializing unit responses")
 	_init_counter_controller()
 	_init_document_controller(scenario)
@@ -82,13 +81,13 @@ func _ready() -> void:
 	radio.radio_result.connect(_on_radio_result)
 
 	_update_subtitle_suggestions(scenario)
-	
+
 	loading_screen.set_loading_message("Initializing AI")
 	_init_enemy_ai()
 
 	while not ready_state["map_ready"]:
 		await get_tree().process_frame
-	
+
 	loading_screen.set_loading_message("Initializing Unit Counters")
 	await _create_initial_unit_counters(playable_units)
 
@@ -197,11 +196,7 @@ func _init_tts_system() -> void:
 
 	if unit_voices and sim and map:
 		unit_voices.init(
-			sim._units_by_id,
-			sim,
-			map.renderer,
-			counter_controller,
-			sim.artillery_controller
+			sim._units_by_id, sim, map.renderer, counter_controller, sim.artillery_controller
 		)
 		_wire_logistics_warnings()
 

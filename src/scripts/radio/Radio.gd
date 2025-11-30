@@ -20,11 +20,11 @@ signal radio_raw_command(text: String)
 
 @export var parser: OrdersParser
 
-## Reference to unit voice responses controller
-@onready var unit_responses: UnitVoiceResponses = $UnitResponses
-
 ## Turn on/off the radio stream
 var _tx := false
+
+## Reference to unit voice responses controller
+@onready var unit_responses: UnitVoiceResponses = $UnitResponses
 
 
 ## Connect to STTService signals.

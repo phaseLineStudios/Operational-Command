@@ -33,10 +33,10 @@ class FireMission:
 	var ammo_type: String
 	var total_rounds: int
 	var flight_time: float
-	var shot_delay: float  ## Random delay before first shot
-	var round_intervals: Array[float] = []  ## Delay for each round after the first
+	var shot_delay: float
+	var round_intervals: Array[float] = []
 	var time_elapsed: float = 0.0
-	var current_round: int = 0  ## Which round we're currently processing (0-based)
+	var current_round: int = 0
 	var splash_called: bool = false
 
 	func _init(
@@ -57,33 +57,38 @@ class FireMission:
 		round_intervals = p_round_intervals
 
 
-## Flight time calculation parameters
-@export var mortar_flight_time_base: float = 15.0  ## Base flight time for mortars (seconds)
-@export var artillery_flight_time_base: float = 25.0  ## Base flight time for artillery (seconds)
-@export var splash_warning_time: float = 5.0  ## Time before impact to call "Splash"
+## Base flight time for mortars (seconds)
+@export var mortar_flight_time_base: float = 15.0
+## Base flight time for artillery (seconds)
+@export var artillery_flight_time_base: float = 25.0
+## Time before impact to call "Splash"
+@export var splash_warning_time: float = 5.0
 
-## Delay parameters
-@export_range(0.0, 30.0, 0.1) var shot_delay_min: float = 2.0  ## Min delay from mission confirmed to first shot (seconds)
-@export_range(0.0, 30.0, 0.1) var shot_delay_max: float = 5.0  ## Max delay from mission confirmed to first shot (seconds)
-@export_range(0.0, 10.0, 0.1) var round_interval_min: float = 0.5  ## Min delay between rounds fired (seconds)
-@export_range(0.0, 10.0, 0.1) var round_interval_max: float = 2.0  ## Max delay between rounds fired (seconds)
-@export_range(0.0, 30.0, 0.1) var bda_delay_min: float = 3.0  ## Min delay from impact to BDA report (seconds)
-@export_range(0.0, 30.0, 0.1) var bda_delay_max: float = 8.0  ## Max delay from impact to BDA report (seconds)
+## Min delay from mission confirmed to first shot (seconds)
+@export_range(0.0, 30.0, 0.1) var shot_delay_min: float = 2.0
+## Max delay from mission confirmed to first shot (seconds)
+@export_range(0.0, 30.0, 0.1) var shot_delay_max: float = 5.0
+## Min delay between rounds fired (seconds)
+@export_range(0.0, 10.0, 0.1) var round_interval_min: float = 0.5
+## Max delay between rounds fired (seconds)
+@export_range(0.0, 10.0, 0.1) var round_interval_max: float = 2.0
+## Min delay from impact to BDA report (seconds)
+@export_range(0.0, 30.0, 0.1) var bda_delay_min: float = 3.0
+## Max delay from impact to BDA report (seconds)
+@export_range(0.0, 30.0, 0.1) var bda_delay_max: float = 8.0
 
 ## Damage parameters
-@export var ap_damage_per_round: float = 10.0  ## Base damage per AP/HE round
-@export var ap_damage_radius_m: float = 50.0  ## Damage radius for AP rounds
+@export var ap_damage_per_round: float = 10.0
+@export var ap_damage_radius_m: float = 50.0
 
-var _units: Dictionary = {}  ## unit_id -> ScenarioUnit
-var _positions: Dictionary = {}  ## unit_id -> Vector2 (terrain meters)
-var _artillery_units: Dictionary = {}  ## unit_id -> bool (is artillery capable)
+var _units: Dictionary = {}
+var _positions: Dictionary = {}
+var _artillery_units: Dictionary = {}
 var _active_missions: Array[FireMission] = []
 var _ammo_system: AmmoSystem = null
 var _los_adapter: LOSAdapter = null
 var _rng := RandomNumberGenerator.new()
-
-## Pending BDA reports (delayed after impact)
-var _pending_bda: Array[Dictionary] = []  ## [{observer_id, target_pos, description, time_remaining}]
+var _pending_bda: Array[Dictionary] = []
 
 
 func _ready() -> void:
