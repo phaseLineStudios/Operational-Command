@@ -76,8 +76,8 @@ func get_grab_offset(hit_position: Vector3) -> Vector3:
 
 func _enter_tree() -> void:
 	if not collision_sounds.is_empty():
-		contact_monitor = true
 		max_contacts_reported = 4
+		contact_monitor = true
 
 
 func _ready():
