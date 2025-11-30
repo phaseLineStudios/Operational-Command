@@ -29,10 +29,10 @@ var map_mesh: MeshInstance3D:
 var _current_tool: Tool = Tool.NONE
 var _is_drawing: bool = false
 var _current_stroke: Array[Vector3] = []
-var _strokes: Array[Dictionary] = []  # {tool: Tool, points: Array[Vector3]}
-var _scenario_strokes: Array[Dictionary] = []  # Pre-drawn strokes from scenario
+var _strokes: Array[Dictionary] = []
+var _scenario_strokes: Array[Dictionary] = []
 var _last_point: Vector3 = Vector3.ZERO
-var _terrain_render: TerrainRender = null  # TerrainRender reference for coordinate conversion
+var _terrain_render: TerrainRender = null
 
 @onready var camera: Camera3D = %CameraController/CameraBounds/Camera
 @onready var interaction: InteractionController = %ObjectController
@@ -43,22 +43,19 @@ func _init_drawing_mesh() -> void:
 		LogService.error("Cannot init drawing mesh: map_mesh invalid", "DrawingController")
 		return
 
-	# Check if DrawingMesh already exists
 	var existing := map_mesh.get_node_or_null("DrawingMesh")
 	if existing:
 		return
 
-	# Create a MeshInstance3D for rendering drawings
 	var drawing_mesh := MeshInstance3D.new()
 	drawing_mesh.name = "DrawingMesh"
 
-	# Create an unshaded material that uses vertex colors
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.vertex_color_use_as_albedo = true
 	material.albedo_color = Color.WHITE
 	material.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED  # Disable backface culling
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.no_depth_test = false
 	drawing_mesh.material_override = material
 	drawing_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -67,7 +64,6 @@ func _init_drawing_mesh() -> void:
 
 
 func _process(_delta: float) -> void:
-	# Update current tool based on what's held
 	_update_current_tool()
 
 	if not _is_drawing:
@@ -76,12 +72,10 @@ func _process(_delta: float) -> void:
 	if _current_tool == Tool.NONE:
 		return
 
-	# Project mouse to map plane and add point to current stroke
 	var mouse_pos := get_viewport().get_mouse_position()
 	var world_pos: Variant = _project_mouse_to_map(mouse_pos)
 
 	if world_pos != null:
-		# Only add point if it's far enough from the last point
 		if (
 			_current_stroke.is_empty()
 			or _last_point.distance_to(world_pos) > point_distance_threshold
@@ -89,7 +83,6 @@ func _process(_delta: float) -> void:
 			_current_stroke.append(world_pos)
 			_last_point = world_pos
 
-			# If erasing, erase in real-time as we drag
 			if _current_tool == Tool.ERASER:
 				_erase_at_point(world_pos)
 
@@ -101,7 +94,6 @@ func _update_current_tool() -> void:
 		_current_tool = Tool.NONE
 		return
 
-	# Detect tool based on the name of the held object
 	var held_name := interaction._held.name
 
 	match held_name:
@@ -176,7 +168,6 @@ func _split_into_segments(surviving_points: Array[Vector3], original_points: Arr
 	var segments: Array = []
 	var current_segment: Array[Vector3] = []
 
-	# Build index map of surviving points
 	var surviving_indices: Array[int] = []
 	for surv_point in surviving_points:
 		for i in range(original_points.size()):
@@ -184,12 +175,10 @@ func _split_into_segments(surviving_points: Array[Vector3], original_points: Arr
 				surviving_indices.append(i)
 				break
 
-	# Split into segments where indices are not consecutive
 	for i in range(surviving_indices.size()):
 		var idx := surviving_indices[i]
 		current_segment.append(original_points[idx])
 
-		# Check if next index is not consecutive (gap detected)
 		var is_last := i == surviving_indices.size() - 1
 		var has_gap := not is_last and (surviving_indices[i + 1] != idx + 1)
 
@@ -207,23 +196,19 @@ func _update_drawing_mesh() -> void:
 		LogService.warning("_update_drawing_mesh: drawing_mesh not found", "DrawingController.gd")
 		return
 
-	# Create arrays for the mesh
 	var surface_tool := SurfaceTool.new()
 	surface_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 
-	# Draw scenario strokes first (underneath player strokes)
 	for stroke in _scenario_strokes:
 		var points: Array = stroke.points
 		var color: Color = stroke.get("color", Color.BLACK)
 		_draw_stroke(surface_tool, points, Tool.NONE, false, color)
 
-	# Draw all completed player strokes
 	for stroke in _strokes:
 		var tool: Tool = stroke.tool
 		var points: Array = stroke.points
 		_draw_stroke(surface_tool, points, tool, false)
 
-	# Draw current stroke preview
 	if _is_drawing and not _current_stroke.is_empty() and _current_tool != Tool.ERASER:
 		_draw_stroke(surface_tool, _current_stroke, _current_tool, true)
 
@@ -245,35 +230,28 @@ func _draw_stroke(
 	if points.size() < 2:
 		return
 
-	# Get color based on tool or use custom color
 	var color := custom_color if tool == Tool.NONE else _get_tool_color(tool)
 
-	# Get width based on tool
 	var width := line_width if tool != Tool.ERASER else eraser_width
 
-	# Convert world points to map-local space
 	var local_points: Array[Vector3] = []
 	for point in points:
 		var local_point := map_mesh.to_local(point)
-		# Offset above the map surface to prevent z-fighting
-		local_point.y += 0.001
+		local_point.y += 0.0001  # Small offset to prevent z-fighting with map
 		local_points.append(local_point)
 
 	for i in range(local_points.size() - 1):
 		var p1: Vector3 = local_points[i]
 		var p2: Vector3 = local_points[i + 1]
 
-		# Calculate perpendicular direction for line width
 		var dir := (p2 - p1).normalized()
 		var perp := Vector3(-dir.z, 0, dir.x) * width * 0.5
 
-		# Create quad (two triangles) for this line segment
 		var v1 := p1 - perp
 		var v2 := p1 + perp
 		var v3 := p2 + perp
 		var v4 := p2 - perp
 
-		# First triangle
 		surface_tool.set_color(color)
 		surface_tool.add_vertex(v1)
 		surface_tool.set_color(color)
@@ -281,7 +259,6 @@ func _draw_stroke(
 		surface_tool.set_color(color)
 		surface_tool.add_vertex(v3)
 
-		# Second triangle
 		surface_tool.set_color(color)
 		surface_tool.add_vertex(v1)
 		surface_tool.set_color(color)
@@ -314,12 +291,10 @@ func _project_mouse_to_map(mouse_pos: Vector2) -> Variant:
 	var from := camera.project_ray_origin(mouse_pos)
 	var dir := camera.project_ray_normal(mouse_pos)
 
-	# Get the map plane in world space
 	var map_transform := map_mesh.global_transform
 	var plane_point := map_transform.origin
 	var plane_normal := (map_transform.basis * Vector3.UP).normalized()
 
-	# Ray-plane intersection
 	var denom := plane_normal.dot(dir)
 	if is_equal_approx(denom, 0.0):
 		return null
@@ -353,7 +328,6 @@ func clear_all() -> void:
 	_current_stroke.clear()
 	_is_drawing = false
 
-	# Clear scenario strokes
 	_scenario_strokes.clear()
 
 	_update_drawing_mesh()
@@ -377,10 +351,8 @@ func load_scenario_drawings(scenario: ScenarioData, terrain_renderer: TerrainRen
 
 	_terrain_render = terrain_renderer
 
-	# Clear existing scenario drawings
 	_scenario_strokes.clear()
 
-	# Separate stamps and strokes
 	var stamps: Array[ScenarioDrawingStamp] = []
 
 	for drawing in scenario.drawings:
@@ -398,7 +370,6 @@ func load_scenario_drawings(scenario: ScenarioData, terrain_renderer: TerrainRen
 		elif drawing is ScenarioDrawingStamp and drawing.visible:
 			stamps.append(drawing)
 
-	# Load stamps into 2D StampLayer (rendered in terrain viewport)
 	if terrain_renderer.stamp_layer:
 		terrain_renderer.stamp_layer.load_stamps(stamps)
 	else:
@@ -416,7 +387,6 @@ func _convert_scenario_stroke(drawing: ScenarioDrawingStroke) -> Dictionary:
 	if drawing.points_m.is_empty():
 		return {}
 
-	# Convert 2D terrain points to 3D world points
 	var world_points: Array[Vector3] = []
 	for point_2d in drawing.points_m:
 		var world_point: Variant = _terrain_to_world(point_2d)
@@ -426,7 +396,6 @@ func _convert_scenario_stroke(drawing: ScenarioDrawingStroke) -> Dictionary:
 	if world_points.is_empty():
 		return {}
 
-	# Convert color to tool
 	var tool := _color_to_tool(drawing.color)
 
 	return {"tool": tool, "points": world_points, "color": drawing.color}
@@ -464,14 +433,11 @@ func _terrain_to_world(pos_m: Vector2) -> Variant:
 		LogService.warning("_terrain_to_world: terrain dimensions are zero", "DrawingController.gd")
 		return null
 
-	# Normalize terrain position to -0.5..0.5 range (mesh local space)
 	var normalized_x := (pos_m.x / terrain_width_m) - 0.5
 	var normalized_z := (pos_m.y / terrain_height_m) - 0.5
 
-	# Scale to mesh size
 	var local_pos := Vector3(normalized_x * mesh_size.x, 0, normalized_z * mesh_size.y)
 
-	# Convert to world space
 	var world_pos := map_mesh.to_global(local_pos)
 
 	return world_pos
@@ -481,22 +447,17 @@ func _terrain_to_world(pos_m: Vector2) -> Variant:
 ## [param color] Stroke color.
 ## [return] Tool enum value.
 func _color_to_tool(color: Color) -> Tool:
-	# Match to closest tool color
 	var r := color.r
 	var g := color.g
 	var b := color.b
 
-	# Black: low RGB
 	if r < 0.3 and g < 0.3 and b < 0.3:
 		return Tool.PEN_BLACK
 
-	# Blue: high B, low R
 	if b > 0.5 and r < 0.5:
 		return Tool.PEN_BLUE
 
-	# Red: high R, low B
 	if r > 0.5 and b < 0.5:
 		return Tool.PEN_RED
 
-	# Default to black
 	return Tool.PEN_BLACK
