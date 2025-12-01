@@ -4,6 +4,10 @@ extends Node
 ##
 ## Plays randomized artillery outgoing/impact sounds and distant combat audio.
 ## Integrates with ArtilleryController and SimWorld signals.
+## Uses polyphonic audio to allow multiple overlapping sounds.
+
+## Maximum simultaneous artillery sounds per type
+const ARTILLERY_POLYPHONY := 16
 
 @export_category("Settings")
 ## Enable artillery sound effects
@@ -27,29 +31,46 @@ var _rng := RandomNumberGenerator.new()
 var _time_since_last_engagement: float = 999.0  ## Time since last engagement reported
 var _combat_sound_playing: bool = false
 
-@onready var _sfx_artillery_outgoing: AudioStreamPlayer = $SfxArtilleryOutgoing
-@onready var _sfx_artillery_impact: AudioStreamPlayer = $SfxArtilleryImpact
-@onready var _sfx_combat: AudioStreamPlayer = $SfxCombat
+var _sfx_artillery_outgoing: AudioStreamPlayer
+var _sfx_artillery_impact: AudioStreamPlayer
+var _sfx_combat: AudioStreamPlayer
+var _playback_outgoing: AudioStreamPlaybackPolyphonic
+var _playback_impact: AudioStreamPlaybackPolyphonic
 
 
-## Initialize random generator and processing.
+## Initialize random generator, polyphonic streams, and processing.
 func _ready() -> void:
 	_rng.randomize()
 	set_process(true)
 
-	# Connect to finished signal to loop combat sounds
+	_sfx_artillery_outgoing = $SfxArtilleryOutgoing
+	_sfx_artillery_impact = $SfxArtilleryImpact
+	_sfx_combat = $SfxCombat
+
+	_init_polyphonic_player(_sfx_artillery_outgoing, ARTILLERY_POLYPHONY)
+	_init_polyphonic_player(_sfx_artillery_impact, ARTILLERY_POLYPHONY)
+
+	_playback_outgoing = _sfx_artillery_outgoing.get_stream_playback()
+	_playback_impact = _sfx_artillery_impact.get_stream_playback()
+
 	_sfx_combat.finished.connect(_on_combat_sound_finished)
+
+
+## Initialize a polyphonic audio stream player.
+func _init_polyphonic_player(player: AudioStreamPlayer, polyphony: int) -> void:
+	var stream := AudioStreamPolyphonic.new()
+	stream.polyphony = polyphony
+	player.stream = stream
+	player.play()
 
 
 ## Update combat sound state.
 func _process(dt: float) -> void:
 	_time_since_last_engagement += dt
 
-	# Start combat sound loop if combat is active and sound not playing
 	if _time_since_last_engagement < combat_fade_time:
 		if not _combat_sound_playing:
 			_start_combat_sound_loop()
-	# Stop combat sound if combat has been inactive for too long
 	elif _combat_sound_playing:
 		_stop_combat_sound_loop()
 
@@ -75,7 +96,6 @@ func _stop_combat_sound_loop() -> void:
 ## Called when combat sound finishes - restart with new random sound if still in combat.
 func _on_combat_sound_finished() -> void:
 	if _combat_sound_playing:
-		# Pick a new random sound and restart
 		var sfx := _pick_random_stream(sound_distant_combat)
 		if sfx:
 			_sfx_combat.stream = sfx
@@ -110,10 +130,13 @@ func _on_artillery_shot(
 	if not enable_artillery_sounds:
 		return
 
+	if not _playback_outgoing:
+		push_warning("CombatSoundController: Outgoing playback not initialized")
+		return
+
 	var sfx := _pick_random_stream(sound_artillery_outgoing)
 	if sfx:
-		_sfx_artillery_outgoing.stream = sfx
-		_sfx_artillery_outgoing.play()
+		_playback_outgoing.play_stream(sfx, 0.0, 0.0, 1.0)
 		LogService.debug("Playing artillery outgoing sound", "CombatSoundController")
 
 
@@ -124,10 +147,13 @@ func _on_artillery_impact(
 	if not enable_artillery_sounds:
 		return
 
+	if not _playback_impact:
+		push_warning("CombatSoundController: Impact playback not initialized")
+		return
+
 	var sfx := _pick_random_stream(sound_artillery_impact)
 	if sfx:
-		_sfx_artillery_impact.stream = sfx
-		_sfx_artillery_impact.play()
+		_playback_impact.play_stream(sfx, 0.0, 0.0, 1.0)
 		LogService.debug("Playing artillery impact sound", "CombatSoundController")
 
 
@@ -136,7 +162,6 @@ func _on_engagement_reported(_attacker_id: String, _defender_id: String, _damage
 	if not enable_combat_sounds:
 		return
 
-	# Reset timer - combat is still active
 	_time_since_last_engagement = 0.0
 
 
