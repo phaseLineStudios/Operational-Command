@@ -118,6 +118,54 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Select"
 
+[node name="VideoLabel" type="Label" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer"]
+layout_mode = 2
+text = "Intro Video"
+
+[node name="VideoRow" type="HBoxContainer" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="VideoPath" type="LineEdit" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer/VideoRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "No Video Selected"
+editable = false
+
+[node name="ClearVideo" type="Button" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer/VideoRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Clear"
+
+[node name="SelectVideo" type="Button" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer/VideoRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Select"
+
+[node name="SubtitlesLabel" type="Label" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer"]
+layout_mode = 2
+text = "Video Subtitles"
+
+[node name="SubtitlesRow" type="HBoxContainer" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SubtitlesPath" type="LineEdit" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer/SubtitlesRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "No Subtitles Selected"
+editable = false
+
+[node name="ClearSubtitles" type="Button" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer/SubtitlesRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Clear"
+
+[node name="SelectSubtitles" type="Button" parent="Root/ScrollContainer/VBox/MetaContainer/VBoxContainer/SubtitlesRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Select"
+
 [node name="ResourcePoolsContainer" type="FoldableContainer" parent="Root/ScrollContainer/VBox"]
 layout_mode = 2
 folded = true

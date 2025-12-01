@@ -66,7 +66,7 @@ func _ready() -> void:
 			_apply_style()
 			if hover_sounds.size() > 0 and _assigned_unit:
 				AudioManager.play_random_ui_sound(
-					hover_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
+					hover_sounds, Vector2(1.0, 1.0), Vector2(0.98, 1.02)
 				)
 	)
 	mouse_exited.connect(

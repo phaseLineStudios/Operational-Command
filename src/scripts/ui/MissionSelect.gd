@@ -8,6 +8,7 @@ const SCENE_CAMPAIGN_SELECT := "res://scenes/campaign_select.tscn"
 
 ## Path to unit select scene
 const SCENE_BRIEFING := "res://scenes/briefing.tscn"
+const SCENE_VIDEO := "res://scenes/mission_video.tscn"
 
 ## Size of each mission pin in pixels.
 @export var pin_size := Vector2i(24, 24)
@@ -218,7 +219,7 @@ func _on_pin_mouse_entered(pin: Control) -> void:
 	pin.modulate = c
 
 	if pin_hover_sounds.size() > 0:
-		AudioManager.play_random_ui_sound(pin_hover_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1))
+		AudioManager.play_random_ui_sound(pin_hover_sounds, Vector2(1.0, 1.0), Vector2(0.98, 1.02))
 
 
 ## Restore highlight alpha when mouse leaves.
@@ -271,7 +272,11 @@ func _on_start_pressed() -> void:
 		return
 
 	Game.select_scenario(_selected_mission)
-	Game.goto_scene(SCENE_BRIEFING)
+
+	if _selected_mission.video:
+		Game.goto_scene(SCENE_VIDEO)
+	else:
+		Game.goto_scene(SCENE_BRIEFING)
 
 
 ## Return to campaign select.

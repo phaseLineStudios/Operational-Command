@@ -16,6 +16,10 @@ enum ScenarioDifficulty { EASY, NORMAL, HARD }
 @export var terrain: TerrainData
 ## The scenario briefing data
 @export var briefing: BriefData
+## Optional scenario intro video
+@export_file("*.ogv ; OGG Video") var video_path: String
+## Optional subtitle track for the intro video
+@export_file("*.tres ; SubtitleTrack Resource") var video_subtitles_path: String
 
 @export_category("Meta")
 ## Difficulty of the scenario
@@ -86,6 +90,7 @@ enum ScenarioDifficulty { EASY, NORMAL, HARD }
 @export var custom_commands: Array[CustomCommand] = []
 
 var preview: Texture2D
+var video: VideoStream
 
 
 ## Serialize data to JSON
@@ -125,6 +130,8 @@ func serialize() -> Dictionary:
 		"title": title,
 		"description": description,
 		"preview_path": preview_path,
+		"video_path": video_path,
+		"video_subtitles_path": video_subtitles_path,
 		"terrain_id": terrain.terrain_id,
 		"briefing": briefing.serialize() as Variant if briefing else null as Variant,
 		"difficulty": int(difficulty),
@@ -164,6 +171,8 @@ static func deserialize(json: Variant) -> ScenarioData:
 	s.title = json.get("title", s.title)
 	s.description = json.get("description", s.description)
 	s.preview_path = json.get("preview_path", s.preview_path)
+	s.video_path = json.get("video_path", s.video_path)
+	s.video_subtitles_path = json.get("video_subtitles_path", s.video_subtitles_path)
 
 	var terr_id: Variant = json.get("terrain_id", null)
 	if typeof(terr_id) == TYPE_STRING and terr_id != "":
@@ -254,6 +263,11 @@ static func deserialize(json: Variant) -> ScenarioData:
 		var tex := load(s.preview_path)
 		if tex is Texture2D:
 			s.preview = tex
+
+	if typeof(s.video_path) == TYPE_STRING and s.video_path != "":
+		var vid := load(s.video_path)
+		if vid is VideoStream:
+			s.video = vid
 
 	return s
 
