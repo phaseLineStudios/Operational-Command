@@ -23,9 +23,8 @@ const SCENE_BRIEFING := "res://scenes/briefing.tscn"
 	preload("res://audio/ui/sfx_ui_button_hover_02.wav")
 ]
 ## Sound to play when clicking a pin
-@export var pin_click_sounds: Array[AudioStream] = [
-	preload("res://audio/ui/sfx_ui_button_click_01.wav")
-]
+@export
+var pin_click_sounds: Array[AudioStream] = [preload("res://audio/ui/sfx_ui_button_click_01.wav")]
 
 var _selected_mission: ScenarioData
 var _campaign: CampaignData
@@ -219,9 +218,7 @@ func _on_pin_mouse_entered(pin: Control) -> void:
 	pin.modulate = c
 
 	if pin_hover_sounds.size() > 0:
-		AudioManager.play_random_ui_sound(
-			pin_hover_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
-		)
+		AudioManager.play_random_ui_sound(pin_hover_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1))
 
 
 ## Restore highlight alpha when mouse leaves.
@@ -237,9 +234,7 @@ func _on_pin_mouse_exited(pin: Control) -> void:
 ## Open the mission card; create/remove image node depending on presence.
 func _on_pin_pressed(mission: ScenarioData, pin_btn: BaseButton) -> void:
 	if pin_click_sounds.size() > 0:
-		AudioManager.play_random_ui_sound(
-			pin_click_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
-		)
+		AudioManager.play_random_ui_sound(pin_click_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1))
 
 	_selected_mission = mission
 	_card_pin_button = pin_btn

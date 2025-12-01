@@ -7,7 +7,7 @@ extends ItemList
 ]
 @export var hover_disabled_sounds: Array[AudioStream] = []
 @export var click_sounds: Array[AudioStream] = [
-	preload("res://audio/ui/sfx_ui_button_click_01.wav")
+	preload("res://audio/ui/sfx_ui_button_click_01.wav"),
 ]
 @export var click_disabled_sounds: Array[AudioStream] = []
 
@@ -45,9 +45,7 @@ func _on_item_clicked(_idx: int, _pos: Vector2, mouse_button_index: int) -> void
 func _play_hover(item_index: int) -> void:
 	if not is_item_disabled(item_index):
 		if hover_sounds.size() > 0:
-			AudioManager.play_random_ui_sound(
-				hover_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
-			)
+			AudioManager.play_random_ui_sound(hover_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1))
 	else:
 		if hover_disabled_sounds.size() > 0:
 			AudioManager.play_random_ui_sound(
@@ -58,9 +56,7 @@ func _play_hover(item_index: int) -> void:
 func _play_click(item_index: int) -> void:
 	if not is_item_disabled(item_index):
 		if click_sounds.size() > 0:
-			AudioManager.play_random_ui_sound(
-				click_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
-			)
+			AudioManager.play_random_ui_sound(click_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1))
 	else:
 		if click_disabled_sounds.size() > 0:
 			AudioManager.play_random_ui_sound(

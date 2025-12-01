@@ -47,8 +47,8 @@ func play_ui_sound(sound: AudioStream, volume_db: float = 0.0, pitch_scale: floa
 ## [param volume_db_range] Volume adjustment range (1.0 = ± 1db)
 ## [param pitch_scale_range] Pitch multiplier range (0.1 = ± 10%)
 func play_random_ui_sound(
-	sounds: Array[AudioStream], 
-	volume_db_rand: Vector2 = Vector2(1.0, 1.0), 
+	sounds: Array[AudioStream],
+	volume_db_rand: Vector2 = Vector2(1.0, 1.0),
 	pitch_scale_rand: Vector2 = Vector2(1.0, 1.0)
 ) -> void:
 	var sound := sounds[randi() % sounds.size()]

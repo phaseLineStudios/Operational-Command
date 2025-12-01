@@ -20,7 +20,7 @@ signal unit_selected(unit: Dictionary)
 ]
 ## Sound to play when clicking a card
 @export var click_sounds: Array[AudioStream] = [
-	preload("res://audio/ui/sfx_ui_button_click_01.wav")
+	preload("res://audio/ui/sfx_ui_button_click_01.wav"),
 ]
 
 var unit: UnitData
@@ -105,9 +105,7 @@ func _update_style() -> void:
 func _gui_input(e: InputEvent) -> void:
 	if e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_LEFT and e.pressed:
 		if click_sounds.size() > 0:
-			AudioManager.play_random_ui_sound(
-				click_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
-			)
+			AudioManager.play_random_ui_sound(click_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1))
 		emit_signal("unit_selected", unit)
 
 
@@ -124,9 +122,7 @@ func _on_mouse_entered() -> void:
 	_is_hovered = true
 	_update_style()
 	if hover_sounds.size() > 0:
-		AudioManager.play_random_ui_sound(
-			hover_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
-		)
+		AudioManager.play_random_ui_sound(hover_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1))
 
 
 ## Hover-out visual feedback.

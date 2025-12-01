@@ -28,7 +28,7 @@ signal request_inspect_unit(unit: Dictionary)
 ]
 ## Sound to play when clicking a slot
 @export var click_sounds: Array[AudioStream] = [
-	preload("res://audio/ui/sfx_ui_button_click_01.wav")
+	preload("res://audio/ui/sfx_ui_button_click_01.wav"),
 ]
 
 var slot_id: String = ""
