@@ -52,6 +52,12 @@ var _pin_centers_by_id: Dictionary = {}
 
 ## Build UI, load map, place pins, hook resizes.
 func _ready() -> void:
+	if AudioManager.get_current_music() != AudioManager.main_menu_music:
+		if not AudioManager.is_music_playing():
+			AudioManager.play_music(AudioManager.main_menu_music)
+		else:
+			AudioManager.crossfade_to(AudioManager.main_menu_music, 0.5)
+
 	_btn_back.pressed.connect(_on_back_pressed)
 	_load_campaign_and_map()
 	await get_tree().process_frame

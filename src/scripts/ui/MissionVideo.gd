@@ -24,11 +24,11 @@ var _video_started := false  ## Tracks if video has actually started playing
 
 
 func _ready() -> void:
+	AudioManager.stop_music(0.5)
 	player.stream = Game.current_scenario.video
 	player.play()
 	player.finished.connect(_on_skip_pressed)
 
-	# Load subtitle track if available
 	_load_subtitles()
 
 	hold_progress.min_value = 0.0
@@ -93,6 +93,7 @@ func _hide_ui() -> void:
 
 func _on_skip_pressed() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	AudioManager.play_music(AudioManager.main_menu_music)
 	Game.goto_scene(SCENE_BRIEFING)
 
 
@@ -106,7 +107,6 @@ func _update_subtitles() -> void:
 		subtitles_lbl.text = ""
 		return
 
-	# Wait for video to actually start before syncing subtitles
 	if not _video_started:
 		if player.is_playing() and player.stream_position > 0.0:
 			_video_started = true

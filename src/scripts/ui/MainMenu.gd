@@ -38,6 +38,12 @@ var _submenu_holder: VBoxContainer
 
 
 func _ready() -> void:
+	if AudioManager.get_current_music() != AudioManager.main_menu_music:
+		if not AudioManager.is_music_playing():
+			AudioManager.play_music(AudioManager.main_menu_music)
+		else:
+			AudioManager.crossfade_to(AudioManager.main_menu_music, 0.5)
+	
 	btn_campaign.pressed.connect(
 		func():
 			_collapse_if_needed()

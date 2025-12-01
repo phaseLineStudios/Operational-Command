@@ -92,6 +92,7 @@ func _ready() -> void:
 	await _create_initial_unit_counters(playable_units)
 
 	loading_screen.hide_loading()
+	AudioManager.stop_music()
 
 	_enable_pickup_collision_sounds()
 	sim.start()
