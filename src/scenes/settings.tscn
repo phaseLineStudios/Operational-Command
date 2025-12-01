@@ -188,6 +188,41 @@ layout_mode = 2
 theme_override_constants/separation = 6
 metadata/_tab_index = 1
 
+[node name="DevicesLabel" type="Label" parent="OCMenuContainer/Root/Tabs/Audio"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "Audio Devices"
+
+[node name="DevicesGrid" type="GridContainer" parent="OCMenuContainer/Root/Tabs/Audio"]
+layout_mode = 2
+columns = 2
+
+[node name="OutputLabel" type="Label" parent="OCMenuContainer/Root/Tabs/Audio/DevicesGrid"]
+layout_mode = 2
+text = "Output Device (Speakers):"
+
+[node name="OutputDevice" type="OptionButton" parent="OCMenuContainer/Root/Tabs/Audio/DevicesGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="InputLabel" type="Label" parent="OCMenuContainer/Root/Tabs/Audio/DevicesGrid"]
+layout_mode = 2
+text = "Input Device (Microphone):"
+
+[node name="InputDevice" type="OptionButton" parent="OCMenuContainer/Root/Tabs/Audio/DevicesGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HSeparator" type="HSeparator" parent="OCMenuContainer/Root/Tabs/Audio"]
+layout_mode = 2
+
+[node name="VolumesLabel" type="Label" parent="OCMenuContainer/Root/Tabs/Audio"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "Volume Levels"
+
 [node name="BusesList" type="GridContainer" parent="OCMenuContainer/Root/Tabs/Audio"]
 unique_name_in_owner = true
 layout_mode = 2

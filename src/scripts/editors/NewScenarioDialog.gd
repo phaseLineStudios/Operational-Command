@@ -89,7 +89,7 @@ func _on_primary_pressed() -> void:
 			sd.preview = thumbnail
 			sd.terrain = terrain
 			sd.video_path = video_path.text
-			sd.video_subtitles_path = subtitles_path.text
+			sd.video_subtitles = subtitle_track
 			sd.unit_recruits = _selected_units.duplicate()
 			_apply_pools_to_scenario(sd)
 			emit_signal("request_create", sd)
@@ -103,7 +103,7 @@ func _on_primary_pressed() -> void:
 			working.preview = thumbnail
 			working.terrain = terrain
 			working.video_path = video_path.text
-			working.video_subtitles_path = subtitles_path.text
+			working.video_subtitles = subtitle_track
 			working.unit_recruits = _selected_units.duplicate()
 			_apply_pools_to_scenario(working)
 			emit_signal("request_update", working)
@@ -197,14 +197,19 @@ func _on_subtitles_select() -> void:
 	dlg.popup_centered_ratio(0.5)
 	dlg.file_selected.connect(
 		func(path):
-			subtitles_path.text = path
+			var resource := load(path)
+			if resource is SubtitleTrack:
+				subtitle_track = resource
+				subtitles_path.text = path
+			else:
+				push_error("Not a SubtitleTrack resource: %s" % path)
 			dlg.queue_free()
 	)
 	dlg.canceled.connect(func(): dlg.queue_free())
 
 
 func _on_subtitles_clear() -> void:
-	subtitles_path.text = ""
+	subtitles_path.text = "No Subtitles Selected"
 	subtitle_track = null
 
 
@@ -216,7 +221,7 @@ func _reset_values() -> void:
 	thumb_path.text = ""
 	thumb_preview.texture = null
 	video_path.text = ""
-	subtitles_path.text = ""
+	subtitles_path.text = "No Subtitles Selected"
 	thumbnail = null
 	terrain = null
 	video_stream = null
@@ -240,7 +245,12 @@ func _load_from_data(d: ScenarioData) -> void:
 	else:
 		terrain_path.text = ""
 	video_path.text = d.video_path if d.video_path else ""
-	subtitles_path.text = d.video_subtitles_path if d.video_subtitles_path else ""
+	if d.video_subtitles:
+		subtitle_track = d.video_subtitles
+		subtitles_path.text = "Embedded Subtitle Track"
+	else:
+		subtitle_track = null
+		subtitles_path.text = "No Subtitles Selected"
 	_selected_units = []
 	if d.unit_recruits:
 		for u in d.unit_recruits:

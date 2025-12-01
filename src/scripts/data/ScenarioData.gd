@@ -18,8 +18,8 @@ enum ScenarioDifficulty { EASY, NORMAL, HARD }
 @export var briefing: BriefData
 ## Optional scenario intro video
 @export_file("*.ogv ; OGG Video") var video_path: String
-## Optional subtitle track for the intro video
-@export_file("*.tres ; SubtitleTrack Resource") var video_subtitles_path: String
+## Optional subtitle track for the intro video (embedded in scenario data)
+@export var video_subtitles: SubtitleTrack
 
 @export_category("Meta")
 ## Difficulty of the scenario
@@ -131,7 +131,8 @@ func serialize() -> Dictionary:
 		"description": description,
 		"preview_path": preview_path,
 		"video_path": video_path,
-		"video_subtitles_path": video_subtitles_path,
+		"video_subtitles":
+		video_subtitles.serialize() as Variant if video_subtitles else null as Variant,
 		"terrain_id": terrain.terrain_id,
 		"briefing": briefing.serialize() as Variant if briefing else null as Variant,
 		"difficulty": int(difficulty),
@@ -172,7 +173,6 @@ static func deserialize(json: Variant) -> ScenarioData:
 	s.description = json.get("description", s.description)
 	s.preview_path = json.get("preview_path", s.preview_path)
 	s.video_path = json.get("video_path", s.video_path)
-	s.video_subtitles_path = json.get("video_subtitles_path", s.video_subtitles_path)
 
 	var terr_id: Variant = json.get("terrain_id", null)
 	if typeof(terr_id) == TYPE_STRING and terr_id != "":
@@ -181,6 +181,12 @@ static func deserialize(json: Variant) -> ScenarioData:
 	var brief_val: Variant = json.get("briefing", null)
 	if brief_val != null:
 		s.briefing = BriefData.deserialize(brief_val)
+
+	var subtitles_val: Variant = json.get("video_subtitles", null)
+	if subtitles_val != null and typeof(subtitles_val) == TYPE_DICTIONARY:
+		var track := SubtitleTrack.new()
+		track.deserialize(subtitles_val)
+		s.video_subtitles = track
 
 	@warning_ignore("int_as_enum_without_cast")
 	s.difficulty = _difficulty_from(json.get("difficulty", s.difficulty))

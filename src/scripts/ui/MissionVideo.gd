@@ -97,19 +97,8 @@ func _on_skip_pressed() -> void:
 
 
 func _load_subtitles() -> void:
-	var subtitle_path := Game.current_scenario.video_subtitles_path
-	if subtitle_path == null or subtitle_path.is_empty():
-		return
-
-	if not FileAccess.file_exists(subtitle_path):
-		push_warning("Subtitle file not found: %s" % subtitle_path)
-		return
-
-	var resource := load(subtitle_path)
-	if resource is SubtitleTrack:
-		_subtitle_track = resource
-	else:
-		push_warning("Invalid subtitle resource at: %s" % subtitle_path)
+	if Game.current_scenario.video_subtitles:
+		_subtitle_track = Game.current_scenario.video_subtitles
 
 
 func _update_subtitles() -> void:
