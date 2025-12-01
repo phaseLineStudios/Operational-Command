@@ -29,10 +29,9 @@ func _init_ui_player() -> void:
 
 
 ## Play a UI sound effect.
-##
-## @param sound: The AudioStream to play
-## @param volume_db: Volume adjustment in decibels (0 = default, negative = quieter)
-## @param pitch_scale: Pitch multiplier (1.0 = normal, >1.0 = higher, <1.0 = lower)
+## [param sound] The AudioStream to play
+## [param volume_db] Volume adjustment in decibels (0 = default, negative = quieter)
+## [param pitch_scale] Pitch multiplier (1.0 = normal, >1.0 = higher, <1.0 = lower)
 func play_ui_sound(sound: AudioStream, volume_db: float = 0.0, pitch_scale: float = 1.0) -> void:
 	if not sound:
 		return
@@ -41,3 +40,18 @@ func play_ui_sound(sound: AudioStream, volume_db: float = 0.0, pitch_scale: floa
 		return
 
 	_ui_playback.play_stream(sound, 0.0, volume_db, pitch_scale)
+
+
+## Play a randomized UI sound effect from array.
+## [param sound] The AudioStream array of sounds to choose from
+## [param volume_db_range] Volume adjustment range (1.0 = ± 1db)
+## [param pitch_scale_range] Pitch multiplier range (0.1 = ± 10%)
+func play_random_ui_sound(
+	sounds: Array[AudioStream], 
+	volume_db_rand: Vector2 = Vector2(1.0, 1.0), 
+	pitch_scale_rand: Vector2 = Vector2(1.0, 1.0)
+) -> void:
+	var sound := sounds[randi() % sounds.size()]
+	var volume_db := randf_range(volume_db_rand.x, volume_db_rand.y)
+	var pitch_scale := randf_range(pitch_scale_rand.x, pitch_scale_rand.y)
+	play_ui_sound(sound, volume_db, pitch_scale)

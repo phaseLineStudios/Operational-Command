@@ -22,9 +22,14 @@ signal request_inspect_unit(unit: Dictionary)
 
 @export_group("Slot Sounds")
 ## Sound to play when hovering over a slot
-@export var hover_sound: AudioStream = preload("res://audio/ui/sfx_button_hover.wav")
+@export var hover_sounds: Array[AudioStream] = [
+	preload("res://audio/ui/sfx_ui_button_hover_01.wav"),
+	preload("res://audio/ui/sfx_ui_button_hover_02.wav")
+]
 ## Sound to play when clicking a slot
-@export var click_sound: AudioStream = preload("res://audio/ui/sfx_button_click.wav")
+@export var click_sounds: Array[AudioStream] = [
+	preload("res://audio/ui/sfx_ui_button_click_01.wav")
+]
 
 var slot_id: String = ""
 var title: String = ""
@@ -59,8 +64,10 @@ func _ready() -> void:
 		func():
 			_is_hovered = true
 			_apply_style()
-			if hover_sound and _assigned_unit:
-				AudioManager.play_ui_sound(hover_sound)
+			if hover_sounds.size() > 0 and _assigned_unit:
+				AudioManager.play_random_ui_sound(
+					hover_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
+				)
 	)
 	mouse_exited.connect(
 		func():
@@ -155,8 +162,10 @@ func _apply_style() -> void:
 func _gui_input(e: InputEvent) -> void:
 	if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
 		if _assigned_unit != null:
-			if click_sound:
-				AudioManager.play_ui_sound(click_sound)
+			if click_sounds.size() > 0:
+				AudioManager.play_random_ui_sound(
+					click_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
+				)
 			emit_signal("request_inspect_unit", _assigned_unit)
 
 

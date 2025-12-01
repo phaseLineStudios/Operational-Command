@@ -1,23 +1,26 @@
 class_name OCMenuTabContainer
 extends TabContainer
 
-@export var hover_sound: AudioStream = preload("res://audio/ui/sfx_button_hover.wav")
-@export var hover_disabled_sound: AudioStream
-@export var click_sound: AudioStream = preload("res://audio/ui/sfx_button_click.wav")
-@export var click_disabled_sound: AudioStream
+@export var hover_sounds: Array[AudioStream] = [
+	preload("res://audio/ui/sfx_ui_button_hover_01.wav"),
+	preload("res://audio/ui/sfx_ui_button_hover_02.wav")
+]
+@export var hover_disabled_sounds: Array[AudioStream] = []
+@export var click_sounds: Array[AudioStream] = [
+	preload("res://audio/ui/sfx_ui_button_click_01.wav")
+]
+@export var click_disabled_sounds: Array[AudioStream] = []
 
 var _last_hovered_tab: int = -1
 var _tab_bar: TabBar
 
 
 func _ready() -> void:
-	# Get the internal TabBar
 	_tab_bar = get_tab_bar()
 	if _tab_bar:
 		_tab_bar.gui_input.connect(_on_tab_bar_input)
 		_tab_bar.mouse_exited.connect(_on_tab_bar_mouse_exited)
 
-	# Listen for tab changes
 	tab_changed.connect(_on_tab_changed)
 
 
@@ -33,7 +36,6 @@ func _handle_hover(mouse_pos: Vector2) -> void:
 	if not _tab_bar:
 		return
 
-	# Find which tab is under the mouse
 	var tab_index := -1
 	var tab_count := get_tab_count()
 
@@ -43,7 +45,6 @@ func _handle_hover(mouse_pos: Vector2) -> void:
 			tab_index = i
 			break
 
-	# Only play sound if we've moved to a different tab
 	if tab_index != _last_hovered_tab:
 		if tab_index >= 0:
 			_play_hover(tab_index)
@@ -60,17 +61,25 @@ func _on_tab_changed(tab_index: int) -> void:
 
 func _play_hover(tab_index: int) -> void:
 	if not is_tab_disabled(tab_index):
-		if hover_sound:
-			AudioManager.play_ui_sound(hover_sound)
+		if hover_sounds.size() > 0:
+			AudioManager.play_random_ui_sound(
+				hover_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
+			)
 	else:
-		if hover_disabled_sound:
-			AudioManager.play_ui_sound(hover_disabled_sound)
+		if hover_disabled_sounds.size() > 0:
+			AudioManager.play_random_ui_sound(
+				hover_disabled_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
+			)
 
 
 func _play_click(tab_index: int) -> void:
 	if not is_tab_disabled(tab_index):
-		if click_sound:
-			AudioManager.play_ui_sound(click_sound)
+		if click_sounds.size() > 0:
+			AudioManager.play_random_ui_sound(
+				click_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
+			)
 	else:
-		if click_disabled_sound:
-			AudioManager.play_ui_sound(click_disabled_sound)
+		if click_disabled_sounds.size() > 0:
+			AudioManager.play_random_ui_sound(
+				click_disabled_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
+			)

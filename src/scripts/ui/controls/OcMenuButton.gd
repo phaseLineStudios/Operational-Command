@@ -2,10 +2,15 @@
 class_name OCMenuButton
 extends Button
 
-@export var hover_sound: AudioStream = preload("res://audio/ui/sfx_button_hover.wav")
-@export var hover_disabled_sound: AudioStream
-@export var click_sound: AudioStream = preload("res://audio/ui/sfx_button_click.wav")
-@export var click_disabled_sound: AudioStream
+@export var hover_sounds: Array[AudioStream] = [
+	preload("res://audio/ui/sfx_ui_button_hover_01.wav"),
+	preload("res://audio/ui/sfx_ui_button_hover_02.wav")
+]
+@export var hover_disabled_sounds: Array[AudioStream] = []
+@export var click_sounds: Array[AudioStream] = [
+	preload("res://audio/ui/sfx_ui_button_click_01.wav")
+]
+@export var click_disabled_sounds: Array[AudioStream] = []
 
 @export_group("Noise Overlay")
 ## Enable/disable noise overlay
@@ -66,20 +71,28 @@ func _draw() -> void:
 
 func _play_hover() -> void:
 	if not disabled:
-		if hover_sound:
-			AudioManager.play_ui_sound(hover_sound)
+		if hover_sounds.size() > 0:
+			AudioManager.play_random_ui_sound(
+				hover_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
+			)
 	else:
-		if hover_disabled_sound:
-			AudioManager.play_ui_sound(hover_disabled_sound)
+		if hover_disabled_sounds.size() > 0:
+			AudioManager.play_random_ui_sound(
+				hover_disabled_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
+			)
 
 
 func _play_pressed() -> void:
 	if not disabled:
-		if click_sound:
-			AudioManager.play_ui_sound(click_sound)
+		if click_sounds.size() > 0:
+			AudioManager.play_random_ui_sound(
+				click_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
+			)
 	else:
-		if click_disabled_sound:
-			AudioManager.play_ui_sound(click_disabled_sound)
+		if click_disabled_sounds.size() > 0:
+			AudioManager.play_random_ui_sound(
+				click_disabled_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
+			)
 
 
 func _rebuild_noise_tex() -> void:

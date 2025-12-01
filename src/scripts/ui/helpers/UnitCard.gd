@@ -14,9 +14,14 @@ signal unit_selected(unit: Dictionary)
 
 @export_group("Card Sounds")
 ## Sound to play when hovering over a card
-@export var hover_sound: AudioStream = preload("res://audio/ui/sfx_button_hover.wav")
+@export var hover_sounds: Array[AudioStream] = [
+	preload("res://audio/ui/sfx_ui_button_hover_01.wav"),
+	preload("res://audio/ui/sfx_ui_button_hover_02.wav")
+]
 ## Sound to play when clicking a card
-@export var click_sound: AudioStream = preload("res://audio/ui/sfx_button_click.wav")
+@export var click_sounds: Array[AudioStream] = [
+	preload("res://audio/ui/sfx_ui_button_click_01.wav")
+]
 
 var unit: UnitData
 var unit_id: String
@@ -99,8 +104,10 @@ func _update_style() -> void:
 ## Click to inspect the unit.
 func _gui_input(e: InputEvent) -> void:
 	if e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_LEFT and e.pressed:
-		if click_sound:
-			AudioManager.play_ui_sound(click_sound)
+		if click_sounds.size() > 0:
+			AudioManager.play_random_ui_sound(
+				click_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
+			)
 		emit_signal("unit_selected", unit)
 
 
@@ -116,8 +123,10 @@ func _notification(what: int) -> void:
 func _on_mouse_entered() -> void:
 	_is_hovered = true
 	_update_style()
-	if hover_sound:
-		AudioManager.play_ui_sound(hover_sound)
+	if hover_sounds.size() > 0:
+		AudioManager.play_random_ui_sound(
+			hover_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
+		)
 
 
 ## Hover-out visual feedback.
