@@ -43,7 +43,7 @@ func _ready() -> void:
 			AudioManager.play_music(AudioManager.main_menu_music)
 		else:
 			AudioManager.crossfade_to(AudioManager.main_menu_music, 0.5)
-	
+
 	btn_campaign.pressed.connect(
 		func():
 			_collapse_if_needed()
