@@ -43,7 +43,7 @@
 [ext_resource type="Script" uid="uid://do2w5t45qvy04" path="res://scripts/audio/CombatSoundController.gd" id="30_66gqg"]
 [ext_resource type="AudioStream" uid="uid://crfoxkxk0olx" path="res://audio/sfx/sfx_distant_artillery_outgoing.wav" id="31_idixg"]
 [ext_resource type="AudioStream" uid="uid://chbwl6b8ltbmk" path="res://audio/sfx/sfx_distant_artillery_impact.wav" id="32_g6xw8"]
-[ext_resource type="AudioStream" uid="uid://c66d1772ak7jv" path="res://audio/sfx/sfx_distant_combat.wav" id="33_5bsee"]
+[ext_resource type="AudioStream" uid="uid://c66d1772ak7jv" path="res://audio/sfx/sfx_distant_combat_loop.wav" id="33_5bsee"]
 [ext_resource type="Script" uid="uid://0xd5ojxkkl4q" path="res://scripts/sim/systems/ArtilleryController.gd" id="33_66vc6"]
 [ext_resource type="PackedScene" uid="uid://bnexhgtx3llph" path="res://scenes/ui/counter_config_dialog.tscn" id="33_bsy1h"]
 [ext_resource type="Script" uid="uid://ckqvusamktt4" path="res://scripts/sim/systems/EngineerController.gd" id="34_1yvtb"]

@@ -2,12 +2,12 @@
 
 [ext_resource type="Script" uid="uid://466r2hsx0sun" path="res://scripts/sim/SceneEnvironment.gd" id="1_a18hc"]
 [ext_resource type="Script" uid="uid://b2q26cxghcrvs" path="res://scripts/audio/EnvSoundController.gd" id="2_gotkl"]
-[ext_resource type="AudioStream" uid="uid://drsd47pjk7d0k" path="res://audio/environment/sfx_ambience_forest_day.wav" id="3_d6m07"]
-[ext_resource type="AudioStream" uid="uid://11xqouk1f16i" path="res://audio/environment/sfx_ambience_forest_night.wav" id="4_kpyhj"]
-[ext_resource type="AudioStream" uid="uid://bppci5cltyly3" path="res://audio/environment/sfx_ambience_forest_rain_light.wav" id="5_0dr1p"]
-[ext_resource type="AudioStream" uid="uid://0w44dl5b8lp1" path="res://audio/environment/sfx_ambience_forest_wind_light.wav" id="5_6utbu"]
-[ext_resource type="AudioStream" uid="uid://chliyt3yv8s5x" path="res://audio/environment/sfx_ambience_forest_rain_heavy.wav" id="6_ehuav"]
-[ext_resource type="AudioStream" uid="uid://7jeea3rpnset" path="res://audio/environment/sfx_ambience_forest_wind_strong.wav" id="6_twpdf"]
+[ext_resource type="AudioStream" uid="uid://drsd47pjk7d0k" path="res://audio/environment/sfx_ambience_forest_day_loop.wav" id="3_d6m07"]
+[ext_resource type="AudioStream" uid="uid://11xqouk1f16i" path="res://audio/environment/sfx_ambience_forest_night_loop.wav" id="4_kpyhj"]
+[ext_resource type="AudioStream" uid="uid://bppci5cltyly3" path="res://audio/environment/sfx_ambience_forest_rain_light_loop.wav" id="5_0dr1p"]
+[ext_resource type="AudioStream" uid="uid://0w44dl5b8lp1" path="res://audio/environment/sfx_ambience_forest_wind_light_loop.wav" id="5_6utbu"]
+[ext_resource type="AudioStream" uid="uid://chliyt3yv8s5x" path="res://audio/environment/sfx_ambience_forest_rain_heavy_loop.wav" id="6_ehuav"]
+[ext_resource type="AudioStream" uid="uid://7jeea3rpnset" path="res://audio/environment/sfx_ambience_forest_wind_strong_loop.wav" id="6_twpdf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7hg7v"]
 transparency = 1

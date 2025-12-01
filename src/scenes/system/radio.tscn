@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://5wbc83x6ecek"]
 
 [ext_resource type="Script" uid="uid://c2ou0jfby4bkd" path="res://scripts/radio/Radio.gd" id="1_ilbh7"]
-[ext_resource type="AudioStream" uid="uid://c5acokvamm14y" path="res://audio/sfx/sfx_radio_noise.wav" id="2_0wu01"]
+[ext_resource type="AudioStream" uid="uid://c5acokvamm14y" path="res://audio/sfx/sfx_radio_noise_loop.wav" id="2_0wu01"]
 [ext_resource type="Script" uid="uid://bnus1tqft6rms" path="res://scripts/radio/UnitVoiceResponses.gd" id="3_voices"]
 [ext_resource type="Script" uid="uid://d1c2ojsjf1fws" path="res://scripts/audio/RadioSignalModulator.gd" id="4_modulator"]
 [ext_resource type="Script" uid="uid://b3scpf03uwuwg" path="res://scripts/radio/RadioSfx.gd" id="4_t3ewi"]
