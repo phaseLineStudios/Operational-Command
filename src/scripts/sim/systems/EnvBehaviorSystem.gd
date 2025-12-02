@@ -119,7 +119,11 @@ func _estimate_path_complexity(unit: Variant) -> float:
 
 ## Evaluate and update lost state for a unit.
 func _update_lost_state(
-	unit: Variant, nav: UnitNavigationState, visibility: float, rng: RandomNumberGenerator, scenario: Variant
+	unit: Variant,
+	nav: UnitNavigationState,
+	visibility: float,
+	rng: RandomNumberGenerator,
+	scenario: Variant
 ) -> void:
 	var uid := String(unit.id)
 	var path_complexity: float = _estimate_path_complexity(unit)
