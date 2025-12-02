@@ -284,8 +284,7 @@ func plan_and_start(su: ScenarioUnit, dest_m: Vector2) -> bool:
 		su.set_meta("_pending_start_profile", p)
 		return true
 	_grid.use_profile(p)
-	var planned := false
-	_with_navigation_bias(su, func(): planned = su.plan_move(_grid, dest_m))
+	var planned: bool = _with_navigation_bias(su, func(): return su.plan_move(_grid, dest_m))
 	if planned:
 		su.start_move(_grid)
 		return true
@@ -613,15 +612,15 @@ func _repath_if_requested(su: ScenarioUnit) -> void:
 	plan_and_start(su, dest)
 
 
-func _with_navigation_bias(su: ScenarioUnit, action: Callable) -> void:
+func _with_navigation_bias(su: ScenarioUnit, action: Callable) -> Variant:
 	if _grid == null:
-		action.call()
-		return
+		return action.call()
 	var prev: float = _grid.road_bias_weight
 	var bias_weight: float = _desired_bias_weight(su)
 	_grid.road_bias_weight = bias_weight
-	action.call()
+	var result: Variant = action.call()
 	_grid.road_bias_weight = prev
+	return result
 
 
 func _desired_bias_weight(su: ScenarioUnit) -> float:

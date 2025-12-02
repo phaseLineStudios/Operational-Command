@@ -32,6 +32,9 @@ func register_units(units: Array) -> void:
 		var uid := String(su.id)
 		if uid == "":
 			continue
+		# Force ALPHA to start in CARELESS for testing.
+		if su.callsign.to_upper() == "ALPHA":
+			su.behaviour = ScenarioUnit.Behaviour.CARELESS
 		if not _nav_state_by_id.has(uid):
 			_nav_state_by_id[uid] = UnitNavigationState.new()
 

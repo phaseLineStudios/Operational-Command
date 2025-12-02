@@ -290,6 +290,8 @@ func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 		var env_mult := 1.0
 		if has_meta("env_speed_mult"):
 			env_mult = float(get_meta("env_speed_mult"))
+			if env_mult <= 0.0:
+				env_mult = 1.0
 		return speed * beh_mult * env_mult
 
 	var c := grid.world_to_cell(p_m)
@@ -303,6 +305,8 @@ func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 		var env_mult := 1.0
 		if has_meta("env_speed_mult"):
 			env_mult = float(get_meta("env_speed_mult"))
+			if env_mult <= 0.0:
+				env_mult = 1.0
 		return speed * beh_mult * env_mult
 
 	if grid._astar.is_in_boundsv(c) and grid._astar.is_point_solid(c):
@@ -315,7 +319,10 @@ func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 	if has_meta("behaviour_speed_mult"):
 		v *= float(get_meta("behaviour_speed_mult"))
 	if has_meta("env_speed_mult"):
-		v *= float(get_meta("env_speed_mult"))
+		var env_mult := float(get_meta("env_speed_mult"))
+		if env_mult <= 0.0:
+			env_mult = 1.0
+		v *= env_mult
 	return v
 
 
