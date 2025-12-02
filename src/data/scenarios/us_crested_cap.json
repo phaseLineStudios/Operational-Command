@@ -698,7 +698,7 @@
           },
           "state_equipment": 0.0,
           "state_injured": 0.0,
-          "state_strength": 0.0
+          "state_strength": 1.0
         },
         "unit_id": "infantry_plt_1"
       },
@@ -720,7 +720,7 @@
           },
           "state_equipment": 0.0,
           "state_injured": 0.0,
-          "state_strength": 0.0
+          "state_strength": 1.0
         },
         "unit_id": "infantry_plt_2"
       },
@@ -742,7 +742,7 @@
           },
           "state_equipment": 0.0,
           "state_injured": 0.0,
-          "state_strength": 0.0
+          "state_strength": 1.0
         },
         "unit_id": "frg_bw_opfor"
       },
@@ -764,7 +764,7 @@
           },
           "state_equipment": 0.0,
           "state_injured": 0.0,
-          "state_strength": 0.0
+          "state_strength": 1.0
         },
         "unit_id": "frg_opfor_2_bundeswehr"
       }
