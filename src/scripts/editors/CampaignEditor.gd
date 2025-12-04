@@ -9,6 +9,8 @@ const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 
 
 func _ready():
+	AudioManager.stop_music(0.5)
+
 	back_btn.connect("pressed", _on_back_pressed)
 
 
