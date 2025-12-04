@@ -238,6 +238,7 @@ func _prebuild_needed_profiles(units: Array[ScenarioUnit]) -> void:
 
 ## Ticks unit movement grouped by profile (reduces grid switching).
 ## Skips groups whose profile grid is still building this frame.
+## Auto-pauses units that are under fire (but not actively firing).
 ## [param units] Units to tick.
 ## [param dt] Delta time in seconds.
 func tick_units(units: Array[ScenarioUnit], dt: float) -> void:
@@ -257,6 +258,13 @@ func tick_units(units: Array[ScenarioUnit], dt: float) -> void:
 		if _grid.ensure_profile(p):
 			_grid.use_profile(p)
 			for u in groups[p]:
+				# Auto-pause if unit is under fire (taking damage)
+				# Note: We don't pause if the unit is actively firing back,
+				# which is handled by the combat mode and engagement system.
+				# This simple check just pauses movement when hit.
+				if u.is_under_fire() and u.move_state() == ScenarioUnit.MoveState.MOVING:
+					u.pause_move()
+
 				u.tick(dt, _grid)
 
 

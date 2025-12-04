@@ -60,7 +60,7 @@
   "role": "MORTAR",
   "size": 2,
   "stats": {
-    "attack": 8.8,
+    "attack": 10.8,
     "defense": 12.0,
     "morale": 1.0,
     "range_m": 498.0,

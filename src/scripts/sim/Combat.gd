@@ -198,7 +198,7 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 
 	# --- apply ROF penalty as delay until next allowed shot ---
 	var cycle_mult := float(fire.get("attack_cycle_mult", 1.0))
-	var base_cycle := 1.0  # seconds between shots (tune to taste)
+	var base_cycle := 4.0  # seconds between shots (tune to taste)
 	_rof_cooldown[uid] = now + base_cycle * cycle_mult
 
 	# TODO (if you model suppression):
@@ -215,6 +215,10 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 		defender.unit.morale = max(0.0, defender.unit.morale - 0.05)
 	elif attacker.unit.morale > 0.0 and applied <= 0:
 		attacker.unit.morale = max(0.0, attacker.unit.morale - 0.02)
+
+	# Mark defender as under fire (for auto-pause logic)
+	if applied > 0:
+		defender.mark_under_fire()
 
 	_apply_vehicle_damage_resolution(attacker, defender, mitigated_attack)
 	return raw_loss
