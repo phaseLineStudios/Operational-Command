@@ -72,6 +72,10 @@ var _artillery_controller: ArtilleryController = null
 
 var _unit_states: Dictionary = {}
 var _spotted_contacts: Dictionary = {}
+## Tracks which units are in contact with whom: { "unit_id": ["enemy1_id", ...] }
+var _active_contacts: Dictionary = {}
+## Tracks active engagements to prevent spam: { "attacker_id|defender_id": true }
+var _active_engagements: Dictionary = {}
 
 var _message_queue: Array[VoiceMessage] = []
 
@@ -329,20 +333,17 @@ func _compare_messages(a: VoiceMessage, b: VoiceMessage) -> bool:
 func _emit_voice_message(msg: VoiceMessage) -> void:
 	var formatted := "%s, %s" % [msg.callsign, msg.text]
 
-	# Emit transmission start for sound effects
 	transmission_start.emit(msg.callsign)
 
 	if TTSService:
 		TTSService.say(formatted)
 	unit_auto_response.emit(msg.callsign, formatted)
 
-	# Request transmission end (actual end happens when TTS finishes)
 	transmission_end_requested.emit(msg.callsign)
 
 
 ## Queue a voice message for a unit.
 func _queue_message(unit_id: String, event_type: EventType) -> void:
-	# Only queue messages for playable units
 	var unit = _units_by_id.get(unit_id)
 	if not unit or not unit.playable:
 		return
@@ -426,15 +427,40 @@ func _check_movement_state(unit_id: String, prev: Dictionary, current: Dictionar
 
 
 ## Check for contact changes (enemies spotted/lost).
-func _check_contact_changes(unit_id: String, prev: Dictionary, current: Dictionary) -> void:
-	var prev_contacts: Array = prev.get("contacts", [])
-	var curr_contacts: Array = current.get("contacts", [])
+func _check_contact_changes(unit_id: String, _prev: Dictionary, _current: Dictionary) -> void:
+	var current_contacts := _get_current_contacts_for_unit(unit_id)
+	var prev_tracked: Array = _active_contacts.get(unit_id, []).duplicate()
 
-	if curr_contacts.size() > prev_contacts.size():
-		_queue_message(unit_id, EventType.CONTACT_SPOTTED)
+	for prev_enemy_id in prev_tracked:
+		if prev_enemy_id not in current_contacts:
+			_report_contact_lost(unit_id, prev_enemy_id)
 
-	elif curr_contacts.size() < prev_contacts.size() and curr_contacts.is_empty():
-		_queue_message(unit_id, EventType.CONTACT_LOST)
+	_active_contacts[unit_id] = current_contacts.duplicate()
+
+
+## Get list of enemy IDs currently in contact with this unit.
+## Filters out dead units to prevent stale contact tracking.
+func _get_current_contacts_for_unit(unit_id: String) -> Array:
+	if not _sim_world or not _sim_world.has_method("get_current_contacts"):
+		return []
+
+	var all_contacts: Array = _sim_world.get_current_contacts()
+	var result: Array = []
+
+	for pair in all_contacts:
+		if typeof(pair) == TYPE_DICTIONARY:
+			var contact_id: String = ""
+			if pair.get("attacker") == unit_id:
+				contact_id = pair.get("defender")
+			elif pair.get("defender") == unit_id:
+				contact_id = pair.get("attacker")
+
+			if contact_id != "":
+				var contact_unit: ScenarioUnit = _units_by_id.get(contact_id)
+				if contact_unit and not contact_unit.is_dead():
+					result.append(contact_id)
+
+	return result
 
 
 ## Check for health/casualty changes.
@@ -448,6 +474,15 @@ func _check_health_changes(unit_id: String, prev: Dictionary, current: Dictionar
 	var max_strength: int = unit.unit.strength
 
 	current["strength"] = curr_strength
+
+	var was_alive := prev_strength > 0
+	var is_dead := unit.is_dead()
+	if was_alive and is_dead:
+		_report_unit_death(unit_id)
+		return
+
+	if is_dead:
+		return
 
 	if curr_strength >= prev_strength:
 		return
@@ -466,25 +501,44 @@ func _check_health_changes(unit_id: String, prev: Dictionary, current: Dictionar
 		_trigger_casualties(unit_id, casualties, curr_strength)
 
 
-## Handle contact reported signal.
+## Handle contact reported signal (NEW contact only).
 func _on_contact_reported(attacker_id: String, defender_id: String) -> void:
 	var spotter: ScenarioUnit = _units_by_id.get(attacker_id)
-	if spotter and spotter.playable:
+	if not spotter or not spotter.playable:
+		return
+
+	var contact_unit: ScenarioUnit = _units_by_id.get(defender_id)
+	if not contact_unit or contact_unit.is_dead():
+		return
+
+	if not _active_contacts.has(attacker_id):
+		_active_contacts[attacker_id] = []
+
+	var contacts: Array = _active_contacts[attacker_id]
+	if defender_id not in contacts:
+		contacts.append(defender_id)
 		_report_contact_spotted(attacker_id, defender_id)
 		_spawn_contact_counter(defender_id)
 
 
 ## Handle engagement reported signal.
+## Only reports when engagement STARTS, not for every shot.
 func _on_engagement_reported(
 	attacker_id: String, defender_id: String, _damage: float = 0.0
 ) -> void:
 	var attacker: ScenarioUnit = _units_by_id.get(attacker_id)
 	if attacker and attacker.playable:
-		_queue_message(attacker_id, EventType.ENGAGING_TARGET)
+		var engagement_key := "%s|%s" % [attacker_id, defender_id]
+		if not _active_engagements.has(engagement_key):
+			_active_engagements[engagement_key] = true
+			_queue_message(attacker_id, EventType.ENGAGING_TARGET)
 
 	var defender: ScenarioUnit = _units_by_id.get(defender_id)
 	if defender and defender.playable:
-		_queue_message(defender_id, EventType.TAKING_FIRE)
+		var fire_key := "%s|%s" % [defender_id, attacker_id]
+		if not _active_engagements.has(fire_key):
+			_active_engagements[fire_key] = true
+			_queue_message(defender_id, EventType.TAKING_FIRE)
 
 
 ## Handle order failure.
@@ -551,7 +605,6 @@ func trigger_resupply_started(src_unit_id: String, dst_unit_id: String) -> void:
 	if not src_unit or not src_unit.playable:
 		return
 
-	# Cooldown check (30 seconds, matching JSON config)
 	var cooldown_key := "resupply_started:%s" % src_unit_id
 	var current_time := Time.get_ticks_msec() / 1000.0
 	var last_trigger_time: float = _resupply_refuel_last_triggered.get(cooldown_key, 0.0)
@@ -639,24 +692,17 @@ func _trigger_command_change(unit_id: String) -> void:
 	_queue_custom_message(unit_id, callsign, message, Priority.URGENT)
 
 
-## Generate and queue descriptive contact report.
+## Generate and queue descriptive contact report for NEW contact.
 ## [param spotter_id] Unit that spotted the contact.
 ## [param contact_id] Enemy unit that was spotted.
 func _report_contact_spotted(spotter_id: String, contact_id: String) -> void:
-	var event_key := "%s:%d" % [spotter_id, EventType.CONTACT_SPOTTED]
-	var current_time := Time.get_ticks_msec() / 1000.0
-	var last_trigger_time: float = _event_last_triggered.get(event_key, 0.0)
-	var cooldown: float = event_config[EventType.CONTACT_SPOTTED].get("cooldown_s", 15.0)
-
-	if current_time - last_trigger_time < cooldown:
-		return
-
 	var spotter_callsign: String = _id_to_callsign.get(spotter_id, spotter_id)
 	var contact_unit = _units_by_id.get(contact_id)
 	if not contact_unit:
 		_queue_message(spotter_id, EventType.CONTACT_SPOTTED)
 		return
 
+	var current_time := Time.get_ticks_msec() / 1000.0
 	var description := _get_unit_description(contact_unit)
 	var grid_pos := _get_grid_from_position(contact_unit.position_m)
 
@@ -668,7 +714,79 @@ func _report_contact_spotted(spotter_id: String, contact_id: String) -> void:
 		_message_queue.remove_at(_message_queue.size() - 1)
 
 	_message_queue.append(msg)
-	_event_last_triggered[event_key] = current_time
+
+
+## Report when contact is lost (enemy retreated, moved out of LOS, etc.).
+## [param spotter_id] Unit that lost contact.
+## [param contact_id] Enemy unit that is no longer visible.
+func _report_contact_lost(spotter_id: String, contact_id: String) -> void:
+	var contact_unit = _units_by_id.get(contact_id)
+	if not contact_unit or not contact_unit.is_dead():
+		_queue_message(spotter_id, EventType.CONTACT_LOST)
+	if _active_contacts.has(spotter_id) and contact_id in _active_contacts[spotter_id]:
+		_active_contacts[spotter_id].erase(contact_id)
+
+	var engagement_key1 := "%s|%s" % [spotter_id, contact_id]
+	var engagement_key2 := "%s|%s" % [contact_id, spotter_id]
+	_active_engagements.erase(engagement_key1)
+	_active_engagements.erase(engagement_key2)
+
+
+## Report unit death via an observer with LOS.
+## If no friendly unit has LOS, nothing is reported (silence).
+## [param dead_unit_id] ID of the unit that just died.
+func _report_unit_death(dead_unit_id: String) -> void:
+	var dead_unit: ScenarioUnit = _units_by_id.get(dead_unit_id)
+	if not dead_unit:
+		return
+
+	var dead_callsign: String = _id_to_callsign.get(dead_unit_id, dead_unit_id)
+	var is_friendly_death := dead_unit.affiliation == ScenarioUnit.Affiliation.FRIEND
+
+	var observers: Array = []
+	for other_id in _units_by_id.keys():
+		var other: ScenarioUnit = _units_by_id.get(other_id)
+		if not other or other == dead_unit:
+			continue
+		if not other.playable or other.affiliation != ScenarioUnit.Affiliation.FRIEND:
+			continue
+		if other.is_dead():
+			continue
+		if _has_los_between(other, dead_unit):
+			observers.append(other)
+
+	if observers.is_empty():
+		return
+
+	var closest: ScenarioUnit = observers[0]
+	var closest_dist := closest.position_m.distance_to(dead_unit.position_m)
+	for obs in observers:
+		var dist: float = obs.position_m.distance_to(dead_unit.position_m)
+		if dist < closest_dist:
+			closest = obs
+			closest_dist = dist
+
+	var observer_callsign: String = _id_to_callsign.get(closest.id, closest.id)
+	var message: String
+
+	if is_friendly_death:
+		message = "%s is down." % dead_callsign
+	else:
+		message = "%s is destroyed." % dead_callsign
+
+	_queue_custom_message(closest.id, observer_callsign, message, Priority.HIGH)
+
+
+## Check if unit A has LOS to unit B.
+## [param a] First unit.
+## [param b] Second unit.
+## [return] True if A can see B.
+func _has_los_between(a: ScenarioUnit, b: ScenarioUnit) -> bool:
+	if not _sim_world or not _sim_world.los_adapter:
+		var dist := a.position_m.distance_to(b.position_m)
+		return dist < 2000.0
+
+	return _sim_world.los_adapter.has_los(a, b)
 
 
 ## Get descriptive text for a unit (e.g., "Enemy infantry platoon").

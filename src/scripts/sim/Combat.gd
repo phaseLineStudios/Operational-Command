@@ -123,6 +123,10 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 	if attacker == null or defender == null or attacker.unit == null or defender.unit == null:
 		return 0.0
 
+	# Dead units cannot attack or be attacked
+	if attacker.is_dead() or defender.is_dead():
+		return 0.0
+
 	match attacker.combat_mode:
 		ScenarioUnit.CombatMode.FORCED_HOLD_FIRE:
 			return 0.0
