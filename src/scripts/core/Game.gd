@@ -341,7 +341,9 @@ func _snapshot_mission_start_states(scenario: ScenarioData) -> void:
 		snapshot[su.unit.id] = unit_state.duplicate()
 
 	current_save.mission_start_states[mission_id] = snapshot
-	LogService.info("Captured mission start states for %s (%d units)" % [mission_id, snapshot.size()], "Game")
+	LogService.info(
+		"Captured mission start states for %s (%d units)" % [mission_id, snapshot.size()], "Game"
+	)
 
 
 ## Restore unit states from the current campaign save.
@@ -373,7 +375,9 @@ func restore_unit_states_from_save(scenario: ScenarioData) -> void:
 			var mission_snapshot: Dictionary = current_save.mission_start_states[mission_id]
 			saved_state = mission_snapshot.get(unit_id, {})
 			if not saved_state.is_empty():
-				LogService.debug("Restoring replay state for %s from mission start snapshot" % unit_id, "Game")
+				LogService.debug(
+					"Restoring replay state for %s from mission start snapshot" % unit_id, "Game"
+				)
 		else:
 			# Forward progress or first playthrough - use current unit_states
 			saved_state = current_save.get_unit_state(unit_id)
@@ -454,7 +458,9 @@ func save_campaign_state() -> void:
 				}
 				current_save.update_unit_state(su.unit.id, state)
 	elif not is_forward_progress:
-		LogService.info("Replay detected - NOT persisting unit states (preventing time paradox)", "Game")
+		LogService.info(
+			"Replay detected - NOT persisting unit states (preventing time paradox)", "Game"
+		)
 
 	# Save to disk
 	Persistence.save_to_file(current_save)

@@ -14,7 +14,9 @@ signal parse_error(msg: String)
 ## High-level order categories.
 ## [br]CUSTOM is used for mission-specific commands registered via [method register_custom_command].
 ## [br]RETREAT makes units fall back away from enemies without player updates until safe.
-enum OrderType {MOVE, HOLD, ATTACK, DEFEND, RECON, FIRE, REPORT, CANCEL, ENGINEER, CUSTOM, RETREAT, UNKNOWN}
+enum OrderType {
+	MOVE, HOLD, ATTACK, DEFEND, RECON, FIRE, REPORT, CANCEL, ENGINEER, CUSTOM, RETREAT, UNKNOWN
+}
 
 ## Minimal schema returned per order.
 const ORDER_KEYS := {

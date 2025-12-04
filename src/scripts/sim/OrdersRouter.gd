@@ -315,7 +315,11 @@ func _apply_retreat(unit: ScenarioUnit, order: Dictionary) -> bool:
 	var retreat_distance_m := 500.0  # Retreat at least 500m
 
 	var threats: Array[ScenarioUnit] = []
-	var enemy_affiliation := ScenarioUnit.Affiliation.ENEMY if unit.affiliation == ScenarioUnit.Affiliation.FRIEND else ScenarioUnit.Affiliation.FRIEND
+	var enemy_affiliation := (
+		ScenarioUnit.Affiliation.ENEMY
+		if unit.affiliation == ScenarioUnit.Affiliation.FRIEND
+		else ScenarioUnit.Affiliation.FRIEND
+	)
 
 	for uid in _units_by_id.keys():
 		var other: ScenarioUnit = _units_by_id[uid]
@@ -334,7 +338,10 @@ func _apply_retreat(unit: ScenarioUnit, order: Dictionary) -> bool:
 		# No visible threats - use default retreat direction (toward rear/south)
 		# This allows retreat orders even when enemies aren't in LOS
 		retreat_vec = Vector2(0, 1)  # South (assuming north is forward)
-		LogService.info("%s retreating to default direction (no threats detected)" % unit.callsign, "OrdersRouter")
+		LogService.info(
+			"%s retreating to default direction (no threats detected)" % unit.callsign,
+			"OrdersRouter"
+		)
 	else:
 		# Calculate weighted retreat vector away from all threats
 		for threat in threats:
@@ -349,7 +356,9 @@ func _apply_retreat(unit: ScenarioUnit, order: Dictionary) -> bool:
 		if retreat_vec.length_squared() < 0.01:
 			# Fallback to default direction if calculation fails
 			retreat_vec = Vector2(0, 1)
-			LogService.warning("%s retreat vector too small, using fallback" % unit.callsign, "OrdersRouter")
+			LogService.warning(
+				"%s retreat vector too small, using fallback" % unit.callsign, "OrdersRouter"
+			)
 
 	# Calculate retreat destination
 	var retreat_dir := retreat_vec.normalized()
@@ -357,7 +366,10 @@ func _apply_retreat(unit: ScenarioUnit, order: Dictionary) -> bool:
 
 	# Plan and start retreat (silently, no radio messages)
 	if movement_adapter.plan_and_start(unit, retreat_dest):
-		LogService.info("%s retreating from %d threats to %s" % [unit.callsign, threats.size(), retreat_dest], "OrdersRouter")
+		LogService.info(
+			"%s retreating from %d threats to %s" % [unit.callsign, threats.size(), retreat_dest],
+			"OrdersRouter"
+		)
 		emit_signal("order_applied", order)
 		return true
 
