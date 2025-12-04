@@ -156,7 +156,7 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 	var acc_mul: float = float(f.get("accuracy_mul", 1.0))
 	if bool(f.get("blocked", false)) or acc_mul < min_acc:
 		if attacker.unit.morale > 0.1:
-			attacker.unit.morale = max(0.0, attacker.unit.morale - 0.01)
+			attacker.unit.morale = max(0.0, attacker.unit.morale - 0.002)
 		return 0.0
 
 	# --- ROF cooldown (per attacking unit) ---
@@ -212,9 +212,9 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 		raw_loss = 1
 	var applied := _apply_casualties(defender, raw_loss)
 	if defender.unit.morale > 0.0 and applied > 0:
-		defender.unit.morale = max(0.0, defender.unit.morale - 0.05)
+		defender.unit.morale = max(0.0, defender.unit.morale - 0.01)
 	elif attacker.unit.morale > 0.0 and applied <= 0:
-		attacker.unit.morale = max(0.0, attacker.unit.morale - 0.02)
+		attacker.unit.morale = max(0.0, attacker.unit.morale - 0.005)
 
 	# Mark defender as under fire (for auto-pause logic)
 	if applied > 0:

@@ -74,14 +74,14 @@ func tick(dt: float) -> void:
 
 	#idle
 	if owner.move_state() == ScenarioUnit.MoveState.IDLE:
-		apply_morale_delta(-0.001 * dt, "idle_decay")
+		apply_morale_delta(-0.0002 * dt, "idle_decay")
 	safe_rest()
 	if scenario.rain > 10.0:
-		apply_morale_delta(-0.002 * dt, "heavy_rain")
+		apply_morale_delta(-0.0004 * dt, "heavy_rain")
 	if scenario.fog_m > 5000.0:
-		apply_morale_delta(-0.001 * dt, "dense_fog")
+		apply_morale_delta(-0.0002 * dt, "dense_fog")
 	if scenario.wind_speed_m > 15.0:
-		apply_morale_delta(-0.001 * dt, "dense_fog")
+		apply_morale_delta(-0.0002 * dt, "high_winds")
 
 
 ##applies morale boost to nearby units

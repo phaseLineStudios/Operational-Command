@@ -96,7 +96,7 @@ func get_ammo_penalty(unit_id: String, ammo_type: String) -> Dictionary:
 		res.attack_power_mult = 0.0
 		res.attack_cycle_mult = 2.0
 		res.suppression_mult = 0.0
-		res.morale_delta = -20
+		res.morale_delta = -5
 		res.ai_recommendation = "avoid"
 		return res
 
@@ -107,14 +107,14 @@ func get_ammo_penalty(unit_id: String, ammo_type: String) -> Dictionary:
 		res.attack_power_mult = 0.5
 		res.attack_cycle_mult = 1.5
 		res.suppression_mult = 0.0
-		res.morale_delta = -20
+		res.morale_delta = -5
 		res.ai_recommendation = "defensive"
 	elif ratio <= su.unit.ammunition_low_threshold:
 		res.state = "low"
 		res.attack_power_mult = 0.8
 		res.attack_cycle_mult = 1.25
 		res.suppression_mult = 0.75
-		res.morale_delta = -10
+		res.morale_delta = -2
 		res.ai_recommendation = "conserve"
 
 	return res
