@@ -1,9 +1,10 @@
 class_name SceneEnvironment
 extends Node3D
 
+@export var scenario: ScenarioData
+
 var sound_controller: EnvSoundController
 
-@export var scenario: ScenarioData
 
 func _ready() -> void:
 	sound_controller = %EnvSoundController

@@ -1,12 +1,17 @@
-[gd_scene load_steps=15 format=3 uid="uid://bwlvqqsapvnqw"]
+[gd_scene load_steps=20 format=3 uid="uid://bwlvqqsapvnqw"]
 
 [ext_resource type="Script" uid="uid://466r2hsx0sun" path="res://scripts/sim/SceneEnvironment.gd" id="1_a18hc"]
 [ext_resource type="Script" uid="uid://b2q26cxghcrvs" path="res://scripts/audio/EnvSoundController.gd" id="2_gotkl"]
+[ext_resource type="Texture2D" uid="uid://b4xpwnfowsgcv" path="res://assets/models/terrain/ground_forest_co.png" id="2_wlrlb"]
+[ext_resource type="Texture2D" uid="uid://3vff36a3lwyk" path="res://assets/models/terrain/ground_forest_ao.png" id="3_63w68"]
 [ext_resource type="AudioStream" uid="uid://drsd47pjk7d0k" path="res://audio/environment/sfx_ambience_forest_day_loop.wav" id="3_d6m07"]
+[ext_resource type="Texture2D" uid="uid://lvt8efdfrcti" path="res://assets/models/terrain/ground_forest_height.png" id="4_a18hc"]
 [ext_resource type="AudioStream" uid="uid://11xqouk1f16i" path="res://audio/environment/sfx_ambience_forest_night_loop.wav" id="4_kpyhj"]
 [ext_resource type="AudioStream" uid="uid://bppci5cltyly3" path="res://audio/environment/sfx_ambience_forest_rain_light_loop.wav" id="5_0dr1p"]
 [ext_resource type="AudioStream" uid="uid://0w44dl5b8lp1" path="res://audio/environment/sfx_ambience_forest_wind_light_loop.wav" id="5_6utbu"]
+[ext_resource type="Texture2D" uid="uid://crkuyq7lb6m18" path="res://assets/models/terrain/ground_forest_no.png" id="5_7hg7v"]
 [ext_resource type="AudioStream" uid="uid://chliyt3yv8s5x" path="res://audio/environment/sfx_ambience_forest_rain_heavy_loop.wav" id="6_ehuav"]
+[ext_resource type="Texture2D" uid="uid://cfy7jjjf0pkkw" path="res://assets/models/terrain/ground_forest_roughness.png" id="6_fnomj"]
 [ext_resource type="AudioStream" uid="uid://7jeea3rpnset" path="res://audio/environment/sfx_ambience_forest_wind_strong_loop.wav" id="6_twpdf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7hg7v"]
@@ -30,7 +35,17 @@ albedo_color = Color(0, 0, 1, 0.7490196)
 size = Vector3(0.3, 0.2, 0.15)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fnomj"]
-albedo_color = Color(0.21995509, 0.36228085, 0.15907207, 1)
+albedo_texture = ExtResource("2_wlrlb")
+roughness_texture = ExtResource("6_fnomj")
+roughness_texture_channel = 4
+normal_enabled = true
+normal_scale = 2.0
+normal_texture = ExtResource("5_7hg7v")
+ao_enabled = true
+ao_texture = ExtResource("3_63w68")
+heightmap_enabled = true
+heightmap_texture = ExtResource("4_a18hc")
+uv1_scale = Vector3(20, 20, 20)
 
 [node name="EnvForest" type="Node3D"]
 script = ExtResource("1_a18hc")

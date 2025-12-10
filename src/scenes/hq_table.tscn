@@ -1,4 +1,4 @@
-[gd_scene load_steps=133 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=136 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -16,6 +16,7 @@
 [ext_resource type="AudioStream" uid="uid://cua5heigau7p6" path="res://audio/sfx/sfx_drop_protractor_02.wav" id="6_idixg"]
 [ext_resource type="AudioStream" uid="uid://b1bbnbn0aonw2" path="res://audio/sfx/sfx_drop_protractor_03.wav" id="7_g6xw8"]
 [ext_resource type="Script" uid="uid://b1vs2cahgd48f" path="res://scripts/sim/SimWorld.gd" id="7_ge8rp"]
+[ext_resource type="PackedScene" uid="uid://b6n878o16ykc3" path="res://assets/models/field_manual/FieldManual.glb" id="7_gvjko"]
 [ext_resource type="Script" uid="uid://b5eh10v1g6c4v" path="res://scripts/sim/SimDebugOverlay.gd" id="7_tixey"]
 [ext_resource type="PackedScene" uid="uid://7ta8ojkjg5rg" path="res://scenes/ui/pause_menu.tscn" id="7_uk27s"]
 [ext_resource type="AudioStream" uid="uid://csrgtinedwlbr" path="res://audio/sfx/sfx_drop_protractor_04.wav" id="8_5bsee"]
@@ -25,12 +26,21 @@
 [ext_resource type="Shader" uid="uid://wfdnibuafvo6" path="res://assets/shaders/FilmGrain.gdshader" id="10_itljb"]
 [ext_resource type="Script" uid="uid://dq8m3cwvv276y" path="res://scripts/sim/Combat.gd" id="10_of8da"]
 [ext_resource type="Script" uid="uid://ckdlg61462pgb" path="res://scripts/sim/OrdersRouter.gd" id="11_tixey"]
+[ext_resource type="ArrayMesh" uid="uid://cfhoi8gswk28f" path="res://assets/models/marker/marker.res" id="12_324us"]
 [ext_resource type="Script" uid="uid://c3rgrbya520ur" path="res://scripts/sim/systems/AmmoSystem.gd" id="12_lrkar"]
+[ext_resource type="Material" uid="uid://dycnnovomvmac" path="res://assets/models/marker/Marker.material" id="13_jalr5"]
 [ext_resource type="Script" uid="uid://c5dqpttm5xyed" path="res://scripts/sim/LOS.gd" id="13_qgda6"]
 [ext_resource type="Script" uid="uid://cw4tt3twmh4gk" path="res://scripts/sim/adapters/LOSAdapter.gd" id="14_415kk"]
 [ext_resource type="Script" uid="uid://brp222cgifhj0" path="res://scripts/sim/systems/FuelSystem.gd" id="14_hvywg"]
+[ext_resource type="Texture2D" uid="uid://bs67s2pl2tt67" path="res://assets/models/marker/marker_blue_co.png" id="14_jalr5"]
+[ext_resource type="Texture2D" uid="uid://ba4xhsw41rm58" path="res://assets/models/marker/marker_red_co.png" id="14_lkn30"]
+[ext_resource type="Texture2D" uid="uid://cgotyktwixeh7" path="res://assets/models/marker/marker_ao.png" id="15_imwkr"]
+[ext_resource type="Texture2D" uid="uid://cxcy4xxcos2te" path="res://assets/models/marker/marker_height.png" id="16_n0sin"]
 [ext_resource type="Script" uid="uid://bxi60at4j0nrr" path="res://scripts/sim/scenario/TriggerEngine.gd" id="16_rdwew"]
 [ext_resource type="Script" uid="uid://dnnu3w3b3j5rk" path="res://scripts/data/FuelProfile.gd" id="16_yatot"]
+[ext_resource type="Texture2D" uid="uid://hrka8glrx6fx" path="res://assets/models/marker/marker_metallic.png" id="17_sxd1u"]
+[ext_resource type="Texture2D" uid="uid://bsmx8prodmtby" path="res://assets/models/marker/marker_no.png" id="18_l6u77"]
+[ext_resource type="Texture2D" uid="uid://dr1f37g71fh70" path="res://assets/models/marker/marker_roughness.png" id="19_8ny4p"]
 [ext_resource type="FontFile" uid="uid://cxbhb0lo85wr0" path="res://assets/fonts/dseg7/DSEG7Classic-Bold.ttf" id="23_nfu8j"]
 [ext_resource type="Script" uid="uid://ch73kyybwrkb8" path="res://scripts/data/AmmoProfile.gd" id="24_jjp33"]
 [ext_resource type="Texture2D" uid="uid://cww2l5lebx4nn" path="res://assets/textures/ui/button_pause.png" id="24_l12u7"]
@@ -101,53 +111,49 @@ size = Vector3(0.115510255, 0.0025, 0.17024414)
 [sub_resource type="BoxShape3D" id="BoxShape3D_vxnyp"]
 size = Vector3(0.12, 0.005, 0.15)
 
-[sub_resource type="BoxMesh" id="BoxMesh_cx6my"]
-size = Vector3(0.12, 0.005, 0.15)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_of8da"]
 size = Vector3(0.1, 0.001, 0.1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_p1n4g"]
 size = Vector3(0.1, 0.001, 0.1)
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_qevx8"]
-height = 0.1
-radius = 0.005
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vxnyp"]
-albedo_color = Color(0, 0, 0, 1)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_uk27s"]
-material = SubResource("StandardMaterial3D_vxnyp")
-top_radius = 0.005
-bottom_radius = 0.005
-height = 0.1
-
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_cx6my"]
-height = 0.1
+height = 0.12648925
 radius = 0.005
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_of8da"]
-albedo_color = Color(0, 0, 1, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lkn30"]
+resource_name = "Marker"
+cull_mode = 2
+albedo_texture = ExtResource("14_jalr5")
+metallic_texture = ExtResource("17_sxd1u")
+metallic_texture_channel = 4
+roughness_texture = ExtResource("19_8ny4p")
+roughness_texture_channel = 4
+normal_enabled = true
+normal_texture = ExtResource("18_l6u77")
+ao_enabled = true
+ao_texture = ExtResource("15_imwkr")
+ao_texture_channel = 4
+heightmap_enabled = true
+heightmap_scale = 1.0
+heightmap_texture = ExtResource("16_n0sin")
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_ge8rp"]
-material = SubResource("StandardMaterial3D_of8da")
-top_radius = 0.005
-bottom_radius = 0.005
-height = 0.1
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_vxnyp"]
-height = 0.1
-radius = 0.005
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qevx8"]
-albedo_color = Color(1, 0, 0, 1)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_of8da"]
-material = SubResource("StandardMaterial3D_qevx8")
-top_radius = 0.005
-bottom_radius = 0.005
-height = 0.1
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x2xe6"]
+resource_name = "Marker"
+cull_mode = 2
+albedo_texture = ExtResource("14_lkn30")
+metallic_texture = ExtResource("17_sxd1u")
+metallic_texture_channel = 4
+roughness_texture = ExtResource("19_8ny4p")
+roughness_texture_channel = 4
+normal_enabled = true
+normal_texture = ExtResource("18_l6u77")
+ao_enabled = true
+ao_texture = ExtResource("15_imwkr")
+ao_texture_channel = 4
+heightmap_enabled = true
+heightmap_scale = 1.0
+heightmap_texture = ExtResource("16_n0sin")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ge0qv"]
 size = Vector3(0.04, 0.02, 0.12)
@@ -461,8 +467,16 @@ metadata/_edit_lock_ = true
 transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 2.160456e-08, 0, 0.49425477)
 
 [node name="CollisionShape3D" type="GPUParticlesCollisionBox3D" parent="Tent"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.046645164, 1.1618462, -1.0424156)
-size = Vector3(3.2870483, 2.384369, 1.4430237)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.046645164, 1.1618462, -1.1751099)
+size = Vector3(3.2870483, 2.384369, 1.7084122)
+
+[node name="ReflectionProbe" type="ReflectionProbe" parent="Tent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.001335144, 1.1644287, 0.5008087)
+blend_distance = 0.0
+size = Vector3(3.3557587, 4.611084, 4.726654)
+interior = true
+ambient_mode = 2
+ambient_color = Color(0.25929385, 0.25929365, 0.25929374, 1)
 
 [node name="StaticObjects" type="Node" parent="."]
 
@@ -575,9 +589,8 @@ inspect_rotation = Vector3(90, 0, 0)
 [node name="Collision" type="CollisionShape3D" parent="PhysicsObjects/FieldManual"]
 shape = SubResource("BoxShape3D_vxnyp")
 
-[node name="Mesh" type="MeshInstance3D" parent="PhysicsObjects/FieldManual"]
-mesh = SubResource("BoxMesh_cx6my")
-skeleton = NodePath("../..")
+[node name="Mesh" parent="PhysicsObjects/FieldManual" instance=ExtResource("7_gvjko")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0049864054, 0)
 
 [node name="Protractor" type="RigidBody3D" parent="PhysicsObjects"]
 unique_name_in_owner = true
@@ -604,18 +617,23 @@ collision_mask = 3
 physics_material_override = SubResource("PhysicsMaterial_cx6my")
 continuous_cd = true
 script = ExtResource("1_oof4l")
+held_rotation = Vector3(180, 0, 0)
 pick_toggle = true
 hide_mouse = true
 use_fixed_anchor = true
+anchor_offset = Vector3(0, 0.046, 0)
 snap_to_origin_position = true
 snap_to_origin_rotation = true
 
 [node name="Collision" type="CollisionShape3D" parent="PhysicsObjects/PenBlack"]
-shape = SubResource("CylinderShape3D_qevx8")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0033081174, 0)
+shape = SubResource("CylinderShape3D_cx6my")
 
 [node name="Mesh" type="MeshInstance3D" parent="PhysicsObjects/PenBlack"]
-mesh = SubResource("CylinderMesh_uk27s")
+transform = Transform3D(0.012, 0, 0, 0, -5.2453664e-10, 0.012, 0, -0.012, -5.2453664e-10, 0, -0.0061503504, 2.6884034e-10)
+mesh = ExtResource("12_324us")
 skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("13_jalr5")
 
 [node name="PenBlue" type="RigidBody3D" parent="PhysicsObjects"]
 unique_name_in_owner = true
@@ -625,18 +643,23 @@ collision_mask = 3
 physics_material_override = SubResource("PhysicsMaterial_cx6my")
 continuous_cd = true
 script = ExtResource("1_oof4l")
+held_rotation = Vector3(180, 0, 0)
 pick_toggle = true
 hide_mouse = true
 use_fixed_anchor = true
+anchor_offset = Vector3(0, 0.046, 0)
 snap_to_origin_position = true
 snap_to_origin_rotation = true
 
 [node name="Collision" type="CollisionShape3D" parent="PhysicsObjects/PenBlue"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0033081174, 0)
 shape = SubResource("CylinderShape3D_cx6my")
 
 [node name="Mesh" type="MeshInstance3D" parent="PhysicsObjects/PenBlue"]
-mesh = SubResource("CylinderMesh_ge8rp")
+transform = Transform3D(0.012, 0, 0, 0, -5.2453664e-10, 0.012, 0, -0.012, -5.2453664e-10, 0, -0.0061503504, 2.6884034e-10)
+mesh = ExtResource("12_324us")
 skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_lkn30")
 
 [node name="PenRed" type="RigidBody3D" parent="PhysicsObjects"]
 unique_name_in_owner = true
@@ -646,18 +669,23 @@ collision_mask = 3
 physics_material_override = SubResource("PhysicsMaterial_cx6my")
 continuous_cd = true
 script = ExtResource("1_oof4l")
+held_rotation = Vector3(180, 0, 0)
 pick_toggle = true
 hide_mouse = true
 use_fixed_anchor = true
+anchor_offset = Vector3(0, 0.046, 0)
 snap_to_origin_position = true
 snap_to_origin_rotation = true
 
 [node name="Collision" type="CollisionShape3D" parent="PhysicsObjects/PenRed"]
-shape = SubResource("CylinderShape3D_vxnyp")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0033081174, 0)
+shape = SubResource("CylinderShape3D_cx6my")
 
 [node name="Mesh" type="MeshInstance3D" parent="PhysicsObjects/PenRed"]
-mesh = SubResource("CylinderMesh_of8da")
+transform = Transform3D(0.012, 0, 0, 0, -5.2453664e-10, 0.012, 0, -0.012, -5.2453664e-10, 0, -0.0061503504, 2.6884034e-10)
+mesh = ExtResource("12_324us")
 skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_x2xe6")
 
 [node name="Eraser" type="RigidBody3D" parent="PhysicsObjects"]
 unique_name_in_owner = true
