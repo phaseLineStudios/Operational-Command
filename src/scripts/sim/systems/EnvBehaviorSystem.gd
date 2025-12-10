@@ -11,13 +11,21 @@ signal unit_unbogged(unit_id: String)
 signal speed_modifier_changed(unit_id: String, multiplier: float)
 signal navigation_bias_changed(unit_id: String, bias: StringName)
 
+## Movement adapter used to query path grid and push drift/speed changes.
 @export var movement_adapter: MovementAdapter
+## LOS adapter used for friendly-visibility recovery checks.
 @export var los_adapter: LOSAdapter
+## Visibility profile that translates terrain/weather into a 0..1 score.
 @export var visibility_profile: VisibilityProfile
+## Fallback speed multiplier when only slowed (soft ground, minor bog).
 @export var default_speed_mult_slowed: float = 0.8
+## Fallback speed multiplier when bogged.
 @export var default_speed_mult_bogged: float = 0.4
+## Visibility threshold below which loss checks begin.
 @export var loss_threshold: float = 0.5
-@export var regroup_recovery_bonus: float = 0.2  ## bonus visibility when Hold/Regroup is active
+## Bonus visibility applied when a Hold/Regroup order is active.
+@export var regroup_recovery_bonus: float = 0.2
+## Radius (m) to treat map labels as landmarks for recovery.
 @export var landmark_recovery_radius_m: float = 25.0
 
 var _nav_state_by_id: Dictionary = {}  ## unit_id -> UnitNavigationState
@@ -229,6 +237,7 @@ func _find_unit_by_id(unit_id: String) -> ScenarioUnit:
 	return null
 
 
+## Generate a small drift vector used while a unit is lost.
 func _random_drift(rng: RandomNumberGenerator) -> Vector2:
 	var angle: float = rng.randf_range(0.0, PI * 2.0)
 	var magnitude: float = rng.randf_range(0.5, 2.0)
@@ -268,6 +277,7 @@ func _terrain_loss_factor(unit: ScenarioUnit) -> float:
 	return 1.0
 
 
+## True when unit has an explicit hold/regroup order metadata set.
 func _has_hold_regroup_order(unit: ScenarioUnit) -> bool:
 	return unit != null and unit.has_meta("hold_regroup")
 
