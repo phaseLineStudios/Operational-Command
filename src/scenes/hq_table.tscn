@@ -1,9 +1,10 @@
-[gd_scene load_steps=133 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=132 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
 [ext_resource type="Script" uid="uid://d0ojagsd85iyf" path="res://scripts/ui/HQTable.gd" id="1_qgda6"]
 [ext_resource type="PackedScene" uid="uid://xp0rbo1drhvx" path="res://assets/models/timer/Timer.glb" id="2_2llyq"]
+[ext_resource type="PackedScene" uid="uid://dfndw0f6hfdhi" path="res://assets/models/table/table.glb" id="2_5bsee"]
 [ext_resource type="Script" uid="uid://4htsynbphlw0" path="res://scripts/core/TimerController.gd" id="3_2llyq"]
 [ext_resource type="Script" uid="uid://dn828tsljtrki" path="res://scripts/core/Camera.gd" id="3_3f477"]
 [ext_resource type="PackedScene" uid="uid://gfdfc6v4mqv6" path="res://assets/models/clipboard/Clipboard.glb" id="4_fhiww"]
@@ -62,12 +63,6 @@
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qevx8"]
 size = Vector3(1, 0.75, 0.7)
-
-[sub_resource type="BoxMesh" id="BoxMesh_oof4l"]
-size = Vector3(1, 0.75, 0.7)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3f477"]
-albedo_color = Color(0.375626, 0.28718, 0.13782, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cdjkm"]
 size = Vector3(0.2, 0.12, 0.12)
@@ -455,10 +450,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.355681, 0)
 [node name="Collision" type="CollisionShape3D" parent="Table"]
 shape = SubResource("BoxShape3D_qevx8")
 
-[node name="Mesh" type="MeshInstance3D" parent="Table"]
-mesh = SubResource("BoxMesh_oof4l")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_3f477")
+[node name="Mesh" parent="Table" instance=ExtResource("2_5bsee")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.32494795, -0.02435413)
 
 [node name="Tent" type="MeshInstance3D" parent="."]
 metadata/_edit_lock_ = true
@@ -523,7 +516,7 @@ outline_size = 5
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.731, 0.068)
 mesh = SubResource("PlaneMesh_p1n4g")
-skeleton = NodePath("../../Table/Mesh")
+skeleton = NodePath("")
 
 [node name="Radio" type="MeshInstance3D" parent="StaticObjects"]
 unique_name_in_owner = true
@@ -534,7 +527,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_lmes1")
 
 [node name="Lamp" type="MeshInstance3D" parent="StaticObjects"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.248519, 0.736343, -0.305243)
-skeleton = NodePath("../../Table/Mesh")
+skeleton = NodePath("")
 
 [node name="LampLight" type="OmniLight3D" parent="StaticObjects"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0898442, 1.24826, 0.089353114)

@@ -16,6 +16,7 @@ extends WorldEnvironment
 	set(val):
 		scenario = val
 		if env_scene:
+			env_scene.scenario = scenario
 			env_scene.get_sound_controller().init_env_sounds(val)
 
 @export_group("Nodes")
