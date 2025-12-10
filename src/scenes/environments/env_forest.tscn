@@ -37,6 +37,7 @@ script = ExtResource("1_a18hc")
 
 [node name="Helpers" type="Node3D" parent="."]
 unique_name_in_owner = true
+visible = false
 metadata/_edit_lock_ = true
 
 [node name="TentShape" type="MeshInstance3D" parent="Helpers"]

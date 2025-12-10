@@ -1,4 +1,4 @@
-[gd_scene load_steps=132 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=133 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dfndw0f6hfdhi" path="res://assets/models/table/table.glb" id="2_5bsee"]
 [ext_resource type="Script" uid="uid://4htsynbphlw0" path="res://scripts/core/TimerController.gd" id="3_2llyq"]
 [ext_resource type="Script" uid="uid://dn828tsljtrki" path="res://scripts/core/Camera.gd" id="3_3f477"]
+[ext_resource type="PackedScene" uid="uid://dgp3gk5keyjti" path="res://assets/models/tent/tent.glb" id="3_rio5r"]
 [ext_resource type="PackedScene" uid="uid://gfdfc6v4mqv6" path="res://assets/models/clipboard/Clipboard.glb" id="4_fhiww"]
 [ext_resource type="Script" uid="uid://0r8k717de5os" path="res://scripts/core/PlayerInteraction.gd" id="4_py2wd"]
 [ext_resource type="AudioStream" uid="uid://clic7fxxhe40a" path="res://audio/sfx/sfx_drop_protractor_01.wav" id="5_66gqg"]
@@ -456,38 +457,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.32494795, -0.02435413)
 [node name="Tent" type="MeshInstance3D" parent="."]
 metadata/_edit_lock_ = true
 
-[node name="PlaceHolder" type="CSGBox3D" parent="Tent"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0238228, 0.86145, 0.0106506)
-size = Vector3(3.33334, 1.77856, 3.539)
-metadata/_edit_lock_ = true
-
-[node name="InsideSpace" type="CSGBox3D" parent="Tent/PlaceHolder"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0218391, -0.392822, -0.339142)
-operation = 2
-size = Vector3(3.13879, 1.81592, 2.76892)
-metadata/_edit_lock_ = true
-
-[node name="Door" type="CSGBox3D" parent="Tent/PlaceHolder"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00355911, -0.417542, -1.20057)
-operation = 2
-size = Vector3(1.37492, 1.76648, 2.76892)
-metadata/_edit_lock_ = true
+[node name="Mesh" parent="Tent" instance=ExtResource("3_rio5r")]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 2.160456e-08, 0, 0.49425477)
 
 [node name="CollisionShape3D" type="GPUParticlesCollisionBox3D" parent="Tent"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2053671, 0.8564415, -1.7407036)
-size = Vector3(0.9696045, 1.7735596, 0.046447754)
-
-[node name="CollisionShape3D2" type="GPUParticlesCollisionBox3D" parent="Tent"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.150321, 0.8564415, -1.7407036)
-size = Vector3(0.9696045, 1.7735596, 0.046447754)
-
-[node name="CollisionShape3D3" type="GPUParticlesCollisionBox3D" parent="Tent"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12325859, 1.540554, -1.7407036)
-size = Vector3(1.5922241, 0.40533447, 0.046447754)
-
-[node name="CollisionShape3D4" type="GPUParticlesCollisionBox3D" parent="Tent"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.027944565, 1.6769829, -0.055599213)
-size = Vector3(3.3188934, 0.1324768, 3.4166565)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.046645164, 1.1618462, -1.0424156)
+size = Vector3(3.2870483, 2.384369, 1.4430237)
 
 [node name="StaticObjects" type="Node" parent="."]
 
