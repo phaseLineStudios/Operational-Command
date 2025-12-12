@@ -40,8 +40,7 @@ func check_rain() -> void:
 
 	if not mat is ShaderMaterial:
 		LogService.warning(
-			"Material is not a ShaderMaterial: %s" % mat.get_class(),
-			"forest_terrain.gd:40"
+			"Material is not a ShaderMaterial: %s" % mat.get_class(), "forest_terrain.gd:40"
 		)
 		return
 

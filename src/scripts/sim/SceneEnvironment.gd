@@ -5,7 +5,7 @@ extends Node3D
 signal scenario_changed(scenario: ScenarioData)
 
 ## Currently loaded scenario
-@export var scenario: ScenarioData : 
+@export var scenario: ScenarioData:
 	set(val):
 		scenario = val
 		emit_signal("scenario_changed", val)
