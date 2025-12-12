@@ -28,8 +28,8 @@ const ARTILLERY_POLYPHONY := 16
 @export var sound_distant_combat: Array[AudioStream]
 
 var _rng := RandomNumberGenerator.new()
-var _time_since_last_engagement: float = 999.0  ## Time since last engagement reported
 var _combat_sound_playing: bool = false
+var _combat_fade_timer: Timer
 
 var _sfx_artillery_outgoing: AudioStreamPlayer
 var _sfx_artillery_impact: AudioStreamPlayer
@@ -38,10 +38,9 @@ var _playback_outgoing: AudioStreamPlaybackPolyphonic
 var _playback_impact: AudioStreamPlaybackPolyphonic
 
 
-## Initialize random generator, polyphonic streams, and processing.
+## Initialize random generator, polyphonic streams, and timer.
 func _ready() -> void:
 	_rng.randomize()
-	set_process(true)
 
 	_sfx_artillery_outgoing = $SfxArtilleryOutgoing
 	_sfx_artillery_impact = $SfxArtilleryImpact
@@ -55,6 +54,12 @@ func _ready() -> void:
 
 	_sfx_combat.finished.connect(_on_combat_sound_finished)
 
+	# Setup timer for combat fade instead of _process()
+	_combat_fade_timer = Timer.new()
+	_combat_fade_timer.one_shot = true
+	_combat_fade_timer.timeout.connect(_on_combat_fade_timeout)
+	add_child(_combat_fade_timer)
+
 
 ## Initialize a polyphonic audio stream player.
 func _init_polyphonic_player(player: AudioStreamPlayer, polyphony: int) -> void:
@@ -64,14 +69,9 @@ func _init_polyphonic_player(player: AudioStreamPlayer, polyphony: int) -> void:
 	player.play()
 
 
-## Update combat sound state.
-func _process(dt: float) -> void:
-	_time_since_last_engagement += dt
-
-	if _time_since_last_engagement < combat_fade_time:
-		if not _combat_sound_playing:
-			_start_combat_sound_loop()
-	elif _combat_sound_playing:
+## Called when combat fade timer times out.
+func _on_combat_fade_timeout() -> void:
+	if _combat_sound_playing:
 		_stop_combat_sound_loop()
 
 
@@ -162,7 +162,13 @@ func _on_engagement_reported(_attacker_id: String, _defender_id: String, _damage
 	if not enable_combat_sounds:
 		return
 
-	_time_since_last_engagement = 0.0
+	# Start combat sound if not already playing
+	if not _combat_sound_playing:
+		_start_combat_sound_loop()
+
+	# Restart fade timer - combat continues
+	if _combat_fade_timer:
+		_combat_fade_timer.start(combat_fade_time)
 
 
 ## Returns a random AudioStream from list or null if empty.

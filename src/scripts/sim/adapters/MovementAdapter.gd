@@ -258,6 +258,9 @@ func tick_units(units: Array[ScenarioUnit], dt: float) -> void:
 		if _grid.ensure_profile(p):
 			_grid.use_profile(p)
 			for u in groups[p]:
+				# Handle repath requests from environment system
+				_repath_if_requested(u)
+
 				# Auto-pause if unit is under fire (taking damage)
 				# Note: We don't pause if the unit is actively firing back,
 				# which is handled by the combat mode and engagement system.
@@ -291,7 +294,8 @@ func plan_and_start(su: ScenarioUnit, dest_m: Vector2) -> bool:
 		su.set_meta("_pending_start_profile", p)
 		return true
 	_grid.use_profile(p)
-	if su.plan_move(_grid, dest_m):
+	var planned: bool = _with_navigation_bias(su, func(): return su.plan_move(_grid, dest_m))
+	if planned:
 		su.start_move(_grid)
 		return true
 	LogService.warning("plan_move failed", "MovementAdapter.gd:163")
@@ -457,7 +461,11 @@ func _step_move(dt: float) -> void:
 		if flat.length() > 0.001:
 			_actor.look_at(_actor.global_position + flat, Vector3.UP)
 
-	_actor.global_position = pos + dir * speed * dt
+	var step_vec := dir * speed * dt
+	if _actor and _actor.has_meta("env_drift3"):
+		var drift3: Vector3 = _actor.get_meta("env_drift3")
+		step_vec += drift3 * dt
+	_actor.global_position = pos + step_vec
 
 
 func _tick_hold(dt: float) -> void:
@@ -527,3 +535,114 @@ func _advance_patrol_leg() -> bool:
 	_moving = true
 	_patrol_segments_remaining -= 1
 	return true
+
+
+## Set an external environment speed multiplier for a unit (placeholder).
+func set_env_speed_multiplier(_su: ScenarioUnit, _mult: float) -> void:
+	if _su == null:
+		return
+	_su.set_meta("env_speed_mult", float(_mult))
+
+
+## Clear environment speed multiplier (placeholder).
+func clear_env_speed_multiplier(_su: ScenarioUnit) -> void:
+	if _su == null:
+		return
+	if _su.has_meta("env_speed_mult"):
+		_su.remove_meta("env_speed_mult")
+
+
+## Apply an external drift vector while lost (placeholder).
+## Store drift for 2D pathing and mirror to actor for 3D motion.
+func set_env_drift(_su: ScenarioUnit, _drift: Vector2) -> void:
+	if _su == null:
+		return
+	_su.set_meta("env_drift", _drift)
+	# Mirror drift into actor metadata for 3D movement if available
+	if _actor != null:
+		_actor.set_meta("env_drift3", Vector3(_drift.x, 0.0, _drift.y))
+
+
+## Clear drift vector (placeholder).
+func clear_env_drift(_su: ScenarioUnit) -> void:
+	if _su == null:
+		return
+	if _su.has_meta("env_drift"):
+		_su.remove_meta("env_drift")
+	if _actor != null and _actor.has_meta("env_drift3"):
+		_actor.remove_meta("env_drift3")
+
+
+## Request a repath due to environment state change (placeholder).
+## Flag a repath request; processed on the next tick group.
+func request_env_repath(_su: ScenarioUnit) -> void:
+	if _su == null:
+		return
+	_su.set_meta("env_repath_requested", true)
+
+
+## Set navigation bias (roads/cover/shortest) (placeholder).
+func set_navigation_bias(_su: ScenarioUnit, _bias: StringName) -> void:
+	if _su == null:
+		return
+	_su.set_meta("env_navigation_bias", _bias)
+
+
+## Optional helper to surface path complexity to env system (placeholder).
+func path_complexity_for(_su: ScenarioUnit) -> float:
+	if _su == null or not _su.has_method("current_path"):
+		return 0.0
+	var path: PackedVector2Array = _su.current_path()
+	if path.is_empty():
+		return 0.0
+	var total_len: float = 0.0
+	var turn_sum: float = 0.0
+	for i in range(1, path.size()):
+		total_len += path[i - 1].distance_to(path[i])
+		if i >= 2:
+			var a := (path[i - 1] - path[i - 2]).normalized()
+			var b := (path[i] - path[i - 1]).normalized()
+			var dot: float = clamp(a.dot(b), -1.0, 1.0)
+			var turn: float = acos(dot)
+			turn_sum += turn
+	var norm_len: float = clamp(total_len / 1000.0, 0.0, 1.0)
+	var norm_turns: float = clamp(turn_sum / PI, 0.0, 1.0)
+	return clamp((norm_len * 0.6) + (norm_turns * 0.4), 0.0, 1.0)
+
+
+func _repath_if_requested(su: ScenarioUnit) -> void:
+	if su == null:
+		return
+	if not su.has_meta("env_repath_requested"):
+		return
+	su.remove_meta("env_repath_requested")
+	var dest: Vector2 = su.destination_m()
+	if not dest.is_finite():
+		return
+	plan_and_start(su, dest)
+
+
+func _with_navigation_bias(su: ScenarioUnit, action: Callable) -> Variant:
+	if _grid == null:
+		return action.call()
+	var prev: float = _grid.road_bias_weight
+	var bias_weight: float = _desired_bias_weight(su)
+	_grid.road_bias_weight = bias_weight
+	var result: Variant = action.call()
+	_grid.road_bias_weight = prev
+	return result
+
+
+func _desired_bias_weight(su: ScenarioUnit) -> float:
+	if su == null or not su.has_meta("env_navigation_bias"):
+		return _grid.road_bias_weight
+	var bias: StringName = StringName(su.get_meta("env_navigation_bias"))
+	match String(bias):
+		"roads":
+			return 0.5
+		"cover":
+			return 1.2
+		"shortest":
+			return 1.0
+		_:
+			return _grid.road_bias_weight

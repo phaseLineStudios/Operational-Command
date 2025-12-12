@@ -48,8 +48,8 @@ var _ambient_using_a := true
 var _precip_using_a: bool = true
 var _wind_using_a: bool = true
 var _rng := RandomNumberGenerator.new()
-var _ambient_sfx_timer := 0.0
-var _thunder_timer := 0.0
+var _ambient_sfx_timer: Timer
+var _thunder_timer: Timer
 
 @onready var _ambient_a: AudioStreamPlayer = $Ambient/StreamA
 @onready var _ambient_b: AudioStreamPlayer = $Ambient/StreamB
@@ -64,14 +64,25 @@ var _thunder_timer := 0.0
 ## Initialize timers and random generator.
 func _ready() -> void:
 	_rng.randomize()
+	_setup_timers()
+
+
+## Setup Timer nodes for ambient SFX and thunder instead of _process() updates.
+func _setup_timers() -> void:
+	# Create and configure ambient SFX timer
+	_ambient_sfx_timer = Timer.new()
+	_ambient_sfx_timer.one_shot = true
+	_ambient_sfx_timer.timeout.connect(_on_ambient_sfx_timeout)
+	add_child(_ambient_sfx_timer)
+
+	# Create and configure thunder timer
+	_thunder_timer = Timer.new()
+	_thunder_timer.one_shot = true
+	_thunder_timer.timeout.connect(_on_thunder_timeout)
+	add_child(_thunder_timer)
+
+	# Start initial timers
 	_reset_timers()
-	set_process(true)
-
-
-## Update random SFX timers.
-func _process(dt: float) -> void:
-	_update_ambient_sfx(dt)
-	_update_thunder(dt)
 
 
 ## Initialize environment sound controller.
@@ -100,15 +111,21 @@ func set_weather(rain_mm_per_hour: float, wind_speed_m: float, use_snow: bool = 
 
 ## Reset random SFX timers to a random offset.
 func _reset_timers() -> void:
-	if ambient_sfx_interval_max > ambient_sfx_interval_min:
-		_ambient_sfx_timer = _rng.randf_range(ambient_sfx_interval_min, ambient_sfx_interval_max)
-	else:
-		_ambient_sfx_timer = max(ambient_sfx_interval_min, 0.0)
+	if _ambient_sfx_timer and enable_ambient_sfx and not ambient_sfx.is_empty():
+		var wait_time: float
+		if ambient_sfx_interval_max > ambient_sfx_interval_min:
+			wait_time = _rng.randf_range(ambient_sfx_interval_min, ambient_sfx_interval_max)
+		else:
+			wait_time = max(ambient_sfx_interval_min, 0.1)
+		_ambient_sfx_timer.start(wait_time)
 
-	if thunder_interval_max > thunder_interval_min:
-		_thunder_timer = _rng.randf_range(thunder_interval_min, thunder_interval_max)
-	else:
-		_thunder_timer = max(thunder_interval_min, 0.0)
+	if _thunder_timer and enable_thunder:
+		var wait_time: float
+		if thunder_interval_max > thunder_interval_min:
+			wait_time = _rng.randf_range(thunder_interval_min, thunder_interval_max)
+		else:
+			wait_time = max(thunder_interval_min, 0.1)
+		_thunder_timer.start(wait_time)
 
 
 ## Update day/night ambient loop based on ScenarioData.
@@ -303,17 +320,9 @@ func _crossfade_wind(new_stream: AudioStream) -> void:
 	_wind_using_a = not _wind_using_a
 
 
-## Tick and play random ambient SFX.
-func _update_ambient_sfx(delta: float) -> void:
-	if not enable_ambient_sfx:
-		return
-	if ambient_sfx.is_empty():
-		return
-	if ambient_sfx_interval_min <= 0.0 and ambient_sfx_interval_max <= 0.0:
-		return
-
-	_ambient_sfx_timer -= delta
-	if _ambient_sfx_timer > 0.0:
+## Called when ambient SFX timer times out.
+func _on_ambient_sfx_timeout() -> void:
+	if not enable_ambient_sfx or ambient_sfx.is_empty():
 		return
 
 	var sfx := _pick_random_stream(ambient_sfx)
@@ -321,25 +330,31 @@ func _update_ambient_sfx(delta: float) -> void:
 		_sfx_ambient.stream = sfx
 		_sfx_ambient.play()
 
-	if ambient_sfx_interval_max > ambient_sfx_interval_min:
-		_ambient_sfx_timer = _rng.randf_range(ambient_sfx_interval_min, ambient_sfx_interval_max)
-	else:
-		_ambient_sfx_timer = max(ambient_sfx_interval_min, 0.1)
+	# Restart timer with new random interval
+	if _ambient_sfx_timer:
+		var wait_time: float
+		if ambient_sfx_interval_max > ambient_sfx_interval_min:
+			wait_time = _rng.randf_range(ambient_sfx_interval_min, ambient_sfx_interval_max)
+		else:
+			wait_time = max(ambient_sfx_interval_min, 0.1)
+		_ambient_sfx_timer.start(wait_time)
 
 
-## Tick and play thunder when raining or snowing.
-func _update_thunder(delta: float) -> void:
+## Called when thunder timer times out.
+func _on_thunder_timeout() -> void:
 	if not enable_thunder:
 		return
 	if not _has_rain and not _has_snow:
+		# Don't play thunder, but restart timer for when weather changes
+		if _thunder_timer:
+			var wait_time: float
+			if thunder_interval_max > thunder_interval_min:
+				wait_time = _rng.randf_range(thunder_interval_min, thunder_interval_max)
+			else:
+				wait_time = max(thunder_interval_min, 0.1)
+			_thunder_timer.start(wait_time)
 		return
 	if sound_thunder.is_empty():
-		return
-	if thunder_interval_min <= 0.0 and thunder_interval_max <= 0.0:
-		return
-
-	_thunder_timer -= delta
-	if _thunder_timer > 0.0:
 		return
 
 	var sfx := _pick_random_stream(sound_thunder)
@@ -347,10 +362,14 @@ func _update_thunder(delta: float) -> void:
 		_sfx_thunder.stream = sfx
 		_sfx_thunder.play()
 
-	if thunder_interval_max > thunder_interval_min:
-		_thunder_timer = _rng.randf_range(thunder_interval_min, thunder_interval_max)
-	else:
-		_thunder_timer = max(thunder_interval_min, 0.1)
+	# Restart timer with new random interval
+	if _thunder_timer:
+		var wait_time: float
+		if thunder_interval_max > thunder_interval_min:
+			wait_time = _rng.randf_range(thunder_interval_min, thunder_interval_max)
+		else:
+			wait_time = max(thunder_interval_min, 0.1)
+		_thunder_timer.start(wait_time)
 
 
 ## Returns a random AudioStream from list or null if empty.

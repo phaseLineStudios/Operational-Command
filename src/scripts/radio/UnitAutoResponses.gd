@@ -85,6 +85,7 @@ var _event_last_triggered: Dictionary = {}
 var _resupply_refuel_last_triggered: Dictionary = {}
 
 var _rng := RandomNumberGenerator.new()
+var _queue_timer: Timer
 
 
 ## Voice message in the queue
@@ -112,6 +113,12 @@ class VoiceMessage:
 func _ready() -> void:
 	_rng.randomize()
 	_load_auto_responses()
+
+	_queue_timer = Timer.new()
+	_queue_timer.one_shot = false
+	_queue_timer.wait_time = global_cooldown_s
+	_queue_timer.timeout.connect(_on_queue_timer_timeout)
+	add_child(_queue_timer)
 
 
 ## Load auto response phrases from JSON data file.
@@ -294,23 +301,23 @@ func _connect_artillery_signals() -> void:
 		_artillery_controller.battle_damage_assessment.connect(_on_battle_damage_assessment)
 
 
-func _process(delta: float) -> void:
-	_process_message_queue(delta)
-
-
-## Process and emit queued voice messages.
-func _process_message_queue(_delta: float) -> void:
+## Called when queue timer times out.
+## process and emit queued voice messages.
+func _on_queue_timer_timeout() -> void:
 	if _message_queue.is_empty():
+		_queue_timer.stop()
 		return
 
 	var current_time := Time.get_ticks_msec() / 1000.0
 
+	# Check global cooldown
 	if current_time - _last_message_time < global_cooldown_s:
 		return
 
 	_message_queue.sort_custom(_compare_messages)
 	var msg := _message_queue[0]
 
+	# Check per-unit cooldown
 	var unit_last_time: float = _unit_last_message.get(msg.unit_id, 0.0)
 	if current_time - unit_last_time < per_unit_cooldown_s:
 		return
@@ -320,6 +327,10 @@ func _process_message_queue(_delta: float) -> void:
 
 	_last_message_time = current_time
 	_unit_last_message[msg.unit_id] = current_time
+
+	# Stop timer if queue is now empty
+	if _message_queue.is_empty():
+		_queue_timer.stop()
 
 
 ## Compare messages for priority sorting (higher priority first).
@@ -371,6 +382,10 @@ func _queue_message(unit_id: String, event_type: EventType) -> void:
 	_message_queue.append(msg)
 	_event_last_triggered[event_key] = current_time
 
+	# Start queue timer if not already running
+	if _queue_timer and _queue_timer.is_stopped():
+		_queue_timer.start()
+
 
 ## Queue a message with custom text (bypasses phrase selection).
 ## [param unit_id] Unit ID.
@@ -388,6 +403,10 @@ func _queue_custom_message(
 		_message_queue.remove_at(_message_queue.size() - 1)
 
 	_message_queue.append(msg)
+
+	# Start queue timer if not already running
+	if _queue_timer and _queue_timer.is_stopped():
+		_queue_timer.start()
 
 
 ## Handle unit state update - detect state changes.
@@ -787,6 +806,10 @@ func _has_los_between(a: ScenarioUnit, b: ScenarioUnit) -> bool:
 		return dist < 2000.0
 
 	return _sim_world.los_adapter.has_los(a, b)
+
+	# Start queue timer if not already running
+	if _queue_timer and _queue_timer.is_stopped():
+		_queue_timer.start()
 
 
 ## Get descriptive text for a unit (e.g., "Enemy infantry platoon").

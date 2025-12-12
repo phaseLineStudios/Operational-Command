@@ -168,3 +168,41 @@ func _behaviour_spotting_mult(target: ScenarioUnit) -> float:
 			return 0.6
 		_:
 			return 1.0
+
+
+## Fast local visibility query placeholder for EnvBehaviorSystem.
+func sample_visibility_for_unit(_unit: ScenarioUnit) -> float:
+	if _unit == null:
+		return 1.0
+	var pos_m: Vector2 = _unit.position_m if "position_m" in _unit else Vector2.ZERO
+	return sample_visibility_at(pos_m)
+
+
+## Visibility sampling at a position placeholder.
+func sample_visibility_at(_pos_m: Vector2) -> float:
+	if _renderer == null:
+		return 1.0
+	# Derive a local concealment penalty by sampling spotting_mul at zero range,
+	# then invert it to represent visibility (1.0 = clear, lower = obscured).
+	var spot_mul: float = spotting_mul(_pos_m, 0.0, _current_weather_severity())
+	var conceal_bonus: float = 1.0
+	var surf: Dictionary = _renderer.get_surface_at_terrain_position(_pos_m)
+	if typeof(surf) == TYPE_DICTIONARY and surf.has("brush"):
+		var brush: Variant = surf.get("brush")
+		if brush and brush.has_method("get"):
+			var conceal: float = clamp(float(brush.get("concealment", 0.0)), 0.0, 1.0)
+			conceal_bonus = max(0.05, 1.0 - conceal)
+	return clamp(spot_mul * conceal_bonus, 0.0, 1.0)
+
+
+func _current_weather_severity() -> float:
+	# If a terrain renderer data is attached, try to fetch ScenarioData weather if present.
+	# Fallback to 0 severity.
+	if Game.current_scenario != null:
+		var scen: ScenarioData = Game.current_scenario
+		var fog_m: float = float(scen.fog_m)
+		var rain: float = float(scen.rain)
+		var fog_sev: float = clamp(1.0 - fog_m / 8000.0, 0.0, 1.0)
+		var rain_sev: float = clamp(rain / 50.0, 0.0, 1.0)
+		return max(fog_sev, rain_sev)
+	return 0.0
