@@ -22,11 +22,11 @@
           "title": "defeat enemies"
         }
       ],
-      "statement": "capture the bridge before the enemies can blow it up\n\nand make sure no enemies are left to defend the bridge."
+      "statement": "Utilise any necessary resource to capture and hold the bridge.\nThe enemies have rigged the bridge to explode but there is still time to capture and disarm the sxplosives before they go off."
     },
     "situation": {
       "enemy": "the enemies will have guardposts guarding the bridge and backup nearby, how much is unknown.",
-      "friendly": "Allys are moving into germany at mass and therefore should have enough resources to capture the bridge.\nproblem is doing it in  time",
+      "friendly": "Allys are moving into germany at mass and therefore should have enough resources to capture the bridge.\nuse all resources neccessary. Time is of the essence",
       "start_time": "",
       "terrain": "the River runs throught the center of the map east to west.\nforest to the south west, and a hill north east overlooking the bridge.\nA Main road runs thru the center of the map and over the bridge, perfect advantage spot for defense.",
       "weather": ""
@@ -139,6 +139,15 @@
           "x": 971.0,
           "y": 1231.0
         },
+        "state": {
+          "cohesion": 1.0,
+          "state_ammunition": {
+
+          },
+          "state_equipment": 0.0,
+          "state_injured": 0.0,
+          "state_strength": 0.0
+        },
         "unit_id": "ger_Unit_Patrol"
       },
       {
@@ -151,6 +160,15 @@
         "position": {
           "x": 891.0,
           "y": 1111.0
+        },
+        "state": {
+          "cohesion": 1.0,
+          "state_ammunition": {
+
+          },
+          "state_equipment": 0.0,
+          "state_injured": 0.0,
+          "state_strength": 0.0
         },
         "unit_id": "ger_unit_GuardPost"
       },
@@ -165,6 +183,15 @@
           "x": 1551.0,
           "y": 731.0
         },
+        "state": {
+          "cohesion": 1.0,
+          "state_ammunition": {
+
+          },
+          "state_equipment": 0.0,
+          "state_injured": 0.0,
+          "state_strength": 0.0
+        },
         "unit_id": "ger_unit_artillery"
       },
       {
@@ -178,20 +205,16 @@
           "x": 921.0,
           "y": 851.0
         },
-        "unit_id": "ger_guardpost_North"
-      },
-      {
-        "affiliation": 0,
-        "behaviour": 1,
-        "callsign": "HOTEL",
-        "combat_mode": 2,
-        "id": "Ally_Scout_1",
-        "playable": false,
-        "position": {
-          "x": 764.64501953125,
-          "y": 1944.64978027344
+        "state": {
+          "cohesion": 1.0,
+          "state_ammunition": {
+
+          },
+          "state_equipment": 0.0,
+          "state_injured": 0.0,
+          "state_strength": 0.0
         },
-        "unit_id": "Ally_Scout"
+        "unit_id": "ger_guardpost_North"
       }
     ]
   },
@@ -211,11 +234,34 @@
   },
   "preview_path": "res://assets/textures/scenarios/rhine_Bridge_thumb.png",
   "scenario_order": 0,
-  "terrain_id": "Rhine_Bridge",
+  "terrain_id": "rhine_bridge",
   "title": "Capture Rhine bridge",
   "units": {
+    "ammo_pools": {
+      "ARTILLERY_AP": 50,
+      "HEAVY_WEAPONS": 60,
+      "MORTAR_AP": 40,
+      "MORTAR_SMOKE": 40,
+      "SMALL_ARMS": 60
+    },
+    "equipment_pool": 100,
+    "replacement_pool": 10,
     "unit_points": 500,
-    "unit_recruits_ids": [],
+    "unit_recruits_ids": [
+      "Ally_Scout",
+      "frg_bw_opfor",
+      "frg_opfor_2_bundeswehr",
+      "heavy_weapons_plt_1",
+      "infantry_plt_1",
+      "infantry_plt_2",
+      "logistics_platoon_1",
+      "scout_plt_1a111_acr",
+      "us_11acr_58engr_pl",
+      "us_11acr_a_trp_2plt_tank_m60a3",
+      "us_11acr_a_trp_itv_sec",
+      "us_11acr_a_trp_mortar_sec_m106",
+      "us_unit_motorized"
+    ],
     "unit_reserves": [],
     "unit_slots": [
       {
@@ -223,8 +269,8 @@
         "callsign": "ALPHA",
         "key": "SLOT_1",
         "start_position": {
-          "x": 759.828063964844,
-          "y": 1941.04333496094
+          "x": 349.0537109375,
+          "y": 1950.02197265625
         },
         "title": "ALPHA"
       },
@@ -233,8 +279,8 @@
         "callsign": "BRAVO",
         "key": "SLOT_2",
         "start_position": {
-          "x": 840.103942871094,
-          "y": 1954.42272949219
+          "x": 462.999572753906,
+          "y": 1884.837890625
         },
         "title": "BRAVO"
       },
@@ -243,8 +289,8 @@
         "callsign": "CHARLIE",
         "key": "SLOT_3",
         "start_position": {
-          "x": 840.103942871094,
-          "y": 1954.42272949219
+          "x": 546.052307128906,
+          "y": 1949.93334960938
         },
         "title": "CHARLIE"
       },
@@ -253,8 +299,8 @@
         "callsign": "DELTA",
         "key": "SLOT_4",
         "start_position": {
-          "x": 639.414367675781,
-          "y": 1946.39514160156
+          "x": 641.658996582031,
+          "y": 1881.29968261719
         },
         "title": "DELTA"
       },
@@ -263,7 +309,7 @@
         "callsign": "ECHO",
         "key": "SLOT_5",
         "start_position": {
-          "x": 703.635070800781,
+          "x": 746.283996582031,
           "y": 1949.07092285156
         },
         "title": "ECHO"
@@ -273,8 +319,8 @@
         "callsign": "FOXTROT",
         "key": "SLOT_6",
         "start_position": {
-          "x": 912.352111816406,
-          "y": 1951.74670410156
+          "x": 851.746032714844,
+          "y": 1888.89611816406
         },
         "title": "FOXTROT"
       },
@@ -283,8 +329,8 @@
         "callsign": "GOLF",
         "key": "SLOT_7",
         "start_position": {
-          "x": 559.138488769531,
-          "y": 1949.07092285156
+          "x": 904.817565917969,
+          "y": 1949.07116699219
         },
         "title": "GOLF"
       }
@@ -293,7 +339,7 @@
   "weather": {
     "fog_m": 8000.0,
     "rain": 0.0,
-    "wind_dir": 0.0,
-    "wind_speed_m": 1.0
+    "wind_dir": 43.0,
+    "wind_speed_m": 2.0
   }
 }

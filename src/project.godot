@@ -27,7 +27,7 @@ Game="*res://scripts/core/Game.gd"
 Persistence="*res://scripts/core/Persistence.gd"
 ContentDB="*res://scripts/core/ContentDB.gd"
 STTService="*res://scripts/radio/STTService.gd"
-NARules="*res://scripts/radio/NARules.gd"
+NARules="*res://maps/NARules.gd"
 LogService="*res://scripts/core/LogService.gd"
 TTSService="*res://scripts/radio/TTSService.gd"
 
