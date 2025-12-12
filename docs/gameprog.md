@@ -5,6 +5,7 @@
 
 ## Related
 - [Core Game Repo](https://github.com/operationalCommandTeam/Operational-Command)
+- [Custom Godot Documentation Tool](https://github.com/phaseLineStudios/gdscript_to_docs)
 
 ## Gameplay Video
 - [Gameplay Demo Video](future_video_here)
