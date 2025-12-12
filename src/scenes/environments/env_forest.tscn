@@ -52,6 +52,7 @@ script = ExtResource("1_a18hc")
 
 [node name="Helpers" type="Node3D" parent="."]
 unique_name_in_owner = true
+visible = false
 metadata/_edit_lock_ = true
 
 [node name="TentShape" type="MeshInstance3D" parent="Helpers"]
@@ -84,8 +85,8 @@ unique_name_in_owner = true
 surface_material_override/0 = ExtResource("3_ntxx4")
 
 [node name="WeatherCollision" type="GPUParticlesCollisionBox3D" parent="Content/Terrain"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
-size = Vector3(50, 0.1, 50)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+size = Vector3(50, 2, 50)
 
 [node name="Trees" type="Node3D" parent="Content" node_paths=PackedStringArray("terrain")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -31.284079)

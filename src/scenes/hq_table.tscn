@@ -232,7 +232,7 @@ color_ramp = SubResource("Gradient_5yowr")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_66gqg"]
 shader = ExtResource("36_66gqg")
-shader_parameter/base_color = Color(0.204346, 0.344014, 0.5625, 1)
+shader_parameter/base_color = Color(0.18183953, 0.28385302, 0.4434352, 0.83)
 shader_parameter/scattering_lut = ExtResource("41_tw4w3")
 shader_parameter/scatter_color = Color(1, 1, 1, 1)
 shader_parameter/scatter_color_2 = Color(1, 1, 1, 1)
@@ -253,7 +253,7 @@ shader_parameter/moon_glow_intensity = 0.8
 shader_parameter/base_cloud_color = Color(1, 1, 1, 1)
 shader_parameter/cloud_density = 4.25
 shader_parameter/cloud_edge = 0.0
-shader_parameter/cloud_coverage = 0.0
+shader_parameter/cloud_coverage = 1.0
 shader_parameter/cloud_direction = Vector2(0, -1)
 shader_parameter/cloud_texture = ExtResource("39_r1wnv")
 shader_parameter/cloud_texture_2 = ExtResource("40_8iaup")
@@ -264,9 +264,9 @@ shader_parameter/cloud_alpha = 1.0
 shader_parameter/cloud_speed = 0.0
 shader_parameter/absorption = 5.0
 shader_parameter/henyey_greenstein_level = 0.69
-shader_parameter/dynamic_cloud_brightness = 0.9
+shader_parameter/dynamic_cloud_brightness = 0.774
 shader_parameter/horizon_uv_curve = 0.5
-shader_parameter/horizon_fog_color = Color(0.82882583, 0.9191148, 0.9999997, 1)
+shader_parameter/horizon_fog_color = Color(0.6879254, 0.7628653, 0.82999974, 0.83)
 shader_parameter/horizon_alpha = 1.0
 shader_parameter/horizon_size = 3.0
 shader_parameter/star_texture = ExtResource("43_66gqg")
@@ -302,7 +302,7 @@ glow_bloom = 0.04
 fog_density = 4.725e-05
 fog_aerial_perspective = 0.0004725
 volumetric_fog_enabled = true
-volumetric_fog_density = 0.0053053694
+volumetric_fog_density = 0.03
 adjustment_enabled = true
 adjustment_contrast = 1.05
 adjustment_saturation = 0.9
@@ -411,14 +411,15 @@ emission_shape = 3
 emission_box_extents = Vector3(1, 1, 1)
 direction = Vector3(0, -1, 0)
 spread = 5.0
-initial_velocity_min = 5.4
-initial_velocity_max = 8.48
-gravity = Vector3(0, -10.208, 0)
+initial_velocity_min = 3.04
+initial_velocity_max = 3.36
+gravity = Vector3(0, -11.84, 0)
 collision_mode = 2
+collision_use_scale = true
 
 [sub_resource type="Curve" id="Curve_g6xw8"]
 _limits = [0.0, 0.1, 0.0, 1.0]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.15584415, 0.007994756), -0.08618498, -0.08618498, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.15584415, 0.007994756), -0.08618498, -0.08618498, 0, 0, Vector2(0.38636363, 0), 0.0, 0.0, 0, 0]
 point_count = 3
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5bsee"]
@@ -426,7 +427,7 @@ transparency = 1
 cull_mode = 2
 shading_mode = 0
 vertex_color_use_as_albedo = true
-albedo_color = Color(0.72567123, 0.87642777, 0.85557157, 0.7607843)
+albedo_color = Color(0.7529412, 0.87058824, 0.8235294, 0.3647059)
 albedo_texture = ExtResource("50_idixg")
 use_particle_trails = true
 
@@ -770,7 +771,7 @@ script = ExtResource("3_3f477")
 move_speed = Vector2(1, 0.6)
 move_smooth = 5.0
 z_tilt_min_deg = -85.0
-z_tilt_max_deg = -36.0
+z_tilt_max_deg = -30.0
 tilt_smooth = 15.0
 
 [node name="CameraBounds" type="MeshInstance3D" parent="Controllers/CameraController"]
@@ -938,6 +939,7 @@ env_anchor = NodePath("EnvironmentAnchor")
 weather = NodePath("Weather")
 rain_node = NodePath("Weather/Rain")
 sky_preset = SubResource("Resource_g6xw8")
+rain_intensity = 10.0
 fog_visibility_curve = SubResource("Curve_idixg")
 
 [node name="SunMoon" type="Node3D" parent="Controllers/EnvironmentController"]
@@ -953,6 +955,7 @@ metadata/_edit_lock_ = true
 [node name="SunLight" type="DirectionalLight3D" parent="Controllers/EnvironmentController/SunMoon/Sun"]
 transform = Transform3D(1, 0, 1.49012e-08, -1.49012e-08, -8.19564e-08, -1, 2.98023e-08, 1, -3.72529e-08, 0, 0, 0)
 light_color = Color(0.996078, 0.996078, 1, 1)
+light_energy = 0.87
 shadow_enabled = true
 metadata/_edit_lock_ = true
 
@@ -975,10 +978,9 @@ metadata/_edit_lock_ = true
 
 [node name="Rain" type="GPUParticles3D" parent="Controllers/EnvironmentController/Weather"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.739531, -4.871651)
-emitting = false
-amount = 296
-lifetime = 1.952
-speed_scale = 0.8480000000000001
+amount = 1080
+lifetime = 1.76
+speed_scale = 1.04
 randomness = 0.38
 trail_enabled = true
 process_material = SubResource("ParticleProcessMaterial_66gqg")

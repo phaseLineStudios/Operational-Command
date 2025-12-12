@@ -318,10 +318,15 @@ func _update_rain_particles() -> void:
 	var process_mat := rain_node.process_material as ParticleProcessMaterial
 	if process_mat:
 		var gravity := remap(rain_intensity, 0.0, 50.0, -9.8, -20.0)
-		process_mat.gravity = Vector3(0, gravity, 0)
 
-		process_mat.initial_velocity_min = remap(rain_intensity, 0.0, 50.0, 5.0, 15.0)
-		process_mat.initial_velocity_max = remap(rain_intensity, 0.0, 50.0, 8.0, 20.0)
+		var base_velocity := remap(rain_intensity, 0.0, 50.0, 2.0, 8.0)
+		process_mat.initial_velocity_min = base_velocity * 0.95
+		process_mat.initial_velocity_max = base_velocity * 1.05
+
+		var wind_rad := deg_to_rad(wind_direction)
+		var wind_x := -sin(wind_rad) * wind_speed * 0.02
+		var wind_z := cos(wind_rad) * wind_speed * 0.02
+		process_mat.gravity = Vector3(wind_x, gravity, wind_z)
 
 
 ## Internal: Update fog density based on visibility distance
@@ -370,11 +375,9 @@ func _update_wind_effects() -> void:
 	if rain_node != null:
 		var process_mat := rain_node.process_material as ParticleProcessMaterial
 		if process_mat:
-			var wind_rad := deg_to_rad(wind_direction)
-			var wind_x := -sin(wind_rad) * wind_speed * 0.1
-			var wind_z := cos(wind_rad) * wind_speed * 0.1
+			process_mat.direction = Vector3(0, -1, 0)
 
-			process_mat.direction = Vector3(wind_x, -1, wind_z).normalized()
+	_update_rain_particles()
 
 	if sky_preset != null:
 		var cloud_speed: float = wind_speed * 0.001
