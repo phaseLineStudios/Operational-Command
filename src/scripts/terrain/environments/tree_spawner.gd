@@ -52,6 +52,32 @@ extends Node3D
 		if Engine.is_editor_hint():
 			_regenerate_deferred()
 
+@export_group("Ground Integration")
+## Sink trees into ground to hide base (meters, positive = sink down)
+@export var ground_sink: float = 0.1:
+	set(value):
+		ground_sink = value
+		if Engine.is_editor_hint():
+			_regenerate_deferred()
+## Random variation in ground sink (0 = none, 1 = full range)
+@export_range(0.0, 1.0) var sink_variation: float = 0.3:
+	set(value):
+		sink_variation = value
+		if Engine.is_editor_hint():
+			_regenerate_deferred()
+## Align trees to terrain slope (experimental - requires terrain normals)
+@export var align_to_slope: bool = false:
+	set(value):
+		align_to_slope = value
+		if Engine.is_editor_hint():
+			_regenerate_deferred()
+## Maximum rotation angle for slope alignment (degrees)
+@export_range(0.0, 45.0) var max_slope_angle: float = 15.0:
+	set(value):
+		max_slope_angle = value
+		if Engine.is_editor_hint():
+			_regenerate_deferred()
+
 @export_group("Terrain Integration")
 ## Optional terrain mesh to sample height from
 @export var terrain: MeshInstance3D:
@@ -252,16 +278,47 @@ func _check_spacing(positions: Array[Vector2], new_pos: Vector2) -> bool:
 func _place_tree(mmi: MultiMeshInstance3D, idx: int, pos_2d: Vector2) -> void:
 	var y := height_offset
 
+	# Sample terrain height
+	var terrain_normal := Vector3.UP
 	if terrain:
-		y = _sample_terrain_height(pos_2d) + height_offset
+		var sample := _sample_terrain_height_and_normal(pos_2d)
+		y = sample.height + height_offset
+		terrain_normal = sample.normal
+
+	# Apply ground sink with variation
+	var sink_amount := ground_sink
+	if sink_variation > 0.0:
+		sink_amount += randf_range(-ground_sink * sink_variation, ground_sink * sink_variation)
+	y -= sink_amount
 
 	var pos := Vector3(pos_2d.x, y, pos_2d.y)
 	var rot := randf_range(0.0, TAU)
 	var scl := randf_range(scale_range.x, scale_range.y)
 
+	# Build transform
 	var t := Transform3D()
+
+	# Apply slope alignment if enabled
+	if align_to_slope and terrain_normal != Vector3.UP:
+		# Calculate rotation to align Y axis with terrain normal
+		var up_axis := Vector3.UP
+		var rotation_axis := up_axis.cross(terrain_normal).normalized()
+
+		if rotation_axis.length() > 0.001:
+			var angle := up_axis.angle_to(terrain_normal)
+			# Clamp angle to max_slope_angle
+			angle = clamp(angle, 0.0, deg_to_rad(max_slope_angle))
+
+			# Apply slope rotation first
+			t = t.rotated(rotation_axis, angle)
+
+	# Apply random Y rotation
 	t = t.rotated(Vector3.UP, rot)
+
+	# Apply scale
 	t = t.scaled(Vector3(scl, scl, scl))
+
+	# Set position
 	t.origin = pos
 
 	mmi.multimesh.set_instance_transform(idx, t)
@@ -269,13 +326,21 @@ func _place_tree(mmi: MultiMeshInstance3D, idx: int, pos_2d: Vector2) -> void:
 
 ## Sample terrain height at XZ position (simplified raycast approach)
 func _sample_terrain_height(pos_2d: Vector2) -> float:
-	if not terrain:
-		return 0.0
+	var sample := _sample_terrain_height_and_normal(pos_2d)
+	return sample.height
 
-	# Simple approach: raycast down from above
+
+## Sample terrain height and normal at XZ position
+func _sample_terrain_height_and_normal(pos_2d: Vector2) -> Dictionary:
+	var result := {"height": 0.0, "normal": Vector3.UP}
+
+	if not terrain:
+		return result
+
+	# Raycast down from above
 	var space := get_world_3d().direct_space_state
 	if not space:
-		return 0.0
+		return result
 
 	var from := Vector3(pos_2d.x, 100.0, pos_2d.y)
 	var to := Vector3(pos_2d.x, -100.0, pos_2d.y)
@@ -284,11 +349,13 @@ func _sample_terrain_height(pos_2d: Vector2) -> float:
 	query.collide_with_areas = false
 	query.collide_with_bodies = true
 
-	var result := space.intersect_ray(query)
-	if result:
-		return result.position.y
+	var hit := space.intersect_ray(query)
+	if hit:
+		result.height = hit.position.y
+		if hit.has("normal"):
+			result.normal = hit.normal
 
-	return 0.0
+	return result
 
 
 ## Get and increment the instance index for a mesh type

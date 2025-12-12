@@ -1,4 +1,4 @@
-[gd_scene load_steps=136 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=138 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -8,10 +8,12 @@
 [ext_resource type="Script" uid="uid://4htsynbphlw0" path="res://scripts/core/TimerController.gd" id="3_2llyq"]
 [ext_resource type="Script" uid="uid://dn828tsljtrki" path="res://scripts/core/Camera.gd" id="3_3f477"]
 [ext_resource type="PackedScene" uid="uid://ge6er1dv81it" path="res://assets/models/tent/tent.glb" id="3_rio5r"]
+[ext_resource type="Material" uid="uid://b0ljpdla4o6ac" path="res://assets/models/tent/body.material" id="4_8ny4p"]
 [ext_resource type="PackedScene" uid="uid://gfdfc6v4mqv6" path="res://assets/models/clipboard/Clipboard.glb" id="4_fhiww"]
 [ext_resource type="Script" uid="uid://0r8k717de5os" path="res://scripts/core/PlayerInteraction.gd" id="4_py2wd"]
 [ext_resource type="AudioStream" uid="uid://clic7fxxhe40a" path="res://audio/sfx/sfx_drop_protractor_01.wav" id="5_66gqg"]
 [ext_resource type="Script" uid="uid://6xtsg3rqhc8t" path="res://scripts/core/MapController.gd" id="5_lmes1"]
+[ext_resource type="Material" uid="uid://du5gfcf4hbvt1" path="res://assets/models/tent/frame.material" id="5_u1ngg"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="6_cx6my"]
 [ext_resource type="AudioStream" uid="uid://cua5heigau7p6" path="res://audio/sfx/sfx_drop_protractor_02.wav" id="6_idixg"]
 [ext_resource type="AudioStream" uid="uid://b1bbnbn0aonw2" path="res://audio/sfx/sfx_drop_protractor_03.wav" id="7_g6xw8"]
@@ -460,13 +462,19 @@ shape = SubResource("BoxShape3D_qevx8")
 [node name="Mesh" parent="Table" instance=ExtResource("2_5bsee")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.32494795, -0.02435413)
 
-[node name="Tent" type="MeshInstance3D" parent="."]
+[node name="Tent" type="Node3D" parent="."]
 metadata/_edit_lock_ = true
 
 [node name="Mesh" parent="Tent" instance=ExtResource("3_rio5r")]
 transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 2.160456e-08, 0, 0.49425477)
 
-[node name="CollisionShape3D" type="GPUParticlesCollisionBox3D" parent="Tent"]
+[node name="Body" parent="Tent/Mesh" index="0"]
+surface_material_override/0 = ExtResource("4_8ny4p")
+
+[node name="Frame" parent="Tent/Mesh" index="1"]
+surface_material_override/0 = ExtResource("5_u1ngg")
+
+[node name="ParticleCollision" type="GPUParticlesCollisionBox3D" parent="Tent"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.046645164, 1.1618462, -1.1751099)
 size = Vector3(3.2870483, 2.384369, 1.7084122)
 
@@ -1017,3 +1025,5 @@ visible = false
 
 [node name="CounterConfigDialog" parent="UI" instance=ExtResource("33_bsy1h")]
 visible = false
+
+[editable path="Tent/Mesh"]

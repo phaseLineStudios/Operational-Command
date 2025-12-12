@@ -1,4 +1,4 @@
-[gd_resource type="VisualShader" load_steps=55 format=3 uid="uid://djcar4w64c864"]
+[gd_resource type="VisualShader" load_steps=57 format=3 uid="uid://djcar4w64c864"]
 
 [ext_resource type="Texture2D" uid="uid://dpsp3h6lh1ahu" path="res://assets/models/terrain/ground_02/ground_moss_co.png" id="1_8qn33"]
 [ext_resource type="Texture2D" uid="uid://btdp7u60p05r2" path="res://assets/models/terrain/ground_02/ground_moss_roughness.png" id="2_bjg2n"]
@@ -62,8 +62,10 @@ operator = 2
 [sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_8qn33"]
 texture = ExtResource("5_86xq8")
 
-[sub_resource type="VisualShaderNodeFloatConstant" id="VisualShaderNodeFloatConstant_8u7v8"]
-constant = 0.25
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_j0w6t"]
+parameter_name = "darken_moss"
+default_value_enabled = true
+default_value = 0.25
 
 [sub_resource type="VisualShaderNodeFloatConstant" id="VisualShaderNodeFloatConstant_j0w6t"]
 constant = 1.0
@@ -89,9 +91,17 @@ parameter_name = "roughness_scale"
 default_value_enabled = true
 default_value = 1.0
 
+[sub_resource type="VisualShaderNodeColorOp" id="VisualShaderNodeColorOp_8u7v8"]
+operator = 2
+
 [sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_bjg2n"]
 texture = ExtResource("6_8d6qa")
 texture_type = 1
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_86xq8"]
+parameter_name = "darken_ground"
+default_value_enabled = true
+default_value = 0.25
 
 [sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_j0w6t"]
 texture = ExtResource("7_j063m")
@@ -169,7 +179,9 @@ uniform sampler2D tex_vtx_2;
 uniform sampler2D tex_vtx_3;
 uniform sampler2D tex_vtx_13;
 uniform sampler2D tex_frg_3 : source_color;
+uniform float darken_ground = 0.25;
 uniform sampler2D tex_frg_10;
+uniform float darken_moss = 0.25;
 uniform sampler2D tex_frg_12;
 uniform sampler2D tex_frg_6;
 uniform sampler2D tex_frg_13;
@@ -285,12 +297,20 @@ void fragment() {
 	vec4 n_out3p0 = texture(tex_frg_3, n_out8p0);
 
 
+// FloatParameter:30
+	float n_out30p0 = darken_ground;
+
+
+// ColorOp:29
+	vec3 n_out29p0 = min(vec3(n_out3p0.xyz), vec3(n_out30p0));
+
+
 // Texture2D:10
 	vec4 n_out10p0 = texture(tex_frg_10, n_out8p0);
 
 
-// FloatConstant:20
-	float n_out20p0 = 0.250000;
+// FloatParameter:20
+	float n_out20p0 = darken_moss;
 
 
 // ColorOp:19
@@ -302,7 +322,7 @@ void fragment() {
 
 
 // Mix:11
-	vec3 n_out11p0 = mix(vec3(n_out3p0.xyz), n_out19p0, vec3(n_out12p0.xyz));
+	vec3 n_out11p0 = mix(n_out29p0, n_out19p0, vec3(n_out12p0.xyz));
 
 
 // Texture2D:6
@@ -445,8 +465,8 @@ nodes/fragment/18/node = SubResource("VisualShaderNodeMix_tcoog")
 nodes/fragment/18/position = Vector2(-80, 1380)
 nodes/fragment/19/node = SubResource("VisualShaderNodeColorOp_j0w6t")
 nodes/fragment/19/position = Vector2(-140, -80)
-nodes/fragment/20/node = SubResource("VisualShaderNodeFloatConstant_8u7v8")
-nodes/fragment/20/position = Vector2(-620, 40)
+nodes/fragment/20/node = SubResource("VisualShaderNodeFloatParameter_j0w6t")
+nodes/fragment/20/position = Vector2(-760, 20)
 nodes/fragment/21/node = SubResource("VisualShaderNodeFloatConstant_j0w6t")
 nodes/fragment/21/position = Vector2(-100, 720)
 nodes/fragment/22/node = SubResource("VisualShaderNodeFloatOp_8u7v8")
@@ -461,4 +481,8 @@ nodes/fragment/27/node = SubResource("VisualShaderNodeFloatOp_j063m")
 nodes/fragment/27/position = Vector2(180, 220)
 nodes/fragment/28/node = SubResource("VisualShaderNodeFloatParameter_nhon0")
 nodes/fragment/28/position = Vector2(-100, 420)
-nodes/fragment/connections = PackedInt32Array(7, 0, 8, 0, 8, 0, 3, 0, 8, 0, 6, 0, 8, 0, 5, 0, 8, 0, 2, 0, 8, 0, 10, 0, 3, 0, 11, 0, 11, 0, 0, 0, 12, 0, 11, 2, 8, 0, 13, 0, 6, 0, 14, 0, 13, 0, 14, 1, 12, 0, 14, 2, 8, 0, 15, 0, 12, 0, 16, 2, 16, 0, 0, 9, 8, 0, 17, 0, 2, 0, 18, 0, 17, 0, 18, 1, 12, 0, 18, 2, 18, 0, 0, 6, 10, 0, 19, 0, 19, 0, 11, 1, 20, 0, 19, 1, 21, 0, 22, 1, 5, 0, 22, 0, 22, 0, 16, 0, 24, 0, 23, 1, 15, 0, 23, 0, 23, 0, 16, 1, 26, 0, 8, 1, 14, 0, 27, 0, 27, 0, 0, 3, 28, 0, 27, 1)
+nodes/fragment/29/node = SubResource("VisualShaderNodeColorOp_8u7v8")
+nodes/fragment/29/position = Vector2(-120, -420)
+nodes/fragment/30/node = SubResource("VisualShaderNodeFloatParameter_86xq8")
+nodes/fragment/30/position = Vector2(-760, -220)
+nodes/fragment/connections = PackedInt32Array(7, 0, 8, 0, 8, 0, 3, 0, 8, 0, 6, 0, 8, 0, 5, 0, 8, 0, 2, 0, 8, 0, 10, 0, 11, 0, 0, 0, 12, 0, 11, 2, 8, 0, 13, 0, 6, 0, 14, 0, 13, 0, 14, 1, 12, 0, 14, 2, 8, 0, 15, 0, 12, 0, 16, 2, 16, 0, 0, 9, 8, 0, 17, 0, 2, 0, 18, 0, 17, 0, 18, 1, 12, 0, 18, 2, 18, 0, 0, 6, 10, 0, 19, 0, 19, 0, 11, 1, 20, 0, 19, 1, 21, 0, 22, 1, 5, 0, 22, 0, 22, 0, 16, 0, 24, 0, 23, 1, 15, 0, 23, 0, 23, 0, 16, 1, 26, 0, 8, 1, 14, 0, 27, 0, 27, 0, 0, 3, 28, 0, 27, 1, 3, 0, 29, 0, 29, 0, 11, 0, 30, 0, 29, 1)
