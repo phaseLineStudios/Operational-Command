@@ -1,7 +1,14 @@
 class_name SceneEnvironment
 extends Node3D
 
-@export var scenario: ScenarioData
+## Emitted when scenario changes.
+signal scenario_changed(scenario: ScenarioData)
+
+## Currently loaded scenario
+@export var scenario: ScenarioData : 
+	set(val):
+		scenario = val
+		emit_signal("scenario_changed", val)
 
 var sound_controller: EnvSoundController
 

@@ -222,6 +222,7 @@ func _update_environment() -> void:
 		return
 	var env := environment_scene.instantiate() as SceneEnvironment
 	env_scene = env
+	env_scene.scenario = scenario
 	env_anchor.add_child(env)
 
 

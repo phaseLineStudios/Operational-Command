@@ -1,17 +1,15 @@
-[gd_scene load_steps=20 format=3 uid="uid://bwlvqqsapvnqw"]
+[gd_scene load_steps=17 format=3 uid="uid://bwlvqqsapvnqw"]
 
 [ext_resource type="Script" uid="uid://466r2hsx0sun" path="res://scripts/sim/SceneEnvironment.gd" id="1_a18hc"]
 [ext_resource type="Script" uid="uid://b2q26cxghcrvs" path="res://scripts/audio/EnvSoundController.gd" id="2_gotkl"]
-[ext_resource type="Texture2D" uid="uid://b4xpwnfowsgcv" path="res://assets/models/terrain/ground_forest_co.png" id="2_wlrlb"]
-[ext_resource type="Texture2D" uid="uid://3vff36a3lwyk" path="res://assets/models/terrain/ground_forest_ao.png" id="3_63w68"]
+[ext_resource type="PackedScene" uid="uid://b3gtxkdmv0434" path="res://assets/models/terrain/terrain.glb" id="2_m1cxp"]
 [ext_resource type="AudioStream" uid="uid://drsd47pjk7d0k" path="res://audio/environment/sfx_ambience_forest_day_loop.wav" id="3_d6m07"]
-[ext_resource type="Texture2D" uid="uid://lvt8efdfrcti" path="res://assets/models/terrain/ground_forest_height.png" id="4_a18hc"]
+[ext_resource type="Script" uid="uid://clucmhgrefkg3" path="res://scripts/terrain/environments/forest_terrain.gd" id="3_mjmqf"]
+[ext_resource type="Material" uid="uid://bdvlyuu8o6iah" path="res://assets/models/terrain/forest_ground.material" id="3_ntxx4"]
 [ext_resource type="AudioStream" uid="uid://11xqouk1f16i" path="res://audio/environment/sfx_ambience_forest_night_loop.wav" id="4_kpyhj"]
 [ext_resource type="AudioStream" uid="uid://bppci5cltyly3" path="res://audio/environment/sfx_ambience_forest_rain_light_loop.wav" id="5_0dr1p"]
 [ext_resource type="AudioStream" uid="uid://0w44dl5b8lp1" path="res://audio/environment/sfx_ambience_forest_wind_light_loop.wav" id="5_6utbu"]
-[ext_resource type="Texture2D" uid="uid://crkuyq7lb6m18" path="res://assets/models/terrain/ground_forest_no.png" id="5_7hg7v"]
 [ext_resource type="AudioStream" uid="uid://chliyt3yv8s5x" path="res://audio/environment/sfx_ambience_forest_rain_heavy_loop.wav" id="6_ehuav"]
-[ext_resource type="Texture2D" uid="uid://cfy7jjjf0pkkw" path="res://assets/models/terrain/ground_forest_roughness.png" id="6_fnomj"]
 [ext_resource type="AudioStream" uid="uid://7jeea3rpnset" path="res://audio/environment/sfx_ambience_forest_wind_strong_loop.wav" id="6_twpdf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7hg7v"]
@@ -34,25 +32,11 @@ albedo_color = Color(0, 0, 1, 0.7490196)
 [sub_resource type="PrismMesh" id="PrismMesh_cxntu"]
 size = Vector3(0.3, 0.2, 0.15)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fnomj"]
-albedo_texture = ExtResource("2_wlrlb")
-roughness_texture = ExtResource("6_fnomj")
-roughness_texture_channel = 4
-normal_enabled = true
-normal_scale = 2.0
-normal_texture = ExtResource("5_7hg7v")
-ao_enabled = true
-ao_texture = ExtResource("3_63w68")
-heightmap_enabled = true
-heightmap_texture = ExtResource("4_a18hc")
-uv1_scale = Vector3(20, 20, 20)
-
 [node name="EnvForest" type="Node3D"]
 script = ExtResource("1_a18hc")
 
 [node name="Helpers" type="Node3D" parent="."]
 unique_name_in_owner = true
-visible = false
 metadata/_edit_lock_ = true
 
 [node name="TentShape" type="MeshInstance3D" parent="Helpers"]
@@ -73,13 +57,18 @@ mesh = SubResource("PrismMesh_cxntu")
 surface_material_override/0 = SubResource("StandardMaterial3D_7chd0")
 metadata/_edit_lock_ = true
 
-[node name="Content" type="Node" parent="."]
+[node name="Content" type="Node" parent="." node_paths=PackedStringArray("scene_env", "terrain")]
+script = ExtResource("3_mjmqf")
+scene_env = NodePath("..")
+terrain = NodePath("Terrain")
 
-[node name="Ground" type="CSGBox3D" parent="Content"]
-size = Vector3(50, 0.001, 50)
-material = SubResource("StandardMaterial3D_fnomj")
+[node name="Terrain" parent="Content" instance=ExtResource("2_m1cxp")]
+unique_name_in_owner = true
 
-[node name="WeatherCollision" type="GPUParticlesCollisionBox3D" parent="Content/Ground"]
+[node name="Terrain" parent="Content/Terrain" index="0"]
+surface_material_override/0 = ExtResource("3_ntxx4")
+
+[node name="WeatherCollision" type="GPUParticlesCollisionBox3D" parent="Content/Terrain"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
 size = Vector3(50, 0.1, 50)
 
@@ -123,3 +112,5 @@ bus = &"Environment"
 
 [node name="SfxThunder" type="AudioStreamPlayer" parent="EnvSoundController"]
 bus = &"Environment"
+
+[editable path="Content/Terrain"]
