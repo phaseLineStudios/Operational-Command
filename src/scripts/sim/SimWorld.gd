@@ -56,7 +56,7 @@ enum State { INIT, RUNNING, PAUSED, COMPLETED }
 var _state: State = State.INIT
 var _dt_accum := 0.0
 var _tick_dt := 0.2
-var _time_scale := 1.0  # Simulation time scale multiplier
+var _time_scale := 1.0
 var _tick_idx := 0
 var _rng := RandomNumberGenerator.new()
 var _orders: OrdersQueue = OrdersQueue.new()
@@ -70,7 +70,8 @@ var _replay: Array[Dictionary] = []
 var _last_contacts: PackedStringArray = []
 var _contact_pairs: Array = []
 var _mission_complete_accum := 0.0
-var _unit_positions: Dictionary = {}  # Track positions for LOS optimization
+var _unit_positions: Dictionary = {}
+var _contact_key_cache: Dictionary = {}
 
 
 ## Initializes tick timing/RNG and wires router signals. Starts processing.
@@ -188,10 +189,21 @@ func _process(dt: float) -> void:
 ## [param dt] Tick delta seconds.
 func _step_tick(dt: float) -> void:
 	_tick_idx += 1
+
+	# Build alive unit lists once per tick
+	var alive_friends: Array[ScenarioUnit] = []
+	var alive_enemies: Array[ScenarioUnit] = []
+	for su in _friendlies:
+		if not su.is_dead():
+			alive_friends.append(su)
+	for su in _enemies:
+		if not su.is_dead():
+			alive_enemies.append(su)
+
 	_process_orders()
-	_update_movement(dt)
+	var moved_units := _update_movement(dt, alive_friends, alive_enemies)
 	_update_logistics(dt)
-	_update_los()
+	_update_los(alive_friends, alive_enemies, moved_units)
 	_update_time(dt)
 	_resolve_combat()
 	_update_morale()
@@ -211,41 +223,60 @@ func _process_orders() -> void:
 
 
 ## Advances movement for all sides and emits unit snapshots.
-func _update_movement(dt: float) -> void:
+func _update_movement(
+	dt: float, alive_friends: Array[ScenarioUnit], alive_enemies: Array[ScenarioUnit]
+) -> Dictionary:
+	var moved_units: Dictionary = {}
+
 	if movement_adapter == null:
-		return
-	var alive_friends: Array[ScenarioUnit] = []
-	var alive_enemies: Array[ScenarioUnit] = []
-	for su in _friendlies:
-		if not su.is_dead():
-			alive_friends.append(su)
-	for su in _enemies:
-		if not su.is_dead():
-			alive_enemies.append(su)
+		return moved_units
+
+	# Track positions before movement
+	var positions_before: Dictionary = {}
+	for su in alive_friends + alive_enemies:
+		positions_before[su.id] = su.position_m
+
+	# Tick movement
 	movement_adapter.tick_units(alive_friends, dt)
 	movement_adapter.tick_units(alive_enemies, dt)
-	for su in _friendlies + _enemies:
-		emit_signal("unit_updated", su.id, _snapshot_unit(su))
+
+	# Emit updates only for units that moved
+	for su in alive_friends:
+		var pos_before: Variant = positions_before.get(su.id)
+		if pos_before == null or su.position_m.distance_to(pos_before) > 0.01:
+			moved_units[su.id] = true
+			emit_signal("unit_updated", su.id, _snapshot_unit(su))
+
+	for su in alive_enemies:
+		var pos_before: Variant = positions_before.get(su.id)
+		if pos_before == null or su.position_m.distance_to(pos_before) > 0.01:
+			moved_units[su.id] = true
+			emit_signal("unit_updated", su.id, _snapshot_unit(su))
+
+	return moved_units
+
+
+## Get or create cached contact key for a pair of unit IDs.
+func _get_contact_key(id_a: String, id_b: String) -> String:
+	var cache_key := "%s|%s" % [id_a, id_b]
+	if not _contact_key_cache.has(cache_key):
+		_contact_key_cache[cache_key] = cache_key
+	return _contact_key_cache[cache_key]
 
 
 ## Computes LOS contact pairs once per tick and emits contact events.
 ## Optimized to only check LOS between units when at least one has moved.
-func _update_los() -> void:
+func _update_los(
+	alive_friends: Array[ScenarioUnit], alive_enemies: Array[ScenarioUnit], moved_units: Dictionary
+) -> void:
 	if los_adapter == null:
 		return
 
-	# Determine which units have moved since last tick
-	var moved_units: Dictionary = {}
-	for unit in _friendlies + _enemies:
-		if unit.is_dead():
-			continue
-		var current_pos := unit.position_m
-		var last_pos: Variant = _unit_positions.get(unit.id)
-
-		# Check if position changed (or first time seeing this unit)
-		if last_pos == null or current_pos.distance_to(last_pos) > 0.01:
-			moved_units[unit.id] = true
-			_unit_positions[unit.id] = current_pos
+	# Update position cache for moved units
+	for unit_id in moved_units.keys():
+		var unit: ScenarioUnit = _units_by_id.get(unit_id)
+		if unit:
+			_unit_positions[unit_id] = unit.position_m
 
 	# Build new contact pairs - only check LOS if at least one unit moved
 	var new_contacts: PackedStringArray = []
@@ -255,15 +286,11 @@ func _update_los() -> void:
 	for contact in _last_contacts:
 		old_contacts_dict[contact] = true
 
-	# Check all friend-enemy pairs
-	for f in _friendlies:
-		if f.is_dead():
-			continue
-		for e in _enemies:
-			if e.is_dead():
-				continue
-
-			var key := "%s|%s" % [f.id, e.id]
+	# Check all friend-enemy pairs (use alive arrays to skip dead unit checks)
+	for f in alive_friends:
+		for e in alive_enemies:
+			# Use cached string key to avoid repeated string formatting
+			var key := _get_contact_key(f.id, e.id)
 			var f_moved := moved_units.has(f.id)
 			var e_moved := moved_units.has(e.id)
 

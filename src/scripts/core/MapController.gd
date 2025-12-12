@@ -20,6 +20,7 @@ var _plane: PlaneMesh
 var _camera: Camera3D
 var _scenario: ScenarioData
 var _mipmap_texture: ImageTexture
+var _last_mouse_pos: Vector2 = Vector2(-9999, -9999)  # Track last mouse position
 
 @onready var terrain_viewport: SubViewport = %TerrainViewport
 @onready var renderer: TerrainRender = %TerrainRender
@@ -105,6 +106,10 @@ func prebuild_force_profiles() -> void:
 
 
 func _process(_dt: float) -> void:
+	var current_mouse := get_viewport().get_mouse_position()
+	if current_mouse.distance_to(_last_mouse_pos) < 1.0:
+		return
+	_last_mouse_pos = current_mouse
 	_update_mouse_grid_ui()
 
 
