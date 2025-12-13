@@ -17,6 +17,11 @@ enum CounterAffiliation { PLAYER, FRIEND, ENEMY, NEUTRAL, UNKNOWN }
 @export_group("Performance")
 @export var free_face_renderer_after_bake: bool = true
 
+## Cache baked face textures to avoid repeated viewport readbacks.
+const _FACE_CACHE_MAX_ENTRIES: int = 128
+static var _face_texture_cache: Dictionary = {}  # cache_key -> Texture2D
+static var _face_cache_order: Array[String] = []
+
 @onready var mesh: MeshInstance3D = %Mesh.get_node_or_null("unit_counter")
 @onready var face_renderer: SubViewport = %FaceRenderer
 @onready var face_background: PanelContainer = %Background
@@ -59,7 +64,47 @@ func _ensure_mesh_materials(color: Color, face: Texture2D) -> void:
 	mesh.set_surface_override_material(1, face_mat)
 
 
+static func _face_cache_key(
+	aff: CounterAffiliation,
+	p_callsign: String,
+	p_symbol_type: MilSymbol.UnitType,
+	p_symbol_size: MilSymbol.UnitSize,
+	bg: Color
+) -> String:
+	return JSON.stringify(
+		[
+			int(aff),
+			p_callsign,
+			int(p_symbol_type),
+			int(p_symbol_size),
+			float(bg.r),
+			float(bg.g),
+			float(bg.b),
+			float(bg.a),
+		]
+	)
+
+
+func _maybe_free_face_renderer() -> void:
+	if face_renderer:
+		face_renderer.render_target_update_mode = SubViewport.UPDATE_DISABLED
+
+	if free_face_renderer_after_bake and not Engine.is_editor_hint():
+		if face_renderer:
+			face_renderer.queue_free()
+		face_renderer = null
+		face_background = null
+		face_symbol = null
+		face_callsign = null
+
+
 func _generate_face(color: Color) -> Texture2D:
+	var key := _face_cache_key(affiliation, callsign, symbol_type, symbol_size, color)
+	var cached: Variant = _face_texture_cache.get(key, null)
+	if cached is Texture2D:
+		_maybe_free_face_renderer()
+		return cached
+
 	# Create frame-only symbol (white lines) using enum-based API
 	var config := MilSymbolConfig.create_frame_only()
 	config.size = MilSymbolConfig.Size.LARGE
@@ -88,20 +133,22 @@ func _generate_face(color: Color) -> Texture2D:
 	await get_tree().process_frame
 	await get_tree().process_frame
 
+	if face_renderer == null:
+		LogService.warning("UnitCounter: FaceRenderer missing", "UnitCounter.gd")
+		return unit_symbol
+
 	var img := face_renderer.get_texture().get_image()
 	img.generate_mipmaps()
 
-	if face_renderer:
-		face_renderer.render_target_update_mode = SubViewport.UPDATE_DISABLED
-	if free_face_renderer_after_bake and not Engine.is_editor_hint():
-		if face_renderer:
-			face_renderer.queue_free()
-		face_renderer = null
-		face_background = null
-		face_symbol = null
-		face_callsign = null
+	var tex: Texture2D = ImageTexture.create_from_image(img)
+	_face_texture_cache[key] = tex
+	_face_cache_order.append(key)
+	if _face_cache_order.size() > _FACE_CACHE_MAX_ENTRIES:
+		var old_key: String = _face_cache_order.pop_front()
+		_face_texture_cache.erase(old_key)
 
-	return ImageTexture.create_from_image(img)
+	_maybe_free_face_renderer()
+	return tex
 
 
 ## Convert CounterAffiliation to MilSymbol.UnitAffiliation
