@@ -87,7 +87,7 @@ func _apply_video_perf_settings() -> void:
 	var scale_pct: float = float(cfg.get_value("video", "scale_pct", 100.0))
 	var res_idx: int = int(cfg.get_value("video", "res_index", 0))
 
-	var window := get_window()
+	var window: Window = get_window()
 	var window_size: Vector2i = window.size if window != null else Vector2i.ZERO
 	if window_size.x <= 0 or window_size.y <= 0:
 		window_size = root_viewport.size
@@ -96,14 +96,14 @@ func _apply_video_perf_settings() -> void:
 	if res_idx >= 0 and res_idx < _DEFAULT_RESOLUTIONS.size():
 		target_size = _DEFAULT_RESOLUTIONS[res_idx]
 
-	var base_scale: float = 1.0
-	if window_size.x > 0 and window_size.y > 0:
-		var sx: float = float(target_size.x) / float(window_size.x)
-		var sy: float = float(target_size.y) / float(window_size.y)
-		base_scale = minf(1.0, minf(sx, sy))
+	var content_size: Vector2i = _compute_content_scale_size(window_size, target_size)
+	if window != null:
+		window.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
+		window.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
+		window.content_scale_size = content_size
 
 	var user_scale: float = clampf(scale_pct / 100.0, 0.1, 2.0)
-	var final_scale: float = clampf(base_scale * user_scale, 0.1, 2.0)
+	var final_scale: float = user_scale
 
 	root_viewport.scaling_3d_mode = (
 		Viewport.SCALING_3D_MODE_FSR if final_scale < 0.999 else Viewport.SCALING_3D_MODE_BILINEAR
@@ -111,7 +111,7 @@ func _apply_video_perf_settings() -> void:
 	root_viewport.scaling_3d_scale = final_scale
 
 	# Adaptive MSAA (helps a lot at 1440p/4K fullscreen).
-	var px: float = float(maxi(window_size.x, 1)) * float(maxi(window_size.y, 1))
+	var px: float = float(maxi(content_size.x, 1)) * float(maxi(content_size.y, 1))
 	px *= final_scale * final_scale
 	if px >= 3_500_000.0:
 		root_viewport.msaa_3d = Viewport.MSAA_DISABLED
@@ -122,10 +122,39 @@ func _apply_video_perf_settings() -> void:
 
 	LogService.info(
 		(
-			"VideoPerf: window=%dx%d target=%dx%d scale=%.2f msaa3d=%d"
-			% [window_size.x, window_size.y, target_size.x, target_size.y, final_scale, root_viewport.msaa_3d]
+			"VideoPerf: win=%dx%d content=%dx%d target=%dx%d scale=%.2f msaa3d=%d"
+			% [
+				window_size.x,
+				window_size.y,
+				content_size.x,
+				content_size.y,
+				target_size.x,
+				target_size.y,
+				final_scale,
+				root_viewport.msaa_3d
+			]
 		),
 		"Game"
+	)
+
+
+func _compute_content_scale_size(window_size: Vector2i, target_size: Vector2i) -> Vector2i:
+	var out: Vector2i = target_size
+	if out.x <= 0 or out.y <= 0:
+		out = window_size
+	if out.x <= 0 or out.y <= 0:
+		return Vector2i(1, 1)
+
+	if window_size.x <= 0 or window_size.y <= 0:
+		return out
+
+	# Avoid supersampling when the window is smaller than the selected resolution.
+	var sx: float = float(window_size.x) / float(out.x)
+	var sy: float = float(window_size.y) / float(out.y)
+	var s: float = minf(1.0, minf(sx, sy))
+	return Vector2i(
+		maxi(1, int(round(float(out.x) * s))),
+		maxi(1, int(round(float(out.y) * s)))
 	)
 
 

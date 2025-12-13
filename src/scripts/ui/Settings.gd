@@ -245,7 +245,7 @@ func _apply_render_scale() -> void:
 	if root_viewport == null:
 		return
 
-	var window := get_window()
+	var window: Window = get_window()
 	var window_size: Vector2i = window.size if window != null else Vector2i.ZERO
 	if window_size.x <= 0 or window_size.y <= 0:
 		window_size = root_viewport.size
@@ -255,17 +255,16 @@ func _apply_render_scale() -> void:
 	if idx >= 0 and idx < resolutions.size():
 		target_size = resolutions[idx]
 
-	# Render scale is applied relative to the *selected* resolution, even in fullscreen
-	# where the window may be larger (borderless fullscreen uses desktop resolution).
-	var base_scale: float = 1.0
-	if window_size.x > 0 and window_size.y > 0:
-		var sx: float = float(target_size.x) / float(window_size.x)
-		var sy: float = float(target_size.y) / float(window_size.y)
-		# Never supersample just because the window is smaller than the chosen resolution.
-		base_scale = minf(1.0, minf(sx, sy))
+	# Lock the internal render resolution to the selected resolution and scale the final
+	# output to the window. This avoids large performance swings when resizing.
+	var content_size: Vector2i = _compute_content_scale_size(window_size, target_size)
+	if window != null:
+		window.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
+		window.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
+		window.content_scale_size = content_size
 
 	var user_scale: float = clampf(float(_scale.value) / 100.0, 0.1, 2.0)
-	var final_scale: float = clampf(base_scale * user_scale, 0.1, 2.0)
+	var final_scale: float = user_scale
 
 	# Godot 4 exposes scaling modes but no explicit "disabled" enum;
 	# use bilinear at scale 1.0 to behave like "off".
@@ -275,17 +274,17 @@ func _apply_render_scale() -> void:
 	root_viewport.scaling_3d_mode = mode
 	root_viewport.scaling_3d_scale = final_scale
 
-	_apply_adaptive_aa(root_viewport, window_size, final_scale)
+	_apply_adaptive_aa(root_viewport, content_size, final_scale)
 
 
-func _apply_adaptive_aa(root_viewport: Viewport, window_size: Vector2i, final_scale: float) -> void:
+func _apply_adaptive_aa(root_viewport: Viewport, render_size: Vector2i, final_scale: float) -> void:
 	if not auto_adjust_aa:
 		if _base_msaa_3d >= 0:
 			root_viewport.msaa_3d = _base_msaa_3d
 		return
 
 	# Estimate actual 3D render pixel count (roughly proportional to cost).
-	var px: float = float(maxi(window_size.x, 1)) * float(maxi(window_size.y, 1))
+	var px: float = float(maxi(render_size.x, 1)) * float(maxi(render_size.y, 1))
 	px *= final_scale * final_scale
 
 	# Disable heavy MSAA at high resolutions (big fullscreen performance win).
@@ -297,6 +296,26 @@ func _apply_adaptive_aa(root_viewport: Viewport, window_size: Vector2i, final_sc
 	else:
 		if _base_msaa_3d >= 0:
 			root_viewport.msaa_3d = _base_msaa_3d
+
+
+func _compute_content_scale_size(window_size: Vector2i, target_size: Vector2i) -> Vector2i:
+	var out: Vector2i = target_size
+	if out.x <= 0 or out.y <= 0:
+		out = window_size
+	if out.x <= 0 or out.y <= 0:
+		return Vector2i(1, 1)
+
+	if window_size.x <= 0 or window_size.y <= 0:
+		return out
+
+	# Avoid supersampling when the window is smaller than the selected resolution.
+	var sx: float = float(window_size.x) / float(out.x)
+	var sy: float = float(window_size.y) / float(out.y)
+	var s: float = minf(1.0, minf(sx, sy))
+	return Vector2i(
+		maxi(1, int(round(float(out.x) * s))),
+		maxi(1, int(round(float(out.y) * s)))
+	)
 
 
 func _schedule_render_scale_apply() -> void:
