@@ -19,6 +19,14 @@ signal scenario_loadout_selected(loadout: Dictionary)
 @export var debug_display_scene: PackedScene = preload("res://scenes/system/debug_display.tscn")
 var debug_display: CanvasLayer
 
+const _SETTINGS_PATH := "user://settings.cfg"
+const _DEFAULT_RESOLUTIONS: Array[Vector2i] = [
+	Vector2i(1920, 1080), Vector2i(1600, 900), Vector2i(1366, 768), Vector2i(1280, 720)
+]
+
+var _base_msaa_3d: int = -1
+var _video_perf_timer: SceneTreeTimer
+
 var current_campaign: CampaignData
 var current_save_id: StringName = &""
 var current_save: CampaignSave = null
@@ -37,6 +45,16 @@ func _ready() -> void:
 	debug_display = debug_display_scene.instantiate()
 	get_tree().root.add_child.call_deferred(debug_display)
 
+	var root_viewport := get_tree().root
+	_base_msaa_3d = root_viewport.msaa_3d if root_viewport else -1
+
+	var window := get_window()
+	if window:
+		var cb := Callable(self, "_on_window_size_changed")
+		if not window.size_changed.is_connected(cb):
+			window.size_changed.connect(cb)
+	_on_window_size_changed()
+
 
 ## Change to scene at [param path]; logs error if missing.
 func goto_scene(path: String) -> void:
@@ -44,6 +62,71 @@ func goto_scene(path: String) -> void:
 		get_tree().change_scene_to_file(path)
 	else:
 		push_error("Scene not found: %s" % path)
+
+
+func _on_window_size_changed() -> void:
+	# Coalesce rapid size changes (fullscreen transitions can emit many events).
+	if _video_perf_timer != null:
+		return
+	_video_perf_timer = get_tree().create_timer(0.05)
+	_video_perf_timer.timeout.connect(
+		func():
+			_video_perf_timer = null
+			_apply_video_perf_settings()
+	)
+
+
+func _apply_video_perf_settings() -> void:
+	var root_viewport := get_tree().root
+	if root_viewport == null:
+		return
+
+	var cfg := ConfigFile.new()
+	var _err := cfg.load(_SETTINGS_PATH)
+
+	var scale_pct: float = float(cfg.get_value("video", "scale_pct", 100.0))
+	var res_idx: int = int(cfg.get_value("video", "res_index", 0))
+
+	var window := get_window()
+	var window_size: Vector2i = window.size if window != null else Vector2i.ZERO
+	if window_size.x <= 0 or window_size.y <= 0:
+		window_size = root_viewport.size
+
+	var target_size: Vector2i = window_size
+	if res_idx >= 0 and res_idx < _DEFAULT_RESOLUTIONS.size():
+		target_size = _DEFAULT_RESOLUTIONS[res_idx]
+
+	var base_scale: float = 1.0
+	if window_size.x > 0 and window_size.y > 0:
+		var sx: float = float(target_size.x) / float(window_size.x)
+		var sy: float = float(target_size.y) / float(window_size.y)
+		base_scale = minf(1.0, minf(sx, sy))
+
+	var user_scale: float = clampf(scale_pct / 100.0, 0.1, 2.0)
+	var final_scale: float = clampf(base_scale * user_scale, 0.1, 2.0)
+
+	root_viewport.scaling_3d_mode = (
+		Viewport.SCALING_3D_MODE_FSR if final_scale < 0.999 else Viewport.SCALING_3D_MODE_BILINEAR
+	)
+	root_viewport.scaling_3d_scale = final_scale
+
+	# Adaptive MSAA (helps a lot at 1440p/4K fullscreen).
+	var px: float = float(maxi(window_size.x, 1)) * float(maxi(window_size.y, 1))
+	px *= final_scale * final_scale
+	if px >= 3_500_000.0:
+		root_viewport.msaa_3d = Viewport.MSAA_DISABLED
+	elif px >= 2_000_000.0:
+		root_viewport.msaa_3d = Viewport.MSAA_2X
+	elif _base_msaa_3d >= 0:
+		root_viewport.msaa_3d = _base_msaa_3d
+
+	LogService.info(
+		(
+			"VideoPerf: window=%dx%d target=%dx%d scale=%.2f msaa3d=%d"
+			% [window_size.x, window_size.y, target_size.x, target_size.y, final_scale, root_viewport.msaa_3d]
+		),
+		"Game"
+	)
 
 
 ## Set current campaign and emit [signal campaign_selected].

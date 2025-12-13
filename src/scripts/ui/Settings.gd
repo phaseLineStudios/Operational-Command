@@ -37,6 +37,12 @@ var _cfg := ConfigFile.new()
 @onready var _scale_val: Label = %ScaleValue
 @onready var _fps: SpinBox = %FPSCap
 
+@export_group("Performance")
+## If true, automatically reduce 3D MSAA at very high pixel counts.
+@export var auto_adjust_aa: bool = true
+
+var _base_msaa_3d: int = -1
+
 # Audio
 @onready var _buses_list: GridContainer = %BusesList
 
@@ -48,6 +54,7 @@ var _cfg := ConfigFile.new()
 
 ## Build UI and load config.
 func _ready() -> void:
+	_base_msaa_3d = get_tree().root.msaa_3d if get_tree() and get_tree().root else -1
 	_build_video_ui()
 	_build_audio_ui()
 	_build_controls_ui()
@@ -229,8 +236,79 @@ func _apply_video() -> void:
 			get_window().size = res_size
 
 	Engine.max_fps = int(_fps.value)
-	# Store render scale only; actual scaling strategy can be implemented later.
-	# (Keeps groundwork without forcing a scaling mode right now.)
+	_schedule_render_scale_apply()
+
+
+## Apply 3D render scaling to keep performance stable at higher resolutions.
+func _apply_render_scale() -> void:
+	var root_viewport := get_tree().root
+	if root_viewport == null:
+		return
+
+	var window := get_window()
+	var window_size: Vector2i = window.size if window != null else Vector2i.ZERO
+	if window_size.x <= 0 or window_size.y <= 0:
+		window_size = root_viewport.size
+
+	var target_size: Vector2i = window_size
+	var idx := _res.get_selected()
+	if idx >= 0 and idx < resolutions.size():
+		target_size = resolutions[idx]
+
+	# Render scale is applied relative to the *selected* resolution, even in fullscreen
+	# where the window may be larger (borderless fullscreen uses desktop resolution).
+	var base_scale: float = 1.0
+	if window_size.x > 0 and window_size.y > 0:
+		var sx: float = float(target_size.x) / float(window_size.x)
+		var sy: float = float(target_size.y) / float(window_size.y)
+		# Never supersample just because the window is smaller than the chosen resolution.
+		base_scale = minf(1.0, minf(sx, sy))
+
+	var user_scale: float = clampf(float(_scale.value) / 100.0, 0.1, 2.0)
+	var final_scale: float = clampf(base_scale * user_scale, 0.1, 2.0)
+
+	# Godot 4 exposes scaling modes but no explicit "disabled" enum;
+	# use bilinear at scale 1.0 to behave like "off".
+	var mode: int = Viewport.SCALING_3D_MODE_BILINEAR
+	if final_scale < 0.999:
+		mode = Viewport.SCALING_3D_MODE_FSR
+	root_viewport.scaling_3d_mode = mode
+	root_viewport.scaling_3d_scale = final_scale
+
+	_apply_adaptive_aa(root_viewport, window_size, final_scale)
+
+
+func _apply_adaptive_aa(root_viewport: Viewport, window_size: Vector2i, final_scale: float) -> void:
+	if not auto_adjust_aa:
+		if _base_msaa_3d >= 0:
+			root_viewport.msaa_3d = _base_msaa_3d
+		return
+
+	# Estimate actual 3D render pixel count (roughly proportional to cost).
+	var px: float = float(maxi(window_size.x, 1)) * float(maxi(window_size.y, 1))
+	px *= final_scale * final_scale
+
+	# Disable heavy MSAA at high resolutions (big fullscreen performance win).
+	# 2560x1440 ~= 3.7M px, 3840x2160 ~= 8.3M px
+	if px >= 3_500_000.0:
+		root_viewport.msaa_3d = Viewport.MSAA_DISABLED
+	elif px >= 2_000_000.0:
+		root_viewport.msaa_3d = Viewport.MSAA_2X
+	else:
+		if _base_msaa_3d >= 0:
+			root_viewport.msaa_3d = _base_msaa_3d
+
+
+func _schedule_render_scale_apply() -> void:
+	var window := get_window()
+	if window == null:
+		call_deferred("_apply_render_scale")
+		return
+
+	var cb := Callable(self, "_apply_render_scale")
+	if not window.size_changed.is_connected(cb):
+		window.size_changed.connect(cb, CONNECT_ONE_SHOT)
+	call_deferred("_apply_render_scale")
 
 
 ## Apply audio to buses.
