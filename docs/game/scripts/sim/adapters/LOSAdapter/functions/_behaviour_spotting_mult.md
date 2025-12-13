@@ -1,6 +1,6 @@
 # LOSAdapter::_behaviour_spotting_mult Function Reference
 
-*Defined at:* `scripts/sim/adapters/LOSAdapter.gd` (lines 155–170)</br>
+*Defined at:* `scripts/sim/adapters/LOSAdapter.gd` (lines 155–172)</br>
 *Belongs to:* [LOSAdapter](../../LOSAdapter.md)
 
 **Signature**

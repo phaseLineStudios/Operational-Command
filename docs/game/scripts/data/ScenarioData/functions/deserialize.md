@@ -1,6 +1,6 @@
 # ScenarioData::deserialize Function Reference
 
-*Defined at:* `scripts/data/ScenarioData.gd` (lines 147–243)</br>
+*Defined at:* `scripts/data/ScenarioData.gd` (lines 166–280)</br>
 *Belongs to:* [ScenarioData](../../ScenarioData.md)
 
 **Signature**
@@ -25,6 +25,7 @@ static func deserialize(json: Variant) -> ScenarioData:
 	s.title = json.get("title", s.title)
 	s.description = json.get("description", s.description)
 	s.preview_path = json.get("preview_path", s.preview_path)
+	s.video_path = json.get("video_path", s.video_path)
 
 	var terr_id: Variant = json.get("terrain_id", null)
 	if typeof(terr_id) == TYPE_STRING and terr_id != "":
@@ -33,6 +34,12 @@ static func deserialize(json: Variant) -> ScenarioData:
 	var brief_val: Variant = json.get("briefing", null)
 	if brief_val != null:
 		s.briefing = BriefData.deserialize(brief_val)
+
+	var subtitles_val: Variant = json.get("video_subtitles", null)
+	if subtitles_val != null and typeof(subtitles_val) == TYPE_DICTIONARY:
+		var track := SubtitleTrack.new()
+		track.deserialize(subtitles_val)
+		s.video_subtitles = track
 
 	@warning_ignore("int_as_enum_without_cast")
 	s.difficulty = _difficulty_from(json.get("difficulty", s.difficulty))
@@ -59,6 +66,12 @@ static func deserialize(json: Variant) -> ScenarioData:
 		s.unit_points = int(um.get("unit_points", s.unit_points))
 		s.unit_slots = _deserialize_unit_slots(um.get("unit_slots", []))
 		s.unit_reserves = _deserialize_unit_slots(um.get("unit_reserves", []))
+		s.replacement_pool = int(um.get("replacement_pool", 0))
+		s.equipment_pool = int(um.get("equipment_pool", 100))
+
+		var ammo_pools_data = um.get("ammo_pools", {})
+		if typeof(ammo_pools_data) == TYPE_DICTIONARY:
+			s.ammo_pools = ammo_pools_data.duplicate()
 
 		var recruit_ids: Array = um.get("unit_recruits_ids", [])
 		if typeof(recruit_ids) == TYPE_ARRAY:
@@ -109,6 +122,11 @@ static func deserialize(json: Variant) -> ScenarioData:
 		var tex := load(s.preview_path)
 		if tex is Texture2D:
 			s.preview = tex
+
+	if typeof(s.video_path) == TYPE_STRING and s.video_path != "":
+		var vid := load(s.video_path)
+		if vid is VideoStream:
+			s.video = vid
 
 	return s
 ```

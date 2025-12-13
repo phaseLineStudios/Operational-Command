@@ -1,6 +1,6 @@
 # Game::update_loop Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 87–91)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 111–115)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

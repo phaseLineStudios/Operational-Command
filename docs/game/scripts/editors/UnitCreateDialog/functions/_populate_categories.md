@@ -1,6 +1,6 @@
 # UnitCreateDialog::_populate_categories Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 336–348)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 365–377)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

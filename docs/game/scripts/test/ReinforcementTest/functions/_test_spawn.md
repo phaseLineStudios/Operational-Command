@@ -1,6 +1,6 @@
 # ReinforcementTest::_test_spawn Function Reference
 
-*Defined at:* `scripts/test/ReinforcementTest.gd` (lines 215–246)</br>
+*Defined at:* `scripts/test/ReinforcementTest.gd` (lines 218–249)</br>
 *Belongs to:* [ReinforcementTest](../../ReinforcementTest.md)
 
 **Signature**

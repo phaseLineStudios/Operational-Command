@@ -1,6 +1,6 @@
 # TerrainEditor::_on_filemenu_pressed Function Reference
 
-*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 93–106)</br>
+*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 95–108)</br>
 *Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**

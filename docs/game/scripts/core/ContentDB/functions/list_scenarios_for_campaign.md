@@ -1,6 +1,6 @@
 # ContentDB::list_scenarios_for_campaign Function Reference
 
-*Defined at:* `scripts/core/ContentDB.gd` (lines 228–267)</br>
+*Defined at:* `scripts/core/ContentDB.gd` (lines 229–268)</br>
 *Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**

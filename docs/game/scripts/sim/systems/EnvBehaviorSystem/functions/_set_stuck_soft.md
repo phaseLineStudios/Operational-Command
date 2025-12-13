@@ -1,6 +1,6 @@
 # EnvBehaviorSystem::_set_stuck_soft Function Reference
 
-*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 362–370)</br>
+*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 359–367)</br>
 *Belongs to:* [EnvBehaviorSystem](../../EnvBehaviorSystem.md)
 
 **Signature**

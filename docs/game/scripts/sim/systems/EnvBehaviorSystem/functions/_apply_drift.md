@@ -1,6 +1,6 @@
 # EnvBehaviorSystem::_apply_drift Function Reference
 
-*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 372–383)</br>
+*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 369–380)</br>
 *Belongs to:* [EnvBehaviorSystem](../../EnvBehaviorSystem.md)
 
 **Signature**

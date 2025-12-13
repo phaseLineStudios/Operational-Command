@@ -1,6 +1,6 @@
 # FuelSystem::_on_move_blocked Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 152–157)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 154–159)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

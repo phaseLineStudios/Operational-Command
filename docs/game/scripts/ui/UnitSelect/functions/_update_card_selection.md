@@ -1,6 +1,6 @@
 # UnitSelect::_update_card_selection Function Reference
 
-*Defined at:* `scripts/ui/UnitSelect.gd` (lines 351–361)</br>
+*Defined at:* `scripts/ui/UnitSelect.gd` (lines 384–394)</br>
 *Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**

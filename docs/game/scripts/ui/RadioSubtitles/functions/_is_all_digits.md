@@ -1,6 +1,6 @@
 # RadioSubtitles::_is_all_digits Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 510–517)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 557–564)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

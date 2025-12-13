@@ -1,6 +1,6 @@
 # FuelSystem::_ready Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 43–47)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 45–49)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

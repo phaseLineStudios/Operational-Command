@@ -1,6 +1,6 @@
 # ContentDB::list_terrains Function Reference
 
-*Defined at:* `scripts/core/ContentDB.gd` (lines 214–226)</br>
+*Defined at:* `scripts/core/ContentDB.gd` (lines 215–227)</br>
 *Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**

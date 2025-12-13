@@ -1,6 +1,6 @@
 # AIController::advance_unit Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 124–128)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 125–129)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # ScenarioEditor::_place_slot_from_tool Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 248–265)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 250–267)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

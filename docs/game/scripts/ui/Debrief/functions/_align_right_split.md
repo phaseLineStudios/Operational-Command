@@ -1,6 +1,6 @@
 # Debrief::_align_right_split Function Reference
 
-*Defined at:* `scripts/ui/Debrief.gd` (lines 429–446)</br>
+*Defined at:* `scripts/ui/Debrief.gd` (lines 452–469)</br>
 *Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**

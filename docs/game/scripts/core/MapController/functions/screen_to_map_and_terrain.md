@@ -1,6 +1,6 @@
 # MapController::screen_to_map_and_terrain Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 159–170)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 228–239)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # HQTable::_on_unit_voice_transcript Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 133–137)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 152–156)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

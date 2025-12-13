@@ -1,6 +1,6 @@
 # ScenarioData::_serialize_unit_slots Function Reference
 
-*Defined at:* `scripts/data/ScenarioData.gd` (lines 256–266)</br>
+*Defined at:* `scripts/data/ScenarioData.gd` (lines 293–303)</br>
 *Belongs to:* [ScenarioData](../../ScenarioData.md)
 
 **Signature**

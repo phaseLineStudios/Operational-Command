@@ -22,6 +22,7 @@ extends Control
 - [`func _on_scenarios_pressed() -> void`](PauseMenu/functions/_on_scenarios_pressed.md) — Called on scenario pressed.
 - [`func _on_main_menu_pressed() -> void`](PauseMenu/functions/_on_main_menu_pressed.md) — Called on main menu pressed.
 - [`func _unhandled_key_input(event: InputEvent) -> void`](PauseMenu/functions/_unhandled_key_input.md)
+- [`func _release_interactions() -> void`](PauseMenu/functions/_release_interactions.md)
 
 ## Public Attributes
 
@@ -121,6 +122,12 @@ Called on main menu pressed.
 
 ```gdscript
 func _unhandled_key_input(event: InputEvent) -> void
+```
+
+### _release_interactions
+
+```gdscript
+func _release_interactions() -> void
 ```
 
 ## Member Data Documentation

@@ -1,6 +1,6 @@
 # UnitVoiceResponses::_get_order_type_name Function Reference
 
-*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 141–160)</br>
+*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 148–166)</br>
 *Belongs to:* [UnitVoiceResponses](../../UnitVoiceResponses.md)
 
 **Signature**
@@ -20,7 +20,6 @@ Convert order type to string name.
 
 ```gdscript
 func _get_order_type_name(type: Variant) -> String:
-	# Map OrdersParser.OrderType enum indices to string tokens
 	const TYPE_NAMES := {
 		0: "MOVE",
 		1: "HOLD",

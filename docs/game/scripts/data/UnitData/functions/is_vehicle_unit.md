@@ -1,6 +1,6 @@
 # UnitData::is_vehicle_unit Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 459–492)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 424–457)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**

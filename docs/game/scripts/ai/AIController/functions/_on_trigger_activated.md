@@ -1,6 +1,6 @@
 # AIController::_on_trigger_activated Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 369–381)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 370–382)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

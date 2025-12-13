@@ -1,6 +1,6 @@
 # UnitCreateDialog::_on_add_slot Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 412–422)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 442–452)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

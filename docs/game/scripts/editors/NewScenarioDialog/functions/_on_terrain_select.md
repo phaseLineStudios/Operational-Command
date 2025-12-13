@@ -1,6 +1,6 @@
 # NewScenarioDialog::_on_terrain_select Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 79–106)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 113–140)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**

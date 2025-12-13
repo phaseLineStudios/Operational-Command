@@ -1,6 +1,6 @@
 # EnvBehaviorSystem::_compute_visibility_score Function Reference
 
-*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 90–104)</br>
+*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 87–101)</br>
 *Belongs to:* [EnvBehaviorSystem](../../EnvBehaviorSystem.md)
 
 **Signature**

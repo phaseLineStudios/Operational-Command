@@ -1,6 +1,6 @@
 # PickupItem::_unhandled_input Function Reference
 
-*Defined at:* `scripts/core/PickupItem.gd` (lines 213–262)</br>
+*Defined at:* `scripts/core/PickupItem.gd` (lines 297–344)</br>
 *Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**
@@ -20,7 +20,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not document_viewport:
 		return
 
-	# Only handle mouse button clicks while inspecting
 	if not _inspecting:
 		return
 
@@ -29,7 +28,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	var mouse_event := event as InputEventMouseButton
 
-	# Only handle left clicks
 	if mouse_event.button_index != MOUSE_BUTTON_LEFT:
 		return
 

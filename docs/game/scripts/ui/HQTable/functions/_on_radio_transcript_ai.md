@@ -1,6 +1,6 @@
 # HQTable::_on_radio_transcript_ai Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 119–131)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 138–150)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

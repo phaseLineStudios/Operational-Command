@@ -1,6 +1,6 @@
 # Debrief::set_units Function Reference
 
-*Defined at:* `scripts/ui/Debrief.gd` (lines 233–277)</br>
+*Defined at:* `scripts/ui/Debrief.gd` (lines 256–300)</br>
 *Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MovementAdapter::plan_and_start Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 276–292)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 277–294)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**
@@ -31,7 +31,8 @@ func plan_and_start(su: ScenarioUnit, dest_m: Vector2) -> bool:
 		su.set_meta("_pending_start_profile", p)
 		return true
 	_grid.use_profile(p)
-	if su.plan_move(_grid, dest_m):
+	var planned: bool = _with_navigation_bias(su, func(): return su.plan_move(_grid, dest_m))
+	if planned:
 		su.start_move(_grid)
 		return true
 	LogService.warning("plan_move failed", "MovementAdapter.gd:163")

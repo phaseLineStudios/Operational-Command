@@ -1,6 +1,6 @@
 # UnitData::_is_anti_vehicle_ammo Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 452–457)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 417–422)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**

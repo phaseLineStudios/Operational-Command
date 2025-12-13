@@ -1,4 +1,4 @@
-[gd_scene load_steps=111 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=133 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -8,11 +8,15 @@
 [ext_resource type="Script" uid="uid://dn828tsljtrki" path="res://scripts/core/Camera.gd" id="3_3f477"]
 [ext_resource type="PackedScene" uid="uid://gfdfc6v4mqv6" path="res://assets/models/clipboard/Clipboard.glb" id="4_fhiww"]
 [ext_resource type="Script" uid="uid://0r8k717de5os" path="res://scripts/core/PlayerInteraction.gd" id="4_py2wd"]
+[ext_resource type="AudioStream" uid="uid://clic7fxxhe40a" path="res://audio/sfx/sfx_drop_protractor_01.wav" id="5_66gqg"]
 [ext_resource type="Script" uid="uid://6xtsg3rqhc8t" path="res://scripts/core/MapController.gd" id="5_lmes1"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="6_cx6my"]
+[ext_resource type="AudioStream" uid="uid://cua5heigau7p6" path="res://audio/sfx/sfx_drop_protractor_02.wav" id="6_idixg"]
+[ext_resource type="AudioStream" uid="uid://b1bbnbn0aonw2" path="res://audio/sfx/sfx_drop_protractor_03.wav" id="7_g6xw8"]
 [ext_resource type="Script" uid="uid://b1vs2cahgd48f" path="res://scripts/sim/SimWorld.gd" id="7_ge8rp"]
 [ext_resource type="Script" uid="uid://b5eh10v1g6c4v" path="res://scripts/sim/SimDebugOverlay.gd" id="7_tixey"]
 [ext_resource type="PackedScene" uid="uid://7ta8ojkjg5rg" path="res://scenes/ui/pause_menu.tscn" id="7_uk27s"]
+[ext_resource type="AudioStream" uid="uid://csrgtinedwlbr" path="res://audio/sfx/sfx_drop_protractor_04.wav" id="8_5bsee"]
 [ext_resource type="Script" uid="uid://bxw82utaedlvn" path="res://scripts/radio/OrdersParser.gd" id="9_415kk"]
 [ext_resource type="Script" uid="uid://be785qai04d2g" path="res://scripts/sim/adapters/MovementAdapter.gd" id="9_fera7"]
 [ext_resource type="Script" uid="uid://dy2uex65i3y4m" path="res://scripts/sim/adapters/CombatAdapter.gd" id="9_vxnyp"]
@@ -36,9 +40,10 @@
 [ext_resource type="PackedScene" uid="uid://b7u4ajeh13tpn" path="res://scenes/ui/loading_screen.tscn" id="28_loading"]
 [ext_resource type="Script" uid="uid://cldkj080ext62" path="res://scripts/sim/UnitCounterController.gd" id="28_wrosp"]
 [ext_resource type="PackedScene" uid="uid://db2miy3a6hjke" path="res://scenes/ui/mission_dialog.tscn" id="29_dialog"]
-[ext_resource type="Script" uid="uid://bnus1tqft6rms" path="res://scripts/radio/UnitVoiceResponses.gd" id="30_voices"]
-[ext_resource type="Script" uid="uid://cpcrrfahha6bx" path="res://scripts/radio/UnitAutoResponses.gd" id="31_auto_voices"]
-[ext_resource type="Script" uid="uid://d1c2ojsjf1fws" path="res://scripts/audio/RadioSignalModulator.gd" id="32_modulator"]
+[ext_resource type="Script" uid="uid://do2w5t45qvy04" path="res://scripts/audio/CombatSoundController.gd" id="30_66gqg"]
+[ext_resource type="AudioStream" uid="uid://crfoxkxk0olx" path="res://audio/sfx/sfx_distant_artillery_outgoing.wav" id="31_idixg"]
+[ext_resource type="AudioStream" uid="uid://chbwl6b8ltbmk" path="res://audio/sfx/sfx_distant_artillery_impact.wav" id="32_g6xw8"]
+[ext_resource type="AudioStream" uid="uid://c66d1772ak7jv" path="res://audio/sfx/sfx_distant_combat_loop.wav" id="33_5bsee"]
 [ext_resource type="Script" uid="uid://0xd5ojxkkl4q" path="res://scripts/sim/systems/ArtilleryController.gd" id="33_66vc6"]
 [ext_resource type="PackedScene" uid="uid://bnexhgtx3llph" path="res://scenes/ui/counter_config_dialog.tscn" id="33_bsy1h"]
 [ext_resource type="Script" uid="uid://ckqvusamktt4" path="res://scripts/sim/systems/EngineerController.gd" id="34_1yvtb"]
@@ -46,8 +51,14 @@
 [ext_resource type="Script" uid="uid://f0yaq3wflq5" path="res://scripts/sim/EnvironmentController.gd" id="36_c0crp"]
 [ext_resource type="Script" uid="uid://mjmvtp2w61ri" path="res://scripts/ui/PostProcessController.gd" id="36_yef6r"]
 [ext_resource type="Shader" uid="uid://csoyxm10cdmqn" path="res://assets/shaders/general.gdshader" id="37_gaccj"]
+[ext_resource type="Texture2D" uid="uid://chrwadpsqxw48" path="res://assets/textures/environment/StaticCloudsAlpha.tga" id="39_r1wnv"]
+[ext_resource type="Texture2D" uid="uid://c1nx6ijb3dcoi" path="res://assets/textures/environment/StaticCloudsXY.tga" id="40_8iaup"]
+[ext_resource type="Texture2D" uid="uid://dg1nw37ri1cnj" path="res://assets/textures/environment/scatteringLUT.HDR" id="41_tw4w3"]
+[ext_resource type="Texture2D" uid="uid://c1jc0qiprxkp8" path="res://assets/textures/environment/Stars_Noise.TGA" id="42_5yowr"]
+[ext_resource type="Texture2D" uid="uid://c2t7qcox668w7" path="res://assets/textures/environment/starmap_8k.jpg" id="43_66gqg"]
 [ext_resource type="Script" uid="uid://d33v0jsmojsg1" path="res://scripts/sim/SkyPreset.gd" id="44_hovgm"]
 [ext_resource type="Script" uid="uid://qvbcqwk2gyo1" path="res://scripts/ai/AIController.gd" id="45_ai"]
+[ext_resource type="Texture2D" uid="uid://cxjjwb5ao85u7" path="res://assets/textures/tex_rain_circle.png" id="50_idixg"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qevx8"]
 size = Vector3(1, 0.75, 0.7)
@@ -172,13 +183,58 @@ metadata/_custom_type_script = "uid://dnnu3w3b3j5rk"
 script = ExtResource("24_jjp33")
 metadata/_custom_type_script = "uid://ch73kyybwrkb8"
 
+[sub_resource type="Gradient" id="Gradient_r1wnv"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.125, 0.95)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_8iaup"]
+noise_type = 2
+frequency = 0.021
+fractal_octaves = 4
+fractal_gain = 0.547
+fractal_weighted_strength = 0.58
+cellular_distance_function = 3
+cellular_jitter = 0.7
+cellular_return_type = 3
+domain_warp_enabled = true
+domain_warp_amplitude = 6.0
+domain_warp_frequency = 1.0
+domain_warp_fractal_octaves = 7
+domain_warp_fractal_lacunarity = 5.0
+domain_warp_fractal_gain = 2.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_tw4w3"]
+noise = SubResource("FastNoiseLite_8iaup")
+color_ramp = SubResource("Gradient_r1wnv")
+seamless = true
+invert = true
+seamless_blend_skirt = 0.401
+
+[sub_resource type="Gradient" id="Gradient_5yowr"]
+interpolation_mode = 2
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_66gqg"]
+noise_type = 4
+seed = 34
+frequency = 0.042
+fractal_octaves = 3
+fractal_lacunarity = 1.605
+fractal_gain = 2.397
+fractal_weighted_strength = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_idixg"]
+noise = SubResource("FastNoiseLite_66gqg")
+color_ramp = SubResource("Gradient_5yowr")
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_66gqg"]
 shader = ExtResource("36_66gqg")
 shader_parameter/base_color = Color(0.204346, 0.344014, 0.5625, 1)
+shader_parameter/scattering_lut = ExtResource("41_tw4w3")
 shader_parameter/scatter_color = Color(1, 1, 1, 1)
 shader_parameter/scatter_color_2 = Color(1, 1, 1, 1)
 shader_parameter/b_anim_clouds = true
 shader_parameter/b_anim_stars = true
+shader_parameter/cloud_type = 1
 shader_parameter/sun_radius = 0.0003
 shader_parameter/sun_edge_blur = 3600.0
 shader_parameter/sun_disc_color = Color(0.737255, 0.694118, 0.603922, 1)
@@ -188,15 +244,29 @@ shader_parameter/sun_glow_intensity = 0.45
 shader_parameter/moon_radius = 0.0003
 shader_parameter/moon_edge_blur = 10000.0
 shader_parameter/moon_glow_color = Color(1, 1, 1, 0)
+shader_parameter/moon_light_color = Vector3(0, 0, 0)
 shader_parameter/moon_glow_intensity = 0.8
 shader_parameter/base_cloud_color = Color(1, 1, 1, 1)
 shader_parameter/cloud_density = 4.25
+shader_parameter/cloud_edge = 0.0
+shader_parameter/cloud_coverage = 0.0
+shader_parameter/cloud_direction = Vector2(0, -1)
+shader_parameter/cloud_texture = ExtResource("39_r1wnv")
+shader_parameter/cloud_texture_2 = ExtResource("40_8iaup")
+shader_parameter/cloud_noise = SubResource("NoiseTexture2D_tw4w3")
+shader_parameter/weather_map = SubResource("NoiseTexture2D_idixg")
 shader_parameter/mg_size = 0.92
 shader_parameter/cloud_alpha = 1.0
-shader_parameter/cloud_speed = 0.0003
+shader_parameter/cloud_speed = 0.0
+shader_parameter/absorption = 5.0
+shader_parameter/henyey_greenstein_level = 0.69
+shader_parameter/dynamic_cloud_brightness = 0.9
+shader_parameter/horizon_uv_curve = 0.5
 shader_parameter/horizon_fog_color = Color(0.82882583, 0.9191148, 0.9999997, 1)
 shader_parameter/horizon_alpha = 1.0
 shader_parameter/horizon_size = 3.0
+shader_parameter/star_texture = ExtResource("43_66gqg")
+shader_parameter/star_noise = ExtResource("42_5yowr")
 shader_parameter/star_color = Color(0.43, 0.55, 0.91, 1)
 shader_parameter/star_brightness = 0.2
 shader_parameter/twinkle_speed = 0.025
@@ -225,8 +295,10 @@ sdfgi_min_cell_size = 1.953125
 glow_enabled = true
 glow_intensity = 0.6
 glow_bloom = 0.04
+fog_density = 4.725e-05
+fog_aerial_perspective = 0.0004725
 volumetric_fog_enabled = true
-volumetric_fog_density = 0.0042
+volumetric_fog_density = 0.0053053694
 adjustment_enabled = true
 adjustment_contrast = 1.05
 adjustment_saturation = 0.9
@@ -308,9 +380,11 @@ point_count = 4
 script = ExtResource("44_hovgm")
 sun_light_intensity = SubResource("Curve_66gqg")
 moon_light_intensity = SubResource("Curve_xqlrs")
+cloud_speed = 0.0
+cloud_direction = Vector2(0, -1)
 base_sky_color = SubResource("GradientTexture1D_018ci")
 base_cloud_color = SubResource("GradientTexture1D_3g2ag")
-overcast_sky_color = SubResource("GradientTexture1D_r1wnv")
+overcast_cloud_color = SubResource("GradientTexture1D_r1wnv")
 horizon_fog_color = SubResource("GradientTexture1D_os6q3")
 sun_light_color = SubResource("GradientTexture1D_5yowr")
 sun_disc_color = SubResource("GradientTexture1D_8iaup")
@@ -319,9 +393,43 @@ moon_light_color = SubResource("GradientTexture1D_4hx2p")
 moon_glow_color = SubResource("GradientTexture1D_ehjqo")
 metadata/_custom_type_script = "uid://d33v0jsmojsg1"
 
+[sub_resource type="Curve" id="Curve_idixg"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.04, 0.2), -0.4639839, -0.4639839, 0, 0, Vector2(0.10126583, 0.04193139), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
 [sub_resource type="SphereMesh" id="SphereMesh_5bsee"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_rio5r"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_66gqg"]
+emission_shape_scale = Vector3(3, 2, 3)
+emission_shape = 3
+emission_box_extents = Vector3(1, 1, 1)
+direction = Vector3(0, -1, 0)
+spread = 5.0
+initial_velocity_min = 5.4
+initial_velocity_max = 8.48
+gravity = Vector3(0, -10.208, 0)
+collision_mode = 2
+
+[sub_resource type="Curve" id="Curve_g6xw8"]
+_limits = [0.0, 0.1, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.15584415, 0.007994756), -0.08618498, -0.08618498, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5bsee"]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.72567123, 0.87642777, 0.85557157, 0.7607843)
+albedo_texture = ExtResource("50_idixg")
+use_particle_trails = true
+
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_idixg"]
+material = SubResource("StandardMaterial3D_5bsee")
+sections = 2
+curve = SubResource("Curve_g6xw8")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yef6r"]
 shader = ExtResource("37_gaccj")
@@ -371,6 +479,22 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00355911, -0.417542, -1.20
 operation = 2
 size = Vector3(1.37492, 1.76648, 2.76892)
 metadata/_edit_lock_ = true
+
+[node name="CollisionShape3D" type="GPUParticlesCollisionBox3D" parent="Tent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2053671, 0.8564415, -1.7407036)
+size = Vector3(0.9696045, 1.7735596, 0.046447754)
+
+[node name="CollisionShape3D2" type="GPUParticlesCollisionBox3D" parent="Tent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.150321, 0.8564415, -1.7407036)
+size = Vector3(0.9696045, 1.7735596, 0.046447754)
+
+[node name="CollisionShape3D3" type="GPUParticlesCollisionBox3D" parent="Tent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12325859, 1.540554, -1.7407036)
+size = Vector3(1.5922241, 0.40533447, 0.046447754)
+
+[node name="CollisionShape3D4" type="GPUParticlesCollisionBox3D" parent="Tent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.027944565, 1.6769829, -0.055599213)
+size = Vector3(3.3188934, 0.1324768, 3.4166565)
 
 [node name="StaticObjects" type="Node" parent="."]
 
@@ -495,6 +619,7 @@ collision_mask = 3
 physics_material_override = SubResource("PhysicsMaterial_cx6my")
 continuous_cd = true
 script = ExtResource("1_oof4l")
+collision_sounds = Array[AudioStream]([ExtResource("5_66gqg"), ExtResource("6_idixg"), ExtResource("7_g6xw8"), ExtResource("8_5bsee")])
 
 [node name="Collision" type="CollisionShape3D" parent="PhysicsObjects/Protractor"]
 shape = SubResource("BoxShape3D_of8da")
@@ -671,21 +796,6 @@ engineer_controller = NodePath("../../CombatController/EngineerController")
 terrain_renderer = NodePath("../../MapController/TerrainViewport/TerrainRender")
 metadata/_custom_type_script = "uid://ckdlg61462pgb"
 
-[node name="UnitVoiceResponses" type="Node" parent="Controllers/RadioController"]
-unique_name_in_owner = true
-script = ExtResource("30_voices")
-
-[node name="TTSPlayer" type="AudioStreamPlayer" parent="Controllers/RadioController/UnitVoiceResponses"]
-unique_name_in_owner = true
-bus = &"Radio"
-
-[node name="RadioSignalModulator" type="Node" parent="Controllers/RadioController"]
-script = ExtResource("32_modulator")
-
-[node name="UnitAutoResponses" type="Node" parent="Controllers/RadioController"]
-unique_name_in_owner = true
-script = ExtResource("31_auto_voices")
-
 [node name="WorldController" type="Node" parent="Controllers" node_paths=PackedStringArray("los_adapter", "movement_adapter", "combat_controller", "combat_adapter", "trigger_engine", "_router", "ammo_system", "fuel_system", "artillery_controller", "engineer_controller", "environment_controller")]
 unique_name_in_owner = true
 script = ExtResource("7_ge8rp")
@@ -765,6 +875,24 @@ agents_root_path = NodePath("Agents")
 
 [node name="Agents" type="Node" parent="Controllers/AIController"]
 
+[node name="SoundController" type="Node" parent="Controllers"]
+
+[node name="CombatSoundController" type="Node" parent="Controllers/SoundController"]
+unique_name_in_owner = true
+script = ExtResource("30_66gqg")
+sound_artillery_outgoing = Array[AudioStream]([ExtResource("31_idixg")])
+sound_artillery_impact = Array[AudioStream]([ExtResource("32_g6xw8")])
+sound_distant_combat = Array[AudioStream]([ExtResource("33_5bsee")])
+
+[node name="SfxArtilleryOutgoing" type="AudioStreamPlayer" parent="Controllers/SoundController/CombatSoundController"]
+bus = &"Environment"
+
+[node name="SfxArtilleryImpact" type="AudioStreamPlayer" parent="Controllers/SoundController/CombatSoundController"]
+bus = &"Environment"
+
+[node name="SfxCombat" type="AudioStreamPlayer" parent="Controllers/SoundController/CombatSoundController"]
+bus = &"Environment"
+
 [node name="TimerController" type="Node" parent="Controllers" node_paths=PackedStringArray("timer", "sim_world", "camera")]
 script = ExtResource("3_2llyq")
 timer = NodePath("../../StaticObjects/Timer")
@@ -772,6 +900,7 @@ sim_world = NodePath("../WorldController")
 camera = NodePath("../CameraController/CameraBounds/Camera")
 press_depth = 0.005
 collision_box_position = Vector3(0, 0.06, 0)
+button_sound_pitch_variation = 0.05
 lcd_font = ExtResource("23_nfu8j")
 lcd_letter_spacing = 2
 pause_icon = ExtResource("24_l12u7")
@@ -792,7 +921,7 @@ counter_dialog = NodePath("../../UI/CounterConfigDialog")
 unique_name_in_owner = true
 script = ExtResource("27_docctrl")
 
-[node name="EnvironmentController" type="WorldEnvironment" parent="Controllers" node_paths=PackedStringArray("sun_moon_parent", "sun_root", "moon_root", "sun", "moon", "env_anchor")]
+[node name="EnvironmentController" type="WorldEnvironment" parent="Controllers" node_paths=PackedStringArray("sun_moon_parent", "sun_root", "moon_root", "sun", "moon", "env_anchor", "weather", "rain_node")]
 unique_name_in_owner = true
 environment = SubResource("Environment_idixg")
 script = ExtResource("36_c0crp")
@@ -802,7 +931,10 @@ moon_root = NodePath("SunMoon/Moon")
 sun = NodePath("SunMoon/Sun/SunLight")
 moon = NodePath("SunMoon/Moon/MoonLight")
 env_anchor = NodePath("EnvironmentAnchor")
+weather = NodePath("Weather")
+rain_node = NodePath("Weather/Rain")
 sky_preset = SubResource("Resource_g6xw8")
+fog_visibility_curve = SubResource("Curve_idixg")
 
 [node name="SunMoon" type="Node3D" parent="Controllers/EnvironmentController"]
 transform = Transform3D(1, 0, 0, 0, -0.9999995, 8.7422734e-08, 0, -8.7422734e-08, -0.9999995, 0, 0, 0)
@@ -834,6 +966,19 @@ shadow_enabled = true
 metadata/_edit_lock_ = true
 
 [node name="EnvironmentAnchor" type="Node3D" parent="Controllers/EnvironmentController"]
+
+[node name="Weather" type="Node3D" parent="Controllers/EnvironmentController"]
+
+[node name="Rain" type="GPUParticles3D" parent="Controllers/EnvironmentController/Weather"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.739531, -4.871651)
+emitting = false
+amount = 296
+lifetime = 1.952
+speed_scale = 0.8480000000000001
+randomness = 0.38
+trail_enabled = true
+process_material = SubResource("ParticleProcessMaterial_66gqg")
+draw_pass_1 = SubResource("RibbonTrailMesh_idixg")
 
 [node name="PostProcess" type="CanvasLayer" parent="."]
 script = ExtResource("36_yef6r")

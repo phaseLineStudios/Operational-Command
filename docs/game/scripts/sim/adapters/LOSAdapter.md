@@ -35,6 +35,9 @@ Either toggle by API, or do a simple distance scan against a group.
 - [`func has_hostile_contact() -> bool`](LOSAdapter/functions/has_hostile_contact.md) — Used by AIAgent wait-until-contact
 - [`func set_hostile_contact(v: bool) -> void`](LOSAdapter/functions/set_hostile_contact.md) — Allow external systems to toggle contact directly.
 - [`func _behaviour_spotting_mult(target: ScenarioUnit) -> float`](LOSAdapter/functions/_behaviour_spotting_mult.md)
+- [`func sample_visibility_for_unit(_unit: ScenarioUnit) -> float`](LOSAdapter/functions/sample_visibility_for_unit.md) — Fast local visibility query placeholder for EnvBehaviorSystem.
+- [`func sample_visibility_at(_pos_m: Vector2) -> float`](LOSAdapter/functions/sample_visibility_at.md) — Visibility sampling at a position placeholder.
+- [`func _current_weather_severity() -> float`](LOSAdapter/functions/_current_weather_severity.md)
 
 ## Public Attributes
 
@@ -133,6 +136,28 @@ Allow external systems to toggle contact directly.
 
 ```gdscript
 func _behaviour_spotting_mult(target: ScenarioUnit) -> float
+```
+
+### sample_visibility_for_unit
+
+```gdscript
+func sample_visibility_for_unit(_unit: ScenarioUnit) -> float
+```
+
+Fast local visibility query placeholder for EnvBehaviorSystem.
+
+### sample_visibility_at
+
+```gdscript
+func sample_visibility_at(_pos_m: Vector2) -> float
+```
+
+Visibility sampling at a position placeholder.
+
+### _current_weather_severity
+
+```gdscript
+func _current_weather_severity() -> float
 ```
 
 ## Member Data Documentation

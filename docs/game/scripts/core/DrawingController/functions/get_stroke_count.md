@@ -1,6 +1,6 @@
 # DrawingController::get_stroke_count Function Reference
 
-*Defined at:* `scripts/core/DrawingController.gd` (lines 364–367)</br>
+*Defined at:* `scripts/core/DrawingController.gd` (lines 338–341)</br>
 *Belongs to:* [DrawingController](../../DrawingController.md)
 
 **Signature**

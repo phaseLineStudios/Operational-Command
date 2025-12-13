@@ -1,6 +1,6 @@
 # DocumentController::_do_transcript_refresh Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 710–715)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 721–726)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

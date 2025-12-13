@@ -1,18 +1,18 @@
 # OCMenuButton::_rebuild_noise_tex Function Reference
 
-*Defined at:* `scripts/ui/controls/OcMenuButton.gd` (lines 57–73)</br>
+*Defined at:* `scripts/ui/controls/OcMenuButton.gd` (lines 95–111)</br>
 *Belongs to:* [OCMenuButton](../../OCMenuButton.md)
 
 **Signature**
 
 ```gdscript
-func _rebuild_noise_tex()
+func _rebuild_noise_tex() -> void
 ```
 
 ## Source
 
 ```gdscript
-func _rebuild_noise_tex():
+func _rebuild_noise_tex() -> void:
 	if _noise_tex != null:
 		return
 	var w := 256

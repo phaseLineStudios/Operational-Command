@@ -1,6 +1,6 @@
 # RadioSubtitles::_ready Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 23–33)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 27–38)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**
@@ -14,6 +14,7 @@ func _ready() -> void
 ```gdscript
 func _ready() -> void:
 	_tables = NARules.get_parser_tables()
+	_load_suggestions_config()
 	visible = false
 
 	# Create hide timer

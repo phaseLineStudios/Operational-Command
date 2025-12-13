@@ -1,6 +1,6 @@
 # TerrainData::_queue_emit Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 487–493)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 499–505)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

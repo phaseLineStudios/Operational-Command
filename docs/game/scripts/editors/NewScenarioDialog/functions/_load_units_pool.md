@@ -1,6 +1,6 @@
 # NewScenarioDialog::_load_units_pool Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 200–216)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 292–308)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**

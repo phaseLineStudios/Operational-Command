@@ -1,6 +1,6 @@
 # RadioSubtitles::_get_quantity_suggestions Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 318–322)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 359–363)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # DocumentController::_on_transcript_page_changed Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 693–697)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 704–708)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

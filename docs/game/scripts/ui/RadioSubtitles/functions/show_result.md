@@ -1,6 +1,6 @@
 # RadioSubtitles::show_result Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 44–53)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 78–87)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

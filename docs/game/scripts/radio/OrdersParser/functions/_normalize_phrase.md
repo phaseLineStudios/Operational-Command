@@ -1,6 +1,6 @@
 # OrdersParser::_normalize_phrase Function Reference
 
-*Defined at:* `scripts/radio/OrdersParser.gd` (lines 560–561)</br>
+*Defined at:* `scripts/radio/OrdersParser.gd` (lines 549–550)</br>
 *Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**

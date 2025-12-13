@@ -1,6 +1,6 @@
 # TerrainData::serialize Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 495–570)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 507–591)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**
@@ -17,9 +17,10 @@ Serialize terrain to JSON
 
 ```gdscript
 func serialize() -> Dictionary:
-	var elev_b64: Variant = null
+	var elev_raw: Variant = null
 	if elevation and not elevation.is_empty():
-		elev_b64 = ContentDB.image_to_png_b64(elevation)
+		# Store raw float data to preserve full precision for elevation data
+		elev_raw = ContentDB.image_to_raw_b64(elevation)
 
 	var srf_out: Array = []
 	for s in surfaces:
@@ -85,7 +86,15 @@ func serialize() -> Dictionary:
 		"height_m": height_m,
 		"elevation_resolution_m": elevation_resolution_m,
 		"grid": {"start_x": grid_start_x, "start_y": grid_start_y},
-		"elevation": {"png_b64": elev_b64},
+		"metadata":
+		{
+			"country": country,
+			"map_scale": map_scale,
+			"edition": edition,
+			"series": series,
+			"sheet": sheet
+		},
+		"elevation": {"raw": elev_raw},
 		"elev_meta":
 		{"base_elevation_m": base_elevation_m, "contour_interval_m": contour_interval_m},
 		"content": {"surfaces": srf_out, "lines": ln_out, "points": pt_out, "labels": lab_out}

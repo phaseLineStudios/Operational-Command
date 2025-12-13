@@ -1,6 +1,6 @@
 # FuelSystem::unregister_unit Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 73–86)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 75–88)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

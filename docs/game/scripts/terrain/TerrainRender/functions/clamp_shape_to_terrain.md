@@ -1,6 +1,6 @@
 # TerrainRender::clamp_shape_to_terrain Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 332–339)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 389–396)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**

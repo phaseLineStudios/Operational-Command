@@ -1,6 +1,6 @@
 # RadioSubtitles::_convert_numbers_to_digits Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 404–431)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 451–478)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

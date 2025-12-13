@@ -1,6 +1,6 @@
 # TimerController::_get_bone_for_state Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 341–351)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 339–349)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**

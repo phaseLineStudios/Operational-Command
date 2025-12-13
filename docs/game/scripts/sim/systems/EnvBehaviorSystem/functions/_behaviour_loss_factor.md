@@ -1,6 +1,6 @@
 # EnvBehaviorSystem::_behaviour_loss_factor Function Reference
 
-*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 286–303)</br>
+*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 283–300)</br>
 *Belongs to:* [EnvBehaviorSystem](../../EnvBehaviorSystem.md)
 
 **Signature**

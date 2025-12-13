@@ -1,6 +1,6 @@
 # UnitMgmt::_collect_units_from_game Function Reference
 
-*Defined at:* `scripts/ui/UnitMgmt.gd` (lines 60–82)</br>
+*Defined at:* `scripts/ui/UnitMgmt.gd` (lines 67–89)</br>
 *Belongs to:* [UnitMgmt](../../UnitMgmt.md)
 
 **Signature**
@@ -32,7 +32,7 @@ func _collect_units_from_game() -> Array[UnitData]:
 
 	# Fallback: read directly from Game.current_scenario if present
 	if Game and Game.current_scenario:
-		for su in Game.current_scenario.units:
+		for su in Game.current_scenario.playable_units:
 			if su and su.unit:
 				out.append(su.unit)
 

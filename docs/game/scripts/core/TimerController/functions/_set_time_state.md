@@ -1,6 +1,6 @@
 # TimerController::_set_time_state Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 296–302)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 294–300)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**

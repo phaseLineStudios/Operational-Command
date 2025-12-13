@@ -1,6 +1,6 @@
 # TTSService::register_playback Function Reference
 
-*Defined at:* `scripts/radio/TTSService.gd` (lines 119–124)</br>
+*Defined at:* `scripts/radio/TTSService.gd` (lines 123–128)</br>
 *Belongs to:* [TTSService](../../TTSService.md)
 
 **Signature**

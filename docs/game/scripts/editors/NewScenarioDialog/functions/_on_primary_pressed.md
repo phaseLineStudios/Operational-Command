@@ -1,6 +1,6 @@
 # NewScenarioDialog::_on_primary_pressed Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 51–78)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 79–112)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**
@@ -24,7 +24,10 @@ func _on_primary_pressed() -> void:
 			sd.description = desc_input.text
 			sd.preview = thumbnail
 			sd.terrain = terrain
+			sd.video_path = video_path.text
+			sd.video_subtitles = subtitle_track
 			sd.unit_recruits = _selected_units.duplicate()
+			_apply_pools_to_scenario(sd)
 			emit_signal("request_create", sd)
 		DialogMode.EDIT:
 			if not working:
@@ -35,7 +38,10 @@ func _on_primary_pressed() -> void:
 			working.description = desc_input.text
 			working.preview = thumbnail
 			working.terrain = terrain
+			working.video_path = video_path.text
+			working.video_subtitles = subtitle_track
 			working.unit_recruits = _selected_units.duplicate()
+			_apply_pools_to_scenario(working)
 			emit_signal("request_update", working)
 	show_dialog(false)
 ```

@@ -1,6 +1,6 @@
 # OrdersRouter::_apply_defend Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 160–169)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 163–173)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**
@@ -21,6 +21,7 @@ DEFEND: move to destination if present; otherwise hold.
 
 ```gdscript
 func _apply_defend(unit: ScenarioUnit, order: Dictionary) -> bool:
+	_apply_navigation_bias(unit, order)
 	if combat_controller and combat_controller.has_method("set_posture"):
 		combat_controller.set_posture(unit, "defend")
 	var dest: Variant = _compute_destination(unit, order)

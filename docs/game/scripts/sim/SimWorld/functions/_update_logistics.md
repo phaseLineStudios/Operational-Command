@@ -1,6 +1,6 @@
 # SimWorld::_update_logistics Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 362–381)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 365–384)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MapController::_on_renderer_ready Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 218–221)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 223–226)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

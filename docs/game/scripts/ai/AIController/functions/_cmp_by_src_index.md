@@ -1,6 +1,6 @@
 # AIController::_cmp_by_src_index Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 188–191)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 189–192)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

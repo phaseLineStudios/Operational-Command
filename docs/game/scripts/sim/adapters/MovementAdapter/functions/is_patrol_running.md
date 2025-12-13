@@ -1,6 +1,6 @@
 # MovementAdapter::is_patrol_running Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 425–428)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 427–430)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

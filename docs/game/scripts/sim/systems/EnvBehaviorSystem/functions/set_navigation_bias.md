@@ -1,6 +1,6 @@
 # EnvBehaviorSystem::set_navigation_bias Function Reference
 
-*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 77–88)</br>
+*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 74–85)</br>
 *Belongs to:* [EnvBehaviorSystem](../../EnvBehaviorSystem.md)
 
 **Signature**

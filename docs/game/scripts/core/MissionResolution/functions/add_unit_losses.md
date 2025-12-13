@@ -1,6 +1,6 @@
 # MissionResolution::add_unit_losses Function Reference
 
-*Defined at:* `scripts/core/MissionResolution.gd` (lines 212–213)</br>
+*Defined at:* `scripts/core/MissionResolution.gd` (lines 210–211)</br>
 *Belongs to:* [MissionResolution](../../MissionResolution.md)
 
 **Signature**

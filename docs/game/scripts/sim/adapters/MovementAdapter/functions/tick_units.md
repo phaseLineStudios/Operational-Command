@@ -1,6 +1,6 @@
 # MovementAdapter::tick_units Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 243–262)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 243–263)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**
@@ -37,5 +37,6 @@ func tick_units(units: Array[ScenarioUnit], dt: float) -> void:
 		if _grid.ensure_profile(p):
 			_grid.use_profile(p)
 			for u in groups[p]:
+				_repath_if_requested(u)
 				u.tick(dt, _grid)
 ```

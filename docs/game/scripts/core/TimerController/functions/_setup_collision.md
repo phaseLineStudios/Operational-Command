@@ -1,6 +1,6 @@
 # TimerController::_setup_collision Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 115–136)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 124–144)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**
@@ -33,7 +33,6 @@ func _setup_collision() -> void:
 	collision_shape.position = collision_box_position
 	static_body.add_child(collision_shape)
 
-	# Setup debug visualization if enabled
 	if debug_draw_collision:
 		_setup_debug_draw(static_body)
 ```

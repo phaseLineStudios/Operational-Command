@@ -1,6 +1,6 @@
 # UnitCounter::_mil_affiliation_to_counter Function Reference
 
-*Defined at:* `scripts/sim/UnitCounter.gd` (lines 100–113)</br>
+*Defined at:* `scripts/sim/UnitCounter.gd` (lines 106–119)</br>
 *Belongs to:* [UnitCounter](../../UnitCounter.md)
 
 **Signature**

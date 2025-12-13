@@ -1,6 +1,6 @@
 # UnitMgmt::_on_committed Function Reference
 
-*Defined at:* `scripts/ui/UnitMgmt.gd` (lines 109–138)</br>
+*Defined at:* `scripts/ui/UnitMgmt.gd` (lines 112–143)</br>
 *Belongs to:* [UnitMgmt](../../UnitMgmt.md)
 
 **Signature**
@@ -27,19 +27,21 @@ func _on_committed(plan: Dictionary) -> void:
 			continue
 
 		# Authoritative gate: skip wiped-out units here
-		if not _can_reinforce(u):
+		if not _can_reinforce(uid):
 			continue
 
-		var cur: int = int(round(u.state_strength))
+		var cur: int = int(round(_unit_strength.get(uid, 0.0)))
 		var cap: int = int(max(0, u.strength))
 		var missing: int = max(0, cap - cur)
 		var give: int = min(add, missing, remaining)
 		if give <= 0:
 			continue
 
-		u.state_strength = float(cur + give)
+		_unit_strength[uid] = float(cur + give)
 		remaining -= give
-		emit_signal("unit_strength_changed", uid, int(round(u.state_strength)), _status_string(u))
+		emit_signal(
+			"unit_strength_changed", uid, int(round(_unit_strength[uid])), _status_string(uid)
+		)
 
 	# Persist pool and refresh UI
 	_set_pool(remaining)

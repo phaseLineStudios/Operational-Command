@@ -1,6 +1,6 @@
 # ArtilleryController::_ready Function Reference
 
-*Defined at:* `scripts/sim/systems/ArtilleryController.gd` (lines 71–74)</br>
+*Defined at:* `scripts/sim/systems/ArtilleryController.gd` (lines 94–98)</br>
 *Belongs to:* [ArtilleryController](../../ArtilleryController.md)
 
 **Signature**
@@ -13,5 +13,6 @@ func _ready() -> void
 
 ```gdscript
 func _ready() -> void:
+	_rng.randomize()
 	add_to_group("ArtilleryController")
 ```

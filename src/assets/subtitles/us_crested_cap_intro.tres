@@ -1,0 +1,70 @@
+[gd_resource type="Resource" script_class="SubtitleTrack" load_steps=13 format=3 uid="uid://dalddqi7kcfec"]
+
+[ext_resource type="Script" uid="uid://dia0qi7erc0aa" path="res://scripts/data/SubtitleTrack.gd" id="1_ippk3"]
+[ext_resource type="Script" uid="uid://depk7af6lobv3" path="res://scripts/data/Subtitle.gd" id="2_snpcq"]
+
+[sub_resource type="Resource" id="Resource_fwonu"]
+script = ExtResource("2_snpcq")
+start_time = 12.0
+end_time = 19.0
+text = "You have just finished a week of Autumn Forge drills. And, Today is the easy part: a four-lane evaluation."
+metadata/_custom_type_script = "uid://depk7af6lobv3"
+
+[sub_resource type="Resource" id="Resource_vpxen"]
+script = ExtResource("2_snpcq")
+start_time = 19.976
+end_time = 25.591
+text = "The Enemy is a mechanized platoon of Bundeswehr playing OPFOR, using NVA tactics."
+
+[sub_resource type="Resource" id="Resource_r3isc"]
+script = ExtResource("2_snpcq")
+start_time = 25.967
+end_time = 32.777
+text = "You should Expect reconnoisance probes, hasty ambushes and simulated mortar strikes using smokes."
+
+[sub_resource type="Resource" id="Resource_mtpe3"]
+script = ExtResource("2_snpcq")
+start_time = 33.795
+end_time = 41.322
+text = "Attached to your company is an engineer platoon. and, adjacent forces include Bundeswehr observers and Range Control umpires."
+
+[sub_resource type="Resource" id="Resource_f3rpf"]
+script = ExtResource("2_snpcq")
+start_time = 42.0
+end_time = 48.219
+text = "The wildflecken terrain is comprised ridges, fields, a shallow lake and a river crossing."
+
+[sub_resource type="Resource" id="Resource_kotxh"]
+script = ExtResource("2_snpcq")
+start_time = 49.084
+end_time = 58.193
+text = "At zero-nine-hundred, your company will run the four lanes: communication and command, movement and contact, break contact and river crossings. "
+
+[sub_resource type="Resource" id="Resource_tua4e"]
+script = ExtResource("2_snpcq")
+start_time = 58.785
+end_time = 64.953
+text = "These lanes should be done safely, by-the-books, with clean radio comms, and zero incidents."
+
+[sub_resource type="Resource" id="Resource_mu8ax"]
+script = ExtResource("2_snpcq")
+start_time = 66.335
+end_time = 74.263
+text = "Your Scouts lead, with tanks on overwatch while TOWs and mortars are in support. engineers will own the river crossing."
+
+[sub_resource type="Resource" id="Resource_e4384"]
+script = ExtResource("2_snpcq")
+start_time = 75.062
+end_time = 82.786
+text = "Fuel and ammo are topped off, no live rounds. Lane control is call sign RANGE. Medevac is UMPIRE."
+
+[sub_resource type="Resource" id="Resource_32h2g"]
+script = ExtResource("2_snpcq")
+start_time = 84.027
+end_time = 87.184
+text = "Good Luck"
+
+[resource]
+script = ExtResource("1_ippk3")
+subtitles = Array[ExtResource("2_snpcq")]([SubResource("Resource_fwonu"), SubResource("Resource_vpxen"), SubResource("Resource_r3isc"), SubResource("Resource_mtpe3"), SubResource("Resource_f3rpf"), SubResource("Resource_kotxh"), SubResource("Resource_tua4e"), SubResource("Resource_mu8ax"), SubResource("Resource_e4384"), SubResource("Resource_32h2g")])
+metadata/_custom_type_script = "uid://dia0qi7erc0aa"

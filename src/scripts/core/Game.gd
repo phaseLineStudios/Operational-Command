@@ -17,7 +17,6 @@ signal scenario_selected(mission_id: StringName)
 signal scenario_loadout_selected(loadout: Dictionary)
 
 @export var debug_display_scene: PackedScene = preload("res://scenes/system/debug_display.tscn")
-var debug_display: CanvasLayer
 
 const _SETTINGS_PATH := "user://settings.cfg"
 const _DEFAULT_RESOLUTIONS: Array[Vector2i] = [
@@ -27,6 +26,7 @@ const _DEFAULT_RESOLUTIONS: Array[Vector2i] = [
 var _base_msaa_3d: int = -1
 var _video_perf_timer: SceneTreeTimer
 
+var debug_display: CanvasLayer
 var current_campaign: CampaignData
 var current_save_id: StringName = &""
 var current_save: CampaignSave = null

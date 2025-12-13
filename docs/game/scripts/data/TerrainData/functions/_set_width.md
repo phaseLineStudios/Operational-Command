@@ -1,6 +1,6 @@
 # TerrainData::_set_width Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 125–131)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 137–143)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # SimWorld::_resolve_combat Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 318–359)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 321–362)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -33,12 +33,12 @@ func _resolve_combat() -> void:
 
 		if typeof(dmg) == TYPE_DICTIONARY:
 			dmg_value = float(dmg.get("damage", 0.0))
-			var f := int(d.unit.strength * d.unit.state_strength)
-			var e := int(a.unit.strength * a.unit.state_strength)
+			var f := int(d.unit.strength * d.state_strength)
+			var e := int(a.unit.strength * a.state_strength)
 			if f != 0 or e != 0:
 				Game.resolution.add_casualties(f, e)
 
-			if bool(d.unit.state_strength == 0):
+			if bool(d.state_strength == 0):
 				if d.affiliation == ScenarioUnit.Affiliation.FRIEND:
 					Game.resolution.add_units_lost(1)
 		else:

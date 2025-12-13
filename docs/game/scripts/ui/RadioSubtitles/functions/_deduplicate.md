@@ -1,6 +1,6 @@
 # RadioSubtitles::_deduplicate Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 388–397)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 435–444)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

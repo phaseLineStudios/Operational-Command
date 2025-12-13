@@ -18,6 +18,10 @@ extends Window
 - [`func _on_terrain_select() -> void`](NewScenarioDialog/functions/_on_terrain_select.md)
 - [`func _on_thumbnail_select() -> void`](NewScenarioDialog/functions/_on_thumbnail_select.md)
 - [`func _on_thumbnail_clear() -> void`](NewScenarioDialog/functions/_on_thumbnail_clear.md)
+- [`func _on_video_select() -> void`](NewScenarioDialog/functions/_on_video_select.md)
+- [`func _on_video_clear() -> void`](NewScenarioDialog/functions/_on_video_clear.md)
+- [`func _on_subtitles_select() -> void`](NewScenarioDialog/functions/_on_subtitles_select.md)
+- [`func _on_subtitles_clear() -> void`](NewScenarioDialog/functions/_on_subtitles_clear.md)
 - [`func _reset_values() -> void`](NewScenarioDialog/functions/_reset_values.md) — Reset values before popup (only when hiding)
 - [`func _load_from_data(d: ScenarioData) -> void`](NewScenarioDialog/functions/_load_from_data.md) — Preload fields from existing ScenarioData.
 - [`func _title_button_from_mode() -> void`](NewScenarioDialog/functions/_title_button_from_mode.md) — Update window title and primary button text to reflect mode.
@@ -30,11 +34,16 @@ extends Window
 - [`func _on_unit_dropped(from_kind: int, to_kind: int, unit_id: String) -> void`](NewScenarioDialog/functions/_on_unit_dropped.md) — Drag & drop callback from UnitDDItemList.
 - [`func _add_units_by_ids(ids: Array[String]) -> void`](NewScenarioDialog/functions/_add_units_by_ids.md) — Append units by ids (dedup).
 - [`func _remove_units_by_ids(ids: Array[String]) -> void`](NewScenarioDialog/functions/_remove_units_by_ids.md) — Remove units by ids.
+- [`func _apply_pools_to_scenario(sd: ScenarioData) -> void`](NewScenarioDialog/functions/_apply_pools_to_scenario.md) — Apply pool values from UI to ScenarioData.
+- [`func _load_pools_from_scenario(d: ScenarioData) -> void`](NewScenarioDialog/functions/_load_pools_from_scenario.md) — Load pool values from ScenarioData to UI.
+- [`func _reset_pool_values() -> void`](NewScenarioDialog/functions/_reset_pool_values.md) — Reset pool values to defaults.
 
 ## Public Attributes
 
 - `TerrainData terrain`
 - `Texture2D thumbnail`
+- `VideoStream video_stream`
+- `SubtitleTrack subtitle_track`
 - `DialogMode dialog_mode`
 - `ScenarioData working`
 - `Array[UnitData] _all_units`
@@ -49,12 +58,33 @@ extends Window
 - `Button thumb_clear`
 - `LineEdit terrain_path`
 - `Button terrain_btn`
+- `LineEdit video_path`
+- `Button video_btn`
+- `Button video_clear`
+- `LineEdit subtitles_path`
+- `Button subtitles_btn`
+- `Button subtitles_clear`
 - `Button close_btn`
 - `Button create_btn`
 - `ItemList unit_pool`
 - `ItemList unit_selected`
 - `Button unit_add`
 - `Button unit_remove`
+- `SpinBox replacement_pool_spin`
+- `SpinBox equipment_pool_spin`
+- `SpinBox small_arms_spin`
+- `SpinBox tank_gun_spin`
+- `SpinBox atgm_spin`
+- `SpinBox at_rocket_spin`
+- `SpinBox heavy_weapons_spin`
+- `SpinBox autocannon_spin`
+- `SpinBox mortar_ap_spin`
+- `SpinBox mortar_smoke_spin`
+- `SpinBox mortar_illum_spin`
+- `SpinBox artillery_ap_spin`
+- `SpinBox artillery_smoke_spin`
+- `SpinBox artillery_illum_spin`
+- `SpinBox engineer_mun_spin`
 
 ## Signals
 
@@ -95,6 +125,30 @@ func _on_thumbnail_select() -> void
 
 ```gdscript
 func _on_thumbnail_clear() -> void
+```
+
+### _on_video_select
+
+```gdscript
+func _on_video_select() -> void
+```
+
+### _on_video_clear
+
+```gdscript
+func _on_video_clear() -> void
+```
+
+### _on_subtitles_select
+
+```gdscript
+func _on_subtitles_select() -> void
+```
+
+### _on_subtitles_clear
+
+```gdscript
+func _on_subtitles_clear() -> void
 ```
 
 ### _reset_values
@@ -195,6 +249,30 @@ func _remove_units_by_ids(ids: Array[String]) -> void
 
 Remove units by ids.
 
+### _apply_pools_to_scenario
+
+```gdscript
+func _apply_pools_to_scenario(sd: ScenarioData) -> void
+```
+
+Apply pool values from UI to ScenarioData.
+
+### _load_pools_from_scenario
+
+```gdscript
+func _load_pools_from_scenario(d: ScenarioData) -> void
+```
+
+Load pool values from ScenarioData to UI.
+
+### _reset_pool_values
+
+```gdscript
+func _reset_pool_values() -> void
+```
+
+Reset pool values to defaults.
+
 ## Member Data Documentation
 
 ### terrain
@@ -207,6 +285,18 @@ var terrain: TerrainData
 
 ```gdscript
 var thumbnail: Texture2D
+```
+
+### video_stream
+
+```gdscript
+var video_stream: VideoStream
+```
+
+### subtitle_track
+
+```gdscript
+var subtitle_track: SubtitleTrack
 ```
 
 ### dialog_mode
@@ -293,6 +383,42 @@ var terrain_path: LineEdit
 var terrain_btn: Button
 ```
 
+### video_path
+
+```gdscript
+var video_path: LineEdit
+```
+
+### video_btn
+
+```gdscript
+var video_btn: Button
+```
+
+### video_clear
+
+```gdscript
+var video_clear: Button
+```
+
+### subtitles_path
+
+```gdscript
+var subtitles_path: LineEdit
+```
+
+### subtitles_btn
+
+```gdscript
+var subtitles_btn: Button
+```
+
+### subtitles_clear
+
+```gdscript
+var subtitles_clear: Button
+```
+
 ### close_btn
 
 ```gdscript
@@ -327,6 +453,96 @@ var unit_add: Button
 
 ```gdscript
 var unit_remove: Button
+```
+
+### replacement_pool_spin
+
+```gdscript
+var replacement_pool_spin: SpinBox
+```
+
+### equipment_pool_spin
+
+```gdscript
+var equipment_pool_spin: SpinBox
+```
+
+### small_arms_spin
+
+```gdscript
+var small_arms_spin: SpinBox
+```
+
+### tank_gun_spin
+
+```gdscript
+var tank_gun_spin: SpinBox
+```
+
+### atgm_spin
+
+```gdscript
+var atgm_spin: SpinBox
+```
+
+### at_rocket_spin
+
+```gdscript
+var at_rocket_spin: SpinBox
+```
+
+### heavy_weapons_spin
+
+```gdscript
+var heavy_weapons_spin: SpinBox
+```
+
+### autocannon_spin
+
+```gdscript
+var autocannon_spin: SpinBox
+```
+
+### mortar_ap_spin
+
+```gdscript
+var mortar_ap_spin: SpinBox
+```
+
+### mortar_smoke_spin
+
+```gdscript
+var mortar_smoke_spin: SpinBox
+```
+
+### mortar_illum_spin
+
+```gdscript
+var mortar_illum_spin: SpinBox
+```
+
+### artillery_ap_spin
+
+```gdscript
+var artillery_ap_spin: SpinBox
+```
+
+### artillery_smoke_spin
+
+```gdscript
+var artillery_smoke_spin: SpinBox
+```
+
+### artillery_illum_spin
+
+```gdscript
+var artillery_illum_spin: SpinBox
+```
+
+### engineer_mun_spin
+
+```gdscript
+var engineer_mun_spin: SpinBox
 ```
 
 ## Signal Documentation

@@ -1,6 +1,6 @@
 # NewScenarioDialog::_on_unit_remove_pressed Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 272–283)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 364–375)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**

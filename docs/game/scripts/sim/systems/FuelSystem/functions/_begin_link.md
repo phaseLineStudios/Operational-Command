@@ -1,6 +1,6 @@
 # FuelSystem::_begin_link Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 377–383)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 391–397)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # UnitCreateDialog::_select_size Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 374–381)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 404–411)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

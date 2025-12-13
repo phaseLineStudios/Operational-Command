@@ -20,6 +20,9 @@ Config path.
 - [`func _ready() -> void`](Settings/functions/_ready.md) — Build UI and load config.
 - [`func _build_video_ui() -> void`](Settings/functions/_build_video_ui.md) — Populate video controls.
 - [`func _build_audio_ui() -> void`](Settings/functions/_build_audio_ui.md) — Create rows for each audio bus.
+- [`func _populate_audio_devices() -> void`](Settings/functions/_populate_audio_devices.md) — Populate audio device dropdowns.
+- [`func _on_output_device_changed(index: int) -> void`](Settings/functions/_on_output_device_changed.md) — Called when output device is changed.
+- [`func _on_input_device_changed(index: int) -> void`](Settings/functions/_on_input_device_changed.md) — Called when input device is changed.
 - [`func _build_controls_ui() -> void`](Settings/functions/_build_controls_ui.md) — Create rebind buttons for actions.
 - [`func _connect_signals() -> void`](Settings/functions/_connect_signals.md) — Wire up buttons and live labels.
 - [`func _load_config() -> void`](Settings/functions/_load_config.md) — Load config file (if present).
@@ -53,6 +56,8 @@ Config path.
 - `Label _scale_val`
 - `SpinBox _fps`
 - `GridContainer _buses_list`
+- `OptionButton _output_device`
+- `OptionButton _input_device`
 - `VBoxContainer _controls_list`
 - `Button _reset_bindings`
 - `Button _rebind_template`
@@ -91,6 +96,30 @@ func _build_audio_ui() -> void
 ```
 
 Create rows for each audio bus.
+
+### _populate_audio_devices
+
+```gdscript
+func _populate_audio_devices() -> void
+```
+
+Populate audio device dropdowns.
+
+### _on_output_device_changed
+
+```gdscript
+func _on_output_device_changed(index: int) -> void
+```
+
+Called when output device is changed.
+
+### _on_input_device_changed
+
+```gdscript
+func _on_input_device_changed(index: int) -> void
+```
+
+Called when input device is changed.
 
 ### _build_controls_ui
 
@@ -318,6 +347,18 @@ var _fps: SpinBox
 
 ```gdscript
 var _buses_list: GridContainer
+```
+
+### _output_device
+
+```gdscript
+var _output_device: OptionButton
+```
+
+### _input_device
+
+```gdscript
+var _input_device: OptionButton
 ```
 
 ### _controls_list

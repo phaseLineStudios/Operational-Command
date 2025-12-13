@@ -1,6 +1,6 @@
 # ReinforcementTest::_test_casualties Function Reference
 
-*Defined at:* `scripts/test/ReinforcementTest.gd` (lines 253–270)</br>
+*Defined at:* `scripts/test/ReinforcementTest.gd` (lines 256–293)</br>
 *Belongs to:* [ReinforcementTest](../../ReinforcementTest.md)
 
 **Signature**
@@ -27,9 +27,29 @@ func _test_casualties() -> void:
 		"CHARLIE": 2,
 		# BRAVO stays 0 unless reinforced first
 	}
-	res.apply_casualties_to_units(_units, losses)
+	# Create ScenarioUnits for casualty application
+	var scenario_units: Array = []
 	for u: UnitData in _units:
-		prints("[after casualties]", u.id, int(round(u.state_strength)), "/", int(u.strength))
-	_panel.set_units(_units)
+		var su := ScenarioUnit.new()
+		su.unit = u
+		su.id = u.id
+		su.state_strength = _unit_strength.get(u.id, 0.0)
+		scenario_units.append(su)
+
+	res.apply_casualties_to_units(scenario_units, losses)
+
+	# Copy state back
+	for su in scenario_units:
+		_unit_strength[su.unit.id] = su.state_strength
+
+	for u: UnitData in _units:
+		prints(
+			"[after casualties]",
+			u.id,
+			int(round(_unit_strength.get(u.id, 0.0))),
+			"/",
+			int(u.strength)
+		)
+	_panel.set_units(_units, _unit_strength)
 	_panel.set_pool(_pool)
 ```

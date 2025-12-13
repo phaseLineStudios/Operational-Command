@@ -1,6 +1,6 @@
 # Settings::_load_config Function Reference
 
-*Defined at:* `scripts/ui/Settings.gd` (lines 140–145)</br>
+*Defined at:* `scripts/ui/Settings.gd` (lines 181–186)</br>
 *Belongs to:* [Settings](../../Settings.md)
 
 **Signature**

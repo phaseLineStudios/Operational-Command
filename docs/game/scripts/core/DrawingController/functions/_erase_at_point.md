@@ -1,6 +1,6 @@
 # DrawingController::_erase_at_point Function Reference
 
-*Defined at:* `scripts/core/DrawingController.gd` (lines 153–173)</br>
+*Defined at:* `scripts/core/DrawingController.gd` (lines 145–165)</br>
 *Belongs to:* [DrawingController](../../DrawingController.md)
 
 **Signature**

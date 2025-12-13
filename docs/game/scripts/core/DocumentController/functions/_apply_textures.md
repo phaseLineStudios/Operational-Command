@@ -1,6 +1,6 @@
 # DocumentController::_apply_textures Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 425–433)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 436–444)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

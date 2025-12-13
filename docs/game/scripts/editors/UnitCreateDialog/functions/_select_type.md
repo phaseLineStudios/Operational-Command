@@ -1,6 +1,6 @@
 # UnitCreateDialog::_select_type Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 383–390)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 413–420)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

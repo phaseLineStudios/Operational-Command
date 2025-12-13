@@ -1,6 +1,6 @@
 # ScenarioEditor::_ready Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 80–170)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 80–172)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
@@ -17,6 +17,8 @@ Initialize context, services, signals, UI, and dialogs
 
 ```gdscript
 func _ready():
+	AudioManager.stop_music(0.5)
+
 	# Initialize helper classes
 	draw_tools.init(self)
 	file_ops.init(self)

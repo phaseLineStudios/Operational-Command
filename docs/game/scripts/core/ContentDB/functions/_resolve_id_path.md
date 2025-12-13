@@ -1,6 +1,6 @@
 # ContentDB::_resolve_id_path Function Reference
 
-*Defined at:* `scripts/core/ContentDB.gd` (lines 68–72)</br>
+*Defined at:* `scripts/core/ContentDB.gd` (lines 69–73)</br>
 *Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**

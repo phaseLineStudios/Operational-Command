@@ -1,6 +1,6 @@
 # UnitMgmt::_on_preview_changed Function Reference
 
-*Defined at:* `scripts/ui/UnitMgmt.gd` (lines 101–106)</br>
+*Defined at:* `scripts/ui/UnitMgmt.gd` (lines 104–109)</br>
 *Belongs to:* [UnitMgmt](../../UnitMgmt.md)
 
 **Signature**

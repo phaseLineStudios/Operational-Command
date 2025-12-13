@@ -1,6 +1,6 @@
 # SlotItem::set_assignment Function Reference
 
-*Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 81–87)</br>
+*Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 96–102)</br>
 *Belongs to:* [SlotItem](../../SlotItem.md)
 
 **Signature**

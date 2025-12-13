@@ -1,6 +1,6 @@
 # TimerController::_process Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 137–171)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 145–174)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**
@@ -13,19 +13,15 @@ func _process(delta: float) -> void
 
 ```gdscript
 func _process(delta: float) -> void:
-	# Accumulate simulation time based on current state
 	if _current_state == TimeState.PAUSED:
-		# Time is paused, don't accumulate
 		pass
 	elif _current_state == TimeState.SPEED_1X:
 		_sim_elapsed_time += delta
 	elif _current_state == TimeState.SPEED_2X:
 		_sim_elapsed_time += delta * 2.0
 
-	# Update LCD display
 	_update_lcd_display()
 
-	# Animate button presses
 	if _skeleton == null:
 		return
 
@@ -34,7 +30,6 @@ func _process(delta: float) -> void:
 		anim.elapsed += delta
 
 		var t := clampf(anim.elapsed / anim.duration, 0.0, 1.0)
-		# Ease out for smooth animation
 		var eased := 1.0 - pow(1.0 - t, 3.0)
 
 		var current_pose := _skeleton.get_bone_pose(bone_idx)

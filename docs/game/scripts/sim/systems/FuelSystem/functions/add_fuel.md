@@ -1,6 +1,6 @@
 # FuelSystem::add_fuel Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 444–459)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 468–483)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

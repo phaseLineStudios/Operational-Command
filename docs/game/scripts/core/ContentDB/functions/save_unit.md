@@ -1,6 +1,6 @@
 # ContentDB::save_unit Function Reference
 
-*Defined at:* `scripts/core/ContentDB.gd` (lines 356–377)</br>
+*Defined at:* `scripts/core/ContentDB.gd` (lines 361–382)</br>
 *Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**

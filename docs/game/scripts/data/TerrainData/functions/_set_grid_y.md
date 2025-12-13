@@ -1,6 +1,6 @@
 # TerrainData::_set_grid_y Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 150–154)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 162–166)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

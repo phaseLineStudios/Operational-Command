@@ -1,6 +1,6 @@
 # TTSService::_abs_path Function Reference
 
-*Defined at:* `scripts/radio/TTSService.gd` (lines 209–210)</br>
+*Defined at:* `scripts/radio/TTSService.gd` (lines 238–239)</br>
 *Belongs to:* [TTSService](../../TTSService.md)
 
 **Signature**

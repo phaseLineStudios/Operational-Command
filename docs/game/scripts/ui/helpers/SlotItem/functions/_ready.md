@@ -1,6 +1,6 @@
 # SlotItem::_ready Function Reference
 
-*Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 42–67)</br>
+*Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 53–82)</br>
 *Belongs to:* [SlotItem](../../SlotItem.md)
 
 **Signature**
@@ -30,6 +30,10 @@ func _ready() -> void:
 		func():
 			_is_hovered = true
 			_apply_style()
+			if hover_sounds.size() > 0 and _assigned_unit:
+				AudioManager.play_random_ui_sound(
+					hover_sounds, Vector2(1.0, 1.0), Vector2(0.98, 1.02)
+				)
 	)
 	mouse_exited.connect(
 		func():

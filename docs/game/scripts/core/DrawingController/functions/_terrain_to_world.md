@@ -1,6 +1,6 @@
 # DrawingController::_terrain_to_world Function Reference
 
-*Defined at:* `scripts/core/DrawingController.gd` (lines 438–479)</br>
+*Defined at:* `scripts/core/DrawingController.gd` (lines 407–445)</br>
 *Belongs to:* [DrawingController](../../DrawingController.md)
 
 **Signature**
@@ -48,14 +48,11 @@ func _terrain_to_world(pos_m: Vector2) -> Variant:
 		LogService.warning("_terrain_to_world: terrain dimensions are zero", "DrawingController.gd")
 		return null
 
-	# Normalize terrain position to -0.5..0.5 range (mesh local space)
 	var normalized_x := (pos_m.x / terrain_width_m) - 0.5
 	var normalized_z := (pos_m.y / terrain_height_m) - 0.5
 
-	# Scale to mesh size
 	var local_pos := Vector3(normalized_x * mesh_size.x, 0, normalized_z * mesh_size.y)
 
-	# Convert to world space
 	var world_pos := map_mesh.to_global(local_pos)
 
 	return world_pos

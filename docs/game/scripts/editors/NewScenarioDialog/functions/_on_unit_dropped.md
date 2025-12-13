@@ -1,6 +1,6 @@
 # NewScenarioDialog::_on_unit_dropped Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 287–297)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 379–389)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**

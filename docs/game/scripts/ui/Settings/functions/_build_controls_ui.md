@@ -1,6 +1,6 @@
 # Settings::_build_controls_ui Function Reference
 
-*Defined at:* `scripts/ui/Settings.gd` (lines 109–124)</br>
+*Defined at:* `scripts/ui/Settings.gd` (lines 150–165)</br>
 *Belongs to:* [Settings](../../Settings.md)
 
 **Signature**

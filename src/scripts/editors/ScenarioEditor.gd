@@ -78,6 +78,8 @@ var menus := ScenarioEditorMenus.new()
 
 ## Initialize context, services, signals, UI, and dialogs
 func _ready():
+	AudioManager.stop_music(0.5)
+
 	# Initialize helper classes
 	draw_tools.init(self)
 	file_ops.init(self)

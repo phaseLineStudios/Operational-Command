@@ -1,6 +1,6 @@
 # TimerController::_update_lcd_display Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 445–469)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 431–451)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**
@@ -20,18 +20,14 @@ func _update_lcd_display() -> void:
 	if _lcd_label == null or _lcd_icon == null:
 		return
 
-	# Use accumulated simulation time
 	var elapsed := _sim_elapsed_time
 
-	# Format time as MM:SS
 	var minutes := int(elapsed / 60.0)
 	var seconds := int(elapsed) % 60
 	var time_str := "%02d:%02d" % [minutes, seconds]
 
-	# Update time label
 	_lcd_label.text = time_str
 
-	# Update icon based on current state
 	match _current_state:
 		TimeState.PAUSED:
 			_lcd_icon.texture = pause_icon

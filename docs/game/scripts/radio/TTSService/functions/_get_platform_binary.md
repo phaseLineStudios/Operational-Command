@@ -1,6 +1,6 @@
 # TTSService::_get_platform_binary Function Reference
 
-*Defined at:* `scripts/radio/TTSService.gd` (lines 172–183)</br>
+*Defined at:* `scripts/radio/TTSService.gd` (lines 201–212)</br>
 *Belongs to:* [TTSService](../../TTSService.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # EnvBehaviorSystem::unregister_unit Function Reference
 
-*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 51–55)</br>
+*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 48–52)</br>
 *Belongs to:* [EnvBehaviorSystem](../../EnvBehaviorSystem.md)
 
 **Signature**

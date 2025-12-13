@@ -36,6 +36,10 @@ Setup the counter with parameters (call before adding to scene tree)
 - `TextureRect face_symbol`
 - `Label face_callsign`
 
+## Signals
+
+- `signal texture_ready` — Emitted when the counter texture has been generated and is ready for display
+
 ## Enumerations
 
 - `enum CounterAffiliation`
@@ -137,6 +141,16 @@ var face_symbol: TextureRect
 ```gdscript
 var face_callsign: Label
 ```
+
+## Signal Documentation
+
+### texture_ready
+
+```gdscript
+signal texture_ready
+```
+
+Emitted when the counter texture has been generated and is ready for display
 
 ## Enumeration Type Documentation
 

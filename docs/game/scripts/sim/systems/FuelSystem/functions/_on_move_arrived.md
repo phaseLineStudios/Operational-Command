@@ -1,6 +1,6 @@
 # FuelSystem::_on_move_arrived Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 146–151)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 148–153)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

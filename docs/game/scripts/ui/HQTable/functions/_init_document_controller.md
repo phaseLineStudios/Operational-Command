@@ -1,6 +1,6 @@
 # HQTable::_init_document_controller Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 98–111)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 120–130)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**
@@ -25,7 +25,4 @@ func _init_document_controller(scenario: ScenarioData) -> void:
 
 		if unit_voices:
 			unit_voices.unit_response.connect(_on_unit_voice_transcript)
-
-		if unit_auto_voices:
-			unit_auto_voices.unit_auto_response.connect(_on_unit_voice_transcript)
 ```

@@ -1,6 +1,6 @@
 # EnvBehaviorSystem::_request_repath Function Reference
 
-*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 350–360)</br>
+*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 347–357)</br>
 *Belongs to:* [EnvBehaviorSystem](../../EnvBehaviorSystem.md)
 
 **Signature**

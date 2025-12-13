@@ -1,6 +1,6 @@
 # AIController::bind_trigger_engine Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 496–500)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 497–503)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

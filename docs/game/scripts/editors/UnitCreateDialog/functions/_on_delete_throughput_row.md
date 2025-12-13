@@ -1,6 +1,6 @@
 # UnitCreateDialog::_on_delete_throughput_row Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 492–496)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 524–528)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

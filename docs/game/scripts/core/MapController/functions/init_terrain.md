@@ -1,6 +1,6 @@
 # MapController::init_terrain Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 59–66)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 81–88)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

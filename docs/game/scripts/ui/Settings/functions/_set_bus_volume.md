@@ -1,6 +1,6 @@
 # Settings::_set_bus_volume Function Reference
 
-*Defined at:* `scripts/ui/Settings.gd` (lines 268–274)</br>
+*Defined at:* `scripts/ui/Settings.gd` (lines 334–340)</br>
 *Belongs to:* [Settings](../../Settings.md)
 
 **Signature**

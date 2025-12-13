@@ -1,6 +1,6 @@
 # AmmoTest::_on_rearm_committed Function Reference
 
-*Defined at:* `scripts/test/AmmoTest.gd` (lines 262–268)</br>
+*Defined at:* `scripts/test/AmmoTest.gd` (lines 268–274)</br>
 *Belongs to:* [AmmoTest](../../AmmoTest.md)
 
 **Signature**

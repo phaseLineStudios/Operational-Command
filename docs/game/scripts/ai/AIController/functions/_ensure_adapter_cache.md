@@ -1,6 +1,6 @@
 # AIController::_ensure_adapter_cache Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 417–440)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 418–441)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

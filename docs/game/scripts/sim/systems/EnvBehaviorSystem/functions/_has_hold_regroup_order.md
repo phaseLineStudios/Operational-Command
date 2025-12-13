@@ -1,6 +1,6 @@
 # EnvBehaviorSystem::_has_hold_regroup_order Function Reference
 
-*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 281–284)</br>
+*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 278–281)</br>
 *Belongs to:* [EnvBehaviorSystem](../../EnvBehaviorSystem.md)
 
 **Signature**

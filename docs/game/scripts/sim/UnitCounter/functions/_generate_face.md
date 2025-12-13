@@ -1,6 +1,6 @@
 # UnitCounter::_generate_face Function Reference
 
-*Defined at:* `scripts/sim/UnitCounter.gd` (lines 53–83)</br>
+*Defined at:* `scripts/sim/UnitCounter.gd` (lines 59–89)</br>
 *Belongs to:* [UnitCounter](../../UnitCounter.md)
 
 **Signature**

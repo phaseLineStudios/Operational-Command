@@ -1,6 +1,6 @@
 # UnitSelect::_export_loadout Function Reference
 
-*Defined at:* `scripts/ui/UnitSelect.gd` (lines 408–414)</br>
+*Defined at:* `scripts/ui/UnitSelect.gd` (lines 448–456)</br>
 *Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**

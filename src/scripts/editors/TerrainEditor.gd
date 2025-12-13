@@ -60,6 +60,8 @@ var _exit_dialog: ConfirmationDialog
 
 
 func _ready():
+	AudioManager.stop_music(0.5)
+
 	file_menu.get_popup().connect("id_pressed", _on_filemenu_pressed)
 	edit_menu.get_popup().connect("id_pressed", _on_editmenu_pressed)
 	terrain_settings_dialog.connect("request_create", _new_terrain)

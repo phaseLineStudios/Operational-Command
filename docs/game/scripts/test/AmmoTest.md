@@ -34,8 +34,8 @@ extends Control
 - `AmmoSystem ammo`
 - `CombatAdapter adapter`
 - `AmmoProfile profile`
-- `UnitData shooter`
-- `UnitData logi`
+- `ScenarioUnit shooter`
+- `ScenarioUnit logi`
 - `Vector3 _pos_shooter`
 - `Vector3 _pos_logi`
 - `Timer _print_tick`
@@ -178,13 +178,13 @@ var profile: AmmoProfile
 ### shooter
 
 ```gdscript
-var shooter: UnitData
+var shooter: ScenarioUnit
 ```
 
 ### logi
 
 ```gdscript
-var logi: UnitData
+var logi: ScenarioUnit
 ```
 
 ### _pos_shooter

@@ -1,6 +1,6 @@
 # DocumentController::_setup_document_input Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 167–189)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 175–197)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

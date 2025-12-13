@@ -1,6 +1,6 @@
 # FuelSystem::_on_move_started Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 139–145)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 141–147)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

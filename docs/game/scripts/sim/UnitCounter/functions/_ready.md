@@ -1,6 +1,6 @@
 # UnitCounter::_ready Function Reference
 
-*Defined at:* `scripts/sim/UnitCounter.gd` (lines 34–40)</br>
+*Defined at:* `scripts/sim/UnitCounter.gd` (lines 37–46)</br>
 *Belongs to:* [UnitCounter](../../UnitCounter.md)
 
 **Signature**
@@ -17,4 +17,7 @@ func _ready() -> void:
 
 	var face := await _generate_face(color)
 	_ensure_mesh_materials(color, face)
+
+	# Emit signal when texture generation is complete
+	texture_ready.emit()
 ```

@@ -1,6 +1,6 @@
 # DrawingController::_input Function Reference
 
-*Defined at:* `scripts/core/DrawingController.gd` (lines 120–133)</br>
+*Defined at:* `scripts/core/DrawingController.gd` (lines 112–125)</br>
 *Belongs to:* [DrawingController](../../DrawingController.md)
 
 **Signature**

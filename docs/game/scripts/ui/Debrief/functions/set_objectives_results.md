@@ -1,6 +1,6 @@
 # Debrief::set_objectives_results Function Reference
 
-*Defined at:* `scripts/ui/Debrief.gd` (lines 159–190)</br>
+*Defined at:* `scripts/ui/Debrief.gd` (lines 182–213)</br>
 *Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**

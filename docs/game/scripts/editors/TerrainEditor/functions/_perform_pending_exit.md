@@ -1,6 +1,6 @@
 # TerrainEditor::_perform_pending_exit Function Reference
 
-*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 165–172)</br>
+*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 167–174)</br>
 *Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**

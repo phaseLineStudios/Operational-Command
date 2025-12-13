@@ -1,6 +1,6 @@
 # OrdersParser::_normalize_and_tokenize Function Reference
 
-*Defined at:* `scripts/radio/OrdersParser.gd` (lines 338–363)</br>
+*Defined at:* `scripts/radio/OrdersParser.gd` (lines 333–357)</br>
 *Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**
@@ -32,7 +32,6 @@ func _normalize_and_tokenize(text: String) -> PackedStringArray:
 		):
 			cleaned += char(cp)
 
-	# Collapse spaces and split.
 	cleaned = cleaned.strip_edges()
 	var parts := cleaned.split(" ", false)
 	var out := PackedStringArray()
