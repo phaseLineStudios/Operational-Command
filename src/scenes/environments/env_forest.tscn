@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://b2q26cxghcrvs" path="res://scripts/audio/EnvSoundController.gd" id="2_gotkl"]
 [ext_resource type="PackedScene" uid="uid://bpr8ateai0qko" path="res://assets/models/terrain/terrain.glb" id="2_m1cxp"]
 [ext_resource type="AudioStream" uid="uid://drsd47pjk7d0k" path="res://audio/environment/sfx_ambience_forest_day_loop.wav" id="3_d6m07"]
-[ext_resource type="Script" uid="uid://clucmhgrefkg3" path="res://scripts/terrain/environments/forest_terrain.gd" id="3_mjmqf"]
+[ext_resource type="Script" uid="uid://clucmhgrefkg3" path="res://scripts/terrain/environments/ForestTerrain.gd" id="3_mjmqf"]
 [ext_resource type="Material" uid="uid://bdvlyuu8o6iah" path="res://assets/models/terrain/forest_ground.material" id="3_ntxx4"]
 [ext_resource type="AudioStream" uid="uid://11xqouk1f16i" path="res://audio/environment/sfx_ambience_forest_night_loop.wav" id="4_kpyhj"]
 [ext_resource type="AudioStream" uid="uid://bppci5cltyly3" path="res://audio/environment/sfx_ambience_forest_rain_light_loop.wav" id="5_0dr1p"]
@@ -99,12 +99,12 @@ ground_sink = 0.01
 align_to_slope = true
 terrain = NodePath("../Terrain/Terrain")
 
-[node name="@MultiMeshInstance3D@66970" type="MultiMeshInstance3D" parent="Content/Trees"]
+[node name="Tree01" type="MultiMeshInstance3D" parent="Content/Trees"]
 visibility_range_end = 200.0
 visibility_range_end_margin = 20.0
 multimesh = SubResource("MultiMesh_63w68")
 
-[node name="@MultiMeshInstance3D@66971" type="MultiMeshInstance3D" parent="Content/Trees"]
+[node name="Tree02" type="MultiMeshInstance3D" parent="Content/Trees"]
 visibility_range_end = 200.0
 visibility_range_end_margin = 20.0
 multimesh = SubResource("MultiMesh_a18hc")

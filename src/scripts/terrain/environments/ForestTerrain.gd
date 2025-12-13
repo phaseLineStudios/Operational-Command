@@ -1,11 +1,11 @@
-class_name forest_terrain
+class_name ForestTerrain
 extends Node
 
 @export var scene_env: SceneEnvironment
 @export var terrain: Node3D
 
-var _scenario: ScenarioData
 var terrain_mesh: MeshInstance3D
+var _scenario: ScenarioData
 
 
 func _ready() -> void:
