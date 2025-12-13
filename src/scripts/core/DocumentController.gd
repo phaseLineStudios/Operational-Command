@@ -118,7 +118,7 @@ func _setup_viewports() -> void:
 	_intel_viewport = SubViewport.new()
 	_intel_viewport.size = render_size
 	_intel_viewport.transparent_bg = false
-	_intel_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_intel_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	_intel_viewport.gui_disable_input = false
 	add_child(_intel_viewport)
 
@@ -126,7 +126,7 @@ func _setup_viewports() -> void:
 	_transcript_viewport = SubViewport.new()
 	_transcript_viewport.size = render_size
 	_transcript_viewport.transparent_bg = false
-	_transcript_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_transcript_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	_transcript_viewport.gui_disable_input = false
 	add_child(_transcript_viewport)
 
@@ -134,7 +134,7 @@ func _setup_viewports() -> void:
 	_briefing_viewport = SubViewport.new()
 	_briefing_viewport.size = render_size
 	_briefing_viewport.transparent_bg = false
-	_briefing_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_briefing_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	_briefing_viewport.gui_disable_input = false
 	add_child(_briefing_viewport)
 
@@ -423,6 +423,14 @@ func _get_mission_timestamp() -> String:
 
 ## Apply rendered textures to clipboard materials
 func _apply_textures() -> void:
+	# Render each SubViewport once before capturing to textures.
+	if _intel_viewport:
+		_intel_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	if _transcript_viewport:
+		_transcript_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	if _briefing_viewport:
+		_briefing_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+
 	await get_tree().process_frame
 	await get_tree().process_frame  # Extra frame to ensure render complete
 
@@ -434,6 +442,7 @@ func _apply_textures() -> void:
 ## Refresh the transcript document texture after content updates
 func _refresh_transcript_texture() -> void:
 	if _transcript_material and _transcript_viewport:
+		_transcript_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 		await get_tree().process_frame  # Wait for render
 		_refresh_texture(_transcript_material, _transcript_viewport)
 
@@ -702,18 +711,24 @@ func _on_briefing_page_changed(page_index: int) -> void:
 
 ## Debounced refresh functions - called after timer expires
 func _do_intel_refresh() -> void:
+	if _intel_viewport:
+		_intel_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 	await get_tree().process_frame
 	await get_tree().process_frame
 	_refresh_texture(_intel_material, _intel_viewport)
 
 
 func _do_transcript_refresh() -> void:
+	if _transcript_viewport:
+		_transcript_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 	await get_tree().process_frame
 	await get_tree().process_frame
 	_refresh_texture(_transcript_material, _transcript_viewport)
 
 
 func _do_briefing_refresh() -> void:
+	if _briefing_viewport:
+		_briefing_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 	await get_tree().process_frame
 	await get_tree().process_frame
 	_refresh_texture(_briefing_material, _briefing_viewport)

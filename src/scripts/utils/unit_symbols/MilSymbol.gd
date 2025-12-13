@@ -102,6 +102,8 @@ func generate_texture(
 	_renderer.unit_size_text = unit_size
 	_renderer.unique_designation = designation
 	_renderer.queue_redraw()
+	if _viewport:
+		_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 
 	# Wait for rendering using the main SceneTree
 	tree = Engine.get_main_loop() as SceneTree
@@ -173,6 +175,8 @@ func generate_texture_sync(
 	_renderer.unit_size_text = unit_size
 	_renderer.unique_designation = designation
 	_renderer.queue_redraw()
+	if _viewport:
+		_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 
 	# Force immediate render
 	RenderingServer.force_draw(false)
@@ -210,7 +214,7 @@ func _ensure_viewport() -> void:
 	_viewport = SubViewport.new()
 	_viewport.size = Vector2i(render_size, render_size)
 	_viewport.transparent_bg = true
-	_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 
 	# Create renderer
 	_renderer = MilSymbolRenderer.new()
