@@ -11,8 +11,10 @@ signal map_unhandled_mouse(event, map_pos: Vector2, terrain_pos: Vector2)
 
 ## Pixel offset from the mouse to place the label
 @export var grid_label_offset: Vector2 = Vector2(16, 16)
-## Render the TerrainViewport at N× resolution for anti-aliasing (1=off)
+## Base oversample for the TerrainViewport (1=off). May be reduced to respect max size.
 @export var viewport_oversample: int = 4
+## Maximum TerrainViewport render target size (pixels). Prevents huge map textures on large terrains.
+@export var viewport_max_size_px: Vector2i = Vector2i(4096, 4096)
 ## If true, the terrain SubViewport renders every frame (useful for debug/animated overlays).
 @export var viewport_update_always: bool = false
 ## If true, bake a CPU ImageTexture with mipmaps from the viewport (expensive).
@@ -31,6 +33,7 @@ var _viewport_update_queued := false
 var _mipmap_timer: SceneTreeTimer
 var _mipmap_gen := 0
 var _dynamic_viewport_cached := false
+var _viewport_pixel_scale: float = 1.0  # Viewport pixels per renderer "map unit"
 var _last_mouse_pos: Vector2 = Vector2(-9999, -9999)  # Track last mouse position
 
 @onready var terrain_viewport: SubViewport = %TerrainViewport
@@ -317,11 +320,33 @@ func _update_viewport_to_renderer() -> void:
 		return
 	var os: int = max(viewport_oversample, 1)
 	var logical := renderer.size
-	var new_size := Vector2i(max(1, int(ceil(logical.x)) * os), max(1, int(ceil(logical.y)) * os))
+	var logical_w: int = max(1, int(ceil(logical.x)))
+	var logical_h: int = max(1, int(ceil(logical.y)))
+
+	var desired_w: int = logical_w * os
+	var desired_h: int = logical_h * os
+
+	var scale_down: float = 1.0
+	if viewport_max_size_px.x > 0 and viewport_max_size_px.y > 0 and desired_w > 0 and desired_h > 0:
+		var sx: float = float(viewport_max_size_px.x) / float(desired_w)
+		var sy: float = float(viewport_max_size_px.y) / float(desired_h)
+		scale_down = minf(1.0, minf(sx, sy))
+
+	_viewport_pixel_scale = float(os) * scale_down
+	if _viewport_pixel_scale <= 0.0:
+		_viewport_pixel_scale = 1.0
+
+	var new_size := Vector2i(
+		maxi(1, int(round(float(logical_w) * _viewport_pixel_scale))),
+		maxi(1, int(round(float(logical_h) * _viewport_pixel_scale)))
+	)
 	if terrain_viewport.size != new_size:
 		terrain_viewport.size = new_size
-		# Make the 2D canvas draw scaled up to fill the larger viewport:
-		terrain_viewport.canvas_transform = Transform2D.IDENTITY.scaled(Vector2(os, os))
+
+	# Scale the 2D canvas to match the chosen render target resolution.
+	terrain_viewport.canvas_transform = Transform2D.IDENTITY.scaled(
+		Vector2(_viewport_pixel_scale, _viewport_pixel_scale)
+	)
 
 
 ## Fit PlaneMesh to the viewport aspect ratio, clamped to _start_world_max
@@ -382,7 +407,8 @@ func screen_to_map_and_terrain(screen_pos: Vector2) -> Variant:
 	var map_px: Variant = _plane_hit_to_map_px(hit)
 	if map_px == null or renderer == null:
 		return null
-	var logical_px: Vector2 = map_px / float(max(viewport_oversample, 1))
+	var s: float = _viewport_pixel_scale if _viewport_pixel_scale > 0.0 else float(max(viewport_oversample, 1))
+	var logical_px: Vector2 = map_px / s
 	var terrain_pos: Vector2 = renderer.map_to_terrain(logical_px)
 	return {"map_px": map_px, "terrain": terrain_pos}
 
@@ -448,15 +474,16 @@ func terrain_to_screen(terrain_pos: Vector2) -> Variant:
 	# Convert terrain meters to map pixels
 	var map_px: Vector2 = renderer.terrain_to_map(terrain_pos)
 
-	# Apply oversample scaling
-	var oversampled_px: Vector2 = map_px * float(max(viewport_oversample, 1))
+	# Convert map units to viewport pixels (oversample and/or downscale).
+	var s: float = _viewport_pixel_scale if _viewport_pixel_scale > 0.0 else float(max(viewport_oversample, 1))
+	var vp_px: Vector2 = map_px * s
 
 	# Convert map pixels to UV coordinates (0-1)
 	var vp := terrain_viewport.size
 	if vp.x <= 0 or vp.y <= 0:
 		return null
-	var u := oversampled_px.x / vp.x
-	var v := oversampled_px.y / vp.y
+	var u := vp_px.x / vp.x
+	var v := vp_px.y / vp.y
 
 	# Convert UV to local plane coordinates
 	if _plane == null:
