@@ -1,6 +1,6 @@
 # DebugMenu::_clear_scene_options_ui Function Reference
 
-*Defined at:* `scripts/ui/DebugMenu.gd` (lines 193–197)</br>
+*Defined at:* `scripts/ui/DebugMenu.gd` (lines 194–198)</br>
 *Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**

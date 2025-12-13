@@ -1,6 +1,6 @@
 # FuelSystem::_check_thresholds Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 202–232)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 204–234)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

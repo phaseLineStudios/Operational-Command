@@ -1,6 +1,6 @@
 # ReinforcementPanel::reset_pending Function Reference
 
-*Defined at:* `scripts/ui/unit_mgmt/ReinforcementPanel.gd` (lines 92–101)</br>
+*Defined at:* `scripts/ui/unit_mgmt/ReinforcementPanel.gd` (lines 103–112)</br>
 *Belongs to:* [ReinforcementPanel](../../ReinforcementPanel.md)
 
 **Signature**

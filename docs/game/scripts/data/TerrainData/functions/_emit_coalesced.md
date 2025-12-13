@@ -1,6 +1,6 @@
 # TerrainData::_emit_coalesced Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 102–120)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 114–132)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

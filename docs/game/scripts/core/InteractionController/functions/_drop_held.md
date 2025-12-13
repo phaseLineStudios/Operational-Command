@@ -1,6 +1,6 @@
 # InteractionController::_drop_held Function Reference
 
-*Defined at:* `scripts/core/PlayerInteraction.gd` (lines 125–132)</br>
+*Defined at:* `scripts/core/PlayerInteraction.gd` (lines 142–150)</br>
 *Belongs to:* [InteractionController](../../InteractionController.md)
 
 **Signature**
@@ -18,4 +18,5 @@ func _drop_held() -> void:
 			_held.call("on_drop")
 	_held = null
 	_have_valid_plane_point = false
+	_resume_drag_after_inspect = false
 ```

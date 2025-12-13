@@ -1,6 +1,6 @@
 # SimWorld::start Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 494–501)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 504–514)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -18,8 +18,11 @@ Start simulation from INIT state.
 ```gdscript
 func start() -> void:
 	if _state == State.INIT:
-		_transition(_state, State.RUNNING)
+		_transition(_state, State.PAUSED)
 
 		var start_s := _scenario.second + _scenario.minute * 60 + _scenario.hour * 60 * 60
 		environment_controller.time_of_day = start_s
+		environment_controller.wind_direction = _scenario.wind_dir
+		environment_controller.wind_speed = _scenario.wind_dir
+		environment_controller.rain_intensity = _scenario.rain
 ```

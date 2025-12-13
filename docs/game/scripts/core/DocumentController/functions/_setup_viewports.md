@@ -1,6 +1,6 @@
 # DocumentController::_setup_viewports Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 114–141)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 122–149)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

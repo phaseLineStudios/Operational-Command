@@ -1,6 +1,6 @@
 # OrdersParser::apply_navigation_bias_metadata Function Reference
 
-*Defined at:* `scripts/radio/OrdersParser.gd` (lines 545–559)</br>
+*Defined at:* `scripts/radio/OrdersParser.gd` (lines 534–548)</br>
 *Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**

@@ -18,9 +18,12 @@ Displays radio subtitles and suggests valid next words based on current input.
 Shows partial speech recognition results and provides intelligent suggestions
 for completing valid radio commands using NARules tables.
 
+Path to suggestions config file
+
 ## Public Member Functions
 
 - [`func _ready() -> void`](RadioSubtitles/functions/_ready.md)
+- [`func _load_suggestions_config() -> void`](RadioSubtitles/functions/_load_suggestions_config.md) — Load suggestions configuration from JSON
 - [`func show_partial(text: String) -> void`](RadioSubtitles/functions/show_partial.md) — Show subtitle with current partial text
 - [`func show_result(text: String) -> void`](RadioSubtitles/functions/show_result.md) — Show final result text
 - [`func hide_subtitles() -> void`](RadioSubtitles/functions/hide_subtitles.md) — Hide the subtitle display
@@ -43,6 +46,7 @@ for completing valid radio commands using NARules tables.
 - [`func _get_unit_callsign_suggestions() -> Array[String]`](RadioSubtitles/functions/_get_unit_callsign_suggestions.md) — Get unit callsign suggestions (for targeting)
 - [`func _get_grid_coordinate_suggestions() -> Array[String]`](RadioSubtitles/functions/_get_grid_coordinate_suggestions.md) — Get grid coordinate suggestions (6 and 8 digit)
 - [`func _is_number_word(token: String) -> bool`](RadioSubtitles/functions/_is_number_word.md) — Check if a token is a number word
+- [`func _is_ammo_type(token: String) -> bool`](RadioSubtitles/functions/_is_ammo_type.md) — Check if a token is an ammo type
 - [`func _normalize_and_tokenize(text: String) -> PackedStringArray`](RadioSubtitles/functions/_normalize_and_tokenize.md) — Normalize and tokenize text (same as OrdersParser)
 - [`func _is_ascii_alpha_cp(cp: int) -> bool`](RadioSubtitles/functions/_is_ascii_alpha_cp.md) — ASCII alpha test
 - [`func _is_ascii_digit_cp(cp: int) -> bool`](RadioSubtitles/functions/_is_ascii_digit_cp.md) — ASCII digit test
@@ -57,6 +61,7 @@ for completing valid radio commands using NARules tables.
 - `float result_display_time` — Display time for result text after PTT release (in seconds)
 - `int max_suggestions` — Maximum number of suggestions to show
 - `Dictionary _tables`
+- `Dictionary _suggestions_config`
 - `Timer _hide_timer`
 - `String _current_text`
 - `bool _is_transmitting`
@@ -72,6 +77,14 @@ for completing valid radio commands using NARules tables.
 ```gdscript
 func _ready() -> void
 ```
+
+### _load_suggestions_config
+
+```gdscript
+func _load_suggestions_config() -> void
+```
+
+Load suggestions configuration from JSON
 
 ### show_partial
 
@@ -249,6 +262,14 @@ func _is_number_word(token: String) -> bool
 
 Check if a token is a number word
 
+### _is_ammo_type
+
+```gdscript
+func _is_ammo_type(token: String) -> bool
+```
+
+Check if a token is an ammo type
+
 ### _normalize_and_tokenize
 
 ```gdscript
@@ -339,6 +360,12 @@ Maximum number of suggestions to show
 
 ```gdscript
 var _tables: Dictionary
+```
+
+### _suggestions_config
+
+```gdscript
+var _suggestions_config: Dictionary
 ```
 
 ### _hide_timer

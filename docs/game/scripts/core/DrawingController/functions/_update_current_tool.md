@@ -1,6 +1,6 @@
 # DrawingController::_update_current_tool Function Reference
 
-*Defined at:* `scripts/core/DrawingController.gd` (lines 99–119)</br>
+*Defined at:* `scripts/core/DrawingController.gd` (lines 92–111)</br>
 *Belongs to:* [DrawingController](../../DrawingController.md)
 
 **Signature**
@@ -17,7 +17,6 @@ func _update_current_tool() -> void:
 		_current_tool = Tool.NONE
 		return
 
-	# Detect tool based on the name of the held object
 	var held_name := interaction._held.name
 
 	match held_name:

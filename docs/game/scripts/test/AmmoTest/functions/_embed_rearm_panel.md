@@ -1,6 +1,6 @@
 # AmmoTest::_embed_rearm_panel Function Reference
 
-*Defined at:* `scripts/test/AmmoTest.gd` (lines 229–261)</br>
+*Defined at:* `scripts/test/AmmoTest.gd` (lines 235–267)</br>
 *Belongs to:* [AmmoTest](../../AmmoTest.md)
 
 **Signature**

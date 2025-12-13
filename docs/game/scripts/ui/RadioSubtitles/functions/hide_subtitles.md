@@ -1,6 +1,6 @@
 # RadioSubtitles::hide_subtitles Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 55–60)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 89–94)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # DocumentController::add_transcript_entry Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 374–401)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 385–412)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

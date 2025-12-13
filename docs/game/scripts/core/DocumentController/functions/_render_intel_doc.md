@@ -1,6 +1,6 @@
 # DocumentController::_render_intel_doc Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 212–226)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 223–237)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

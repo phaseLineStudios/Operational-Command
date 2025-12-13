@@ -1,6 +1,6 @@
 # PickupItem::_ready Function Reference
 
-*Defined at:* `scripts/core/PickupItem.gd` (lines 60–68)</br>
+*Defined at:* `scripts/core/PickupItem.gd` (lines 83–98)</br>
 *Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**
@@ -19,4 +19,11 @@ func _ready():
 
 	if document_viewport:
 		set_process_unhandled_input(true)
+
+	if not collision_sounds.is_empty():
+		_collision_sound_player = AudioStreamPlayer3D.new()
+		_collision_sound_player.bus = "SFX"
+		add_child(_collision_sound_player)
+
+		set_physics_process(true)
 ```

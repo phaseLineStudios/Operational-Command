@@ -1,6 +1,6 @@
 # FuelSystem::get_fuel_state Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 87–91)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 89–93)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

@@ -73,6 +73,11 @@ Terrain model: size, elevation, surfaces, features, labels.
 - `int width_m` — Width of the map in meters.
 - `int height_m` — Height of the map in meters.
 - `int elevation_resolution_m` — World meters per elevation sample (grid step).
+- `String country` — Country or region
+- `String map_scale` — Map scale (always 1:25,000)
+- `String edition` — Map edition number
+- `String series` — Map series identifier
+- `String sheet` — Map sheet identifier
 - `int grid_start_x` — Starting number on X axis labels.
 - `int grid_start_y` — Starting number on Y axis labels.
 - `int base_elevation_m` — The base elevation of the terrain in meters.
@@ -507,6 +512,56 @@ var elevation_resolution_m: int
 Decorators: `@export`
 
 World meters per elevation sample (grid step). Lower = denser.
+
+### country
+
+```gdscript
+var country: String
+```
+
+Decorators: `@export`
+
+Country or region
+
+### map_scale
+
+```gdscript
+var map_scale: String
+```
+
+Decorators: `@export`
+
+Map scale (always 1:25,000)
+
+### edition
+
+```gdscript
+var edition: String
+```
+
+Decorators: `@export`
+
+Map edition number
+
+### series
+
+```gdscript
+var series: String
+```
+
+Decorators: `@export`
+
+Map series identifier
+
+### sheet
+
+```gdscript
+var sheet: String
+```
+
+Decorators: `@export`
+
+Map sheet identifier
 
 ### grid_start_x
 

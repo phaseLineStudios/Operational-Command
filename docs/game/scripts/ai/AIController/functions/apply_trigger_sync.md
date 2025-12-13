@@ -1,6 +1,6 @@
 # AIController::apply_trigger_sync Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 465–494)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 466–495)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MovementAdapter::_tick_hold Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 455–466)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 461–472)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # UnitCreateDialog::_load_from_working Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 117–191)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 131–205)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**
@@ -34,7 +34,6 @@ func _load_from_working() -> void:
 	_role.text = String(_working.role)
 	_cost.value = _working.cost
 	_strength.value = _working.strength
-	_attack.value = _working.attack
 	_defense.value = _working.defense
 	_spot_m.value = _working.spot_m
 	_range_m.value = _working.range_m
@@ -89,4 +88,5 @@ func _load_from_working() -> void:
 		_thru[k] = _working.throughput[k]
 
 	_load_ammo_from_working()
+	_update_attack_preview()
 ```

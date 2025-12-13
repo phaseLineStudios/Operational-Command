@@ -1,6 +1,6 @@
 # EnvBehaviorSystem::_weather_loss_factor Function Reference
 
-*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 305–311)</br>
+*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 302–308)</br>
 *Belongs to:* [EnvBehaviorSystem](../../EnvBehaviorSystem.md)
 
 **Signature**

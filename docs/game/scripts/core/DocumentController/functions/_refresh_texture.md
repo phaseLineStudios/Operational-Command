@@ -1,6 +1,6 @@
 # DocumentController::_refresh_texture Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 479–492)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 490–503)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

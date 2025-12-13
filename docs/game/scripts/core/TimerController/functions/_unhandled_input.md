@@ -1,6 +1,6 @@
 # TimerController::_unhandled_input Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 172–176)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 175–179)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**

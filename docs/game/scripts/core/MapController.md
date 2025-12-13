@@ -23,10 +23,13 @@ Handles map interaction and applies terrain renderer as a texture
 - [`func _process(_dt: float) -> void`](MapController/functions/_process.md)
 - [`func _unhandled_input(event: InputEvent) -> void`](MapController/functions/_unhandled_input.md) — Handle *unhandled* input and emit when it hits the map.
 - [`func _apply_viewport_texture() -> void`](MapController/functions/_apply_viewport_texture.md) — Assign the terrain viewport as the map texture
+- [`func _update_mipmap_texture() -> void`](MapController/functions/_update_mipmap_texture.md) — Update the mipmap texture from the viewport
 - [`func _update_viewport_to_renderer() -> void`](MapController/functions/_update_viewport_to_renderer.md) — Resize the Viewport to match the renderer's pixel size (including margins)
 - [`func _update_mesh_fit() -> void`](MapController/functions/_update_mesh_fit.md) — Fit PlaneMesh to the viewport aspect ratio, clamped to _start_world_max
 - [`func _on_viewport_size_changed() -> void`](MapController/functions/_on_viewport_size_changed.md) — Viewport callback: refit plane on texture size change
 - [`func _on_renderer_map_resize() -> void`](MapController/functions/_on_renderer_map_resize.md) — Renderer callback: sync viewport to new map pixel size
+- [`func _on_terrain_changed() -> void`](MapController/functions/_on_terrain_changed.md) — Terrain data changed callback: update mipmaps when terrain changes
+- [`func _on_renderer_ready() -> void`](MapController/functions/_on_renderer_ready.md) — Renderer ready callback: generate mipmaps after initial render completes
 - [`func screen_to_map_and_terrain(screen_pos: Vector2) -> Variant`](MapController/functions/screen_to_map_and_terrain.md) — Helper: from screen pos to map pixels & terrain meters.
 - [`func _raycast_to_map_plane(screen_pos: Vector2) -> Variant`](MapController/functions/_raycast_to_map_plane.md) — World-space hit on the plane under a screen position; null if none
 - [`func _plane_hit_to_map_px(hit_world: Vector3) -> Variant`](MapController/functions/_plane_hit_to_map_px.md) — Convert a world hit on the plane to map pixels (0..viewport size)
@@ -43,6 +46,8 @@ Handles map interaction and applies terrain renderer as a texture
 - `PlaneMesh _plane`
 - `Camera3D _camera`
 - `ScenarioData _scenario`
+- `ImageTexture _mipmap_texture`
+- `Vector2 _last_mouse_pos`
 - `SubViewport terrain_viewport`
 - `TerrainRender renderer`
 - `MeshInstance3D map`
@@ -100,6 +105,14 @@ func _apply_viewport_texture() -> void
 
 Assign the terrain viewport as the map texture
 
+### _update_mipmap_texture
+
+```gdscript
+func _update_mipmap_texture() -> void
+```
+
+Update the mipmap texture from the viewport
+
 ### _update_viewport_to_renderer
 
 ```gdscript
@@ -131,6 +144,22 @@ func _on_renderer_map_resize() -> void
 ```
 
 Renderer callback: sync viewport to new map pixel size
+
+### _on_terrain_changed
+
+```gdscript
+func _on_terrain_changed() -> void
+```
+
+Terrain data changed callback: update mipmaps when terrain changes
+
+### _on_renderer_ready
+
+```gdscript
+func _on_renderer_ready() -> void
+```
+
+Renderer ready callback: generate mipmaps after initial render completes
 
 ### screen_to_map_and_terrain
 
@@ -232,6 +261,18 @@ var _camera: Camera3D
 
 ```gdscript
 var _scenario: ScenarioData
+```
+
+### _mipmap_texture
+
+```gdscript
+var _mipmap_texture: ImageTexture
+```
+
+### _last_mouse_pos
+
+```gdscript
+var _last_mouse_pos: Vector2
 ```
 
 ### terrain_viewport

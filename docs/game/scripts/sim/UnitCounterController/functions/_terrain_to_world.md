@@ -1,6 +1,6 @@
 # UnitCounterController::_terrain_to_world Function Reference
 
-*Defined at:* `scripts/sim/UnitCounterController.gd` (lines 144–189)</br>
+*Defined at:* `scripts/sim/UnitCounterController.gd` (lines 144–185)</br>
 *Belongs to:* [UnitCounterController](../../UnitCounterController.md)
 
 **Signature**
@@ -39,24 +39,20 @@ func _terrain_to_world(pos_m: Vector2) -> Variant:
 		)
 		return null
 
-	if _terrain_render.data == null:
+	# Convert terrain meters to map pixels (includes margins and borders)
+	var map_px := _terrain_render.terrain_to_map(pos_m)
+
+	# Get total map size in pixels (includes margins)
+	var map_size := _terrain_render.size
+	if map_size.x == 0 or map_size.y == 0:
 		LogService.warning(
-			"_terrain_to_world: terrain_render.data is null", "UnitCounterController.gd"
+			"_terrain_to_world: terrain render size is zero", "UnitCounterController.gd"
 		)
 		return null
 
-	var terrain_width_m := float(_terrain_render.data.width_m)
-	var terrain_height_m := float(_terrain_render.data.height_m)
-
-	if terrain_width_m == 0 or terrain_height_m == 0:
-		LogService.warning(
-			"_terrain_to_world: terrain dimensions are zero", "UnitCounterController.gd"
-		)
-		return null
-
-	# Normalize terrain position to -0.5..0.5 range (mesh local space)
-	var normalized_x := (pos_m.x / terrain_width_m) - 0.5
-	var normalized_z := (pos_m.y / terrain_height_m) - 0.5
+	# Normalize to -0.5..0.5 range (mesh local space)
+	var normalized_x := (map_px.x / map_size.x) - 0.5
+	var normalized_z := (map_px.y / map_size.y) - 0.5
 
 	# Scale to mesh size
 	var local_pos := Vector3(normalized_x * mesh_size.x, 0, normalized_z * mesh_size.y)

@@ -1,6 +1,6 @@
 # MovementAdapter::_advance_patrol_leg Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 494–521)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 500–529)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

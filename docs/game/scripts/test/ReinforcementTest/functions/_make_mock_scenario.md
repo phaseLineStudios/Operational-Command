@@ -1,6 +1,6 @@
 # ReinforcementTest::_make_mock_scenario Function Reference
 
-*Defined at:* `scripts/test/ReinforcementTest.gd` (lines 189–202)</br>
+*Defined at:* `scripts/test/ReinforcementTest.gd` (lines 192–205)</br>
 *Belongs to:* [ReinforcementTest](../../ReinforcementTest.md)
 
 **Signature**

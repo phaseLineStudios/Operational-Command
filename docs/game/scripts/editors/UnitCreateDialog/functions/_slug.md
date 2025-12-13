@@ -1,6 +1,6 @@
 # UnitCreateDialog::_slug Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 674–681)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 699–706)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

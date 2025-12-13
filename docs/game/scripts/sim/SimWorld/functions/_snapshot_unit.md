@@ -1,6 +1,6 @@
 # SimWorld::_snapshot_unit Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 580–596)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 595–611)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -22,7 +22,7 @@ Build a compact unit snapshot.
 func _snapshot_unit(su: ScenarioUnit) -> Dictionary:
 	if su == null:
 		return {}
-	var strength := su.unit.strength * su.unit.state_strength
+	var strength := su.unit.strength * su.state_strength
 	var destroyed := su.is_dead()
 
 	return {

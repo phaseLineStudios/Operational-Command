@@ -1,6 +1,6 @@
 # TimerController::_setup_debug_draw Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 353–369)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 351–366)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**
@@ -22,11 +22,10 @@ func _setup_debug_draw(static_body: StaticBody3D) -> void:
 	box_mesh.size = collision_box_size
 	_debug_mesh.mesh = box_mesh
 
-	# Create transparent material
 	var material := StandardMaterial3D.new()
-	material.albedo_color = Color(0.0, 1.0, 0.0, 0.3)  # Green with transparency
+	material.albedo_color = Color(0.0, 1.0, 0.0, 0.3)
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED  # Draw both sides
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	_debug_mesh.material_override = material
 
 	_debug_mesh.position = collision_box_position

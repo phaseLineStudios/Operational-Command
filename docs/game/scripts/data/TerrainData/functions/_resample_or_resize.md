@@ -1,6 +1,6 @@
 # TerrainData::_resample_or_resize Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 432–446)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 444–458)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

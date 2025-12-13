@@ -1,6 +1,6 @@
 # TerrainRender::is_inside_map Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 359–362)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 416–419)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**

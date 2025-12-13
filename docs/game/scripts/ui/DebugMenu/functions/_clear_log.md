@@ -1,6 +1,6 @@
 # DebugMenu::_clear_log Function Reference
 
-*Defined at:* `scripts/ui/DebugMenu.gd` (lines 171–175)</br>
+*Defined at:* `scripts/ui/DebugMenu.gd` (lines 174–178)</br>
 *Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**

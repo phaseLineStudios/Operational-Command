@@ -1,6 +1,6 @@
 # MainMenu::_queue_free_children Function Reference
 
-*Defined at:* `scripts/ui/MainMenu.gd` (lines 188–192)</br>
+*Defined at:* `scripts/ui/MainMenu.gd` (lines 194–198)</br>
 *Belongs to:* [MainMenu](../../MainMenu.md)
 
 **Signature**

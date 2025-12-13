@@ -1,6 +1,6 @@
 # DocumentFace::prev_page Function Reference
 
-*Defined at:* `scripts/ui/DocumentFace.gd` (lines 81–83)</br>
+*Defined at:* `scripts/ui/DocumentFace.gd` (lines 97–101)</br>
 *Belongs to:* [DocumentFace](../../DocumentFace.md)
 
 **Signature**

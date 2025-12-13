@@ -84,6 +84,7 @@ Display a specific page for a document
 
 ## Public Attributes
 
+- `Array[AudioStream] page_change_sounds` — Sound to play when page is changed.
 - `RigidBody3D intel_clipboard` — References to the clipboard RigidBody3D nodes
 - `RigidBody3D transcript_clipboard`
 - `RigidBody3D briefing_clipboard`
@@ -348,6 +349,16 @@ func _refresh_briefing_objectives() -> void
 Refresh only the briefing objectives page
 
 ## Member Data Documentation
+
+### page_change_sounds
+
+```gdscript
+var page_change_sounds: Array[AudioStream]
+```
+
+Decorators: `@export`
+
+Sound to play when page is changed.
 
 ### intel_clipboard
 

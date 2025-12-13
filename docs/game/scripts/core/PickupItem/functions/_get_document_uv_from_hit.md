@@ -1,6 +1,6 @@
 # PickupItem::_get_document_uv_from_hit Function Reference
 
-*Defined at:* `scripts/core/PickupItem.gd` (lines 264–332)</br>
+*Defined at:* `scripts/core/PickupItem.gd` (lines 346–414)</br>
 *Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**

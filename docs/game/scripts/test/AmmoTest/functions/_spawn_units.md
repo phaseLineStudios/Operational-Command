@@ -1,6 +1,6 @@
 # AmmoTest::_spawn_units Function Reference
 
-*Defined at:* `scripts/test/AmmoTest.gd` (lines 117–143)</br>
+*Defined at:* `scripts/test/AmmoTest.gd` (lines 117–149)</br>
 *Belongs to:* [AmmoTest](../../AmmoTest.md)
 
 **Signature**
@@ -14,20 +14,26 @@ func _spawn_units() -> void
 ```gdscript
 func _spawn_units() -> void:
 	# Shooter
-	shooter = UnitData.new()
+	var shooter_data := UnitData.new()
+	shooter_data.id = "alpha"
+	shooter_data.title = "Alpha"
+	shooter_data.ammunition = {AMMO_TYPE: _init_shooter_cap}
+	shooter = ScenarioUnit.new()
 	shooter.id = "alpha"
-	shooter.title = "Alpha"
-	shooter.ammunition = {AMMO_TYPE: _init_shooter_cap}
+	shooter.unit = shooter_data
 	shooter.state_ammunition = {AMMO_TYPE: _init_shooter_cap}
 
 	# Logistics unit
-	logi = UnitData.new()
+	var logi_data := UnitData.new()
+	logi_data.id = "logi1"
+	logi_data.title = "Logistics Truck"
+	logi_data.throughput = {AMMO_TYPE: _init_logi_stock}
+	logi_data.supply_transfer_rate = _rate
+	logi_data.supply_transfer_radius_m = _radius
+	logi_data.equipment_tags = ["LOGISTICS"]
+	logi = ScenarioUnit.new()
 	logi.id = "logi1"
-	logi.title = "Logistics Truck"
-	logi.throughput = {AMMO_TYPE: _init_logi_stock}
-	logi.supply_transfer_rate = _rate
-	logi.supply_transfer_radius_m = _radius
-	logi.equipment_tags = ["LOGISTICS"]
+	logi.unit = logi_data
 
 	ammo.register_unit(shooter)
 	ammo.register_unit(logi)

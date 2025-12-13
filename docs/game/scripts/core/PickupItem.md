@@ -19,18 +19,27 @@ Surface index 3 is the paper surface on the clipboard
 
 Size of the document viewport for coordinate mapping
 
+Minimum impact impulse needed to trigger collision sound
+
+Cooldown between collision sounds (seconds)
+
 ## Public Member Functions
 
 - [`func get_grab_offset(hit_position: Vector3) -> Vector3`](PickupItem/functions/get_grab_offset.md) — Get the grab offset for this item.
+- [`func _enter_tree() -> void`](PickupItem/functions/_enter_tree.md)
 - [`func _ready()`](PickupItem/functions/_ready.md)
 - [`func on_pickup() -> void`](PickupItem/functions/on_pickup.md) — Runs on pickup
 - [`func on_drop() -> void`](PickupItem/functions/on_drop.md) — Runs on drop
+- [`func enable_collision_sounds() -> void`](PickupItem/functions/enable_collision_sounds.md) — Enable collision sounds
+- [`func disable_collision_sounds() -> void`](PickupItem/functions/disable_collision_sounds.md) — Disable collision sounds
 - [`func start_inspect(camera: Camera3D) -> void`](PickupItem/functions/start_inspect.md) — Runs on inspect start
 - [`func end_inspect() -> void`](PickupItem/functions/end_inspect.md) — Runs on inspect close
 - [`func toggle_inspect(camera: Camera3D) -> void`](PickupItem/functions/toggle_inspect.md)
 - [`func is_inspecting() -> bool`](PickupItem/functions/is_inspecting.md)
 - [`func handle_inspect_input(event: InputEvent) -> bool`](PickupItem/functions/handle_inspect_input.md)
 - [`func _process(delta: float) -> void`](PickupItem/functions/_process.md)
+- [`func _physics_process(_delta: float) -> void`](PickupItem/functions/_physics_process.md) — Physics process for collision detection
+- [`func _integrate_forces(state: PhysicsDirectBodyState3D) -> void`](PickupItem/functions/_integrate_forces.md) — Integrate forces to detect collisions reliably
 - [`func _unhandled_input(event: InputEvent) -> void`](PickupItem/functions/_unhandled_input.md) — Handle unhandled input for document interaction
 - [`func _get_document_uv_from_hit(hit: Dictionary) -> Vector2`](PickupItem/functions/_get_document_uv_from_hit.md) — Get UV coordinates from raycast hit on document mesh
 - [`func _barycentric_coords(p: Vector3, a: Vector3, b: Vector3, c: Vector3) -> Vector3`](PickupItem/functions/_barycentric_coords.md) — Calculate barycentric coordinates of point p in triangle (a, b, c)
@@ -49,8 +58,10 @@ Size of the document viewport for coordinate mapping
 - `Vector3 inspect_rotation` — Rotation relative to camera (degrees)
 - `float inspect_smooth` — Higher = snappier follow in inspect (0 = teleport)
 - `SubViewport document_viewport` — Viewport to forward clicks to (for interactive documents)
+- `Array[AudioStream] collision_sounds` — Collision sound effects to play randomly on impact
 - `Vector3 origin_position`
 - `Vector3 origin_rotation`
+- `AudioStreamPlayer3D _collision_sound_player`
 - `Camera3D _inspect_camera`
 - `Transform3D _pre_inspect_transform`
 
@@ -67,6 +78,12 @@ If use_fixed_anchor is true, returns anchor_offset.
 Otherwise, returns the offset based on where the item was clicked.
 `hit_position` World position where the item was clicked.
 [return] Local offset for grabbing.
+
+### _enter_tree
+
+```gdscript
+func _enter_tree() -> void
+```
 
 ### _ready
 
@@ -89,6 +106,22 @@ func on_drop() -> void
 ```
 
 Runs on drop
+
+### enable_collision_sounds
+
+```gdscript
+func enable_collision_sounds() -> void
+```
+
+Enable collision sounds
+
+### disable_collision_sounds
+
+```gdscript
+func disable_collision_sounds() -> void
+```
+
+Disable collision sounds
 
 ### start_inspect
 
@@ -129,6 +162,22 @@ func handle_inspect_input(event: InputEvent) -> bool
 ```gdscript
 func _process(delta: float) -> void
 ```
+
+### _physics_process
+
+```gdscript
+func _physics_process(_delta: float) -> void
+```
+
+Physics process for collision detection
+
+### _integrate_forces
+
+```gdscript
+func _integrate_forces(state: PhysicsDirectBodyState3D) -> void
+```
+
+Integrate forces to detect collisions reliably
 
 ### _unhandled_input
 
@@ -272,6 +321,16 @@ Decorators: `@export`
 
 Viewport to forward clicks to (for interactive documents)
 
+### collision_sounds
+
+```gdscript
+var collision_sounds: Array[AudioStream]
+```
+
+Decorators: `@export`
+
+Collision sound effects to play randomly on impact
+
 ### origin_position
 
 ```gdscript
@@ -282,6 +341,12 @@ var origin_position: Vector3
 
 ```gdscript
 var origin_rotation: Vector3
+```
+
+### _collision_sound_player
+
+```gdscript
+var _collision_sound_player: AudioStreamPlayer3D
 ```
 
 ### _inspect_camera

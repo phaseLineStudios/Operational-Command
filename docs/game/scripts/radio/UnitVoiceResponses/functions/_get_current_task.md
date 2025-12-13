@@ -1,6 +1,6 @@
 # UnitVoiceResponses::_get_current_task Function Reference
 
-*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 341–361)</br>
+*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 394–414)</br>
 *Belongs to:* [UnitVoiceResponses](../../UnitVoiceResponses.md)
 
 **Signature**

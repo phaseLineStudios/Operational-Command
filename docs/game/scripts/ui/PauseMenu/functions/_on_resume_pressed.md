@@ -1,6 +1,6 @@
 # PauseMenu::_on_resume_pressed Function Reference
 
-*Defined at:* `scripts/ui/PauseMenu.gd` (lines 52–56)</br>
+*Defined at:* `scripts/ui/PauseMenu.gd` (lines 52–58)</br>
 *Belongs to:* [PauseMenu](../../PauseMenu.md)
 
 **Signature**
@@ -17,6 +17,8 @@ Called on resume button pressed.
 
 ```gdscript
 func _on_resume_pressed() -> void:
+	_release_interactions()
 	menu_container.visible = false
+	visible = false
 	emit_signal("resume_requested")
 ```

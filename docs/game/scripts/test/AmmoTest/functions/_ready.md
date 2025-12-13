@@ -59,8 +59,8 @@ func _ready() -> void:
 	_print_tick.timeout.connect(
 		func() -> void:
 			var cur := int(shooter.state_ammunition.get(AMMO_TYPE, 0))
-			var cap := int(shooter.ammunition.get(AMMO_TYPE, 0))
-			var stock := int(logi.throughput.get(AMMO_TYPE, 0))
+			var cap := int(shooter.unit.ammunition.get(AMMO_TYPE, 0))
+			var stock := int(logi.unit.throughput.get(AMMO_TYPE, 0))
 			print("[TICK] shooter %d/%d  stock %d" % [cur, cap, stock])
 			_update_hud()
 	)

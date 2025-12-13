@@ -1,6 +1,6 @@
 # AmmoSystem::tick Function Reference
 
-*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 131–143)</br>
+*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 139–151)</br>
 *Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**
@@ -20,7 +20,7 @@ func tick(delta: float) -> void:
 	for uid in _units.keys():
 		if _active_links.has(uid):
 			continue
-		var dst: UnitData = _units[uid]
+		var dst: ScenarioUnit = _units[uid]
 		if not _needs_ammo(dst):
 			continue
 		var src_id := _pick_link_for(dst)

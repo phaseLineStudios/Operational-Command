@@ -1,6 +1,6 @@
 # AIController::_get_node_from_path Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 441–446)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 442–447)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

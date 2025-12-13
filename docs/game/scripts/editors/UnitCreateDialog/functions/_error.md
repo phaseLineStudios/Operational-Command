@@ -1,6 +1,6 @@
 # UnitCreateDialog::_error Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 665–670)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 690–695)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

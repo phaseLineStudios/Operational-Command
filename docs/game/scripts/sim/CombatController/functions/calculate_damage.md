@@ -1,6 +1,6 @@
 # CombatController::calculate_damage Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 119–210)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 122–222)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**
@@ -66,24 +66,33 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 
 	# --- ammo gate + penalties ---
 	# returns {allow, attack_power_mult, attack_cycle_mult, suppression_mult, ...}
-	var fire := _gate_and_consume(attacker.unit, "small_arms", 5)
+	var ammo_meta := _select_ammo_profile_for_attack(attacker, defender)
+	var fire := _gate_and_consume(
+		attacker.unit,
+		attacker.id,
+		ammo_meta.get("ammo_type", "SMALL_ARMS"),
+		int(ammo_meta.get("rounds", 5))
+	)
 	if not bool(fire.get("allow", true)):
 		LogService.info("%s cannot fire: out of ammo" % attacker.unit.id, "Combat")
 		return 0.0
 
-	# --- base strengths ---
-	var atk_str: float = max(0.0, attacker.unit.state_strength)
-	var def_str: float = max(0.0, defender.unit.state_strength)
-	var base_attack: float = atk_str * attacker.unit.morale * attacker.unit.attack
-	var base_defense: float = def_str * defender.unit.morale * defender.unit.defense
+	# --- base strengths via equipment-aware helpers ---
+	var dynamic_attack: float = _compute_dynamic_attack_power(attacker)
+	if dynamic_attack <= 0.0:
+		return 0.0
+	var defensepower: float = _compute_dynamic_defense_value(defender)
+	var def_str: float = max(0.0, defender.state_strength)
 
 	# --- apply terrain multipliers ---
 	var dmg_mul: float = float(f.get("damage_mul", 1.0))
-	var attackpower: float = base_attack * acc_mul * dmg_mul
-	var defensepower: float = base_defense
+	var attackpower: float = dynamic_attack * acc_mul * dmg_mul
 
 	# --- apply ammo penalties ---
 	attackpower *= float(fire.get("attack_power_mult", 1.0))
+
+	# --- defense mitigation ---
+	var mitigated_attack: float = _apply_defense_modifier_to_damage(attackpower, defensepower)
 
 	# --- apply ROF penalty as delay until next allowed shot ---
 	var cycle_mult := float(fire.get("attack_cycle_mult", 1.0))
@@ -95,16 +104,16 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 	# _apply_suppression(attacker, defender, sup_mult)
 
 	# --- outcome ---
-	if attackpower - defensepower > 0.0:
-		var denom: float = max(def_str, 1.0)
-		var raw_loss: int = int(floor((attackpower - defensepower) * 0.1 / denom))
-		var applied := _apply_casualties(defender.unit, max(raw_loss, 1))
-		if defender.unit.morale > 0.0 and applied > 0:
-			defender.unit.morale = max(0.0, defender.unit.morale - 0.05)
-		return raw_loss
-	else:
-		var applied2 := _apply_casualties(defender.unit, 1)
-		if attacker.unit.morale > 0.0 and applied2 == 0:
-			attacker.unit.morale = max(0.0, attacker.unit.morale - 0.02)
-		return 1.0
+	var denom: float = max(def_str, 1.0)
+	var raw_loss: int = int(floor(mitigated_attack * 0.1 / denom))
+	if raw_loss <= 0:
+		raw_loss = 1
+	var applied := _apply_casualties(defender, raw_loss)
+	if defender.unit.morale > 0.0 and applied > 0:
+		defender.unit.morale = max(0.0, defender.unit.morale - 0.05)
+	elif attacker.unit.morale > 0.0 and applied <= 0:
+		attacker.unit.morale = max(0.0, attacker.unit.morale - 0.02)
+
+	_apply_vehicle_damage_resolution(attacker, defender, mitigated_attack)
+	return raw_loss
 ```

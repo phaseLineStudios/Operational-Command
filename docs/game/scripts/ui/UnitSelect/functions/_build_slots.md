@@ -1,6 +1,6 @@
 # UnitSelect::_build_slots Function Reference
 
-*Defined at:* `scripts/ui/UnitSelect.gd` (lines 102–125)</br>
+*Defined at:* `scripts/ui/UnitSelect.gd` (lines 126–149)</br>
 *Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**

@@ -6,11 +6,11 @@
 **Signature**
 
 ```gdscript
-func register_unit(unit_id: String, u: UnitData) -> void
+func register_unit(unit_id: String, su: ScenarioUnit) -> void
 ```
 
 - **unit_id**: The ScenarioUnit ID (with SLOT suffix if applicable).
-- **u**: The UnitData to register.
+- **su**: The ScenarioUnit to register.
 
 ## Description
 
@@ -19,8 +19,8 @@ Register a unit and check if it's engineer-capable.
 ## Source
 
 ```gdscript
-func register_unit(unit_id: String, u: UnitData) -> void:
-	_units[unit_id] = u
-	var is_eng: bool = _is_engineer_unit(u)
+func register_unit(unit_id: String, su: ScenarioUnit) -> void:
+	_units[unit_id] = su
+	var is_eng: bool = _is_engineer_unit(su)
 	_engineer_units[unit_id] = is_eng
 ```

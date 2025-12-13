@@ -1,6 +1,6 @@
 # TTSService::is_ready Function Reference
 
-*Defined at:* `scripts/radio/TTSService.gd` (lines 66–69)</br>
+*Defined at:* `scripts/radio/TTSService.gd` (lines 70–73)</br>
 *Belongs to:* [TTSService](../../TTSService.md)
 
 **Signature**

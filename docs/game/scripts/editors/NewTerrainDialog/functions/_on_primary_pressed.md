@@ -1,6 +1,6 @@
 # NewTerrainDialog::_on_primary_pressed Function Reference
 
-*Defined at:* `scripts/editors/TerrainSettingsDialog.gd` (lines 60–89)</br>
+*Defined at:* `scripts/editors/TerrainSettingsDialog.gd` (lines 64–103)</br>
 *Belongs to:* [NewTerrainDialog](../../NewTerrainDialog.md)
 
 **Signature**
@@ -26,6 +26,11 @@ func _on_primary_pressed():
 		_target_data.grid_start_x = int(terrain_grid_x.value)
 		_target_data.grid_start_y = int(terrain_grid_y.value)
 		_target_data.base_elevation_m = int(base_elevation.value)
+		_target_data.country = meta_country.text
+		_target_data.map_scale = "1:25,000"
+		_target_data.edition = meta_edition.text
+		_target_data.series = meta_series.text
+		_target_data.sheet = meta_sheet.text
 
 		show_dialog(false)
 		emit_signal("request_edit", _target_data)
@@ -37,6 +42,11 @@ func _on_primary_pressed():
 		data.grid_start_x = int(terrain_grid_x.value)
 		data.grid_start_y = int(terrain_grid_y.value)
 		data.base_elevation_m = int(base_elevation.value)
+		data.country = meta_country.text
+		data.map_scale = "1:25,000"
+		data.edition = meta_edition.text
+		data.series = meta_series.text
+		data.sheet = meta_sheet.text
 
 		show_dialog(false)
 		emit_signal("request_create", data)

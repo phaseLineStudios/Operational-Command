@@ -1,6 +1,6 @@
 # ScenarioData::serialize Function Reference
 
-*Defined at:* `scripts/data/ScenarioData.gd` (lines 84–145)</br>
+*Defined at:* `scripts/data/ScenarioData.gd` (lines 97–164)</br>
 *Belongs to:* [ScenarioData](../../ScenarioData.md)
 
 **Signature**
@@ -52,6 +52,9 @@ func serialize() -> Dictionary:
 		"title": title,
 		"description": description,
 		"preview_path": preview_path,
+		"video_path": video_path,
+		"video_subtitles":
+		video_subtitles.serialize() as Variant if video_subtitles else null as Variant,
 		"terrain_id": terrain.terrain_id,
 		"briefing": briefing.serialize() as Variant if briefing else null as Variant,
 		"difficulty": int(difficulty),
@@ -65,7 +68,10 @@ func serialize() -> Dictionary:
 			"unit_points": unit_points,
 			"unit_slots": _serialize_unit_slots(unit_slots),
 			"unit_recruits_ids": recruit_ids,
-			"unit_reserves": _serialize_unit_slots(unit_reserves)
+			"unit_reserves": _serialize_unit_slots(unit_reserves),
+			"replacement_pool": replacement_pool,
+			"equipment_pool": equipment_pool,
+			"ammo_pools": ammo_pools.duplicate()
 		},
 		"content":
 		{

@@ -1,6 +1,6 @@
 # UnitAutoResponses::_compare_messages Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 376–381)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 333–338)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

@@ -17,6 +17,7 @@ Show the loading screen with optional custom message
 
 - [`func _ready() -> void`](LoadingScreen/functions/_ready.md)
 - [`func set_card_details() -> void`](LoadingScreen/functions/set_card_details.md) — Set scenario details in card.
+- [`func set_loading_message(message: String) -> void`](LoadingScreen/functions/set_loading_message.md) — Set the loading screen message
 - [`func hide_loading() -> void`](LoadingScreen/functions/hide_loading.md) — Hide the loading screen
 
 ## Public Attributes
@@ -42,6 +43,14 @@ func set_card_details() -> void
 ```
 
 Set scenario details in card.
+
+### set_loading_message
+
+```gdscript
+func set_loading_message(message: String) -> void
+```
+
+Set the loading screen message
 
 ### hide_loading
 

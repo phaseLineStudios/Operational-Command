@@ -1,6 +1,6 @@
 # ContentDB::get_all_objects Function Reference
 
-*Defined at:* `scripts/core/ContentDB.gd` (lines 74–88)</br>
+*Defined at:* `scripts/core/ContentDB.gd` (lines 75–89)</br>
 *Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**

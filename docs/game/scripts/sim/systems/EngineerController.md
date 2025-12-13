@@ -29,7 +29,7 @@ Active engineer task data
 ## Public Member Functions
 
 - [`func _ready() -> void`](EngineerController/functions/_ready.md)
-- [`func register_unit(unit_id: String, u: UnitData) -> void`](EngineerController/functions/register_unit.md) — Register a unit and check if it's engineer-capable.
+- [`func register_unit(unit_id: String, su: ScenarioUnit) -> void`](EngineerController/functions/register_unit.md) — Register a unit and check if it's engineer-capable.
 - [`func unregister_unit(unit_id: String) -> void`](EngineerController/functions/unregister_unit.md) — Unregister a unit
 - [`func set_unit_position(unit_id: String, pos: Vector2) -> void`](EngineerController/functions/set_unit_position.md) — Update unit position
 - [`func bind_ammo_system(ammo_sys: AmmoSystem) -> void`](EngineerController/functions/bind_ammo_system.md) — Bind external systems
@@ -47,7 +47,7 @@ Active engineer task data
 - [`func _place_mines(_target_pos: Vector2) -> void`](EngineerController/functions/_place_mines.md) — Place mines at the target position (stub)
 - [`func _place_demo(_target_pos: Vector2) -> void`](EngineerController/functions/_place_demo.md) — Place demo charges at the target position (stub)
 - [`func _rebuild_pathfinding() -> void`](EngineerController/functions/_rebuild_pathfinding.md) — Rebuild pathfinding grid after terrain modification
-- [`func _is_engineer_unit(u: UnitData) -> bool`](EngineerController/functions/_is_engineer_unit.md) — Check if unit has engineer ammunition
+- [`func _is_engineer_unit(su: ScenarioUnit) -> bool`](EngineerController/functions/_is_engineer_unit.md) — Check if unit has engineer ammunition
 - [`func _init(p_unit_id: String, p_task_type: String, p_target_pos: Vector2, p_duration: float)`](EngineerController/functions/_init.md)
 
 ## Public Attributes
@@ -90,12 +90,12 @@ func _ready() -> void
 ### register_unit
 
 ```gdscript
-func register_unit(unit_id: String, u: UnitData) -> void
+func register_unit(unit_id: String, su: ScenarioUnit) -> void
 ```
 
 Register a unit and check if it's engineer-capable.
 `unit_id` The ScenarioUnit ID (with SLOT suffix if applicable).
-`u` The UnitData to register.
+`su` The ScenarioUnit to register.
 
 ### unregister_unit
 
@@ -230,7 +230,7 @@ Rebuild pathfinding grid after terrain modification
 ### _is_engineer_unit
 
 ```gdscript
-func _is_engineer_unit(u: UnitData) -> bool
+func _is_engineer_unit(su: ScenarioUnit) -> bool
 ```
 
 Check if unit has engineer ammunition

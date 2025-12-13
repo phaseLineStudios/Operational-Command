@@ -1,6 +1,6 @@
 # SlotItem::_apply_style Function Reference
 
-*Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 127–145)</br>
+*Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 142–160)</br>
 *Belongs to:* [SlotItem](../../SlotItem.md)
 
 **Signature**

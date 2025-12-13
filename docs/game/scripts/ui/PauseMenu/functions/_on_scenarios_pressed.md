@@ -1,6 +1,6 @@
 # PauseMenu::_on_scenarios_pressed Function Reference
 
-*Defined at:* `scripts/ui/PauseMenu.gd` (lines 82–86)</br>
+*Defined at:* `scripts/ui/PauseMenu.gd` (lines 84–88)</br>
 *Belongs to:* [PauseMenu](../../PauseMenu.md)
 
 **Signature**

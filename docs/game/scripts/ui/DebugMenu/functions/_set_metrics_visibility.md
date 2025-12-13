@@ -1,6 +1,6 @@
 # DebugMenu::_set_metrics_visibility Function Reference
 
-*Defined at:* `scripts/ui/DebugMenu.gd` (lines 76–79)</br>
+*Defined at:* `scripts/ui/DebugMenu.gd` (lines 79–82)</br>
 *Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # AIController::resume_unit Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 112–116)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 113–117)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

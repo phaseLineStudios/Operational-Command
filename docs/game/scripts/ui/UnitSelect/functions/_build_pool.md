@@ -1,6 +1,6 @@
 # UnitSelect::_build_pool Function Reference
 
-*Defined at:* `scripts/ui/UnitSelect.gd` (lines 127–149)</br>
+*Defined at:* `scripts/ui/UnitSelect.gd` (lines 151–179)</br>
 *Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**
@@ -24,6 +24,12 @@ func _build_pool() -> void:
 
 	var units: Array[UnitData] = ContentDB.list_recruitable_units(Game.current_scenario.id)
 	for u in units:
+		# Restore experience from campaign save if available
+		if Game.current_save:
+			var saved_state := Game.current_save.get_unit_state(u.id)
+			if not saved_state.is_empty():
+				u.experience = saved_state.get("experience", u.experience)
+
 		_units_by_id[u.id] = u
 
 		var card: UnitCard = unit_card_scene.instantiate() as UnitCard

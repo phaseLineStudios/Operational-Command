@@ -1,6 +1,6 @@
 # SimWorld::_process Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 199–210)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 176–187)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

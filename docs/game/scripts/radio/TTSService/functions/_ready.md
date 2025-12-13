@@ -1,6 +1,6 @@
 # TTSService::_ready Function Reference
 
-*Defined at:* `scripts/radio/TTSService.gd` (lines 36–41)</br>
+*Defined at:* `scripts/radio/TTSService.gd` (lines 42–46)</br>
 *Belongs to:* [TTSService](../../TTSService.md)
 
 **Signature**
@@ -13,7 +13,6 @@ func _ready() -> void
 
 ```gdscript
 func _ready() -> void:
-	# Defer TTS initialization to avoid blocking game startup
 	_is_initializing = true
 	call_deferred("_initialize_async")
 ```

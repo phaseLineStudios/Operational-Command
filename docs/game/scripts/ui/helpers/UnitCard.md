@@ -33,6 +33,8 @@ Recruitable unit card.
 - `Texture2D fallback_default_icon` — Fallback icon if unit["icon"] is missing/empty.
 - `StyleBox hover_style` — Hover style
 - `StyleBox selected_style` — Selected Style
+- `Array[AudioStream] hover_sounds` — Sound to play when hovering over a card
+- `Array[AudioStream] click_sounds` — Sound to play when clicking a card
 - `UnitData unit`
 - `String unit_id`
 - `Texture2D default_icon`
@@ -158,6 +160,26 @@ var selected_style: StyleBox
 Decorators: `@export`
 
 Selected Style
+
+### hover_sounds
+
+```gdscript
+var hover_sounds: Array[AudioStream]
+```
+
+Decorators: `@export`
+
+Sound to play when hovering over a card
+
+### click_sounds
+
+```gdscript
+var click_sounds: Array[AudioStream]
+```
+
+Decorators: `@export`
+
+Sound to play when clicking a card
 
 ### unit
 

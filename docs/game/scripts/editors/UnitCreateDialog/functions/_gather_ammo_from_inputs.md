@@ -1,6 +1,6 @@
 # UnitCreateDialog::_gather_ammo_from_inputs Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 263–269)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 262–268)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

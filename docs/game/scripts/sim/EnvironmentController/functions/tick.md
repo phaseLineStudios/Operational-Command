@@ -1,6 +1,6 @@
 # EnvironmentController::tick Function Reference
 
-*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 150–156)</br>
+*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 241–247)</br>
 *Belongs to:* [EnvironmentController](../../EnvironmentController.md)
 
 **Signature**

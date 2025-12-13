@@ -1,6 +1,6 @@
 # DebugOverlay::_fuel_snapshot Function Reference
 
-*Defined at:* `scripts/test/DebugOverlay.gd` (lines 268–288)</br>
+*Defined at:* `scripts/test/DebugOverlay.gd` (lines 264–284)</br>
 *Belongs to:* [DebugOverlay](../../DebugOverlay.md)
 
 **Signature**

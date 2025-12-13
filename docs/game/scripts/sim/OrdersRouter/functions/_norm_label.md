@@ -1,6 +1,6 @@
 # OrdersRouter::_norm_label Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 390–423)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 395–428)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**

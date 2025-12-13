@@ -6,7 +6,7 @@
 **Signature**
 
 ```gdscript
-func _is_engineer_unit(u: UnitData) -> bool
+func _is_engineer_unit(su: ScenarioUnit) -> bool
 ```
 
 ## Description
@@ -16,12 +16,12 @@ Check if unit has engineer ammunition
 ## Source
 
 ```gdscript
-func _is_engineer_unit(u: UnitData) -> bool:
-	if u.state_ammunition.get("ENGINEER_MINE", 0) > 0:
+func _is_engineer_unit(su: ScenarioUnit) -> bool:
+	if su.state_ammunition.get("ENGINEER_MINE", 0) > 0:
 		return true
-	if u.state_ammunition.get("ENGINEER_DEMO", 0) > 0:
+	if su.state_ammunition.get("ENGINEER_DEMO", 0) > 0:
 		return true
-	if u.state_ammunition.get("ENGINEER_BRIDGE", 0) > 0:
+	if su.state_ammunition.get("ENGINEER_BRIDGE", 0) > 0:
 		return true
 
 	return false

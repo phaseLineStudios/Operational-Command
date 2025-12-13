@@ -1,6 +1,6 @@
 # DocumentFace::_on_prev_pressed Function Reference
 
-*Defined at:* `scripts/ui/DocumentFace.gd` (lines 46–49)</br>
+*Defined at:* `scripts/ui/DocumentFace.gd` (lines 57–60)</br>
 *Belongs to:* [DocumentFace](../../DocumentFace.md)
 
 **Signature**

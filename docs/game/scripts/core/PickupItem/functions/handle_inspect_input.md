@@ -1,6 +1,6 @@
 # PickupItem::handle_inspect_input Function Reference
 
-*Defined at:* `scripts/core/PickupItem.gd` (lines 125–190)</br>
+*Defined at:* `scripts/core/PickupItem.gd` (lines 169–237)</br>
 *Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**
@@ -37,18 +37,21 @@ func handle_inspect_input(event: InputEvent) -> bool:
 			params.collision_mask = collision_layer
 			var hit := space.intersect_ray(params)
 
-			if not hit.is_empty() and hit.collider == self:
-				var uv := _get_document_uv_from_hit(hit)
-				if uv != Vector2(-1, -1):
-					var viewport_pos := uv * document_viewport_size
+			if hit.is_empty() or hit.collider != self:
+				end_inspect()
+				return true
 
-					var viewport_event := InputEventMouseButton.new()
-					viewport_event.button_index = mouse_event.button_index
-					viewport_event.pressed = mouse_event.pressed
-					viewport_event.position = viewport_pos
-					viewport_event.global_position = viewport_pos
-					document_viewport.push_input(viewport_event)
-					return true
+			var uv := _get_document_uv_from_hit(hit)
+			if uv != Vector2(-1, -1):
+				var viewport_pos := uv * document_viewport_size
+
+				var viewport_event := InputEventMouseButton.new()
+				viewport_event.button_index = mouse_event.button_index
+				viewport_event.pressed = mouse_event.pressed
+				viewport_event.position = viewport_pos
+				viewport_event.global_position = viewport_pos
+				document_viewport.push_input(viewport_event)
+				return true
 
 		# Handle right clicks for closing inspect
 		if event.button_index == MOUSE_BUTTON_RIGHT:

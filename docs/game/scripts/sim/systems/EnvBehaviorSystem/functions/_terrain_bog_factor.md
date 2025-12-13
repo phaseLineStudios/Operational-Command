@@ -1,6 +1,6 @@
 # EnvBehaviorSystem::_terrain_bog_factor Function Reference
 
-*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 248–263)</br>
+*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 245–260)</br>
 *Belongs to:* [EnvBehaviorSystem](../../EnvBehaviorSystem.md)
 
 **Signature**

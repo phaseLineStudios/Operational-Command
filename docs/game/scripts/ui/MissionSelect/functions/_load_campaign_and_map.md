@@ -1,6 +1,6 @@
 # MissionSelect::_load_campaign_and_map Function Reference
 
-*Defined at:* `scripts/ui/MissionSelect.gd` (lines 60–75)</br>
+*Defined at:* `scripts/ui/MissionSelect.gd` (lines 82–97)</br>
 *Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**

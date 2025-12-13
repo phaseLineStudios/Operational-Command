@@ -1,6 +1,6 @@
 # DrawingController::_end_drawing Function Reference
 
-*Defined at:* `scripts/core/DrawingController.gd` (lines 141–151)</br>
+*Defined at:* `scripts/core/DrawingController.gd` (lines 133–143)</br>
 *Belongs to:* [DrawingController](../../DrawingController.md)
 
 **Signature**

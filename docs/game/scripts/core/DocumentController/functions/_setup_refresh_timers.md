@@ -1,6 +1,6 @@
 # DocumentController::_setup_refresh_timers Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 143–165)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 151–173)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

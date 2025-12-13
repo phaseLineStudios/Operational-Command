@@ -1,6 +1,6 @@
 # ReinforcementPanel::commit Function Reference
 
-*Defined at:* `scripts/ui/unit_mgmt/ReinforcementPanel.gd` (lines 103–112)</br>
+*Defined at:* `scripts/ui/unit_mgmt/ReinforcementPanel.gd` (lines 114–124)</br>
 *Belongs to:* [ReinforcementPanel](../../ReinforcementPanel.md)
 
 **Signature**
@@ -21,7 +21,8 @@ func commit() -> void:
 	# strip any zero/negative or wiped-out entries (if units list is present)
 	for uid in plan.keys():
 		var u := _find_unit(uid)
-		if u == null or u.state_strength <= 0.0 or int(plan[uid]) <= 0:
+		var cur_strength: float = _unit_strength.get(uid, 0.0)
+		if u == null or cur_strength <= 0.0 or int(plan[uid]) <= 0:
 			plan.erase(uid)
 	emit_signal("reinforcement_committed", plan)
 ```

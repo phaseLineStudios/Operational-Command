@@ -1,6 +1,6 @@
 # UnitCreateDialog::_select_move_profile Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 392–398)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 422–428)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

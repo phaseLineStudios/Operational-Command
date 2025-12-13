@@ -1,6 +1,6 @@
 # ScenarioUnit::_speed_here_mps Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 262–294)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 281–328)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**
@@ -26,7 +26,12 @@ func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 		var beh_mult := 1.0
 		if has_meta("behaviour_speed_mult"):
 			beh_mult = float(get_meta("behaviour_speed_mult"))
-		return speed * beh_mult
+		var env_mult := 1.0
+		if has_meta("env_speed_mult"):
+			env_mult = float(get_meta("env_speed_mult"))
+			if env_mult <= 0.0:
+				env_mult = 1.0
+		return speed * beh_mult * env_mult
 
 	var c := grid.world_to_cell(p_m)
 	if not grid._in_bounds(c):
@@ -36,7 +41,12 @@ func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 		var beh_mult := 1.0
 		if has_meta("behaviour_speed_mult"):
 			beh_mult = float(get_meta("behaviour_speed_mult"))
-		return speed * beh_mult
+		var env_mult := 1.0
+		if has_meta("env_speed_mult"):
+			env_mult = float(get_meta("env_speed_mult"))
+			if env_mult <= 0.0:
+				env_mult = 1.0
+		return speed * beh_mult * env_mult
 
 	if grid._astar.is_in_boundsv(c) and grid._astar.is_point_solid(c):
 		return 0.0
@@ -47,5 +57,10 @@ func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 		v *= _fuel.speed_mult(id)
 	if has_meta("behaviour_speed_mult"):
 		v *= float(get_meta("behaviour_speed_mult"))
+	if has_meta("env_speed_mult"):
+		var env_mult := float(get_meta("env_speed_mult"))
+		if env_mult <= 0.0:
+			env_mult = 1.0
+		v *= env_mult
 	return v
 ```

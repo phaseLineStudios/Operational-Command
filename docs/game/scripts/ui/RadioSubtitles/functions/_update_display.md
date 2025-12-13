@@ -1,6 +1,6 @@
 # RadioSubtitles::_update_display Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 72–88)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 106–122)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**
@@ -27,7 +27,7 @@ func _update_display() -> void:
 	_subtitle_label.text = display_text
 
 	# Update suggestions
-	if _is_transmitting and _current_text != "":
+	if _is_transmitting:
 		_update_suggestions()
 	else:
 		_clear_suggestions()

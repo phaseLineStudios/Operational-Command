@@ -1,6 +1,6 @@
 # UnitData::has_anti_vehicle_weapons Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 439–450)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 404–415)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**

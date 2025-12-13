@@ -26,7 +26,7 @@ Audio generator buffer length (sec).
 - [`func get_stream() -> AudioStreamGenerator`](TTSService/functions/get_stream.md) — Return the current AudioStreamGenerator.
 - [`func set_voice(new_model: Model) -> bool`](TTSService/functions/set_voice.md) — Set speaker voice model and restart streaming service.
 - [`func register_playback(playback: AudioStreamGeneratorPlayback) -> void`](TTSService/functions/register_playback.md) — Register the consumer's playback so we can push frames into it.
-- [`func register_player(player: AudioStreamPlayer) -> void`](TTSService/functions/register_player.md) — Register by passing the player's node (sets stream & plays).
+- [`func register_player(player: AudioStreamPlayer3D) -> void`](TTSService/functions/register_player.md) — Register by passing the player's node (sets stream & plays).
 - [`func say(text: String) -> bool`](TTSService/functions/say.md) — Generate a TTS response (async).
 - [`func _process(_dt: float) -> void`](TTSService/functions/_process.md) — Pull bytes from the extension and push frames (if playback registered).
 - [`func _exit_tree() -> void`](TTSService/functions/_exit_tree.md) — Stop stream thread to avoid hang on exit.
@@ -42,12 +42,17 @@ Audio generator buffer length (sec).
 - `AudioStreamGeneratorPlayback _playback`
 - `bool _is_initializing`
 - `bool _initialization_complete`
+- `bool _is_speaking`
+- `bool _audio_started`
+- `float _last_buffer_fill`
+- `float _speaking_timeout`
 
 ## Signals
 
 - `signal stream_ready(stream: AudioStreamGenerator)` — Emitted when the streaming daemon is ready.
 - `signal stream_error(message: String)` — Emitted on streaming error.
 - `signal speaking_started(text: String)` — Emitted when a line is sent to Piper (best-effort).
+- `signal speaking_finished` — Emitted when Piper finishes generating audio for a phrase.
 
 ## Enumerations
 
@@ -118,7 +123,7 @@ Register the consumer's playback so we can push frames into it.
 ### register_player
 
 ```gdscript
-func register_player(player: AudioStreamPlayer) -> void
+func register_player(player: AudioStreamPlayer3D) -> void
 ```
 
 Register by passing the player's node (sets stream & plays).
@@ -220,6 +225,30 @@ var _is_initializing: bool
 var _initialization_complete: bool
 ```
 
+### _is_speaking
+
+```gdscript
+var _is_speaking: bool
+```
+
+### _audio_started
+
+```gdscript
+var _audio_started: bool
+```
+
+### _last_buffer_fill
+
+```gdscript
+var _last_buffer_fill: float
+```
+
+### _speaking_timeout
+
+```gdscript
+var _speaking_timeout: float
+```
+
 ## Signal Documentation
 
 ### stream_ready
@@ -246,6 +275,14 @@ signal speaking_started(text: String)
 ```
 
 Emitted when a line is sent to Piper (best-effort).
+
+### speaking_finished
+
+```gdscript
+signal speaking_finished
+```
+
+Emitted when Piper finishes generating audio for a phrase.
 
 ## Enumeration Type Documentation
 

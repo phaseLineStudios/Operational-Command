@@ -1,6 +1,6 @@
 # TimerController::_is_child_of_timer Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 320–328)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 318–326)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MainMenu::_quit Function Reference
 
-*Defined at:* `scripts/ui/MainMenu.gd` (lines 83–86)</br>
+*Defined at:* `scripts/ui/MainMenu.gd` (lines 89–92)</br>
 *Belongs to:* [MainMenu](../../MainMenu.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # ScenarioUnitsCatalog::_setup_unit_create Function Reference
 
-*Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 137–144)</br>
+*Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 142–152)</br>
 *Belongs to:* [ScenarioUnitsCatalog](../../ScenarioUnitsCatalog.md)
 
 **Signature**
@@ -18,4 +18,7 @@ func _setup_unit_create(ctx: ScenarioEditorContext):
 
 	if not ctx.unit_create_dlg.unit_saved.is_connected(func(u, p): _on_unit_saved(ctx, u, p)):
 		ctx.unit_create_dlg.unit_saved.connect(func(u, p): _on_unit_saved(ctx, u, p))
+
+	if not ctx.unit_create_dlg.canceled.is_connected(func(): _on_dialog_closed(ctx)):
+		ctx.unit_create_dlg.canceled.connect(func(): _on_dialog_closed(ctx))
 ```

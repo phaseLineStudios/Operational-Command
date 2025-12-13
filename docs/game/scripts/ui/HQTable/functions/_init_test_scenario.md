@@ -1,6 +1,6 @@
 # HQTable::_init_test_scenario Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 397–422)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 477–502)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

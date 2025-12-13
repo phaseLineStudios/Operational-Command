@@ -1,6 +1,6 @@
 # EnvBehaviorSystem::tick_units Function Reference
 
-*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 57–75)</br>
+*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 54–72)</br>
 *Belongs to:* [EnvBehaviorSystem](../../EnvBehaviorSystem.md)
 
 **Signature**

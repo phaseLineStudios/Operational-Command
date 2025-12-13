@@ -1,6 +1,6 @@
 # MapController::_on_terrain_changed Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 210–216)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 215–221)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

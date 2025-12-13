@@ -1,6 +1,6 @@
 # TerrainData::_set_contour_interval_m Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 165–169)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 177–181)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

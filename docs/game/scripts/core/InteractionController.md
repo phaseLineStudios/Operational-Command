@@ -18,6 +18,7 @@ extends Node
 - [`func _process(delta: float) -> void`](InteractionController/functions/_process.md)
 - [`func _try_pickup(mouse_pos: Vector2) -> void`](InteractionController/functions/_try_pickup.md)
 - [`func _drop_held() -> void`](InteractionController/functions/_drop_held.md)
+- [`func cancel_hold() -> void`](InteractionController/functions/cancel_hold.md)
 - [`func _project_mouse_to_finite_plane(mouse_pos: Vector2) -> Variant`](InteractionController/functions/_project_mouse_to_finite_plane.md)
 
 ## Public Attributes
@@ -58,6 +59,12 @@ func _try_pickup(mouse_pos: Vector2) -> void
 
 ```gdscript
 func _drop_held() -> void
+```
+
+### cancel_hold
+
+```gdscript
+func cancel_hold() -> void
 ```
 
 ### _project_mouse_to_finite_plane

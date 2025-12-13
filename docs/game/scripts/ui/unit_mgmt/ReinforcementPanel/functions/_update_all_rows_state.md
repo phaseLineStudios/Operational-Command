@@ -1,6 +1,6 @@
 # ReinforcementPanel::_update_all_rows_state Function Reference
 
-*Defined at:* `scripts/ui/unit_mgmt/ReinforcementPanel.gd` (lines 190–228)</br>
+*Defined at:* `scripts/ui/unit_mgmt/ReinforcementPanel.gd` (lines 229–274)</br>
 *Belongs to:* [ReinforcementPanel](../../ReinforcementPanel.md)
 
 **Signature**
@@ -22,15 +22,21 @@ func _update_all_rows_state() -> void:
 		var w: RowWidgets = _rows.get(uid, null)
 		if w == null:
 			continue
-		var cur: int = int(round(u.state_strength))
+		var cur: int = int(round(_unit_strength.get(uid, 0.0)))
 		var cap: int = int(max(0, u.strength))
 		var missing: int = max(0, cap - cur)
 		var req: int = int(_pending.get(uid, 0))
 
 		w.value.text = str(req)
-		w.slider.max_value = float(missing)
-		w.slider.value = float(req)
+		w.slider.min_value = 0.0
+		w.slider.max_value = float(cap)
+		# Ensure slider value doesn't go below current strength
+		var target_value: float = float(cur + req)
+		if target_value < float(cur):
+			target_value = float(cur)
+		w.slider.value = target_value
 		w.max_lbl.text = "/ %d" % missing
+		w.current_max_label.text = "Personnel: %d / %d" % [cur, cap]
 
 		var wiped: bool = cur <= 0
 		_disable_row(w, wiped or (_pool_remaining <= 0 and req <= 0))
@@ -50,7 +56,8 @@ func _update_all_rows_state() -> void:
 			if u.understrength_threshold > 0.0
 			else understrength_threshold
 		)
-		w.badge.set_unit(u, thr)
+		var cur_strength: float = _unit_strength.get(uid, 0.0)
+		w.badge.set_unit(u, cur_strength, thr)
 
 	_update_pool_labels()
 ```

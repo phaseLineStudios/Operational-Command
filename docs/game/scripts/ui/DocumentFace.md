@@ -19,9 +19,12 @@ extends PanelContainer
 - [`func set_total_pages(count: int) -> void`](DocumentFace/functions/set_total_pages.md) — Set total pages
 - [`func next_page() -> void`](DocumentFace/functions/next_page.md) — Navigate to next page
 - [`func prev_page() -> void`](DocumentFace/functions/prev_page.md) — Navigate to previous page
+- [`func _play_page_change_sound() -> void`](DocumentFace/functions/_play_page_change_sound.md) — Play a random page change sound
 
 ## Public Attributes
 
+- `Array[AudioStream] page_change_sounds` — Page change sound effects to play randomly when changing pages
+- `AudioStreamPlayer _page_sound_player`
 - `RichTextLabel paper_content`
 - `Label page_indicator`
 - `Button prev_button`
@@ -95,7 +98,31 @@ func prev_page() -> void
 
 Navigate to previous page
 
+### _play_page_change_sound
+
+```gdscript
+func _play_page_change_sound() -> void
+```
+
+Play a random page change sound
+
 ## Member Data Documentation
+
+### page_change_sounds
+
+```gdscript
+var page_change_sounds: Array[AudioStream]
+```
+
+Decorators: `@export`
+
+Page change sound effects to play randomly when changing pages
+
+### _page_sound_player
+
+```gdscript
+var _page_sound_player: AudioStreamPlayer
+```
 
 ### paper_content
 

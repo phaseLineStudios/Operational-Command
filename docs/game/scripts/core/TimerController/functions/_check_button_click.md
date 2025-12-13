@@ -1,6 +1,6 @@
 # TimerController::_check_button_click Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 178–209)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 181–210)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**
@@ -34,12 +34,10 @@ func _check_button_click(mouse_pos: Vector2) -> void:
 	if hit.is_empty():
 		return
 
-	# Check if we hit this timer object
 	var collider: Node = hit.collider
 	if not _is_child_of_timer(collider):
 		return
 
-	# Determine which button was clicked based on hit position
 	var hit_local := timer.to_local(hit.position)
 	var clicked_bone := _get_closest_button_bone(hit_local)
 

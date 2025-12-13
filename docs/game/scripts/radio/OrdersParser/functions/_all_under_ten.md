@@ -1,6 +1,6 @@
 # OrdersParser::_all_under_ten Function Reference
 
-*Defined at:* `scripts/radio/OrdersParser.gd` (lines 444–451)</br>
+*Defined at:* `scripts/radio/OrdersParser.gd` (lines 438–445)</br>
 *Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**

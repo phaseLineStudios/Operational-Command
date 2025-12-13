@@ -40,6 +40,8 @@ them while controlling the Engine.time_scale.
 - [`func _setup_lcd_display() -> void`](TimerController/functions/_setup_lcd_display.md) — Setup LCD display using SubViewport.
 - [`func _update_lcd_display() -> void`](TimerController/functions/_update_lcd_display.md) — Update LCD display with current time and mode.
 - [`func _find_mesh_instance(node: Node) -> MeshInstance3D`](TimerController/functions/_find_mesh_instance.md) — Find MeshInstance3D in children recursively.
+- [`func _play_button_press_sound() -> void`](TimerController/functions/_play_button_press_sound.md) — Play a random button press sound
+- [`func _play_button_release_sound() -> void`](TimerController/functions/_play_button_release_sound.md) — Play a random button release sound
 
 ## Public Attributes
 
@@ -55,6 +57,9 @@ them while controlling the Engine.time_scale.
 - `Vector3 collision_box_size` — Button Collision box size.
 - `Vector3 collision_box_position` — Button Collision box position.
 - `bool debug_draw_collision` — Enable debug visualization of collision box.
+- `Array[AudioStream] button_press_sounds` — Button press sound effects to play randomly when button is pressed
+- `Array[AudioStream] button_release_sounds` — Button release sound effects to play randomly when button is released
+- `float button_sound_pitch_variation` — Random pitch variation range (0.0 = no variation, 0.1 = ±10%, etc.)
 - `int lcd_surface_index` — Surface material override index for LCD.
 - `Vector2i lcd_resolution` — Display resolution.
 - `Color lcd_bg_color` — Display background color.
@@ -78,6 +83,7 @@ them while controlling the Engine.time_scale.
 - `Label _lcd_label`
 - `TextureRect _lcd_icon`
 - `float _sim_elapsed_time`
+- `AudioStreamPlayer3D _button_sound_player`
 
 ## Enumerations
 
@@ -223,6 +229,22 @@ func _find_mesh_instance(node: Node) -> MeshInstance3D
 
 Find MeshInstance3D in children recursively.
 
+### _play_button_press_sound
+
+```gdscript
+func _play_button_press_sound() -> void
+```
+
+Play a random button press sound
+
+### _play_button_release_sound
+
+```gdscript
+func _play_button_release_sound() -> void
+```
+
+Play a random button release sound
+
 ## Member Data Documentation
 
 ### timer
@@ -344,6 +366,36 @@ var debug_draw_collision: bool
 Decorators: `@export`
 
 Enable debug visualization of collision box.
+
+### button_press_sounds
+
+```gdscript
+var button_press_sounds: Array[AudioStream]
+```
+
+Decorators: `@export`
+
+Button press sound effects to play randomly when button is pressed
+
+### button_release_sounds
+
+```gdscript
+var button_release_sounds: Array[AudioStream]
+```
+
+Decorators: `@export`
+
+Button release sound effects to play randomly when button is released
+
+### button_sound_pitch_variation
+
+```gdscript
+var button_sound_pitch_variation: float
+```
+
+Decorators: `@export`
+
+Random pitch variation range (0.0 = no variation, 0.1 = ±10%, etc.)
 
 ### lcd_surface_index
 
@@ -525,6 +577,12 @@ var _lcd_icon: TextureRect
 
 ```gdscript
 var _sim_elapsed_time: float
+```
+
+### _button_sound_player
+
+```gdscript
+var _button_sound_player: AudioStreamPlayer3D
 ```
 
 ## Enumeration Type Documentation

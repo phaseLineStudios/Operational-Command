@@ -1,6 +1,6 @@
 # FuelSystem::speed_mult Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 117–125)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 119–127)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

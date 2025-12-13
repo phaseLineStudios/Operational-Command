@@ -1,6 +1,6 @@
 # Settings::_apply_gameplay Function Reference
 
-*Defined at:* `scripts/ui/Settings.gd` (lines 247–250)</br>
+*Defined at:* `scripts/ui/Settings.gd` (lines 304–307)</br>
 *Belongs to:* [Settings](../../Settings.md)
 
 **Signature**

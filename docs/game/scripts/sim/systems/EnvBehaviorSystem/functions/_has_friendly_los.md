@@ -1,6 +1,6 @@
 # EnvBehaviorSystem::_has_friendly_los Function Reference
 
-*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 333–348)</br>
+*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 330–345)</br>
 *Belongs to:* [EnvBehaviorSystem](../../EnvBehaviorSystem.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # RadioSubtitles::_on_hide_timer_timeout Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 399–402)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 446–449)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

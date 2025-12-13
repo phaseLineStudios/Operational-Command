@@ -1,6 +1,6 @@
 # UnitData::_default_ammo_damage Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 592–595)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 553–556)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**

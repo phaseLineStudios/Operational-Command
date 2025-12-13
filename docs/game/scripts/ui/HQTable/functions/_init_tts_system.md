@@ -1,6 +1,6 @@
 # HQTable::_init_tts_system Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 174–201)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 193–219)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**
@@ -18,14 +18,13 @@ Initialize TTS service and wire up unit voice responses
 ```gdscript
 func _init_tts_system() -> void:
 	if TTSService and tts_player:
+		if TTSService.is_initializing():
+			await TTSService.stream_ready
 		TTSService.register_player(tts_player)
 
 	if unit_voices and sim and map:
-		unit_voices.init(sim._units_by_id, sim, map.renderer)
-
-	if unit_auto_voices and sim and map:
-		unit_auto_voices.init(
-			sim, sim._units_by_id, map.renderer, counter_controller, sim.artillery_controller
+		unit_voices.init(
+			sim._units_by_id, sim, map.renderer, counter_controller, sim.artillery_controller
 		)
 		_wire_logistics_warnings()
 

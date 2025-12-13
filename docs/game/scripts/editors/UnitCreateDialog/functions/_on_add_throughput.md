@@ -1,6 +1,6 @@
 # UnitCreateDialog::_on_add_throughput Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 477–490)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 509–522)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

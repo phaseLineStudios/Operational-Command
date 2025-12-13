@@ -1,6 +1,6 @@
 # OCMenuButton::_notification Function Reference
 
-*Defined at:* `scripts/ui/controls/OcMenuButton.gd` (lines 48–52)</br>
+*Defined at:* `scripts/ui/controls/OcMenuButton.gd` (lines 64–68)</br>
 *Belongs to:* [OCMenuButton](../../OCMenuButton.md)
 
 **Signature**

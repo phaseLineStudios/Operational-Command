@@ -1,6 +1,6 @@
 # FuelSystem::_refuel_tick Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 393–442)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 407–466)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**
@@ -33,6 +33,13 @@ func _refuel_tick(delta: float) -> void:
 		if src == null or dst2 == null:
 			_finish_link(dst_id2)
 			continue
+		# Break link if either unit moves
+		if (
+			src.move_state() != ScenarioUnit.MoveState.IDLE
+			or dst2.move_state() != ScenarioUnit.MoveState.IDLE
+		):
+			_finish_link(dst_id2)
+			continue
 		if not _within_radius(src, dst2):
 			_finish_link(dst_id2)
 			continue
@@ -58,6 +65,9 @@ func _refuel_tick(delta: float) -> void:
 		else:
 			_xfer_accum[dst_id2] = budget
 
-		if not _needs_fuel(dst2) or not _has_stock(src):
+		var out_of_stock := not _has_stock(src)
+		if not _needs_fuel(dst2) or out_of_stock:
+			if out_of_stock:
+				emit_signal("supplier_exhausted", src_id2)
 			_finish_link(dst_id2)
 ```

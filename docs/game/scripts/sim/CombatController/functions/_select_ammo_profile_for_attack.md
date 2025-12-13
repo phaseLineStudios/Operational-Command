@@ -1,6 +1,6 @@
 # CombatController::_select_ammo_profile_for_attack Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 581–646)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 582–647)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**
@@ -39,10 +39,10 @@ func _select_ammo_profile_for_attack(attacker: ScenarioUnit, defender: ScenarioU
 			continue
 
 		var has_stock := true
-		if unit.state_ammunition.has(ammo_key):
-			has_stock = int(unit.state_ammunition.get(ammo_key, 0)) > 0
-		elif unit.state_ammunition.has(ammo_key.to_lower()):
-			has_stock = int(unit.state_ammunition.get(ammo_key.to_lower(), 0)) > 0
+		if attacker.state_ammunition.has(ammo_key):
+			has_stock = int(attacker.state_ammunition.get(ammo_key, 0)) > 0
+		elif attacker.state_ammunition.has(ammo_key.to_lower()):
+			has_stock = int(attacker.state_ammunition.get(ammo_key.to_lower(), 0)) > 0
 		if not has_stock:
 			continue
 

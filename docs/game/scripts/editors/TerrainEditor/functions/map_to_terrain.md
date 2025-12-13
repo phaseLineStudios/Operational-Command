@@ -1,6 +1,6 @@
 # TerrainEditor::map_to_terrain Function Reference
 
-*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 555–558)</br>
+*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 557–560)</br>
 *Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**

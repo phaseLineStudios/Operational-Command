@@ -1,6 +1,6 @@
 # SlotItem::clear_assignment Function Reference
 
-*Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 89–95)</br>
+*Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 104–110)</br>
 *Belongs to:* [SlotItem](../../SlotItem.md)
 
 **Signature**

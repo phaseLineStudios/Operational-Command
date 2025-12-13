@@ -1,6 +1,6 @@
 # UnitData::serialize Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 193–237)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 208–245)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**
@@ -37,14 +37,8 @@ func serialize() -> Dictionary:
 			"spot_m": spot_m,
 			"range_m": range_m,
 			"morale": morale,
-			"speed_kph": speed_kph
-		},
-		"state":
-		{
-			"state_strength": state_strength,
-			"state_injured": state_injured,
-			"state_equipment": state_equipment,
-			"cohesion": cohesion
+			"speed_kph": speed_kph,
+			"understrength_threshold": understrength_threshold
 		},
 		"editor": {"unit_category": unit_category.id},
 		"throughput": throughput.duplicate(),
@@ -53,7 +47,6 @@ func serialize() -> Dictionary:
 		"doctrine": doctrine,
 		# --- Ammo + Logistics persistence ---
 		"ammunition": ammunition.duplicate(),
-		"state_ammunition": state_ammunition.duplicate(),
 		"ammunition_low_threshold": ammunition_low_threshold,
 		"ammunition_critical_threshold": ammunition_critical_threshold,
 		"supply_transfer_rate": supply_transfer_rate,

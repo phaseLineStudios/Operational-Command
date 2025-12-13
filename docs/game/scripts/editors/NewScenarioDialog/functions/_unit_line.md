@@ -1,6 +1,6 @@
 # NewScenarioDialog::_unit_line Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 254–257)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 346–349)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # Settings::_ready Function Reference
 
-*Defined at:* `scripts/ui/Settings.gd` (lines 50–60)</br>
+*Defined at:* `scripts/ui/Settings.gd` (lines 52–62)</br>
 *Belongs to:* [Settings](../../Settings.md)
 
 **Signature**

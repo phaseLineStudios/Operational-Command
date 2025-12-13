@@ -1,6 +1,6 @@
 # Game API Reference
 
-*Generated on:* 2025-11-15 12:51
+*Generated on:* 2025-12-13 22:11
 
 ### Navigation
 

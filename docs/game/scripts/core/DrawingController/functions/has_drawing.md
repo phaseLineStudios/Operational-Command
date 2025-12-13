@@ -1,6 +1,6 @@
 # DrawingController::has_drawing Function Reference
 
-*Defined at:* `scripts/core/DrawingController.gd` (lines 346–349)</br>
+*Defined at:* `scripts/core/DrawingController.gd` (lines 321–324)</br>
 *Belongs to:* [DrawingController](../../DrawingController.md)
 
 **Signature**

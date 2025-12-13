@@ -1,6 +1,6 @@
 # UnitData::deserialize Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 239–321)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 247–318)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**
@@ -52,13 +52,9 @@ static func deserialize(data: Variant) -> UnitData:
 		u.range_m = float(stats.get("range_m", u.range_m))
 		u.morale = float(stats.get("morale", u.morale))
 		u.speed_kph = float(stats.get("speed_kph", u.speed_kph))
-
-	var state: Dictionary = data.get("state", {})
-	if typeof(state) == TYPE_DICTIONARY:
-		u.state_strength = float(state.get("state_strength", u.state_strength))
-		u.state_injured = float(state.get("state_injured", u.state_injured))
-		u.state_equipment = float(state.get("state_equipment", u.state_equipment))
-		u.cohesion = float(state.get("cohesion", u.cohesion))
+		u.understrength_threshold = float(
+			stats.get("understrength_threshold", u.understrength_threshold)
+		)
 
 	var editor: Dictionary = data.get("editor", {})
 	if typeof(editor) == TYPE_DICTIONARY:
@@ -78,10 +74,6 @@ static func deserialize(data: Variant) -> UnitData:
 	if typeof(am_caps) == TYPE_DICTIONARY:
 		u.ammunition = am_caps
 
-	var am_state = data.get("state_ammunition", null)
-	if typeof(am_state) == TYPE_DICTIONARY:
-		u.state_ammunition = am_state
-
 	u.ammunition_low_threshold = float(
 		data.get("ammunition_low_threshold", u.ammunition_low_threshold)
 	)
@@ -92,11 +84,6 @@ static func deserialize(data: Variant) -> UnitData:
 	u.supply_transfer_radius_m = float(
 		data.get("supply_transfer_radius_m", u.supply_transfer_radius_m)
 	)
-
-	# Backfill ammo state if missing (for older saves)
-	if u.state_ammunition.is_empty() and not u.ammunition.is_empty():
-		for k in u.ammunition.keys():
-			u.state_ammunition[k] = int(u.ammunition[k])
 
 	return u
 ```

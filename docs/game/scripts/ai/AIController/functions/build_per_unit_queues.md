@@ -1,6 +1,6 @@
 # AIController::build_per_unit_queues Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 133–186)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 134–187)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

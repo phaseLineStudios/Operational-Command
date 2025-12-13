@@ -1,6 +1,6 @@
 # AmmoTest::_wire_ui Function Reference
 
-*Defined at:* `scripts/test/AmmoTest.gd` (lines 144–155)</br>
+*Defined at:* `scripts/test/AmmoTest.gd` (lines 150–161)</br>
 *Belongs to:* [AmmoTest](../../AmmoTest.md)
 
 **Signature**

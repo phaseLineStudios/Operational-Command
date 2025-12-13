@@ -1,6 +1,6 @@
 # UnitSelect::_on_request_assign_drop Function Reference
 
-*Defined at:* `scripts/ui/UnitSelect.gd` (lines 210–219)</br>
+*Defined at:* `scripts/ui/UnitSelect.gd` (lines 240–249)</br>
 *Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**

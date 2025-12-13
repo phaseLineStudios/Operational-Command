@@ -1,6 +1,6 @@
 # OrdersParser::_new_order_builder Function Reference
 
-*Defined at:* `scripts/radio/OrdersParser.gd` (lines 298–314)</br>
+*Defined at:* `scripts/radio/OrdersParser.gd` (lines 293–309)</br>
 *Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**
@@ -25,10 +25,10 @@ func _new_order_builder() -> Dictionary:
 		"zone": "",
 		"target_callsign": "",
 		"direct": false,
-		"report_type": "",  # For REPORT orders: status, position, contact
-		"ammo_type": "",  # For FIRE orders: "ap", "smoke", "illum"
-		"rounds": 1,  # For FIRE orders: number of rounds
-		"engineer_task": "",  # For ENGINEER orders: "mine", "demo", "bridge"
+		"report_type": "",
+		"ammo_type": "",
+		"rounds": 1,
+		"engineer_task": "",
 		"raw": PackedStringArray()
 	}
 ```

@@ -1,6 +1,6 @@
 # MissionSelect::_update_mission_locked_states Function Reference
 
-*Defined at:* `scripts/ui/MissionSelect.gd` (lines 296–314)</br>
+*Defined at:* `scripts/ui/MissionSelect.gd` (lines 323–341)</br>
 *Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**

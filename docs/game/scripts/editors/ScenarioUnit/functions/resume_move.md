@@ -1,6 +1,6 @@
 # ScenarioUnit::resume_move Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 177–183)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 191–197)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**

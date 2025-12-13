@@ -1,6 +1,6 @@
 # UnitMgmt::_find_unit Function Reference
 
-*Defined at:* `scripts/ui/UnitMgmt.gd` (lines 140–146)</br>
+*Defined at:* `scripts/ui/UnitMgmt.gd` (lines 145–151)</br>
 *Belongs to:* [UnitMgmt](../../UnitMgmt.md)
 
 **Signature**

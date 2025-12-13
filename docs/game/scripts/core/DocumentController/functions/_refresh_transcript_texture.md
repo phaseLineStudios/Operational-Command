@@ -1,6 +1,6 @@
 # DocumentController::_refresh_transcript_texture Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 435–440)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 446–451)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

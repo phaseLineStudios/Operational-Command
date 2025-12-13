@@ -1,6 +1,6 @@
 # DocumentController::prev_page_briefing Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 748–752)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 759–763)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

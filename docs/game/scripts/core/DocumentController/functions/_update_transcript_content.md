@@ -1,6 +1,6 @@
 # DocumentController::_update_transcript_content Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 329–370)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 340–381)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # TimerController::_set_button_pressed Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 261–279)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 257–276)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**
@@ -24,7 +24,6 @@ func _set_button_pressed(bone_idx: int) -> void:
 	var start_y := current_pose.origin.y
 	var rest_y: float = _bone_rest_positions.get(bone_idx, 0.0)
 
-	# Animate to pressed position
 	_animating_bones[bone_idx] = {
 		"start_y": start_y,
 		"target_y": rest_y - press_depth,
@@ -33,4 +32,6 @@ func _set_button_pressed(bone_idx: int) -> void:
 	}
 
 	_current_pressed_bone = bone_idx
+
+	_play_button_press_sound()
 ```
