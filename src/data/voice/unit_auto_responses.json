@@ -1,0 +1,329 @@
+{
+  "events": {
+	"MOVEMENT_STARTED": {
+	  "phrases": [
+		"Moving out.",
+		"On the move.",
+		"Proceeding to waypoint.",
+        "Roger, moving."
+	  ],
+	  "priority": 1,
+	  "cooldown_s": 10.0
+	},
+	"POSITION_REACHED": {
+	  "phrases": [
+		"Position reached.",
+		"In position.",
+		"Arrived at waypoint.",
+        "We're here."
+	  ],
+	  "priority": 1,
+	  "cooldown_s": 5.0
+	},
+	"CONTACT_SPOTTED": {
+	  "phrases": [
+		"Contact!",
+		"Enemy spotted!",
+		"Eyes on hostile forces!",
+        "We have contact!"
+	  ],
+	  "priority": 2,
+	  "cooldown_s": 15.0
+	},
+	"CONTACT_LOST": {
+	  "phrases": [
+		"Contact lost.",
+		"Lost visual.",
+        "Target out of sight."
+	  ],
+	  "priority": 0,
+	  "cooldown_s": 20.0
+	},
+	"TAKING_FIRE": {
+	  "phrases": [
+		"Taking fire!",
+		"We're under fire!",
+		"Incoming fire!",
+        "Contact, contact!"
+	  ],
+	  "priority": 3,
+	  "cooldown_s": 20.0
+	},
+	"ENGAGING_TARGET": {
+	  "phrases": [
+		"Engaging!",
+		"Firing!",
+		"Engaging hostile forces!",
+        "Opening fire!"
+	  ],
+	  "priority": 2,
+	  "cooldown_s": 15.0
+	},
+	"AMMO_LOW": {
+	  "phrases": [
+		"Running low on ammo.",
+		"Ammo running low.",
+        "We're low on ammunition."
+	  ],
+	  "priority": 2,
+	  "cooldown_s": 60.0
+	},
+	"AMMO_CRITICAL": {
+	  "phrases": [
+		"Critically low on ammo!",
+		"Almost out of ammunition!",
+        "We need resupply!"
+	  ],
+	  "priority": 3,
+	  "cooldown_s": 60.0
+	},
+	"FUEL_LOW": {
+	  "phrases": [
+		"Fuel running low.",
+		"Low on fuel.",
+        "We need to refuel soon."
+	  ],
+	  "priority": 2,
+	  "cooldown_s": 60.0
+	},
+	"FUEL_CRITICAL": {
+	  "phrases": [
+		"Fuel critical!",
+		"Almost out of fuel!",
+        "We're running on fumes!"
+	  ],
+	  "priority": 3,
+	  "cooldown_s": 60.0
+	},
+	"ORDER_FAILED": {
+	  "phrases": [
+		"Unable to comply.",
+		"Negative.",
+        "Can't execute that order."
+	  ],
+	  "priority": 1,
+	  "cooldown_s": 5.0
+	},
+	"MOVEMENT_BLOCKED": {
+	  "phrases": [
+		"We're blocked!",
+		"Can't proceed!",
+        "Movement blocked!"
+	  ],
+	  "priority": 2,
+	  "cooldown_s": 10.0
+	},
+	"MISSION_CONFIRMED": {
+	  "phrases": [
+		"Fire mission confirmed.",
+		"Roger, fire mission accepted.",
+		"Mission confirmed, preparing rounds.",
+        "Roger, fire mission acknowledged."
+	  ],
+	  "priority": 1,
+	  "cooldown_s": 5.0
+	},
+	"ROUNDS_SHOT": {
+	  "phrases": [
+		"Shot!",
+		"Rounds away!",
+        "Shot, out!"
+	  ],
+	  "priority": 2,
+	  "cooldown_s": 5.0
+	},
+	"ROUNDS_SPLASH": {
+	  "phrases": [
+		"Splash!",
+		"Splash, out!",
+        "Splash in 5!"
+	  ],
+	  "priority": 2,
+	  "cooldown_s": 5.0
+	},
+	"ROUNDS_IMPACT": {
+	  "phrases": [
+		"Rounds on target.",
+		"Impact confirmed.",
+		"Rounds complete.",
+        "Impact, out."
+	  ],
+	  "priority": 1,
+	  "cooldown_s": 5.0
+	},
+	"BATTLE_DAMAGE_ASSESSMENT": {
+	  "phrases": [],
+	  "priority": 2,
+	  "cooldown_s": 10.0
+	},
+	"CASUALTIES_TAKEN": {
+	  "phrases": [
+		"We've taken casualties!",
+		"We're hit!",
+		"Taking losses!",
+		"Man down!"
+	  ],
+	  "priority": 2,
+	  "cooldown_s": 30.0
+	},
+	"COMMAND_CHANGE": {
+	  "phrases": [],
+	  "priority": 3,
+	  "cooldown_s": 120.0
+	},
+	"STRENGTH_REPORT": {
+	  "phrases": [],
+	  "priority": 2,
+	  "cooldown_s": 60.0
+	},
+	"COMBAT_INEFFECTIVE": {
+	  "phrases": [
+		"We're combat ineffective!",
+		"Unit is combat ineffective!",
+		"We can't hold!",
+		"We need immediate reinforcement!"
+	  ],
+	  "priority": 3,
+	  "cooldown_s": 120.0
+	},
+	"RESUPPLY_STARTED": {
+	  "phrases": [],
+	  "priority": 1,
+	  "cooldown_s": 30.0
+	},
+	"RESUPPLY_EXHAUSTED": {
+	  "phrases": [
+		"Out of ammunition stock.",
+		"Ammunition supply exhausted.",
+		"No more rounds to transfer."
+	  ],
+	  "priority": 2,
+	  "cooldown_s": 60.0
+	},
+	"REFUEL_STARTED": {
+	  "phrases": [],
+	  "priority": 1,
+	  "cooldown_s": 30.0
+	},
+	"REFUEL_EXHAUSTED": {
+	  "phrases": [
+		"Out of fuel stock.",
+		"Fuel supply exhausted.",
+		"No more fuel to transfer."
+	  ],
+	  "priority": 2,
+	  "cooldown_s": 60.0
+	}
+  },
+  "order_failures": {
+	"unknown_unit": [
+	  "Unable to comply, unit not found.",
+	  "Negative, unknown unit.",
+      "Can't locate that unit."
+	],
+	"dead_unit": [
+	  "Unable to comply, unit is down.",
+	  "Negative, that unit is out of action.",
+      "Unit is no longer operational."
+	],
+	"unsupported_type": [
+	  "Unable to comply, invalid order type.",
+	  "Negative, can't execute that order.",
+      "Order not recognized."
+	],
+	"move_missing_destination": [
+	  "Unable to comply, no destination specified.",
+	  "Negative, where do you want us to go?",
+      "Need a destination."
+	],
+	"move_destination_zero": [
+	  "Unable to comply, invalid destination.",
+	  "Negative, can't move there.",
+      "That's not a valid location."
+	],
+	"move_plan_failed": [
+	  "Unable to comply, can't find a route.",
+	  "Negative, no path available.",
+      "Can't get there from here."
+	],
+	"recon_no_destination": [
+	  "Unable to comply, need a recon target.",
+	  "Negative, where should we recon?",
+      "Need a location to scout."
+	],
+	"fire_missing_target": [
+	  "Unable to comply, no target.",
+	  "Negative, who do we engage?",
+      "Need a target."
+	],
+	"fire_not_artillery": [
+	  "Unable to comply, not an artillery unit.",
+	  "Negative, we're not artillery.",
+      "We don't have indirect fire capability."
+	],
+	"fire_no_ammo": [
+	  "Unable to comply, no ammunition.",
+	  "Negative, out of that ammo type.",
+      "We don't have that ammunition."
+	],
+	"fire_mission_rejected": [
+	  "Unable to comply, fire mission rejected.",
+	  "Negative, can't execute fire mission.",
+      "Fire mission denied."
+	],
+	"fire_unhandled": [
+	  "Unable to comply, can't engage.",
+	  "Negative, unable to fire.",
+      "Can't execute fire mission."
+	]
+  },
+  "movement_blocked": {
+	"no_path": [
+	  "Can't find a route!",
+	  "No path available!",
+      "Unable to reach destination!"
+	],
+	"blocked_cell": [
+	  "We're stuck!",
+	  "Terrain is impassable!",
+      "Can't move through here!"
+	],
+	"no_grid": [
+	  "Navigation error!",
+	  "Can't navigate!",
+      "System error!"
+	],
+	"no_unit": [
+	  "Unit error!",
+	  "Can't move!",
+      "System error!"
+	],
+	"no_speed": [
+	  "We're immobilized!",
+	  "Can't move, immobilized!",
+      "Movement systems down!"
+	]
+  },
+  "commander_names": [
+	"Sergeant Miller",
+	"Corporal Johnson",
+	"Staff Sergeant Davis",
+	"Sergeant First Class Anderson",
+	"Lieutenant Thompson",
+	"Sergeant Wilson",
+	"Corporal Martinez",
+	"Staff Sergeant Garcia",
+	"Sergeant Rodriguez",
+	"Corporal Brown",
+	"Sergeant First Class Taylor",
+	"Lieutenant Moore",
+	"Sergeant Jackson",
+	"Corporal White",
+	"Staff Sergeant Harris",
+	"Sergeant Martin",
+	"Corporal Thompson",
+	"Sergeant First Class Clark",
+	"Lieutenant Lewis",
+	"Sergeant Walker"
+  ]
+}

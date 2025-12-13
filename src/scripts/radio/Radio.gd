@@ -23,6 +23,9 @@ signal radio_raw_command(text: String)
 ## Turn on/off the radio stream
 var _tx := false
 
+## Reference to unit voice responses controller
+@onready var unit_responses: UnitVoiceResponses = $UnitResponses
+
 
 ## Connect to STTService signals.
 func _ready() -> void:

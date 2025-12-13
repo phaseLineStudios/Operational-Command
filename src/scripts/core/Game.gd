@@ -17,8 +17,8 @@ signal scenario_selected(mission_id: StringName)
 signal scenario_loadout_selected(loadout: Dictionary)
 
 @export var debug_display_scene: PackedScene = preload("res://scenes/system/debug_display.tscn")
-var debug_display: CanvasLayer
 
+var debug_display: CanvasLayer
 var current_campaign: CampaignData
 var current_save_id: StringName = &""
 var current_save: CampaignSave = null

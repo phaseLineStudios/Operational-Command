@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://obyhpxe5r3nc"]
+[gd_scene load_steps=18 format=3 uid="uid://obyhpxe5r3nc"]
 
 [ext_resource type="Script" uid="uid://ccwvjhbhbak72" path="res://scripts/ui/UnitSelect.gd" id="1_oi50k"]
 [ext_resource type="Script" uid="uid://c1km1pb0bjkq1" path="res://scripts/ui/helpers/PoolDropArea.gd" id="2_erus1"]
@@ -9,6 +9,7 @@
 [ext_resource type="Theme" uid="uid://dy2ly8e3tggi0" path="res://assets/themes/menu.theme" id="5_ptgxh"]
 [ext_resource type="PackedScene" uid="uid://dvyattx2k3rxj" path="res://scenes/ui/slot_item.tscn" id="6_qiiyt"]
 [ext_resource type="Script" uid="uid://boc05sevt2wad" path="res://scripts/ui/controls/OcMenuButton.gd" id="6_sf4k2"]
+[ext_resource type="Script" uid="uid://b0pl8rrbk6ik8" path="res://scripts/ui/controls/OcMenuTabContainer.gd" id="10_sf4k2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_52lny"]
 content_margin_left = 30.0
@@ -75,42 +76,6 @@ content_margin_top = 5.0
 content_margin_right = 5.0
 content_margin_bottom = 5.0
 bg_color = Color(0.07450981, 0.09019608, 0.105882354, 0.49803922)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_12qa1"]
-content_margin_left = 5.0
-content_margin_top = 5.0
-content_margin_right = 5.0
-content_margin_bottom = 5.0
-bg_color = Color(0.07450981, 0.09019608, 0.105882354, 0.49803922)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.22352941, 0.25490198, 0.27058825, 1)
-corner_detail = 5
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rk4ed"]
-content_margin_left = 5.0
-content_margin_top = 5.0
-content_margin_right = 5.0
-content_margin_bottom = 5.0
-bg_color = Color(0.07450981, 0.09019608, 0.105882354, 0.6)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_color = Color(0.23137255, 0.25882354, 0.27450982, 1)
-corner_detail = 1
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ptsig"]
-content_margin_left = 5.0
-content_margin_top = 5.0
-content_margin_right = 5.0
-content_margin_bottom = 5.0
-bg_color = Color(0.067, 0.082, 0.098, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_color = Color(0.224, 0.255, 0.271, 1)
 
 [node name="UnitSelect" type="Control"]
 layout_mode = 3
@@ -214,31 +179,43 @@ layout_mode = 2
 toggle_mode = true
 button_pressed = true
 text = "All"
+script = ExtResource("6_sf4k2")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
 
 [node name="Armor" type="Button" parent="OCMenuContainer/VBoxContainer/Main/LeftTray/AvailableUnits/Filters"]
 layout_mode = 2
 toggle_mode = true
 text = "Armor"
+script = ExtResource("6_sf4k2")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
 
 [node name="Inf" type="Button" parent="OCMenuContainer/VBoxContainer/Main/LeftTray/AvailableUnits/Filters"]
 layout_mode = 2
 toggle_mode = true
 text = "Inf"
+script = ExtResource("6_sf4k2")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
 
 [node name="Mech" type="Button" parent="OCMenuContainer/VBoxContainer/Main/LeftTray/AvailableUnits/Filters"]
 layout_mode = 2
 toggle_mode = true
 text = "Mech"
+script = ExtResource("6_sf4k2")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
 
 [node name="Motor" type="Button" parent="OCMenuContainer/VBoxContainer/Main/LeftTray/AvailableUnits/Filters"]
 layout_mode = 2
 toggle_mode = true
 text = "Motor"
+script = ExtResource("6_sf4k2")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
 
 [node name="Support" type="Button" parent="OCMenuContainer/VBoxContainer/Main/LeftTray/AvailableUnits/Filters"]
 layout_mode = 2
 toggle_mode = true
 text = "Support"
+script = ExtResource("6_sf4k2")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
 
 [node name="Search" type="LineEdit" parent="OCMenuContainer/VBoxContainer/Main/LeftTray/AvailableUnits"]
 unique_name_in_owner = true
@@ -337,14 +314,15 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_g1oib")
 layout_mode = 2
 
 [node name="Stats" type="TabContainer" parent="OCMenuContainer/VBoxContainer/Main/RightTray/VBox"]
+clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_12qa1")
-theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_rk4ed")
-theme_override_styles/tab_selected = SubResource("StyleBoxFlat_ptsig")
-theme_override_styles/tab_focus = SubResource("StyleBoxFlat_ptsig")
+focus_mode = 2
+mouse_filter = 0
 current_tab = 0
+script = ExtResource("10_sf4k2")
+metadata/_custom_type_script = "uid://b0pl8rrbk6ik8"
 
 [node name="Supply" type="VBoxContainer" parent="OCMenuContainer/VBoxContainer/Main/RightTray/VBox/Stats"]
 unique_name_in_owner = true

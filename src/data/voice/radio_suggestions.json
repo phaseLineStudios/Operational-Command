@@ -1,0 +1,87 @@
+{
+  "callsigns": {
+	"type": "dynamic",
+	"source": "callsigns_table",
+	"subkeys": "actions"
+  },
+  "actions": {
+	"move": {
+	  "subkeys": ["directions", "grid", "terrain_labels"]
+	},
+	"attack": {
+	  "subkeys": "enemy_callsigns"
+	},
+	"defend": {
+	  "subkeys": ["directions", "terrain_labels"]
+	},
+	"recon": {
+	  "subkeys": ["directions", "terrain_labels"]
+	},
+	"report": {
+	  "subkeys": "report_types"
+	},
+	"fire": {
+	  "subkeys": ["ammo_types", "directions", "terrain_labels"]
+	},
+	"hold": {},
+	"cancel": {}
+  },
+  "report_types": {
+	"status": {},
+	"position": {},
+	"contact": {},
+	"supply": {}
+  },
+  "ammo_types": {
+	"ap": {
+	  "subkeys": "fire_targets"
+	},
+	"he": {
+	  "subkeys": "fire_targets"
+	},
+	"smoke": {
+	  "subkeys": "fire_targets"
+	},
+	"illum": {
+	  "subkeys": "fire_targets"
+	},
+	"illumination": {
+	  "subkeys": "fire_targets"
+	}
+  },
+  "fire_targets": {
+	"type": "context_aware",
+	"options": ["directions", "terrain_labels", "quantities"]
+  },
+  "directions": {
+	"type": "dynamic",
+	"source": "directions_table",
+	"subkeys": "quantities"
+  },
+  "quantities": {
+	"type": "numeric",
+	"options": ["100", "200", "500", "1000", "1500", "2000"],
+	"subkeys": "quantity_units"
+  },
+  "quantity_units": {
+	"meters": {},
+	"kilometers": {},
+	"rounds": {}
+  },
+  "grid": {
+	"type": "special",
+	"subkeys": "grid_coordinates"
+  },
+  "grid_coordinates": {
+	"type": "examples",
+	"options": ["123456", "234567", "345678", "12345678", "23456789"]
+  },
+  "terrain_labels": {
+	"type": "dynamic",
+	"source": "terrain_labels_list"
+  },
+  "enemy_callsigns": {
+	"type": "dynamic",
+	"source": "unit_callsigns_list"
+  }
+}

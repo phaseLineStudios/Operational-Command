@@ -24,9 +24,9 @@ const ORDER_KEYS := {
 	"zone": "",
 	"target_callsign": "",
 	"direct": false,
-	"ammo_type": "",  # For FIRE orders: "ap", "smoke", "illum"
-	"rounds": 1,  # For FIRE orders: number of rounds
-	"engineer_task": "",  # For ENGINEER orders: "mine", "demo", "bridge"
+	"ammo_type": "",
+	"rounds": 1,
+	"engineer_task": "",
 	"raw": []
 }
 
@@ -73,7 +73,6 @@ func parse(text: String) -> Array:
 		emit_signal("parse_error", "No tokens.")
 		return []
 
-	# First check for custom commands (full text match)
 	var normalized_text := text.to_lower().strip_edges()
 	for keyword in _custom_commands.keys():
 		if normalized_text.contains(keyword):
@@ -89,7 +88,6 @@ func parse(text: String) -> Array:
 	else:
 		emit_signal("parsed", orders)
 
-		# Print hr orders for debugging
 		for order in orders:
 			LogService.info("Order: %s" % order_to_string(order), "OrdersParser.gd:41")
 	return orders
@@ -112,12 +110,10 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 	while i < tokens.size():
 		var t := tokens[i]
 
-		# Skip artifacts/stopwords.
 		if t == "[unk]" or stopwords.has(t):
 			i += 1
 			continue
 
-		# Callsign.
 		if callsigns.has(t):
 			var cs := str(callsigns[t])
 			if cur.callsign == "":
@@ -133,13 +129,11 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 			i += 1
 			continue
 
-		# Direct movement modifier (can come before or after move action)
 		if t == "direct":
 			cur.direct = true
 			i += 1
 			continue
 
-		# Action keyword.
 		if actions.has(t):
 			var ot := int(actions[t])
 			if cur.type != OrderType.UNKNOWN and cur.callsign != "":
@@ -149,39 +143,59 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 				cur.callsign = prev_subject
 			cur.type = ot
 
-			# Detect report type if this is a REPORT order
 			if ot == OrderType.REPORT:
-				# Default to status
 				cur.report_type = "status"
-				# Look at next token to determine report type
 				if i + 1 < tokens.size():
 					var next := tokens[i + 1]
 					if next in ["status"]:
 						cur.report_type = "status"
-						i += 1  # Skip the report type token
+						i += 1
 					elif next == "position":
 						cur.report_type = "position"
-						i += 1  # Skip the report type token
+						i += 1
 					elif next in ["contact", "contacts"]:
 						cur.report_type = "contact"
-						i += 1  # Skip the report type token
-				# "sitrep" keyword defaults to status (already set)
+						i += 1
+					elif next in ["supply", "supplies", "ammo", "fuel"]:
+						cur.report_type = "supply"
+						i += 1
 
-			# Detect ammo type and rounds if this is a FIRE order
 			if ot == OrderType.FIRE:
-				# Default ammo type is AP
 				cur.ammo_type = "ap"
 				cur.rounds = 1
-				# Scan ahead for ammo type and rounds keywords
-				# But stop early if we hit grid/position keywords
+				LogService.debug(
+					"Parsing FIRE order, scanning from token %d: %s" % [i, tokens.slice(i)],
+					"OrdersParser"
+				)
 				var j := i + 1
 				while j < tokens.size():
 					var next := tokens[j]
-					# Stop IMMEDIATELY if we hit grid/position keywords
-					# (don't consume them, let normal parsing handle them)
-					if qty_labels.has(next) or directions.has(next):
-						break
-					# Detect ammo type
+
+					if next in ["round", "rounds"]:
+						if j > i + 1:
+							var prev := tokens[j - 1]
+							LogService.debug(
+								"Found 'rounds' at %d, prev token: '%s'" % [j, prev], "OrdersParser"
+							)
+							if _is_int_literal(prev):
+								cur.rounds = int(prev)
+								LogService.debug(
+									"Parsed rounds as int literal: %d" % cur.rounds, "OrdersParser"
+								)
+							elif number_words.has(prev):
+								cur.rounds = int(number_words[prev])
+								LogService.debug(
+									"Parsed rounds from word: %d" % cur.rounds, "OrdersParser"
+								)
+							else:
+								LogService.debug(
+									"Prev token not recognized as number", "OrdersParser"
+								)
+						else:
+							LogService.debug("Found 'rounds' but j <= i+1", "OrdersParser")
+						j += 1
+						continue
+
 					if next in ["ap", "he", "frag", "antipersonnel"]:
 						cur.ammo_type = "ap"
 						j += 1
@@ -194,37 +208,21 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 						cur.ammo_type = "illum"
 						j += 1
 						continue
-					# Detect rounds count
-					elif next in ["round", "rounds"]:
-						# Look for number before "round/rounds"
-						if j > i + 1:
-							var prev := tokens[j - 1]
-							if _is_int_literal(prev):
-								cur.rounds = int(prev)
-							elif number_words.has(prev):
-								cur.rounds = int(number_words[prev])
-						j += 1
-						continue
-					# Stop if we hit callsigns or other actions
-					elif callsigns.has(next) or actions.has(next):
-						break
-					# Otherwise skip this token
-					j += 1
-				# Don't update i - let normal parsing handle position/grid
-				# Only the ammo type scanning consumes its own tokens
 
-			# Detect engineer task type if this is an ENGINEER order
+					if qty_labels.has(next) or directions.has(next):
+						break
+
+					if callsigns.has(next) or actions.has(next):
+						break
+
+					j += 1
 			if ot == OrderType.ENGINEER:
-				# Default task type is mine
 				cur.engineer_task = "mine"
-				# Scan ahead for task type keywords
 				var j := i + 1
 				while j < tokens.size():
 					var next := tokens[j]
-					# Stop if we hit grid/position keywords
 					if qty_labels.has(next) or directions.has(next):
 						break
-					# Detect task type
 					if next in ["mine", "mines", "minefield"]:
 						cur.engineer_task = "mine"
 						j += 1
@@ -237,17 +235,13 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 						cur.engineer_task = "bridge"
 						j += 1
 						continue
-					# Stop if we hit callsigns or other actions
 					elif callsigns.has(next) or actions.has(next):
 						break
-					# Otherwise skip this token
 					j += 1
-				# Don't update i - let normal parsing handle position/grid
 
 			i += 1
 			continue
 
-		# Direction.
 		if directions.has(t):
 			cur.direction = str(directions[t])
 			i += 1
@@ -260,7 +254,6 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 				cur.quantity = num_after.value
 				i += 1 + num_after.consumed
 				continue
-			# If no number after label, treat label as hint and continue scanning.
 			i += 1
 			continue
 
@@ -275,16 +268,13 @@ func _extract_orders(tokens: PackedStringArray) -> Array:
 			cur.quantity = num_here.value
 			continue
 
-		# Prepositions are hints; skip.
 		if prepositions.has(t):
 			i += 1
 			continue
 
-		# Unknowns kept for debugging.
 		cur.raw.append(t)
 		i += 1
 
-	# Flush tail if meaningful.
 	if (
 		cur.callsign != ""
 		and (
@@ -309,10 +299,10 @@ func _new_order_builder() -> Dictionary:
 		"zone": "",
 		"target_callsign": "",
 		"direct": false,
-		"report_type": "",  # For REPORT orders: status, position, contact
-		"ammo_type": "",  # For FIRE orders: "ap", "smoke", "illum"
-		"rounds": 1,  # For FIRE orders: number of rounds
-		"engineer_task": "",  # For ENGINEER orders: "mine", "demo", "bridge"
+		"report_type": "",
+		"ammo_type": "",
+		"rounds": 1,
+		"engineer_task": "",
 		"raw": PackedStringArray()
 	}
 
@@ -356,7 +346,6 @@ func _normalize_and_tokenize(text: String) -> PackedStringArray:
 		):
 			cleaned += char(cp)
 
-	# Collapse spaces and split.
 	cleaned = cleaned.strip_edges()
 	var parts := cleaned.split(" ", false)
 	var out := PackedStringArray()

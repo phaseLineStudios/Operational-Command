@@ -20,6 +20,17 @@ signal request_inspect_unit(unit: Dictionary)
 ## Icon used when slot is empty or unit lacks icon.
 @export var default_icon: Texture2D
 
+@export_group("Slot Sounds")
+## Sound to play when hovering over a slot
+@export var hover_sounds: Array[AudioStream] = [
+	preload("res://audio/ui/sfx_ui_button_hover_01.wav"),
+	preload("res://audio/ui/sfx_ui_button_hover_02.wav")
+]
+## Sound to play when clicking a slot
+@export var click_sounds: Array[AudioStream] = [
+	preload("res://audio/ui/sfx_ui_button_click_01.wav"),
+]
+
 var slot_id: String = ""
 var title: String = ""
 var allowed_roles: Array = []
@@ -53,6 +64,10 @@ func _ready() -> void:
 		func():
 			_is_hovered = true
 			_apply_style()
+			if hover_sounds.size() > 0 and _assigned_unit:
+				AudioManager.play_random_ui_sound(
+					hover_sounds, Vector2(1.0, 1.0), Vector2(0.98, 1.02)
+				)
 	)
 	mouse_exited.connect(
 		func():
@@ -147,6 +162,10 @@ func _apply_style() -> void:
 func _gui_input(e: InputEvent) -> void:
 	if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
 		if _assigned_unit != null:
+			if click_sounds.size() > 0:
+				AudioManager.play_random_ui_sound(
+					click_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1)
+				)
 			emit_signal("request_inspect_unit", _assigned_unit)
 
 

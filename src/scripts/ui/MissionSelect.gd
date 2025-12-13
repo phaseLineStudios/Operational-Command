@@ -8,6 +8,7 @@ const SCENE_CAMPAIGN_SELECT := "res://scenes/campaign_select.tscn"
 
 ## Path to unit select scene
 const SCENE_BRIEFING := "res://scenes/briefing.tscn"
+const SCENE_VIDEO := "res://scenes/mission_video.tscn"
 
 ## Size of each mission pin in pixels.
 @export var pin_size := Vector2i(24, 24)
@@ -15,6 +16,16 @@ const SCENE_BRIEFING := "res://scenes/briefing.tscn"
 @export var pin_texture: Texture2D
 ## Show title tooltip for pins.
 @export var show_pin_tooltips := true
+
+@export_group("Pin Sounds")
+## Sound to play when hovering over a pin
+@export var pin_hover_sounds: Array[AudioStream] = [
+	preload("res://audio/ui/sfx_ui_button_hover_01.wav"),
+	preload("res://audio/ui/sfx_ui_button_hover_02.wav")
+]
+## Sound to play when clicking a pin
+@export
+var pin_click_sounds: Array[AudioStream] = [preload("res://audio/ui/sfx_ui_button_click_01.wav")]
 
 var _selected_mission: ScenarioData
 var _campaign: CampaignData
@@ -41,6 +52,12 @@ var _pin_centers_by_id: Dictionary = {}
 
 ## Build UI, load map, place pins, hook resizes.
 func _ready() -> void:
+	if AudioManager.get_current_music() != AudioManager.main_menu_music:
+		if not AudioManager.is_music_playing():
+			AudioManager.play_music(AudioManager.main_menu_music)
+		else:
+			AudioManager.crossfade_to(AudioManager.main_menu_music, 0.5)
+
 	_btn_back.pressed.connect(_on_back_pressed)
 	_load_campaign_and_map()
 	await get_tree().process_frame
@@ -207,6 +224,9 @@ func _on_pin_mouse_entered(pin: Control) -> void:
 	c.a = 1.0
 	pin.modulate = c
 
+	if pin_hover_sounds.size() > 0:
+		AudioManager.play_random_ui_sound(pin_hover_sounds, Vector2(1.0, 1.0), Vector2(0.98, 1.02))
+
 
 ## Restore highlight alpha when mouse leaves.
 func _on_pin_mouse_exited(pin: Control) -> void:
@@ -220,6 +240,9 @@ func _on_pin_mouse_exited(pin: Control) -> void:
 
 ## Open the mission card; create/remove image node depending on presence.
 func _on_pin_pressed(mission: ScenarioData, pin_btn: BaseButton) -> void:
+	if pin_click_sounds.size() > 0:
+		AudioManager.play_random_ui_sound(pin_click_sounds, Vector2(1.0, 1.0), Vector2(0.9, 1.1))
+
 	_selected_mission = mission
 	_card_pin_button = pin_btn
 
@@ -255,7 +278,11 @@ func _on_start_pressed() -> void:
 		return
 
 	Game.select_scenario(_selected_mission)
-	Game.goto_scene(SCENE_BRIEFING)
+
+	if _selected_mission.video:
+		Game.goto_scene(SCENE_VIDEO)
+	else:
+		Game.goto_scene(SCENE_BRIEFING)
 
 
 ## Return to campaign select.

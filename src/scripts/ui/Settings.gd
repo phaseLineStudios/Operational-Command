@@ -12,7 +12,7 @@ enum WindowMode { WINDOWED, FULLSCREEN }
 const CONFIG_PATH := "user://settings.cfg"
 
 ## Exposed buses. Missing buses are ignored.
-@export var audio_buses: Array[String] = ["Master", "Music", "SFX", "UI", "Radio"]
+@export var audio_buses: Array[String] = ["Master", "Environment", "Music", "SFX", "UI", "Radio"]
 ## Actions to rebind (must exist in InputMap).
 @export var actions_to_rebind: Array[String] = ["ptt"]
 ## Resolution list.
@@ -39,6 +39,8 @@ var _cfg := ConfigFile.new()
 
 # Audio
 @onready var _buses_list: GridContainer = %BusesList
+@onready var _output_device: OptionButton = %OutputDevice
+@onready var _input_device: OptionButton = %InputDevice
 
 # Controls
 @onready var _controls_list: VBoxContainer = %ControlsList
@@ -74,6 +76,8 @@ func _build_video_ui() -> void:
 
 ## Create rows for each audio bus.
 func _build_audio_ui() -> void:
+	_populate_audio_devices()
+
 	for audio_name in audio_buses:
 		var idx := AudioServer.get_bus_index(audio_name)
 		if idx == -1:
@@ -101,6 +105,45 @@ func _build_audio_ui() -> void:
 				_set_bus_volume(audio_name, v)
 		)
 		mute.toggled.connect(func(on: bool): _set_bus_mute(audio_name, on))
+
+
+## Populate audio device dropdowns.
+func _populate_audio_devices() -> void:
+	# Output devices (speakers)
+	_output_device.clear()
+	var output_devices := AudioServer.get_output_device_list()
+	var current_output := AudioServer.get_output_device()
+	for i in range(output_devices.size()):
+		var device_name: String = output_devices[i]
+		_output_device.add_item(device_name)
+		if device_name == current_output:
+			_output_device.select(i)
+
+	# Input devices (microphones)
+	_input_device.clear()
+	var input_devices := AudioServer.get_input_device_list()
+	var current_input := AudioServer.get_input_device()
+	for i in range(input_devices.size()):
+		var device_name: String = input_devices[i]
+		_input_device.add_item(device_name)
+		if device_name == current_input:
+			_input_device.select(i)
+
+	# Connect change signals
+	_output_device.item_selected.connect(_on_output_device_changed)
+	_input_device.item_selected.connect(_on_input_device_changed)
+
+
+## Called when output device is changed.
+func _on_output_device_changed(index: int) -> void:
+	var device_name := _output_device.get_item_text(index)
+	AudioServer.set_output_device(device_name)
+
+
+## Called when input device is changed.
+func _on_input_device_changed(index: int) -> void:
+	var device_name := _input_device.get_item_text(index)
+	AudioServer.set_input_device(device_name)
 
 
 ## Create rebind buttons for actions.
@@ -165,6 +208,22 @@ func _apply_ui_from_config() -> void:
 		mute.button_pressed = m
 		_set_bus_volume(audio_name, sli.value)
 		_set_bus_mute(audio_name, m)
+
+	var saved_output: String = _cfg.get_value("audio", "output_device", "")
+	if saved_output != "":
+		for i in range(_output_device.item_count):
+			if _output_device.get_item_text(i) == saved_output:
+				_output_device.select(i)
+				AudioServer.set_output_device(saved_output)
+				break
+
+	var saved_input: String = _cfg.get_value("audio", "input_device", "")
+	if saved_input != "":
+		for i in range(_input_device.item_count):
+			if _input_device.get_item_text(i) == saved_input:
+				_input_device.select(i)
+				AudioServer.set_input_device(saved_input)
+				break
 
 
 ## Apply settings and persist.
@@ -258,6 +317,15 @@ func _save_config() -> void:
 		var row: Dictionary = _bus_rows[bus_name]
 		_cfg.set_value("audio", "%s_vol" % bus_name, (row["slider"] as HSlider).value)
 		_cfg.set_value("audio", "%s_mute" % bus_name, (row["mute"] as CheckBox).button_pressed)
+
+	# Save audio device selections
+	var output_idx := _output_device.get_selected()
+	if output_idx >= 0:
+		_cfg.set_value("audio", "output_device", _output_device.get_item_text(output_idx))
+
+	var input_idx := _input_device.get_selected()
+	if input_idx >= 0:
+		_cfg.set_value("audio", "input_device", _input_device.get_item_text(input_idx))
 
 	_cfg.save(CONFIG_PATH)
 
