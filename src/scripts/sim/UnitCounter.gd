@@ -14,6 +14,9 @@ enum CounterAffiliation { PLAYER, FRIEND, ENEMY, NEUTRAL, UNKNOWN }
 @export var symbol_type: MilSymbol.UnitType = MilSymbol.UnitType.INFANTRY
 @export var symbol_size: MilSymbol.UnitSize = MilSymbol.UnitSize.COMPANY
 
+@export_group("Performance")
+@export var free_face_renderer_after_bake: bool = true
+
 @onready var mesh: MeshInstance3D = %Mesh.get_node_or_null("unit_counter")
 @onready var face_renderer: SubViewport = %FaceRenderer
 @onready var face_background: PanelContainer = %Background
@@ -77,12 +80,26 @@ func _generate_face(color: Color) -> Texture2D:
 	sb.bg_color = color
 	face_background.add_theme_stylebox_override("panel", sb)
 
+	# Update the (disabled-by-default) viewport once to bake the face texture.
+	if face_renderer:
+		face_renderer.render_target_update_mode = SubViewport.UPDATE_ONCE
+
 	# Wait for viewport to render
 	await get_tree().process_frame
 	await get_tree().process_frame
 
 	var img := face_renderer.get_texture().get_image()
 	img.generate_mipmaps()
+
+	if face_renderer:
+		face_renderer.render_target_update_mode = SubViewport.UPDATE_DISABLED
+	if free_face_renderer_after_bake and not Engine.is_editor_hint():
+		if face_renderer:
+			face_renderer.queue_free()
+		face_renderer = null
+		face_background = null
+		face_symbol = null
+		face_callsign = null
 
 	return ImageTexture.create_from_image(img)
 
