@@ -20,6 +20,10 @@ const RESOLUTION_SCALE := 2.0
 ## Material surface index for the paper on clipboard mesh
 const PAPER_MATERIAL_INDEX := 3
 
+@export_group("Performance")
+## If true, bake a CPU ImageTexture with mipmaps from the viewport (expensive).
+@export var bake_viewport_mipmaps: bool = false
+
 ## Maximum transcript entries before pruning oldest
 const MAX_TRANSCRIPT_ENTRIES := 50
 
@@ -488,6 +492,16 @@ func _apply_texture_to_clipboard(
 func _refresh_texture(material: StandardMaterial3D, viewport: SubViewport) -> void:
 	if material == null or viewport == null:
 		LogService.warning("Cannot refresh: material or viewport is null", "DocumentController.gd")
+		return
+
+	material.texture_filter = (
+		BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+		if bake_viewport_mipmaps
+		else BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	)
+
+	if not bake_viewport_mipmaps:
+		material.albedo_texture = viewport.get_texture()
 		return
 
 	var img := viewport.get_texture().get_image()
