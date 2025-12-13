@@ -15,6 +15,8 @@ signal map_unhandled_mouse(event, map_pos: Vector2, terrain_pos: Vector2)
 @export var viewport_oversample: int = 4
 ## If true, the terrain SubViewport renders every frame (useful for debug/animated overlays).
 @export var viewport_update_always: bool = false
+## If true, bake a CPU ImageTexture with mipmaps from the viewport (expensive).
+@export var bake_viewport_mipmaps: bool = false
 ## Delay before rebuilding mipmaps after a map change (seconds).
 @export var mipmap_update_delay_sec: float = 0.08
 
@@ -47,8 +49,12 @@ func _ready() -> void:
 	_start_world_max = Vector2(_plane.size.x * sx, _plane.size.y * sz)
 
 	_mat = map.get_active_material(0)
-	# Use anisotropic filtering for better quality at extreme angles
-	_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	# Use anisotropic filtering only when baking mipmaps (avoids expensive readbacks by default).
+	_mat.texture_filter = (
+		BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+		if bake_viewport_mipmaps
+		else BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	)
 	# Disable texture repeat to avoid edge artifacts
 	_mat.uv1_triplanar = false
 
@@ -135,14 +141,19 @@ func _unhandled_input(event: InputEvent) -> void:
 func _apply_viewport_texture() -> void:
 	# Temporarily use viewport texture directly
 	_mat.albedo_texture = terrain_viewport.get_texture()
-	# Create an ImageTexture that will hold mipmaps
-	if _mipmap_texture == null:
+	# Optional: Create an ImageTexture that will hold baked mipmaps (expensive path).
+	if bake_viewport_mipmaps and _mipmap_texture == null:
 		_mipmap_texture = ImageTexture.new()
 	# Don't generate mipmaps yet - wait for render_ready signal
 
 
 ## Update the mipmap texture from the viewport
 func _update_mipmap_texture() -> void:
+	if not bake_viewport_mipmaps:
+		return
+	if _mipmap_texture == null:
+		_mipmap_texture = ImageTexture.new()
+
 	# Get the viewport's rendered image
 	var img := terrain_viewport.get_texture().get_image()
 	if img == null or img.is_empty():
@@ -205,6 +216,8 @@ func _do_viewport_update_once() -> void:
 
 ## Debounce mipmap rebuilds and ensure the map gets baked back to a static ImageTexture.
 func _schedule_mipmap_update() -> void:
+	if not bake_viewport_mipmaps:
+		return
 	if _is_dynamic_viewport() or not is_inside_tree():
 		return
 	_mipmap_gen += 1
@@ -281,7 +294,7 @@ func _request_map_refresh(with_mipmaps: bool) -> void:
 	# Show the live viewport immediately; bake mipmaps after changes settle.
 	_apply_viewport_texture()
 	_queue_viewport_update()
-	if with_mipmaps:
+	if with_mipmaps and bake_viewport_mipmaps:
 		_schedule_mipmap_update()
 
 
