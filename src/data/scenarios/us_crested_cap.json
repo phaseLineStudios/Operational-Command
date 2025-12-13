@@ -772,7 +772,7 @@
   },
   "datetime": {
     "day": 5,
-    "hour": 2,
+    "hour": 9,
     "minute": 0,
     "month": 11,
     "year": 1983
@@ -896,8 +896,8 @@
     ]
   },
   "weather": {
-    "fog_m": 800.0,
-    "rain": 2.0,
+    "fog_m": 8000.0,
+    "rain": 0.0,
     "wind_dir": 0.0,
     "wind_speed_m": 1.0
   }
