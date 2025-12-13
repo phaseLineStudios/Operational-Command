@@ -21,7 +21,6 @@ func _ready() -> void:
 
 func scenario_changed(new_scenario: ScenarioData) -> void:
 	if not new_scenario:
-		LogService.warning("Null scenario.", "forest_terrain.gd:24")
 		return
 	print(new_scenario)
 	_scenario = new_scenario
@@ -47,10 +46,8 @@ func check_rain() -> void:
 	var shader_mat := mat as ShaderMaterial
 
 	if _scenario.rain > 0.0:
-		# Lower roughness makes terrain look wet/shiny
 		shader_mat.set_shader_parameter("roughness_scale", 0.0)
 		print("Set terrain roughness to 0.0 (wet)")
 	else:
-		# Reset to normal roughness
 		shader_mat.set_shader_parameter("roughness_scale", 1.0)
 		print("Set terrain roughness to 1.0 (dry)")

@@ -518,10 +518,6 @@ func _split_transcript_into_pages(content: RichTextLabel, full_text: String) -> 
 	var visible_lines := content.get_visible_line_count()
 
 	if visible_lines < 10:
-		LogService.warning(
-			"visible_lines=%d is too small, defaulting to 30" % visible_lines,
-			"DocumentController.gd"
-		)
 		visible_lines = 30
 
 	if total_lines <= visible_lines:

@@ -173,7 +173,7 @@ func _generate_forest() -> void:
 
 	# Calculate trees per mesh type (evenly distributed)
 	var mesh_count := tree_meshes.size()
-	var trees_per_mesh := tree_count / mesh_count
+	var trees_per_mesh := int(float(tree_count) / mesh_count)
 	var remainder := tree_count % mesh_count
 
 	# Create MultiMesh instances for each tree type
