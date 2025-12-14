@@ -1,6 +1,6 @@
 # TimerController::_set_button_pressed Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 257–276)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 259–278)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**

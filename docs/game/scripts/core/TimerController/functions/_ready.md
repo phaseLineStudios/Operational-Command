@@ -1,6 +1,6 @@
 # TimerController::_ready Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 88–122)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 90–124)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # DocumentController::_get_mission_timestamp Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 427–434)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 450–457)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

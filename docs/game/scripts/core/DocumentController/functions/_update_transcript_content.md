@@ -1,6 +1,6 @@
 # DocumentController::_update_transcript_content Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 340–381)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 360–401)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**
@@ -54,6 +54,6 @@ func _update_transcript_content(follow_new_messages: bool) -> void:
 	_transcript_face.update_page_indicator()
 	_display_page(_transcript_face, _transcript_content, _transcript_pages, target_page)
 
-	# Refresh texture immediately for transcript updates (no debounce needed)
-	await _do_transcript_refresh()
+	if _transcript_refresh_timer:
+		_transcript_refresh_timer.start()
 ```

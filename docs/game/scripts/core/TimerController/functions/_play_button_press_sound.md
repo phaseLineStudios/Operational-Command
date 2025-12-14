@@ -1,6 +1,6 @@
 # TimerController::_play_button_press_sound Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 464–477)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 475–488)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**

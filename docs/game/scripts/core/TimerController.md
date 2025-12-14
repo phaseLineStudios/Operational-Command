@@ -84,6 +84,8 @@ them while controlling the Engine.time_scale.
 - `TextureRect _lcd_icon`
 - `float _sim_elapsed_time`
 - `AudioStreamPlayer3D _button_sound_player`
+- `int _lcd_last_elapsed_sec`
+- `int _lcd_last_state`
 
 ## Enumerations
 
@@ -583,6 +585,18 @@ var _sim_elapsed_time: float
 
 ```gdscript
 var _button_sound_player: AudioStreamPlayer3D
+```
+
+### _lcd_last_elapsed_sec
+
+```gdscript
+var _lcd_last_elapsed_sec: int
+```
+
+### _lcd_last_state
+
+```gdscript
+var _lcd_last_state: int
 ```
 
 ## Enumeration Type Documentation

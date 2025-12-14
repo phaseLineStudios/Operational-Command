@@ -1,6 +1,6 @@
 # Game::_award_experience_to_units Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 249–306)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 358–415)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

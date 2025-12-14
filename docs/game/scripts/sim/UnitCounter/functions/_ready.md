@@ -1,6 +1,6 @@
 # UnitCounter::_ready Function Reference
 
-*Defined at:* `scripts/sim/UnitCounter.gd` (lines 37–46)</br>
+*Defined at:* `scripts/sim/UnitCounter.gd` (lines 45–54)</br>
 *Belongs to:* [UnitCounter](../../UnitCounter.md)
 
 **Signature**

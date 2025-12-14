@@ -1,6 +1,6 @@
 # DocumentController::_setup_content_labels Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 199–221)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 219–241)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

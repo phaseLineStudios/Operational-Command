@@ -1,6 +1,6 @@
 # MapController::_ready Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 31–79)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 61–108)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**
@@ -22,21 +22,24 @@ func _ready() -> void:
 		sz = 1.0
 	_start_world_max = Vector2(_plane.size.x * sx, _plane.size.y * sz)
 
-	_mat = map.get_active_material(0)
-	# Use anisotropic filtering for better quality at extreme angles
-	_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
-	# Disable texture repeat to avoid edge artifacts
-	_mat.uv1_triplanar = false
+	_map_mat = ShaderMaterial.new()
+	_map_mat.shader = MAP_PAPER_SHADER
+	map.material_override = _map_mat
+	_apply_map_material_settings()
 
-	# Enable automatic updates
-	terrain_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-
-	# Enable 2X MSAA for line smoothing without too much blur
-	terrain_viewport.msaa_2d = Viewport.MSAA_2X
+	# Enable 4X MSAA for line smoothing without too much blur
+	terrain_viewport.msaa_2d = Viewport.MSAA_4X
 	# Disable screen space AA to keep text sharp
 	terrain_viewport.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
+	# Pixel snap improves readability for thin lines/text.
+	if "snap_2d_transforms_to_pixel" in terrain_viewport:
+		terrain_viewport.set("snap_2d_transforms_to_pixel", true)
+	if "snap_2d_vertices_to_pixel" in terrain_viewport:
+		terrain_viewport.set("snap_2d_vertices_to_pixel", true)
 
 	_apply_viewport_texture()
+	_dynamic_viewport_cached = _is_dynamic_viewport()
+	_sync_viewport_update_mode()
 
 	if not terrain_viewport.is_connected(
 		"size_changed", Callable(self, "_on_viewport_size_changed")
@@ -50,13 +53,9 @@ func _ready() -> void:
 			renderer.connect("resized", Callable(self, "_on_renderer_map_resize"))
 		if not renderer.is_connected("render_ready", Callable(self, "_on_renderer_ready")):
 			renderer.connect("render_ready", Callable(self, "_on_renderer_ready"))
-		# Update mipmaps when renderer redraws (only when terrain changes)
-		if (
-			renderer.data
-			and not renderer.data.is_connected("changed", Callable(self, "_on_terrain_changed"))
-		):
-			renderer.data.changed.connect(_on_terrain_changed, CONNECT_DEFERRED)
+		_bind_terrain_signals(renderer.data)
 
 	_update_viewport_to_renderer()
 	_update_mesh_fit()
+	_request_map_refresh(true)
 ```

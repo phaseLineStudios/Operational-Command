@@ -1,6 +1,6 @@
 # LOSAdapter::_current_weather_severity Function Reference
 
-*Defined at:* `scripts/sim/adapters/LOSAdapter.gd` (lines 198–208)</br>
+*Defined at:* `scripts/sim/adapters/LOSAdapter.gd` (lines 233–243)</br>
 *Belongs to:* [LOSAdapter](../../LOSAdapter.md)
 
 **Signature**

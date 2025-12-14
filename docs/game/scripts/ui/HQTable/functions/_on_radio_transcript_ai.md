@@ -26,5 +26,5 @@ func _on_radio_transcript_ai(level: String, text: String) -> void:
 	await get_tree().process_frame
 
 	var speaker := _extract_speaker_from_message(text)
-	await document_controller.add_transcript_entry(speaker, text)
+	document_controller.add_transcript_entry(speaker, text)
 ```

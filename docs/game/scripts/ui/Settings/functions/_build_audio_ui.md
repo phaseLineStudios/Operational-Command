@@ -1,6 +1,6 @@
 # Settings::_build_audio_ui Function Reference
 
-*Defined at:* `scripts/ui/Settings.gd` (lines 78–109)</br>
+*Defined at:* `scripts/ui/Settings.gd` (lines 84–115)</br>
 *Belongs to:* [Settings](../../Settings.md)
 
 **Signature**

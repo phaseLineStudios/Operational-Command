@@ -1,6 +1,6 @@
 # DocumentController::prev_page_transcript Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 749–753)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 803–807)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

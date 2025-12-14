@@ -1,6 +1,6 @@
 # TimerController::_find_mesh_instance Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 453–462)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 464–473)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**

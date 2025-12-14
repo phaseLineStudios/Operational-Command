@@ -1,6 +1,6 @@
 # TimerController::_update_lcd_display Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 431–451)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 434–462)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**
@@ -17,14 +17,20 @@ Update LCD display with current time and mode.
 
 ```gdscript
 func _update_lcd_display() -> void:
-	if _lcd_label == null or _lcd_icon == null:
+	if _lcd_label == null or _lcd_icon == null or _lcd_viewport == null:
 		return
 
-	var elapsed := _sim_elapsed_time
+	var elapsed_sec: int = int(_sim_elapsed_time)
+	var state_i: int = int(_current_state)
+	if elapsed_sec == _lcd_last_elapsed_sec and state_i == _lcd_last_state:
+		return
 
-	var minutes := int(elapsed / 60.0)
-	var seconds := int(elapsed) % 60
-	var time_str := "%02d:%02d" % [minutes, seconds]
+	_lcd_last_elapsed_sec = elapsed_sec
+	_lcd_last_state = state_i
+
+	var minutes: int = int(elapsed_sec / 60.0)
+	var seconds: int = elapsed_sec % 60
+	var time_str: String = "%02d:%02d" % [minutes, seconds]
 
 	_lcd_label.text = time_str
 
@@ -35,4 +41,6 @@ func _update_lcd_display() -> void:
 			_lcd_icon.texture = play_icon
 		TimeState.SPEED_2X:
 			_lcd_icon.texture = fastforward_icon
+
+	_lcd_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 ```

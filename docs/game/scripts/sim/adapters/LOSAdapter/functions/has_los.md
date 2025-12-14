@@ -1,6 +1,6 @@
 # LOSAdapter::has_los Function Reference
 
-*Defined at:* `scripts/sim/adapters/LOSAdapter.gd` (lines 80–108)</br>
+*Defined at:* `scripts/sim/adapters/LOSAdapter.gd` (lines 111–139)</br>
 *Belongs to:* [LOSAdapter](../../LOSAdapter.md)
 
 **Signature**

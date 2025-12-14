@@ -1,6 +1,6 @@
 # MilSymbol::_init Function Reference
 
-*Defined at:* `scripts/utils/unit_symbols/MilSymbol.gd` (lines 57–63)</br>
+*Defined at:* `scripts/utils/unit_symbols/MilSymbol.gd` (lines 125–131)</br>
 *Belongs to:* [MilSymbol](../../MilSymbol.md)
 
 **Signature**

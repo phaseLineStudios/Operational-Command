@@ -1,6 +1,6 @@
 # MilSymbol::_parse_icon_type Function Reference
 
-*Defined at:* `scripts/utils/unit_symbols/MilSymbol.gd` (lines 245–248)</br>
+*Defined at:* `scripts/utils/unit_symbols/MilSymbol.gd` (lines 331–334)</br>
 *Belongs to:* [MilSymbol](../../MilSymbol.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # DocumentController::_split_into_pages Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 603–685)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 651–733)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

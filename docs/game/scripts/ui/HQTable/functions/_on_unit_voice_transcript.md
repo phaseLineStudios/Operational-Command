@@ -18,5 +18,5 @@ Handle unit voice responses for transcript (both acknowledgments and auto-respon
 ```gdscript
 func _on_unit_voice_transcript(callsign: String, message: String) -> void:
 	if document_controller and message != "":
-		await document_controller.add_transcript_entry(callsign, message)
+		document_controller.add_transcript_entry(callsign, message)
 ```

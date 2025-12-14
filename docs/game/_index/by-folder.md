@@ -16,19 +16,19 @@
 
 - [AudioManager](../scripts/core/AudioManager.md) — 7 funcs · 8 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 - [ContentDB](../scripts/core/ContentDB.md) — 43 funcs · 1 vars · 0 signals · 1 consts · 0 enums — *inherits* `Node`
-- [DocumentController](../scripts/core/DocumentController.md) — 31 funcs · 28 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
+- [DocumentController](../scripts/core/DocumentController.md) — 32 funcs · 30 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 - [DrawingController](../scripts/core/DrawingController.md) — 20 funcs · 16 vars · 3 signals · 0 consts · 1 enums — *inherits* `Node`
-- [Game](../scripts/core/Game.md) — 23 funcs · 9 vars · 5 signals · 0 consts · 0 enums — *inherits* `Node`
+- [Game](../scripts/core/Game.md) — 26 funcs · 11 vars · 5 signals · 1 consts · 0 enums — *inherits* `Node`
 - [InputSchema](../scripts/core/InputSchema.md) — 0 funcs · 0 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 - [InteractionController](../scripts/core/InteractionController.md) — 7 funcs · 5 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 - [LogService](../scripts/core/LogService.md) — 11 funcs · 2 vars · 1 signals · 0 consts · 1 enums — *inherits* `Node`
 - [LogTap](../scripts/core/LogTap.md) — 1 funcs · 0 vars · 1 signals · 0 consts · 0 enums — *inherits* `Logger`
-- [MapController](../scripts/core/MapController.md) — 19 funcs · 13 vars · 3 signals · 0 consts · 0 enums — *inherits* `Node`
+- [MapController](../scripts/core/MapController.md) — 35 funcs · 25 vars · 3 signals · 0 consts · 0 enums — *inherits* `Node`
 - [MissionResolution](../scripts/core/MissionResolution.md) — 13 funcs · 9 vars · 3 signals · 0 consts · 2 enums — *inherits* `Node`
 - [Persistence](../scripts/core/Persistence.md) — 10 funcs · 1 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 - [PickupItem](../scripts/core/PickupItem.md) — 18 funcs · 18 vars · 0 signals · 0 consts · 0 enums — *inherits* `RigidBody3D`
 - [TableCamera](../scripts/core/TableCamera.md) — 7 funcs · 7 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
-- [TimerController](../scripts/core/TimerController.md) — 20 funcs · 39 vars · 0 signals · 0 consts · 1 enums — *inherits* `Node`
+- [TimerController](../scripts/core/TimerController.md) — 20 funcs · 41 vars · 0 signals · 0 consts · 1 enums — *inherits* `Node`
 
 #### scripts/data
 
@@ -101,7 +101,7 @@
 - [SkyPreset](../scripts/sim/SkyPreset.md) — 0 funcs · 37 vars · 0 signals · 0 consts · 0 enums — *inherits* `Resource`
 - [TerrainEffects](../scripts/sim/TerrainEffects.md) — 7 funcs · 13 vars · 0 signals · 0 consts · 0 enums — *inherits* `RefCounted`
 - [TerrainEffectsConfig](../scripts/sim/TerrainEffectsConfig.md) — 0 funcs · 13 vars · 0 signals · 0 consts · 0 enums — *inherits* `Resource`
-- [UnitCounter](../scripts/sim/UnitCounter.md) — 6 funcs · 9 vars · 1 signals · 0 consts · 1 enums — *inherits* `Node3D`
+- [UnitCounter](../scripts/sim/UnitCounter.md) — 7 funcs · 10 vars · 1 signals · 1 consts · 1 enums — *inherits* `Node3D`
 - [UnitCounterController](../scripts/sim/UnitCounterController.md) — 5 funcs · 8 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 
 #### scripts/terrain
@@ -153,13 +153,14 @@
 - [MissionSelect](../scripts/ui/MissionSelect.md) — 19 funcs · 21 vars · 0 signals · 0 consts · 0 enums — *inherits* `Control`
 - [MissionVideo](../scripts/ui/MissionVideo.md) — 9 funcs · 5 vars · 0 signals · 0 consts · 0 enums — *inherits* `Control`
 - [PauseMenu](../scripts/ui/PauseMenu.md) — 12 funcs · 10 vars · 2 signals · 0 consts · 0 enums — *inherits* `Control`
-- [PostProcessController](../scripts/ui/PostProcessController.md) — 3 funcs · 18 vars · 0 signals · 0 consts · 0 enums — *inherits* `CanvasLayer`
+- [PostProcessController](../scripts/ui/PostProcessController.md) — 7 funcs · 29 vars · 0 signals · 0 consts · 0 enums — *inherits* `CanvasLayer`
 - [RadioSubtitles](../scripts/ui/RadioSubtitles.md) — 33 funcs · 11 vars · 0 signals · 0 consts · 0 enums — *inherits* `Control`
-- [Settings](../scripts/ui/Settings.md) — 21 funcs · 20 vars · 1 signals · 0 consts · 1 enums — *inherits* `Control`
+- [Settings](../scripts/ui/Settings.md) — 25 funcs · 22 vars · 1 signals · 0 consts · 1 enums — *inherits* `Control`
 - [SubtitleEditor](../scripts/ui/SubtitleEditor.md) — 28 funcs · 24 vars · 0 signals · 0 consts · 0 enums — *inherits* `Control`
 - [UnitMarkers](../scripts/ui/UnitMarkers.md) — 0 funcs · 0 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 - [UnitMgmt](../scripts/ui/UnitMgmt.md) — 10 funcs · 6 vars · 1 signals · 0 consts · 0 enums — *inherits* `Control`
 - [UnitSelect](../scripts/ui/UnitSelect.md) — 35 funcs · 50 vars · 0 signals · 0 consts · 0 enums — *inherits* `Control`
+- [ViewportReadOverlay](../scripts/ui/ViewportReadOverlay.md) — 8 funcs · 10 vars · 1 signals · 0 consts · 0 enums — *inherits* `CanvasLayer`
 
 #### scripts/utils
 
@@ -232,7 +233,7 @@
 ##### scripts/sim/adapters
 
 - [CombatAdapter](../scripts/sim/adapters/CombatAdapter.md) — 8 funcs · 6 vars · 1 signals · 0 consts · 1 enums — *inherits* `Node`
-- [LOSAdapter](../scripts/sim/adapters/LOSAdapter.md) — 12 funcs · 14 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
+- [LOSAdapter](../scripts/sim/adapters/LOSAdapter.md) — 13 funcs · 16 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 - [MovementAdapter](../scripts/sim/adapters/MovementAdapter.md) — 35 funcs · 27 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 
 ##### scripts/sim/scenario
@@ -277,7 +278,7 @@
 
 ##### scripts/utils/unit_symbols
 
-- [MilSymbol](../scripts/utils/unit_symbols/MilSymbol.md) — 7 funcs · 3 vars · 0 signals · 0 consts · 5 enums — *inherits* `RefCounted`
+- [MilSymbol](../scripts/utils/unit_symbols/MilSymbol.md) — 8 funcs · 7 vars · 0 signals · 1 consts · 5 enums — *inherits* `RefCounted`
 - [MilSymbolConfig](../scripts/utils/unit_symbols/MilSymbolConfig.md) — 7 funcs · 12 vars · 0 signals · 1 consts · 1 enums — *inherits* `Resource`
 - [MilSymbolGeometry](../scripts/utils/unit_symbols/MilSymbolGeometry.md) — 6 funcs · 5 vars · 0 signals · 0 consts · 1 enums — *inherits* `RefCounted`
 - [MilSymbolIcons](../scripts/utils/unit_symbols/MilSymbolIcons.md) — 2 funcs · 1 vars · 0 signals · 0 consts · 0 enums — *inherits* `RefCounted`

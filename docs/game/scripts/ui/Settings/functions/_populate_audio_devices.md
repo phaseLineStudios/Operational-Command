@@ -1,6 +1,6 @@
 # Settings::_populate_audio_devices Function Reference
 
-*Defined at:* `scripts/ui/Settings.gd` (lines 111–136)</br>
+*Defined at:* `scripts/ui/Settings.gd` (lines 117–142)</br>
 *Belongs to:* [Settings](../../Settings.md)
 
 **Signature**

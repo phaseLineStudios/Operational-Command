@@ -1,6 +1,6 @@
 # MapController::_update_mipmap_texture Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 138–160)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 229–255)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**
@@ -17,6 +17,11 @@ Update the mipmap texture from the viewport
 
 ```gdscript
 func _update_mipmap_texture() -> void:
+	if not bake_viewport_mipmaps:
+		return
+	if _mipmap_texture == null:
+		_mipmap_texture = ImageTexture.new()
+
 	# Get the viewport's rendered image
 	var img := terrain_viewport.get_texture().get_image()
 	if img == null or img.is_empty():
@@ -35,6 +40,5 @@ func _update_mipmap_texture() -> void:
 		_mipmap_texture.update(img)
 
 	# Switch material to use mipmap texture now that we have content
-	if _mat.albedo_texture != _mipmap_texture:
-		_mat.albedo_texture = _mipmap_texture
+	_set_map_texture(_mipmap_texture)
 ```

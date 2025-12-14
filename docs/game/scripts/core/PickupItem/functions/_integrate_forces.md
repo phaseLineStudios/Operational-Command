@@ -1,6 +1,6 @@
 # PickupItem::_integrate_forces Function Reference
 
-*Defined at:* `scripts/core/PickupItem.gd` (lines 284–295)</br>
+*Defined at:* `scripts/core/PickupItem.gd` (lines 285–296)</br>
 *Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**

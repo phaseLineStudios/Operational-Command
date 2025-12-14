@@ -1,6 +1,6 @@
 # TimerController::_process Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 145–174)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 147–176)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**

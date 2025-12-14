@@ -1,6 +1,6 @@
 # MapController::terrain_to_screen Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 294–349)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 561–619)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**
@@ -26,15 +26,18 @@ func terrain_to_screen(terrain_pos: Vector2) -> Variant:
 	# Convert terrain meters to map pixels
 	var map_px: Vector2 = renderer.terrain_to_map(terrain_pos)
 
-	# Apply oversample scaling
-	var oversampled_px: Vector2 = map_px * float(max(viewport_oversample, 1))
+	# Convert map units to viewport pixels (oversample and/or downscale).
+	var s: float = (
+		_viewport_pixel_scale if _viewport_pixel_scale > 0.0 else float(max(viewport_oversample, 1))
+	)
+	var vp_px: Vector2 = map_px * s
 
 	# Convert map pixels to UV coordinates (0-1)
 	var vp := terrain_viewport.size
 	if vp.x <= 0 or vp.y <= 0:
 		return null
-	var u := oversampled_px.x / vp.x
-	var v := oversampled_px.y / vp.y
+	var u := vp_px.x / vp.x
+	var v := vp_px.y / vp.y
 
 	# Convert UV to local plane coordinates
 	if _plane == null:

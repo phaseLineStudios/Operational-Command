@@ -1,6 +1,6 @@
 # DocumentController::_setup_refresh_timers Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 151–173)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 164–193)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**
@@ -30,6 +30,13 @@ func _setup_refresh_timers() -> void:
 	_transcript_refresh_timer.one_shot = true
 	_transcript_refresh_timer.timeout.connect(_do_transcript_refresh)
 	add_child(_transcript_refresh_timer)
+
+	# Transcript update timer (coalesce new entries)
+	_transcript_update_timer = Timer.new()
+	_transcript_update_timer.wait_time = maxf(transcript_update_delay_sec, 0.01)
+	_transcript_update_timer.one_shot = true
+	_transcript_update_timer.timeout.connect(_do_transcript_update)
+	add_child(_transcript_update_timer)
 
 	# Briefing timer
 	_briefing_refresh_timer = Timer.new()

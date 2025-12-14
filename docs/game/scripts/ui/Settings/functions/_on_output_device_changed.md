@@ -1,6 +1,6 @@
 # Settings::_on_output_device_changed Function Reference
 
-*Defined at:* `scripts/ui/Settings.gd` (lines 138–142)</br>
+*Defined at:* `scripts/ui/Settings.gd` (lines 144–148)</br>
 *Belongs to:* [Settings](../../Settings.md)
 
 **Signature**

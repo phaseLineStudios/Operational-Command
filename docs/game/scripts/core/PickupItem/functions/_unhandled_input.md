@@ -1,6 +1,6 @@
 # PickupItem::_unhandled_input Function Reference
 
-*Defined at:* `scripts/core/PickupItem.gd` (lines 297–344)</br>
+*Defined at:* `scripts/core/PickupItem.gd` (lines 298–345)</br>
 *Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**

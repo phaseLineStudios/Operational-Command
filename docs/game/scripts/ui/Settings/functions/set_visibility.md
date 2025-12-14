@@ -1,6 +1,6 @@
 # Settings::set_visibility Function Reference
 
-*Defined at:* `scripts/ui/Settings.gd` (lines 355–357)</br>
+*Defined at:* `scripts/ui/Settings.gd` (lines 448–450)</br>
 *Belongs to:* [Settings](../../Settings.md)
 
 **Signature**

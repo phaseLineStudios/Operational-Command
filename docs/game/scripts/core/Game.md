@@ -24,6 +24,9 @@ tactical map → debrief → unit management.
 - [`func ready() -> void`](Game/functions/ready.md)
 - [`func _ready() -> void`](Game/functions/_ready.md)
 - [`func goto_scene(path: String) -> void`](Game/functions/goto_scene.md) — Change to scene at `path`; logs error if missing.
+- [`func _on_window_size_changed() -> void`](Game/functions/_on_window_size_changed.md)
+- [`func _apply_video_perf_settings() -> void`](Game/functions/_apply_video_perf_settings.md)
+- [`func _compute_content_scale_size(window_size: Vector2i, target_size: Vector2i) -> Vector2i`](Game/functions/_compute_content_scale_size.md)
 - [`func select_campaign(campaign: CampaignData) -> void`](Game/functions/select_campaign.md) — Set current campaign and emit `signal campaign_selected`.
 - [`func select_save(save_id: StringName) -> void`](Game/functions/select_save.md) — Set current save and emit `signal save_selected`.
 - [`func delete_save(save_id: StringName) -> void`](Game/functions/delete_save.md)
@@ -55,7 +58,13 @@ tactical map → debrief → unit management.
 - `ScenarioData current_scenario`
 - `Dictionary current_scenario_loadout`
 - `Dictionary current_scenario_summary`
+- `int _base_msaa_3d`
+- `SceneTreeTimer _video_perf_timer`
 - `MissionResolution resolution`
+
+## Public Constants
+
+- `const _DEFAULT_RESOLUTIONS: Array[Vector2i]`
 
 ## Signals
 
@@ -86,6 +95,24 @@ func goto_scene(path: String) -> void
 ```
 
 Change to scene at `path`; logs error if missing.
+
+### _on_window_size_changed
+
+```gdscript
+func _on_window_size_changed() -> void
+```
+
+### _apply_video_perf_settings
+
+```gdscript
+func _apply_video_perf_settings() -> void
+```
+
+### _compute_content_scale_size
+
+```gdscript
+func _compute_content_scale_size(window_size: Vector2i, target_size: Vector2i) -> Vector2i
+```
 
 ### select_campaign
 
@@ -297,10 +324,30 @@ var current_scenario_loadout: Dictionary
 var current_scenario_summary: Dictionary
 ```
 
+### _base_msaa_3d
+
+```gdscript
+var _base_msaa_3d: int
+```
+
+### _video_perf_timer
+
+```gdscript
+var _video_perf_timer: SceneTreeTimer
+```
+
 ### resolution
 
 ```gdscript
 var resolution: MissionResolution
+```
+
+## Constant Documentation
+
+### _DEFAULT_RESOLUTIONS
+
+```gdscript
+const _DEFAULT_RESOLUTIONS: Array[Vector2i]
 ```
 
 ## Signal Documentation

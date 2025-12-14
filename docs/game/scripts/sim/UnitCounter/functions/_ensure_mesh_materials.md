@@ -1,6 +1,6 @@
 # UnitCounter::_ensure_mesh_materials Function Reference
 
-*Defined at:* `scripts/sim/UnitCounter.gd` (lines 47–58)</br>
+*Defined at:* `scripts/sim/UnitCounter.gd` (lines 55–66)</br>
 *Belongs to:* [UnitCounter](../../UnitCounter.md)
 
 **Signature**

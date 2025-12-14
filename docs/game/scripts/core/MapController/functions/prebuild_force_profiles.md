@@ -1,6 +1,6 @@
 # MapController::prebuild_force_profiles Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 90–107)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 121–138)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # Settings::_apply_audio Function Reference
 
-*Defined at:* `scripts/ui/Settings.gd` (lines 296–302)</br>
+*Defined at:* `scripts/ui/Settings.gd` (lines 389–395)</br>
 *Belongs to:* [Settings](../../Settings.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # PickupItem::_barycentric_coords Function Reference
 
-*Defined at:* `scripts/core/PickupItem.gd` (lines 416–435)</br>
+*Defined at:* `scripts/core/PickupItem.gd` (lines 417–436)</br>
 *Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # TimerController::_setup_lcd_display Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 368–429)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 370–432)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**
@@ -28,7 +28,7 @@ func _setup_lcd_display() -> void:
 
 	_lcd_viewport = SubViewport.new()
 	_lcd_viewport.size = lcd_resolution
-	_lcd_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_lcd_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	_lcd_viewport.transparent_bg = false
 	add_child(_lcd_viewport)
 
@@ -76,4 +76,5 @@ func _setup_lcd_display() -> void:
 	lcd_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 
 	mesh_instance.set_surface_override_material(lcd_surface_index, lcd_material)
+	_update_lcd_display()
 ```

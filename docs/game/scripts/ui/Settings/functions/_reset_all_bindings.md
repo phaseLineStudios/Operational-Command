@@ -1,6 +1,6 @@
 # Settings::_reset_all_bindings Function Reference
 
-*Defined at:* `scripts/ui/Settings.gd` (lines 256–267)</br>
+*Defined at:* `scripts/ui/Settings.gd` (lines 262–273)</br>
 *Belongs to:* [Settings](../../Settings.md)
 
 **Signature**

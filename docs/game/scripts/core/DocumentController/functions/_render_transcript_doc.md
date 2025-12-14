@@ -1,6 +1,6 @@
 # DocumentController::_render_transcript_doc Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 311–338)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 331–358)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

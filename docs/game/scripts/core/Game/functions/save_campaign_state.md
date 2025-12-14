@@ -1,6 +1,6 @@
 # Game::save_campaign_state Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 365–396)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 474–505)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

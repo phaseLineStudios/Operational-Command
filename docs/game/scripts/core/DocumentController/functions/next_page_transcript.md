@@ -1,6 +1,6 @@
 # DocumentController::next_page_transcript Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 744–748)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 798–802)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

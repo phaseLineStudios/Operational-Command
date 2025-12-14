@@ -1,6 +1,6 @@
 # Settings::_apply_ui_from_config Function Reference
 
-*Defined at:* `scripts/ui/Settings.gd` (lines 188–228)</br>
+*Defined at:* `scripts/ui/Settings.gd` (lines 194–234)</br>
 *Belongs to:* [Settings](../../Settings.md)
 
 **Signature**

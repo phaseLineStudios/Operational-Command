@@ -1,6 +1,6 @@
 # TimerController::_get_closest_button_bone Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 212–237)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 214–239)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MilSymbol::_parse_domain Function Reference
 
-*Defined at:* `scripts/utils/unit_symbols/MilSymbol.gd` (lines 250–265)</br>
+*Defined at:* `scripts/utils/unit_symbols/MilSymbol.gd` (lines 336–351)</br>
 *Belongs to:* [MilSymbol](../../MilSymbol.md)
 
 **Signature**

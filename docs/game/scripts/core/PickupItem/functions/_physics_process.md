@@ -1,6 +1,6 @@
 # PickupItem::_physics_process Function Reference
 
-*Defined at:* `scripts/core/PickupItem.gd` (lines 260–282)</br>
+*Defined at:* `scripts/core/PickupItem.gd` (lines 261–283)</br>
 *Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**

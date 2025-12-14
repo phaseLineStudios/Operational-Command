@@ -1,6 +1,6 @@
 # TimerController::_setup_debug_draw Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 351–366)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 353–368)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**

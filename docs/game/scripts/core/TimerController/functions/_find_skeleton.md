@@ -1,6 +1,6 @@
 # TimerController::_find_skeleton Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 328–337)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 330–339)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**

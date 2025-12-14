@@ -1,6 +1,6 @@
 # TimerController::_setup_collision Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 124–144)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 126–146)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**

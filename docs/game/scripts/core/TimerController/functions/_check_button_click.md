@@ -1,6 +1,6 @@
 # TimerController::_check_button_click Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 181–210)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 183–212)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MapController::_on_terrain_changed Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 215–221)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 482–485)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**
@@ -17,8 +17,5 @@ Terrain data changed callback: update mipmaps when terrain changes
 
 ```gdscript
 func _on_terrain_changed() -> void:
-	# Use call_deferred to batch multiple changes
-	if not is_inside_tree():
-		return
-	call_deferred("_update_mipmap_texture")
+	_request_map_refresh(true)
 ```

@@ -1,6 +1,6 @@
 # Settings::_apply_video Function Reference
 
-*Defined at:* `scripts/ui/Settings.gd` (lines 269–294)</br>
+*Defined at:* `scripts/ui/Settings.gd` (lines 275–299)</br>
 *Belongs to:* [Settings](../../Settings.md)
 
 **Signature**
@@ -38,6 +38,5 @@ func _apply_video() -> void:
 			get_window().size = res_size
 
 	Engine.max_fps = int(_fps.value)
-	# Store render scale only; actual scaling strategy can be implemented later.
-	# (Keeps groundwork without forcing a scaling mode right now.)
+	_schedule_render_scale_apply()
 ```

@@ -1,6 +1,6 @@
 # TimerController::_release_button Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 278–292)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 280–294)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**
