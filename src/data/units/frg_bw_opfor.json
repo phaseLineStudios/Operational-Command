@@ -70,7 +70,7 @@
 	"TANK_GUN": 0
   },
   "stats": {
-	"attack": 25.0,
+	"attack": 45.48,
 	"defense": 15.0,
 	"morale": 1.0,
 	"range_m": 500.0,

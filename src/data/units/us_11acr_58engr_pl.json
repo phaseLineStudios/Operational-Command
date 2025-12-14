@@ -47,7 +47,7 @@
     "weapons": {
       "Demo Charges": {
         "ammo": 12,
-        "type": 24
+        "type": 4
       },
       "M60": {
         "ammo": 0,
@@ -64,7 +64,7 @@
   "role": "ENG",
   "size": 3,
   "stats": {
-    "attack": 101.44,
+    "attack": 7.04,
     "defense": 20.0,
     "morale": 1.0,
     "range_m": 400.0,

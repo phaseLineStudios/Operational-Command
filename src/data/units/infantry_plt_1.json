@@ -8,7 +8,7 @@
 	"equipment": {},
 	"experience": 0.0,
 	"stats": {
-		"attack": 55,
+		"attack": 3.2,
 		"defense": 35,
 		"spot_m": 1000,
 		"range_m": 500,

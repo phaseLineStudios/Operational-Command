@@ -123,6 +123,10 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 	if attacker == null or defender == null or attacker.unit == null or defender.unit == null:
 		return 0.0
 
+	# Dead units cannot attack or be attacked
+	if attacker.is_dead() or defender.is_dead():
+		return 0.0
+
 	match attacker.combat_mode:
 		ScenarioUnit.CombatMode.FORCED_HOLD_FIRE:
 			return 0.0
@@ -156,7 +160,7 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 	var acc_mul: float = float(f.get("accuracy_mul", 1.0))
 	if bool(f.get("blocked", false)) or acc_mul < min_acc:
 		if attacker.unit.morale > 0.1:
-			attacker.unit.morale = max(0.0, attacker.unit.morale - 0.01)
+			attacker.unit.morale = max(0.0, attacker.unit.morale - 0.002)
 		return 0.0
 
 	# --- ROF cooldown (per attacking unit) ---
@@ -198,7 +202,7 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 
 	# --- apply ROF penalty as delay until next allowed shot ---
 	var cycle_mult := float(fire.get("attack_cycle_mult", 1.0))
-	var base_cycle := 1.0  # seconds between shots (tune to taste)
+	var base_cycle := 4.0  # seconds between shots (tune to taste)
 	_rof_cooldown[uid] = now + base_cycle * cycle_mult
 
 	# TODO (if you model suppression):
@@ -212,9 +216,13 @@ func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float:
 		raw_loss = 1
 	var applied := _apply_casualties(defender, raw_loss)
 	if defender.unit.morale > 0.0 and applied > 0:
-		defender.unit.morale = max(0.0, defender.unit.morale - 0.05)
+		defender.unit.morale = max(0.0, defender.unit.morale - 0.01)
 	elif attacker.unit.morale > 0.0 and applied <= 0:
-		attacker.unit.morale = max(0.0, attacker.unit.morale - 0.02)
+		attacker.unit.morale = max(0.0, attacker.unit.morale - 0.005)
+
+	# Mark defender as under fire (for auto-pause logic)
+	if applied > 0:
+		defender.mark_under_fire()
 
 	_apply_vehicle_damage_resolution(attacker, defender, mitigated_attack)
 	return raw_loss

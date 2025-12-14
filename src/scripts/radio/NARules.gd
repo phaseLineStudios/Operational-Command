@@ -88,6 +88,10 @@ func get_parser_tables() -> Dictionary:
 			"sitrep": OrdersParser.OrderType.REPORT,
 			"cancel": OrdersParser.OrderType.CANCEL,
 			"abort": OrdersParser.OrderType.CANCEL,
+			"retreat": OrdersParser.OrderType.RETREAT,
+			"withdraw": OrdersParser.OrderType.RETREAT,
+			"pullback": OrdersParser.OrderType.RETREAT,
+			"disengage": OrdersParser.OrderType.RETREAT,
 			"lay": OrdersParser.OrderType.ENGINEER,
 			"place": OrdersParser.OrderType.ENGINEER,
 			"build": OrdersParser.OrderType.ENGINEER,
@@ -215,7 +219,7 @@ func build_vosk_word_array(
 	var tables := get_parser_tables()
 
 	words.append_array(tables["action_synonyms"].keys())
-	words.append_array(["now", "immediately", "direct"])
+	words.append_array(["now", "immediately", "direct", "back", "pull"])
 	# Add report type keywords (not in action_synonyms but needed for parsing)
 	words.append_array(
 		["status", "position", "contact", "contacts", "supply", "supplies", "ammo", "fuel"]

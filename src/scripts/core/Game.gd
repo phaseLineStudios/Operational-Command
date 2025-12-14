@@ -191,6 +191,8 @@ func select_scenario(scenario: ScenarioData) -> void:
 
 	# Restore unit states from save if available
 	if current_save:
+		# Snapshot current unit states BEFORE mission starts (for replay support)
+		_snapshot_mission_start_states(scenario)
 		restore_unit_states_from_save(scenario)
 
 	LogService.trace("Set Scenario: %s" % current_scenario.id)
@@ -413,8 +415,49 @@ func _award_experience_to_units() -> void:
 	)
 
 
+## Snapshot unit states at mission start (for replay support).
+## This captures the unit state BEFORE the mission begins, so replays start fresh.
+func _snapshot_mission_start_states(scenario: ScenarioData) -> void:
+	if not current_save or not scenario or not scenario.playable_units:
+		return
+
+	var mission_id := scenario.id
+
+	# Check if we already have a snapshot for this mission
+	if current_save.mission_start_states.has(mission_id):
+		LogService.debug("Mission start states already captured for %s" % mission_id, "Game")
+		return
+
+	# Capture current unit states
+	var snapshot := {}
+	for su in scenario.playable_units:
+		if not (su is ScenarioUnit) or not su.unit:
+			continue
+
+		# Use current unit_states (or defaults if first time)
+		var unit_state := current_save.get_unit_state(su.unit.id)
+		if unit_state.is_empty():
+			# First time - use template defaults
+			unit_state = {
+				"state_strength": su.unit.strength,
+				"state_injured": 0.0,
+				"state_equipment": 1.0,
+				"cohesion": 1.0,
+				"state_ammunition": su.unit.ammunition.duplicate(),
+				"experience": su.unit.experience,
+			}
+
+		snapshot[su.unit.id] = unit_state.duplicate()
+
+	current_save.mission_start_states[mission_id] = snapshot
+	LogService.info(
+		"Captured mission start states for %s (%d units)" % [mission_id, snapshot.size()], "Game"
+	)
+
+
 ## Restore unit states from the current campaign save.
 ## Called when a scenario is selected to apply persistent state across missions.
+## If replaying a mission, restores from the snapshot taken BEFORE that mission.
 func restore_unit_states_from_save(scenario: ScenarioData) -> void:
 	if not current_save:
 		LogService.debug("No save to restore from", "Game")
@@ -424,6 +467,9 @@ func restore_unit_states_from_save(scenario: ScenarioData) -> void:
 		LogService.debug("No scenario playable units to restore", "Game")
 		return
 
+	var mission_id := scenario.id
+	var is_replay := current_save.is_mission_completed(mission_id)
+
 	var restored_count := 0
 
 	for su in scenario.playable_units:
@@ -431,7 +477,19 @@ func restore_unit_states_from_save(scenario: ScenarioData) -> void:
 			continue
 
 		var unit_id := su.unit.id
-		var saved_state := current_save.get_unit_state(unit_id)
+		var saved_state := {}
+
+		# If replaying, use the snapshot from BEFORE this mission started
+		if is_replay and current_save.mission_start_states.has(mission_id):
+			var mission_snapshot: Dictionary = current_save.mission_start_states[mission_id]
+			saved_state = mission_snapshot.get(unit_id, {})
+			if not saved_state.is_empty():
+				LogService.debug(
+					"Restoring replay state for %s from mission start snapshot" % unit_id, "Game"
+				)
+		else:
+			# Forward progress or first playthrough - use current unit_states
+			saved_state = current_save.get_unit_state(unit_id)
 
 		if saved_state.is_empty():
 			LogService.debug("No saved state for unit: %s, using defaults" % unit_id, "Game")
@@ -468,13 +526,16 @@ func restore_unit_states_from_save(scenario: ScenarioData) -> void:
 			"Game"
 		)
 
-	LogService.info("Restored %d unit states from save" % restored_count, "Game")
+	var mode := "replay" if is_replay else "forward"
+	LogService.info("Restored %d unit states from save (%s mode)" % [restored_count, mode], "Game")
 
 
 func save_campaign_state() -> void:
 	if not current_save:
 		push_warning("Cannot save campaign state: no active save")
 		return
+
+	var is_forward_progress := false
 
 	# Update current mission
 	if current_scenario:
@@ -487,8 +548,13 @@ func save_campaign_state() -> void:
 				current_save.complete_mission(current_scenario.id)
 				LogService.info("Marked mission %s as completed" % current_scenario.id, "Game")
 
-	# Update unit states from scenario playable units
-	if current_scenario and current_scenario.playable_units:
+				# Check if this is forward progress (new furthest mission)
+				is_forward_progress = (current_scenario.id == current_save.furthest_mission)
+
+	# ONLY persist unit states if this is forward progress
+	# This prevents time paradoxes when replaying earlier missions
+	if is_forward_progress and current_scenario and current_scenario.playable_units:
+		LogService.info("Forward progress detected - persisting unit states", "Game")
 		for su in current_scenario.playable_units:
 			if su is ScenarioUnit and su.unit:
 				var state := {
@@ -500,6 +566,10 @@ func save_campaign_state() -> void:
 					"experience": su.unit.experience,
 				}
 				current_save.update_unit_state(su.unit.id, state)
+	elif not is_forward_progress:
+		LogService.info(
+			"Replay detected - NOT persisting unit states (preventing time paradox)", "Game"
+		)
 
 	# Save to disk
 	Persistence.save_to_file(current_save)

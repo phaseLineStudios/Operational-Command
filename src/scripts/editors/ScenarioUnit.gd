@@ -56,6 +56,12 @@ const ARRIVE_EPSILON := 1.0
 ## Current ammo per type for this unit, same keys as unit.ammunition.
 @export var state_ammunition: Dictionary = {}
 
+@export_category("Combat State")
+## Timestamp when unit was last fired upon (seconds since epoch)
+var last_fired_upon_time: float = -1.0
+## Duration (seconds) to consider a unit "under fire" after being hit
+var under_fire_timeout: float = 10.0
+
 var _move_state: MoveState = MoveState.IDLE
 var _move_dest_m: Vector2 = Vector2.ZERO
 var _move_path: PackedVector2Array = []
@@ -346,6 +352,20 @@ func _estimate_time_along(grid: PathGrid, pts: PackedVector2Array) -> float:
 ## Convert kph to mps
 func _kph_to_mps(speed_kph: float) -> float:
 	return max(0.0, speed_kph) * (1000.0 / 3600.0)
+
+
+## Mark this unit as being fired upon (called by Combat system)
+func mark_under_fire() -> void:
+	last_fired_upon_time = Time.get_ticks_msec() / 1000.0
+
+
+## Check if this unit is currently under fire
+## [return] True if recently fired upon, false otherwise
+func is_under_fire() -> bool:
+	if last_fired_upon_time < 0.0:
+		return false
+	var now := Time.get_ticks_msec() / 1000.0
+	return (now - last_fired_upon_time) <= under_fire_timeout
 
 
 ## Serialize to JSON.
