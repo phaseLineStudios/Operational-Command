@@ -1,6 +1,6 @@
 # Debrief::_on_retry_pressed Function Reference
 
-*Defined at:* `scripts/ui/Debrief.gd` (lines 354–357)</br>
+*Defined at:* `scripts/ui/Debrief.gd` (lines 377–380)</br>
 *Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**

@@ -13,13 +13,20 @@ extends Button
 
 ## Public Member Functions
 
+- [`func _ready() -> void`](OCMenuButton/functions/_ready.md)
 - [`func _notification(what: int) -> void`](OCMenuButton/functions/_notification.md)
-- [`func _draw()`](OCMenuButton/functions/_draw.md)
-- [`func _rebuild_noise_tex()`](OCMenuButton/functions/_rebuild_noise_tex.md)
+- [`func _draw() -> void`](OCMenuButton/functions/_draw.md)
+- [`func _play_hover() -> void`](OCMenuButton/functions/_play_hover.md)
+- [`func _play_pressed() -> void`](OCMenuButton/functions/_play_pressed.md)
+- [`func _rebuild_noise_tex() -> void`](OCMenuButton/functions/_rebuild_noise_tex.md)
 - [`func _draw_noise_overlay()`](OCMenuButton/functions/_draw_noise_overlay.md)
 
 ## Public Attributes
 
+- `Array[AudioStream] hover_sounds`
+- `Array[AudioStream] hover_disabled_sounds`
+- `Array[AudioStream] click_sounds`
+- `Array[AudioStream] click_disabled_sounds`
 - `bool noise_enabled` — Enable/disable noise overlay
 - `float noise_opacity`
 - `float noise_grain`
@@ -27,6 +34,12 @@ extends Button
 - `ImageTexture _noise_tex`
 
 ## Member Function Documentation
+
+### _ready
+
+```gdscript
+func _ready() -> void
+```
 
 ### _notification
 
@@ -37,13 +50,25 @@ func _notification(what: int) -> void
 ### _draw
 
 ```gdscript
-func _draw()
+func _draw() -> void
+```
+
+### _play_hover
+
+```gdscript
+func _play_hover() -> void
+```
+
+### _play_pressed
+
+```gdscript
+func _play_pressed() -> void
 ```
 
 ### _rebuild_noise_tex
 
 ```gdscript
-func _rebuild_noise_tex()
+func _rebuild_noise_tex() -> void
 ```
 
 ### _draw_noise_overlay
@@ -53,6 +78,30 @@ func _draw_noise_overlay()
 ```
 
 ## Member Data Documentation
+
+### hover_sounds
+
+```gdscript
+var hover_sounds: Array[AudioStream]
+```
+
+### hover_disabled_sounds
+
+```gdscript
+var hover_disabled_sounds: Array[AudioStream]
+```
+
+### click_sounds
+
+```gdscript
+var click_sounds: Array[AudioStream]
+```
+
+### click_disabled_sounds
+
+```gdscript
+var click_disabled_sounds: Array[AudioStream]
+```
 
 ### noise_enabled
 

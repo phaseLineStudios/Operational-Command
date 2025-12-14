@@ -1,6 +1,6 @@
 # EnvBehaviorSystem::_near_landmark Function Reference
 
-*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 313–331)</br>
+*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 310–328)</br>
 *Belongs to:* [EnvBehaviorSystem](../../EnvBehaviorSystem.md)
 
 **Signature**

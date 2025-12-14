@@ -1,6 +1,6 @@
 # FuelSystem::_on_move_resumed Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 164–169)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 166–171)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

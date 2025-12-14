@@ -1,6 +1,6 @@
 # MilSymbol::_parse_affiliation Function Reference
 
-*Defined at:* `scripts/utils/unit_symbols/MilSymbol.gd` (lines 230–243)</br>
+*Defined at:* `scripts/utils/unit_symbols/MilSymbol.gd` (lines 316–329)</br>
 *Belongs to:* [MilSymbol](../../MilSymbol.md)
 
 **Signature**

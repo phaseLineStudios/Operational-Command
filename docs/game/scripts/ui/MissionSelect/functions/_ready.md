@@ -1,6 +1,6 @@
 # MissionSelect::_ready Function Reference
 
-*Defined at:* `scripts/ui/MissionSelect.gd` (lines 40–58)</br>
+*Defined at:* `scripts/ui/MissionSelect.gd` (lines 54–80)</br>
 *Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**
@@ -17,6 +17,12 @@ Build UI, load map, place pins, hook resizes.
 
 ```gdscript
 func _ready() -> void:
+	if AudioManager.get_current_music() != AudioManager.main_menu_music:
+		if not AudioManager.is_music_playing():
+			AudioManager.play_music(AudioManager.main_menu_music)
+		else:
+			AudioManager.crossfade_to(AudioManager.main_menu_music, 0.5)
+
 	_btn_back.pressed.connect(_on_back_pressed)
 	_load_campaign_and_map()
 	await get_tree().process_frame
@@ -33,4 +39,6 @@ func _ready() -> void:
 		_card_start.pressed.connect(_on_start_pressed)
 	if not _card_close.pressed.is_connected(_close_card):
 		_card_close.pressed.connect(_close_card)
+	if not _pins_layer.draw.is_connected(_on_pins_layer_draw):
+		_pins_layer.draw.connect(_on_pins_layer_draw)
 ```

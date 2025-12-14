@@ -1,6 +1,6 @@
 # RadioSubtitles::_analyze_tokens Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 241–281)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 285–325)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

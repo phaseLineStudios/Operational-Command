@@ -1,6 +1,6 @@
 # UnitCreateDialog::_on_delete_equip_row Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 467–475)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 498–507)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**
@@ -23,4 +23,5 @@ func _on_delete_equip_row(key: String, row: HBoxContainer) -> void:
 	else:
 		_equip.erase(key)
 	row.queue_free()
+	_update_attack_preview()
 ```

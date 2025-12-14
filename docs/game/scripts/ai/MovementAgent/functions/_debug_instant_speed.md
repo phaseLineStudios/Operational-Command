@@ -1,6 +1,6 @@
 # MovementAgent::_debug_instant_speed Function Reference
 
-*Defined at:* `scripts/ai/MovementAgent.gd` (lines 302–309)</br>
+*Defined at:* `scripts/ai/MovementAgent.gd` (lines 318–325)</br>
 *Belongs to:* [MovementAgent](../../MovementAgent.md)
 
 **Signature**

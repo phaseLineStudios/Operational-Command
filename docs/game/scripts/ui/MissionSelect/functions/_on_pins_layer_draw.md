@@ -1,6 +1,6 @@
 # MissionSelect::_on_pins_layer_draw Function Reference
 
-*Defined at:* `scripts/ui/MissionSelect.gd` (lines 321–367)</br>
+*Defined at:* `scripts/ui/MissionSelect.gd` (lines 348–394)</br>
 *Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**

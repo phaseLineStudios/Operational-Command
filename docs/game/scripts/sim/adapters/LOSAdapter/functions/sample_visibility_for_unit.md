@@ -1,6 +1,6 @@
 # LOSAdapter::sample_visibility_for_unit Function Reference
 
-*Defined at:* `scripts/sim/adapters/LOSAdapter.gd` (lines 174–180)</br>
+*Defined at:* `scripts/sim/adapters/LOSAdapter.gd` (lines 209–215)</br>
 *Belongs to:* [LOSAdapter](../../LOSAdapter.md)
 
 **Signature**

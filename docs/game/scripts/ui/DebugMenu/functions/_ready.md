@@ -1,6 +1,6 @@
 # DebugMenu::_ready Function Reference
 
-*Defined at:* `scripts/ui/DebugMenu.gd` (lines 52–74)</br>
+*Defined at:* `scripts/ui/DebugMenu.gd` (lines 43–77)</br>
 *Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**
@@ -31,6 +31,18 @@ func _ready():
 
 	scene_options_refresh.pressed.connect(_refresh_scene_options)
 
-	# Start initial scan
+	# Initialize save editor
+	_save_editor = DebugMenuSaveEditor.new(save_editor_save_name, save_editor_content)
+	save_editor_refresh.pressed.connect(func(): _save_editor.refresh(self))
+	save_editor_tab.name = "Save Editor"
+
+	# Initialize mission editor (if Mission tab UI exists in scene)
+	if mission_status and mission_content and mission_refresh and mission_tab:
+		_mission_editor = DebugMenuMission.new(mission_status, mission_content)
+		mission_refresh.pressed.connect(func(): _mission_editor.refresh(self))
+		mission_tab.name = "Mission"
+
 	_refresh_scene_options()
+	_save_editor.refresh(self)
+	_update_mission_tab_visibility()
 ```

@@ -15,7 +15,7 @@ extends HBoxContainer
 
 - [`func _ensure_ui() -> void`](UnitStrengthBadge/functions/_ensure_ui.md) — Create child UI nodes if needed.
 - [`func _ready() -> void`](UnitStrengthBadge/functions/_ready.md) — Called when the node enters the scene tree.
-- [`func set_unit(u: UnitData, threshold: float = -1.0) -> void`](UnitStrengthBadge/functions/set_unit.md) — Update the badge from a UnitData.
+- [`func set_unit(u: UnitData, current_strength: float, threshold: float = -1.0) -> void`](UnitStrengthBadge/functions/set_unit.md) — Update the badge from a UnitData and current strength.
 
 ## Public Attributes
 
@@ -44,10 +44,13 @@ Called when the node enters the scene tree.
 ### set_unit
 
 ```gdscript
-func set_unit(u: UnitData, threshold: float = -1.0) -> void
+func set_unit(u: UnitData, current_strength: float, threshold: float = -1.0) -> void
 ```
 
-Update the badge from a UnitData. Creates UI if called before _ready().
+Update the badge from a UnitData and current strength. Creates UI if called before _ready().
+`u` UnitData template (for max strength).
+`current_strength` Current strength value (from campaign or mission state).
+`threshold` Optional understrength threshold override.
 
 ## Member Data Documentation
 

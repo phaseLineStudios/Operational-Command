@@ -1,6 +1,6 @@
 # AmmoSystem::_ready Function Reference
 
-*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 34–37)</br>
+*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 36–39)</br>
 *Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**

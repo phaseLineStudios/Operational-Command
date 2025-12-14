@@ -1,6 +1,6 @@
 # TerrainRender::_rebuild_surface_spatial_index Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 260–322)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 317–379)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**

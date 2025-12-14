@@ -1,6 +1,6 @@
 # RadioSubtitles::_is_number_word Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 353–357)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 394–398)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

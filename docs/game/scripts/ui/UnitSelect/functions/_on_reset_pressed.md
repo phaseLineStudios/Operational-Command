@@ -1,6 +1,6 @@
 # UnitSelect::_on_reset_pressed Function Reference
 
-*Defined at:* `scripts/ui/UnitSelect.gd` (lines 386–391)</br>
+*Defined at:* `scripts/ui/UnitSelect.gd` (lines 422–427)</br>
 *Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**

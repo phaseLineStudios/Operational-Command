@@ -46,12 +46,80 @@ enum UnitStatus { PRESENT, PLANNED }
 ## Unit Reinforced or Reduced
 enum UnitReinforcedReduced { NONE, REINFORCED, REDUCED, REINFORCED_AND_REDUCED }
 
+## Texture cache (avoid repeated viewport renders + GPU readbacks).
+const _CACHE_MAX_ENTRIES: int = 256
+static var _texture_cache: Dictionary = {}  # cache_key -> ImageTexture
+static var _texture_cache_order: Array[String] = []
+
 ## Configuration
 var config: MilSymbolConfig
 
 ## Cached viewport and renderer (reused for efficiency)
 var _viewport: SubViewport
 var _renderer: MilSymbolRenderer
+
+
+static func _cache_key(
+	cfg: MilSymbolConfig,
+	affiliation: UnitAffiliation,
+	domain: MilSymbolGeometry.Domain,
+	icon_type: UnitType,
+	unit_size: String,
+	designation: String
+) -> String:
+	if cfg == null:
+		return ""
+
+	var frame_col: Color = cfg.get_frame_color(affiliation)
+	var fill_col: Color = cfg.get_fill_color(affiliation)
+
+	var key_data: Array = [
+		# Config that affects rendered output
+		int(cfg.size),
+		float(cfg.resolution_scale),
+		float(cfg.stroke_width),
+		bool(cfg.filled),
+		float(cfg.fill_opacity),
+		bool(cfg.framed),
+		bool(cfg.show_icon),
+		int(cfg.font_size),
+		# Colors (encode as primitives for JSON)
+		float(cfg.icon_color.r),
+		float(cfg.icon_color.g),
+		float(cfg.icon_color.b),
+		float(cfg.icon_color.a),
+		float(cfg.text_color.r),
+		float(cfg.text_color.g),
+		float(cfg.text_color.b),
+		float(cfg.text_color.a),
+		float(frame_col.r),
+		float(frame_col.g),
+		float(frame_col.b),
+		float(frame_col.a),
+		float(fill_col.r),
+		float(fill_col.g),
+		float(fill_col.b),
+		float(fill_col.a),
+		# Symbol parameters
+		int(affiliation),
+		int(domain),
+		int(icon_type),
+		unit_size,
+		designation,
+	]
+	return JSON.stringify(key_data)
+
+
+static func _cache_put(key: String, tex: ImageTexture) -> void:
+	if key == "" or tex == null:
+		return
+	if _texture_cache.has(key):
+		return
+	_texture_cache[key] = tex
+	_texture_cache_order.append(key)
+	if _texture_cache_order.size() > _CACHE_MAX_ENTRIES:
+		var old_key: String = _texture_cache_order.pop_front()
+		_texture_cache.erase(old_key)
 
 
 func _init(p_config: MilSymbolConfig = null) -> void:
@@ -85,6 +153,11 @@ func generate_texture(
 	unit_size: String = "",
 	designation: String = ""
 ) -> ImageTexture:
+	var key := _cache_key(config, affiliation, domain, icon_type, unit_size, designation)
+	var cached: Variant = _texture_cache.get(key, null)
+	if cached is ImageTexture:
+		return cached
+
 	var viewport_created := _viewport == null
 	_ensure_viewport()
 
@@ -102,6 +175,8 @@ func generate_texture(
 	_renderer.unit_size_text = unit_size
 	_renderer.unique_designation = designation
 	_renderer.queue_redraw()
+	if _viewport:
+		_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 
 	# Wait for rendering using the main SceneTree
 	tree = Engine.get_main_loop() as SceneTree
@@ -120,7 +195,9 @@ func generate_texture(
 		var target_size := config.get_pixel_size()
 		img.resize(target_size, target_size, Image.INTERPOLATE_LANCZOS)
 
-	return ImageTexture.create_from_image(img)
+	var tex := ImageTexture.create_from_image(img)
+	_cache_put(key, tex)
+	return tex
 
 
 ## Generate a symbol texture from a simplified code
@@ -157,6 +234,11 @@ func generate_texture_sync(
 	unit_size: String = "",
 	designation: String = ""
 ) -> ImageTexture:
+	var key := _cache_key(config, affiliation, domain, icon_type, unit_size, designation)
+	var cached: Variant = _texture_cache.get(key, null)
+	if cached is ImageTexture:
+		return cached
+
 	var viewport_created := _viewport == null
 	_ensure_viewport()
 
@@ -173,6 +255,8 @@ func generate_texture_sync(
 	_renderer.unit_size_text = unit_size
 	_renderer.unique_designation = designation
 	_renderer.queue_redraw()
+	if _viewport:
+		_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 
 	# Force immediate render
 	RenderingServer.force_draw(false)
@@ -187,7 +271,9 @@ func generate_texture_sync(
 		var target_size := config.get_pixel_size()
 		img.resize(target_size, target_size, Image.INTERPOLATE_LANCZOS)
 
-	return ImageTexture.create_from_image(img)
+	var tex := ImageTexture.create_from_image(img)
+	_cache_put(key, tex)
+	return tex
 
 
 ## Clean up resources
@@ -210,7 +296,7 @@ func _ensure_viewport() -> void:
 	_viewport = SubViewport.new()
 	_viewport.size = Vector2i(render_size, render_size)
 	_viewport.transparent_bg = true
-	_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 
 	# Create renderer
 	_renderer = MilSymbolRenderer.new()

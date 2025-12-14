@@ -1,6 +1,6 @@
 # OrdersRouter::_apply_recon Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 174–184)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 178–189)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**
@@ -21,6 +21,7 @@ RECON: move with recon posture if supported.
 
 ```gdscript
 func _apply_recon(unit: ScenarioUnit, order: Dictionary) -> bool:
+	_apply_navigation_bias(unit, order)
 	if combat_controller and combat_controller.has_method("set_posture"):
 		combat_controller.set_posture(unit, "recon")
 	var dest: Variant = _compute_destination(unit, order)

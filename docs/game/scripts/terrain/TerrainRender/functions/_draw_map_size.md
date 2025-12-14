@@ -1,6 +1,6 @@
 # TerrainRender::_draw_map_size Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 242–253)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 299–310)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**

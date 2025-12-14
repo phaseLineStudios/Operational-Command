@@ -1,6 +1,6 @@
 # EnvBehaviorSystem::_find_unit_by_id Function Reference
 
-*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 228–239)</br>
+*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 225–236)</br>
 *Belongs to:* [EnvBehaviorSystem](../../EnvBehaviorSystem.md)
 
 **Signature**

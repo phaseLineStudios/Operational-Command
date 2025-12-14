@@ -1,6 +1,6 @@
 # UnitSelect::_on_request_return_to_pool Function Reference
 
-*Defined at:* `scripts/ui/UnitSelect.gd` (lines 270–273)</br>
+*Defined at:* `scripts/ui/UnitSelect.gd` (lines 300–303)</br>
 *Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**

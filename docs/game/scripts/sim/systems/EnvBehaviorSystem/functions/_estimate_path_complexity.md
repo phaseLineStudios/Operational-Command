@@ -1,6 +1,6 @@
 # EnvBehaviorSystem::_estimate_path_complexity Function Reference
 
-*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 106–127)</br>
+*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 103–124)</br>
 *Belongs to:* [EnvBehaviorSystem](../../EnvBehaviorSystem.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # FuelSystem::_on_move_progress Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 135–138)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 137–140)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

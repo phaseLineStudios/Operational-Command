@@ -1,0 +1,60 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/ViewportReadOverlay.gd" id="1_overlay"]
+
+[node name="ViewportReadOverlay" type="CanvasLayer"]
+layer = 50
+script = ExtResource("1_overlay")
+
+[node name="Root" type="Control" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 0
+
+[node name="Background" type="ColorRect" parent="Root"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 0
+color = Color(0, 0, 0, 0.65)
+
+[node name="Margin" type="MarginContainer" parent="Root"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 0
+theme_override_constants/margin_left = 80
+theme_override_constants/margin_top = 60
+theme_override_constants/margin_right = 80
+theme_override_constants/margin_bottom = 60
+
+[node name="Panel" type="PanelContainer" parent="Root/Margin"]
+layout_mode = 2
+mouse_filter = 0
+
+[node name="VBox" type="VBoxContainer" parent="Root/Margin/Panel"]
+layout_mode = 2
+mouse_filter = 0
+
+[node name="TopBar" type="HBoxContainer" parent="Root/Margin/Panel/VBox"]
+layout_mode = 2
+mouse_filter = 0
+
+[node name="TitleLabel" type="Label" parent="Root/Margin/Panel/VBox/TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "View"
+
+[node name="CloseButton" type="Button" parent="Root/Margin/Panel/VBox/TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"
+
+[node name="ViewportTexture" type="TextureRect" parent="Root/Margin/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 0

@@ -1,6 +1,6 @@
 # UnitData::_queue_icon_update Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 157–162)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 172–177)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**

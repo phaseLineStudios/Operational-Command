@@ -1,6 +1,6 @@
 # UnitData::get_weapon_ammo_types Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 415–437)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 380–402)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**

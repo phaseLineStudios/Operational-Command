@@ -1,6 +1,6 @@
 # Radio::_unhandled_input Function Reference
 
-*Defined at:* `scripts/radio/Radio.gd` (lines 35–47)</br>
+*Defined at:* `scripts/radio/Radio.gd` (lines 38–50)</br>
 *Belongs to:* [Radio](../../Radio.md)
 
 **Signature**

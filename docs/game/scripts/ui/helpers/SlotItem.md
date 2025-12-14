@@ -42,6 +42,8 @@ Accepts drops and shows current assigned unit.
 - `StyleBox hover_style_filled` — Hover style when the slot is filled.
 - `StyleBox deny_hover_style` — Style to show while hovering with an invalid payload (deny-hover).
 - `Texture2D default_icon` — Icon used when slot is empty or unit lacks icon.
+- `Array[AudioStream] hover_sounds` — Sound to play when hovering over a slot
+- `Array[AudioStream] click_sounds` — Sound to play when clicking a slot
 - `String slot_id`
 - `String title`
 - `Array allowed_roles`
@@ -207,6 +209,26 @@ var default_icon: Texture2D
 Decorators: `@export`
 
 Icon used when slot is empty or unit lacks icon.
+
+### hover_sounds
+
+```gdscript
+var hover_sounds: Array[AudioStream]
+```
+
+Decorators: `@export`
+
+Sound to play when hovering over a slot
+
+### click_sounds
+
+```gdscript
+var click_sounds: Array[AudioStream]
+```
+
+Decorators: `@export`
+
+Sound to play when clicking a slot
 
 ### slot_id
 

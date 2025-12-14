@@ -1,6 +1,6 @@
 # Game::get_current_units Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 152–164)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 343–355)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**
@@ -12,7 +12,7 @@ func get_current_units() -> Array
 ## Description
 
 Return current units in context for screens that need them.
-Prefer Scenario.units entries, but fall back to unit_recruits.
+Prefer Scenario.playable_units entries, but fall back to unit_recruits.
 
 ## Source
 
@@ -20,7 +20,7 @@ Prefer Scenario.units entries, but fall back to unit_recruits.
 func get_current_units() -> Array:
 	var out: Array = []
 	if current_scenario:
-		for su in current_scenario.units:
+		for su in current_scenario.playable_units:
 			if su and su.unit:
 				out.append(su)
 		if out.is_empty():

@@ -44,6 +44,7 @@ One-liner for quick frame-only symbol generation
 
 ## Public Member Functions
 
+- [`func _cache_put(key: String, tex: ImageTexture) -> void`](MilSymbol/functions/_cache_put.md)
 - [`func _init(p_config: MilSymbolConfig = null) -> void`](MilSymbol/functions/_init.md)
 - [`func cleanup() -> void`](MilSymbol/functions/cleanup.md) — Clean up resources
 - [`func _ensure_viewport() -> void`](MilSymbol/functions/_ensure_viewport.md) — Ensure viewport and renderer exist
@@ -57,6 +58,14 @@ One-liner for quick frame-only symbol generation
 - `MilSymbolConfig config` — Configuration
 - `SubViewport _viewport` — Cached viewport and renderer (reused for efficiency)
 - `MilSymbolRenderer _renderer`
+- `Color frame_col`
+- `Color fill_col`
+- `Array key_data`
+- `Variant cached`
+
+## Public Constants
+
+- `const _CACHE_MAX_ENTRIES: int` — Texture cache (avoid repeated viewport renders + GPU readbacks).
 
 ## Enumerations
 
@@ -67,6 +76,12 @@ One-liner for quick frame-only symbol generation
 - `enum UnitReinforcedReduced` — Unit Reinforced or Reduced
 
 ## Member Function Documentation
+
+### _cache_put
+
+```gdscript
+func _cache_put(key: String, tex: ImageTexture) -> void
+```
 
 ### _init
 
@@ -145,6 +160,40 @@ Cached viewport and renderer (reused for efficiency)
 ```gdscript
 var _renderer: MilSymbolRenderer
 ```
+
+### frame_col
+
+```gdscript
+var frame_col: Color
+```
+
+### fill_col
+
+```gdscript
+var fill_col: Color
+```
+
+### key_data
+
+```gdscript
+var key_data: Array
+```
+
+### cached
+
+```gdscript
+var cached: Variant
+```
+
+## Constant Documentation
+
+### _CACHE_MAX_ENTRIES
+
+```gdscript
+const _CACHE_MAX_ENTRIES: int
+```
+
+Texture cache (avoid repeated viewport renders + GPU readbacks).
 
 ## Enumeration Type Documentation
 

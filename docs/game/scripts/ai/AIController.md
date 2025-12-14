@@ -48,6 +48,15 @@ into runner-friendly dictionaries.
 - [`func refresh_unit_index_cache() -> void`](AIController/functions/refresh_unit_index_cache.md) — Rebuild the ScenarioUnit id -> index cache for quick lookups.
 - [`func apply_trigger_sync(per_unit: Dictionary, triggers: Array) -> void`](AIController/functions/apply_trigger_sync.md) — Register trigger/task sync so tasks stay blocked until trigger activates.
 - [`func bind_trigger_engine(engine: TriggerEngine) -> void`](AIController/functions/bind_trigger_engine.md) — Bind TriggerEngine to receive trigger_activated notifications.
+- [`func bind_env_behavior_system(_env_sys: Node) -> void`](AIController/functions/bind_env_behavior_system.md) — Bind environment behaviour system signals (placeholder).
+- [`func _on_unit_lost(_unit_id: String) -> void`](AIController/functions/_on_unit_lost.md) — Handle unit lost event (placeholder).
+- [`func _on_unit_recovered(_unit_id: String) -> void`](AIController/functions/_on_unit_recovered.md) — Handle unit recovered event (placeholder).
+- [`func _on_unit_bogged(_unit_id: String) -> void`](AIController/functions/_on_unit_bogged.md) — Handle unit bogged event (placeholder).
+- [`func _on_unit_unbogged(_unit_id: String) -> void`](AIController/functions/_on_unit_unbogged.md) — Handle unit unbogged event (placeholder).
+- [`func apply_navigation_bias_from_order(_unit_id: String, _bias: StringName) -> void`](AIController/functions/apply_navigation_bias_from_order.md) — Apply navigation bias intent from orders (placeholder).
+- [`func _uid_to_index(uid: String) -> int`](AIController/functions/_uid_to_index.md)
+- [`func _request_engineer_if_available(unit_index: int) -> void`](AIController/functions/_request_engineer_if_available.md) — Locate an engineer-capable unit and log a support request.
+- [`func _emit_radio(level: String, msg: String) -> void`](AIController/functions/_emit_radio.md)
 
 ## Public Attributes
 
@@ -76,6 +85,7 @@ into runner-friendly dictionaries.
 - `OrdersRouter _orders_router`
 - `Node _agents_root`
 - `Dictionary _unit_index_cache` — ScenarioUnit id -> index cache for quick lookup.
+- `Node _env_behavior_system`
 
 ## Member Function Documentation
 
@@ -266,6 +276,74 @@ func bind_trigger_engine(engine: TriggerEngine) -> void
 
 Bind TriggerEngine to receive trigger_activated notifications.
 
+### bind_env_behavior_system
+
+```gdscript
+func bind_env_behavior_system(_env_sys: Node) -> void
+```
+
+Bind environment behaviour system signals (placeholder).
+
+### _on_unit_lost
+
+```gdscript
+func _on_unit_lost(_unit_id: String) -> void
+```
+
+Handle unit lost event (placeholder).
+
+### _on_unit_recovered
+
+```gdscript
+func _on_unit_recovered(_unit_id: String) -> void
+```
+
+Handle unit recovered event (placeholder).
+
+### _on_unit_bogged
+
+```gdscript
+func _on_unit_bogged(_unit_id: String) -> void
+```
+
+Handle unit bogged event (placeholder).
+
+### _on_unit_unbogged
+
+```gdscript
+func _on_unit_unbogged(_unit_id: String) -> void
+```
+
+Handle unit unbogged event (placeholder).
+
+### apply_navigation_bias_from_order
+
+```gdscript
+func apply_navigation_bias_from_order(_unit_id: String, _bias: StringName) -> void
+```
+
+Apply navigation bias intent from orders (placeholder).
+
+### _uid_to_index
+
+```gdscript
+func _uid_to_index(uid: String) -> int
+```
+
+### _request_engineer_if_available
+
+```gdscript
+func _request_engineer_if_available(unit_index: int) -> void
+```
+
+Locate an engineer-capable unit and log a support request.
+
+### _emit_radio
+
+```gdscript
+func _emit_radio(level: String, msg: String) -> void
+```
+
 ## Member Data Documentation
 
 ### sim_world_ref
@@ -439,3 +517,9 @@ var _unit_index_cache: Dictionary
 ```
 
 ScenarioUnit id -> index cache for quick lookup.
+
+### _env_behavior_system
+
+```gdscript
+var _env_behavior_system: Node
+```

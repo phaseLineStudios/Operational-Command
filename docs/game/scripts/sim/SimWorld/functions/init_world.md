@@ -1,6 +1,6 @@
 # SimWorld::init_world Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 136–175)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 118–152)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**
@@ -43,17 +43,12 @@ func init_world(scenario: ScenarioData) -> void:
 		if su.playable:
 			_playable_by_callsign[su.callsign] = su.id
 	_router.bind_units(_units_by_id, _units_by_callsign)
+	if environment_controller:
+		environment_controller.scenario = scenario
 	if artillery_controller:
 		_router.artillery_controller = artillery_controller
 	_register_logistics_units()
 
 	# Initialize custom commands for this mission
 	_init_custom_commands(scenario)
-
-	# Start paused so player can review before beginning
-	_transition(State.INIT, State.PAUSED)
-
-	# Set Start time
-	var start_s := scenario.second + scenario.minute * 60 + scenario.hour * 60 * 60
-	environment_controller.time_of_day = start_s
 ```

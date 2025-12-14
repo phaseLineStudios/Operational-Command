@@ -1,6 +1,6 @@
 # DrawingController::get_tool Function Reference
 
-*Defined at:* `scripts/core/DrawingController.gd` (lines 341–344)</br>
+*Defined at:* `scripts/core/DrawingController.gd` (lines 316–319)</br>
 *Belongs to:* [DrawingController](../../DrawingController.md)
 
 **Signature**

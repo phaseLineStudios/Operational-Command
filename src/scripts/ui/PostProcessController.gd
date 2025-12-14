@@ -51,12 +51,39 @@ extends CanvasLayer
 ## Strength of Sharpen/unsharpen mask.
 @export_range(0.0, 3.0) var sharpen_strength: float = 0.6
 
+@export_group("Read Mode")
+## Temporarily overrides post-processing/video settings to improve text readability.
+@export var read_mode_enabled: bool = false:
+	set(value):
+		_read_mode_enabled = value
+		if is_inside_tree():
+			_apply_read_mode(_read_mode_enabled)
+	get:
+		return _read_mode_enabled
+## Disable film grain while reading.
+@export var read_mode_disable_film_grain: bool = true
+## Disable chromatic aberration while reading.
+@export var read_mode_disable_chromatic_aberration: bool = true
+## Disable vignette while reading.
+@export var read_mode_disable_vignette: bool = true
+## Disable glow/bloom while reading.
+@export var read_mode_disable_glow: bool = true
+## Sharpen strength override while reading (<= 0 keeps current).
+@export_range(0.0, 3.0) var read_mode_sharpen_strength: float = 0.9
+## If true, temporarily force full-resolution rendering while reading.
+@export var read_mode_force_full_res: bool = true
+
 var film_grain_shader: ShaderMaterial
 var general_shader: ShaderMaterial
 var environment: Environment
 
-@onready var film_grain_rect: ColorRect = $GeneralPP
-@onready var general_rect: ColorRect = $FilmGrain
+var _read_mode_cached: bool = false
+var _saved_settings: Dictionary = {}
+var _saved_video: Dictionary = {}
+var _read_mode_enabled: bool = false
+
+@onready var general_rect: ColorRect = $GeneralPP
+@onready var film_grain_rect: ColorRect = $FilmGrain
 @onready var world_environment: WorldEnvironment = %EnvironmentController
 
 
@@ -67,12 +94,13 @@ func _ready() -> void:
 	film_grain_shader = _get_shader(film_grain_rect)
 	general_shader = _get_shader(general_rect)
 	_apply_settings()
+	_apply_read_mode(read_mode_enabled)
 
 
 ## apply parameters.
 func _apply_settings() -> void:
 	environment.tonemap_mode = Environment.TONE_MAPPER_ACES
-	environment.adjustment_enabled = true
+	environment.adjustment_enabled = adjustments
 	environment.adjustment_brightness = adjustment_brightness
 	environment.adjustment_contrast = adjustment_contrast
 	environment.adjustment_saturation = adjustment_saturation
@@ -84,19 +112,138 @@ func _apply_settings() -> void:
 	environment.glow_enabled = glow
 	environment.glow_intensity = glow_intensity
 	environment.glow_bloom = glow_bloom
+	if film_grain_rect:
+		film_grain_rect.visible = film_grain
+	if film_grain_shader:
+		film_grain_shader.set_shader_parameter("grain_amount", grain_amount)
+		film_grain_shader.set_shader_parameter("grain_size", grain_size)
 
-	film_grain_shader.set_shader_parameter("grain_amount", grain_amount)
-	film_grain_shader.set_shader_parameter("grain_size", grain_size)
-
-	general_shader.set_shader_parameter("vignette", vignette)
-	general_shader.set_shader_parameter("vignette_intensity", vignette_intensity)
-	general_shader.set_shader_parameter("vignette_softness", vignette_softness)
-	general_shader.set_shader_parameter("chromatic_abberation", ca)
-	general_shader.set_shader_parameter("ca_intensity", ca_intensity)
-	general_shader.set_shader_parameter("sharpen", sharpen)
-	general_shader.set_shader_parameter("sharpen_strength", sharpen_strength)
+	if general_shader:
+		general_shader.set_shader_parameter("vignette", vignette)
+		general_shader.set_shader_parameter("vignette_intensity", vignette_intensity)
+		general_shader.set_shader_parameter("vignette_softness", vignette_softness)
+		general_shader.set_shader_parameter("chromatic_abberation", ca)
+		general_shader.set_shader_parameter("ca_intensity", ca_intensity)
+		general_shader.set_shader_parameter("sharpen", sharpen)
+		general_shader.set_shader_parameter("sharpen_strength", sharpen_strength)
 
 
 ## Get shader material from CanvasItem.
 func _get_shader(rect: CanvasItem) -> ShaderMaterial:
 	return rect.material as ShaderMaterial
+
+
+func _apply_read_mode(enabled: bool) -> void:
+	if enabled == _read_mode_cached:
+		return
+	_read_mode_cached = enabled
+
+	if enabled:
+		_saved_settings = {
+			"film_grain": film_grain,
+			"grain_amount": grain_amount,
+			"grain_size": grain_size,
+			"vignette": vignette,
+			"vignette_intensity": vignette_intensity,
+			"vignette_softness": vignette_softness,
+			"glow": glow,
+			"glow_intensity": glow_intensity,
+			"glow_bloom": glow_bloom,
+			"ca": ca,
+			"ca_intensity": ca_intensity,
+			"sharpen": sharpen,
+			"sharpen_strength": sharpen_strength,
+		}
+
+		if read_mode_disable_film_grain:
+			film_grain = false
+			grain_amount = 0.0
+		if read_mode_disable_vignette:
+			vignette = false
+			vignette_intensity = 0.0
+		if read_mode_disable_glow:
+			glow = false
+			glow_intensity = 0.0
+			glow_bloom = 0.0
+		if read_mode_disable_chromatic_aberration:
+			ca = false
+			ca_intensity = 0.0
+		if read_mode_sharpen_strength > 0.0:
+			sharpen = true
+			sharpen_strength = read_mode_sharpen_strength
+
+		if read_mode_force_full_res:
+			_save_video_state()
+			_apply_video_full_res()
+	else:
+		if not _saved_settings.is_empty():
+			film_grain = bool(_saved_settings.get("film_grain", film_grain))
+			grain_amount = float(_saved_settings.get("grain_amount", grain_amount))
+			grain_size = float(_saved_settings.get("grain_size", grain_size))
+			vignette = bool(_saved_settings.get("vignette", vignette))
+			vignette_intensity = float(
+				_saved_settings.get("vignette_intensity", vignette_intensity)
+			)
+			vignette_softness = float(_saved_settings.get("vignette_softness", vignette_softness))
+			glow = bool(_saved_settings.get("glow", glow))
+			glow_intensity = float(_saved_settings.get("glow_intensity", glow_intensity))
+			glow_bloom = float(_saved_settings.get("glow_bloom", glow_bloom))
+			ca = bool(_saved_settings.get("ca", ca))
+			ca_intensity = float(_saved_settings.get("ca_intensity", ca_intensity))
+			sharpen = bool(_saved_settings.get("sharpen", sharpen))
+			sharpen_strength = float(_saved_settings.get("sharpen_strength", sharpen_strength))
+			_saved_settings.clear()
+
+		_restore_video_state()
+
+	_apply_settings()
+
+
+func _save_video_state() -> void:
+	_saved_video.clear()
+	var window: Window = get_window()
+	if window:
+		_saved_video["content_scale_mode"] = int(window.content_scale_mode)
+		_saved_video["content_scale_aspect"] = int(window.content_scale_aspect)
+		_saved_video["content_scale_size"] = window.content_scale_size
+	var root_vp := get_tree().root
+	if root_vp:
+		_saved_video["scaling_3d_mode"] = int(root_vp.scaling_3d_mode)
+		_saved_video["scaling_3d_scale"] = float(root_vp.scaling_3d_scale)
+
+
+func _apply_video_full_res() -> void:
+	var window: Window = get_window()
+	var root_vp := get_tree().root
+	if window == null or root_vp == null:
+		return
+
+	# Keep the same scale mode but render at native window resolution for readability.
+	if window.size.x > 0 and window.size.y > 0:
+		window.content_scale_size = window.size
+
+	root_vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
+	root_vp.scaling_3d_scale = 1.0
+
+
+func _restore_video_state() -> void:
+	if _saved_video.is_empty():
+		return
+	var window: Window = get_window()
+	if window:
+		window.content_scale_mode = int(
+			_saved_video.get("content_scale_mode", window.content_scale_mode)
+		)
+		window.content_scale_aspect = int(
+			_saved_video.get("content_scale_aspect", window.content_scale_aspect)
+		)
+		window.content_scale_size = _saved_video.get(
+			"content_scale_size", window.content_scale_size
+		)
+	var root_vp := get_tree().root
+	if root_vp:
+		root_vp.scaling_3d_mode = int(_saved_video.get("scaling_3d_mode", root_vp.scaling_3d_mode))
+		root_vp.scaling_3d_scale = float(
+			_saved_video.get("scaling_3d_scale", root_vp.scaling_3d_scale)
+		)
+	_saved_video.clear()

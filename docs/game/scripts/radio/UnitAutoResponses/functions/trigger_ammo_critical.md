@@ -1,6 +1,6 @@
 # UnitAutoResponses::trigger_ammo_critical Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 521–524)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 548–551)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

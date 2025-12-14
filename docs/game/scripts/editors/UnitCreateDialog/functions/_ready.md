@@ -1,6 +1,6 @@
 # UnitCreateDialog::_ready Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 68–100)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 73–114)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**
@@ -36,6 +36,8 @@ func _ready() -> void:
 	_slot_add.pressed.connect(_on_add_slot)
 	_equip_add.pressed.connect(_on_add_equip)
 	_th_add.pressed.connect(_on_add_throughput)
+	_strength.value_changed.connect(func(_value): _update_attack_preview())
+	_morale.value_changed.connect(func(_value): _update_attack_preview())
 
 	_save_btn.pressed.connect(_on_save_pressed)
 	_cancel_btn.pressed.connect(_on_cancel_pressed)
@@ -43,4 +45,11 @@ func _ready() -> void:
 
 	_size_ob.item_selected.connect(_generate_preview_icons)
 	_type_ob.item_selected.connect(_generate_preview_icons)
+	if _attack_label:
+		_attack_label.tooltip_text = ATTACK_TOOLTIP
+	if _attack_value:
+		_attack_value.tooltip_text = ATTACK_TOOLTIP
+	if _stats_container:
+		_stats_container.tooltip_text = ATTACK_TOOLTIP
+	_update_attack_preview()
 ```

@@ -1,6 +1,6 @@
 # RadioSubtitles::_get_callsign_suggestions Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 283–290)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 327–334)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

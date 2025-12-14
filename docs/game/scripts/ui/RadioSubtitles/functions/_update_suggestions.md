@@ -1,6 +1,6 @@
 # RadioSubtitles::_update_suggestions Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 90–113)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 124–147)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

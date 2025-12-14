@@ -1,6 +1,6 @@
 # TerrainData::get_elev_px Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 379–388)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 391–400)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # PostProcessController::_get_shader Function Reference
 
-*Defined at:* `scripts/ui/PostProcessController.gd` (lines 101–102)</br>
+*Defined at:* `scripts/ui/PostProcessController.gd` (lines 132–135)</br>
 *Belongs to:* [PostProcessController](../../PostProcessController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # RadioSubtitles::_suggest_for_defend_recon Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 216–231)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 258–273)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

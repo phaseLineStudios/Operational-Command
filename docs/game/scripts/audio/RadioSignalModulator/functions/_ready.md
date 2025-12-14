@@ -1,6 +1,6 @@
 # RadioSignalModulator::_ready Function Reference
 
-*Defined at:* `scripts/audio/RadioSignalModulator.gd` (lines 29–40)</br>
+*Defined at:* `scripts/audio/RadioSignalModulator.gd` (lines 24–34)</br>
 *Belongs to:* [RadioSignalModulator](../../RadioSignalModulator.md)
 
 **Signature**
@@ -19,7 +19,6 @@ func _ready() -> void:
 		set_process(false)
 		return
 
-	# Start with strong signal
 	_signal_strength = max_signal_strength
 	_target_strength = max_signal_strength
 ```

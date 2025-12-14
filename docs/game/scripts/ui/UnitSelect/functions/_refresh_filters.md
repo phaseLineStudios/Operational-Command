@@ -1,6 +1,6 @@
 # UnitSelect::_refresh_filters Function Reference
 
-*Defined at:* `scripts/ui/UnitSelect.gd` (lines 203–208)</br>
+*Defined at:* `scripts/ui/UnitSelect.gd` (lines 233–238)</br>
 *Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**

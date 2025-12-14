@@ -1,6 +1,6 @@
 # TerrainEditor::_update_tool_button_tint Function Reference
 
-*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 267–274)</br>
+*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 269–276)</br>
 *Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**

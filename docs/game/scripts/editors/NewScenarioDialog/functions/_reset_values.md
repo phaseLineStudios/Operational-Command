@@ -1,6 +1,6 @@
 # NewScenarioDialog::_reset_values Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 138–150)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 217–234)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**
@@ -22,9 +22,14 @@ func _reset_values() -> void:
 	terrain_path.text = ""
 	thumb_path.text = ""
 	thumb_preview.texture = null
+	video_path.text = ""
+	subtitles_path.text = "No Subtitles Selected"
 	thumbnail = null
 	terrain = null
+	video_stream = null
+	subtitle_track = null
 	working = null
 	dialog_mode = DialogMode.CREATE
 	_title_button_from_mode()
+	_reset_pool_values()
 ```

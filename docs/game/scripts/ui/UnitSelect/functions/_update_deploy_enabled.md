@@ -1,6 +1,6 @@
 # UnitSelect::_update_deploy_enabled Function Reference
 
-*Defined at:* `scripts/ui/UnitSelect.gd` (lines 403–406)</br>
+*Defined at:* `scripts/ui/UnitSelect.gd` (lines 443–446)</br>
 *Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**

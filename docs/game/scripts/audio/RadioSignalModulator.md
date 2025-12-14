@@ -30,12 +30,12 @@ Creates realistic radio fading, interference, and signal dropout.
 - `float max_signal_strength`
 - `float fade_speed`
 - `float interference_chance`
-- `int _radio_bus_idx` — Radio bus index
-- `int _lowpass_idx` — Effect indices on the Radio bus
+- `int _radio_bus_idx`
+- `int _lowpass_idx`
 - `int _distortion_idx`
-- `float _signal_strength` — Current signal strength (0.0 to 1.0)
-- `float _target_strength` — Target signal strength
-- `float _interference_timer` — Interference accumulator
+- `float _signal_strength`
+- `float _target_strength`
+- `float _interference_timer`
 
 ## Public Constants
 
@@ -92,15 +92,11 @@ var interference_chance: float
 var _radio_bus_idx: int
 ```
 
-Radio bus index
-
 ### _lowpass_idx
 
 ```gdscript
 var _lowpass_idx: int
 ```
-
-Effect indices on the Radio bus
 
 ### _distortion_idx
 
@@ -114,23 +110,17 @@ var _distortion_idx: int
 var _signal_strength: float
 ```
 
-Current signal strength (0.0 to 1.0)
-
 ### _target_strength
 
 ```gdscript
 var _target_strength: float
 ```
 
-Target signal strength
-
 ### _interference_timer
 
 ```gdscript
 var _interference_timer: float
 ```
-
-Interference accumulator
 
 ## Constant Documentation
 

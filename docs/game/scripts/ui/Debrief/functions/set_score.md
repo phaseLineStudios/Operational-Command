@@ -1,6 +1,6 @@
 # Debrief::set_score Function Reference
 
-*Defined at:* `scripts/ui/Debrief.gd` (lines 193–206)</br>
+*Defined at:* `scripts/ui/Debrief.gd` (lines 216–229)</br>
 *Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**

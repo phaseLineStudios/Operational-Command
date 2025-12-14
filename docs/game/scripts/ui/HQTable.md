@@ -28,7 +28,13 @@ extends Node3D
 - [`func _on_ammo_critical(unit_id: String) -> void`](HQTable/functions/_on_ammo_critical.md) — Handle ammo critical warning.
 - [`func _on_fuel_low(unit_id: String) -> void`](HQTable/functions/_on_fuel_low.md) — Handle fuel low warning.
 - [`func _on_fuel_critical(unit_id: String) -> void`](HQTable/functions/_on_fuel_critical.md) — Handle fuel critical warning.
+- [`func _on_resupply_started(src_unit_id: String, dst_unit_id: String) -> void`](HQTable/functions/_on_resupply_started.md) — Handle resupply started.
+- [`func _on_ammo_supplier_exhausted(src_unit_id: String) -> void`](HQTable/functions/_on_ammo_supplier_exhausted.md) — Handle ammo supplier exhausted.
+- [`func _on_refuel_started(src_unit_id: String, dst_unit_id: String) -> void`](HQTable/functions/_on_refuel_started.md) — Handle refuel started.
+- [`func _on_fuel_supplier_exhausted(src_unit_id: String) -> void`](HQTable/functions/_on_fuel_supplier_exhausted.md) — Handle fuel supplier exhausted.
 - [`func _on_radio_message(_level: String, text: String) -> void`](HQTable/functions/_on_radio_message.md) — Handle radio messages from SimWorld (trigger API, ammo/fuel warnings, etc.)
+- [`func _enable_pickup_collision_sounds() -> void`](HQTable/functions/_enable_pickup_collision_sounds.md) — Enable collision sounds for all PickupItems in the scene
+- [`func _find_all_pickup_items(node: Node) -> Array[PickupItem]`](HQTable/functions/_find_all_pickup_items.md) — Recursively find all PickupItem nodes in the tree
 - [`func _exit_tree() -> void`](HQTable/functions/_exit_tree.md) — Clean up when exiting (clears session drawings)
 - [`func generate_playable_units(slots: Array[UnitSlotData]) -> Array[ScenarioUnit]`](HQTable/functions/generate_playable_units.md) — Build the list of playable units from scenario slots and current loadout.
 - [`func _on_radio_on() -> void`](HQTable/functions/_on_radio_on.md) — Handle radio PTT pressed
@@ -43,7 +49,9 @@ extends Node3D
 
 ## Public Attributes
 
-- `SimWorld sim` — Headquarter table bootstrapper for a mission.
+- `UnitVoiceResponses unit_voices` — Headquarter table bootstrapper for a mission.
+- `AudioStreamPlayer3D tts_player`
+- `SimWorld sim`
 - `MapController map`
 - `TerrainRender renderer`
 - `Control debug_overlay`
@@ -56,10 +64,8 @@ extends Node3D
 - `DrawingController drawing_controller`
 - `UnitCounterController counter_controller`
 - `DocumentController document_controller`
-- `UnitVoiceResponses unit_voices`
-- `UnitAutoResponses unit_auto_voices`
-- `AudioStreamPlayer tts_player`
 - `AIController ai_controller`
+- `CombatSoundController combat_sound`
 
 ## Member Function Documentation
 
@@ -184,6 +190,38 @@ func _on_fuel_critical(unit_id: String) -> void
 
 Handle fuel critical warning.
 
+### _on_resupply_started
+
+```gdscript
+func _on_resupply_started(src_unit_id: String, dst_unit_id: String) -> void
+```
+
+Handle resupply started.
+
+### _on_ammo_supplier_exhausted
+
+```gdscript
+func _on_ammo_supplier_exhausted(src_unit_id: String) -> void
+```
+
+Handle ammo supplier exhausted.
+
+### _on_refuel_started
+
+```gdscript
+func _on_refuel_started(src_unit_id: String, dst_unit_id: String) -> void
+```
+
+Handle refuel started.
+
+### _on_fuel_supplier_exhausted
+
+```gdscript
+func _on_fuel_supplier_exhausted(src_unit_id: String) -> void
+```
+
+Handle fuel supplier exhausted.
+
 ### _on_radio_message
 
 ```gdscript
@@ -191,6 +229,22 @@ func _on_radio_message(_level: String, text: String) -> void
 ```
 
 Handle radio messages from SimWorld (trigger API, ammo/fuel warnings, etc.)
+
+### _enable_pickup_collision_sounds
+
+```gdscript
+func _enable_pickup_collision_sounds() -> void
+```
+
+Enable collision sounds for all PickupItems in the scene
+
+### _find_all_pickup_items
+
+```gdscript
+func _find_all_pickup_items(node: Node) -> Array[PickupItem]
+```
+
+Recursively find all PickupItem nodes in the tree
 
 ### _exit_tree
 
@@ -281,18 +335,28 @@ func _init_enemy_ai() -> void
 
 ## Member Data Documentation
 
-### sim
+### unit_voices
 
 ```gdscript
-var sim: SimWorld
+var unit_voices: UnitVoiceResponses
 ```
-
-Decorators: `@onready`
 
 Headquarter table bootstrapper for a mission.
 
 Sets up terrain, simulation world, radio pipeline, and speech word list.
 Generates playable units from scenario slots and binds controllers.
+
+### tts_player
+
+```gdscript
+var tts_player: AudioStreamPlayer3D
+```
+
+### sim
+
+```gdscript
+var sim: SimWorld
+```
 
 ### map
 
@@ -366,26 +430,14 @@ var counter_controller: UnitCounterController
 var document_controller: DocumentController
 ```
 
-### unit_voices
-
-```gdscript
-var unit_voices: UnitVoiceResponses
-```
-
-### unit_auto_voices
-
-```gdscript
-var unit_auto_voices: UnitAutoResponses
-```
-
-### tts_player
-
-```gdscript
-var tts_player: AudioStreamPlayer
-```
-
 ### ai_controller
 
 ```gdscript
 var ai_controller: AIController
+```
+
+### combat_sound
+
+```gdscript
+var combat_sound: CombatSoundController
 ```

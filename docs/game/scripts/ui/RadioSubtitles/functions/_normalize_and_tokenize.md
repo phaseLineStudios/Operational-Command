@@ -1,6 +1,6 @@
 # RadioSubtitles::_normalize_and_tokenize Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 359–376)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 406–423)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

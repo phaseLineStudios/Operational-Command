@@ -1,6 +1,6 @@
 # HQTable::_terrain_pos_to_world Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 359–396)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 447–476)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**
@@ -33,25 +33,17 @@ func _terrain_pos_to_world(pos_m: Vector2) -> Variant:
 	else:
 		return null
 
-	var terrain_data := map.renderer.data
-	if terrain_data == null:
+	var map_px := renderer.terrain_to_map(pos_m)
+
+	var map_size := renderer.size
+	if map_size.x == 0 or map_size.y == 0:
 		return null
 
-	var terrain_width_m := float(terrain_data.width_m)
-	var terrain_height_m := float(terrain_data.height_m)
+	var normalized_x := (map_px.x / map_size.x) - 0.5
+	var normalized_z := (map_px.y / map_size.y) - 0.5
 
-	if terrain_width_m == 0 or terrain_height_m == 0:
-		return null
-
-	# Normalize terrain position to -0.5..0.5 range (mesh local space)
-	var t_pos_m := renderer.terrain_to_map(pos_m)
-	var normalized_x := (t_pos_m.x / terrain_width_m) - 0.5
-	var normalized_z := (t_pos_m.y / terrain_height_m) - 0.5
-
-	# Scale to mesh size
 	var local_pos := Vector3(normalized_x * mesh_size.x, 0, normalized_z * mesh_size.y)
 
-	# Convert to world space
 	var world_pos := map_mesh.to_global(local_pos)
 
 	return world_pos

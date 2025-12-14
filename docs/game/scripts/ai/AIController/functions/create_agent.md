@@ -1,6 +1,6 @@
 # AIController::create_agent Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 383–409)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 384–410)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

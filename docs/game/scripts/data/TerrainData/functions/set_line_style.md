@@ -1,6 +1,6 @@
 # TerrainData::set_line_style Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 247–254)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 259–266)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # TerrainEditor::_ready Function Reference
 
-*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 62–83)</br>
+*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 62–85)</br>
 *Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**
@@ -13,6 +13,8 @@ func _ready()
 
 ```gdscript
 func _ready():
+	AudioManager.stop_music(0.5)
+
 	file_menu.get_popup().connect("id_pressed", _on_filemenu_pressed)
 	edit_menu.get_popup().connect("id_pressed", _on_editmenu_pressed)
 	terrain_settings_dialog.connect("request_create", _new_terrain)

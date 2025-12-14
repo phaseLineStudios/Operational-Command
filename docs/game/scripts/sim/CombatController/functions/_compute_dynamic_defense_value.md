@@ -1,6 +1,6 @@
 # CombatController::_compute_dynamic_defense_value Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 504–519)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 505–520)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**
@@ -23,8 +23,8 @@ func _compute_dynamic_defense_value(defender: ScenarioUnit) -> float:
 	var unit: UnitData = defender.unit
 	var base_defense: float = max(unit.defense, 0.0)
 	var morale_factor: float = lerp(0.4, 1.0, clamp(unit.morale, 0.0, 1.0))
-	var cohesion_factor: float = lerp(0.4, 1.0, clamp(unit.cohesion, 0.0, 1.0))
-	var equipment_factor: float = lerp(0.35, 1.0, clamp(unit.state_equipment, 0.0, 1.0))
+	var cohesion_factor: float = lerp(0.4, 1.0, clamp(defender.cohesion, 0.0, 1.0))
+	var equipment_factor: float = lerp(0.35, 1.0, clamp(defender.state_equipment, 0.0, 1.0))
 	var movement_factor: float = 1.0
 	if defender.move_state() == ScenarioUnit.MoveState.MOVING:
 		movement_factor = 0.75

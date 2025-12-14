@@ -1,6 +1,6 @@
 # UnitCreateDialog::_reset_equip Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 632–637)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 657–662)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

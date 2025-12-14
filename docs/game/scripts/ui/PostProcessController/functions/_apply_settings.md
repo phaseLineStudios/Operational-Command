@@ -1,6 +1,6 @@
 # PostProcessController::_apply_settings Function Reference
 
-*Defined at:* `scripts/ui/PostProcessController.gd` (lines 73–99)</br>
+*Defined at:* `scripts/ui/PostProcessController.gd` (lines 101–130)</br>
 *Belongs to:* [PostProcessController](../../PostProcessController.md)
 
 **Signature**
@@ -18,7 +18,7 @@ apply parameters.
 ```gdscript
 func _apply_settings() -> void:
 	environment.tonemap_mode = Environment.TONE_MAPPER_ACES
-	environment.adjustment_enabled = true
+	environment.adjustment_enabled = adjustments
 	environment.adjustment_brightness = adjustment_brightness
 	environment.adjustment_contrast = adjustment_contrast
 	environment.adjustment_saturation = adjustment_saturation
@@ -30,15 +30,18 @@ func _apply_settings() -> void:
 	environment.glow_enabled = glow
 	environment.glow_intensity = glow_intensity
 	environment.glow_bloom = glow_bloom
+	if film_grain_rect:
+		film_grain_rect.visible = film_grain
+	if film_grain_shader:
+		film_grain_shader.set_shader_parameter("grain_amount", grain_amount)
+		film_grain_shader.set_shader_parameter("grain_size", grain_size)
 
-	film_grain_shader.set_shader_parameter("grain_amount", grain_amount)
-	film_grain_shader.set_shader_parameter("grain_size", grain_size)
-
-	general_shader.set_shader_parameter("vignette", vignette)
-	general_shader.set_shader_parameter("vignette_intensity", vignette_intensity)
-	general_shader.set_shader_parameter("vignette_softness", vignette_softness)
-	general_shader.set_shader_parameter("chromatic_abberation", ca)
-	general_shader.set_shader_parameter("ca_intensity", ca_intensity)
-	general_shader.set_shader_parameter("sharpen", sharpen)
-	general_shader.set_shader_parameter("sharpen_strength", sharpen_strength)
+	if general_shader:
+		general_shader.set_shader_parameter("vignette", vignette)
+		general_shader.set_shader_parameter("vignette_intensity", vignette_intensity)
+		general_shader.set_shader_parameter("vignette_softness", vignette_softness)
+		general_shader.set_shader_parameter("chromatic_abberation", ca)
+		general_shader.set_shader_parameter("ca_intensity", ca_intensity)
+		general_shader.set_shader_parameter("sharpen", sharpen)
+		general_shader.set_shader_parameter("sharpen_strength", sharpen_strength)
 ```

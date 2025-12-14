@@ -1,6 +1,6 @@
 # DocumentController::_apply_textures Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 425–433)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 459–475)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**
@@ -17,6 +17,14 @@ Apply rendered textures to clipboard materials
 
 ```gdscript
 func _apply_textures() -> void:
+	# Render each SubViewport once before capturing to textures.
+	if _intel_viewport:
+		_intel_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	if _transcript_viewport:
+		_transcript_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	if _briefing_viewport:
+		_briefing_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+
 	await get_tree().process_frame
 	await get_tree().process_frame  # Extra frame to ensure render complete
 

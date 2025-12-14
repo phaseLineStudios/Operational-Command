@@ -24,8 +24,12 @@ tactical map → debrief → unit management.
 - [`func ready() -> void`](Game/functions/ready.md)
 - [`func _ready() -> void`](Game/functions/_ready.md)
 - [`func goto_scene(path: String) -> void`](Game/functions/goto_scene.md) — Change to scene at `path`; logs error if missing.
+- [`func _on_window_size_changed() -> void`](Game/functions/_on_window_size_changed.md)
+- [`func _apply_video_perf_settings() -> void`](Game/functions/_apply_video_perf_settings.md)
+- [`func _compute_content_scale_size(window_size: Vector2i, target_size: Vector2i) -> Vector2i`](Game/functions/_compute_content_scale_size.md)
 - [`func select_campaign(campaign: CampaignData) -> void`](Game/functions/select_campaign.md) — Set current campaign and emit `signal campaign_selected`.
 - [`func select_save(save_id: StringName) -> void`](Game/functions/select_save.md) — Set current save and emit `signal save_selected`.
+- [`func delete_save(save_id: StringName) -> void`](Game/functions/delete_save.md)
 - [`func select_scenario(scenario: ScenarioData) -> void`](Game/functions/select_scenario.md) — Set current mission and emit `signal mission_selected`.
 - [`func set_scenario_loadout(loadout: Dictionary) -> void`](Game/functions/set_scenario_loadout.md) — Set current mission loadout and emit `signal mission_loadout_selected`
 - [`func start_scenario(prim: Array[String]) -> void`](Game/functions/start_scenario.md) — Start mission
@@ -36,27 +40,37 @@ tactical map → debrief → unit management.
 - [`func record_casualties(fr: int, en: int) -> void`](Game/functions/record_casualties.md) — Record casualties
 - [`func record_unit_lost(count: int = 1) -> void`](Game/functions/record_unit_lost.md) — record lost units
 - [`func end_scenario_and_go_to_debrief() -> void`](Game/functions/end_scenario_and_go_to_debrief.md) — End mission and navigate to debrief
-- [`func get_replacement_pool() -> int`](Game/functions/get_replacement_pool.md) — Return available replacements pool
-- [`func set_replacement_pool(v: int) -> void`](Game/functions/set_replacement_pool.md) — Set replacement pool (non-persistent placeholder)
+- [`func on_debrief_continue(_payload: Dictionary) -> void`](Game/functions/on_debrief_continue.md) — Handle continue from debrief scene
+- [`func on_debrief_retry(_payload: Dictionary) -> void`](Game/functions/on_debrief_retry.md) — Handle retry from debrief scene
+- [`func on_medal_assigned(medal: String, recipient_name: String) -> void`](Game/functions/on_medal_assigned.md) — Handle medal assignment in debrief
 - [`func get_current_units() -> Array`](Game/functions/get_current_units.md) — Return current units in context for screens that need them.
+- [`func _award_experience_to_units() -> void`](Game/functions/_award_experience_to_units.md) — Award experience to playable units after mission completion.
+- [`func restore_unit_states_from_save(scenario: ScenarioData) -> void`](Game/functions/restore_unit_states_from_save.md) — Restore unit states from the current campaign save.
 - [`func save_campaign_state() -> void`](Game/functions/save_campaign_state.md)
 
 ## Public Attributes
 
 - `PackedScene debug_display_scene`
-- `int campaign_replacement_pool` — Personnel replacements available for pre-mission reinforcement
 - `CanvasLayer debug_display`
 - `CampaignData current_campaign`
 - `StringName current_save_id`
+- `CampaignSave current_save`
 - `ScenarioData current_scenario`
 - `Dictionary current_scenario_loadout`
 - `Dictionary current_scenario_summary`
+- `int _base_msaa_3d`
+- `SceneTreeTimer _video_perf_timer`
 - `MissionResolution resolution`
+
+## Public Constants
+
+- `const _DEFAULT_RESOLUTIONS: Array[Vector2i]`
 
 ## Signals
 
 - `signal campaign_selected(campaign_id: StringName)` — Emitted when a campaign is selected.
 - `signal save_selected(save_id: StringName)` — Emitted when a save is selected.
+- `signal save_deleted(save_id: StringName)` — Emitted when a save is deleted.
 - `signal scenario_selected(mission_id: StringName)` — Emitted when a mission is selected.
 - `signal scenario_loadout_selected(loadout: Dictionary)` — Emitted when a mission loadout is selected
 
@@ -82,6 +96,24 @@ func goto_scene(path: String) -> void
 
 Change to scene at `path`; logs error if missing.
 
+### _on_window_size_changed
+
+```gdscript
+func _on_window_size_changed() -> void
+```
+
+### _apply_video_perf_settings
+
+```gdscript
+func _apply_video_perf_settings() -> void
+```
+
+### _compute_content_scale_size
+
+```gdscript
+func _compute_content_scale_size(window_size: Vector2i, target_size: Vector2i) -> Vector2i
+```
+
 ### select_campaign
 
 ```gdscript
@@ -97,6 +129,12 @@ func select_save(save_id: StringName) -> void
 ```
 
 Set current save and emit `signal save_selected`.
+
+### delete_save
+
+```gdscript
+func delete_save(save_id: StringName) -> void
+```
 
 ### select_scenario
 
@@ -178,21 +216,30 @@ func end_scenario_and_go_to_debrief() -> void
 
 End mission and navigate to debrief
 
-### get_replacement_pool
+### on_debrief_continue
 
 ```gdscript
-func get_replacement_pool() -> int
+func on_debrief_continue(_payload: Dictionary) -> void
 ```
 
-Return available replacements pool
+Handle continue from debrief scene
 
-### set_replacement_pool
+### on_debrief_retry
 
 ```gdscript
-func set_replacement_pool(v: int) -> void
+func on_debrief_retry(_payload: Dictionary) -> void
 ```
 
-Set replacement pool (non-persistent placeholder)
+Handle retry from debrief scene
+
+### on_medal_assigned
+
+```gdscript
+func on_medal_assigned(medal: String, recipient_name: String) -> void
+```
+
+Handle medal assignment in debrief
+Awards bonus experience to the recipient unit
 
 ### get_current_units
 
@@ -201,7 +248,25 @@ func get_current_units() -> Array
 ```
 
 Return current units in context for screens that need them.
-Prefer Scenario.units entries, but fall back to unit_recruits.
+Prefer Scenario.playable_units entries, but fall back to unit_recruits.
+
+### _award_experience_to_units
+
+```gdscript
+func _award_experience_to_units() -> void
+```
+
+Award experience to playable units after mission completion.
+Base XP for survival, bonus for success.
+
+### restore_unit_states_from_save
+
+```gdscript
+func restore_unit_states_from_save(scenario: ScenarioData) -> void
+```
+
+Restore unit states from the current campaign save.
+Called when a scenario is selected to apply persistent state across missions.
 
 ### save_campaign_state
 
@@ -216,16 +281,6 @@ func save_campaign_state() -> void
 ```gdscript
 var debug_display_scene: PackedScene
 ```
-
-### campaign_replacement_pool
-
-```gdscript
-var campaign_replacement_pool: int
-```
-
-Decorators: `@export`
-
-Personnel replacements available for pre-mission reinforcement
 
 ### debug_display
 
@@ -243,6 +298,12 @@ var current_campaign: CampaignData
 
 ```gdscript
 var current_save_id: StringName
+```
+
+### current_save
+
+```gdscript
+var current_save: CampaignSave
 ```
 
 ### current_scenario
@@ -263,10 +324,30 @@ var current_scenario_loadout: Dictionary
 var current_scenario_summary: Dictionary
 ```
 
+### _base_msaa_3d
+
+```gdscript
+var _base_msaa_3d: int
+```
+
+### _video_perf_timer
+
+```gdscript
+var _video_perf_timer: SceneTreeTimer
+```
+
 ### resolution
 
 ```gdscript
 var resolution: MissionResolution
+```
+
+## Constant Documentation
+
+### _DEFAULT_RESOLUTIONS
+
+```gdscript
+const _DEFAULT_RESOLUTIONS: Array[Vector2i]
 ```
 
 ## Signal Documentation
@@ -286,6 +367,14 @@ signal save_selected(save_id: StringName)
 ```
 
 Emitted when a save is selected.
+
+### save_deleted
+
+```gdscript
+signal save_deleted(save_id: StringName)
+```
+
+Emitted when a save is deleted.
 
 ### scenario_selected
 

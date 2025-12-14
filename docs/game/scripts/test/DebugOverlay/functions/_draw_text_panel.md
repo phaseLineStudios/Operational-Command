@@ -1,6 +1,6 @@
 # DebugOverlay::_draw_text_panel Function Reference
 
-*Defined at:* `scripts/test/DebugOverlay.gd` (lines 159–260)</br>
+*Defined at:* `scripts/test/DebugOverlay.gd` (lines 155–256)</br>
 *Belongs to:* [DebugOverlay](../../DebugOverlay.md)
 
 **Signature**

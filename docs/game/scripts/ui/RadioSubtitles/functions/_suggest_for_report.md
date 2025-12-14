@@ -1,6 +1,6 @@
 # RadioSubtitles::_suggest_for_report Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 233–239)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 275–283)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**
@@ -18,7 +18,9 @@ Suggestions for REPORT command
 ```gdscript
 func _suggest_for_report(_state: Dictionary, _last_token: String) -> Array[String]:
 	var suggestions: Array[String] = []
-	# Suggest report types
-	suggestions.append_array(["Status", "Contact", "Position", "Ammunition", "Casualties"])
+	# Get report types from config
+	var report_types_config = _suggestions_config.get("report_types", {})
+	for report_type in report_types_config.keys():
+		suggestions.append(str(report_type).capitalize())
 	return suggestions
 ```

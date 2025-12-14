@@ -1,6 +1,6 @@
 # TerrainRender::_set_data Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 142–157)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 159–177)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**
@@ -21,6 +21,8 @@ func _set_data(d: TerrainData):
 	if data:
 		data.changed.connect(_on_data_changed, CONNECT_DEFERRED | CONNECT_REFERENCE_COUNTED)
 		clear_render_error()
+		# Calculate scaled margins based on map size if margin_percent is set
+		_calculate_scaled_margins()
 		if path_grid:
 			path_grid.data = data
 			if nav_auto_build:
@@ -30,4 +32,5 @@ func _set_data(d: TerrainData):
 	call_deferred("_draw_map_size")
 	call_deferred("_push_data_to_layers")
 	call_deferred("_mark_all_dirty")
+	call_deferred("_emit_render_ready")
 ```

@@ -1,6 +1,6 @@
 # SceneEnvironment::_ready Function Reference
 
-*Defined at:* `scripts/sim/SceneEnvironment.gd` (lines 5–8)</br>
+*Defined at:* `scripts/sim/SceneEnvironment.gd` (lines 7–11)</br>
 *Belongs to:* [SceneEnvironment](../../SceneEnvironment.md)
 
 **Signature**
@@ -13,5 +13,6 @@ func _ready() -> void
 
 ```gdscript
 func _ready() -> void:
+	sound_controller = %EnvSoundController
 	hide_helpers()
 ```

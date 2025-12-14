@@ -1,6 +1,6 @@
 # FuelSystem::_consume_tick Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 173–201)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 175–203)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

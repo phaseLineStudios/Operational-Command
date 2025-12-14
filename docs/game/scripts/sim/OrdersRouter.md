@@ -52,6 +52,7 @@ resolved through the movement adapter.
 - [`func _normalize_type(t: Variant) -> String`](OrdersRouter/functions/_normalize_type.md) — Normalize an order type to its string token.
 - [`func _dir_to_vec(dir: String) -> Vector2`](OrdersRouter/functions/_dir_to_vec.md) — Convert a cardinal/intercardinal label to a unit vector (meters space).
 - [`func _quantity_to_meters(qty: int, zone: String) -> float`](OrdersRouter/functions/_quantity_to_meters.md) — Convert a quantity and zone to meters.
+- [`func _apply_navigation_bias(unit: ScenarioUnit, order: Dictionary) -> void`](OrdersRouter/functions/_apply_navigation_bias.md) — Apply navigation bias metadata to movement adapter if present.
 
 ## Public Attributes
 
@@ -264,6 +265,14 @@ Convert a quantity and zone to meters.
 `qty` Quantity value.
 `zone` Unit label (e.g. "m", "km", "grid").
 [return] Distance in meters.
+
+### _apply_navigation_bias
+
+```gdscript
+func _apply_navigation_bias(unit: ScenarioUnit, order: Dictionary) -> void
+```
+
+Apply navigation bias metadata to movement adapter if present.
 
 ## Member Data Documentation
 

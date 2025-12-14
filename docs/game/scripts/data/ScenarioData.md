@@ -29,6 +29,8 @@ extends Resource
 - `String preview_path` — File path to the scenario preview image
 - `TerrainData terrain` — The scenario terrain data
 - `BriefData briefing` — The scenario briefing data
+- `String video_path` — Optional scenario intro video
+- `SubtitleTrack video_subtitles` — Optional subtitle track for the intro video (embedded in scenario data)
 - `ScenarioDifficulty difficulty` — Difficulty of the scenario
 - `Vector2 map_position` — Position of the scenario on the campaign/selection map
 - `int scenario_order` — Order index of the scenario in a campaign sequence
@@ -48,6 +50,9 @@ extends Resource
 - `Array[UnitSlotData] unit_reserves` — Reserve slots for reinforcements or delayed units
 - `Array[String] friendly_callsigns` — Friendly Callsign List
 - `Array[String] enemy_callsigns` — Enemy Callsign List
+- `int replacement_pool` — Personnel replacements available for reinforcement
+- `int equipment_pool` — Equipment pool for resupply (shared across all units)
+- `Dictionary ammo_pools` — Ammunition pools per type (e.g., {"small_arms": 1000, "at": 50})
 - `Array[ScenarioUnit] units` — List of units placed in this scenario
 - `Array[ScenarioUnit] playable_units` — List of playable units.
 - `Array[ScenarioTrigger] triggers` — Triggers that define scripted events and conditions
@@ -55,6 +60,7 @@ extends Resource
 - `Array drawings` — Drawings or map overlays associated with the scenario
 - `Array[CustomCommand] custom_commands` — Custom voice commands for this mission
 - `Texture2D preview`
+- `VideoStream video`
 
 ## Enumerations
 
@@ -169,6 +175,26 @@ var briefing: BriefData
 Decorators: `@export`
 
 The scenario briefing data
+
+### video_path
+
+```gdscript
+var video_path: String
+```
+
+Decorators: `@export_file("*.ogv ; OGG Video")`
+
+Optional scenario intro video
+
+### video_subtitles
+
+```gdscript
+var video_subtitles: SubtitleTrack
+```
+
+Decorators: `@export`
+
+Optional subtitle track for the intro video (embedded in scenario data)
 
 ### difficulty
 
@@ -360,6 +386,36 @@ Decorators: `@export`
 
 Enemy Callsign List
 
+### replacement_pool
+
+```gdscript
+var replacement_pool: int
+```
+
+Decorators: `@export`
+
+Personnel replacements available for reinforcement
+
+### equipment_pool
+
+```gdscript
+var equipment_pool: int
+```
+
+Decorators: `@export`
+
+Equipment pool for resupply (shared across all units)
+
+### ammo_pools
+
+```gdscript
+var ammo_pools: Dictionary
+```
+
+Decorators: `@export`
+
+Ammunition pools per type (e.g., {"small_arms": 1000, "at": 50})
+
 ### units
 
 ```gdscript
@@ -424,6 +480,12 @@ Custom voice commands for this mission
 
 ```gdscript
 var preview: Texture2D
+```
+
+### video
+
+```gdscript
+var video: VideoStream
 ```
 
 ## Enumeration Type Documentation

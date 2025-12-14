@@ -1,6 +1,6 @@
 # ContentDB::get_units Function Reference
 
-*Defined at:* `scripts/core/ContentDB.gd` (lines 330–338)</br>
+*Defined at:* `scripts/core/ContentDB.gd` (lines 334–342)</br>
 *Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**

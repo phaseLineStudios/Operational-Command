@@ -1,6 +1,6 @@
 # SlotItem::_drop_data Function Reference
 
-*Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 174–181)</br>
+*Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 193–200)</br>
 *Belongs to:* [SlotItem](../../SlotItem.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # SimWorld::_on_order_failed Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 773–775)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 788–790)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

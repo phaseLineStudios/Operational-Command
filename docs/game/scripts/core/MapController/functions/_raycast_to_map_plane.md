@@ -1,6 +1,6 @@
 # MapController::_raycast_to_map_plane Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 172–187)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 508–523)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

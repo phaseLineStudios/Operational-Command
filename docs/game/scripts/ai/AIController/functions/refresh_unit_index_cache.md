@@ -1,6 +1,6 @@
 # AIController::refresh_unit_index_cache Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 448–461)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 449–462)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

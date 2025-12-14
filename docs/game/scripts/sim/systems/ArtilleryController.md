@@ -32,7 +32,7 @@ Returns true if accepted, false if unable to comply
 ## Public Member Functions
 
 - [`func _ready() -> void`](ArtilleryController/functions/_ready.md)
-- [`func register_unit(unit_id: String, u: UnitData) -> void`](ArtilleryController/functions/register_unit.md) — Register a unit and check if it's artillery-capable.
+- [`func register_unit(unit_id: String, su: ScenarioUnit) -> void`](ArtilleryController/functions/register_unit.md) — Register a unit and check if it's artillery-capable.
 - [`func unregister_unit(unit_id: String) -> void`](ArtilleryController/functions/unregister_unit.md) — Unregister a unit
 - [`func set_unit_position(unit_id: String, pos: Vector2) -> void`](ArtilleryController/functions/set_unit_position.md) — Update unit position
 - [`func bind_ammo_system(ammo_sys: AmmoSystem) -> void`](ArtilleryController/functions/bind_ammo_system.md) — Bind external systems
@@ -40,24 +40,33 @@ Returns true if accepted, false if unable to comply
 - [`func is_artillery_unit(unit_id: String) -> bool`](ArtilleryController/functions/is_artillery_unit.md) — Check if a unit is artillery-capable
 - [`func get_available_ammo_types(unit_id: String) -> Array[String]`](ArtilleryController/functions/get_available_ammo_types.md) — Get available artillery ammunition types for a unit
 - [`func tick(delta: float) -> void`](ArtilleryController/functions/tick.md) — Tick active fire missions
-- [`func _process_impact(mission: FireMission) -> void`](ArtilleryController/functions/_process_impact.md) — Process round impacts and generate damage/BDA
+- [`func _get_round_shot_time(mission: FireMission, round_index: int) -> float`](ArtilleryController/functions/_get_round_shot_time.md) — Calculate when a specific round should be fired
+- [`func _process_impact(mission: FireMission) -> void`](ArtilleryController/functions/_process_impact.md) — Process mission completion and generate BDA
 - [`func _generate_bda(mission: FireMission) -> void`](ArtilleryController/functions/_generate_bda.md) — Generate battle damage assessment from observer units
 - [`func _generate_bda_description(mission: FireMission) -> String`](ArtilleryController/functions/_generate_bda_description.md) — Generate BDA description based on mission type
-- [`func _is_artillery_unit(u: UnitData) -> bool`](ArtilleryController/functions/_is_artillery_unit.md) — Check if unit has artillery/mortar ammunition
+- [`func _is_artillery_unit(su: ScenarioUnit) -> bool`](ArtilleryController/functions/_is_artillery_unit.md) — Check if unit has artillery/mortar ammunition
 
 ## Public Attributes
 
 - `String unit_id`
 - `Vector2 target_pos`
 - `String ammo_type`
-- `int rounds`
+- `int total_rounds`
 - `float flight_time`
+- `float shot_delay`
+- `Array[float] round_intervals`
 - `float time_elapsed`
-- `bool shot_called`
+- `int current_round`
 - `bool splash_called`
-- `float mortar_flight_time_base` — Flight time calculation parameters
-- `float artillery_flight_time_base`
-- `float splash_warning_time`
+- `float mortar_flight_time_base` — Base flight time for mortars (seconds)
+- `float artillery_flight_time_base` — Base flight time for artillery (seconds)
+- `float splash_warning_time` — Time before impact to call "Splash"
+- `float shot_delay_min` — Min delay from mission confirmed to first shot (seconds)
+- `float shot_delay_max` — Max delay from mission confirmed to first shot (seconds)
+- `float round_interval_min` — Min delay between rounds fired (seconds)
+- `float round_interval_max` — Max delay between rounds fired (seconds)
+- `float bda_delay_min` — Min delay from impact to BDA report (seconds)
+- `float bda_delay_max` — Max delay from impact to BDA report (seconds)
 - `float ap_damage_per_round` — Damage parameters
 - `float ap_damage_radius_m`
 - `Dictionary _units`
@@ -66,7 +75,8 @@ Returns true if accepted, false if unable to comply
 - `Array[FireMission] _active_missions`
 - `AmmoSystem _ammo_system`
 - `LOSAdapter _los_adapter`
-- `UnitData u`
+- `Array[Dictionary] _pending_bda`
+- `ScenarioUnit su`
 - `int current_ammo`
 - `bool is_mortar`
 - `float base_flight_time`
@@ -94,12 +104,12 @@ func _ready() -> void
 ### register_unit
 
 ```gdscript
-func register_unit(unit_id: String, u: UnitData) -> void
+func register_unit(unit_id: String, su: ScenarioUnit) -> void
 ```
 
 Register a unit and check if it's artillery-capable.
 `unit_id` The ScenarioUnit ID (with SLOT suffix if applicable).
-`u` The UnitData to register.
+`su` The ScenarioUnit to register.
 
 ### unregister_unit
 
@@ -155,13 +165,21 @@ func tick(delta: float) -> void
 
 Tick active fire missions
 
+### _get_round_shot_time
+
+```gdscript
+func _get_round_shot_time(mission: FireMission, round_index: int) -> float
+```
+
+Calculate when a specific round should be fired
+
 ### _process_impact
 
 ```gdscript
 func _process_impact(mission: FireMission) -> void
 ```
 
-Process round impacts and generate damage/BDA
+Process mission completion and generate BDA
 
 ### _generate_bda
 
@@ -182,7 +200,7 @@ Generate BDA description based on mission type
 ### _is_artillery_unit
 
 ```gdscript
-func _is_artillery_unit(u: UnitData) -> bool
+func _is_artillery_unit(su: ScenarioUnit) -> bool
 ```
 
 Check if unit has artillery/mortar ammunition
@@ -207,10 +225,10 @@ var target_pos: Vector2
 var ammo_type: String
 ```
 
-### rounds
+### total_rounds
 
 ```gdscript
-var rounds: int
+var total_rounds: int
 ```
 
 ### flight_time
@@ -219,16 +237,28 @@ var rounds: int
 var flight_time: float
 ```
 
+### shot_delay
+
+```gdscript
+var shot_delay: float
+```
+
+### round_intervals
+
+```gdscript
+var round_intervals: Array[float]
+```
+
 ### time_elapsed
 
 ```gdscript
 var time_elapsed: float
 ```
 
-### shot_called
+### current_round
 
 ```gdscript
-var shot_called: bool
+var current_round: int
 ```
 
 ### splash_called
@@ -245,7 +275,7 @@ var mortar_flight_time_base: float
 
 Decorators: `@export`
 
-Flight time calculation parameters
+Base flight time for mortars (seconds)
 
 ### artillery_flight_time_base
 
@@ -253,11 +283,79 @@ Flight time calculation parameters
 var artillery_flight_time_base: float
 ```
 
+Decorators: `@export`
+
+Base flight time for artillery (seconds)
+
 ### splash_warning_time
 
 ```gdscript
 var splash_warning_time: float
 ```
+
+Decorators: `@export`
+
+Time before impact to call "Splash"
+
+### shot_delay_min
+
+```gdscript
+var shot_delay_min: float
+```
+
+Decorators: `@export_range(0.0, 30.0, 0.1)`
+
+Min delay from mission confirmed to first shot (seconds)
+
+### shot_delay_max
+
+```gdscript
+var shot_delay_max: float
+```
+
+Decorators: `@export_range(0.0, 30.0, 0.1)`
+
+Max delay from mission confirmed to first shot (seconds)
+
+### round_interval_min
+
+```gdscript
+var round_interval_min: float
+```
+
+Decorators: `@export_range(0.0, 10.0, 0.1)`
+
+Min delay between rounds fired (seconds)
+
+### round_interval_max
+
+```gdscript
+var round_interval_max: float
+```
+
+Decorators: `@export_range(0.0, 10.0, 0.1)`
+
+Max delay between rounds fired (seconds)
+
+### bda_delay_min
+
+```gdscript
+var bda_delay_min: float
+```
+
+Decorators: `@export_range(0.0, 30.0, 0.1)`
+
+Min delay from impact to BDA report (seconds)
+
+### bda_delay_max
+
+```gdscript
+var bda_delay_max: float
+```
+
+Decorators: `@export_range(0.0, 30.0, 0.1)`
+
+Max delay from impact to BDA report (seconds)
 
 ### ap_damage_per_round
 
@@ -311,10 +409,16 @@ var _ammo_system: AmmoSystem
 var _los_adapter: LOSAdapter
 ```
 
-### u
+### _pending_bda
 
 ```gdscript
-var u: UnitData
+var _pending_bda: Array[Dictionary]
+```
+
+### su
+
+```gdscript
+var su: ScenarioUnit
 ```
 
 ### current_ammo

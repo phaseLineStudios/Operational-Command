@@ -1,6 +1,6 @@
 # TerrainEditor::_queue_free_children Function Reference
 
-*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 482–486)</br>
+*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 484–488)</br>
 *Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**

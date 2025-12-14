@@ -1,6 +1,6 @@
 # EnvBehaviorSystem::_emit_speed_change Function Reference
 
-*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 217–226)</br>
+*Defined at:* `scripts/sim/systems/EnvBehaviorSystem.gd` (lines 214–223)</br>
 *Belongs to:* [EnvBehaviorSystem](../../EnvBehaviorSystem.md)
 
 **Signature**

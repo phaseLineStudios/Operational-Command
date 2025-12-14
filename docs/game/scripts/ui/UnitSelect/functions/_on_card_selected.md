@@ -1,6 +1,6 @@
 # UnitSelect::_on_card_selected Function Reference
 
-*Defined at:* `scripts/ui/UnitSelect.gd` (lines 345–349)</br>
+*Defined at:* `scripts/ui/UnitSelect.gd` (lines 375–382)</br>
 *Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**
@@ -19,4 +19,7 @@ Handle card clicked in pool
 func _on_card_selected(unit: UnitData) -> void:
 	_show_unit_stats(unit)
 	_update_card_selection(unit)
+	_selected_unit_for_supply = unit
+	_populate_supply_ui(unit)
+	_populate_replacements_ui(unit)
 ```

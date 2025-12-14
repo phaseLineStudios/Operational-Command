@@ -1,6 +1,6 @@
 # Debrief::_collect_payload Function Reference
 
-*Defined at:* `scripts/ui/Debrief.gd` (lines 359–369)</br>
+*Defined at:* `scripts/ui/Debrief.gd` (lines 382–392)</br>
 *Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**

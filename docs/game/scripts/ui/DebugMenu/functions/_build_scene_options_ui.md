@@ -1,6 +1,6 @@
 # DebugMenu::_build_scene_options_ui Function Reference
 
-*Defined at:* `scripts/ui/DebugMenu.gd` (lines 512–550)</br>
+*Defined at:* `scripts/ui/DebugMenu.gd` (lines 468–506)</br>
 *Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**

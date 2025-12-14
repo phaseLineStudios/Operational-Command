@@ -1,6 +1,6 @@
 # RadioSubtitles::show_partial Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 35–42)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 69–76)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # NewScenarioDialog::_on_thumbnail_select Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 107–130)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 141–164)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**

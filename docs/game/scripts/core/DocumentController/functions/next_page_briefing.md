@@ -1,6 +1,6 @@
 # DocumentController::next_page_briefing Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 743–747)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 808–812)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

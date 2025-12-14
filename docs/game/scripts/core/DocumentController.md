@@ -58,8 +58,9 @@ Display a specific page for a document
 - [`func _render_briefing_doc() -> void`](DocumentController/functions/_render_briefing_doc.md) — Render briefing document in FRAGO SMEAC format
 - [`func _render_transcript_doc() -> void`](DocumentController/functions/_render_transcript_doc.md) — Render transcript document (initial render)
 - [`func _update_transcript_content(follow_new_messages: bool) -> void`](DocumentController/functions/_update_transcript_content.md) — Update transcript content while preserving page position
+- [`func _queue_transcript_update() -> void`](DocumentController/functions/_queue_transcript_update.md)
+- [`func _do_transcript_update() -> void`](DocumentController/functions/_do_transcript_update.md)
 - [`func add_transcript_entry(speaker: String, message: String) -> void`](DocumentController/functions/add_transcript_entry.md) — Add a radio transmission to the transcript
-- [`func _refresh_transcript_display() -> void`](DocumentController/functions/_refresh_transcript_display.md) — Refresh transcript display without adding new entries
 - [`func _get_mission_timestamp() -> String`](DocumentController/functions/_get_mission_timestamp.md) — Get current mission timestamp as formatted string
 - [`func _apply_textures() -> void`](DocumentController/functions/_apply_textures.md) — Apply rendered textures to clipboard materials
 - [`func _refresh_transcript_texture() -> void`](DocumentController/functions/_refresh_transcript_texture.md) — Refresh the transcript document texture after content updates
@@ -84,6 +85,9 @@ Display a specific page for a document
 
 ## Public Attributes
 
+- `bool bake_viewport_mipmaps` — If true, bake a CPU ImageTexture with mipmaps from the viewport (expensive).
+- `float transcript_update_delay_sec` — Delay before rebuilding transcript pages after new entries (seconds).
+- `Array[AudioStream] page_change_sounds` — Sound to play when page is changed.
 - `RigidBody3D intel_clipboard` — References to the clipboard RigidBody3D nodes
 - `RigidBody3D transcript_clipboard`
 - `RigidBody3D briefing_clipboard`
@@ -100,7 +104,6 @@ Display a specific page for a document
 - `Array[String] _transcript_pages`
 - `Array[String] _briefing_pages`
 - `Array[Dictionary] _transcript_entries` — Transcript storage
-- `Array[Dictionary] _transcript_pending_entries`
 - `ScenarioData _scenario` — Current scenario reference
 - `MissionResolution _resolution` — Mission resolution for objective tracking
 - `StandardMaterial3D _intel_material` — Material references for texture updates
@@ -108,6 +111,7 @@ Display a specific page for a document
 - `StandardMaterial3D _briefing_material`
 - `Timer _intel_refresh_timer` — Debounce timers for texture refresh
 - `Timer _transcript_refresh_timer`
+- `Timer _transcript_update_timer`
 - `Timer _briefing_refresh_timer`
 - `MeshInstance3D mesh_instance`
 - `StandardMaterial3D material`
@@ -178,6 +182,18 @@ func _update_transcript_content(follow_new_messages: bool) -> void
 
 Update transcript content while preserving page position
 
+### _queue_transcript_update
+
+```gdscript
+func _queue_transcript_update() -> void
+```
+
+### _do_transcript_update
+
+```gdscript
+func _do_transcript_update() -> void
+```
+
 ### add_transcript_entry
 
 ```gdscript
@@ -187,14 +203,6 @@ func add_transcript_entry(speaker: String, message: String) -> void
 Add a radio transmission to the transcript
 `speaker` Who is speaking (e.g., "PLAYER", "ALPHA", "HQ")
 `message` The message text
-
-### _refresh_transcript_display
-
-```gdscript
-func _refresh_transcript_display() -> void
-```
-
-Refresh transcript display without adding new entries
 
 ### _get_mission_timestamp
 
@@ -349,6 +357,36 @@ Refresh only the briefing objectives page
 
 ## Member Data Documentation
 
+### bake_viewport_mipmaps
+
+```gdscript
+var bake_viewport_mipmaps: bool
+```
+
+Decorators: `@export`
+
+If true, bake a CPU ImageTexture with mipmaps from the viewport (expensive).
+
+### transcript_update_delay_sec
+
+```gdscript
+var transcript_update_delay_sec: float
+```
+
+Decorators: `@export`
+
+Delay before rebuilding transcript pages after new entries (seconds).
+
+### page_change_sounds
+
+```gdscript
+var page_change_sounds: Array[AudioStream]
+```
+
+Decorators: `@export`
+
+Sound to play when page is changed.
+
 ### intel_clipboard
 
 ```gdscript
@@ -457,12 +495,6 @@ var _transcript_entries: Array[Dictionary]
 
 Transcript storage
 
-### _transcript_pending_entries
-
-```gdscript
-var _transcript_pending_entries: Array[Dictionary]
-```
-
 ### _scenario
 
 ```gdscript
@@ -511,6 +543,12 @@ Debounce timers for texture refresh
 
 ```gdscript
 var _transcript_refresh_timer: Timer
+```
+
+### _transcript_update_timer
+
+```gdscript
+var _transcript_update_timer: Timer
 ```
 
 ### _briefing_refresh_timer

@@ -1,6 +1,6 @@
 # TimerController::_on_button_pressed Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 239–259)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 241–257)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**
@@ -17,18 +17,14 @@ Handle button press.
 
 ```gdscript
 func _on_button_pressed(bone_idx: int) -> void:
-	# Don't do anything if same button pressed
 	if bone_idx == _current_pressed_bone:
 		return
 
-	# Release previous button
 	if _current_pressed_bone >= 0:
 		_release_button(_current_pressed_bone)
 
-	# Press new button (stays down)
 	_set_button_pressed(bone_idx)
 
-	# Change time state
 	if bone_idx == _pause_bone_idx:
 		_set_time_state(TimeState.PAUSED)
 	elif bone_idx == _speed_1x_bone_idx:

@@ -1,6 +1,6 @@
 # ScenarioUnit::is_dead Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 60–63)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 72–77)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**
@@ -19,5 +19,7 @@ Check if unit is dead.
 
 ```gdscript
 func is_dead() -> bool:
-	return float(unit.state_strength / unit.strength) <= 0.0
+	if unit == null:
+		return true
+	return float(state_strength / unit.strength) <= 0.0
 ```

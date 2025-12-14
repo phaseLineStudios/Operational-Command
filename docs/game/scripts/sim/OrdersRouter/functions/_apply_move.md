@@ -1,6 +1,6 @@
 # OrdersRouter::_apply_move Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 102–127)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 102–130)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**
@@ -21,6 +21,7 @@ MOVE: compute destination from grid, target_callsign (unit or label), or directi
 
 ```gdscript
 func _apply_move(unit: ScenarioUnit, order: Dictionary) -> bool:
+	_apply_navigation_bias(unit, order)
 	var dest: Variant = _compute_destination(unit, order)
 	if dest == null:
 		emit_signal("order_failed", order, "move_missing_destination")
@@ -38,6 +39,8 @@ func _apply_move(unit: ScenarioUnit, order: Dictionary) -> bool:
 			success = movement_adapter.plan_and_start_direct(unit, dest)
 		else:
 			success = movement_adapter.plan_and_start(unit, dest)
+		if order.has("navigation_bias") and order.navigation_bias == StringName("roads"):
+			LogService.info("Order applied with road bias for %s" % unit.id, "OrdersRouter.gd")
 
 	if success:
 		emit_signal("order_applied", order)

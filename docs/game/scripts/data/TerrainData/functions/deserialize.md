@@ -1,6 +1,6 @@
 # TerrainData::deserialize Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 572–678)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 593–720)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**
@@ -33,6 +33,14 @@ static func deserialize(d: Variant) -> TerrainData:
 		t.grid_start_x = int(grid.get("start_x", t.grid_start_x))
 		t.grid_start_y = int(grid.get("start_y", t.grid_start_y))
 
+	var metadata: Dictionary = d.get("metadata", {})
+	if typeof(metadata) == TYPE_DICTIONARY:
+		t.country = str(metadata.get("country", t.country))
+		t.map_scale = str(metadata.get("map_scale", t.map_scale))
+		t.edition = str(metadata.get("edition", t.edition))
+		t.series = str(metadata.get("series", t.series))
+		t.sheet = str(metadata.get("sheet", t.sheet))
+
 	var em: Dictionary = d.get("elev_meta", {})
 	if typeof(em) == TYPE_DICTIONARY:
 		t.base_elevation_m = int(em.get("base_elevation_m", t.base_elevation_m))
@@ -40,13 +48,26 @@ static func deserialize(d: Variant) -> TerrainData:
 
 	var elev: Dictionary = d.get("elevation", {})
 	if typeof(elev) == TYPE_DICTIONARY:
-		var b64: String = elev.get("png_b64", null)
-		if b64 != null and typeof(b64) == TYPE_STRING and b64 != "":
-			var img := ContentDB.png_b64_to_image(b64)
+		# Try raw format first (new lossless format)
+		var raw_data: Variant = elev.get("raw", null)
+		if raw_data != null and typeof(raw_data) == TYPE_DICTIONARY:
+			var img := ContentDB.raw_b64_to_image(raw_data)
 			if not img.is_empty():
 				t.elevation = img
 				t._resample_or_resize()
 				t._update_scale()
+		else:
+			# Fall back to PNG format for backwards compatibility with old terrains
+			var png_b64: Variant = elev.get("png_b64", null)
+			if png_b64 != null and typeof(png_b64) == TYPE_STRING and png_b64 != "":
+				var img := ContentDB.png_b64_to_image(png_b64)
+				if not img.is_empty():
+					# Convert PNG to FORMAT_RF for elevation data
+					if img.get_format() != Image.FORMAT_RF:
+						img.convert(Image.FORMAT_RF)
+					t.elevation = img
+					t._resample_or_resize()
+					t._update_scale()
 
 	var content: Dictionary = d.get("content", {})
 	if typeof(content) == TYPE_DICTIONARY:

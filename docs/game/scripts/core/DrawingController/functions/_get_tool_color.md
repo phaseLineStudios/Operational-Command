@@ -1,6 +1,6 @@
 # DrawingController::_get_tool_color Function Reference
 
-*Defined at:* `scripts/core/DrawingController.gd` (lines 293–306)</br>
+*Defined at:* `scripts/core/DrawingController.gd` (lines 270–283)</br>
 *Belongs to:* [DrawingController](../../DrawingController.md)
 
 **Signature**

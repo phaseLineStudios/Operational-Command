@@ -1,6 +1,6 @@
 # ReinforcementPanel::_set_amount Function Reference
 
-*Defined at:* `scripts/ui/unit_mgmt/ReinforcementPanel.gd` (lines 257–274)</br>
+*Defined at:* `scripts/ui/unit_mgmt/ReinforcementPanel.gd` (lines 303–320)</br>
 *Belongs to:* [ReinforcementPanel](../../ReinforcementPanel.md)
 
 **Signature**
@@ -20,7 +20,7 @@ func _set_amount(uid: String, target: int) -> void:
 	var u: UnitData = _find_unit(uid)
 	if u == null:
 		return
-	var cur: int = int(round(u.state_strength))
+	var cur: int = int(round(_unit_strength.get(uid, 0.0)))
 	var cap: int = int(max(0, u.strength))
 	var missing: int = max(0, cap - cur)
 	var already: int = int(_pending.get(uid, 0))

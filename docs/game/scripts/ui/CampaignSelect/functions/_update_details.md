@@ -1,6 +1,6 @@
 # CampaignSelect::_update_details Function Reference
 
-*Defined at:* `scripts/ui/CampaignSelect.gd` (lines 70–77)</br>
+*Defined at:* `scripts/ui/CampaignSelect.gd` (lines 84–91)</br>
 *Belongs to:* [CampaignSelect](../../CampaignSelect.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # NewScenarioDialog::_reset_pool_values Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 408–423)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 480–495)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**

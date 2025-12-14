@@ -1,6 +1,6 @@
 # HQTable::_on_radio_transcript_player_early Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 113–117)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 132–136)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**
@@ -18,5 +18,5 @@ Handle player radio result for transcript
 ```gdscript
 func _on_radio_transcript_player_early(text: String) -> void:
 	if document_controller and text != "":
-		await document_controller.add_transcript_entry("PLAYER", text)
+		document_controller.add_transcript_entry("PLAYER", text)
 ```

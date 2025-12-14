@@ -1,6 +1,6 @@
 # TTSService::_initialize_async Function Reference
 
-*Defined at:* `scripts/radio/TTSService.gd` (lines 43–63)</br>
+*Defined at:* `scripts/radio/TTSService.gd` (lines 48–67)</br>
 *Belongs to:* [TTSService](../../TTSService.md)
 
 **Signature**
@@ -17,7 +17,6 @@ Initialize TTS asynchronously to avoid blocking startup.
 
 ```gdscript
 func _initialize_async() -> void:
-	# Wait one frame to ensure UI has rendered
 	await get_tree().process_frame
 
 	_piper_path = _get_platform_binary()

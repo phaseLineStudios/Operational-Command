@@ -1,12 +1,12 @@
 # AmmoSystem::is_empty Function Reference
 
-*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 98–101)</br>
+*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 104–109)</br>
 *Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**
 
 ```gdscript
-func is_empty(u: UnitData, t: String) -> bool
+func is_empty(su: ScenarioUnit, t: String) -> bool
 ```
 
 ## Description
@@ -16,6 +16,8 @@ True if current ammo is zero.
 ## Source
 
 ```gdscript
-func is_empty(u: UnitData, t: String) -> bool:
-	return int(u.state_ammunition.get(t, 0)) <= 0
+func is_empty(su: ScenarioUnit, t: String) -> bool:
+	if su == null:
+		return true
+	return int(su.state_ammunition.get(t, 0)) <= 0
 ```

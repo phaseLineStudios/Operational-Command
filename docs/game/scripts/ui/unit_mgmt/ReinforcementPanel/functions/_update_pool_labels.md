@@ -1,6 +1,6 @@
 # ReinforcementPanel::_update_pool_labels Function Reference
 
-*Defined at:* `scripts/ui/unit_mgmt/ReinforcementPanel.gd` (lines 230–235)</br>
+*Defined at:* `scripts/ui/unit_mgmt/ReinforcementPanel.gd` (lines 276–281)</br>
 *Belongs to:* [ReinforcementPanel](../../ReinforcementPanel.md)
 
 **Signature**

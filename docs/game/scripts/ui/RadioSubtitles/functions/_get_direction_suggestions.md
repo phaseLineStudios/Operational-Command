@@ -1,6 +1,6 @@
 # RadioSubtitles::_get_direction_suggestions Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 305–316)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 346–357)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

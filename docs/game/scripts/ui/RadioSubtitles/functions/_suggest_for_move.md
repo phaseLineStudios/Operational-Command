@@ -1,6 +1,6 @@
 # RadioSubtitles::_suggest_for_move Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 167–194)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 201–228)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

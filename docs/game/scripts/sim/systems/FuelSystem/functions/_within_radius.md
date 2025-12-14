@@ -1,6 +1,6 @@
 # FuelSystem::_within_radius Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 349–354)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 357–362)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

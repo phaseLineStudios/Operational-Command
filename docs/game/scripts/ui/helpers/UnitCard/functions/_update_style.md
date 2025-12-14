@@ -1,6 +1,6 @@
 # UnitCard::_update_style Function Reference
 
-*Defined at:* `scripts/ui/helpers/UnitCard.gd` (lines 82–92)</br>
+*Defined at:* `scripts/ui/helpers/UnitCard.gd` (lines 93–103)</br>
 *Belongs to:* [UnitCard](../../UnitCard.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # FuelSystem::_elevation_delta_norm Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 294–315)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 296–317)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

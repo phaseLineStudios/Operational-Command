@@ -1,6 +1,6 @@
 # ScenarioUnitsCatalog::_used_unit_ids Function Reference
 
-*Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 170–176)</br>
+*Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 190–198)</br>
 *Belongs to:* [ScenarioUnitsCatalog](../../ScenarioUnitsCatalog.md)
 
 **Signature**

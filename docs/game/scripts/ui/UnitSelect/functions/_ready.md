@@ -1,6 +1,6 @@
 # UnitSelect::_ready Function Reference
 
-*Defined at:* `scripts/ui/UnitSelect.gd` (lines 65–73)</br>
+*Defined at:* `scripts/ui/UnitSelect.gd` (lines 88–97)</br>
 *Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**
@@ -23,4 +23,5 @@ func _ready() -> void:
 	_refresh_filters()
 	_update_deploy_enabled()
 	_update_logistics_labels(0, 0, 0, 0)
+	_init_supply_pools()
 ```

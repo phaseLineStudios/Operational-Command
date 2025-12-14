@@ -1,6 +1,6 @@
 # CampaignSelect::_ready Function Reference
 
-*Defined at:* `scripts/ui/CampaignSelect.gd` (lines 31–36)</br>
+*Defined at:* `scripts/ui/CampaignSelect.gd` (lines 36–40)</br>
 *Belongs to:* [CampaignSelect](../../CampaignSelect.md)
 
 **Signature**
@@ -17,7 +17,6 @@ Init UI, populate list, connect signals.
 
 ```gdscript
 func _ready() -> void:
-	_set_action_buttons_visible(false)
 	_populate_campaigns()
 	_connect_signals()
 ```

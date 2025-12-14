@@ -1,6 +1,6 @@
 # TerrainRender::_on_data_changed Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 187–192)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 207–212)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**

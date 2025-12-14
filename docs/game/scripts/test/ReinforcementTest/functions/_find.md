@@ -1,6 +1,6 @@
 # ReinforcementTest::_find Function Reference
 
-*Defined at:* `scripts/test/ReinforcementTest.gd` (lines 303–307)</br>
+*Defined at:* `scripts/test/ReinforcementTest.gd` (lines 323–327)</br>
 *Belongs to:* [ReinforcementTest](../../ReinforcementTest.md)
 
 **Signature**
