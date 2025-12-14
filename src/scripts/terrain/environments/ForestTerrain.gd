@@ -46,7 +46,7 @@ func check_rain() -> void:
 	var shader_mat := mat as ShaderMaterial
 
 	if _scenario.rain > 0.0:
-		shader_mat.set_shader_parameter("roughness_scale", 0.0)
+		shader_mat.set_shader_parameter("roughness_scale", 0.1)
 		print("Set terrain roughness to 0.0 (wet)")
 	else:
 		shader_mat.set_shader_parameter("roughness_scale", 1.0)

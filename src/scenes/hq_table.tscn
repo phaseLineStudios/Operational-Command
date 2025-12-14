@@ -1,4 +1,4 @@
-[gd_scene load_steps=137 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=138 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -74,6 +74,7 @@
 [ext_resource type="Script" uid="uid://d33v0jsmojsg1" path="res://scripts/sim/SkyPreset.gd" id="44_hovgm"]
 [ext_resource type="Script" uid="uid://qvbcqwk2gyo1" path="res://scripts/ai/AIController.gd" id="45_ai"]
 [ext_resource type="Texture2D" uid="uid://cxjjwb5ao85u7" path="res://assets/textures/tex_rain_circle.png" id="50_idixg"]
+[ext_resource type="Script" uid="uid://brs2ul5esg57c" path="res://scripts/utils/PerformanceProfiler.gd" id="67_e2sws"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qevx8"]
 size = Vector3(1, 0.75, 0.7)
@@ -131,7 +132,6 @@ normal_texture = ExtResource("18_l6u77")
 ao_enabled = true
 ao_texture = ExtResource("15_imwkr")
 ao_texture_channel = 4
-heightmap_enabled = true
 heightmap_scale = 1.0
 heightmap_texture = ExtResource("16_n0sin")
 
@@ -148,7 +148,6 @@ normal_texture = ExtResource("18_l6u77")
 ao_enabled = true
 ao_texture = ExtResource("15_imwkr")
 ao_texture_channel = 4
-heightmap_enabled = true
 heightmap_scale = 1.0
 heightmap_texture = ExtResource("16_n0sin")
 
@@ -248,7 +247,7 @@ shader_parameter/moon_glow_intensity = 0.8
 shader_parameter/base_cloud_color = Color(1, 1, 1, 1)
 shader_parameter/cloud_density = 4.25
 shader_parameter/cloud_edge = 0.0
-shader_parameter/cloud_coverage = 1.0
+shader_parameter/cloud_coverage = 0.0
 shader_parameter/cloud_direction = Vector2(0, -1)
 shader_parameter/cloud_texture = ExtResource("39_r1wnv")
 shader_parameter/cloud_texture_2 = ExtResource("40_8iaup")
@@ -976,6 +975,9 @@ randomness = 0.38
 trail_enabled = true
 process_material = SubResource("ParticleProcessMaterial_66gqg")
 draw_pass_1 = SubResource("RibbonTrailMesh_idixg")
+
+[node name="Profiler" type="Node" parent="Controllers"]
+script = ExtResource("67_e2sws")
 
 [node name="PostProcess" type="CanvasLayer" parent="."]
 script = ExtResource("36_yef6r")
