@@ -23,6 +23,8 @@ const PAPER_MATERIAL_INDEX := 3
 @export_group("Performance")
 ## If true, bake a CPU ImageTexture with mipmaps from the viewport (expensive).
 @export var bake_viewport_mipmaps: bool = false
+## Delay before rebuilding transcript pages after new entries (seconds).
+@export var transcript_update_delay_sec: float = 0.25
 
 ## Maximum transcript entries before pruning oldest
 const MAX_TRANSCRIPT_ENTRIES := 50
@@ -73,7 +75,7 @@ var _transcript_entries: Array[Dictionary] = []
 
 ## Transcript update mutex to prevent concurrent updates
 var _transcript_updating := false
-var _transcript_pending_entries: Array[Dictionary] = []
+var _transcript_update_needs_rerun := false
 
 ## Current scenario reference
 var _scenario: ScenarioData
@@ -89,6 +91,7 @@ var _briefing_material: StandardMaterial3D
 ## Debounce timers for texture refresh
 var _intel_refresh_timer: Timer
 var _transcript_refresh_timer: Timer
+var _transcript_update_timer: Timer
 var _briefing_refresh_timer: Timer
 
 
@@ -166,6 +169,13 @@ func _setup_refresh_timers() -> void:
 	_transcript_refresh_timer.one_shot = true
 	_transcript_refresh_timer.timeout.connect(_do_transcript_refresh)
 	add_child(_transcript_refresh_timer)
+
+	# Transcript update timer (coalesce new entries)
+	_transcript_update_timer = Timer.new()
+	_transcript_update_timer.wait_time = maxf(transcript_update_delay_sec, 0.01)
+	_transcript_update_timer.one_shot = true
+	_transcript_update_timer.timeout.connect(_do_transcript_update)
+	add_child(_transcript_update_timer)
 
 	# Briefing timer
 	_briefing_refresh_timer = Timer.new()
@@ -379,24 +389,25 @@ func _update_transcript_content(follow_new_messages: bool) -> void:
 	_transcript_face.update_page_indicator()
 	_display_page(_transcript_face, _transcript_content, _transcript_pages, target_page)
 
-	# Refresh texture immediately for transcript updates (no debounce needed)
-	await _do_transcript_refresh()
+	if _transcript_refresh_timer:
+		_transcript_refresh_timer.start()
 
 
-## Add a radio transmission to the transcript
-## [param speaker] Who is speaking (e.g., "PLAYER", "ALPHA", "HQ")
-## [param message] The message text
-func add_transcript_entry(speaker: String, message: String) -> void:
-	var timestamp := _get_mission_timestamp()
-	var entry := {"timestamp": timestamp, "speaker": speaker, "message": message}
-
-	_transcript_entries.append(entry)
-
-	if _transcript_entries.size() > MAX_TRANSCRIPT_ENTRIES:
-		_transcript_entries.pop_front()
-
+func _queue_transcript_update() -> void:
+	if _transcript_update_timer == null:
+		return
 	if _transcript_updating:
-		_transcript_pending_entries.append(entry)
+		_transcript_update_needs_rerun = true
+		return
+	_transcript_update_timer.wait_time = maxf(transcript_update_delay_sec, 0.01)
+	if not _transcript_update_timer.is_stopped():
+		return
+	_transcript_update_timer.start()
+
+
+func _do_transcript_update() -> void:
+	if _transcript_updating:
+		_transcript_update_needs_rerun = true
 		return
 
 	_transcript_updating = true
@@ -409,22 +420,24 @@ func add_transcript_entry(speaker: String, message: String) -> void:
 
 	_transcript_updating = false
 
-	if _transcript_pending_entries.size() > 0:
-		_transcript_pending_entries.clear()
-		await _refresh_transcript_display()
+	if _transcript_update_needs_rerun:
+		_transcript_update_needs_rerun = false
+		_queue_transcript_update()
 
 
-## Refresh transcript display without adding new entries
-func _refresh_transcript_display() -> void:
-	_transcript_updating = true
+## Add a radio transmission to the transcript
+## [param speaker] Who is speaking (e.g., "PLAYER", "ALPHA", "HQ")
+## [param message] The message text
+func add_transcript_entry(speaker: String, message: String) -> void:
+	var timestamp: String = _get_mission_timestamp()
+	var entry: Dictionary = {"timestamp": timestamp, "speaker": speaker, "message": message}
 
-	var was_on_last_page := false
-	if _transcript_face and _transcript_pages.size() > 0:
-		was_on_last_page = _transcript_face.current_page >= _transcript_pages.size() - 1
+	_transcript_entries.append(entry)
 
-	await _update_transcript_content(was_on_last_page)
+	if _transcript_entries.size() > MAX_TRANSCRIPT_ENTRIES:
+		_transcript_entries.pop_front()
 
-	_transcript_updating = false
+	_queue_transcript_update()
 
 
 ## Get current mission timestamp as formatted string
