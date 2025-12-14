@@ -83,6 +83,8 @@ var _lcd_label: Label
 var _lcd_icon: TextureRect
 var _sim_elapsed_time: float = 0.0
 var _button_sound_player: AudioStreamPlayer3D
+var _lcd_last_elapsed_sec: int = -1
+var _lcd_last_state: int = -1
 
 
 func _ready() -> void:
@@ -377,7 +379,7 @@ func _setup_lcd_display() -> void:
 
 	_lcd_viewport = SubViewport.new()
 	_lcd_viewport.size = lcd_resolution
-	_lcd_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_lcd_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	_lcd_viewport.transparent_bg = false
 	add_child(_lcd_viewport)
 
@@ -425,18 +427,25 @@ func _setup_lcd_display() -> void:
 	lcd_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 
 	mesh_instance.set_surface_override_material(lcd_surface_index, lcd_material)
+	_update_lcd_display()
 
 
 ## Update LCD display with current time and mode.
 func _update_lcd_display() -> void:
-	if _lcd_label == null or _lcd_icon == null:
+	if _lcd_label == null or _lcd_icon == null or _lcd_viewport == null:
 		return
 
-	var elapsed := _sim_elapsed_time
+	var elapsed_sec: int = int(_sim_elapsed_time)
+	var state_i: int = int(_current_state)
+	if elapsed_sec == _lcd_last_elapsed_sec and state_i == _lcd_last_state:
+		return
 
-	var minutes := int(elapsed / 60.0)
-	var seconds := int(elapsed) % 60
-	var time_str := "%02d:%02d" % [minutes, seconds]
+	_lcd_last_elapsed_sec = elapsed_sec
+	_lcd_last_state = state_i
+
+	var minutes: int = int(elapsed_sec / 60.0)
+	var seconds: int = elapsed_sec % 60
+	var time_str: String = "%02d:%02d" % [minutes, seconds]
 
 	_lcd_label.text = time_str
 
@@ -447,6 +456,8 @@ func _update_lcd_display() -> void:
 			_lcd_icon.texture = play_icon
 		TimeState.SPEED_2X:
 			_lcd_icon.texture = fastforward_icon
+
+	_lcd_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 
 
 ## Find MeshInstance3D in children recursively.
