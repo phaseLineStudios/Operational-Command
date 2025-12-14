@@ -1,6 +1,6 @@
 # CampaignSelect::_on_select_save_pressed Function Reference
 
-*Defined at:* `scripts/ui/CampaignSelect.gd` (lines 112–118)</br>
+*Defined at:* `scripts/ui/CampaignSelect.gd` (lines 156–167)</br>
 *Belongs to:* [CampaignSelect](../../CampaignSelect.md)
 
 **Signature**
@@ -19,6 +19,11 @@ open a save picker filtered to the current campaign.
 func _on_select_save_pressed() -> void:
 	if not _selected_campaign:
 		return
-	# TODO Open a save picker dialog/scene filtered by campaign
-	push_warning("Save selection UI not implemented yet.")
+
+	var saves := Persistence.list_saves_for_campaign(_selected_campaign.id)
+	if saves.is_empty():
+		push_warning("No saves found for this campaign.")
+		return
+
+	_show_save_picker(saves)
 ```

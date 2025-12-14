@@ -31,6 +31,7 @@ extends Node2D
 - `Array[UnitData] _units`
 - `ReinforcementPanel _panel`
 - `int _pool`
+- `Dictionary[String, float] _unit_strength` — Temporary: tracks current strength per unit for testing
 - `Dictionary _baseline_strengths`
 - `int _baseline_pool`
 - `float strength_factor`
@@ -153,6 +154,14 @@ var _panel: ReinforcementPanel
 ```gdscript
 var _pool: int
 ```
+
+### _unit_strength
+
+```gdscript
+var _unit_strength: Dictionary[String, float]
+```
+
+Temporary: tracks current strength per unit for testing
 
 ### _baseline_strengths
 

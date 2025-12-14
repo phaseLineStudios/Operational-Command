@@ -15,8 +15,6 @@ extends Resource
 
 Weapon Equipment Ammunition types
 
-## Detailed Description
-
 Handheld weapons (5.56, 7.62, 9mm etc.)
 
 Heavy crew-served or non-manportable weapons (.50)
@@ -51,6 +49,15 @@ Ammunition variables
 
 Logistics variables, is part of ammunition and we can add stuff here later, like fuel
 
+Calculates the attack rating using equipment, ammo profiles, and strength.
+
+## Detailed Description
+
+`ammo_damage_config` Optional ammo damage configuration.
+`current_strength` Optional current strength override (defaults to full strength).
+
+Calculates the attack contribution for a single weapon entry.
+
 ## Public Member Functions
 
 - [`func _init() -> void`](UnitData/functions/_init.md)
@@ -58,6 +65,18 @@ Logistics variables, is part of ammunition and we can add stuff here later, like
 - [`func _update_icons_async(rev: int) -> void`](UnitData/functions/_update_icons_async.md) — Build both friend/enemy icons asynchronously.
 - [`func serialize() -> Dictionary`](UnitData/functions/serialize.md) — Serialize this unit to JSON
 - [`func deserialize(data: Variant) -> UnitData`](UnitData/functions/deserialize.md) — Deserialize Unit JSON
+- [`func get_weapon_ammo_types() -> Dictionary`](UnitData/functions/get_weapon_ammo_types.md) — Returns the ammo types referenced by the unit's weapon equipment.
+- [`func has_anti_vehicle_weapons() -> bool`](UnitData/functions/has_anti_vehicle_weapons.md) — Returns true when the equipment loadout includes anti-vehicle weapons.
+- [`func _is_anti_vehicle_ammo(ammo_type: int) -> bool`](UnitData/functions/_is_anti_vehicle_ammo.md) — Helper to classify a weapon ammo enum index as anti-vehicle capable.
+- [`func is_vehicle_unit() -> bool`](UnitData/functions/is_vehicle_unit.md) — Returns true when the unit should be treated as a vehicle target in combat.
+- [`func _ensure_ammunition_from_equipment() -> void`](UnitData/functions/_ensure_ammunition_from_equipment.md) — Builds ammunition dictionaries based on equipped weapons when values are missing.
+- [`func _get_equipment_category(category_name: String) -> Dictionary`](UnitData/functions/_get_equipment_category.md) — Lookup an equipment category while tolerating mixed-case keys.
+- [`func _ammo_index_to_key(idx: int) -> String`](UnitData/functions/_ammo_index_to_key.md) — Convert ammo enum index -> string key ("SMALL_ARMS").
+- [`func _ammo_key_to_index(ammo_key: String) -> int`](UnitData/functions/_ammo_key_to_index.md) — Convert ammo key name to enum index.
+- [`func _get_ammo_amount(source: Dictionary, ammo_key: String) -> float`](UnitData/functions/_get_ammo_amount.md) — Safely fetch an ammo value from a dictionary that might use string or numeric keys.
+- [`func _has_ammo_key(source: Dictionary, ammo_key: String) -> bool`](UnitData/functions/_has_ammo_key.md) — Returns true if the dictionary contains the ammo key as string or enum index.
+- [`func _default_ammo_damage(ammo_key: String) -> float`](UnitData/functions/_default_ammo_damage.md) — Fallback damage when no config entry is available.
+- [`func _resolve_ammo_index(value: Variant) -> int`](UnitData/functions/_resolve_ammo_index.md) — Normalize mixed ammo representations (string/int) to an enum index.
 
 ## Public Attributes
 
@@ -82,22 +101,27 @@ Logistics variables, is part of ammunition and we can add stuff here later, like
 - `float range_m` — Effective weapon range in meters
 - `float morale` — Morale level (0 = broken, 1 = max)
 - `float speed_kph` — Movement speed in kilometers per hour
-- `float state_strength` — Current strength
-- `float state_injured` — Current injured
-- `float understrength_threshold` — per-unit understrength threshold
-- `float state_equipment` — Current remaining equipment
-- `float cohesion` — Current cohesion level (0.0–1.0).
+- `float understrength_threshold` — Per-unit understrength threshold (0.0-1.0)
 - `Dictionary throughput` — Supply throughput { "supply_type": (int)amount }
 - `Array[String] equipment_tags` — Equipment tag codes associated with this unit [ "AMMO_PALLET" ]
 - `String doctrine` — Doctrine code used by the AI for this unit.
 - `UnitCategoryData unit_category`
 - `Dictionary ammunition` — Ammo capacity per type, e.g.
-- `Dictionary state_ammunition` — Current ammo per type for this unit, same keys as `ammunition`.
-- `float ammunition_low_threshold` — Ratio (0..1): when `current/capacity <= ammunition_low_threshold` emit “Bingo ammo”.
+- `float ammunition_low_threshold` — Ratio (0..1): when `current/capacity <= ammunition_low_threshold` emit "Bingo ammo".
 - `float ammunition_critical_threshold` — Ratio (0..1): when `current/capacity <= ammunition_critical_threshold` emit “Ammo critical”.
 - `float supply_transfer_rate` — Transfer rate (rounds per second) a logistics unit can push to a recipient in range.
 - `float supply_transfer_radius_m` — Transfer radius in meters within which resupply is possible.
 - `int _icon_rev`
+- `Dictionary weapons`
+- `float total_weapon_power`
+- `Variant weapon_data`
+- `Dictionary weapon_entry`
+- `float effective_strength`
+- `float ratio`
+- `float manpower_component`
+- `float computed`
+- `float qty`
+- `float ammo_ratio`
 
 ## Signals
 
@@ -147,6 +171,102 @@ func deserialize(data: Variant) -> UnitData
 ```
 
 Deserialize Unit JSON
+
+### get_weapon_ammo_types
+
+```gdscript
+func get_weapon_ammo_types() -> Dictionary
+```
+
+Returns the ammo types referenced by the unit's weapon equipment.
+
+### has_anti_vehicle_weapons
+
+```gdscript
+func has_anti_vehicle_weapons() -> bool
+```
+
+Returns true when the equipment loadout includes anti-vehicle weapons.
+
+### _is_anti_vehicle_ammo
+
+```gdscript
+func _is_anti_vehicle_ammo(ammo_type: int) -> bool
+```
+
+Helper to classify a weapon ammo enum index as anti-vehicle capable.
+
+### is_vehicle_unit
+
+```gdscript
+func is_vehicle_unit() -> bool
+```
+
+Returns true when the unit should be treated as a vehicle target in combat.
+
+### _ensure_ammunition_from_equipment
+
+```gdscript
+func _ensure_ammunition_from_equipment() -> void
+```
+
+Builds ammunition dictionaries based on equipped weapons when values are missing.
+
+### _get_equipment_category
+
+```gdscript
+func _get_equipment_category(category_name: String) -> Dictionary
+```
+
+Lookup an equipment category while tolerating mixed-case keys.
+
+### _ammo_index_to_key
+
+```gdscript
+func _ammo_index_to_key(idx: int) -> String
+```
+
+Convert ammo enum index -> string key ("SMALL_ARMS").
+
+### _ammo_key_to_index
+
+```gdscript
+func _ammo_key_to_index(ammo_key: String) -> int
+```
+
+Convert ammo key name to enum index.
+
+### _get_ammo_amount
+
+```gdscript
+func _get_ammo_amount(source: Dictionary, ammo_key: String) -> float
+```
+
+Safely fetch an ammo value from a dictionary that might use string or numeric keys.
+
+### _has_ammo_key
+
+```gdscript
+func _has_ammo_key(source: Dictionary, ammo_key: String) -> bool
+```
+
+Returns true if the dictionary contains the ammo key as string or enum index.
+
+### _default_ammo_damage
+
+```gdscript
+func _default_ammo_damage(ammo_key: String) -> float
+```
+
+Fallback damage when no config entry is available.
+
+### _resolve_ammo_index
+
+```gdscript
+func _resolve_ammo_index(value: Variant) -> int
+```
+
+Normalize mixed ammo representations (string/int) to an enum index.
 
 ## Member Data Documentation
 
@@ -360,26 +480,6 @@ Decorators: `@export`
 
 Movement speed in kilometers per hour
 
-### state_strength
-
-```gdscript
-var state_strength: float
-```
-
-Decorators: `@export`
-
-Current strength
-
-### state_injured
-
-```gdscript
-var state_injured: float
-```
-
-Decorators: `@export`
-
-Current injured
-
 ### understrength_threshold
 
 ```gdscript
@@ -388,27 +488,7 @@ var understrength_threshold: float
 
 Decorators: `@export`
 
-per-unit understrength threshold
-
-### state_equipment
-
-```gdscript
-var state_equipment: float
-```
-
-Decorators: `@export`
-
-Current remaining equipment
-
-### cohesion
-
-```gdscript
-var cohesion: float
-```
-
-Decorators: `@export_range(0.0, 1.0, 0.01)`
-
-Current cohesion level (0.0–1.0).
+Per-unit understrength threshold (0.0-1.0)
 
 ### throughput
 
@@ -456,16 +536,6 @@ Decorators: `@export`
 
 Ammo capacity per type, e.g. `{ "small_arms": 30, "he": 10 }`.
 
-### state_ammunition
-
-```gdscript
-var state_ammunition: Dictionary
-```
-
-Decorators: `@export`
-
-Current ammo per type for this unit, same keys as `ammunition`.
-
 ### ammunition_low_threshold
 
 ```gdscript
@@ -474,7 +544,7 @@ var ammunition_low_threshold: float
 
 Decorators: `@export_range(0.0, 1.0, 0.01)`
 
-Ratio (0..1): when `current/capacity <= ammunition_low_threshold` emit “Bingo ammo”.
+Ratio (0..1): when `current/capacity <= ammunition_low_threshold` emit "Bingo ammo".
 
 ### ammunition_critical_threshold
 
@@ -510,6 +580,66 @@ Transfer radius in meters within which resupply is possible.
 
 ```gdscript
 var _icon_rev: int
+```
+
+### weapons
+
+```gdscript
+var weapons: Dictionary
+```
+
+### total_weapon_power
+
+```gdscript
+var total_weapon_power: float
+```
+
+### weapon_data
+
+```gdscript
+var weapon_data: Variant
+```
+
+### weapon_entry
+
+```gdscript
+var weapon_entry: Dictionary
+```
+
+### effective_strength
+
+```gdscript
+var effective_strength: float
+```
+
+### ratio
+
+```gdscript
+var ratio: float
+```
+
+### manpower_component
+
+```gdscript
+var manpower_component: float
+```
+
+### computed
+
+```gdscript
+var computed: float
+```
+
+### qty
+
+```gdscript
+var qty: float
+```
+
+### ammo_ratio
+
+```gdscript
+var ammo_ratio: float
 ```
 
 ## Signal Documentation

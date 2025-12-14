@@ -1,6 +1,6 @@
 # UnitData::_update_icons_async Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 165–191)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 180–206)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**

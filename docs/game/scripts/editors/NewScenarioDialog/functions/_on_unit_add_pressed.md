@@ -1,6 +1,6 @@
 # NewScenarioDialog::_on_unit_add_pressed Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 259–270)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 351–362)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**

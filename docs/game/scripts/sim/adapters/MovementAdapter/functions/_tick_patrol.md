@@ -1,6 +1,6 @@
 # MovementAdapter::_tick_patrol Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 467–493)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 473–499)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # ReinforcementTest::_make_demo_units Function Reference
 
-*Defined at:* `scripts/test/ReinforcementTest.gd` (lines 277–301)</br>
+*Defined at:* `scripts/test/ReinforcementTest.gd` (lines 300–321)</br>
 *Belongs to:* [ReinforcementTest](../../ReinforcementTest.md)
 
 **Signature**
@@ -21,21 +21,18 @@ func _make_demo_units() -> Array[UnitData]:
 	a.id = "ALPHA"
 	a.title = "Alpha"
 	a.strength = 30
-	a.state_strength = 17.0
 	a.understrength_threshold = 0.8
 
 	var b: UnitData = UnitData.new()
 	b.id = "BRAVO"
 	b.title = "Bravo"
 	b.strength = 30
-	b.state_strength = 0.0  # wiped out
 	b.understrength_threshold = 0.6
 
 	var c: UnitData = UnitData.new()
 	c.id = "CHARLIE"
 	c.title = "Charlie"
 	c.strength = 30
-	c.state_strength = 27.0
 	c.understrength_threshold = 0.9
 
 	return [a, b, c]

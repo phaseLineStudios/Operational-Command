@@ -1,6 +1,6 @@
 # UnitData::_get_ammo_amount Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 570–580)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 531–541)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**

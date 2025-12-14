@@ -1,6 +1,6 @@
 # ContentDB::_norm_dir Function Reference
 
-*Defined at:* `scripts/core/ContentDB.gd` (lines 12–20)</br>
+*Defined at:* `scripts/core/ContentDB.gd` (lines 13–21)</br>
 *Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**

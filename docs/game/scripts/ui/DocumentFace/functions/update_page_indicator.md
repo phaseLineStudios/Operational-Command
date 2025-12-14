@@ -1,6 +1,6 @@
 # DocumentFace::update_page_indicator Function Reference
 
-*Defined at:* `scripts/ui/DocumentFace.gd` (lines 27–44)</br>
+*Defined at:* `scripts/ui/DocumentFace.gd` (lines 38–55)</br>
 *Belongs to:* [DocumentFace](../../DocumentFace.md)
 
 **Signature**

@@ -26,10 +26,12 @@ If true, rebuild the grid automatically when data is set/changed.
 - [`func _set_data(d: TerrainData)`](TerrainRender/functions/_set_data.md) — Set new Terrain Data
 - [`func _push_data_to_layers() -> void`](TerrainRender/functions/_push_data_to_layers.md) — Push exports to their respective layers
 - [`func _on_data_changed() -> void`](TerrainRender/functions/_on_data_changed.md) — Reconfigure if terrain data is changed
+- [`func _emit_render_ready() -> void`](TerrainRender/functions/_emit_render_ready.md) — Emit render_ready signal after waiting for layers to draw
 - [`func render_error(error: String = "") -> void`](TerrainRender/functions/render_error.md) — Show a render error
 - [`func clear_render_error() -> void`](TerrainRender/functions/clear_render_error.md) — Hide the render error
 - [`func _mark_all_dirty() -> void`](TerrainRender/functions/_mark_all_dirty.md) — Mark elements as dirty to redraw
 - [`func _debounce_relayout_and_push() -> void`](TerrainRender/functions/_debounce_relayout_and_push.md) — Debounce the relayout and push styles
+- [`func _calculate_scaled_margins() -> void`](TerrainRender/functions/_calculate_scaled_margins.md) — Calculate margin sizes and font sizes based on map size and percentages
 - [`func _draw_map_size() -> void`](TerrainRender/functions/_draw_map_size.md) — Resize the map to fit the terrain data
 - [`func _on_base_layer_resize()`](TerrainRender/functions/_on_base_layer_resize.md) — Emit a resize event for base layer
 - [`func _rebuild_surface_spatial_index() -> void`](TerrainRender/functions/_rebuild_surface_spatial_index.md) — Build a spatial hash for polygon AREA surfaces.
@@ -54,15 +56,21 @@ If true, rebuild the grid automatically when data is set/changed.
 - `Color base_color` — Base background map color
 - `Color terrain_border_color` — Color of the map border
 - `int terrain_border_px` — Width of the map border
-- `int title_size` — Font size for map title
+- `float title_size_percent` — Title font size as percentage of map's smaller dimension.
+- `int title_size` — Font size for map title (used when title_size_percent = 0)
 - `Color margin_color` — Color of outer margin
-- `int margin_top_px` — Size of outer margin top
-- `int margin_bottom_px` — Size of outer margin bottom
-- `int margin_left_px` — Size of outer margin left
-- `int margin_right_px` — Size of outer margin right
+- `float margin_top_percent` — Top margin as percentage of map's smaller dimension (0.0-1.0).
+- `float margin_bottom_percent` — Bottom margin as percentage of map's smaller dimension (0.0-1.0).
+- `float margin_left_percent` — Left margin as percentage of map's smaller dimension (0.0-1.0).
+- `float margin_right_percent` — Right margin as percentage of map's smaller dimension (0.0-1.0).
+- `int margin_top_px` — Size of outer margin top (used when margin_top_percent = 0)
+- `int margin_bottom_px` — Size of outer margin bottom (used when margin_bottom_percent = 0)
+- `int margin_left_px` — Size of outer margin left (used when margin_left_percent = 0)
+- `int margin_right_px` — Size of outer margin right (used when margin_right_percent = 0)
 - `Color label_color` — Color for text
 - `Font label_font` — Font for text
-- `int label_size` — Font size of grid number text
+- `float label_size_percent` — Grid label font size as percentage of map's smaller dimension.
+- `int label_size` — Font size of grid number text (used when label_size_percent = 0)
 - `Color grid_100m_color` — Color of grid lines for every 100m
 - `Color grid_1km_color` — Color of grid lines for every 1000m
 - `float grid_line_px` — Width of grid lines for every 100m
@@ -80,7 +88,8 @@ If true, rebuild the grid automatically when data is set/changed.
 - `Color contour_label_bg` — Contour label background
 - `float contour_label_padding_px` — Contour label padding
 - `Font contour_label_font` — Contour label font
-- `int contour_label_size` — Contour label font size
+- `float contour_label_size_percent` — Contour label font size as percentage of map's smaller dimension.
+- `int contour_label_size` — Contour label font size (used when contour_label_size_percent = 0)
 - `float contour_label_gap_extra_px` — Extra space beyond plaque width
 - `PathGrid path_grid` — reference to the PathGrid used for movement/pathfinding.
 - `int nav_default_profile` — Default profile to rebuild for when auto-building.
@@ -108,6 +117,7 @@ If true, rebuild the grid automatically when data is set/changed.
 ## Signals
 
 - `signal map_resize` — Emits when the map is resized
+- `signal render_ready` — Emits when initial rendering is complete (after data set and first draw)
 
 ## Member Function Documentation
 
@@ -149,6 +159,14 @@ func _on_data_changed() -> void
 
 Reconfigure if terrain data is changed
 
+### _emit_render_ready
+
+```gdscript
+func _emit_render_ready() -> void
+```
+
+Emit render_ready signal after waiting for layers to draw
+
 ### render_error
 
 ```gdscript
@@ -180,6 +198,14 @@ func _debounce_relayout_and_push() -> void
 ```
 
 Debounce the relayout and push styles
+
+### _calculate_scaled_margins
+
+```gdscript
+func _calculate_scaled_margins() -> void
+```
+
+Calculate margin sizes and font sizes based on map size and percentages
 
 ### _draw_map_size
 
@@ -358,6 +384,16 @@ Decorators: `@export`
 
 Width of the map border
 
+### title_size_percent
+
+```gdscript
+var title_size_percent: float
+```
+
+Decorators: `@export_range(0.0, 0.05, 0.0001)`
+
+Title font size as percentage of map's smaller dimension. If > 0, overrides title_size.
+
 ### title_size
 
 ```gdscript
@@ -366,7 +402,7 @@ var title_size: int
 
 Decorators: `@export`
 
-Font size for map title
+Font size for map title (used when title_size_percent = 0)
 
 ### margin_color
 
@@ -378,6 +414,46 @@ Decorators: `@export`
 
 Color of outer margin
 
+### margin_top_percent
+
+```gdscript
+var margin_top_percent: float
+```
+
+Decorators: `@export_range(0.0, 0.5, 0.001)`
+
+Top margin as percentage of map's smaller dimension (0.0-1.0). If > 0, overrides px value.
+
+### margin_bottom_percent
+
+```gdscript
+var margin_bottom_percent: float
+```
+
+Decorators: `@export_range(0.0, 0.5, 0.001)`
+
+Bottom margin as percentage of map's smaller dimension (0.0-1.0). If > 0, overrides px value.
+
+### margin_left_percent
+
+```gdscript
+var margin_left_percent: float
+```
+
+Decorators: `@export_range(0.0, 0.5, 0.001)`
+
+Left margin as percentage of map's smaller dimension (0.0-1.0). If > 0, overrides px value.
+
+### margin_right_percent
+
+```gdscript
+var margin_right_percent: float
+```
+
+Decorators: `@export_range(0.0, 0.5, 0.001)`
+
+Right margin as percentage of map's smaller dimension (0.0-1.0). If > 0, overrides px value.
+
 ### margin_top_px
 
 ```gdscript
@@ -386,7 +462,7 @@ var margin_top_px: int
 
 Decorators: `@export`
 
-Size of outer margin top
+Size of outer margin top (used when margin_top_percent = 0)
 
 ### margin_bottom_px
 
@@ -396,7 +472,7 @@ var margin_bottom_px: int
 
 Decorators: `@export`
 
-Size of outer margin bottom
+Size of outer margin bottom (used when margin_bottom_percent = 0)
 
 ### margin_left_px
 
@@ -406,7 +482,7 @@ var margin_left_px: int
 
 Decorators: `@export`
 
-Size of outer margin left
+Size of outer margin left (used when margin_left_percent = 0)
 
 ### margin_right_px
 
@@ -416,7 +492,7 @@ var margin_right_px: int
 
 Decorators: `@export`
 
-Size of outer margin right
+Size of outer margin right (used when margin_right_percent = 0)
 
 ### label_color
 
@@ -438,6 +514,16 @@ Decorators: `@export`
 
 Font for text
 
+### label_size_percent
+
+```gdscript
+var label_size_percent: float
+```
+
+Decorators: `@export_range(0.0, 0.05, 0.0001)`
+
+Grid label font size as percentage of map's smaller dimension. If > 0, overrides label_size.
+
 ### label_size
 
 ```gdscript
@@ -446,7 +532,7 @@ var label_size: int
 
 Decorators: `@export`
 
-Font size of grid number text
+Font size of grid number text (used when label_size_percent = 0)
 
 ### grid_100m_color
 
@@ -618,6 +704,17 @@ Decorators: `@export`
 
 Contour label font
 
+### contour_label_size_percent
+
+```gdscript
+var contour_label_size_percent: float
+```
+
+Decorators: `@export_range(0.0, 0.05, 0.0001)`
+
+Contour label font size as percentage of map's smaller dimension.
+If > 0, overrides contour_label_size.
+
 ### contour_label_size
 
 ```gdscript
@@ -626,7 +723,7 @@ var contour_label_size: int
 
 Decorators: `@export`
 
-Contour label font size
+Contour label font size (used when contour_label_size_percent = 0)
 
 ### contour_label_gap_extra_px
 
@@ -777,3 +874,11 @@ signal map_resize
 ```
 
 Emits when the map is resized
+
+### render_ready
+
+```gdscript
+signal render_ready
+```
+
+Emits when initial rendering is complete (after data set and first draw)

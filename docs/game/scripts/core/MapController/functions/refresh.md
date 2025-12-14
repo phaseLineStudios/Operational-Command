@@ -1,6 +1,6 @@
 # MapController::refresh Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 282–285)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 621–625)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**
@@ -20,4 +20,5 @@ func refresh() -> void:
 	_apply_viewport_texture()
 	_update_viewport_to_renderer()
 	_update_mesh_fit()
+	_request_map_refresh(true)
 ```

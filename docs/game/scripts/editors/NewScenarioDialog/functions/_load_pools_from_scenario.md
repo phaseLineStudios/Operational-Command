@@ -1,6 +1,6 @@
 # NewScenarioDialog::_load_pools_from_scenario Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 388–406)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 460–478)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**

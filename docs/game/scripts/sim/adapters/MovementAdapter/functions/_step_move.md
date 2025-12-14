@@ -1,6 +1,6 @@
 # MovementAdapter::_step_move Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 435–454)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 437–460)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**
@@ -29,5 +29,9 @@ func _step_move(dt: float) -> void:
 		if flat.length() > 0.001:
 			_actor.look_at(_actor.global_position + flat, Vector3.UP)
 
-	_actor.global_position = pos + dir * speed * dt
+	var step_vec := dir * speed * dt
+	if _actor and _actor.has_meta("env_drift3"):
+		var drift3: Vector3 = _actor.get_meta("env_drift3")
+		step_vec += drift3 * dt
+	_actor.global_position = pos + step_vec
 ```

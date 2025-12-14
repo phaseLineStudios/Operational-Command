@@ -1,6 +1,6 @@
 # HQTable::_init_drawing_controller Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 78–86)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 102–109)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**
@@ -18,7 +18,6 @@ Initialize the drawing controller and bind to trigger API
 ```gdscript
 func _init_drawing_controller() -> void:
 	if drawing_controller:
-		# Set the map mesh reference
 		drawing_controller.map_mesh = %Map
 
 	if trigger_engine and trigger_engine._api:

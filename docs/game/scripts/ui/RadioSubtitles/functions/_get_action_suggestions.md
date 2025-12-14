@@ -1,6 +1,6 @@
 # RadioSubtitles::_get_action_suggestions Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 292–303)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 336–344)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**
@@ -18,12 +18,9 @@ Get action suggestions
 ```gdscript
 func _get_action_suggestions() -> Array[String]:
 	var suggestions: Array[String] = []
-	var actions: Dictionary = _tables.get("action_synonyms", {})
-	var seen := {}
-	for key in actions.keys():
-		var action_type: int = actions[key]
-		if not seen.has(action_type):
-			seen[action_type] = true
-			suggestions.append(str(key).capitalize())
+	# Use config to get actions in proper order
+	var actions_config = _suggestions_config.get("actions", {})
+	for action in actions_config.keys():
+		suggestions.append(str(action).capitalize())
 	return suggestions
 ```

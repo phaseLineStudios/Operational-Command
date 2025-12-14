@@ -24,6 +24,22 @@ Debug sample rate (Hz) while scene runs
 
 Also print compact line to console
 
+Gate a fire attempt by ammunition and consume rounds when allowed.
+
+Returns a Dictionary with at least:
+{ allow: bool, state: String, attack_power_mult: float,
+attack_cycle_mult: float, suppression_mult: float, morale_delta: int,
+ai_recommendation: String }
+
+Behavior:
+- If `_adapter` is null → allow=true with neutral multipliers (keeps tests running).
+- If `CombatAdapter.request_fire_with_penalty()` exists → use it.
+- Else fall back to `request_fire()` and map to a neutral response.
+`attacker` UnitData of the attacking unit.
+`attacker_id` ScenarioUnit ID (with SLOT suffix if applicable).
+`ammo_type` Ammunition type string.
+`rounds` Number of rounds to consume.
+
 Debug - build and emit a snapshot (for overlays/logging)
 
 ## Public Member Functions
@@ -34,11 +50,17 @@ Debug - build and emit a snapshot (for overlays/logging)
 - [`func calculate_damage(attacker: ScenarioUnit, defender: ScenarioUnit) -> float`](CombatController/functions/calculate_damage.md) — Combat damage calculation with terrain/environment multipliers + ammo
 - [`func check_abort_condition(attacker: ScenarioUnit, defender: ScenarioUnit) -> void`](CombatController/functions/check_abort_condition.md) — Check the various conditions for if the combat is finished
 - [`func print_unit_status(attacker: UnitData, defender: UnitData) -> void`](CombatController/functions/print_unit_status.md) — check unit mid combat status for testing of combat status
-- [`func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> Dictionary`](CombatController/functions/_gate_and_consume.md) — Gate a fire attempt by ammunition and consume rounds when allowed.
-- [`func _apply_casualties(u: UnitData, raw_losses: int) -> int`](CombatController/functions/_apply_casualties.md) — Apply casualties to runtime state.
+- [`func _apply_casualties(su: ScenarioUnit, raw_losses: int) -> int`](CombatController/functions/_apply_casualties.md) — Apply casualties to runtime state.
 - [`func _within_engagement_envelope(attacker: ScenarioUnit, dist_m: float) -> bool`](CombatController/functions/_within_engagement_envelope.md) — True if attacker is permitted to fire at defender at distance 'dist_m'.
 - [`func _set_debug_rate() -> void`](CombatController/functions/_set_debug_rate.md) — Adjust debug timer
 - [`func set_debug_enabled(v: bool) -> void`](CombatController/functions/set_debug_enabled.md) — Toggle debug at runtime
+- [`func _compute_dynamic_attack_power(attacker: ScenarioUnit) -> float`](CombatController/functions/_compute_dynamic_attack_power.md) — Computes the effective attack value for an attacker using equipment + ammo state.
+- [`func _compute_dynamic_defense_value(defender: ScenarioUnit) -> float`](CombatController/functions/_compute_dynamic_defense_value.md) — Computes the defender's mitigation modifier that scales incoming damage.
+- [`func _apply_defense_modifier_to_damage(attack_value: float, defense_value: float) -> float`](CombatController/functions/_apply_defense_modifier_to_damage.md) — Applies the defense modifier to the pending damage value.
+- [`func _attacker_can_damage_vehicle(attacker: ScenarioUnit) -> bool`](CombatController/functions/_attacker_can_damage_vehicle.md) — Returns true when the attacker has the means to harm armored vehicles.
+- [`func _is_vehicle_target(defender: ScenarioUnit) -> bool`](CombatController/functions/_is_vehicle_target.md) — Returns true when the defender should be treated as a vehicle for damage resolution.
+- [`func _apply_vehicle_damage_resolution(attacker: ScenarioUnit, defender: ScenarioUnit, damage_value)`](CombatController/functions/_apply_vehicle_damage_resolution.md) — Applies vehicle-specific damage/destruction logic when applicable.
+- [`func _select_ammo_profile_for_attack(attacker: ScenarioUnit, defender: ScenarioUnit) -> Dictionary`](CombatController/functions/_select_ammo_profile_for_attack.md) — Picks an ammo type + round count based on the attacker's current weapon mix.
 
 ## Public Attributes
 
@@ -46,6 +68,7 @@ Debug - build and emit a snapshot (for overlays/logging)
 - `TerrainRender terrain_renderer` — Terrain renderer reference
 - `CombatAdapter combat_adapter` — Adapter used to gate fire and apply ammo penalties.
 - `TerrainEffectsConfig terrain_config` — TerrainEffectConfig reference
+- `AmmoDamageConfig ammo_damage_config` — Lookup table for ammo type damage profiles.
 - `Control debug_overlay` — Optional Control that implements `update_debug(data: Dictionary)`
 - `UnitData imported_attacker` — imported units manually for testing purposes
 - `UnitData imported_defender`
@@ -118,28 +141,10 @@ func print_unit_status(attacker: UnitData, defender: UnitData) -> void
 
 check unit mid combat status for testing of combat status
 
-### _gate_and_consume
-
-```gdscript
-func _gate_and_consume(attacker: UnitData, ammo_type: String, rounds: int) -> Dictionary
-```
-
-Gate a fire attempt by ammunition and consume rounds when allowed.
-
-Returns a Dictionary with at least:
-{ allow: bool, state: String, attack_power_mult: float,
-attack_cycle_mult: float, suppression_mult: float, morale_delta: int,
-ai_recommendation: String }
-
-Behavior:
-- If `_adapter` is null → allow=true with neutral multipliers (keeps tests running).
-- If `CombatAdapter.request_fire_with_penalty()` exists → use it.
-- Else fall back to `request_fire()` and map to a neutral response.
-
 ### _apply_casualties
 
 ```gdscript
-func _apply_casualties(u: UnitData, raw_losses: int) -> int
+func _apply_casualties(su: ScenarioUnit, raw_losses: int) -> int
 ```
 
 Apply casualties to runtime state. Returns actual KIA + WIA applied
@@ -169,6 +174,62 @@ func set_debug_enabled(v: bool) -> void
 ```
 
 Toggle debug at runtime
+
+### _compute_dynamic_attack_power
+
+```gdscript
+func _compute_dynamic_attack_power(attacker: ScenarioUnit) -> float
+```
+
+Computes the effective attack value for an attacker using equipment + ammo state.
+
+### _compute_dynamic_defense_value
+
+```gdscript
+func _compute_dynamic_defense_value(defender: ScenarioUnit) -> float
+```
+
+Computes the defender's mitigation modifier that scales incoming damage.
+
+### _apply_defense_modifier_to_damage
+
+```gdscript
+func _apply_defense_modifier_to_damage(attack_value: float, defense_value: float) -> float
+```
+
+Applies the defense modifier to the pending damage value.
+
+### _attacker_can_damage_vehicle
+
+```gdscript
+func _attacker_can_damage_vehicle(attacker: ScenarioUnit) -> bool
+```
+
+Returns true when the attacker has the means to harm armored vehicles.
+
+### _is_vehicle_target
+
+```gdscript
+func _is_vehicle_target(defender: ScenarioUnit) -> bool
+```
+
+Returns true when the defender should be treated as a vehicle for damage resolution.
+
+### _apply_vehicle_damage_resolution
+
+```gdscript
+func _apply_vehicle_damage_resolution(attacker: ScenarioUnit, defender: ScenarioUnit, damage_value)
+```
+
+Applies vehicle-specific damage/destruction logic when applicable.
+
+### _select_ammo_profile_for_attack
+
+```gdscript
+func _select_ammo_profile_for_attack(attacker: ScenarioUnit, defender: ScenarioUnit) -> Dictionary
+```
+
+Picks an ammo type + round count based on the attacker's current weapon mix.
 
 ## Member Data Documentation
 
@@ -211,6 +272,16 @@ var terrain_config: TerrainEffectsConfig
 Decorators: `@export`
 
 TerrainEffectConfig reference
+
+### ammo_damage_config
+
+```gdscript
+var ammo_damage_config: AmmoDamageConfig
+```
+
+Decorators: `@export`
+
+Lookup table for ammo type damage profiles.
 
 ### debug_overlay
 

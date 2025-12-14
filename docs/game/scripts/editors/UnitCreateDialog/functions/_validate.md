@@ -1,6 +1,6 @@
 # UnitCreateDialog::_validate Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 299–312)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 328–341)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

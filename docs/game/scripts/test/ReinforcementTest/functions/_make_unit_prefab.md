@@ -1,6 +1,6 @@
 # ReinforcementTest::_make_unit_prefab Function Reference
 
-*Defined at:* `scripts/test/ReinforcementTest.gd` (lines 166–169)</br>
+*Defined at:* `scripts/test/ReinforcementTest.gd` (lines 169–172)</br>
 *Belongs to:* [ReinforcementTest](../../ReinforcementTest.md)
 
 **Signature**

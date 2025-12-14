@@ -1,6 +1,6 @@
 # MilSymbol::cleanup Function Reference
 
-*Defined at:* `scripts/utils/unit_symbols/MilSymbol.gd` (lines 194–200)</br>
+*Defined at:* `scripts/utils/unit_symbols/MilSymbol.gd` (lines 280–286)</br>
 *Belongs to:* [MilSymbol](../../MilSymbol.md)
 
 **Signature**

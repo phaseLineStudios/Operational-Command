@@ -3,6 +3,11 @@ class_name EnvironmentController
 extends WorldEnvironment
 ## Controlls environmental factors
 
+## Update interval for _process() to avoid every-frame shader updates
+const UPDATE_INTERVAL: float = 0.1  # Update every 0.1 seconds instead of every frame
+## Cache previous sun position to avoid redundant shader updates
+const SUN_POSITION_THRESHOLD: float = 0.001  # Only update if sun moves more than this
+
 @export_category("Sky Control")
 ## Current time (in seconds)
 @export_range(0.0, 86400.0, 1.0) var time_of_day: float = 43200.0
@@ -97,6 +102,8 @@ var _set_cloud_coverage: float = 0.
 var _cloud_brightness_modifier: float = 1.0
 var _light_power_modifier: float = 1.0
 var _sky_brightness_modifier: float = 1.0
+var _last_update_time: float = 0.0
+var _cached_sun_position: float = -1.0
 
 
 ## Check if simulating day/night cycle, determine rate of time, and increase time
@@ -139,6 +146,11 @@ func _update_rotation() -> void:
 ## Update colors based on current time of day
 func _update_sky() -> void:
 	sun_position = sun_root.global_position.y / 2.0 + 0.5
+
+	# Skip expensive shader updates if sun hasn't moved significantly
+	if abs(sun_position - _cached_sun_position) < SUN_POSITION_THRESHOLD:
+		return
+	_cached_sun_position = sun_position
 
 	var sky_material = self.environment.sky.get_material()
 	var cloud_color = lerp(
@@ -240,7 +252,7 @@ func _ready() -> void:
 	_update_environment()
 
 
-func _process(_dt: float) -> void:
+func _process(dt: float) -> void:
 	if sun_moon_parent == null:
 		return
 	if sun_root == null:
@@ -251,9 +263,14 @@ func _process(_dt: float) -> void:
 		return
 	if moon == null:
 		return
-	_update_rotation()
-	_update_sky()
-	_update_lights()
+
+	# Only update environment every UPDATE_INTERVAL seconds to avoid expensive per-frame updates
+	_last_update_time += dt
+	if _last_update_time >= UPDATE_INTERVAL:
+		_update_rotation()
+		_update_sky()
+		_update_lights()
+		_last_update_time = 0.0
 
 	if not env_scene:
 		_update_environment()

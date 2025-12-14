@@ -1,6 +1,6 @@
 # UnitMgmt::_refresh_from_game Function Reference
 
-*Defined at:* `scripts/ui/UnitMgmt.gd` (lines 29–58)</br>
+*Defined at:* `scripts/ui/UnitMgmt.gd` (lines 31–65)</br>
 *Belongs to:* [UnitMgmt](../../UnitMgmt.md)
 
 **Signature**
@@ -19,6 +19,7 @@ Pull units from Game and refresh list and panel.
 func _refresh_from_game() -> void:
 	_units = _collect_units_from_game()
 	_uid_to_index.clear()
+	_unit_strength.clear()
 
 	# Rebuild list with title + strength badge per row
 	for c in _list_box.get_children():
@@ -26,8 +27,12 @@ func _refresh_from_game() -> void:
 
 	var idx := 0
 	for u: UnitData in _units:
-		_uid_to_index[u.id] = idx
+		var uid := u.id
+		_uid_to_index[uid] = idx
 		idx += 1
+
+		# Initialize strength to full (campaign persistence will override this later)
+		_unit_strength[uid] = float(u.strength)
 
 		var row := HBoxContainer.new()
 		_list_box.add_child(row)
@@ -37,11 +42,11 @@ func _refresh_from_game() -> void:
 		row.add_child(title)
 
 		var badge: UnitStrengthBadge = UnitStrengthBadge.new()
-		# Pass per-unit threshold if set; fall back to panel default inside the badge
-		badge.set_unit(u, _panel.understrength_threshold)
+		var cur_strength: float = _unit_strength.get(uid, float(u.strength))
+		badge.set_unit(u, cur_strength, _panel.understrength_threshold)
 		row.add_child(badge)
 
 	# Keep panel updated
-	_panel.set_units(_units)
+	_panel.set_units(_units, _unit_strength)
 	_panel.set_pool(_get_pool())
 ```

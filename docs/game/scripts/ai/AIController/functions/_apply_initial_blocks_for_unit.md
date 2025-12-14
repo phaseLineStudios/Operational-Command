@@ -1,6 +1,6 @@
 # AIController::_apply_initial_blocks_for_unit Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 357–368)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 358–369)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

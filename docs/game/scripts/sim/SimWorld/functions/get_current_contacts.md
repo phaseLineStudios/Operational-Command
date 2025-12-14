@@ -1,6 +1,6 @@
 # SimWorld::get_current_contacts Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 383–386)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 386–389)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # Game::end_scenario_and_go_to_debrief Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 118–139)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 251–275)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**
@@ -29,7 +29,10 @@ func end_scenario_and_go_to_debrief() -> void:
 
 	if not losses.is_empty():
 		# Apply to campaign units so UnitMgmt reflects new strengths
-		resolution.apply_casualties_to_units(Game.current_scenario.units, losses)
+		resolution.apply_casualties_to_units(Game.current_scenario.playable_units, losses)
+
+	# Award experience to surviving units
+	_award_experience_to_units()
 
 	# Persist (added later)
 	if has_method("save_campaign_state"):

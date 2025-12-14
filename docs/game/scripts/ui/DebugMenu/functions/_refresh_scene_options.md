@@ -1,6 +1,6 @@
 # DebugMenu::_refresh_scene_options Function Reference
 
-*Defined at:* `scripts/ui/DebugMenu.gd` (lines 177–191)</br>
+*Defined at:* `scripts/ui/DebugMenu.gd` (lines 180–192)</br>
 *Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**
@@ -24,9 +24,7 @@ func _refresh_scene_options() -> void:
 	scene_options_status.text = "Scanning..."
 	scene_options_refresh.disabled = true
 
-	# Clear existing options
 	_clear_scene_options_ui()
 
-	# Start async scan
 	_scan_scene_for_options.call_deferred()
 ```

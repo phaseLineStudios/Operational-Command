@@ -1,6 +1,6 @@
 # PickupItem::_process Function Reference
 
-*Defined at:* `scripts/core/PickupItem.gd` (lines 191–211)</br>
+*Defined at:* `scripts/core/PickupItem.gd` (lines 239–259)</br>
 *Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**

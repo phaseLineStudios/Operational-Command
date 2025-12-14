@@ -1,6 +1,6 @@
 # TerrainRender::nav_estimate_time_s Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 546–549)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 610–613)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**

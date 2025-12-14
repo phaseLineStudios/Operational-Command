@@ -1,6 +1,6 @@
 # UnitData::_resolve_ammo_index Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 597–604)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 558–565)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**

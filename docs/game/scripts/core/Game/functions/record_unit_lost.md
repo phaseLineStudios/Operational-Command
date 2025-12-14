@@ -1,6 +1,6 @@
 # Game::record_unit_lost Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 113–116)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 246–249)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

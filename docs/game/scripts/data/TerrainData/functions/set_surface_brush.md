@@ -1,6 +1,6 @@
 # TerrainData::set_surface_brush Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 212–219)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 224–231)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

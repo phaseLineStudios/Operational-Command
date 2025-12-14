@@ -26,6 +26,12 @@ const MAX_TRANSCRIPT_ENTRIES := 50
 ## Refresh delay in seconds (wait for user to stop navigating)
 const REFRESH_DELAY := 0.15
 
+@export_group("Performance")
+## If true, bake a CPU ImageTexture with mipmaps from the viewport (expensive).
+@export var bake_viewport_mipmaps: bool = false
+## Delay before rebuilding transcript pages after new entries (seconds).
+@export var transcript_update_delay_sec: float = 0.25
+
 ## Sound to play when page is changed.
 @export var page_change_sounds: Array[AudioStream] = [
 	preload("res://audio/sfx/sfx_paper_flip_01.wav"),
@@ -69,7 +75,7 @@ var _transcript_entries: Array[Dictionary] = []
 
 ## Transcript update mutex to prevent concurrent updates
 var _transcript_updating := false
-var _transcript_pending_entries: Array[Dictionary] = []
+var _transcript_update_needs_rerun := false
 
 ## Current scenario reference
 var _scenario: ScenarioData
@@ -85,6 +91,7 @@ var _briefing_material: StandardMaterial3D
 ## Debounce timers for texture refresh
 var _intel_refresh_timer: Timer
 var _transcript_refresh_timer: Timer
+var _transcript_update_timer: Timer
 var _briefing_refresh_timer: Timer
 
 
@@ -126,24 +133,30 @@ func _setup_viewports() -> void:
 	_intel_viewport = SubViewport.new()
 	_intel_viewport.size = render_size
 	_intel_viewport.transparent_bg = false
-	_intel_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_intel_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	_intel_viewport.gui_disable_input = false
+	_intel_viewport.msaa_2d = Viewport.MSAA_2X
+	_intel_viewport.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
 	add_child(_intel_viewport)
 
 	# Transcript viewport
 	_transcript_viewport = SubViewport.new()
 	_transcript_viewport.size = render_size
 	_transcript_viewport.transparent_bg = false
-	_transcript_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_transcript_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	_transcript_viewport.gui_disable_input = false
+	_transcript_viewport.msaa_2d = Viewport.MSAA_2X
+	_transcript_viewport.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
 	add_child(_transcript_viewport)
 
 	# Briefing viewport
 	_briefing_viewport = SubViewport.new()
 	_briefing_viewport.size = render_size
 	_briefing_viewport.transparent_bg = false
-	_briefing_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_briefing_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	_briefing_viewport.gui_disable_input = false
+	_briefing_viewport.msaa_2d = Viewport.MSAA_2X
+	_briefing_viewport.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
 	add_child(_briefing_viewport)
 
 
@@ -162,6 +175,13 @@ func _setup_refresh_timers() -> void:
 	_transcript_refresh_timer.one_shot = true
 	_transcript_refresh_timer.timeout.connect(_do_transcript_refresh)
 	add_child(_transcript_refresh_timer)
+
+	# Transcript update timer (coalesce new entries)
+	_transcript_update_timer = Timer.new()
+	_transcript_update_timer.wait_time = maxf(transcript_update_delay_sec, 0.01)
+	_transcript_update_timer.one_shot = true
+	_transcript_update_timer.timeout.connect(_do_transcript_update)
+	add_child(_transcript_update_timer)
 
 	# Briefing timer
 	_briefing_refresh_timer = Timer.new()
@@ -375,24 +395,25 @@ func _update_transcript_content(follow_new_messages: bool) -> void:
 	_transcript_face.update_page_indicator()
 	_display_page(_transcript_face, _transcript_content, _transcript_pages, target_page)
 
-	# Refresh texture immediately for transcript updates (no debounce needed)
-	await _do_transcript_refresh()
+	if _transcript_refresh_timer:
+		_transcript_refresh_timer.start()
 
 
-## Add a radio transmission to the transcript
-## [param speaker] Who is speaking (e.g., "PLAYER", "ALPHA", "HQ")
-## [param message] The message text
-func add_transcript_entry(speaker: String, message: String) -> void:
-	var timestamp := _get_mission_timestamp()
-	var entry := {"timestamp": timestamp, "speaker": speaker, "message": message}
-
-	_transcript_entries.append(entry)
-
-	if _transcript_entries.size() > MAX_TRANSCRIPT_ENTRIES:
-		_transcript_entries.pop_front()
-
+func _queue_transcript_update() -> void:
+	if _transcript_update_timer == null:
+		return
 	if _transcript_updating:
-		_transcript_pending_entries.append(entry)
+		_transcript_update_needs_rerun = true
+		return
+	_transcript_update_timer.wait_time = maxf(transcript_update_delay_sec, 0.01)
+	if not _transcript_update_timer.is_stopped():
+		return
+	_transcript_update_timer.start()
+
+
+func _do_transcript_update() -> void:
+	if _transcript_updating:
+		_transcript_update_needs_rerun = true
 		return
 
 	_transcript_updating = true
@@ -405,22 +426,24 @@ func add_transcript_entry(speaker: String, message: String) -> void:
 
 	_transcript_updating = false
 
-	if _transcript_pending_entries.size() > 0:
-		_transcript_pending_entries.clear()
-		await _refresh_transcript_display()
+	if _transcript_update_needs_rerun:
+		_transcript_update_needs_rerun = false
+		_queue_transcript_update()
 
 
-## Refresh transcript display without adding new entries
-func _refresh_transcript_display() -> void:
-	_transcript_updating = true
+## Add a radio transmission to the transcript
+## [param speaker] Who is speaking (e.g., "PLAYER", "ALPHA", "HQ")
+## [param message] The message text
+func add_transcript_entry(speaker: String, message: String) -> void:
+	var timestamp: String = _get_mission_timestamp()
+	var entry: Dictionary = {"timestamp": timestamp, "speaker": speaker, "message": message}
 
-	var was_on_last_page := false
-	if _transcript_face and _transcript_pages.size() > 0:
-		was_on_last_page = _transcript_face.current_page >= _transcript_pages.size() - 1
+	_transcript_entries.append(entry)
 
-	await _update_transcript_content(was_on_last_page)
+	if _transcript_entries.size() > MAX_TRANSCRIPT_ENTRIES:
+		_transcript_entries.pop_front()
 
-	_transcript_updating = false
+	_queue_transcript_update()
 
 
 ## Get current mission timestamp as formatted string
@@ -434,6 +457,14 @@ func _get_mission_timestamp() -> String:
 
 ## Apply rendered textures to clipboard materials
 func _apply_textures() -> void:
+	# Render each SubViewport once before capturing to textures.
+	if _intel_viewport:
+		_intel_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	if _transcript_viewport:
+		_transcript_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	if _briefing_viewport:
+		_briefing_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+
 	await get_tree().process_frame
 	await get_tree().process_frame  # Extra frame to ensure render complete
 
@@ -445,6 +476,7 @@ func _apply_textures() -> void:
 ## Refresh the transcript document texture after content updates
 func _refresh_transcript_texture() -> void:
 	if _transcript_material and _transcript_viewport:
+		_transcript_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 		await get_tree().process_frame  # Wait for render
 		_refresh_texture(_transcript_material, _transcript_viewport)
 
@@ -490,6 +522,22 @@ func _apply_texture_to_clipboard(
 func _refresh_texture(material: StandardMaterial3D, viewport: SubViewport) -> void:
 	if material == null or viewport == null:
 		LogService.warning("Cannot refresh: material or viewport is null", "DocumentController.gd")
+		return
+
+	# Reduce glare so text stays readable under strong lights.
+	material.albedo_color = Color.WHITE
+	material.metallic = 0.0
+	material.roughness = 1.0
+	material.specular = 0.0
+
+	material.texture_filter = (
+		BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+		if bake_viewport_mipmaps
+		else BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	)
+
+	if not bake_viewport_mipmaps:
+		material.albedo_texture = viewport.get_texture()
 		return
 
 	var img := viewport.get_texture().get_image()
@@ -705,18 +753,24 @@ func _on_briefing_page_changed(page_index: int) -> void:
 
 ## Debounced refresh functions - called after timer expires
 func _do_intel_refresh() -> void:
+	if _intel_viewport:
+		_intel_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 	await get_tree().process_frame
 	await get_tree().process_frame
 	_refresh_texture(_intel_material, _intel_viewport)
 
 
 func _do_transcript_refresh() -> void:
+	if _transcript_viewport:
+		_transcript_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 	await get_tree().process_frame
 	await get_tree().process_frame
 	_refresh_texture(_transcript_material, _transcript_viewport)
 
 
 func _do_briefing_refresh() -> void:
+	if _briefing_viewport:
+		_briefing_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 	await get_tree().process_frame
 	await get_tree().process_frame
 	_refresh_texture(_briefing_material, _briefing_viewport)

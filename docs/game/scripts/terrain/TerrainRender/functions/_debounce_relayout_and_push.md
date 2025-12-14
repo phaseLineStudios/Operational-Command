@@ -1,6 +1,6 @@
 # TerrainRender::_debounce_relayout_and_push Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 228–240)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 258–270)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**

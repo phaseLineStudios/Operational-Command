@@ -1,6 +1,6 @@
 # UnitCreateDialog::_populate_type Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 313–318)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 342–347)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

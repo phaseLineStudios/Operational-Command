@@ -1,6 +1,6 @@
 # LoadingScreen::hide_loading Function Reference
 
-*Defined at:* `scripts/ui/LoadingScreen.gd` (lines 43–44)</br>
+*Defined at:* `scripts/ui/LoadingScreen.gd` (lines 49–50)</br>
 *Belongs to:* [LoadingScreen](../../LoadingScreen.md)
 
 **Signature**

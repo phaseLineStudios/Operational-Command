@@ -1,6 +1,6 @@
 # TTSService::is_initializing Function Reference
 
-*Defined at:* `scripts/radio/TTSService.gd` (lines 72–75)</br>
+*Defined at:* `scripts/radio/TTSService.gd` (lines 76–79)</br>
 *Belongs to:* [TTSService](../../TTSService.md)
 
 **Signature**

@@ -41,11 +41,15 @@ Build a CUSTOM order from a matched keyword.
 - [`func _is_ascii_digit_cp(cp: int) -> bool`](OrdersParser/functions/_is_ascii_digit_cp.md) — ASCII digit test for a code point.
 - [`func order_to_string(o: Dictionary) -> String`](OrdersParser/functions/order_to_string.md) — Human-friendly summary for a single order.
 - [`func _order_type_to_string(t: int) -> String`](OrdersParser/functions/_order_type_to_string.md) — String name for OrderType.
+- [`func register_navigation_bias_phrase(_phrase: String, _bias: StringName) -> void`](OrdersParser/functions/register_navigation_bias_phrase.md) — Register navigation bias phrase (placeholder).
+- [`func apply_navigation_bias_metadata(_orders: Array) -> Array`](OrdersParser/functions/apply_navigation_bias_metadata.md) — Annotate parsed orders with navigation bias metadata (placeholder).
+- [`func _normalize_phrase(p: String) -> String`](OrdersParser/functions/_normalize_phrase.md)
 
 ## Public Attributes
 
 - `Dictionary _tables`
 - `Dictionary _custom_commands`
+- `Dictionary _nav_bias_phrases`
 - `Dictionary metadata`
 
 ## Signals
@@ -193,6 +197,28 @@ func _order_type_to_string(t: int) -> String
 
 String name for OrderType.
 
+### register_navigation_bias_phrase
+
+```gdscript
+func register_navigation_bias_phrase(_phrase: String, _bias: StringName) -> void
+```
+
+Register navigation bias phrase (placeholder).
+
+### apply_navigation_bias_metadata
+
+```gdscript
+func apply_navigation_bias_metadata(_orders: Array) -> Array
+```
+
+Annotate parsed orders with navigation bias metadata (placeholder).
+
+### _normalize_phrase
+
+```gdscript
+func _normalize_phrase(p: String) -> String
+```
+
 ## Member Data Documentation
 
 ### _tables
@@ -205,6 +231,12 @@ var _tables: Dictionary
 
 ```gdscript
 var _custom_commands: Dictionary
+```
+
+### _nav_bias_phrases
+
+```gdscript
+var _nav_bias_phrases: Dictionary
 ```
 
 ### metadata

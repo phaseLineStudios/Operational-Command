@@ -53,6 +53,16 @@ Enable resolving String destinations using TerrainData.labels[].text.
 - [`func _tick_hold(dt: float) -> void`](MovementAdapter/functions/_tick_hold.md)
 - [`func _tick_patrol(dt: float) -> void`](MovementAdapter/functions/_tick_patrol.md)
 - [`func _advance_patrol_leg() -> bool`](MovementAdapter/functions/_advance_patrol_leg.md)
+- [`func set_env_speed_multiplier(_su: ScenarioUnit, _mult: float) -> void`](MovementAdapter/functions/set_env_speed_multiplier.md) — Set an external environment speed multiplier for a unit (placeholder).
+- [`func clear_env_speed_multiplier(_su: ScenarioUnit) -> void`](MovementAdapter/functions/clear_env_speed_multiplier.md) — Clear environment speed multiplier (placeholder).
+- [`func set_env_drift(_su: ScenarioUnit, _drift: Vector2) -> void`](MovementAdapter/functions/set_env_drift.md) — Apply an external drift vector while lost (placeholder).
+- [`func clear_env_drift(_su: ScenarioUnit) -> void`](MovementAdapter/functions/clear_env_drift.md) — Clear drift vector (placeholder).
+- [`func request_env_repath(_su: ScenarioUnit) -> void`](MovementAdapter/functions/request_env_repath.md) — Request a repath due to environment state change (placeholder).
+- [`func set_navigation_bias(_su: ScenarioUnit, _bias: StringName) -> void`](MovementAdapter/functions/set_navigation_bias.md) — Set navigation bias (roads/cover/shortest) (placeholder).
+- [`func path_complexity_for(_su: ScenarioUnit) -> float`](MovementAdapter/functions/path_complexity_for.md) — Optional helper to surface path complexity to env system (placeholder).
+- [`func _repath_if_requested(su: ScenarioUnit) -> void`](MovementAdapter/functions/_repath_if_requested.md)
+- [`func _with_navigation_bias(su: ScenarioUnit, action: Callable) -> Variant`](MovementAdapter/functions/_with_navigation_bias.md)
+- [`func _desired_bias_weight(su: ScenarioUnit) -> float`](MovementAdapter/functions/_desired_bias_weight.md)
 
 ## Public Attributes
 
@@ -298,6 +308,82 @@ func _tick_patrol(dt: float) -> void
 
 ```gdscript
 func _advance_patrol_leg() -> bool
+```
+
+### set_env_speed_multiplier
+
+```gdscript
+func set_env_speed_multiplier(_su: ScenarioUnit, _mult: float) -> void
+```
+
+Set an external environment speed multiplier for a unit (placeholder).
+
+### clear_env_speed_multiplier
+
+```gdscript
+func clear_env_speed_multiplier(_su: ScenarioUnit) -> void
+```
+
+Clear environment speed multiplier (placeholder).
+
+### set_env_drift
+
+```gdscript
+func set_env_drift(_su: ScenarioUnit, _drift: Vector2) -> void
+```
+
+Apply an external drift vector while lost (placeholder).
+Store drift for 2D pathing and mirror to actor for 3D motion.
+
+### clear_env_drift
+
+```gdscript
+func clear_env_drift(_su: ScenarioUnit) -> void
+```
+
+Clear drift vector (placeholder).
+
+### request_env_repath
+
+```gdscript
+func request_env_repath(_su: ScenarioUnit) -> void
+```
+
+Request a repath due to environment state change (placeholder).
+Flag a repath request; processed on the next tick group.
+
+### set_navigation_bias
+
+```gdscript
+func set_navigation_bias(_su: ScenarioUnit, _bias: StringName) -> void
+```
+
+Set navigation bias (roads/cover/shortest) (placeholder).
+
+### path_complexity_for
+
+```gdscript
+func path_complexity_for(_su: ScenarioUnit) -> float
+```
+
+Optional helper to surface path complexity to env system (placeholder).
+
+### _repath_if_requested
+
+```gdscript
+func _repath_if_requested(su: ScenarioUnit) -> void
+```
+
+### _with_navigation_bias
+
+```gdscript
+func _with_navigation_bias(su: ScenarioUnit, action: Callable) -> Variant
+```
+
+### _desired_bias_weight
+
+```gdscript
+func _desired_bias_weight(su: ScenarioUnit) -> float
 ```
 
 ## Member Data Documentation

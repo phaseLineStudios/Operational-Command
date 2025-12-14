@@ -1,6 +1,6 @@
 # UnitAutoResponses::_report_contact_spotted Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 555–583)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 664–696)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**
@@ -23,7 +23,7 @@ func _report_contact_spotted(spotter_id: String, contact_id: String) -> void:
 	var event_key := "%s:%d" % [spotter_id, EventType.CONTACT_SPOTTED]
 	var current_time := Time.get_ticks_msec() / 1000.0
 	var last_trigger_time: float = _event_last_triggered.get(event_key, 0.0)
-	var cooldown: float = EVENT_CONFIG[EventType.CONTACT_SPOTTED].get("cooldown_s", 15.0)
+	var cooldown: float = event_config[EventType.CONTACT_SPOTTED].get("cooldown_s", 15.0)
 
 	if current_time - last_trigger_time < cooldown:
 		return
@@ -38,7 +38,7 @@ func _report_contact_spotted(spotter_id: String, contact_id: String) -> void:
 	var grid_pos := _get_grid_from_position(contact_unit.position_m)
 
 	var message := "Contact! %s at grid %s." % [description, grid_pos]
-	var priority: Priority = EVENT_CONFIG[EventType.CONTACT_SPOTTED].get("priority", Priority.HIGH)
+	var priority: Priority = event_config[EventType.CONTACT_SPOTTED].get("priority", Priority.HIGH)
 	var msg := VoiceMessage.new(spotter_id, spotter_callsign, message, priority, current_time)
 
 	if _message_queue.size() >= max_queue_size:
@@ -46,4 +46,8 @@ func _report_contact_spotted(spotter_id: String, contact_id: String) -> void:
 
 	_message_queue.append(msg)
 	_event_last_triggered[event_key] = current_time
+
+	# Start queue timer if not already running
+	if _queue_timer and _queue_timer.is_stopped():
+		_queue_timer.start()
 ```

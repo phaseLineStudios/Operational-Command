@@ -1,6 +1,6 @@
 # DebugMenu::_collect_nodes_recursive Function Reference
 
-*Defined at:* `scripts/ui/DebugMenu.gd` (lines 501–510)</br>
+*Defined at:* `scripts/ui/DebugMenu.gd` (lines 457–466)</br>
 *Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**

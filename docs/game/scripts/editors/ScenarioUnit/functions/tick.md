@@ -1,6 +1,6 @@
 # ScenarioUnit::tick Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 193–231)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 207–250)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**
@@ -43,6 +43,11 @@ func tick(dt: float, grid: PathGrid) -> void:
 			remain = 0.0
 
 	position_m = cur
+	# Apply optional environmental drift after base movement
+	if has_meta("env_drift"):
+		var drift: Vector2 = get_meta("env_drift")
+		position_m += drift * max(dt, 0.0)
+
 	_move_last_eta_s = estimate_eta_s(grid)
 	emit_signal("move_progress", position_m, _move_last_eta_s)
 

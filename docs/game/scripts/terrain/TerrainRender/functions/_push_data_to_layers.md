@@ -1,6 +1,6 @@
 # TerrainRender::_push_data_to_layers Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 159–185)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 179–205)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**

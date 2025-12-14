@@ -1,6 +1,6 @@
 # NewScenarioDialog::_refresh_unit_lists Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 218–252)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 310–344)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**

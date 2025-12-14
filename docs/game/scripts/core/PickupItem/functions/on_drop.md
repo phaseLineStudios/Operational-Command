@@ -1,6 +1,6 @@
 # PickupItem::on_drop Function Reference
 
-*Defined at:* `scripts/core/PickupItem.gd` (lines 79–94)</br>
+*Defined at:* `scripts/core/PickupItem.gd` (lines 109–128)</br>
 *Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**
@@ -22,6 +22,10 @@ func on_drop() -> void:
 		if snap_to_origin_rotation:
 			global_rotation = origin_rotation
 		freeze = true
+
+		var sound := collision_sounds[randi() % collision_sounds.size()]
+		_collision_sound_player.stream = sound
+		_collision_sound_player.play()
 	elif snap_to_origin_rotation:
 		global_rotation = origin_rotation
 		freeze = false

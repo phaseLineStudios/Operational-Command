@@ -1,6 +1,6 @@
 # FuelSystem::_is_tanker Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 319–332)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 321–334)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

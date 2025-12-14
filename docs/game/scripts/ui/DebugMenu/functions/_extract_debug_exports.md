@@ -1,6 +1,6 @@
 # DebugMenu::_extract_debug_exports Function Reference
 
-*Defined at:* `scripts/ui/DebugMenu.gd` (lines 302–350)</br>
+*Defined at:* `scripts/ui/DebugMenu.gd` (lines 288–330)</br>
 *Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**
@@ -26,7 +26,6 @@ func _extract_debug_exports(node: Node) -> Array:
 		var prop_name: String = prop["name"]
 		var prop_usage: int = prop["usage"]
 
-		# Track categories and groups
 		if prop_usage & PROPERTY_USAGE_CATEGORY:
 			in_debug_category = prop_name.to_lower().contains("debug")
 			continue
@@ -35,15 +34,12 @@ func _extract_debug_exports(node: Node) -> Array:
 			in_debug_group = prop_name.to_lower().contains("debug")
 			continue
 
-		# Skip non-editor properties
 		if not (prop_usage & PROPERTY_USAGE_EDITOR):
 			continue
 
-		# Skip built-in properties
 		if prop_usage & PROPERTY_USAGE_CLASS_IS_BITFIELD:
 			continue
 
-		# Check if this is a debug property
 		var is_debug := false
 		if prop_name.to_lower().contains("debug"):
 			is_debug = true
@@ -53,11 +49,9 @@ func _extract_debug_exports(node: Node) -> Array:
 		if not is_debug:
 			continue
 
-		# Skip unwanted built-in properties
 		if _should_skip_property(prop_name):
 			continue
 
-		# Convert property to debug option
 		var option := _property_to_option(node, prop)
 		if option != null and not option.is_empty():
 			options.append(option)

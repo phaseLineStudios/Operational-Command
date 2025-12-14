@@ -1,6 +1,6 @@
 # ScenarioUnitsCatalog::_refresh Function Reference
 
-*Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 70–136)</br>
+*Defined at:* `scripts/editors/services/ScenarioUnitsCatalog.gd` (lines 72–141)</br>
 *Belongs to:* [ScenarioUnitsCatalog](../../ScenarioUnitsCatalog.md)
 
 **Signature**
@@ -77,4 +77,7 @@ func _refresh(ctx: ScenarioEditorContext) -> void:
 		item.set_text(0, unit.title)
 		item.set_icon(0, ImageTexture.create_from_image(img))
 		item.set_metadata(0, unit)
+
+	# Update button text based on whether a unit is selected
+	_update_button_text(ctx)
 ```

@@ -1,15 +1,15 @@
 # AmmoSystem::_init_ammunition_from_equipment Function Reference
 
-*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 270–334)</br>
+*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 303–367)</br>
 *Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**
 
 ```gdscript
-func _init_ammunition_from_equipment(u: UnitData) -> void
+func _init_ammunition_from_equipment(su: ScenarioUnit) -> void
 ```
 
-- **u**: UnitData to initialize
+- **su**: ScenarioUnit to initialize
 
 ## Description
 
@@ -19,11 +19,11 @@ Scans equipment.weapons and calculates ammo capacity for each AmmoTypes.
 ## Source
 
 ```gdscript
-func _init_ammunition_from_equipment(u: UnitData) -> void:
-	if not u.equipment or not u.equipment.has("weapons"):
+func _init_ammunition_from_equipment(su: ScenarioUnit) -> void:
+	if not su.unit.equipment or not su.unit.equipment.has("weapons"):
 		return
 
-	var weapons: Dictionary = u.equipment.get("weapons", {})
+	var weapons: Dictionary = su.unit.equipment.get("weapons", {})
 	if weapons.is_empty():
 		return
 
@@ -67,21 +67,21 @@ func _init_ammunition_from_equipment(u: UnitData) -> void:
 	# Only update ammunition if we found any weapon equipment
 	if not ammo_caps.is_empty():
 		# Initialize ammunition dict if empty
-		if u.ammunition.is_empty():
-			u.ammunition = {}
+		if su.unit.ammunition.is_empty():
+			su.unit.ammunition = {}
 
 		# Initialize state_ammunition dict if empty
-		if u.state_ammunition.is_empty():
-			u.state_ammunition = {}
+		if su.state_ammunition.is_empty():
+			su.state_ammunition = {}
 
 		# Set capacities from equipment
 		for ammo_key in ammo_caps.keys():
-			u.ammunition[ammo_key] = ammo_caps[ammo_key]
+			su.unit.ammunition[ammo_key] = ammo_caps[ammo_key]
 			# Set current state to full capacity if not already set
-			if not u.state_ammunition.has(ammo_key):
-				u.state_ammunition[ammo_key] = ammo_caps[ammo_key]
+			if not su.state_ammunition.has(ammo_key):
+				su.state_ammunition[ammo_key] = ammo_caps[ammo_key]
 
 		LogService.debug(
-			"Initialized ammo from equipment for %s: %s" % [u.id, str(ammo_caps)], "AmmoSystem.gd"
+			"Initialized ammo from equipment for %s: %s" % [su.id, str(ammo_caps)], "AmmoSystem.gd"
 		)
 ```

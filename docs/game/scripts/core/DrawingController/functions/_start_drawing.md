@@ -1,6 +1,6 @@
 # DrawingController::_start_drawing Function Reference
 
-*Defined at:* `scripts/core/DrawingController.gd` (lines 134–140)</br>
+*Defined at:* `scripts/core/DrawingController.gd` (lines 126–132)</br>
 *Belongs to:* [DrawingController](../../DrawingController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # InteractionController::_unhandled_input Function Reference
 
-*Defined at:* `scripts/core/PlayerInteraction.gd` (lines 24–60)</br>
+*Defined at:* `scripts/core/PlayerInteraction.gd` (lines 26–77)</br>
 *Belongs to:* [InteractionController](../../InteractionController.md)
 
 **Signature**
@@ -17,6 +17,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		var handled := _held.handle_inspect_input(event)
 		if handled:
 			get_viewport().set_input_as_handled()
+			if _held != null and not _held.is_inspecting():
+				if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+					_resume_drag_after_inspect = true
+				elif event is InputEventKey and event.keycode == KEY_ESCAPE:
+					_resume_drag_after_inspect = false
+					_drop_held()
+				else:
+					_resume_drag_after_inspect = false
 		return
 
 	if event is InputEventMouseButton and event.is_pressed():
@@ -44,6 +52,13 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	if event is InputEventMouseButton and event.is_released():
 		if event.button_index == MOUSE_BUTTON_LEFT and _held != null and not _held.pick_toggle:
+			if _held.is_inspecting():
+				get_viewport().set_input_as_handled()
+				return
+			if _resume_drag_after_inspect:
+				_resume_drag_after_inspect = false
+				get_viewport().set_input_as_handled()
+				return
 			_drop_held()
 			get_viewport().set_input_as_handled()
 			return

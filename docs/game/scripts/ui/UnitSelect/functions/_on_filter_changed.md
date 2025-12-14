@@ -1,6 +1,6 @@
 # UnitSelect::_on_filter_changed Function Reference
 
-*Defined at:* `scripts/ui/UnitSelect.gd` (lines 151–159)</br>
+*Defined at:* `scripts/ui/UnitSelect.gd` (lines 181–189)</br>
 *Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # DrawingController::load_scenario_drawings Function Reference
 
-*Defined at:* `scripts/core/DrawingController.gd` (lines 371–411)</br>
+*Defined at:* `scripts/core/DrawingController.gd` (lines 345–382)</br>
 *Belongs to:* [DrawingController](../../DrawingController.md)
 
 **Signature**
@@ -28,10 +28,8 @@ func load_scenario_drawings(scenario: ScenarioData, terrain_renderer: TerrainRen
 
 	_terrain_render = terrain_renderer
 
-	# Clear existing scenario drawings
 	_scenario_strokes.clear()
 
-	# Separate stamps and strokes
 	var stamps: Array[ScenarioDrawingStamp] = []
 
 	for drawing in scenario.drawings:
@@ -49,7 +47,6 @@ func load_scenario_drawings(scenario: ScenarioData, terrain_renderer: TerrainRen
 		elif drawing is ScenarioDrawingStamp and drawing.visible:
 			stamps.append(drawing)
 
-	# Load stamps into 2D StampLayer (rendered in terrain viewport)
 	if terrain_renderer.stamp_layer:
 		terrain_renderer.stamp_layer.load_stamps(stamps)
 	else:

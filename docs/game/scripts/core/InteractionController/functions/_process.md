@@ -1,6 +1,6 @@
 # InteractionController::_process Function Reference
 
-*Defined at:* `scripts/core/PlayerInteraction.gd` (lines 61–83)</br>
+*Defined at:* `scripts/core/PlayerInteraction.gd` (lines 78–100)</br>
 *Belongs to:* [InteractionController](../../InteractionController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # AIController::normalize_tasks Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 198–282)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 199–283)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # AIController::_resolve_context_nodes Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 410–416)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 411–417)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

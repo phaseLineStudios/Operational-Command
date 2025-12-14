@@ -1,6 +1,6 @@
 # CombatController::_ready Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 53–74)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 56–77)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**

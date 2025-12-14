@@ -1,6 +1,6 @@
 # HQTable::_init_enemy_ai Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 423–465)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 503–542)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**
@@ -27,7 +27,6 @@ func _init_enemy_ai() -> void:
 	ai_controller.unregister_all_units()
 	ai_controller.refresh_unit_index_cache()
 
-	# Build per-unit queues from scenario JSON (normalize inside AIController)
 	var flat_tasks: Array = []
 	if scenario.tasks is Array:
 		flat_tasks = scenario.tasks
@@ -35,7 +34,6 @@ func _init_enemy_ai() -> void:
 	var per_unit: Dictionary = ai_controller.build_per_unit_queues(normalized)
 	ai_controller.apply_trigger_sync(per_unit, scenario.triggers)
 
-	# Create an agent per ENEMY unit in scenario.units
 	for i in scenario.units.size():
 		var u: ScenarioUnit = scenario.units[i]
 		if u == null or u.affiliation != ScenarioUnit.Affiliation.ENEMY:
@@ -44,7 +42,6 @@ func _init_enemy_ai() -> void:
 		if agent == null:
 			continue
 
-		# Apply ScenarioUnit initial behaviour/ROE before queue starts
 		agent.set_behaviour(int(u.behaviour))
 		agent.set_combat_mode(int(u.combat_mode))
 

@@ -1,6 +1,6 @@
 # DocumentFace::set_total_pages Function Reference
 
-*Defined at:* `scripts/ui/DocumentFace.gd` (lines 68–73)</br>
+*Defined at:* `scripts/ui/DocumentFace.gd` (lines 84–89)</br>
 *Belongs to:* [DocumentFace](../../DocumentFace.md)
 
 **Signature**

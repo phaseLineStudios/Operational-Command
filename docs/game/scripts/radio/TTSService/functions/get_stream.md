@@ -1,6 +1,6 @@
 # TTSService::get_stream Function Reference
 
-*Defined at:* `scripts/radio/TTSService.gd` (lines 78–81)</br>
+*Defined at:* `scripts/radio/TTSService.gd` (lines 82–85)</br>
 *Belongs to:* [TTSService](../../TTSService.md)
 
 **Signature**

@@ -1,12 +1,12 @@
 # Persistence::create_new_campaign_save Function Reference
 
-*Defined at:* `scripts/core/Persistence.gd` (lines 24–27)</br>
+*Defined at:* `scripts/core/Persistence.gd` (lines 73–79)</br>
 *Belongs to:* [Persistence](../../Persistence.md)
 
 **Signature**
 
 ```gdscript
-func create_new_campaign_save(_campaign_id: StringName) -> String
+func create_new_campaign_save(campaign_id: StringName, save_name: String = "") -> String
 ```
 
 ## Description
@@ -16,8 +16,9 @@ Create a new save for `campaign_id`; return new ID.
 ## Source
 
 ```gdscript
-func create_new_campaign_save(_campaign_id: StringName) -> String:
-	# TODO: write initial save data; return new save id
-	var new_id := "save_" + str(Time.get_unix_time_from_system())
-	return new_id
+func create_new_campaign_save(campaign_id: StringName, save_name: String = "") -> String:
+	var save: CampaignSave = CampaignSave.create_new(campaign_id, save_name)
+	save_to_file(save)
+	_save_cache[save.save_id] = save
+	return save.save_id
 ```

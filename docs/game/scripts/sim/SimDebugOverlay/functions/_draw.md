@@ -85,7 +85,7 @@ func _draw() -> void:
 			var order_txt: String = order if show_orders else ""
 			var beh := _enum_name(ScenarioUnit.Behaviour, unit.behaviour)
 			var cmb := _enum_name(ScenarioUnit.CombatMode, unit.combat_mode)
-			var s_ratio := _norm_ratio(unit.unit.state_strength, unit.unit.strength)
+			var s_ratio := _norm_ratio(unit.state_strength, unit.unit.strength)
 			var m_ratio := _norm_ratio(unit.unit.morale)
 			var fuel_ratio := (
 				_fuel.get_fuel_state(unit.id).ratio()

@@ -1,6 +1,6 @@
 # UnitCreateDialog::_reset_ui Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 588–630)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 620–655)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**
@@ -22,16 +22,7 @@ func _reset_ui() -> void:
 			le.text = ""
 
 	for sb in [
-		_cost,
-		_strength,
-		_attack,
-		_defense,
-		_spot_m,
-		_range_m,
-		_morale,
-		_speed_kph,
-		_equip_val,
-		_th_val
+		_cost, _strength, _defense, _spot_m, _range_m, _morale, _speed_kph, _equip_val, _th_val
 	]:
 		if sb:
 			sb.value = 0
@@ -57,4 +48,6 @@ func _reset_ui() -> void:
 	_equip_ammo_container.visible = false
 	_is_engineer.set_pressed_no_signal(false)
 	_is_medical.set_pressed_no_signal(false)
+	if _attack_value:
+		_attack_value.text = "0.0"
 ```

@@ -1,6 +1,6 @@
 # UnitData::_ensure_ammunition_from_equipment Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 494–533)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 459–494)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**
@@ -46,12 +46,8 @@ func _ensure_ammunition_from_equipment() -> void:
 
 	if typeof(ammunition) != TYPE_DICTIONARY or ammunition == null:
 		ammunition = {}
-	if typeof(state_ammunition) != TYPE_DICTIONARY or state_ammunition == null:
-		state_ammunition = {}
 
 	for ammo_key in ammo_caps.keys():
 		if not ammunition.has(ammo_key):
 			ammunition[ammo_key] = ammo_caps[ammo_key]
-		if not state_ammunition.has(ammo_key):
-			state_ammunition[ammo_key] = ammo_caps[ammo_key]
 ```

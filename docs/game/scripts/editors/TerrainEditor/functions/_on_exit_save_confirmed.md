@@ -1,6 +1,6 @@
 # TerrainEditor::_on_exit_save_confirmed Function Reference
 
-*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 154–163)</br>
+*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 156–165)</br>
 *Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**

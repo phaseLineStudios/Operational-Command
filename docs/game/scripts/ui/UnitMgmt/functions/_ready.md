@@ -1,6 +1,6 @@
 # UnitMgmt::_ready Function Reference
 
-*Defined at:* `scripts/ui/UnitMgmt.gd` (lines 21–27)</br>
+*Defined at:* `scripts/ui/UnitMgmt.gd` (lines 23–29)</br>
 *Belongs to:* [UnitMgmt](../../UnitMgmt.md)
 
 **Signature**

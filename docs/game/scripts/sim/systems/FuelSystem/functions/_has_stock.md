@@ -1,6 +1,6 @@
 # FuelSystem::_has_stock Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 341–348)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 349–356)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

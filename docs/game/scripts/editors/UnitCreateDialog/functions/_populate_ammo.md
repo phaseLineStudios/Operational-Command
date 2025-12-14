@@ -1,6 +1,6 @@
 # UnitCreateDialog::_populate_ammo Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 350–372)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 379–402)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**
@@ -37,4 +37,5 @@ func _populate_ammo() -> void:
 
 		_ammo_keys.append(ammo_name)
 		_ammo_spinners.append(amt)
+		amt.value_changed.connect(func(_value): _update_attack_preview())
 ```

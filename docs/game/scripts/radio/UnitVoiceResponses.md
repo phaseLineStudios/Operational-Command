@@ -13,18 +13,26 @@ extends Node
 
 ## Brief
 
-Generates unit voice acknowledgments for orders.
+Main controller for unit voice responses.
 
 ## Detailed Description
 
-Connects to OrdersRouter signals and triggers TTS responses.
+Manages both manual acknowledgments (order responses) and automatic responses
+(simulation events). Emits transmission signals for sound effect integration.
 
-Acknowledgment phrases by order type.
+Path to acknowledgments data file.
+
+Initialize with references to units and simulation world.
+`id_index` Dictionary String->ScenarioUnit (by unit id).
+`world` Reference to SimWorld for contact data.
+`terrain_renderer` Reference to TerrainRender for grid conversions.
+`counter_controller` UnitCounterController for spawning counters.
+`artillery_controller` ArtilleryController for fire mission responses.
 
 ## Public Member Functions
 
 - [`func _ready() -> void`](UnitVoiceResponses/functions/_ready.md)
-- [`func init(id_index: Dictionary, world: Node, terrain_renderer: Node = null) -> void`](UnitVoiceResponses/functions/init.md) — Initialize with references to units and simulation world.
+- [`func _load_acknowledgments() -> void`](UnitVoiceResponses/functions/_load_acknowledgments.md) — Load acknowledgment phrases from JSON data file.
 - [`func _on_order_applied(order: Dictionary) -> void`](UnitVoiceResponses/functions/_on_order_applied.md) — Handle order applied - generate acknowledgment or report.
 - [`func _get_acknowledgment(order_type: String) -> String`](UnitVoiceResponses/functions/_get_acknowledgment.md) — Get a random acknowledgment phrase for an order type.
 - [`func _get_order_type_name(type: Variant) -> String`](UnitVoiceResponses/functions/_get_order_type_name.md) — Convert order type to string name.
@@ -32,20 +40,30 @@ Acknowledgment phrases by order type.
 - [`func _generate_status_report(unit: ScenarioUnit, callsign: String) -> String`](UnitVoiceResponses/functions/_generate_status_report.md) — Generate status report: unit status, position, and current task.
 - [`func _generate_position_report(unit: ScenarioUnit, callsign: String) -> String`](UnitVoiceResponses/functions/_generate_position_report.md) — Generate position report: position, direction if moving, speed if moving.
 - [`func _generate_contact_report(unit: ScenarioUnit, callsign: String) -> String`](UnitVoiceResponses/functions/_generate_contact_report.md) — Generate contact report: known hostile elements and their status/positions.
+- [`func _generate_supply_report(unit: ScenarioUnit, callsign: String) -> String`](UnitVoiceResponses/functions/_generate_supply_report.md) — Generate supply report: ammunition and fuel status.
 - [`func _get_grid_position(pos_m: Vector2) -> String`](UnitVoiceResponses/functions/_get_grid_position.md) — Get grid coordinate for a position.
 - [`func _get_current_task(unit: ScenarioUnit) -> String`](UnitVoiceResponses/functions/_get_current_task.md) — Get current task description for a unit.
 - [`func _get_cardinal_direction(from: Vector2, to: Vector2) -> String`](UnitVoiceResponses/functions/_get_cardinal_direction.md) — Get cardinal direction from one position to another.
+- [`func _on_auto_response(callsign: String, message: String) -> void`](UnitVoiceResponses/functions/_on_auto_response.md) — Handle automatic voice response from UnitAutoResponses.
+- [`func _on_auto_transmission_start(callsign: String) -> void`](UnitVoiceResponses/functions/_on_auto_transmission_start.md) — Handle transmission start from auto responses.
+- [`func _on_auto_transmission_end_requested(_callsign: String) -> void`](UnitVoiceResponses/functions/_on_auto_transmission_end_requested.md) — Handle transmission end request from auto responses.
+- [`func _on_tts_finished() -> void`](UnitVoiceResponses/functions/_on_tts_finished.md) — Handle TTS audio playback finished.
+- [`func emit_system_message(message: String, callsign: String = "Mission Control") -> void`](UnitVoiceResponses/functions/emit_system_message.md) — Emit a system message (e.g., from TriggerAPI) with radio SFX.
 
 ## Public Attributes
 
-- `tts_service` — Reference to TTS service (autoload).
-- `Dictionary units_by_id` — Reference to unit index (unit_id -> ScenarioUnit).
-- `SimWorld sim_world` — Reference to SimWorld for contact data.
-- `TerrainRender terrain_render` — Reference to terrain renderer for grid conversions.
+- `Dictionary acknowledgments`
+- `Dictionary units_by_id`
+- `SimWorld sim_world`
+- `TerrainRender terrain_render`
+- `String _current_transmitter`
+- `UnitAutoResponses auto_responses` — Reference to auto responses controller.
 
 ## Signals
 
 - `signal unit_response(callsign: String, message: String)` — Emitted when a unit generates a voice response.
+- `signal transmission_start(callsign: String)` — Emitted when a unit starts transmitting on radio.
+- `signal transmission_end(callsign: String)` — Emitted when a unit finishes transmitting on radio.
 
 ## Member Function Documentation
 
@@ -55,16 +73,13 @@ Acknowledgment phrases by order type.
 func _ready() -> void
 ```
 
-### init
+### _load_acknowledgments
 
 ```gdscript
-func init(id_index: Dictionary, world: Node, terrain_renderer: Node = null) -> void
+func _load_acknowledgments() -> void
 ```
 
-Initialize with references to units and simulation world.
-`id_index` Dictionary String->ScenarioUnit (by unit id).
-`world` Reference to SimWorld for contact data.
-`terrain_renderer` Reference to TerrainRender for grid conversions.
+Load acknowledgment phrases from JSON data file.
 
 ### _on_order_applied
 
@@ -139,6 +154,17 @@ Generate contact report: known hostile elements and their status/positions.
 `callsign` Unit callsign.
 [return] Contact report string.
 
+### _generate_supply_report
+
+```gdscript
+func _generate_supply_report(unit: ScenarioUnit, callsign: String) -> String
+```
+
+Generate supply report: ammunition and fuel status.
+`unit` ScenarioUnit to report on.
+`callsign` Unit callsign.
+[return] Supply report string.
+
 ### _get_grid_position
 
 ```gdscript
@@ -170,15 +196,62 @@ Get cardinal direction from one position to another.
 `to` End position.
 [return] Cardinal direction string (e.g., "north", "northeast").
 
-## Member Data Documentation
-
-### tts_service
+### _on_auto_response
 
 ```gdscript
-var tts_service
+func _on_auto_response(callsign: String, message: String) -> void
 ```
 
-Reference to TTS service (autoload).
+Handle automatic voice response from UnitAutoResponses.
+Re-emits as a unit_response for logging/transcript.
+`callsign` Unit callsign.
+`message` Response message.
+
+### _on_auto_transmission_start
+
+```gdscript
+func _on_auto_transmission_start(callsign: String) -> void
+```
+
+Handle transmission start from auto responses.
+`callsign` Unit callsign.
+
+### _on_auto_transmission_end_requested
+
+```gdscript
+func _on_auto_transmission_end_requested(_callsign: String) -> void
+```
+
+Handle transmission end request from auto responses.
+Doesn't emit immediately - waits for TTS to finish.
+`callsign` Unit callsign.
+
+### _on_tts_finished
+
+```gdscript
+func _on_tts_finished() -> void
+```
+
+Handle TTS audio playback finished.
+Emits transmission_end for the current transmitter.
+
+### emit_system_message
+
+```gdscript
+func emit_system_message(message: String, callsign: String = "Mission Control") -> void
+```
+
+Emit a system message (e.g., from TriggerAPI) with radio SFX.
+`message` Message text to speak.
+`callsign` Optional callsign (defaults to "Mission Control").
+
+## Member Data Documentation
+
+### acknowledgments
+
+```gdscript
+var acknowledgments: Dictionary
+```
 
 ### units_by_id
 
@@ -186,15 +259,11 @@ Reference to TTS service (autoload).
 var units_by_id: Dictionary
 ```
 
-Reference to unit index (unit_id -> ScenarioUnit).
-
 ### sim_world
 
 ```gdscript
 var sim_world: SimWorld
 ```
-
-Reference to SimWorld for contact data.
 
 ### terrain_render
 
@@ -202,7 +271,21 @@ Reference to SimWorld for contact data.
 var terrain_render: TerrainRender
 ```
 
-Reference to terrain renderer for grid conversions.
+### _current_transmitter
+
+```gdscript
+var _current_transmitter: String
+```
+
+### auto_responses
+
+```gdscript
+var auto_responses: UnitAutoResponses
+```
+
+Decorators: `@onready`
+
+Reference to auto responses controller.
 
 ## Signal Documentation
 
@@ -215,3 +298,21 @@ signal unit_response(callsign: String, message: String)
 Emitted when a unit generates a voice response.
 `callsign` The unit's callsign.
 `message` The full message text.
+
+### transmission_start
+
+```gdscript
+signal transmission_start(callsign: String)
+```
+
+Emitted when a unit starts transmitting on radio.
+`callsign` The unit's callsign.
+
+### transmission_end
+
+```gdscript
+signal transmission_end(callsign: String)
+```
+
+Emitted when a unit finishes transmitting on radio.
+`callsign` The unit's callsign.

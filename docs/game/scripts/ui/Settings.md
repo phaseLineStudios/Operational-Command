@@ -20,6 +20,9 @@ Config path.
 - [`func _ready() -> void`](Settings/functions/_ready.md) — Build UI and load config.
 - [`func _build_video_ui() -> void`](Settings/functions/_build_video_ui.md) — Populate video controls.
 - [`func _build_audio_ui() -> void`](Settings/functions/_build_audio_ui.md) — Create rows for each audio bus.
+- [`func _populate_audio_devices() -> void`](Settings/functions/_populate_audio_devices.md) — Populate audio device dropdowns.
+- [`func _on_output_device_changed(index: int) -> void`](Settings/functions/_on_output_device_changed.md) — Called when output device is changed.
+- [`func _on_input_device_changed(index: int) -> void`](Settings/functions/_on_input_device_changed.md) — Called when input device is changed.
 - [`func _build_controls_ui() -> void`](Settings/functions/_build_controls_ui.md) — Create rebind buttons for actions.
 - [`func _connect_signals() -> void`](Settings/functions/_connect_signals.md) — Wire up buttons and live labels.
 - [`func _load_config() -> void`](Settings/functions/_load_config.md) — Load config file (if present).
@@ -28,6 +31,10 @@ Config path.
 - [`func _reset_defaults() -> void`](Settings/functions/_reset_defaults.md) — Reset to defaults.
 - [`func _reset_all_bindings() -> void`](Settings/functions/_reset_all_bindings.md) — Remove custom bindings and restore defaults (uses InputSchema if present).
 - [`func _apply_video() -> void`](Settings/functions/_apply_video.md) — Apply video settings to the window/engine.
+- [`func _apply_render_scale() -> void`](Settings/functions/_apply_render_scale.md) — Apply 3D render scaling to keep performance stable at higher resolutions.
+- [`func _apply_adaptive_aa(root_viewport: Viewport, render_size: Vector2i, final_scale: float) -> void`](Settings/functions/_apply_adaptive_aa.md)
+- [`func _compute_content_scale_size(window_size: Vector2i, target_size: Vector2i) -> Vector2i`](Settings/functions/_compute_content_scale_size.md)
+- [`func _schedule_render_scale_apply() -> void`](Settings/functions/_schedule_render_scale_apply.md)
 - [`func _apply_audio() -> void`](Settings/functions/_apply_audio.md) — Apply audio to buses.
 - [`func _apply_gameplay() -> void`](Settings/functions/_apply_gameplay.md) — Apply gameplay flags.
 - [`func _save_config() -> void`](Settings/functions/_save_config.md) — Save config file.
@@ -42,6 +49,8 @@ Config path.
 - `Array[String] actions_to_rebind` — Actions to rebind (must exist in InputMap).
 - `Array[Vector2i] resolutions` — Resolution list.
 - `PackedScene back_scene` — Scene to navigate to on back (leave empty for no action)
+- `bool auto_adjust_aa` — If true, automatically reduce 3D MSAA at very high pixel counts.
+- `int _base_msaa_3d`
 - `Dictionary _bus_rows`
 - `Button btn_back`
 - `Button _btn_apply`
@@ -53,6 +62,8 @@ Config path.
 - `Label _scale_val`
 - `SpinBox _fps`
 - `GridContainer _buses_list`
+- `OptionButton _output_device`
+- `OptionButton _input_device`
 - `VBoxContainer _controls_list`
 - `Button _reset_bindings`
 - `Button _rebind_template`
@@ -91,6 +102,30 @@ func _build_audio_ui() -> void
 ```
 
 Create rows for each audio bus.
+
+### _populate_audio_devices
+
+```gdscript
+func _populate_audio_devices() -> void
+```
+
+Populate audio device dropdowns.
+
+### _on_output_device_changed
+
+```gdscript
+func _on_output_device_changed(index: int) -> void
+```
+
+Called when output device is changed.
+
+### _on_input_device_changed
+
+```gdscript
+func _on_input_device_changed(index: int) -> void
+```
+
+Called when input device is changed.
 
 ### _build_controls_ui
 
@@ -155,6 +190,32 @@ func _apply_video() -> void
 ```
 
 Apply video settings to the window/engine.
+
+### _apply_render_scale
+
+```gdscript
+func _apply_render_scale() -> void
+```
+
+Apply 3D render scaling to keep performance stable at higher resolutions.
+
+### _apply_adaptive_aa
+
+```gdscript
+func _apply_adaptive_aa(root_viewport: Viewport, render_size: Vector2i, final_scale: float) -> void
+```
+
+### _compute_content_scale_size
+
+```gdscript
+func _compute_content_scale_size(window_size: Vector2i, target_size: Vector2i) -> Vector2i
+```
+
+### _schedule_render_scale_apply
+
+```gdscript
+func _schedule_render_scale_apply() -> void
+```
 
 ### _apply_audio
 
@@ -254,6 +315,22 @@ Decorators: `@export`
 
 Scene to navigate to on back (leave empty for no action)
 
+### auto_adjust_aa
+
+```gdscript
+var auto_adjust_aa: bool
+```
+
+Decorators: `@export`
+
+If true, automatically reduce 3D MSAA at very high pixel counts.
+
+### _base_msaa_3d
+
+```gdscript
+var _base_msaa_3d: int
+```
+
 ### _bus_rows
 
 ```gdscript
@@ -318,6 +395,18 @@ var _fps: SpinBox
 
 ```gdscript
 var _buses_list: GridContainer
+```
+
+### _output_device
+
+```gdscript
+var _output_device: OptionButton
+```
+
+### _input_device
+
+```gdscript
+var _input_device: OptionButton
 ```
 
 ### _controls_list

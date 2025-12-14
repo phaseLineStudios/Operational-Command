@@ -1,6 +1,6 @@
 # DebugOverlay::_icon_for_unit Function Reference
 
-*Defined at:* `scripts/test/DebugOverlay.gd` (lines 146–158)</br>
+*Defined at:* `scripts/test/DebugOverlay.gd` (lines 142–154)</br>
 *Belongs to:* [DebugOverlay](../../DebugOverlay.md)
 
 **Signature**

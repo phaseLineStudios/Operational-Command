@@ -1,6 +1,6 @@
 # Game::restore_unit_states_from_save Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 309–364)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 418–473)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

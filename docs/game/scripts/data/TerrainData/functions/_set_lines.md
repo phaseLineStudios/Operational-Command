@@ -1,6 +1,6 @@
 # TerrainData::_set_lines Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 176–181)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 188–193)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

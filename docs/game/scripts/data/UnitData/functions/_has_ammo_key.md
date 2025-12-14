@@ -1,6 +1,6 @@
 # UnitData::_has_ammo_key Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 582–590)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 543–551)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**

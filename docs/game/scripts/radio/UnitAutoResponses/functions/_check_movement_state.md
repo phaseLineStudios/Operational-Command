@@ -1,6 +1,6 @@
 # UnitAutoResponses::_check_movement_state Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 444–454)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 426–446)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**
@@ -17,12 +17,22 @@ Check for movement state changes.
 
 ```gdscript
 func _check_movement_state(unit_id: String, prev: Dictionary, current: Dictionary) -> void:
-	var prev_movement_state: String = prev.get("movement_state", "IDLE")
-	var curr_movement_state: String = current.get("movement_state", "IDLE")
+	var unit: ScenarioUnit = _units_by_id.get(unit_id)
+	if not unit:
+		return
 
-	if prev_movement_state == "IDLE" and curr_movement_state == "MOVING":
+	const IDLE = 0
+	const MOVING = 2
+	const ARRIVED = 5
+
+	var prev_movement_state: int = prev.get("movement_state", IDLE)
+	var curr_movement_state: int = unit.move_state()
+
+	if prev_movement_state == IDLE and curr_movement_state == MOVING:
 		_queue_message(unit_id, EventType.MOVEMENT_STARTED)
 
-	elif prev_movement_state == "MOVING" and curr_movement_state == "ARRIVED":
+	elif prev_movement_state == MOVING and curr_movement_state == ARRIVED:
 		_queue_message(unit_id, EventType.POSITION_REACHED)
+
+	current["movement_state"] = curr_movement_state
 ```

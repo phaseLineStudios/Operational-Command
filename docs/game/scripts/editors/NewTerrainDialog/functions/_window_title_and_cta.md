@@ -1,6 +1,6 @@
 # NewTerrainDialog::_window_title_and_cta Function Reference
 
-*Defined at:* `scripts/editors/TerrainSettingsDialog.gd` (lines 115–119)</br>
+*Defined at:* `scripts/editors/TerrainSettingsDialog.gd` (lines 133–137)</br>
 *Belongs to:* [NewTerrainDialog](../../NewTerrainDialog.md)
 
 **Signature**

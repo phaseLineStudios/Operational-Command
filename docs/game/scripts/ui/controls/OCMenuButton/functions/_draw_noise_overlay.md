@@ -1,6 +1,6 @@
 # OCMenuButton::_draw_noise_overlay Function Reference
 
-*Defined at:* `scripts/ui/controls/OcMenuButton.gd` (lines 74–88)</br>
+*Defined at:* `scripts/ui/controls/OcMenuButton.gd` (lines 112–126)</br>
 *Belongs to:* [OCMenuButton](../../OCMenuButton.md)
 
 **Signature**

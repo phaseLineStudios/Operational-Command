@@ -1,6 +1,6 @@
 # TTSService::_read_sample_rate Function Reference
 
-*Defined at:* `scripts/radio/TTSService.gd` (lines 159–169)</br>
+*Defined at:* `scripts/radio/TTSService.gd` (lines 188–198)</br>
 *Belongs to:* [TTSService](../../TTSService.md)
 
 **Signature**

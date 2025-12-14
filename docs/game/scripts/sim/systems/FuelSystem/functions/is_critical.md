@@ -1,6 +1,6 @@
 # FuelSystem::is_critical Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 101–108)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 103–110)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

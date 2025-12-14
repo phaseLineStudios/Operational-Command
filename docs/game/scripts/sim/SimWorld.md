@@ -27,6 +27,11 @@ Fixed tick rate (Hz).
 
 Grace period before ending (seconds) to avoid flapping.
 
+Advances movement for all sides and emits unit snapshots.
+
+Computes LOS contact pairs once per tick and emits contact events.
+Optimized to only check LOS between units when at least one has moved.
+
 ## Public Member Functions
 
 - [`func _ready() -> void`](SimWorld/functions/_ready.md) — Initializes tick timing/RNG and wires router signals.
@@ -36,8 +41,7 @@ Grace period before ending (seconds) to avoid flapping.
 - [`func _process(dt: float) -> void`](SimWorld/functions/_process.md) — Fixed-rate loop; advances the sim in discrete ticks while RUNNING.
 - [`func _step_tick(dt: float) -> void`](SimWorld/functions/_step_tick.md) — Executes a single sim tick (deterministic order).
 - [`func _process_orders() -> void`](SimWorld/functions/_process_orders.md) — Pops ready orders and routes them via the OrdersRouter.
-- [`func _update_movement(dt: float) -> void`](SimWorld/functions/_update_movement.md) — Advances movement for all sides and emits unit snapshots.
-- [`func _update_los() -> void`](SimWorld/functions/_update_los.md) — Computes LOS contact pairs once per tick and emits contact events.
+- [`func _get_contact_key(id_a: String, id_b: String) -> String`](SimWorld/functions/_get_contact_key.md) — Get or create cached contact key for a pair of unit IDs.
 - [`func _resolve_combat() -> void`](SimWorld/functions/_resolve_combat.md) — Resolves combat for current contact pairs (range/logic inside controller).
 - [`func _update_logistics(dt: float) -> void`](SimWorld/functions/_update_logistics.md) — Ticks logistics systems and updates positions for proximity logic.
 - [`func get_current_contacts() -> Array`](SimWorld/functions/get_current_contacts.md) — Pairs in contact this tick: Array of { attacker: String, defender: String }.
@@ -51,6 +55,7 @@ Grace period before ending (seconds) to avoid flapping.
 - [`func bind_radio(radio: Radio, parser: Node) -> void`](SimWorld/functions/bind_radio.md) — Bind Radio and Parser so voice results are queued automatically.
 - [`func pause() -> void`](SimWorld/functions/pause.md) — Pause simulation.
 - [`func resume() -> void`](SimWorld/functions/resume.md) — Resume simulation.
+- [`func start() -> void`](SimWorld/functions/start.md) — Start simulation from INIT state.
 - [`func set_time_scale(scale: float) -> void`](SimWorld/functions/set_time_scale.md) — Set simulation time scale (1.0 = normal, 2.0 = 2x speed).
 - [`func get_time_scale() -> float`](SimWorld/functions/get_time_scale.md) — Get current simulation time scale (1.0 = normal, 2.0 = 2x speed, 0.0 = paused).
 - [`func step() -> void`](SimWorld/functions/step.md) — Step one tick while paused.
@@ -100,6 +105,13 @@ Grace period before ending (seconds) to avoid flapping.
 - `PackedStringArray _last_contacts`
 - `Array _contact_pairs`
 - `Dictionary _unit_positions`
+- `Dictionary _contact_key_cache`
+- `Dictionary moved_units`
+- `Dictionary positions_before`
+- `Variant pos_before`
+- `ScenarioUnit unit`
+- `PackedStringArray new_contacts`
+- `Dictionary old_contacts_dict`
 
 ## Signals
 
@@ -178,22 +190,13 @@ func _process_orders() -> void
 
 Pops ready orders and routes them via the OrdersRouter.
 
-### _update_movement
+### _get_contact_key
 
 ```gdscript
-func _update_movement(dt: float) -> void
+func _get_contact_key(id_a: String, id_b: String) -> String
 ```
 
-Advances movement for all sides and emits unit snapshots.
-
-### _update_los
-
-```gdscript
-func _update_los() -> void
-```
-
-Computes LOS contact pairs once per tick and emits contact events.
-Optimized to only check LOS between units when at least one has moved.
+Get or create cached contact key for a pair of unit IDs.
 
 ### _resolve_combat
 
@@ -307,6 +310,14 @@ func resume() -> void
 ```
 
 Resume simulation.
+
+### start
+
+```gdscript
+func start() -> void
+```
+
+Start simulation from INIT state.
 
 ### set_time_scale
 
@@ -724,6 +735,48 @@ var _contact_pairs: Array
 
 ```gdscript
 var _unit_positions: Dictionary
+```
+
+### _contact_key_cache
+
+```gdscript
+var _contact_key_cache: Dictionary
+```
+
+### moved_units
+
+```gdscript
+var moved_units: Dictionary
+```
+
+### positions_before
+
+```gdscript
+var positions_before: Dictionary
+```
+
+### pos_before
+
+```gdscript
+var pos_before: Variant
+```
+
+### unit
+
+```gdscript
+var unit: ScenarioUnit
+```
+
+### new_contacts
+
+```gdscript
+var new_contacts: PackedStringArray
+```
+
+### old_contacts_dict
+
+```gdscript
+var old_contacts_dict: Dictionary
 ```
 
 ## Signal Documentation

@@ -1,6 +1,6 @@
 # TerrainData::elev_px_to_world Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 407–410)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 419–422)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

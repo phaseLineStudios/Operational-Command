@@ -1,6 +1,6 @@
 # UnitAutoResponses::_on_contact_reported Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 468–473)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 489–495)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**
@@ -17,7 +17,8 @@ Handle contact reported signal.
 
 ```gdscript
 func _on_contact_reported(attacker_id: String, defender_id: String) -> void:
-	_report_contact_spotted(attacker_id, defender_id)
-
-	_spawn_contact_counter(defender_id)
+	var spotter: ScenarioUnit = _units_by_id.get(attacker_id)
+	if spotter and spotter.playable:
+		_report_contact_spotted(attacker_id, defender_id)
+		_spawn_contact_counter(defender_id)
 ```

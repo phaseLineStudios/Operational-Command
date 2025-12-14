@@ -1,6 +1,6 @@
 # Game::select_save Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 55–59)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 165–176)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**
@@ -18,6 +18,13 @@ Set current save and emit `signal save_selected`.
 ```gdscript
 func select_save(save_id: StringName) -> void:
 	current_save_id = save_id
+	current_save = Persistence.load_save(save_id)
+
+	if current_save:
+		LogService.info("Loaded save: %s" % current_save.save_name, "Game")
+	else:
+		push_warning("Failed to load save: %s" % save_id)
+
 	emit_signal("save_selected", save_id)
 ```
 

@@ -1,6 +1,6 @@
 # DrawingController::_color_to_tool Function Reference
 
-*Defined at:* `scripts/core/DrawingController.gd` (lines 483–502)</br>
+*Defined at:* `scripts/core/DrawingController.gd` (lines 449–463)</br>
 *Belongs to:* [DrawingController](../../DrawingController.md)
 
 **Signature**
@@ -20,23 +20,18 @@ Convert color to closest drawing tool.
 
 ```gdscript
 func _color_to_tool(color: Color) -> Tool:
-	# Match to closest tool color
 	var r := color.r
 	var g := color.g
 	var b := color.b
 
-	# Black: low RGB
 	if r < 0.3 and g < 0.3 and b < 0.3:
 		return Tool.PEN_BLACK
 
-	# Blue: high B, low R
 	if b > 0.5 and r < 0.5:
 		return Tool.PEN_BLUE
 
-	# Red: high R, low B
 	if r > 0.5 and b < 0.5:
 		return Tool.PEN_RED
 
-	# Default to black
 	return Tool.PEN_BLACK
 ```

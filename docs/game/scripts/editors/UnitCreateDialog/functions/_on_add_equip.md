@@ -1,6 +1,6 @@
 # UnitCreateDialog::_on_add_equip Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 447–465)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 477–496)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**
@@ -33,4 +33,5 @@ func _on_add_equip() -> void:
 	_equip[c_str.to_lower()][k] = {"type": v, "ammo": a}
 	_equip_key.text = ""
 	_equip_val.value = 0
+	_update_attack_preview()
 ```

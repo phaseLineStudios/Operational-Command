@@ -1,6 +1,6 @@
 # UnitCreateDialog::_populate_size Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 320–326)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 349–355)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

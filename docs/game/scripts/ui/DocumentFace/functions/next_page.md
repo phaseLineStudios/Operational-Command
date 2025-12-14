@@ -1,6 +1,6 @@
 # DocumentFace::next_page Function Reference
 
-*Defined at:* `scripts/ui/DocumentFace.gd` (lines 75–79)</br>
+*Defined at:* `scripts/ui/DocumentFace.gd` (lines 91–95)</br>
 *Belongs to:* [DocumentFace](../../DocumentFace.md)
 
 **Signature**

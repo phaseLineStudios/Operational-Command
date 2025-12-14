@@ -1,6 +1,6 @@
 # NewScenarioDialog::_apply_pools_to_scenario Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 354–386)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 426–458)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**

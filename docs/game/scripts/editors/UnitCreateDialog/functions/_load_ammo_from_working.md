@@ -1,6 +1,6 @@
 # UnitCreateDialog::_load_ammo_from_working Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 193–212)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 207–226)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**
@@ -11,13 +11,13 @@ func _load_ammo_from_working() -> void
 
 ## Description
 
-Load ammo amounts from _working.ammo into the SpinBoxes.
+Load ammo amounts from _working.ammunition into the SpinBoxes.
 
 ## Source
 
 ```gdscript
 func _load_ammo_from_working() -> void:
-	var ammo_dict: Variant = _working.get("ammo")
+	var ammo_dict: Variant = _working.ammunition
 	if typeof(ammo_dict) != TYPE_DICTIONARY:
 		ammo_dict = {}
 

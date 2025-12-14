@@ -1,6 +1,6 @@
 # RadioSubtitles::_get_terrain_label_suggestions Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 324–332)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 365–373)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

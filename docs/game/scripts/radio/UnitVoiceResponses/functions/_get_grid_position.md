@@ -1,6 +1,6 @@
 # UnitVoiceResponses::_get_grid_position Function Reference
 
-*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 331–337)</br>
+*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 384–390)</br>
 *Belongs to:* [UnitVoiceResponses](../../UnitVoiceResponses.md)
 
 **Signature**

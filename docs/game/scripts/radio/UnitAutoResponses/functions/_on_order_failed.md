@@ -1,6 +1,6 @@
 # UnitAutoResponses::_on_order_failed Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 485–505)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 512–532)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**
@@ -33,8 +33,8 @@ func _on_order_failed(order: Dictionary, reason: String) -> void:
 	if unit_id == "":
 		return
 
-	var default_phrases: Array = EVENT_CONFIG[EventType.ORDER_FAILED]["phrases"]
-	var phrases: Array = ORDER_FAILURE_PHRASES.get(reason, default_phrases)
+	var default_phrases: Array = event_config[EventType.ORDER_FAILED]["phrases"]
+	var phrases: Array = order_failure_phrases.get(reason, default_phrases)
 	var phrase: String = phrases[_rng.randi() % phrases.size()]
 
 	_queue_custom_message(unit_id, callsign, phrase, Priority.NORMAL)

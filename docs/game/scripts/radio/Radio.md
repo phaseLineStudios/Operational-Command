@@ -34,6 +34,7 @@ Turn on/off the radio stream
 ## Public Attributes
 
 - `OrdersParser parser`
+- `UnitVoiceResponses unit_responses` — Reference to unit voice responses controller
 
 ## Signals
 
@@ -101,6 +102,16 @@ Ensure we stop capture when the radio node leaves.
 ```gdscript
 var parser: OrdersParser
 ```
+
+### unit_responses
+
+```gdscript
+var unit_responses: UnitVoiceResponses
+```
+
+Decorators: `@onready`
+
+Reference to unit voice responses controller
 
 ## Signal Documentation
 

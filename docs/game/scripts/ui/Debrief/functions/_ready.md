@@ -1,6 +1,6 @@
 # Debrief::_ready Function Reference
 
-*Defined at:* `scripts/ui/Debrief.gd` (lines 87–131)</br>
+*Defined at:* `scripts/ui/Debrief.gd` (lines 87–154)</br>
 *Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**
@@ -24,6 +24,11 @@ func _ready() -> void:
 	_assign_btn.pressed.connect(_on_assign_pressed)
 	_init_units_tree_columns()
 	_update_title()
+
+	# Connect signals to Game for flow management
+	continue_requested.connect(Game.on_debrief_continue)
+	retry_requested.connect(Game.on_debrief_retry)
+	commendation_assigned.connect(Game.on_medal_assigned)
 
 	if not Game.current_scenario_summary.is_empty():
 		# @TODO: switch to using populate_from_dict()
@@ -53,7 +58,25 @@ func _ready() -> void:
 		var units_dict: Array[Dictionary] = []
 		var units_string: Array[String] = []
 		for pu in Game.current_scenario.playable_units:
-			units_dict.append({"name": pu.unit.title})
+			var unit_status := "Alive"
+			if pu.state_strength <= 0:
+				unit_status = "KIA"
+			elif pu.state_strength < pu.unit.strength * 0.5:
+				unit_status = "Weakened"
+
+			(
+				units_dict
+				. append(
+					{
+						"name": pu.unit.title,
+						"xp": int(pu.unit.experience),
+						"status": unit_status,
+						"kills": 0,  # TODO: Track kills in combat system
+						"wia": int(pu.state_injured),
+						"kia": int(pu.unit.strength - pu.state_strength),
+					}
+				)
+			)
 			units_string.append(pu.unit.title)
 		set_units(units_dict)
 		set_recipients_from_units()

@@ -1,6 +1,6 @@
 # Game::goto_scene Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 41–47)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 60–66)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

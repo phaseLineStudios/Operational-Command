@@ -1,6 +1,6 @@
 # HQTable::_init_counter_controller Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 88–96)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 111–118)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**
@@ -17,7 +17,6 @@ Initialize the counter controller and bind to trigger API
 
 ```gdscript
 func _init_counter_controller() -> void:
-	# Initialize counter controller with map mesh and terrain render for coordinate conversion
 	if counter_controller and map:
 		counter_controller.init(%Map, map.renderer)
 

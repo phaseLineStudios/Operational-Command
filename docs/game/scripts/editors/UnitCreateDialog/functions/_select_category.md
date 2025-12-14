@@ -1,6 +1,6 @@
 # UnitCreateDialog::_select_category Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 400–410)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 430–440)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

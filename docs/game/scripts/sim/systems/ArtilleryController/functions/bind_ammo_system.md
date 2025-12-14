@@ -1,6 +1,6 @@
 # ArtilleryController::bind_ammo_system Function Reference
 
-*Defined at:* `scripts/sim/systems/ArtilleryController.gd` (lines 101–104)</br>
+*Defined at:* `scripts/sim/systems/ArtilleryController.gd` (lines 131–134)</br>
 *Belongs to:* [ArtilleryController](../../ArtilleryController.md)
 
 **Signature**

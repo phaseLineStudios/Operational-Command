@@ -78,6 +78,7 @@ with optional terrain and slope multipliers.
 - `signal fuel_empty(unit_id: String)`
 - `signal refuel_started(src_unit_id: String, dst_unit_id: String)`
 - `signal refuel_completed(src_unit_id: String, dst_unit_id: String)`
+- `signal supplier_exhausted(src_unit_id: String)` — Emitted when tanker runs out of fuel stock.
 - `signal unit_immobilized_fuel_out(unit_id: String)` — Mobility signals
 - `signal unit_mobilized_after_refuel(unit_id: String)`
 
@@ -388,6 +389,14 @@ signal refuel_started(src_unit_id: String, dst_unit_id: String)
 ```gdscript
 signal refuel_completed(src_unit_id: String, dst_unit_id: String)
 ```
+
+### supplier_exhausted
+
+```gdscript
+signal supplier_exhausted(src_unit_id: String)
+```
+
+Emitted when tanker runs out of fuel stock.
 
 ### unit_immobilized_fuel_out
 

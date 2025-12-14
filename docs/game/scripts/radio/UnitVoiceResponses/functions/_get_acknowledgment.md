@@ -1,6 +1,6 @@
 # UnitVoiceResponses::_get_acknowledgment Function Reference
 
-*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 130–137)</br>
+*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 137–144)</br>
 *Belongs to:* [UnitVoiceResponses](../../UnitVoiceResponses.md)
 
 **Signature**
@@ -20,7 +20,7 @@ Get a random acknowledgment phrase for an order type.
 
 ```gdscript
 func _get_acknowledgment(order_type: String) -> String:
-	var phrases: Array = ACKNOWLEDGMENTS.get(order_type, [])
+	var phrases: Array = acknowledgments.get(order_type, [])
 	if phrases.is_empty():
 		phrases = ["Roger.", "Copy.", "Acknowledged."]
 

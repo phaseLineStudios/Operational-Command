@@ -21,11 +21,14 @@ extends Resource
 - `float moon_edge_blur` — Blur on moons edge
 - `Curve moon_light_intensity` — Intensity of moonlight
 - `float moon_glow_intensity` — Intensity of moon glow
+- `Color scatter_color` — Sun scattering color multiplier
+- `Color scatter_color_2` — Moon scattering color multiplier
 - `float horizon_size` — Size of horizon
 - `float horizon_alpha` — Transparency of horizon
 - `float cloud_speed` — Speed of clouds
 - `Vector2 cloud_direction` — Direction of clouds
 - `float cloud_density` — Density of clouds
+- `float cloud_alpha` — Opacity of clouds
 - `float cloud_glow` — Glow of clouds
 - `float cloud_light_absorbtion` — Light absorbtion of clouds
 - `float cloud_brightness` — Brightness of clouds
@@ -40,7 +43,7 @@ extends Resource
 - `float star_speed` — Speed of stars
 - `GradientTexture1D base_sky_color`
 - `GradientTexture1D base_cloud_color`
-- `GradientTexture1D overcast_sky_color`
+- `GradientTexture1D overcast_cloud_color`
 - `GradientTexture1D horizon_fog_color`
 - `GradientTexture1D sun_light_color`
 - `GradientTexture1D sun_disc_color`
@@ -130,6 +133,26 @@ Decorators: `@export_range(0, 1, 0.01)`
 
 Intensity of moon glow
 
+### scatter_color
+
+```gdscript
+var scatter_color: Color
+```
+
+Decorators: `@export`
+
+Sun scattering color multiplier
+
+### scatter_color_2
+
+```gdscript
+var scatter_color_2: Color
+```
+
+Decorators: `@export`
+
+Moon scattering color multiplier
+
 ### horizon_size
 
 ```gdscript
@@ -179,6 +202,16 @@ var cloud_density: float
 Decorators: `@export_range(0.0, 8.0, 0.05)`
 
 Density of clouds
+
+### cloud_alpha
+
+```gdscript
+var cloud_alpha: float
+```
+
+Decorators: `@export_range(0.0, 1.0, 0.01)`
+
+Opacity of clouds
 
 ### cloud_glow
 
@@ -312,10 +345,10 @@ var base_sky_color: GradientTexture1D
 var base_cloud_color: GradientTexture1D
 ```
 
-### overcast_sky_color
+### overcast_cloud_color
 
 ```gdscript
-var overcast_sky_color: GradientTexture1D
+var overcast_cloud_color: GradientTexture1D
 ```
 
 ### horizon_fog_color

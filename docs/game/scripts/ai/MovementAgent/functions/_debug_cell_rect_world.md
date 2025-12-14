@@ -1,6 +1,6 @@
 # MovementAgent::_debug_cell_rect_world Function Reference
 
-*Defined at:* `scripts/ai/MovementAgent.gd` (lines 282–288)</br>
+*Defined at:* `scripts/ai/MovementAgent.gd` (lines 298–304)</br>
 *Belongs to:* [MovementAgent](../../MovementAgent.md)
 
 **Signature**

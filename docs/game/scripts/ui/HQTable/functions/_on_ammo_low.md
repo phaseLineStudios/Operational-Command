@@ -1,6 +1,6 @@
 # HQTable::_on_ammo_low Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 217–221)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 239–243)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**
@@ -17,6 +17,6 @@ Handle ammo low warning.
 
 ```gdscript
 func _on_ammo_low(unit_id: String) -> void:
-	if unit_auto_voices:
-		unit_auto_voices.trigger_ammo_low(unit_id)
+	if unit_voices and unit_voices.auto_responses:
+		unit_voices.auto_responses.trigger_ammo_low(unit_id)
 ```

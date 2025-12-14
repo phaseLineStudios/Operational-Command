@@ -1,6 +1,6 @@
 # MapController::_on_renderer_ready Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 218–221)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 487–490)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**
@@ -17,5 +17,5 @@ Renderer ready callback: generate mipmaps after initial render completes
 
 ```gdscript
 func _on_renderer_ready() -> void:
-	_update_mipmap_texture()
+	_request_map_refresh(true)
 ```

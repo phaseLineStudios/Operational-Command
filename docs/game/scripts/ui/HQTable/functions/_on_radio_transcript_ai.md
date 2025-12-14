@@ -1,6 +1,6 @@
 # HQTable::_on_radio_transcript_ai Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 119–131)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 138–150)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**
@@ -26,5 +26,5 @@ func _on_radio_transcript_ai(level: String, text: String) -> void:
 	await get_tree().process_frame
 
 	var speaker := _extract_speaker_from_message(text)
-	await document_controller.add_transcript_entry(speaker, text)
+	document_controller.add_transcript_entry(speaker, text)
 ```

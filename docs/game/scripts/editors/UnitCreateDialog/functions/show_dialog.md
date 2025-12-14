@@ -1,6 +1,6 @@
 # UnitCreateDialog::show_dialog Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 104–115)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 118–129)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # FuelSystem::_pick_link_for Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 355–376)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 363–390)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**
@@ -20,6 +20,12 @@ func _pick_link_for(dst: ScenarioUnit) -> String:
 		var id: String = key as String
 		var src: ScenarioUnit = _su[id] as ScenarioUnit
 		if src == null or src.id == dst.id:
+			continue
+		# Don't use dead units as suppliers
+		if src.state_strength <= 0:
+			continue
+		# Only use stationary units as suppliers
+		if src.move_state() != ScenarioUnit.MoveState.IDLE:
 			continue
 		if not _is_tanker(src.unit):
 			continue

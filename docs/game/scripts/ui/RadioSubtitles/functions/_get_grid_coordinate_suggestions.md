@@ -1,6 +1,6 @@
 # RadioSubtitles::_get_grid_coordinate_suggestions Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 344–351)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 385–392)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

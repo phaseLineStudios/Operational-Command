@@ -1,6 +1,6 @@
 # DebugOverlay::_format_fuel_line Function Reference
 
-*Defined at:* `scripts/test/DebugOverlay.gd` (lines 261–266)</br>
+*Defined at:* `scripts/test/DebugOverlay.gd` (lines 257–262)</br>
 *Belongs to:* [DebugOverlay](../../DebugOverlay.md)
 
 **Signature**

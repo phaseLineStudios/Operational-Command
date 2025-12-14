@@ -1,6 +1,6 @@
 # DebugMenuSaveEditor::refresh Function Reference
 
-*Defined at:* `scripts/ui/DebugMenuSaveEditor.gd` (lines 17–158)</br>
+*Defined at:* `scripts/ui/DebugMenuSaveEditor.gd` (lines 17–149)</br>
 *Belongs to:* [DebugMenuSaveEditor](../../DebugMenuSaveEditor.md)
 
 **Signature**
@@ -70,15 +70,6 @@ func refresh(parent: Node) -> void:
 		func(): show_select_current_mission_dialog(parent, save, current_mission_edit)
 	)
 	current_mission_hbox.add_child(current_mission_select_btn)
-
-	# Replacement Pool
-	_add_row_int(
-		"Replacement Pool",
-		save.replacement_pool,
-		func(value):
-			save.replacement_pool = int(value)
-			Persistence.save_to_file(save)
-	)
 
 	# Total Playtime (read-only, formatted)
 	var hours := int(save.total_playtime_seconds / 3600.0)

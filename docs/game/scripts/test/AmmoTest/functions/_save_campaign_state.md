@@ -1,6 +1,6 @@
 # AmmoTest::_save_campaign_state Function Reference
 
-*Defined at:* `scripts/test/AmmoTest.gd` (lines 269–274)</br>
+*Defined at:* `scripts/test/AmmoTest.gd` (lines 275–280)</br>
 *Belongs to:* [AmmoTest](../../AmmoTest.md)
 
 **Signature**

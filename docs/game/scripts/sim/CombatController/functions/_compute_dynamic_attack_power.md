@@ -1,6 +1,6 @@
 # CombatController::_compute_dynamic_attack_power Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 483–502)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 484–503)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**
@@ -27,8 +27,8 @@ func _compute_dynamic_attack_power(attacker: ScenarioUnit) -> float:
 	base_attack = max(base_attack, 0.0)
 
 	var morale_factor: float = clamp(unit.morale, 0.1, 1.25)
-	var cohesion_factor: float = lerp(0.35, 1.0, clamp(unit.cohesion, 0.0, 1.0))
-	var equipment_factor: float = lerp(0.4, 1.0, clamp(unit.state_equipment, 0.0, 1.0))
+	var cohesion_factor: float = lerp(0.35, 1.0, clamp(attacker.cohesion, 0.0, 1.0))
+	var equipment_factor: float = lerp(0.4, 1.0, clamp(attacker.state_equipment, 0.0, 1.0))
 	var movement_factor: float = 1.0
 	if attacker.move_state() == ScenarioUnit.MoveState.MOVING:
 		movement_factor = 0.9

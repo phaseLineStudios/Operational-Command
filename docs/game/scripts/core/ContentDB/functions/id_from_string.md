@@ -1,6 +1,6 @@
 # ContentDB::id_from_string Function Reference
 
-*Defined at:* `scripts/core/ContentDB.gd` (lines 542–546)</br>
+*Defined at:* `scripts/core/ContentDB.gd` (lines 599–603)</br>
 *Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**

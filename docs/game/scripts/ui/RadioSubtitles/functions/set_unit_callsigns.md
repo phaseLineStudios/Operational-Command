@@ -1,6 +1,6 @@
 # RadioSubtitles::set_unit_callsigns Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 67–70)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 101–104)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # ScenarioEditor::_unhandled_key_input Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 379–399)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 381–401)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

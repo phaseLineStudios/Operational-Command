@@ -1,6 +1,6 @@
 # TTSService::_get_model_path Function Reference
 
-*Defined at:* `scripts/radio/TTSService.gd` (lines 187–205)</br>
+*Defined at:* `scripts/radio/TTSService.gd` (lines 216–234)</br>
 *Belongs to:* [TTSService](../../TTSService.md)
 
 **Signature**

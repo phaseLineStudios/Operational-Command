@@ -1,6 +1,6 @@
 # DebugMenuSaveEditor::_add_row Function Reference
 
-*Defined at:* `scripts/ui/DebugMenuSaveEditor.gd` (lines 160–179)</br>
+*Defined at:* `scripts/ui/DebugMenuSaveEditor.gd` (lines 151–170)</br>
 *Belongs to:* [DebugMenuSaveEditor](../../DebugMenuSaveEditor.md)
 
 **Signature**

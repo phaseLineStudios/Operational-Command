@@ -1,6 +1,6 @@
 # AIController::unregister_unit Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 74–86)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 75–87)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

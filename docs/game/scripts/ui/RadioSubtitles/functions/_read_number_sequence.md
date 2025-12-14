@@ -1,6 +1,6 @@
 # RadioSubtitles::_read_number_sequence Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 433–508)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 480–555)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

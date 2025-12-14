@@ -1,6 +1,6 @@
 # MovementAdapter::request_hold_area Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 369–387)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 371–389)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

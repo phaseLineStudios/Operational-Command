@@ -1,6 +1,6 @@
 # ScenarioEditor::_start_place_task_tool Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 207–212)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 209–214)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
