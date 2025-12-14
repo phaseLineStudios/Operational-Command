@@ -330,8 +330,8 @@
 		  "combat_mode": 2.0
 		},
 		"position_m": {
-		  "x": 1902.3271484375,
-		  "y": 1238.85595703125
+		  "x": 1972.52172851563,
+		  "y": 1195.58508300781
 		},
 		"prev_index": -1,
 		"task_type": "set_combat_mode",
@@ -344,8 +344,8 @@
 
 		},
 		"position_m": {
-		  "x": 1874.48559570313,
-		  "y": 1323.6005859375
+		  "x": 1835.63220214844,
+		  "y": 1310.39562988281
 		},
 		"prev_index": 0,
 		"task_type": "move",
@@ -732,8 +732,13 @@
 		"id": "frg_bw_opfor_1",
 		"playable": false,
 		"position": {
+<<<<<<< HEAD
 		  "x": 2060.09741210938,
 		  "y": 1244.36572265625
+=======
+		  "x": 1969.70947265625,
+		  "y": 1257.82788085938
+>>>>>>> origin/main
 		},
 		"state": {
 		  "cohesion": 1.0,
@@ -742,7 +747,11 @@
 		  },
 		  "state_equipment": 0.0,
 		  "state_injured": 0.0,
+<<<<<<< HEAD
 		  "state_strength": 0.0
+=======
+		  "state_strength": 31.0
+>>>>>>> origin/main
 		},
 		"unit_id": "frg_bw_opfor"
 	  },
@@ -764,7 +773,11 @@
 		  },
 		  "state_equipment": 0.0,
 		  "state_injured": 0.0,
+<<<<<<< HEAD
 		  "state_strength": 0.0
+=======
+		  "state_strength": 28.0
+>>>>>>> origin/main
 		},
 		"unit_id": "frg_opfor_2_bundeswehr"
 	  }
@@ -894,11 +907,75 @@
 		"title": "FOXTROT"
 	  }
 	]
+<<<<<<< HEAD
   },
   "weather": {
 	"fog_m": 8000.0,
 	"rain": 0.0,
 	"wind_dir": 0.0,
 	"wind_speed_m": 1.0
+=======
+  },
+  "video_path": "res://assets/videos/us_crested_cap_intro.ogv",
+  "video_subtitles": {
+	"subtitles": [
+	  {
+		"end_time": 19.0,
+		"start_time": 12.0,
+		"text": "You have just finished a week of Autumn Forge drills. And, Today is the easy part: a four-lane evaluation."
+	  },
+	  {
+		"end_time": 25.591,
+		"start_time": 19.976,
+		"text": "The Enemy is a mechanized platoon of Bundeswehr playing OPFOR, using NVA tactics."
+	  },
+	  {
+		"end_time": 32.777,
+		"start_time": 25.967,
+		"text": "You should Expect reconnoisance probes, hasty ambushes and simulated mortar strikes using smokes."
+	  },
+	  {
+		"end_time": 41.322,
+		"start_time": 33.795,
+		"text": "Attached to your company is an engineer platoon. and, adjacent forces include Bundeswehr observers and Range Control umpires."
+	  },
+	  {
+		"end_time": 48.219,
+		"start_time": 42.0,
+		"text": "The wildflecken terrain is comprised ridges, fields, a shallow lake and a river crossing."
+	  },
+	  {
+		"end_time": 58.193,
+		"start_time": 49.084,
+		"text": "At zero-nine-hundred, your company will run the four lanes: communication and command, movement and contact, break contact and river crossings. "
+	  },
+	  {
+		"end_time": 64.953,
+		"start_time": 58.785,
+		"text": "These lanes should be done safely, by-the-books, with clean radio comms, and zero incidents."
+	  },
+	  {
+		"end_time": 74.263,
+		"start_time": 66.335,
+		"text": "Your Scouts lead, with tanks on overwatch while TOWs and mortars are in support. engineers will own the river crossing."
+	  },
+	  {
+		"end_time": 82.786,
+		"start_time": 75.062,
+		"text": "Fuel and ammo are topped off, no live rounds. Lane control is call sign RANGE. Medevac is UMPIRE."
+	  },
+	  {
+		"end_time": 87.184,
+		"start_time": 84.027,
+		"text": "Good Luck"
+	  }
+	]
+  },
+  "weather": {
+	"fog_m": 8000.0,
+	"rain": 2.6,
+	"wind_dir": 67.0,
+	"wind_speed_m": 4.0
+>>>>>>> origin/main
   }
 }

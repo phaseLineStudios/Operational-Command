@@ -1,6 +1,6 @@
 # PostProcessController::_ready Function Reference
 
-*Defined at:* `scripts/ui/PostProcessController.gd` (lines 63–71)</br>
+*Defined at:* `scripts/ui/PostProcessController.gd` (lines 90–99)</br>
 *Belongs to:* [PostProcessController](../../PostProcessController.md)
 
 **Signature**
@@ -19,4 +19,5 @@ func _ready() -> void:
 	film_grain_shader = _get_shader(film_grain_rect)
 	general_shader = _get_shader(general_rect)
 	_apply_settings()
+	_apply_read_mode(read_mode_enabled)
 ```

@@ -1,126 +1,133 @@
 class_name UnitVoiceResponses
 extends Node
-## Generates unit voice acknowledgments for orders.
-## Connects to OrdersRouter signals and triggers TTS responses.
+## Main controller for unit voice responses.
+##
+## Manages both manual acknowledgments (order responses) and automatic responses
+## (simulation events). Emits transmission signals for sound effect integration.
 
 ## Emitted when a unit generates a voice response.
 ## [param callsign] The unit's callsign.
 ## [param message] The full message text.
 signal unit_response(callsign: String, message: String)
 
-## Acknowledgment phrases by order type.
-const ACKNOWLEDGMENTS := {
-	"MOVE":
-	[
-		"Moving out.",
-		"Roger, moving.",
-		"On the way.",
-		"Wilco, moving to position.",
-		"Acknowledged, moving."
-	],
-	"HOLD":
-	[
-		"Holding position.",
-		"Roger, holding.",
-		"Holding here.",
-		"Copy, holding position.",
-		"Acknowledged, holding."
-	],
-	"CANCEL":
-	[
-		"Roger, canceling order.",
-		"Acknowledged, standing by.",
-		"Copy, canceling.",
-		"Order canceled."
-	],
-	"ATTACK":
-	[
-		"Engaging target.",
-		"Roger, engaging.",
-		"Attack confirmed.",
-		"Wilco, engaging hostile.",
-		"Copy, attacking."
-	],
-	"DEFEND":
-	[
-		"Roger, going defensive.",
-		"Copy, defensive position.",
-		"Acknowledged, defending.",
-		"Going defensive."
-	],
-	"RECON":
-	[
-		"Roger, moving to observe.",
-		"Copy, recon mission.",
-		"Acknowledged, reconnoitering.",
-		"Moving to recon position."
-	],
-	"FIRE":
-	[
-		"Fire mission acknowledged.",
-		"Roger, firing.",
-		"Copy, engaging target.",
-		"Fire mission, wilco."
-	],
-	"REPORT": ["Roger, sending report.", "Copy, reporting.", "Acknowledged."],
-	"CUSTOM": ["Roger.", "Acknowledged.", "Copy."]
-}
+## Emitted when a unit starts transmitting on radio.
+## [param callsign] The unit's callsign.
+signal transmission_start(callsign: String)
 
-## Reference to TTS service (autoload).
-var tts_service = null
-## Reference to unit index (unit_id -> ScenarioUnit).
+## Emitted when a unit finishes transmitting on radio.
+## [param callsign] The unit's callsign.
+signal transmission_end(callsign: String)
+
+## Path to acknowledgments data file.
+const ACKNOWLEDGMENTS_PATH := "res://data/voice/unit_acknowledgments.json"
+
+var acknowledgments: Dictionary = {}
 var units_by_id: Dictionary = {}
-## Reference to SimWorld for contact data.
 var sim_world: SimWorld = null
-## Reference to terrain renderer for grid conversions.
 var terrain_render: TerrainRender = null
+var _current_transmitter: String = ""
+
+## Reference to auto responses controller.
+@onready var auto_responses: UnitAutoResponses = %AutoResponses
 
 
 func _ready() -> void:
-	# Reference the TTS autoload
-	tts_service = get_node_or_null("/root/TTSService")
-	if not tts_service:
-		push_warning("UnitVoiceResponses: TTSService autoload not found.")
+	_load_acknowledgments()
+
+	if TTSService:
+		TTSService.speaking_finished.connect(_on_tts_finished)
+
+	if auto_responses:
+		auto_responses.unit_auto_response.connect(_on_auto_response)
+		auto_responses.transmission_start.connect(_on_auto_transmission_start)
+		auto_responses.transmission_end_requested.connect(_on_auto_transmission_end_requested)
+	else:
+		push_warning("UnitVoiceResponses: UnitAutoResponses not found.")
+
+
+## Load acknowledgment phrases from JSON data file.
+func _load_acknowledgments() -> void:
+	if not FileAccess.file_exists(ACKNOWLEDGMENTS_PATH):
+		push_error("UnitVoiceResponses: Acknowledgments file not found: %s" % ACKNOWLEDGMENTS_PATH)
+		return
+
+	var file := FileAccess.open(ACKNOWLEDGMENTS_PATH, FileAccess.READ)
+	if file == null:
+		push_error(
+			"UnitVoiceResponses: Failed to open acknowledgments file: %s" % ACKNOWLEDGMENTS_PATH
+		)
+		return
+
+	var json_text := file.get_as_text()
+	file.close()
+
+	var json := JSON.new()
+	var error := json.parse(json_text)
+	if error != OK:
+		push_error(
+			(
+				"UnitVoiceResponses: Failed to parse acknowledgments JSON at line %d: %s"
+				% [json.get_error_line(), json.get_error_message()]
+			)
+		)
+		return
+
+	acknowledgments = json.data
+	LogService.info(
+		"Loaded %d acknowledgment categories" % acknowledgments.size(), "UnitVoiceResponses"
+	)
 
 
 ## Initialize with references to units and simulation world.
 ## [param id_index] Dictionary String->ScenarioUnit (by unit id).
 ## [param world] Reference to SimWorld for contact data.
 ## [param terrain_renderer] Reference to TerrainRender for grid conversions.
-func init(id_index: Dictionary, world: Node, terrain_renderer: Node = null) -> void:
+## [param counter_controller] UnitCounterController for spawning counters.
+## [param artillery_controller] ArtilleryController for fire mission responses.
+func init(
+	id_index: Dictionary,
+	world: Node,
+	terrain_renderer: Node = null,
+	counter_controller = null,
+	artillery_controller = null
+) -> void:
 	units_by_id = id_index
 	sim_world = world
 	terrain_render = terrain_renderer
+
+	if auto_responses:
+		auto_responses.init(
+			world, id_index, terrain_renderer, counter_controller, artillery_controller
+		)
 
 
 ## Handle order applied - generate acknowledgment or report.
 ## [param order] Order dictionary from OrdersRouter.
 func _on_order_applied(order: Dictionary) -> void:
-	if not tts_service or not tts_service.is_ready():
+	if not TTSService or not TTSService.is_ready():
 		return
 
 	var order_type := _get_order_type_name(order.get("type", "UNKNOWN"))
 	var callsign := str(order.get("callsign", "Unit"))
 	var unit_id := str(order.get("unit_id", ""))
 
-	# Handle REPORT orders specially
 	if order_type == "REPORT":
 		_handle_report(order, callsign, unit_id)
 		return
 
-	# Get random acknowledgment for this order type
+	if order_type == "FIRE":
+		return
+
 	var ack := _get_acknowledgment(order_type)
 	if ack.is_empty():
 		return
 
-	# Format: "Callsign, acknowledgment"
-	# Example: "Alpha, moving out."
 	var response := "%s, %s" % [callsign, ack]
 
-	# Speak the response
-	tts_service.say(response)
+	_current_transmitter = callsign
+	transmission_start.emit(callsign)
 
-	# Emit signal for transcript logging
+	TTSService.say(response)
 	unit_response.emit(callsign, response)
 
 
@@ -128,7 +135,7 @@ func _on_order_applied(order: Dictionary) -> void:
 ## [param order_type] Order type string (MOVE, ATTACK, etc.).
 ## [return] Random acknowledgment phrase.
 func _get_acknowledgment(order_type: String) -> String:
-	var phrases: Array = ACKNOWLEDGMENTS.get(order_type, [])
+	var phrases: Array = acknowledgments.get(order_type, [])
 	if phrases.is_empty():
 		phrases = ["Roger.", "Copy.", "Acknowledged."]
 
@@ -139,7 +146,6 @@ func _get_acknowledgment(order_type: String) -> String:
 ## [param type] Order type (int or string).
 ## [return] Order type name string.
 func _get_order_type_name(type: Variant) -> String:
-	# Map OrdersParser.OrderType enum indices to string tokens
 	const TYPE_NAMES := {
 		0: "MOVE",
 		1: "HOLD",
@@ -178,13 +184,18 @@ func _handle_report(order: Dictionary, callsign: String, unit_id: String) -> voi
 			report = _generate_position_report(unit, callsign)
 		"contact":
 			report = _generate_contact_report(unit, callsign)
+		"supply":
+			report = _generate_supply_report(unit, callsign)
 		_:
 			report = _generate_status_report(unit, callsign)
 
 	if not report.is_empty():
-		tts_service.say(report)
-		# Emit signal for transcript logging
+		_current_transmitter = callsign
+		transmission_start.emit(callsign)
+
+		TTSService.say(report)
 		unit_response.emit(callsign, report)
+
 	else:
 		LogService.warning("Generated empty report", "UnitVoiceResponses.gd:_handle_report")
 
@@ -196,10 +207,8 @@ func _handle_report(order: Dictionary, callsign: String, unit_id: String) -> voi
 func _generate_status_report(unit: ScenarioUnit, callsign: String) -> String:
 	var parts: Array[String] = []
 
-	# Callsign
 	parts.append(callsign)
 
-	# Status (health/strength)
 	var strength_pct := 0.0
 	if unit.unit and unit.unit.strength > 0:
 		strength_pct = (float(unit.state_strength) / float(unit.unit.strength)) * 100.0
@@ -214,12 +223,10 @@ func _generate_status_report(unit: ScenarioUnit, callsign: String) -> String:
 		status = "light damage"
 	parts.append("status %s" % status)
 
-	# Position (grid coordinate)
 	var grid_pos := _get_grid_position(unit.position_m)
 	if not grid_pos.is_empty():
 		parts.append("position grid %s" % grid_pos)
 
-	# Current task
 	var task := _get_current_task(unit)
 	if not task.is_empty():
 		parts.append(task)
@@ -234,26 +241,21 @@ func _generate_status_report(unit: ScenarioUnit, callsign: String) -> String:
 func _generate_position_report(unit: ScenarioUnit, callsign: String) -> String:
 	var parts: Array[String] = []
 
-	# Callsign
 	parts.append(callsign)
 
-	# Position (grid coordinate)
 	var grid_pos := _get_grid_position(unit.position_m)
 	if not grid_pos.is_empty():
 		parts.append("position grid %s" % grid_pos)
 	else:
 		parts.append("position unknown")
 
-	# Movement state
 	var move_state := unit.move_state()
 	if move_state == ScenarioUnit.MoveState.MOVING:
-		# Get direction to destination
 		var dest := unit.destination_m()
 		if dest != Vector2.ZERO:
 			var dir := _get_cardinal_direction(unit.position_m, dest)
 			parts.append("moving %s" % dir)
 
-			# Speed
 			if unit.unit and unit.unit.speed_kph > 0:
 				parts.append("speed %d kilometers per hour" % int(unit.unit.speed_kph))
 	elif move_state == ScenarioUnit.MoveState.IDLE:
@@ -269,10 +271,8 @@ func _generate_position_report(unit: ScenarioUnit, callsign: String) -> String:
 func _generate_contact_report(unit: ScenarioUnit, callsign: String) -> String:
 	var parts: Array[String] = []
 
-	# Callsign
 	parts.append(callsign)
 
-	# Get contacts from SimWorld
 	if sim_world == null or not sim_world.has_method("get_contacts_for_unit"):
 		parts.append("no contact data available")
 		return ". ".join(parts) + "."
@@ -283,10 +283,8 @@ func _generate_contact_report(unit: ScenarioUnit, callsign: String) -> String:
 		parts.append("no hostile contacts")
 		return ". ".join(parts) + "."
 
-	# Report contacts
 	parts.append("%d hostile contact%s" % [contacts.size(), "s" if contacts.size() > 1 else ""])
 
-	# Report details for each contact (limit to 3 for brevity)
 	var max_contacts := mini(contacts.size(), 3)
 	for i in max_contacts:
 		var contact: ScenarioUnit = contacts[i]
@@ -295,7 +293,6 @@ func _generate_contact_report(unit: ScenarioUnit, callsign: String) -> String:
 
 		var contact_parts: Array[String] = []
 
-		# Callsign or type
 		if not contact.callsign.is_empty():
 			contact_parts.append(contact.callsign)
 		elif contact.unit and not contact.unit.title.is_empty():
@@ -303,7 +300,6 @@ func _generate_contact_report(unit: ScenarioUnit, callsign: String) -> String:
 		else:
 			contact_parts.append("hostile unit")
 
-		# Position
 		var grid_pos := _get_grid_position(contact.position_m)
 		if not grid_pos.is_empty():
 			contact_parts.append("grid %s" % grid_pos)
@@ -321,6 +317,63 @@ func _generate_contact_report(unit: ScenarioUnit, callsign: String) -> String:
 				]
 			)
 		)
+
+	return ". ".join(parts) + "."
+
+
+## Generate supply report: ammunition and fuel status.
+## [param unit] ScenarioUnit to report on.
+## [param callsign] Unit callsign.
+## [return] Supply report string.
+func _generate_supply_report(unit: ScenarioUnit, callsign: String) -> String:
+	var parts: Array[String] = []
+
+	parts.append(callsign)
+
+	if sim_world and sim_world.ammo_system:
+		var has_ammo := false
+		for ammo_type in unit.unit.ammunition.keys():
+			var cap: int = int(unit.unit.ammunition.get(ammo_type, 0))
+			if cap > 0:
+				has_ammo = true
+				break
+
+		if has_ammo:
+			var ammo_status := "ammunition nominal"
+			var lowest_pct := 100.0
+
+			for ammo_type in unit.unit.ammunition.keys():
+				var cap: int = int(unit.unit.ammunition.get(ammo_type, 0))
+				if cap <= 0:
+					continue
+				var cur: int = int(unit.state_ammunition.get(ammo_type, 0))
+				var pct := (float(cur) / float(cap)) * 100.0
+				if pct < lowest_pct:
+					lowest_pct = pct
+
+			if lowest_pct <= 0:
+				ammo_status = "ammunition winchester"
+			elif lowest_pct <= unit.unit.ammunition_critical_threshold * 100.0:
+				ammo_status = "ammunition critical"
+			elif lowest_pct <= unit.unit.ammunition_low_threshold * 100.0:
+				ammo_status = "ammunition low"
+
+			parts.append(ammo_status)
+
+	if sim_world and sim_world.fuel_system:
+		var fuel_state = sim_world.fuel_system.get_fuel_state(unit.id)
+		if fuel_state and fuel_state.fuel_capacity > 0:
+			var fuel_pct: float = (fuel_state.state_fuel / fuel_state.fuel_capacity) * 100.0
+			var fuel_status := "fuel nominal"
+
+			if fuel_pct <= 0:
+				fuel_status = "fuel empty"
+			elif fuel_pct <= fuel_state.fuel_critical_threshold * 100.0:
+				fuel_status = "fuel critical"
+			elif fuel_pct <= fuel_state.fuel_low_threshold * 100.0:
+				fuel_status = "fuel low"
+
+			parts.append(fuel_status)
 
 	return ". ".join(parts) + "."
 
@@ -371,14 +424,11 @@ func _get_cardinal_direction(from: Vector2, to: Vector2) -> String:
 	var angle := delta.angle()
 	var degrees := rad_to_deg(angle)
 
-	# Normalize to 0-360
 	while degrees < 0:
 		degrees += 360
 	while degrees >= 360:
 		degrees -= 360
 
-	# Map to cardinal/intercardinal directions
-	# 0° is east, 90° is south, 180° is west, 270° is north
 	if degrees < 22.5 or degrees >= 337.5:
 		return "east"
 	elif degrees < 67.5:
@@ -395,3 +445,47 @@ func _get_cardinal_direction(from: Vector2, to: Vector2) -> String:
 		return "north"
 	else:
 		return "northeast"
+
+
+## Handle automatic voice response from UnitAutoResponses.
+## Re-emits as a unit_response for logging/transcript.
+## [param callsign] Unit callsign.
+## [param message] Response message.
+func _on_auto_response(callsign: String, message: String) -> void:
+	unit_response.emit(callsign, message)
+
+
+## Handle transmission start from auto responses.
+## [param callsign] Unit callsign.
+func _on_auto_transmission_start(callsign: String) -> void:
+	_current_transmitter = callsign
+	transmission_start.emit(callsign)
+
+
+## Handle transmission end request from auto responses.
+## Doesn't emit immediately - waits for TTS to finish.
+## [param callsign] Unit callsign.
+func _on_auto_transmission_end_requested(_callsign: String) -> void:
+	# Just track who wants to end - actual emission happens when TTS finishes
+	pass
+
+
+## Handle TTS audio playback finished.
+## Emits transmission_end for the current transmitter.
+func _on_tts_finished() -> void:
+	if _current_transmitter != "":
+		transmission_end.emit(_current_transmitter)
+		_current_transmitter = ""
+
+
+## Emit a system message (e.g., from TriggerAPI) with radio SFX.
+## [param message] Message text to speak.
+## [param callsign] Optional callsign (defaults to "Mission Control").
+func emit_system_message(message: String, callsign: String = "Mission Control") -> void:
+	_current_transmitter = callsign
+	transmission_start.emit(callsign)
+
+	if TTSService:
+		TTSService.say(message)
+
+	unit_response.emit(callsign, message)

@@ -1,6 +1,6 @@
 # UnitCreateDialog::_generate_preview_icons Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 272–297)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 301–326)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

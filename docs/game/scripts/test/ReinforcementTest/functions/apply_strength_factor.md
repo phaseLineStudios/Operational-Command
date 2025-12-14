@@ -1,6 +1,6 @@
 # ReinforcementTest::apply_strength_factor Function Reference
 
-*Defined at:* `scripts/test/ReinforcementTest.gd` (lines 174–179)</br>
+*Defined at:* `scripts/test/ReinforcementTest.gd` (lines 177–182)</br>
 *Belongs to:* [ReinforcementTest](../../ReinforcementTest.md)
 
 **Signature**

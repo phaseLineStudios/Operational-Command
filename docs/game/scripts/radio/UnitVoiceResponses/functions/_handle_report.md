@@ -1,6 +1,6 @@
 # UnitVoiceResponses::_handle_report Function Reference
 
-*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 165–191)</br>
+*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 171–202)</br>
 *Belongs to:* [UnitVoiceResponses](../../UnitVoiceResponses.md)
 
 **Signature**
@@ -36,13 +36,18 @@ func _handle_report(order: Dictionary, callsign: String, unit_id: String) -> voi
 			report = _generate_position_report(unit, callsign)
 		"contact":
 			report = _generate_contact_report(unit, callsign)
+		"supply":
+			report = _generate_supply_report(unit, callsign)
 		_:
 			report = _generate_status_report(unit, callsign)
 
 	if not report.is_empty():
-		tts_service.say(report)
-		# Emit signal for transcript logging
+		_current_transmitter = callsign
+		transmission_start.emit(callsign)
+
+		TTSService.say(report)
 		unit_response.emit(callsign, report)
+
 	else:
 		LogService.warning("Generated empty report", "UnitVoiceResponses.gd:_handle_report")
 ```

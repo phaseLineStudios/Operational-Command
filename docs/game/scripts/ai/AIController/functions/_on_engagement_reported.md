@@ -1,6 +1,6 @@
 # AIController::_on_engagement_reported Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 284–332)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 285–333)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

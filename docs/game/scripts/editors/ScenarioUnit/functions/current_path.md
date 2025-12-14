@@ -1,6 +1,6 @@
 # ScenarioUnit::current_path Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 252–255)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 271–274)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**

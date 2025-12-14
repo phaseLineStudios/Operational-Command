@@ -1,6 +1,6 @@
 # LOSAdapter::spotting_mul Function Reference
 
-*Defined at:* `scripts/sim/adapters/LOSAdapter.gd` (lines 115–122)</br>
+*Defined at:* `scripts/sim/adapters/LOSAdapter.gd` (lines 146–153)</br>
 *Belongs to:* [LOSAdapter](../../LOSAdapter.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # DocumentController::prev_page_intel Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 728–732)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 793–797)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

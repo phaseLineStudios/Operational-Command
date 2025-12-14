@@ -1,6 +1,6 @@
 # OrdersRouter::_normalize_type Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 427–436)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 432–441)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**

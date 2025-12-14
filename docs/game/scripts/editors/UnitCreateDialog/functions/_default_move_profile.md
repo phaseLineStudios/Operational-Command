@@ -1,6 +1,6 @@
 # UnitCreateDialog::_default_move_profile Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 639–644)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 664–669)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

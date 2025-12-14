@@ -1,6 +1,6 @@
 # UnitSelect::_load_mission Function Reference
 
-*Defined at:* `scripts/ui/UnitSelect.gd` (lines 93–100)</br>
+*Defined at:* `scripts/ui/UnitSelect.gd` (lines 117–124)</br>
 *Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**

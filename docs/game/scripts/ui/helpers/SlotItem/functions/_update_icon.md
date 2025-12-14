@@ -1,6 +1,6 @@
 # SlotItem::_update_icon Function Reference
 
-*Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 111–125)</br>
+*Defined at:* `scripts/ui/helpers/SlotItem.gd` (lines 126–140)</br>
 *Belongs to:* [SlotItem](../../SlotItem.md)
 
 **Signature**

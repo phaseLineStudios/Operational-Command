@@ -1,6 +1,6 @@
 # TerrainData::remove_point Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 293–300)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 305–312)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # UnitCounter::_generate_face Function Reference
 
-*Defined at:* `scripts/sim/UnitCounter.gd` (lines 53–83)</br>
+*Defined at:* `scripts/sim/UnitCounter.gd` (lines 104–156)</br>
 *Belongs to:* [UnitCounter](../../UnitCounter.md)
 
 **Signature**
@@ -13,6 +13,12 @@ func _generate_face(color: Color) -> Texture2D
 
 ```gdscript
 func _generate_face(color: Color) -> Texture2D:
+	var key := _face_cache_key(affiliation, callsign, symbol_type, symbol_size, color)
+	var cached: Variant = _face_texture_cache.get(key, null)
+	if cached is Texture2D:
+		_maybe_free_face_renderer()
+		return cached
+
 	# Create frame-only symbol (white lines) using enum-based API
 	var config := MilSymbolConfig.create_frame_only()
 	config.size = MilSymbolConfig.Size.LARGE
@@ -33,12 +39,28 @@ func _generate_face(color: Color) -> Texture2D:
 	sb.bg_color = color
 	face_background.add_theme_stylebox_override("panel", sb)
 
+	# Update the (disabled-by-default) viewport once to bake the face texture.
+	if face_renderer:
+		face_renderer.render_target_update_mode = SubViewport.UPDATE_ONCE
+
 	# Wait for viewport to render
 	await get_tree().process_frame
 	await get_tree().process_frame
 
+	if face_renderer == null:
+		LogService.warning("UnitCounter: FaceRenderer missing", "UnitCounter.gd")
+		return unit_symbol
+
 	var img := face_renderer.get_texture().get_image()
 	img.generate_mipmaps()
 
-	return ImageTexture.create_from_image(img)
+	var tex: Texture2D = ImageTexture.create_from_image(img)
+	_face_texture_cache[key] = tex
+	_face_cache_order.append(key)
+	if _face_cache_order.size() > _FACE_CACHE_MAX_ENTRIES:
+		var old_key: String = _face_cache_order.pop_front()
+		_face_texture_cache.erase(old_key)
+
+	_maybe_free_face_renderer()
+	return tex
 ```

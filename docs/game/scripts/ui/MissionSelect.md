@@ -33,21 +33,31 @@ Show title tooltip for pins.
 - [`func _make_pin(m: ScenarioData) -> BaseButton`](MissionSelect/functions/_make_pin.md) — Builds a pin control.
 - [`func _apply_transparent_button_style(btn: Button) -> void`](MissionSelect/functions/_apply_transparent_button_style.md) — Remove all button styleboxes so only icon/text remains.
 - [`func _update_pin_positions() -> void`](MissionSelect/functions/_update_pin_positions.md) — Reposition pins with letterbox awareness.
+- [`func _update_pin_highlight() -> void`](MissionSelect/functions/_update_pin_highlight.md) — Highlight latest unlocked mission pin and fade previous ones.
+- [`func _on_pin_mouse_entered(pin: Control) -> void`](MissionSelect/functions/_on_pin_mouse_entered.md) — Temporarily restore full alpha while hovering a pin.
+- [`func _on_pin_mouse_exited(pin: Control) -> void`](MissionSelect/functions/_on_pin_mouse_exited.md) — Restore highlight alpha when mouse leaves.
 - [`func _on_pin_pressed(mission: ScenarioData, pin_btn: BaseButton) -> void`](MissionSelect/functions/_on_pin_pressed.md) — Open the mission card; create/remove image node depending on presence.
 - [`func _on_start_pressed() -> void`](MissionSelect/functions/_on_start_pressed.md) — Start current mission.
 - [`func _on_back_pressed() -> void`](MissionSelect/functions/_on_back_pressed.md) — Return to campaign select.
 - [`func _on_backdrop_gui_input(event: InputEvent) -> void`](MissionSelect/functions/_on_backdrop_gui_input.md) — Decide if an overlay click should close the card.
 - [`func _point_over_any_pin(view_pt: Vector2) -> bool`](MissionSelect/functions/_point_over_any_pin.md) — True if the viewport point lies over any mission pin.
 - [`func _close_card() -> void`](MissionSelect/functions/_close_card.md) — Hide card and clear selection.
+- [`func _update_mission_locked_states() -> void`](MissionSelect/functions/_update_mission_locked_states.md) — Update which missions are locked based on campaign progression.
+- [`func is_mission_available(mission: ScenarioData) -> bool`](MissionSelect/functions/is_mission_available.md) — Check if a mission is available to play.
+- [`func _on_pins_layer_draw() -> void`](MissionSelect/functions/_on_pins_layer_draw.md) — Draw mission path between pins in campaign order.
 - [`func _clear_children(node: Node) -> void`](MissionSelect/functions/_clear_children.md) — Remove all children from a node.
 
 ## Public Attributes
 
 - `Texture2D pin_texture` — Optional custom pin icon; if empty, a text-dot button is used.
+- `Array[AudioStream] pin_hover_sounds` — Sound to play when hovering over a pin
+- `Array[AudioStream] pin_click_sounds` — Sound to play when clicking a pin
 - `ScenarioData _selected_mission`
 - `CampaignData _campaign`
 - `Array[ScenarioData] _scenarios`
 - `BaseButton _card_pin_button`
+- `Dictionary _mission_locked`
+- `Dictionary _pin_centers_by_id`
 - `OCMenuContainer _container`
 - `OCMenuButton _btn_back`
 - `TextureRect _map_rect`
@@ -111,6 +121,30 @@ func _update_pin_positions() -> void
 
 Reposition pins with letterbox awareness.
 
+### _update_pin_highlight
+
+```gdscript
+func _update_pin_highlight() -> void
+```
+
+Highlight latest unlocked mission pin and fade previous ones.
+
+### _on_pin_mouse_entered
+
+```gdscript
+func _on_pin_mouse_entered(pin: Control) -> void
+```
+
+Temporarily restore full alpha while hovering a pin.
+
+### _on_pin_mouse_exited
+
+```gdscript
+func _on_pin_mouse_exited(pin: Control) -> void
+```
+
+Restore highlight alpha when mouse leaves.
+
 ### _on_pin_pressed
 
 ```gdscript
@@ -159,6 +193,31 @@ func _close_card() -> void
 
 Hide card and clear selection.
 
+### _update_mission_locked_states
+
+```gdscript
+func _update_mission_locked_states() -> void
+```
+
+Update which missions are locked based on campaign progression.
+First mission is always unlocked; subsequent missions require previous mission completion.
+
+### is_mission_available
+
+```gdscript
+func is_mission_available(mission: ScenarioData) -> bool
+```
+
+Check if a mission is available to play.
+
+### _on_pins_layer_draw
+
+```gdscript
+func _on_pins_layer_draw() -> void
+```
+
+Draw mission path between pins in campaign order.
+
 ### _clear_children
 
 ```gdscript
@@ -178,6 +237,26 @@ var pin_texture: Texture2D
 Decorators: `@export`
 
 Optional custom pin icon; if empty, a text-dot button is used.
+
+### pin_hover_sounds
+
+```gdscript
+var pin_hover_sounds: Array[AudioStream]
+```
+
+Decorators: `@export`
+
+Sound to play when hovering over a pin
+
+### pin_click_sounds
+
+```gdscript
+var pin_click_sounds: Array[AudioStream]
+```
+
+Decorators: `@export`
+
+Sound to play when clicking a pin
 
 ### _selected_mission
 
@@ -201,6 +280,18 @@ var _scenarios: Array[ScenarioData]
 
 ```gdscript
 var _card_pin_button: BaseButton
+```
+
+### _mission_locked
+
+```gdscript
+var _mission_locked: Dictionary
+```
+
+### _pin_centers_by_id
+
+```gdscript
+var _pin_centers_by_id: Dictionary
 ```
 
 ### _container

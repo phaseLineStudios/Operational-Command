@@ -1,6 +1,6 @@
 # AIController::pause_unit Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 106–110)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 107–111)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

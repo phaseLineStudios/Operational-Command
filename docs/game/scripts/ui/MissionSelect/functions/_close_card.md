@@ -1,6 +1,6 @@
 # MissionSelect::_close_card Function Reference
 
-*Defined at:* `scripts/ui/MissionSelect.gd` (lines 197–203)</br>
+*Defined at:* `scripts/ui/MissionSelect.gd` (lines 314–320)</br>
 *Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**

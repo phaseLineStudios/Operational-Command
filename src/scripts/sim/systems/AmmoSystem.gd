@@ -18,6 +18,8 @@ signal ammo_empty(unit_id: String)
 signal resupply_started(src_unit_id: String, dst_unit_id: String)
 ## Emitted when resupply finishes (recipient full OR stock exhausted).
 signal resupply_completed(src_unit_id: String, dst_unit_id: String)
+## Emitted when supplier runs out of ammunition stock.
+signal supplier_exhausted(src_unit_id: String)
 
 ## Default caps/thresholds applied to newly registered units if missing.
 @export var ammo_profile: AmmoProfile
@@ -175,8 +177,14 @@ func _is_logistics(su: ScenarioUnit) -> bool:
 	return false
 
 
-## True if any ammo type is below its cap.
+## True if any ammo type is below its cap, unit is alive, and is stationary.
 func _needs_ammo(su: ScenarioUnit) -> bool:
+	# Don't resupply dead units
+	if su.state_strength <= 0:
+		return false
+	# Only resupply stationary units
+	if su.move_state() != ScenarioUnit.MoveState.IDLE:
+		return false
 	for t in su.unit.ammunition.keys():
 		if int(su.state_ammunition.get(t, 0)) < int(su.unit.ammunition[t]):
 			return true
@@ -199,6 +207,12 @@ func _pick_link_for(dst: ScenarioUnit) -> String:
 		if not _logi.get(sid, false):
 			continue
 		var src: ScenarioUnit = _units[sid]
+		# Don't use dead units as suppliers
+		if src.state_strength <= 0:
+			continue
+		# Only use stationary units as suppliers
+		if src.move_state() != ScenarioUnit.MoveState.IDLE:
+			continue
 		if not _has_stock(src):
 			continue
 		if not _within_radius(src, dst):
@@ -229,7 +243,17 @@ func _transfer_tick(delta: float) -> void:
 	for dst_id in _active_links.keys().duplicate():
 		var src: ScenarioUnit = _units.get(_active_links[dst_id]) as ScenarioUnit
 		var dst: ScenarioUnit = _units.get(dst_id) as ScenarioUnit
-		if src == null or dst == null or not _within_radius(src, dst) or not _has_stock(src):
+		if src == null or dst == null:
+			_finish_link(dst_id)
+			continue
+		# Break link if either unit moves
+		if (
+			src.move_state() != ScenarioUnit.MoveState.IDLE
+			or dst.move_state() != ScenarioUnit.MoveState.IDLE
+		):
+			_finish_link(dst_id)
+			continue
+		if not _within_radius(src, dst) or not _has_stock(src):
 			_finish_link(dst_id)
 			continue
 
@@ -266,7 +290,10 @@ func _transfer_tick(delta: float) -> void:
 
 		_xfer_accum[dst_id] = acc - float(transferred)
 
-		if not _needs_ammo(dst) or not _has_stock(src):
+		var out_of_stock := not _has_stock(src)
+		if not _needs_ammo(dst) or out_of_stock:
+			if out_of_stock:
+				emit_signal("supplier_exhausted", _active_links[dst_id])
 			_finish_link(dst_id)
 
 

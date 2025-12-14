@@ -1,6 +1,6 @@
 # NewScenarioDialog::_add_units_by_ids Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 299–316)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 391–408)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**

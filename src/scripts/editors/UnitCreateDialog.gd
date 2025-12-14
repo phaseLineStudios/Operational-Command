@@ -203,9 +203,9 @@ func _load_from_working() -> void:
 	_update_attack_preview()
 
 
-## Load ammo amounts from _working.ammo into the SpinBoxes.
+## Load ammo amounts from _working.ammunition into the SpinBoxes.
 func _load_ammo_from_working() -> void:
-	var ammo_dict: Variant = _working.get("ammo")
+	var ammo_dict: Variant = _working.ammunition
 	if typeof(ammo_dict) != TYPE_DICTIONARY:
 		ammo_dict = {}
 

@@ -1,6 +1,6 @@
 # FuelSystem::_terrain_slope_multiplier Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 236–258)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 238–260)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

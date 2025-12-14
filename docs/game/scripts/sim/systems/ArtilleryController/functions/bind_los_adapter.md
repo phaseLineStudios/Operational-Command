@@ -1,6 +1,6 @@
 # ArtilleryController::bind_los_adapter Function Reference
 
-*Defined at:* `scripts/sim/systems/ArtilleryController.gd` (lines 105–108)</br>
+*Defined at:* `scripts/sim/systems/ArtilleryController.gd` (lines 135–138)</br>
 *Belongs to:* [ArtilleryController](../../ArtilleryController.md)
 
 **Signature**

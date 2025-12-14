@@ -1,6 +1,6 @@
 # AIController::_ready Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 49–57)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 50–58)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

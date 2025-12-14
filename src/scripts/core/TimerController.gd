@@ -36,6 +36,15 @@ enum TimeState { PAUSED, SPEED_1X, SPEED_2X }
 ## Enable debug visualization of collision box.
 @export var debug_draw_collision: bool = false
 
+@export_group("Button Sounds")
+## Button press sound effects to play randomly when button is pressed
+@export
+var button_press_sounds: Array[AudioStream] = [preload("res://audio/sfx/sfx_timer_button.wav")]
+## Button release sound effects to play randomly when button is released
+@export var button_release_sounds: Array[AudioStream] = []
+## Random pitch variation range (0.0 = no variation, 0.1 = ±10%, etc.)
+@export var button_sound_pitch_variation: float = 0.1
+
 @export_group("LCD Display")
 ## Surface material override index for LCD.
 @export var lcd_surface_index: int = 1
@@ -65,30 +74,34 @@ var _skeleton: Skeleton3D
 var _pause_bone_idx: int = -1
 var _speed_1x_bone_idx: int = -1
 var _speed_2x_bone_idx: int = -1
-var _animating_bones: Dictionary = {}  # bone_idx -> {target_y, duration, elapsed}
+var _animating_bones: Dictionary = {}
 var _debug_mesh: MeshInstance3D
-var _current_pressed_bone: int = -1  # Currently depressed button bone
-var _bone_rest_positions: Dictionary = {}  # bone_idx -> original_y
+var _current_pressed_bone: int = -1
+var _bone_rest_positions: Dictionary = {}
 var _lcd_viewport: SubViewport
 var _lcd_label: Label
 var _lcd_icon: TextureRect
-var _sim_elapsed_time: float = 0.0  # Accumulated simulation time
+var _sim_elapsed_time: float = 0.0
+var _button_sound_player: AudioStreamPlayer3D
+var _lcd_last_elapsed_sec: int = -1
+var _lcd_last_state: int = -1
 
 
 func _ready() -> void:
-	# Setup collision body for button clicks
+	if not button_press_sounds.is_empty() or not button_release_sounds.is_empty():
+		_button_sound_player = AudioStreamPlayer3D.new()
+		_button_sound_player.bus = "SFX"
+		timer.add_child(_button_sound_player)
+
 	_setup_collision()
 
-	# Setup LCD display
 	_setup_lcd_display()
 
-	# Find skeleton in children
 	_skeleton = _find_skeleton(timer)
 	if _skeleton == null:
 		push_warning("TimerController: No Skeleton3D found in Timer model")
 		return
 
-	# Get bone indices
 	_pause_bone_idx = _skeleton.find_bone(pause_button_bone)
 	_speed_1x_bone_idx = _skeleton.find_bone(speed_1x_button_bone)
 	_speed_2x_bone_idx = _skeleton.find_bone(speed_2x_button_bone)
@@ -100,13 +113,11 @@ func _ready() -> void:
 	if _speed_2x_bone_idx == -1:
 		push_warning("TimerController: Bone '%s' not found" % speed_2x_button_bone)
 
-	# Store rest positions for all buttons
 	for bone_idx in [_pause_bone_idx, _speed_1x_bone_idx, _speed_2x_bone_idx]:
 		if bone_idx >= 0:
 			var pose := _skeleton.get_bone_pose(bone_idx)
 			_bone_rest_positions[bone_idx] = pose.origin.y
 
-	# Set initial time scale and button state
 	_apply_time_state(_current_state)
 	_set_button_pressed(_get_bone_for_state(_current_state))
 
@@ -129,25 +140,20 @@ func _setup_collision() -> void:
 	collision_shape.position = collision_box_position
 	static_body.add_child(collision_shape)
 
-	# Setup debug visualization if enabled
 	if debug_draw_collision:
 		_setup_debug_draw(static_body)
 
 
 func _process(delta: float) -> void:
-	# Accumulate simulation time based on current state
 	if _current_state == TimeState.PAUSED:
-		# Time is paused, don't accumulate
 		pass
 	elif _current_state == TimeState.SPEED_1X:
 		_sim_elapsed_time += delta
 	elif _current_state == TimeState.SPEED_2X:
 		_sim_elapsed_time += delta * 2.0
 
-	# Update LCD display
 	_update_lcd_display()
 
-	# Animate button presses
 	if _skeleton == null:
 		return
 
@@ -156,7 +162,6 @@ func _process(delta: float) -> void:
 		anim.elapsed += delta
 
 		var t := clampf(anim.elapsed / anim.duration, 0.0, 1.0)
-		# Ease out for smooth animation
 		var eased := 1.0 - pow(1.0 - t, 3.0)
 
 		var current_pose := _skeleton.get_bone_pose(bone_idx)
@@ -193,12 +198,10 @@ func _check_button_click(mouse_pos: Vector2) -> void:
 	if hit.is_empty():
 		return
 
-	# Check if we hit this timer object
 	var collider: Node = hit.collider
 	if not _is_child_of_timer(collider):
 		return
 
-	# Determine which button was clicked based on hit position
 	var hit_local := timer.to_local(hit.position)
 	var clicked_bone := _get_closest_button_bone(hit_local)
 
@@ -228,7 +231,6 @@ func _get_closest_button_bone(local_pos: Vector3) -> int:
 			closest_dist = dist
 			closest_bone = bone_idx
 
-	# Only consider it a click if reasonably close (within 5cm)
 	if closest_dist > 0.05:
 		return -1
 
@@ -237,18 +239,14 @@ func _get_closest_button_bone(local_pos: Vector3) -> int:
 
 ## Handle button press.
 func _on_button_pressed(bone_idx: int) -> void:
-	# Don't do anything if same button pressed
 	if bone_idx == _current_pressed_bone:
 		return
 
-	# Release previous button
 	if _current_pressed_bone >= 0:
 		_release_button(_current_pressed_bone)
 
-	# Press new button (stays down)
 	_set_button_pressed(bone_idx)
 
-	# Change time state
 	if bone_idx == _pause_bone_idx:
 		_set_time_state(TimeState.PAUSED)
 	elif bone_idx == _speed_1x_bone_idx:
@@ -266,7 +264,6 @@ func _set_button_pressed(bone_idx: int) -> void:
 	var start_y := current_pose.origin.y
 	var rest_y: float = _bone_rest_positions.get(bone_idx, 0.0)
 
-	# Animate to pressed position
 	_animating_bones[bone_idx] = {
 		"start_y": start_y,
 		"target_y": rest_y - press_depth,
@@ -275,6 +272,8 @@ func _set_button_pressed(bone_idx: int) -> void:
 	}
 
 	_current_pressed_bone = bone_idx
+
+	_play_button_press_sound()
 
 
 ## Release a button (animate back to rest position).
@@ -286,10 +285,11 @@ func _release_button(bone_idx: int) -> void:
 	var start_y := current_pose.origin.y
 	var rest_y: float = _bone_rest_positions.get(bone_idx, 0.0)
 
-	# Animate back to rest position
 	_animating_bones[bone_idx] = {
 		"start_y": start_y, "target_y": rest_y, "duration": press_duration, "elapsed": 0.0
 	}
+
+	_play_button_release_sound()
 
 
 ## Set the time state and apply it.
@@ -356,11 +356,10 @@ func _setup_debug_draw(static_body: StaticBody3D) -> void:
 	box_mesh.size = collision_box_size
 	_debug_mesh.mesh = box_mesh
 
-	# Create transparent material
 	var material := StandardMaterial3D.new()
-	material.albedo_color = Color(0.0, 1.0, 0.0, 0.3)  # Green with transparency
+	material.albedo_color = Color(0.0, 1.0, 0.0, 0.3)
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED  # Draw both sides
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	_debug_mesh.material_override = material
 
 	_debug_mesh.position = collision_box_position
@@ -373,37 +372,30 @@ func _setup_lcd_display() -> void:
 		push_warning("TimerController: Timer reference not set for LCD")
 		return
 
-	# Find the MeshInstance3D in the timer
 	var mesh_instance := _find_mesh_instance(timer)
 	if mesh_instance == null:
 		push_warning("TimerController: No MeshInstance3D found for LCD display")
 		return
 
-	# Create SubViewport for rendering LCD content
 	_lcd_viewport = SubViewport.new()
 	_lcd_viewport.size = lcd_resolution
-	_lcd_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_lcd_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	_lcd_viewport.transparent_bg = false
 	add_child(_lcd_viewport)
 
-	# Create background ColorRect
 	var bg := ColorRect.new()
 	bg.color = lcd_bg_color
 	bg.size = Vector2(lcd_resolution)
 	_lcd_viewport.add_child(bg)
 
-	# Create label for time display (left side)
 	_lcd_label = Label.new()
 
-	# Use LabelSettings for better controld
 	var label_settings := LabelSettings.new()
 	label_settings.font = lcd_font
 	label_settings.font_size = lcd_font_size
 	label_settings.font_color = lcd_text_color
 
-	# Apply letter spacing if supported by font variation
 	if lcd_letter_spacing != 0 and lcd_font:
-		# Create a font variation with spacing adjustment
 		var font_variation := FontVariation.new()
 		font_variation.base_font = lcd_font
 		font_variation.spacing_glyph = lcd_letter_spacing
@@ -416,17 +408,14 @@ func _setup_lcd_display() -> void:
 	_lcd_label.size = Vector2(lcd_resolution.x - 60, lcd_resolution.y - 10)
 	_lcd_viewport.add_child(_lcd_label)
 
-	# Create icon display (right side)
 	_lcd_icon = TextureRect.new()
 	_lcd_icon.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
 	_lcd_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_lcd_icon.modulate = lcd_text_color  # Tint icon to match text color
+	_lcd_icon.modulate = lcd_text_color
 	_lcd_icon.size = icon_size
-	# Position at top right with 5px margin
 	_lcd_icon.position = Vector2(lcd_resolution.x - icon_size.x - 15, 0)
 	_lcd_viewport.add_child(_lcd_icon)
 
-	# Create material using viewport texture
 	var lcd_material := StandardMaterial3D.new()
 	var viewport_tex := _lcd_viewport.get_texture()
 	lcd_material.albedo_texture = viewport_tex
@@ -437,27 +426,29 @@ func _setup_lcd_display() -> void:
 	lcd_material.emission_energy_multiplier = 2.0
 	lcd_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 
-	# Apply to surface
 	mesh_instance.set_surface_override_material(lcd_surface_index, lcd_material)
+	_update_lcd_display()
 
 
 ## Update LCD display with current time and mode.
 func _update_lcd_display() -> void:
-	if _lcd_label == null or _lcd_icon == null:
+	if _lcd_label == null or _lcd_icon == null or _lcd_viewport == null:
 		return
 
-	# Use accumulated simulation time
-	var elapsed := _sim_elapsed_time
+	var elapsed_sec: int = int(_sim_elapsed_time)
+	var state_i: int = int(_current_state)
+	if elapsed_sec == _lcd_last_elapsed_sec and state_i == _lcd_last_state:
+		return
 
-	# Format time as MM:SS
-	var minutes := int(elapsed / 60.0)
-	var seconds := int(elapsed) % 60
-	var time_str := "%02d:%02d" % [minutes, seconds]
+	_lcd_last_elapsed_sec = elapsed_sec
+	_lcd_last_state = state_i
 
-	# Update time label
+	var minutes: int = int(elapsed_sec / 60.0)
+	var seconds: int = elapsed_sec % 60
+	var time_str: String = "%02d:%02d" % [minutes, seconds]
+
 	_lcd_label.text = time_str
 
-	# Update icon based on current state
 	match _current_state:
 		TimeState.PAUSED:
 			_lcd_icon.texture = pause_icon
@@ -465,6 +456,8 @@ func _update_lcd_display() -> void:
 			_lcd_icon.texture = play_icon
 		TimeState.SPEED_2X:
 			_lcd_icon.texture = fastforward_icon
+
+	_lcd_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 
 
 ## Find MeshInstance3D in children recursively.
@@ -476,3 +469,33 @@ func _find_mesh_instance(node: Node) -> MeshInstance3D:
 		if result != null:
 			return result
 	return null
+
+
+## Play a random button press sound
+func _play_button_press_sound() -> void:
+	if button_press_sounds.is_empty() or not _button_sound_player:
+		return
+
+	var sound := button_press_sounds[randi() % button_press_sounds.size()]
+	_button_sound_player.stream = sound
+
+	# Apply random pitch variation
+	var pitch_offset := randf_range(-button_sound_pitch_variation, button_sound_pitch_variation)
+	_button_sound_player.pitch_scale = 1.0 + pitch_offset
+
+	_button_sound_player.play()
+
+
+## Play a random button release sound
+func _play_button_release_sound() -> void:
+	if button_release_sounds.is_empty() or not _button_sound_player:
+		return
+
+	var sound := button_release_sounds[randi() % button_release_sounds.size()]
+	_button_sound_player.stream = sound
+
+	# Apply random pitch variation
+	var pitch_offset := randf_range(-button_sound_pitch_variation, button_sound_pitch_variation)
+	_button_sound_player.pitch_scale = 1.0 + pitch_offset
+
+	_button_sound_player.play()

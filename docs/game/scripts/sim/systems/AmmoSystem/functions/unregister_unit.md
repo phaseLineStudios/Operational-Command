@@ -1,6 +1,6 @@
 # AmmoSystem::unregister_unit Function Reference
 
-*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 56–65)</br>
+*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 58–67)</br>
 *Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**

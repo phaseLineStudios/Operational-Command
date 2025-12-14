@@ -1,6 +1,6 @@
 # TerrainData::remove_line Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 265–272)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 277–284)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

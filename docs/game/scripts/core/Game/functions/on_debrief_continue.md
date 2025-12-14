@@ -1,6 +1,6 @@
 # Game::on_debrief_continue Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 168–178)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 277–287)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

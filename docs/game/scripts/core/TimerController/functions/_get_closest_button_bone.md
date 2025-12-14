@@ -1,6 +1,6 @@
 # TimerController::_get_closest_button_bone Function Reference
 
-*Defined at:* `scripts/core/TimerController.gd` (lines 211–237)</br>
+*Defined at:* `scripts/core/TimerController.gd` (lines 214–239)</br>
 *Belongs to:* [TimerController](../../TimerController.md)
 
 **Signature**
@@ -36,7 +36,6 @@ func _get_closest_button_bone(local_pos: Vector3) -> int:
 			closest_dist = dist
 			closest_bone = bone_idx
 
-	# Only consider it a click if reasonably close (within 5cm)
 	if closest_dist > 0.05:
 		return -1
 

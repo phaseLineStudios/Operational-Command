@@ -1,6 +1,6 @@
 # CombatController::_apply_vehicle_damage_resolution Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 553–579)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 554–580)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**
@@ -36,9 +36,9 @@ func _apply_vehicle_damage_resolution(attacker: ScenarioUnit, defender: Scenario
 			vehicle_damage *= clamp(highest_profile * 0.05, 0.25, 3.0)
 
 	var equipment_loss: float = clamp(vehicle_damage * 0.01, 0.0, 1.0)
-	defender.unit.state_equipment = max(defender.unit.state_equipment - equipment_loss, 0.0)
+	defender.state_equipment = max(defender.state_equipment - equipment_loss, 0.0)
 
-	if defender.unit.state_equipment <= 0.05:
+	if defender.state_equipment <= 0.05:
 		var catastrophic_loss: int = int(max(1.0, floor(vehicle_damage * 0.02)))
-		_apply_casualties(defender.unit, catastrophic_loss)
+		_apply_casualties(defender, catastrophic_loss)
 ```

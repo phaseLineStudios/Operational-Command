@@ -1,6 +1,6 @@
 # UnitSelect::_show_unit_stats Function Reference
 
-*Defined at:* `scripts/ui/UnitSelect.gd` (lines 369–379)</br>
+*Defined at:* `scripts/ui/UnitSelect.gd` (lines 405–415)</br>
 *Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**
@@ -22,7 +22,7 @@ func _show_unit_stats(unit: UnitData) -> void:
 	_lbl_def.text = "Defence: %d" % unit.defense
 	_lbl_spot.text = "Spotting Distance: %dm" % unit.spot_m
 	_lbl_range.text = "Engagement Range: %dm" % unit.range_m
-	_lbl_morale.text = "Morale: %d%%" % unit.morale
+	_lbl_morale.text = "Morale: %d%%" % (unit.morale * 100.0)
 	_lbl_speed.text = "Ground Speed: %dkm/h" % unit.speed_kph
-	_lbl_coh.text = "Cohesion: %d%%" % unit.cohesion
+	_lbl_coh.text = "Cohesion: 100%%"  # Cohesion is per-mission state, starts at 100%
 ```

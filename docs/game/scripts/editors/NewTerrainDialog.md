@@ -35,6 +35,10 @@ Open the dialog for creating a new terrain (optionally pass defaults).
 - `SpinBox terrain_grid_x`
 - `SpinBox terrain_grid_y`
 - `SpinBox base_elevation`
+- `LineEdit meta_country`
+- `LineEdit meta_edition`
+- `LineEdit meta_series`
+- `LineEdit meta_sheet`
 - `Button create_btn`
 - `Button cancel_btn`
 
@@ -141,6 +145,30 @@ var terrain_grid_y: SpinBox
 
 ```gdscript
 var base_elevation: SpinBox
+```
+
+### meta_country
+
+```gdscript
+var meta_country: LineEdit
+```
+
+### meta_edition
+
+```gdscript
+var meta_edition: LineEdit
+```
+
+### meta_series
+
+```gdscript
+var meta_series: LineEdit
+```
+
+### meta_sheet
+
+```gdscript
+var meta_sheet: LineEdit
 ```
 
 ### create_btn

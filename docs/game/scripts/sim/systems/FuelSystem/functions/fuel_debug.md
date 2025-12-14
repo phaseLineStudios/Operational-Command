@@ -1,6 +1,6 @@
 # FuelSystem::fuel_debug Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 461–476)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 485–500)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

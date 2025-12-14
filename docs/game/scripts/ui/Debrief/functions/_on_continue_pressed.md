@@ -1,6 +1,6 @@
 # Debrief::_on_continue_pressed Function Reference
 
-*Defined at:* `scripts/ui/Debrief.gd` (lines 349–352)</br>
+*Defined at:* `scripts/ui/Debrief.gd` (lines 372–375)</br>
 *Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**

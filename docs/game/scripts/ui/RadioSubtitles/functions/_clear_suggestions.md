@@ -1,6 +1,6 @@
 # RadioSubtitles::_clear_suggestions Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 115–122)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 149–156)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

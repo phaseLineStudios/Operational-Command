@@ -37,9 +37,11 @@ Replace a key-value row (optional category row).
 - [`func _ready() -> void`](UnitCreateDialog/functions/_ready.md)
 - [`func show_dialog(state: bool, unit: UnitData = null) -> void`](UnitCreateDialog/functions/show_dialog.md) — Open dialog (CREATE if unit == null).
 - [`func _load_from_working() -> void`](UnitCreateDialog/functions/_load_from_working.md) — Load UI from working data.
-- [`func _load_ammo_from_working() -> void`](UnitCreateDialog/functions/_load_ammo_from_working.md) — Load ammo amounts from _working.ammo into the SpinBoxes.
+- [`func _load_ammo_from_working() -> void`](UnitCreateDialog/functions/_load_ammo_from_working.md) — Load ammo amounts from _working.ammunition into the SpinBoxes.
 - [`func _collect_into_working() -> void`](UnitCreateDialog/functions/_collect_into_working.md) — Apply UI -> working data.
 - [`func _collect_ammo_into_working() -> void`](UnitCreateDialog/functions/_collect_ammo_into_working.md) — Collect ammo amounts from SpinBoxes into _working.ammo.
+- [`func _gather_ammo_from_inputs() -> Dictionary`](UnitCreateDialog/functions/_gather_ammo_from_inputs.md)
+- [`func _update_attack_preview() -> void`](UnitCreateDialog/functions/_update_attack_preview.md)
 - [`func _on_save_pressed() -> void`](UnitCreateDialog/functions/_on_save_pressed.md) — Emit save signal.
 - [`func _on_cancel_pressed() -> void`](UnitCreateDialog/functions/_on_cancel_pressed.md) — Emit cancel signal.
 - [`func _generate_preview_icons(_idx: int) -> void`](UnitCreateDialog/functions/_generate_preview_icons.md)
@@ -80,7 +82,8 @@ Replace a key-value row (optional category row).
 - `LineEdit _role`
 - `SpinBox _cost`
 - `SpinBox _strength`
-- `SpinBox _attack`
+- `Label _attack_label`
+- `Label _attack_value`
 - `SpinBox _defense`
 - `SpinBox _spot_m`
 - `SpinBox _range_m`
@@ -106,6 +109,7 @@ Replace a key-value row (optional category row).
 - `Button _equip_add`
 - `VBoxContainer _equip_list`
 - `GridContainer _ammo_container`
+- `FoldableContainer _stats_container`
 - `LineEdit _th_key`
 - `SpinBox _th_val`
 - `Button _th_add`
@@ -156,7 +160,7 @@ Load UI from working data.
 func _load_ammo_from_working() -> void
 ```
 
-Load ammo amounts from _working.ammo into the SpinBoxes.
+Load ammo amounts from _working.ammunition into the SpinBoxes.
 
 ### _collect_into_working
 
@@ -173,6 +177,18 @@ func _collect_ammo_into_working() -> void
 ```
 
 Collect ammo amounts from SpinBoxes into _working.ammo.
+
+### _gather_ammo_from_inputs
+
+```gdscript
+func _gather_ammo_from_inputs() -> Dictionary
+```
+
+### _update_attack_preview
+
+```gdscript
+func _update_attack_preview() -> void
+```
 
 ### _on_save_pressed
 
@@ -450,10 +466,16 @@ var _cost: SpinBox
 var _strength: SpinBox
 ```
 
-### _attack
+### _attack_label
 
 ```gdscript
-var _attack: SpinBox
+var _attack_label: Label
+```
+
+### _attack_value
+
+```gdscript
+var _attack_value: Label
 ```
 
 ### _defense
@@ -604,6 +626,12 @@ var _equip_list: VBoxContainer
 
 ```gdscript
 var _ammo_container: GridContainer
+```
+
+### _stats_container
+
+```gdscript
+var _stats_container: FoldableContainer
 ```
 
 ### _th_key

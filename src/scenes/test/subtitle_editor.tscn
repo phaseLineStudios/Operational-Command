@@ -1,0 +1,237 @@
+[gd_scene load_steps=2 format=3 uid="uid://diyeemw61cbl5"]
+
+[ext_resource type="Script" uid="uid://do0gpjcrs4ok1" path="res://scripts/ui/SubtitleEditor.gd" id="1_subtitle_editor"]
+
+[node name="SubtitleEditor" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_subtitle_editor")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"HeaderLarge"
+text = "Subtitle Editor"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="FileControls" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="NewTrackButton" type="Button" parent="MarginContainer/VBoxContainer/FileControls"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "New Track"
+
+[node name="LoadTrackButton" type="Button" parent="MarginContainer/VBoxContainer/FileControls"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Load Track"
+
+[node name="SaveTrackButton" type="Button" parent="MarginContainer/VBoxContainer/FileControls"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Save Track"
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/VBoxContainer/FileControls"]
+layout_mode = 2
+
+[node name="LoadVideoButton" type="Button" parent="MarginContainer/VBoxContainer/FileControls"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Load Video"
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="VideoPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VideoContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VideoPanel"]
+layout_mode = 2
+
+[node name="VideoPlayer" type="VideoStreamPlayer" parent="MarginContainer/VBoxContainer/VideoPanel/VideoContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+expand = true
+bus = &"Music"
+
+[node name="SubtitlePreview" type="Label" parent="MarginContainer/VBoxContainer/VideoPanel/VideoContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = " "
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="PlaybackControls" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="TimeLabel" type="Label" parent="MarginContainer/VBoxContainer/PlaybackControls"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "00:00.000 / 00:00.000"
+horizontal_alignment = 1
+
+[node name="SeekSlider" type="HSlider" parent="MarginContainer/VBoxContainer/PlaybackControls"]
+unique_name_in_owner = true
+layout_mode = 2
+step = 0.001
+
+[node name="PlayButton" type="Button" parent="MarginContainer/VBoxContainer/PlaybackControls"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Play"
+
+[node name="HSeparator3" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ContentHBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="LeftPanel" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ContentHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 5
+
+[node name="ListLabel" type="Label" parent="MarginContainer/VBoxContainer/ContentHBox/LeftPanel"]
+layout_mode = 2
+text = "Subtitles:"
+
+[node name="SubtitleList" type="ItemList" parent="MarginContainer/VBoxContainer/ContentHBox/LeftPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RightPanel" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ContentHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="EditorLabel" type="Label" parent="MarginContainer/VBoxContainer/ContentHBox/RightPanel"]
+layout_mode = 2
+text = "Edit Subtitle:"
+
+[node name="TimingGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/ContentHBox/RightPanel"]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 5
+columns = 3
+
+[node name="StartLabel" type="Label" parent="MarginContainer/VBoxContainer/ContentHBox/RightPanel/TimingGrid"]
+layout_mode = 2
+text = "Start Time:"
+
+[node name="StartTimeSpin" type="SpinBox" parent="MarginContainer/VBoxContainer/ContentHBox/RightPanel/TimingGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 3600.0
+step = 0.001
+allow_greater = true
+
+[node name="SetStartButton" type="Button" parent="MarginContainer/VBoxContainer/ContentHBox/RightPanel/TimingGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Set to Current"
+
+[node name="EndLabel" type="Label" parent="MarginContainer/VBoxContainer/ContentHBox/RightPanel/TimingGrid"]
+layout_mode = 2
+text = "End Time:"
+
+[node name="EndTimeSpin" type="SpinBox" parent="MarginContainer/VBoxContainer/ContentHBox/RightPanel/TimingGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 3600.0
+step = 0.001
+allow_greater = true
+
+[node name="SetEndButton" type="Button" parent="MarginContainer/VBoxContainer/ContentHBox/RightPanel/TimingGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Set to Current"
+
+[node name="TextLabel" type="Label" parent="MarginContainer/VBoxContainer/ContentHBox/RightPanel"]
+layout_mode = 2
+text = "Subtitle Text:"
+
+[node name="SubtitleText" type="TextEdit" parent="MarginContainer/VBoxContainer/ContentHBox/RightPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+wrap_mode = 1
+
+[node name="ButtonsHBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ContentHBox/RightPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="AddButton" type="Button" parent="MarginContainer/VBoxContainer/ContentHBox/RightPanel/ButtonsHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Add New"
+
+[node name="UpdateButton" type="Button" parent="MarginContainer/VBoxContainer/ContentHBox/RightPanel/ButtonsHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Update Selected"
+
+[node name="DeleteButton" type="Button" parent="MarginContainer/VBoxContainer/ContentHBox/RightPanel/ButtonsHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Delete Selected"
+
+[node name="VideoDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+title = "Open a Video File"
+initial_position = 2
+size = Vector2i(600, 400)
+ok_button_text = "Open"
+
+[node name="LoadTrackDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+title = "Open a Subtitle Track"
+initial_position = 2
+size = Vector2i(600, 400)
+ok_button_text = "Open"
+
+[node name="SaveTrackDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+title = "Save Subtitle Track"
+initial_position = 2
+size = Vector2i(600, 400)
+ok_button_text = "Save"

@@ -1,6 +1,6 @@
 # MilSymbol::_unit_size_to_text Function Reference
 
-*Defined at:* `scripts/utils/unit_symbols/MilSymbol.gd` (lines 267–296)</br>
+*Defined at:* `scripts/utils/unit_symbols/MilSymbol.gd` (lines 353–382)</br>
 *Belongs to:* [MilSymbol](../../MilSymbol.md)
 
 **Signature**

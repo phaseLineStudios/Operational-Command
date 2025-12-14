@@ -1,6 +1,6 @@
 # UnitCreateDialog::_val_to_text Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 646–653)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 671–678)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

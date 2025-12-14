@@ -1,6 +1,6 @@
 # MissionSelect::_on_pin_mouse_exited Function Reference
 
-*Defined at:* `scripts/ui/MissionSelect.gd` (lines 212–220)</br>
+*Defined at:* `scripts/ui/MissionSelect.gd` (lines 232–240)</br>
 *Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**

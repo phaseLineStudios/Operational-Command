@@ -1,6 +1,6 @@
 # OrdersParser::parse Function Reference
 
-*Defined at:* `scripts/radio/OrdersParser.gd` (lines 65–92)</br>
+*Defined at:* `scripts/radio/OrdersParser.gd` (lines 70–95)</br>
 *Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**
@@ -22,7 +22,6 @@ func parse(text: String) -> Array:
 		emit_signal("parse_error", "No tokens.")
 		return []
 
-	# First check for custom commands (full text match)
 	var normalized_text := text.to_lower().strip_edges()
 	for keyword in _custom_commands.keys():
 		if normalized_text.contains(keyword):
@@ -32,13 +31,12 @@ func parse(text: String) -> Array:
 			return [custom_order]
 
 	# Fall back to standard order parsing
-	var orders := _extract_orders(tokens)
+	var orders := apply_navigation_bias_metadata(_extract_orders(tokens))
 	if orders.is_empty():
 		emit_signal("parse_error", "No orders found.")
 	else:
 		emit_signal("parsed", orders)
 
-		# Print hr orders for debugging
 		for order in orders:
 			LogService.info("Order: %s" % order_to_string(order), "OrdersParser.gd:41")
 	return orders

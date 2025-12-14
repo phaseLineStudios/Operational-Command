@@ -1,6 +1,6 @@
 # ContentDB::get_unit Function Reference
 
-*Defined at:* `scripts/core/ContentDB.gd` (lines 321–328)</br>
+*Defined at:* `scripts/core/ContentDB.gd` (lines 322–332)</br>
 *Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**
@@ -22,5 +22,8 @@ func get_unit(id: String) -> UnitData:
 	if d.is_empty():
 		push_warning("Unit not found: %s" % id)
 		return null
-	return UnitData.deserialize(d)
+	var u := UnitData.deserialize(d)
+	if u:
+		u.compute_attack_power(AMMO_DAMAGE_CONFIG)
+	return u
 ```

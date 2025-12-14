@@ -1,6 +1,6 @@
 # RadioSubtitles::set_terrain_labels Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 62–65)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 96–99)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

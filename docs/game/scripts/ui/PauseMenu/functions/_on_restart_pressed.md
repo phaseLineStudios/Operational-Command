@@ -1,6 +1,6 @@
 # PauseMenu::_on_restart_pressed Function Reference
 
-*Defined at:* `scripts/ui/PauseMenu.gd` (lines 58–61)</br>
+*Defined at:* `scripts/ui/PauseMenu.gd` (lines 60–63)</br>
 *Belongs to:* [PauseMenu](../../PauseMenu.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # DocumentController::next_page_intel Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 723–727)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 788–792)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

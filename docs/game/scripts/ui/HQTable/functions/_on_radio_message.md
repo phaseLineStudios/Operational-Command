@@ -1,6 +1,6 @@
 # HQTable::_on_radio_message Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 241–255)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 287–298)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**
@@ -17,16 +17,13 @@ Handle radio messages from SimWorld (trigger API, ammo/fuel warnings, etc.)
 
 ```gdscript
 func _on_radio_message(_level: String, text: String) -> void:
-	# Skip "Order applied" and "Order failed" messages
-	# These are already handled by UnitVoiceResponses
 	if text.begins_with("Order applied") or text.begins_with("Order failed"):
 		return
 
-	# Skip ammo/fuel warnings - now handled by UnitAutoResponses
 	if text.contains("low ammo") or text.contains("winchester") or text.contains("low on fuel"):
 		return
 
-	# Speak the message via TTS
-	if TTSService and TTSService.is_ready():
-		TTSService.say(text)
+	if unit_voices:
+		# Use system message method to get radio SFX
+		unit_voices.emit_system_message(text)
 ```

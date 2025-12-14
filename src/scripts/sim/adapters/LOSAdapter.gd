@@ -13,6 +13,8 @@ extends Node
 @export var actor_path: NodePath
 @export var hostiles_group_name: StringName = &"hostile"
 @export var detection_radius: float = 60.0
+## Interval for proximity scans when enabled (seconds).
+@export var proximity_scan_interval_sec: float = 0.25
 
 ## NodePath to a LOS helper that implements:
 ## `trace_los(a_pos, b_pos, renderer, terrain_data, effects_config) -> Dictionary`
@@ -34,26 +36,31 @@ var _terrain: TerrainData
 
 var _actor: Node3D
 var _hostile_contact: bool = false
+var _scan_accum: float = 0.0
 
 
 ## Autowires LOS helper and terrain renderer from exported paths.
 func _ready() -> void:
-	var sim: SimWorld
-	if simworld_path.is_empty():
-		sim = null
-	else:
-		sim = get_node_or_null(simworld_path)
-	if sim:
+	var sim: SimWorld = null
+	if not simworld_path.is_empty():
+		sim = get_node_or_null(simworld_path) as SimWorld
+	if sim == null:
+		sim = _find_simworld()
+	if sim and not sim.is_connected("contact_reported", Callable(self, "_on_contact")):
 		sim.contact_reported.connect(_on_contact)
 	if los_node_path != NodePath(""):
 		_los = get_node(los_node_path)
 	if terrain_renderer_path != NodePath(""):
 		_renderer = get_node(terrain_renderer_path) as TerrainRender
 		_terrain = _renderer.data
-	if actor_path.is_empty():
-		_actor = get_parent() as Node3D
-	else:
+
+	var scan_enabled: bool = (
+		sim == null and not actor_path.is_empty() and String(hostiles_group_name) != ""
+	)
+	set_process(scan_enabled)
+	if scan_enabled:
 		_actor = get_node_or_null(actor_path) as Node3D
+		_scan_accum = proximity_scan_interval_sec
 
 
 func _process(_dt: float) -> void:
@@ -61,15 +68,39 @@ func _process(_dt: float) -> void:
 		return
 	if String(hostiles_group_name) == "":
 		return
-	# Simple proximity scan; replace with your perception logic when ready
+
+	_scan_accum += _dt
+	var interval: float = maxf(proximity_scan_interval_sec, 0.0)
+	if interval > 0.0 and _scan_accum < interval:
+		return
+	_scan_accum = 0.0
+
+	# Simple proximity scan; replace with your perception logic when ready.
 	var pos: Vector3 = _actor.global_position
+	var radius_sq: float = detection_radius * detection_radius
 	var found: bool = false
 	for n in get_tree().get_nodes_in_group(hostiles_group_name):
-		if n is Node3D:
-			if (n as Node3D).global_position.distance_to(pos) <= detection_radius:
-				found = true
-				break
+		var n3d: Node3D = n as Node3D
+		if n3d == null:
+			continue
+		if n3d.global_position.distance_squared_to(pos) <= radius_sq:
+			found = true
+			break
 	_hostile_contact = found
+	if found:
+		_last_contact_s = Time.get_ticks_msec() / 1000.0
+
+
+func _find_simworld() -> SimWorld:
+	var node: Node = self
+	while node != null:
+		if node is SimWorld:
+			return node as SimWorld
+		for child in node.get_children():
+			if child is SimWorld:
+				return child as SimWorld
+		node = node.get_parent()
+	return null
 
 
 ## Returns true if there is an unobstructed LOS from [param a] to [param b].
@@ -141,6 +172,8 @@ func _on_contact(attacker: String, defender: String) -> void:
 
 ## Used by AIAgent wait-until-contact
 func has_hostile_contact() -> bool:
+	if _hostile_contact:
+		return true
 	if _last_contact_s < 0.0:
 		return false
 	var curr_time := Time.get_ticks_msec() / 1000.0
@@ -150,6 +183,8 @@ func has_hostile_contact() -> bool:
 ## Allow external systems to toggle contact directly.
 func set_hostile_contact(v: bool) -> void:
 	_hostile_contact = v
+	if v:
+		_last_contact_s = Time.get_ticks_msec() / 1000.0
 
 
 func _behaviour_spotting_mult(target: ScenarioUnit) -> float:
@@ -168,3 +203,41 @@ func _behaviour_spotting_mult(target: ScenarioUnit) -> float:
 			return 0.6
 		_:
 			return 1.0
+
+
+## Fast local visibility query placeholder for EnvBehaviorSystem.
+func sample_visibility_for_unit(_unit: ScenarioUnit) -> float:
+	if _unit == null:
+		return 1.0
+	var pos_m: Vector2 = _unit.position_m if "position_m" in _unit else Vector2.ZERO
+	return sample_visibility_at(pos_m)
+
+
+## Visibility sampling at a position placeholder.
+func sample_visibility_at(_pos_m: Vector2) -> float:
+	if _renderer == null:
+		return 1.0
+	# Derive a local concealment penalty by sampling spotting_mul at zero range,
+	# then invert it to represent visibility (1.0 = clear, lower = obscured).
+	var spot_mul: float = spotting_mul(_pos_m, 0.0, _current_weather_severity())
+	var conceal_bonus: float = 1.0
+	var surf: Dictionary = _renderer.get_surface_at_terrain_position(_pos_m)
+	if typeof(surf) == TYPE_DICTIONARY and surf.has("brush"):
+		var brush: Variant = surf.get("brush")
+		if brush and brush.has_method("get"):
+			var conceal: float = clamp(float(brush.get("concealment", 0.0)), 0.0, 1.0)
+			conceal_bonus = max(0.05, 1.0 - conceal)
+	return clamp(spot_mul * conceal_bonus, 0.0, 1.0)
+
+
+func _current_weather_severity() -> float:
+	# If a terrain renderer data is attached, try to fetch ScenarioData weather if present.
+	# Fallback to 0 severity.
+	if Game.current_scenario != null:
+		var scen: ScenarioData = Game.current_scenario
+		var fog_m: float = float(scen.fog_m)
+		var rain: float = float(scen.rain)
+		var fog_sev: float = clamp(1.0 - fog_m / 8000.0, 0.0, 1.0)
+		var rain_sev: float = clamp(rain / 50.0, 0.0, 1.0)
+		return max(fog_sev, rain_sev)
+	return 0.0

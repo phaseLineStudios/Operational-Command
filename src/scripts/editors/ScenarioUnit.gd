@@ -45,12 +45,12 @@ const ARRIVE_EPSILON := 1.0
 @export var playable: bool = false
 
 @export_category("State")
-## Current strength
+## Current strength (defaults to unit.strength if not set)
 @export var state_strength: float = 0.0
 ## Current injured
 @export var state_injured: float = 0.0
-## Current remaining equipment
-@export var state_equipment: float = 0.0
+## Current remaining equipment (1.0 = 100%)
+@export var state_equipment: float = 1.0
 ## Current cohesion level (0.0–1.0).
 @export_range(0.0, 1.0, 0.01) var cohesion: float = 1.0
 ## Current ammo per type for this unit, same keys as unit.ammunition.
@@ -231,6 +231,11 @@ func tick(dt: float, grid: PathGrid) -> void:
 			remain = 0.0
 
 	position_m = cur
+	# Apply optional environmental drift after base movement
+	if has_meta("env_drift"):
+		var drift: Vector2 = get_meta("env_drift")
+		position_m += drift * max(dt, 0.0)
+
 	_move_last_eta_s = estimate_eta_s(grid)
 	emit_signal("move_progress", position_m, _move_last_eta_s)
 
@@ -282,7 +287,12 @@ func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 		var beh_mult := 1.0
 		if has_meta("behaviour_speed_mult"):
 			beh_mult = float(get_meta("behaviour_speed_mult"))
-		return speed * beh_mult
+		var env_mult := 1.0
+		if has_meta("env_speed_mult"):
+			env_mult = float(get_meta("env_speed_mult"))
+			if env_mult <= 0.0:
+				env_mult = 1.0
+		return speed * beh_mult * env_mult
 
 	var c := grid.world_to_cell(p_m)
 	if not grid._in_bounds(c):
@@ -292,7 +302,12 @@ func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 		var beh_mult := 1.0
 		if has_meta("behaviour_speed_mult"):
 			beh_mult = float(get_meta("behaviour_speed_mult"))
-		return speed * beh_mult
+		var env_mult := 1.0
+		if has_meta("env_speed_mult"):
+			env_mult = float(get_meta("env_speed_mult"))
+			if env_mult <= 0.0:
+				env_mult = 1.0
+		return speed * beh_mult * env_mult
 
 	if grid._astar.is_in_boundsv(c) and grid._astar.is_point_solid(c):
 		return 0.0
@@ -303,6 +318,11 @@ func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float:
 		v *= _fuel.speed_mult(id)
 	if has_meta("behaviour_speed_mult"):
 		v *= float(get_meta("behaviour_speed_mult"))
+	if has_meta("env_speed_mult"):
+		var env_mult := float(get_meta("env_speed_mult"))
+		if env_mult <= 0.0:
+			env_mult = 1.0
+		v *= env_mult
 	return v
 
 
@@ -362,14 +382,37 @@ static func deserialize(d: Dictionary) -> ScenarioUnit:
 	u.behaviour = int(d.get("behaviour")) as Behaviour
 	u.playable = d.get("playable", u.playable)
 
+	# Initialize state from template first (ensure defaults are always set)
+	if u.unit:
+		u.state_strength = u.unit.strength
+		u.state_equipment = 1.0
+		u.cohesion = 1.0
+		u.state_ammunition = u.unit.ammunition.duplicate()
+	else:
+		push_warning(
+			(
+				"ScenarioUnit.deserialize: unit is null for id=%s, unit_id=%s"
+				% [u.id, d.get("unit_id")]
+			)
+		)
+		u.state_strength = 0.0
+		u.state_equipment = 0.0
+		u.cohesion = 0.0
+
+	# Override with saved state if present
 	var state: Dictionary = d.get("state", {})
-	if typeof(state) == TYPE_DICTIONARY:
-		u.state_strength = float(state.get("state_strength", u.state_strength))
-		u.state_injured = float(state.get("state_injured", u.state_injured))
-		u.state_equipment = float(state.get("state_equipment", u.state_equipment))
-		u.cohesion = float(state.get("cohesion", u.cohesion))
-		var ammo_state = state.get("state_ammunition", null)
-		if typeof(ammo_state) == TYPE_DICTIONARY:
-			u.state_ammunition = ammo_state
+	if typeof(state) == TYPE_DICTIONARY and not state.is_empty():
+		if state.has("state_strength"):
+			u.state_strength = float(state.get("state_strength"))
+		if state.has("state_injured"):
+			u.state_injured = float(state.get("state_injured"))
+		if state.has("state_equipment"):
+			u.state_equipment = float(state.get("state_equipment"))
+		if state.has("cohesion"):
+			u.cohesion = float(state.get("cohesion"))
+		if state.has("state_ammunition"):
+			var ammo_state = state.get("state_ammunition")
+			if typeof(ammo_state) == TYPE_DICTIONARY:
+				u.state_ammunition = ammo_state
 
 	return u

@@ -12,7 +12,7 @@ enum WindowMode { WINDOWED, FULLSCREEN }
 const CONFIG_PATH := "user://settings.cfg"
 
 ## Exposed buses. Missing buses are ignored.
-@export var audio_buses: Array[String] = ["Master", "Music", "SFX", "UI", "Radio"]
+@export var audio_buses: Array[String] = ["Master", "Environment", "Music", "SFX", "UI", "Radio"]
 ## Actions to rebind (must exist in InputMap).
 @export var actions_to_rebind: Array[String] = ["ptt"]
 ## Resolution list.
@@ -22,6 +22,11 @@ const CONFIG_PATH := "user://settings.cfg"
 ## Scene to navigate to on back (leave empty for no action)
 @export var back_scene: PackedScene
 
+@export_group("Performance")
+## If true, automatically reduce 3D MSAA at very high pixel counts.
+@export var auto_adjust_aa: bool = true
+
+var _base_msaa_3d: int = -1
 var _bus_rows: Dictionary = {}  # name -> {slider: HSlider, label: Label, mute: CheckBox}
 var _cfg := ConfigFile.new()
 
@@ -39,6 +44,8 @@ var _cfg := ConfigFile.new()
 
 # Audio
 @onready var _buses_list: GridContainer = %BusesList
+@onready var _output_device: OptionButton = %OutputDevice
+@onready var _input_device: OptionButton = %InputDevice
 
 # Controls
 @onready var _controls_list: VBoxContainer = %ControlsList
@@ -48,6 +55,7 @@ var _cfg := ConfigFile.new()
 
 ## Build UI and load config.
 func _ready() -> void:
+	_base_msaa_3d = get_tree().root.msaa_3d if get_tree() and get_tree().root else -1
 	_build_video_ui()
 	_build_audio_ui()
 	_build_controls_ui()
@@ -74,6 +82,8 @@ func _build_video_ui() -> void:
 
 ## Create rows for each audio bus.
 func _build_audio_ui() -> void:
+	_populate_audio_devices()
+
 	for audio_name in audio_buses:
 		var idx := AudioServer.get_bus_index(audio_name)
 		if idx == -1:
@@ -101,6 +111,45 @@ func _build_audio_ui() -> void:
 				_set_bus_volume(audio_name, v)
 		)
 		mute.toggled.connect(func(on: bool): _set_bus_mute(audio_name, on))
+
+
+## Populate audio device dropdowns.
+func _populate_audio_devices() -> void:
+	# Output devices (speakers)
+	_output_device.clear()
+	var output_devices := AudioServer.get_output_device_list()
+	var current_output := AudioServer.get_output_device()
+	for i in range(output_devices.size()):
+		var device_name: String = output_devices[i]
+		_output_device.add_item(device_name)
+		if device_name == current_output:
+			_output_device.select(i)
+
+	# Input devices (microphones)
+	_input_device.clear()
+	var input_devices := AudioServer.get_input_device_list()
+	var current_input := AudioServer.get_input_device()
+	for i in range(input_devices.size()):
+		var device_name: String = input_devices[i]
+		_input_device.add_item(device_name)
+		if device_name == current_input:
+			_input_device.select(i)
+
+	# Connect change signals
+	_output_device.item_selected.connect(_on_output_device_changed)
+	_input_device.item_selected.connect(_on_input_device_changed)
+
+
+## Called when output device is changed.
+func _on_output_device_changed(index: int) -> void:
+	var device_name := _output_device.get_item_text(index)
+	AudioServer.set_output_device(device_name)
+
+
+## Called when input device is changed.
+func _on_input_device_changed(index: int) -> void:
+	var device_name := _input_device.get_item_text(index)
+	AudioServer.set_input_device(device_name)
 
 
 ## Create rebind buttons for actions.
@@ -166,6 +215,22 @@ func _apply_ui_from_config() -> void:
 		_set_bus_volume(audio_name, sli.value)
 		_set_bus_mute(audio_name, m)
 
+	var saved_output: String = _cfg.get_value("audio", "output_device", "")
+	if saved_output != "":
+		for i in range(_output_device.item_count):
+			if _output_device.get_item_text(i) == saved_output:
+				_output_device.select(i)
+				AudioServer.set_output_device(saved_output)
+				break
+
+	var saved_input: String = _cfg.get_value("audio", "input_device", "")
+	if saved_input != "":
+		for i in range(_input_device.item_count):
+			if _input_device.get_item_text(i) == saved_input:
+				_input_device.select(i)
+				AudioServer.set_input_device(saved_input)
+				break
+
 
 ## Apply settings and persist.
 func _apply_and_save() -> void:
@@ -229,8 +294,95 @@ func _apply_video() -> void:
 			get_window().size = res_size
 
 	Engine.max_fps = int(_fps.value)
-	# Store render scale only; actual scaling strategy can be implemented later.
-	# (Keeps groundwork without forcing a scaling mode right now.)
+	_schedule_render_scale_apply()
+
+
+## Apply 3D render scaling to keep performance stable at higher resolutions.
+func _apply_render_scale() -> void:
+	var root_viewport := get_tree().root
+	if root_viewport == null:
+		return
+
+	var window: Window = get_window()
+	var window_size: Vector2i = window.size if window != null else Vector2i.ZERO
+	if window_size.x <= 0 or window_size.y <= 0:
+		window_size = root_viewport.size
+
+	var target_size: Vector2i = window_size
+	var idx := _res.get_selected()
+	if idx >= 0 and idx < resolutions.size():
+		target_size = resolutions[idx]
+
+	# Lock the internal render resolution to the selected resolution and scale the final
+	# output to the window. This avoids large performance swings when resizing.
+	var content_size: Vector2i = _compute_content_scale_size(window_size, target_size)
+	if window != null:
+		window.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
+		window.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
+		window.content_scale_size = content_size
+
+	var user_scale: float = clampf(float(_scale.value) / 100.0, 0.1, 2.0)
+	var final_scale: float = user_scale
+
+	# Godot 4 exposes scaling modes but no explicit "disabled" enum;
+	# use bilinear at scale 1.0 to behave like "off".
+	var mode: int = Viewport.SCALING_3D_MODE_BILINEAR
+	if final_scale < 0.999:
+		mode = Viewport.SCALING_3D_MODE_FSR
+	root_viewport.scaling_3d_mode = mode
+	root_viewport.scaling_3d_scale = final_scale
+
+	_apply_adaptive_aa(root_viewport, content_size, final_scale)
+
+
+func _apply_adaptive_aa(root_viewport: Viewport, render_size: Vector2i, final_scale: float) -> void:
+	if not auto_adjust_aa:
+		if _base_msaa_3d >= 0:
+			root_viewport.msaa_3d = _base_msaa_3d
+		return
+
+	# Estimate actual 3D render pixel count (roughly proportional to cost).
+	var px: float = float(maxi(render_size.x, 1)) * float(maxi(render_size.y, 1))
+	px *= final_scale * final_scale
+
+	# Disable heavy MSAA at high resolutions (big fullscreen performance win).
+	# 2560x1440 ~= 3.7M px, 3840x2160 ~= 8.3M px
+	if px >= 3_500_000.0:
+		root_viewport.msaa_3d = Viewport.MSAA_DISABLED
+	elif px >= 2_000_000.0:
+		root_viewport.msaa_3d = Viewport.MSAA_2X
+	else:
+		if _base_msaa_3d >= 0:
+			root_viewport.msaa_3d = _base_msaa_3d
+
+
+func _compute_content_scale_size(window_size: Vector2i, target_size: Vector2i) -> Vector2i:
+	var out: Vector2i = target_size
+	if out.x <= 0 or out.y <= 0:
+		out = window_size
+	if out.x <= 0 or out.y <= 0:
+		return Vector2i(1, 1)
+
+	if window_size.x <= 0 or window_size.y <= 0:
+		return out
+
+	# Avoid supersampling when the window is smaller than the selected resolution.
+	var sx: float = float(window_size.x) / float(out.x)
+	var sy: float = float(window_size.y) / float(out.y)
+	var s: float = minf(1.0, minf(sx, sy))
+	return Vector2i(maxi(1, int(round(float(out.x) * s))), maxi(1, int(round(float(out.y) * s))))
+
+
+func _schedule_render_scale_apply() -> void:
+	var window := get_window()
+	if window == null:
+		call_deferred("_apply_render_scale")
+		return
+
+	var cb := Callable(self, "_apply_render_scale")
+	if not window.size_changed.is_connected(cb):
+		window.size_changed.connect(cb, CONNECT_ONE_SHOT)
+	call_deferred("_apply_render_scale")
 
 
 ## Apply audio to buses.
@@ -258,6 +410,15 @@ func _save_config() -> void:
 		var row: Dictionary = _bus_rows[bus_name]
 		_cfg.set_value("audio", "%s_vol" % bus_name, (row["slider"] as HSlider).value)
 		_cfg.set_value("audio", "%s_mute" % bus_name, (row["mute"] as CheckBox).button_pressed)
+
+	# Save audio device selections
+	var output_idx := _output_device.get_selected()
+	if output_idx >= 0:
+		_cfg.set_value("audio", "output_device", _output_device.get_item_text(output_idx))
+
+	var input_idx := _input_device.get_selected()
+	if input_idx >= 0:
+		_cfg.set_value("audio", "input_device", _input_device.get_item_text(input_idx))
 
 	_cfg.save(CONFIG_PATH)
 

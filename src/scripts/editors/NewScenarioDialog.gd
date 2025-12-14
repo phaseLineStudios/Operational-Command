@@ -10,6 +10,8 @@ enum DialogMode { CREATE, EDIT }
 
 var terrain: TerrainData
 var thumbnail: Texture2D
+var video_stream: VideoStream
+var subtitle_track: SubtitleTrack
 var dialog_mode: DialogMode = DialogMode.CREATE
 var working: ScenarioData
 
@@ -26,6 +28,12 @@ var _selected_units: Array[UnitData] = []
 @onready var thumb_clear: Button = %ClearThumbnail
 @onready var terrain_path: LineEdit = %TerrainPath
 @onready var terrain_btn: Button = %SelectTerrain
+@onready var video_path: LineEdit = %VideoPath
+@onready var video_btn: Button = %SelectVideo
+@onready var video_clear: Button = %ClearVideo
+@onready var subtitles_path: LineEdit = %SubtitlesPath
+@onready var subtitles_btn: Button = %SelectSubtitles
+@onready var subtitles_clear: Button = %ClearSubtitles
 @onready var close_btn: Button = %Close
 @onready var create_btn: Button = %Create
 @onready var unit_pool: ItemList = %UnitPoolList
@@ -57,6 +65,10 @@ func _ready():
 	terrain_btn.pressed.connect(_on_terrain_select)
 	thumb_btn.pressed.connect(_on_thumbnail_select)
 	thumb_clear.pressed.connect(_on_thumbnail_clear)
+	video_btn.pressed.connect(_on_video_select)
+	video_clear.pressed.connect(_on_video_clear)
+	subtitles_btn.pressed.connect(_on_subtitles_select)
+	subtitles_clear.pressed.connect(_on_subtitles_clear)
 
 	unit_add.pressed.connect(_on_unit_add_pressed)
 	unit_remove.pressed.connect(_on_unit_remove_pressed)
@@ -76,6 +88,8 @@ func _on_primary_pressed() -> void:
 			sd.description = desc_input.text
 			sd.preview = thumbnail
 			sd.terrain = terrain
+			sd.video_path = video_path.text
+			sd.video_subtitles = subtitle_track
 			sd.unit_recruits = _selected_units.duplicate()
 			_apply_pools_to_scenario(sd)
 			emit_signal("request_create", sd)
@@ -88,6 +102,8 @@ func _on_primary_pressed() -> void:
 			working.description = desc_input.text
 			working.preview = thumbnail
 			working.terrain = terrain
+			working.video_path = video_path.text
+			working.video_subtitles = subtitle_track
 			working.unit_recruits = _selected_units.duplicate()
 			_apply_pools_to_scenario(working)
 			emit_signal("request_update", working)
@@ -152,6 +168,51 @@ func _on_thumbnail_clear() -> void:
 	thumbnail = null
 
 
+func _on_video_select() -> void:
+	var dlg := FileDialog.new()
+	dlg.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	dlg.access = FileDialog.ACCESS_FILESYSTEM
+	dlg.add_filter("*.ogv ; OGG Video")
+	add_child(dlg)
+	dlg.popup_centered_ratio(0.5)
+	dlg.file_selected.connect(
+		func(path):
+			video_path.text = path
+			dlg.queue_free()
+	)
+	dlg.canceled.connect(func(): dlg.queue_free())
+
+
+func _on_video_clear() -> void:
+	video_path.text = ""
+	video_stream = null
+
+
+func _on_subtitles_select() -> void:
+	var dlg := FileDialog.new()
+	dlg.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	dlg.access = FileDialog.ACCESS_FILESYSTEM
+	dlg.add_filter("*.tres ; Subtitle Track Resource")
+	add_child(dlg)
+	dlg.popup_centered_ratio(0.5)
+	dlg.file_selected.connect(
+		func(path):
+			var resource := load(path)
+			if resource is SubtitleTrack:
+				subtitle_track = resource
+				subtitles_path.text = path
+			else:
+				push_error("Not a SubtitleTrack resource: %s" % path)
+			dlg.queue_free()
+	)
+	dlg.canceled.connect(func(): dlg.queue_free())
+
+
+func _on_subtitles_clear() -> void:
+	subtitles_path.text = "No Subtitles Selected"
+	subtitle_track = null
+
+
 ## Reset values before popup (only when hiding)
 func _reset_values() -> void:
 	title_input.text = ""
@@ -159,8 +220,12 @@ func _reset_values() -> void:
 	terrain_path.text = ""
 	thumb_path.text = ""
 	thumb_preview.texture = null
+	video_path.text = ""
+	subtitles_path.text = "No Subtitles Selected"
 	thumbnail = null
 	terrain = null
+	video_stream = null
+	subtitle_track = null
 	working = null
 	dialog_mode = DialogMode.CREATE
 	_title_button_from_mode()
@@ -179,6 +244,13 @@ func _load_from_data(d: ScenarioData) -> void:
 		terrain_path.text = terrain.resource_path
 	else:
 		terrain_path.text = ""
+	video_path.text = d.video_path if d.video_path else ""
+	if d.video_subtitles:
+		subtitle_track = d.video_subtitles
+		subtitles_path.text = "Embedded Subtitle Track"
+	else:
+		subtitle_track = null
+		subtitles_path.text = "No Subtitles Selected"
 	_selected_units = []
 	if d.unit_recruits:
 		for u in d.unit_recruits:

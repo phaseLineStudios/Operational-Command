@@ -1,6 +1,6 @@
 # PickupItem::_barycentric_coords Function Reference
 
-*Defined at:* `scripts/core/PickupItem.gd` (lines 334–353)</br>
+*Defined at:* `scripts/core/PickupItem.gd` (lines 417–436)</br>
 *Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**
@@ -29,7 +29,7 @@ func _barycentric_coords(p: Vector3, a: Vector3, b: Vector3, c: Vector3) -> Vect
 
 	var denom := d00 * d11 - d01 * d01
 	if abs(denom) < 0.0001:
-		return Vector3(1, 0, 0)  # Degenerate triangle
+		return Vector3(1, 0, 0)
 
 	var v := (d11 * d20 - d01 * d21) / denom
 	var w := (d00 * d21 - d01 * d20) / denom

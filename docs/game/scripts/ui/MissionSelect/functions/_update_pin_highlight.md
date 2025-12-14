@@ -1,6 +1,6 @@
 # MissionSelect::_update_pin_highlight Function Reference
 
-*Defined at:* `scripts/ui/MissionSelect.gd` (lines 174–203)</br>
+*Defined at:* `scripts/ui/MissionSelect.gd` (lines 191–220)</br>
 *Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**

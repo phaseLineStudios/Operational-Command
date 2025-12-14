@@ -13,7 +13,19 @@ extends PanelContainer
 
 ## Brief
 
+Helper function to draw horizontally centered text
+
+## Detailed Description
+
+Helper function to draw horizontally centered text with optional bold styling
+
 Helper function to draw vertically centered text
+
+Helper function to draw vertically centered text with optional bold styling
+
+Helper function to draw left-aligned text
+
+Helper function to draw right-aligned text
 
 ## Public Member Functions
 
@@ -22,7 +34,6 @@ Helper function to draw vertically centered text
 - [`func mark_dirty()`](MarginLayer/functions/mark_dirty.md) — Mark dirty for redraw
 - [`func _notification(what)`](MarginLayer/functions/_notification.md) — Redraw margin on resize
 - [`func _draw() -> void`](MarginLayer/functions/_draw.md)
-- [`func _draw_text_center(text: String, pos: Vector2, font_size: int = label_size) -> void`](MarginLayer/functions/_draw_text_center.md) — Helper function to draw horizontally centered text
 
 ## Public Attributes
 
@@ -86,14 +97,6 @@ Redraw margin on resize
 ```gdscript
 func _draw() -> void
 ```
-
-### _draw_text_center
-
-```gdscript
-func _draw_text_center(text: String, pos: Vector2, font_size: int = label_size) -> void
-```
-
-Helper function to draw horizontally centered text
 
 ## Member Data Documentation
 

@@ -1,6 +1,6 @@
 # Settings::_apply_ui_from_config Function Reference
 
-*Defined at:* `scripts/ui/Settings.gd` (lines 147–171)</br>
+*Defined at:* `scripts/ui/Settings.gd` (lines 194–234)</br>
 *Belongs to:* [Settings](../../Settings.md)
 
 **Signature**
@@ -39,4 +39,20 @@ func _apply_ui_from_config() -> void:
 		mute.button_pressed = m
 		_set_bus_volume(audio_name, sli.value)
 		_set_bus_mute(audio_name, m)
+
+	var saved_output: String = _cfg.get_value("audio", "output_device", "")
+	if saved_output != "":
+		for i in range(_output_device.item_count):
+			if _output_device.get_item_text(i) == saved_output:
+				_output_device.select(i)
+				AudioServer.set_output_device(saved_output)
+				break
+
+	var saved_input: String = _cfg.get_value("audio", "input_device", "")
+	if saved_input != "":
+		for i in range(_input_device.item_count):
+			if _input_device.get_item_text(i) == saved_input:
+				_input_device.select(i)
+				AudioServer.set_input_device(saved_input)
+				break
 ```

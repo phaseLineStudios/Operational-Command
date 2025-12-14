@@ -1,6 +1,6 @@
 # DocumentController::_render_briefing_doc Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 228–298)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 259–329)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

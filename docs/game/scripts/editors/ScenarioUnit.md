@@ -49,6 +49,11 @@ Start movement; will plan if needed or if dest is provided.
 - `CombatMode combat_mode` — Unit Combat Mode
 - `Behaviour behaviour` — Unit Behaviour
 - `bool playable` — Is unit playable.
+- `float state_strength` — Current strength (defaults to unit.strength if not set)
+- `float state_injured` — Current injured
+- `float state_equipment` — Current remaining equipment (1.0 = 100%)
+- `float cohesion` — Current cohesion level (0.0–1.0).
+- `Dictionary state_ammunition` — Current ammo per type for this unit, same keys as unit.ammunition.
 - `MoveState _move_state`
 - `Vector2 _move_dest_m`
 - `PackedVector2Array _move_path`
@@ -317,6 +322,56 @@ var playable: bool
 Decorators: `@export`
 
 Is unit playable.
+
+### state_strength
+
+```gdscript
+var state_strength: float
+```
+
+Decorators: `@export`
+
+Current strength (defaults to unit.strength if not set)
+
+### state_injured
+
+```gdscript
+var state_injured: float
+```
+
+Decorators: `@export`
+
+Current injured
+
+### state_equipment
+
+```gdscript
+var state_equipment: float
+```
+
+Decorators: `@export`
+
+Current remaining equipment (1.0 = 100%)
+
+### cohesion
+
+```gdscript
+var cohesion: float
+```
+
+Decorators: `@export_range(0.0, 1.0, 0.01)`
+
+Current cohesion level (0.0–1.0).
+
+### state_ammunition
+
+```gdscript
+var state_ammunition: Dictionary
+```
+
+Decorators: `@export`
+
+Current ammo per type for this unit, same keys as unit.ammunition.
 
 ### _move_state
 

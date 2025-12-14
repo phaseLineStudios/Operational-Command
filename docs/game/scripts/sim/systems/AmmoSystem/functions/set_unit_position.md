@@ -1,6 +1,6 @@
 # AmmoSystem::set_unit_position Function Reference
 
-*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 67–70)</br>
+*Defined at:* `scripts/sim/systems/AmmoSystem.gd` (lines 69–72)</br>
 *Belongs to:* [AmmoSystem](../../AmmoSystem.md)
 
 **Signature**

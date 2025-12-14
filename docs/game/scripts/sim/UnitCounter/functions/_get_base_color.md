@@ -1,6 +1,6 @@
 # UnitCounter::_get_base_color Function Reference
 
-*Defined at:* `scripts/sim/UnitCounter.gd` (lines 114–127)</br>
+*Defined at:* `scripts/sim/UnitCounter.gd` (lines 187–200)</br>
 *Belongs to:* [UnitCounter](../../UnitCounter.md)
 
 **Signature**

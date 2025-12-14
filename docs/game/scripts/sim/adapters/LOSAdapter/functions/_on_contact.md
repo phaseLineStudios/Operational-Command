@@ -1,6 +1,6 @@
 # LOSAdapter::_on_contact Function Reference
 
-*Defined at:* `scripts/sim/adapters/LOSAdapter.gd` (lines 137–141)</br>
+*Defined at:* `scripts/sim/adapters/LOSAdapter.gd` (lines 168–172)</br>
 *Belongs to:* [LOSAdapter](../../LOSAdapter.md)
 
 **Signature**

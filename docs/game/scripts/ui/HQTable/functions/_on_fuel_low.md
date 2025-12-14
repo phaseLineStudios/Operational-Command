@@ -1,6 +1,6 @@
 # HQTable::_on_fuel_low Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 229–233)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 251–255)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**
@@ -17,6 +17,6 @@ Handle fuel low warning.
 
 ```gdscript
 func _on_fuel_low(unit_id: String) -> void:
-	if unit_auto_voices:
-		unit_auto_voices.trigger_fuel_low(unit_id)
+	if unit_voices and unit_voices.auto_responses:
+		unit_voices.auto_responses.trigger_fuel_low(unit_id)
 ```

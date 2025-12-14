@@ -1,6 +1,6 @@
 # ScenarioEditor::_on_overlay_gui_input Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 315–377)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 317–379)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # UnitData::_get_equipment_category Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 535–546)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 496–507)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**

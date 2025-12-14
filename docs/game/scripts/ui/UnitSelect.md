@@ -23,6 +23,10 @@ Path to briefing scene
 
 Path to hq table scene
 
+ReinforcementPanel scene
+
+Add ammo resupply row
+
 ## Public Member Functions
 
 - [`func _ready() -> void`](UnitSelect/functions/_ready.md) — Build UI, load mission
@@ -51,6 +55,15 @@ Path to hq table scene
 - [`func _on_deploy_pressed() -> void`](UnitSelect/functions/_on_deploy_pressed.md) — Deploy current loadout if slots are filled
 - [`func _update_deploy_enabled() -> void`](UnitSelect/functions/_update_deploy_enabled.md) — Enable/disable deploy button based on slot fill
 - [`func _export_loadout() -> Dictionary`](UnitSelect/functions/_export_loadout.md) — Export current mission loadout as dictionary
+- [`func _init_supply_pools() -> void`](UnitSelect/functions/_init_supply_pools.md) — Initialize supply pools from scenario
+- [`func _populate_supply_ui(unit: UnitData, reset_pending: bool = true) -> void`](UnitSelect/functions/_populate_supply_ui.md) — Populate supply UI with ammo and equipment resupply options
+- [`func _add_equipment_row(scenario_unit: ScenarioUnit, container: VBoxContainer) -> void`](UnitSelect/functions/_add_equipment_row.md) — Add equipment resupply row
+- [`func _commit_resupply(unit: UnitData) -> void`](UnitSelect/functions/_commit_resupply.md) — Commit pending resupply changes
+- [`func _reset_resupply_pending(unit: UnitData) -> void`](UnitSelect/functions/_reset_resupply_pending.md) — Reset pending resupply changes to original values (undo all changes including commits)
+- [`func _populate_replacements_ui(unit: UnitData) -> void`](UnitSelect/functions/_populate_replacements_ui.md) — Populate replacements UI with ReinforcementPanel
+- [`func _on_reinforcement_committed(plan: Dictionary) -> void`](UnitSelect/functions/_on_reinforcement_committed.md) — Handle reinforcement committed
+- [`func _get_scenario_unit_for_id(unit_id: String) -> ScenarioUnit`](UnitSelect/functions/_get_scenario_unit_for_id.md) — Get or create temporary ScenarioUnit for a unit ID
+- [`func _save_temp_unit_states() -> void`](UnitSelect/functions/_save_temp_unit_states.md) — Save temporary unit states back to campaign save
 
 ## Public Attributes
 
@@ -64,6 +77,17 @@ Path to hq table scene
 - `Dictionary _assigned_by_unit`
 - `int _used_points`
 - `UnitCard _selected_card`
+- `UnitData _selected_unit_for_supply`
+- `int _current_equipment_pool`
+- `Dictionary _current_ammo_pools`
+- `ReinforcementPanel _reinforcement_panel`
+- `int _pending_equipment` — Pending resupply changes (staged before commit)
+- `Dictionary _pending_ammo`
+- `Dictionary _original_equipment` — Original state tracking (for reset to undo all changes) - per unit
+- `Dictionary _original_ammo`
+- `Dictionary _original_equipment_pool`
+- `Dictionary _original_ammo_pools`
+- `Dictionary _temp_scenario_units` — Temporary ScenarioUnit instances for state management during loadout configuration
 - `Label _lbl_title`
 - `Label _lbl_points`
 - `Label _lbl_slots`
@@ -91,6 +115,8 @@ Path to hq table scene
 - `Label _lbl_morale`
 - `Label _lbl_speed`
 - `Label _lbl_coh`
+- `VBoxContainer _supply_vbox`
+- `VBoxContainer _replacements_vbox`
 
 ## Member Function Documentation
 
@@ -302,6 +328,78 @@ func _export_loadout() -> Dictionary
 
 Export current mission loadout as dictionary
 
+### _init_supply_pools
+
+```gdscript
+func _init_supply_pools() -> void
+```
+
+Initialize supply pools from scenario
+
+### _populate_supply_ui
+
+```gdscript
+func _populate_supply_ui(unit: UnitData, reset_pending: bool = true) -> void
+```
+
+Populate supply UI with ammo and equipment resupply options
+
+### _add_equipment_row
+
+```gdscript
+func _add_equipment_row(scenario_unit: ScenarioUnit, container: VBoxContainer) -> void
+```
+
+Add equipment resupply row
+
+### _commit_resupply
+
+```gdscript
+func _commit_resupply(unit: UnitData) -> void
+```
+
+Commit pending resupply changes
+
+### _reset_resupply_pending
+
+```gdscript
+func _reset_resupply_pending(unit: UnitData) -> void
+```
+
+Reset pending resupply changes to original values (undo all changes including commits)
+
+### _populate_replacements_ui
+
+```gdscript
+func _populate_replacements_ui(unit: UnitData) -> void
+```
+
+Populate replacements UI with ReinforcementPanel
+
+### _on_reinforcement_committed
+
+```gdscript
+func _on_reinforcement_committed(plan: Dictionary) -> void
+```
+
+Handle reinforcement committed
+
+### _get_scenario_unit_for_id
+
+```gdscript
+func _get_scenario_unit_for_id(unit_id: String) -> ScenarioUnit
+```
+
+Get or create temporary ScenarioUnit for a unit ID
+
+### _save_temp_unit_states
+
+```gdscript
+func _save_temp_unit_states() -> void
+```
+
+Save temporary unit states back to campaign save
+
 ## Member Data Documentation
 
 ### default_unit_icon
@@ -371,6 +469,78 @@ var _used_points: int
 ```gdscript
 var _selected_card: UnitCard
 ```
+
+### _selected_unit_for_supply
+
+```gdscript
+var _selected_unit_for_supply: UnitData
+```
+
+### _current_equipment_pool
+
+```gdscript
+var _current_equipment_pool: int
+```
+
+### _current_ammo_pools
+
+```gdscript
+var _current_ammo_pools: Dictionary
+```
+
+### _reinforcement_panel
+
+```gdscript
+var _reinforcement_panel: ReinforcementPanel
+```
+
+### _pending_equipment
+
+```gdscript
+var _pending_equipment: int
+```
+
+Pending resupply changes (staged before commit)
+
+### _pending_ammo
+
+```gdscript
+var _pending_ammo: Dictionary
+```
+
+### _original_equipment
+
+```gdscript
+var _original_equipment: Dictionary
+```
+
+Original state tracking (for reset to undo all changes) - per unit
+
+### _original_ammo
+
+```gdscript
+var _original_ammo: Dictionary
+```
+
+### _original_equipment_pool
+
+```gdscript
+var _original_equipment_pool: Dictionary
+```
+
+### _original_ammo_pools
+
+```gdscript
+var _original_ammo_pools: Dictionary
+```
+
+### _temp_scenario_units
+
+```gdscript
+var _temp_scenario_units: Dictionary
+```
+
+Temporary ScenarioUnit instances for state management during loadout configuration
 
 ### _lbl_title
 
@@ -532,4 +702,16 @@ var _lbl_speed: Label
 
 ```gdscript
 var _lbl_coh: Label
+```
+
+### _supply_vbox
+
+```gdscript
+var _supply_vbox: VBoxContainer
+```
+
+### _replacements_vbox
+
+```gdscript
+var _replacements_vbox: VBoxContainer
 ```

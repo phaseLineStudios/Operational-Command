@@ -1,6 +1,6 @@
 # AmmoTest::_on_fire_once Function Reference
 
-*Defined at:* `scripts/test/AmmoTest.gd` (lines 159–165)</br>
+*Defined at:* `scripts/test/AmmoTest.gd` (lines 165–171)</br>
 *Belongs to:* [AmmoTest](../../AmmoTest.md)
 
 **Signature**

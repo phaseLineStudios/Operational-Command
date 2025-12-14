@@ -1,6 +1,6 @@
 # TerrainData::_update_scale Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 425–430)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 437–442)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

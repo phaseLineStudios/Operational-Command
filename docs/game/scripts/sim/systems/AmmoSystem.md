@@ -26,25 +26,25 @@ using their transfer rate; emits resupply started/completed.
 ## Public Member Functions
 
 - [`func _ready() -> void`](AmmoSystem/functions/_ready.md) — Add to a group for convenient lookups.
-- [`func register_unit(u: UnitData) -> void`](AmmoSystem/functions/register_unit.md) — Register a unit so AmmoSystem tracks it and applies defaults if missing.
+- [`func register_unit(su: ScenarioUnit) -> void`](AmmoSystem/functions/register_unit.md) — Register a unit so AmmoSystem tracks it and applies defaults if missing.
 - [`func unregister_unit(unit_id: String) -> void`](AmmoSystem/functions/unregister_unit.md) — Stop tracking a unit and tear down any active resupply links.
 - [`func set_unit_position(unit_id: String, pos: Vector3) -> void`](AmmoSystem/functions/set_unit_position.md) — Update a unit's world-space position (meters; XZ used, Y ignored).
-- [`func get_unit(unit_id: String) -> UnitData`](AmmoSystem/functions/get_unit.md) — Retrieve the UnitData previously registered (or null if unknown).
-- [`func is_low(u: UnitData, t: String) -> bool`](AmmoSystem/functions/is_low.md) — True if current/cap <= low threshold (and > 0).
-- [`func is_critical(u: UnitData, t: String) -> bool`](AmmoSystem/functions/is_critical.md) — True if current/cap <= critical threshold (and > 0).
-- [`func is_empty(u: UnitData, t: String) -> bool`](AmmoSystem/functions/is_empty.md) — True if current ammo is zero.
+- [`func get_unit(unit_id: String) -> ScenarioUnit`](AmmoSystem/functions/get_unit.md) — Retrieve the ScenarioUnit previously registered (or null if unknown).
+- [`func is_low(su: ScenarioUnit, t: String) -> bool`](AmmoSystem/functions/is_low.md) — True if current/cap <= low threshold (and > 0).
+- [`func is_critical(su: ScenarioUnit, t: String) -> bool`](AmmoSystem/functions/is_critical.md) — True if current/cap <= critical threshold (and > 0).
+- [`func is_empty(su: ScenarioUnit, t: String) -> bool`](AmmoSystem/functions/is_empty.md) — True if current ammo is zero.
 - [`func consume(unit_id: String, t: String, amount: int = 1) -> bool`](AmmoSystem/functions/consume.md) — Decrease ammo for `unit_id` of type `t` by `amount`.
 - [`func tick(delta: float) -> void`](AmmoSystem/functions/tick.md) — Start links for needy units and transfer rounds along active links.
-- [`func _within_radius(src: UnitData, dst: UnitData) -> bool`](AmmoSystem/functions/_within_radius.md) — True if src is within its transfer radius of dst.
-- [`func _is_logistics(u: UnitData) -> bool`](AmmoSystem/functions/_is_logistics.md) — True if the unit should act as a logistics source.
-- [`func _needs_ammo(u: UnitData) -> bool`](AmmoSystem/functions/_needs_ammo.md) — True if any ammo type is below its cap.
-- [`func _has_stock(u: UnitData) -> bool`](AmmoSystem/functions/_has_stock.md) — True if unit has any stock left to transfer.
-- [`func _pick_link_for(dst: UnitData) -> String`](AmmoSystem/functions/_pick_link_for.md) — Pick a logistics source within radius that has stock (simple first-match).
+- [`func _within_radius(src: ScenarioUnit, dst: ScenarioUnit) -> bool`](AmmoSystem/functions/_within_radius.md) — True if src is within its transfer radius of dst.
+- [`func _is_logistics(su: ScenarioUnit) -> bool`](AmmoSystem/functions/_is_logistics.md) — True if the unit should act as a logistics source.
+- [`func _needs_ammo(su: ScenarioUnit) -> bool`](AmmoSystem/functions/_needs_ammo.md) — True if any ammo type is below its cap, unit is alive, and is stationary.
+- [`func _has_stock(su: ScenarioUnit) -> bool`](AmmoSystem/functions/_has_stock.md) — True if unit has any stock left to transfer.
+- [`func _pick_link_for(dst: ScenarioUnit) -> String`](AmmoSystem/functions/_pick_link_for.md) — Pick a logistics source within radius that has stock (simple first-match).
 - [`func _begin_link(src_id: String, dst_id: String) -> void`](AmmoSystem/functions/_begin_link.md) — Begin a resupply link from `src_id` to `dst_id`.
 - [`func _finish_link(dst_id: String) -> void`](AmmoSystem/functions/_finish_link.md) — Finish an active resupply link for `dst_id`.
 - [`func _transfer_tick(delta: float) -> void`](AmmoSystem/functions/_transfer_tick.md) — Transfer rounds for all active links using a fractional-rate accumulator so
 low rates still work at high frame rates (e.g., 20 rps @ 60 FPS).
-- [`func _init_ammunition_from_equipment(u: UnitData) -> void`](AmmoSystem/functions/_init_ammunition_from_equipment.md) — Initialize ammunition capacities from equipment.
+- [`func _init_ammunition_from_equipment(su: ScenarioUnit) -> void`](AmmoSystem/functions/_init_ammunition_from_equipment.md) — Initialize ammunition capacities from equipment.
 
 ## Public Attributes
 
@@ -62,6 +62,7 @@ low rates still work at high frame rates (e.g., 20 rps @ 60 FPS).
 - `signal ammo_empty(unit_id: String)` — Emitted when current ammo hits zero.
 - `signal resupply_started(src_unit_id: String, dst_unit_id: String)` — Emitted when a logistics unit begins resupplying a recipient.
 - `signal resupply_completed(src_unit_id: String, dst_unit_id: String)` — Emitted when resupply finishes (recipient full OR stock exhausted).
+- `signal supplier_exhausted(src_unit_id: String)` — Emitted when supplier runs out of ammunition stock.
 
 ## Member Function Documentation
 
@@ -76,7 +77,7 @@ Add to a group for convenient lookups.
 ### register_unit
 
 ```gdscript
-func register_unit(u: UnitData) -> void
+func register_unit(su: ScenarioUnit) -> void
 ```
 
 Register a unit so AmmoSystem tracks it and applies defaults if missing.
@@ -100,15 +101,15 @@ Update a unit's world-space position (meters; XZ used, Y ignored).
 ### get_unit
 
 ```gdscript
-func get_unit(unit_id: String) -> UnitData
+func get_unit(unit_id: String) -> ScenarioUnit
 ```
 
-Retrieve the UnitData previously registered (or null if unknown).
+Retrieve the ScenarioUnit previously registered (or null if unknown).
 
 ### is_low
 
 ```gdscript
-func is_low(u: UnitData, t: String) -> bool
+func is_low(su: ScenarioUnit, t: String) -> bool
 ```
 
 True if current/cap <= low threshold (and > 0).
@@ -116,7 +117,7 @@ True if current/cap <= low threshold (and > 0).
 ### is_critical
 
 ```gdscript
-func is_critical(u: UnitData, t: String) -> bool
+func is_critical(su: ScenarioUnit, t: String) -> bool
 ```
 
 True if current/cap <= critical threshold (and > 0).
@@ -124,7 +125,7 @@ True if current/cap <= critical threshold (and > 0).
 ### is_empty
 
 ```gdscript
-func is_empty(u: UnitData, t: String) -> bool
+func is_empty(su: ScenarioUnit, t: String) -> bool
 ```
 
 True if current ammo is zero.
@@ -149,7 +150,7 @@ Start links for needy units and transfer rounds along active links.
 ### _within_radius
 
 ```gdscript
-func _within_radius(src: UnitData, dst: UnitData) -> bool
+func _within_radius(src: ScenarioUnit, dst: ScenarioUnit) -> bool
 ```
 
 True if src is within its transfer radius of dst.
@@ -157,7 +158,7 @@ True if src is within its transfer radius of dst.
 ### _is_logistics
 
 ```gdscript
-func _is_logistics(u: UnitData) -> bool
+func _is_logistics(su: ScenarioUnit) -> bool
 ```
 
 True if the unit should act as a logistics source.
@@ -165,15 +166,15 @@ True if the unit should act as a logistics source.
 ### _needs_ammo
 
 ```gdscript
-func _needs_ammo(u: UnitData) -> bool
+func _needs_ammo(su: ScenarioUnit) -> bool
 ```
 
-True if any ammo type is below its cap.
+True if any ammo type is below its cap, unit is alive, and is stationary.
 
 ### _has_stock
 
 ```gdscript
-func _has_stock(u: UnitData) -> bool
+func _has_stock(su: ScenarioUnit) -> bool
 ```
 
 True if unit has any stock left to transfer.
@@ -181,7 +182,7 @@ True if unit has any stock left to transfer.
 ### _pick_link_for
 
 ```gdscript
-func _pick_link_for(dst: UnitData) -> String
+func _pick_link_for(dst: ScenarioUnit) -> String
 ```
 
 Pick a logistics source within radius that has stock (simple first-match).
@@ -214,12 +215,12 @@ low rates still work at high frame rates (e.g., 20 rps @ 60 FPS).
 ### _init_ammunition_from_equipment
 
 ```gdscript
-func _init_ammunition_from_equipment(u: UnitData) -> void
+func _init_ammunition_from_equipment(su: ScenarioUnit) -> void
 ```
 
 Initialize ammunition capacities from equipment.
 Scans equipment.weapons and calculates ammo capacity for each AmmoTypes.
-`u` UnitData to initialize
+`su` ScenarioUnit to initialize
 
 ## Member Data Documentation
 
@@ -304,3 +305,11 @@ signal resupply_completed(src_unit_id: String, dst_unit_id: String)
 ```
 
 Emitted when resupply finishes (recipient full OR stock exhausted).
+
+### supplier_exhausted
+
+```gdscript
+signal supplier_exhausted(src_unit_id: String)
+```
+
+Emitted when supplier runs out of ammunition stock.

@@ -1,6 +1,6 @@
 # ContentDB::load_res Function Reference
 
-*Defined at:* `scripts/core/ContentDB.gd` (lines 490–497)</br>
+*Defined at:* `scripts/core/ContentDB.gd` (lines 495–502)</br>
 *Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**

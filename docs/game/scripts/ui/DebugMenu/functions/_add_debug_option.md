@@ -1,6 +1,6 @@
 # DebugMenu::_add_debug_option Function Reference
 
-*Defined at:* `scripts/ui/DebugMenu.gd` (lines 552–649)</br>
+*Defined at:* `scripts/ui/DebugMenu.gd` (lines 508–605)</br>
 *Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**

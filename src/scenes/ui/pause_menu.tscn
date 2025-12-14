@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://7ta8ojkjg5rg"]
+[gd_scene load_steps=5 format=3 uid="uid://7ta8ojkjg5rg"]
 
 [ext_resource type="Script" uid="uid://bhpoq688iquia" path="res://scripts/ui/PauseMenu.gd" id="1_6tw0m"]
 [ext_resource type="PackedScene" uid="uid://vwwe2bp0x2mn" path="res://scenes/settings.tscn" id="2_0lmf7"]
+[ext_resource type="Script" uid="uid://boc05sevt2wad" path="res://scripts/ui/controls/OcMenuButton.gd" id="2_f6eus"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pu0qw"]
 content_margin_left = 300.0
@@ -37,26 +38,36 @@ alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 text = "Resume"
+script = ExtResource("2_f6eus")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
 
 [node name="Restart" type="Button" parent="MenuContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Restart"
+script = ExtResource("2_f6eus")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
 
 [node name="Settings" type="Button" parent="MenuContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Settings"
+script = ExtResource("2_f6eus")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
 
 [node name="Scenarios" type="Button" parent="MenuContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Back to scenarios"
+script = ExtResource("2_f6eus")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
 
 [node name="MainMenu" type="Button" parent="MenuContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Back to main menu"
+script = ExtResource("2_f6eus")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
 
 [node name="SettingsDisplay" parent="." instance=ExtResource("2_0lmf7")]
 unique_name_in_owner = true

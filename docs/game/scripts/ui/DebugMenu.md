@@ -36,12 +36,15 @@ extends Window
 - [`func _add_debug_option(node: Node, option: Dictionary) -> void`](DebugMenu/functions/_add_debug_option.md) — Add a single debug option to the UI
 - [`func _process(_dt: float) -> void`](DebugMenu/functions/_process.md)
 - [`func _close()`](DebugMenu/functions/_close.md)
+- [`func _update_mission_tab_visibility() -> void`](DebugMenu/functions/_update_mission_tab_visibility.md) — Update Mission tab visibility based on whether HQ Table scene is active
 
 ## Public Attributes
 
 - `Array _log_lines` — Debug menu window that provides scene-wide debugging options
 - `Array _scene_options_discovered`
 - `bool _is_scanning`
+- `DebugMenuSaveEditor _save_editor`
+- `DebugMenuMission _mission_editor`
 - `DebugMetricsDisplay metrics_display`
 - `OptionButton metrics_visibility`
 - `OptionButton scene_loader_scene`
@@ -57,6 +60,14 @@ extends Window
 - `GridContainer scene_options_container`
 - `Button scene_options_refresh`
 - `Label scene_options_status`
+- `Label save_editor_save_name`
+- `Button save_editor_refresh`
+- `GridContainer save_editor_content`
+- `VBoxContainer save_editor_tab`
+- `Label mission_status`
+- `Button mission_refresh`
+- `GridContainer mission_content`
+- `VBoxContainer mission_tab`
 
 ## Member Function Documentation
 
@@ -236,6 +247,14 @@ func _process(_dt: float) -> void
 func _close()
 ```
 
+### _update_mission_tab_visibility
+
+```gdscript
+func _update_mission_tab_visibility() -> void
+```
+
+Update Mission tab visibility based on whether HQ Table scene is active
+
 ## Member Data Documentation
 
 ### _log_lines
@@ -250,26 +269,7 @@ This window contains multiple tabs:
 - Log: Shows filtered log messages from LogService
 - General: General debug options and scene loader
 - Scene Options: Auto-discovered debug options from nodes in the active scene
-
-Debug options are automatically discovered in two ways:
-
-Method 1: @export variables (automatic detection)
-- Any @export variable with "debug" in its name (e.g., @export var debug_speed: float)
-- Any @export variable in a "Debug" category (@export_category("Debug"))
-- Any @export variable in a "debug" group (@export_group("debug"))
-
-Method 2: Manual implementation (for buttons and complex cases)
-Implement `get_debug_options()` which returns an Array of dictionaries:
-{
-"name": String,        # Display name of the option
-"type": String,        # One of: "bool", "int", "float", "string", "enum", "button"
-"value": Variant,      # Current value (not used for "button" type)
-"callback": Callable,  # Called when value changes or button pressed
-"min": float,          # Optional: minimum value for int/float
-"max": float,          # Optional: maximum value for int/float
-"step": float,         # Optional: step size for int/float
-"options": Array,      # Optional: array of options for "enum" type
-}
+- Save Editor: Edit currently selected save
 
 ### _scene_options_discovered
 
@@ -281,6 +281,18 @@ var _scene_options_discovered: Array
 
 ```gdscript
 var _is_scanning: bool
+```
+
+### _save_editor
+
+```gdscript
+var _save_editor: DebugMenuSaveEditor
+```
+
+### _mission_editor
+
+```gdscript
+var _mission_editor: DebugMenuMission
 ```
 
 ### metrics_display
@@ -371,4 +383,52 @@ var scene_options_refresh: Button
 
 ```gdscript
 var scene_options_status: Label
+```
+
+### save_editor_save_name
+
+```gdscript
+var save_editor_save_name: Label
+```
+
+### save_editor_refresh
+
+```gdscript
+var save_editor_refresh: Button
+```
+
+### save_editor_content
+
+```gdscript
+var save_editor_content: GridContainer
+```
+
+### save_editor_tab
+
+```gdscript
+var save_editor_tab: VBoxContainer
+```
+
+### mission_status
+
+```gdscript
+var mission_status: Label
+```
+
+### mission_refresh
+
+```gdscript
+var mission_refresh: Button
+```
+
+### mission_content
+
+```gdscript
+var mission_content: GridContainer
+```
+
+### mission_tab
+
+```gdscript
+var mission_tab: VBoxContainer
 ```

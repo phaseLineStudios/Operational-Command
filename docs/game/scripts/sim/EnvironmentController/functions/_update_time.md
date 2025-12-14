@@ -1,6 +1,6 @@
 # EnvironmentController::_update_time Function Reference
 
-*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 47–52)</br>
+*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 109–117)</br>
 *Belongs to:* [EnvironmentController](../../EnvironmentController.md)
 
 **Signature**
@@ -20,4 +20,7 @@ func _update_time(dt: float) -> void:
 	time_of_day += dt
 	if time_of_day > 86400.0:
 		time_of_day = 0.0
+
+	if env_scene:
+		env_scene.get_sound_controller().update_time(int(time_of_day))
 ```

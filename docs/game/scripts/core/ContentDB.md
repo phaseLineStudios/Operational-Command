@@ -57,6 +57,8 @@ with basic validation and helpful error messages.
 - [`func load_res(path: Variant) -> Variant`](ContentDB/functions/load_res.md) — Deserialize a resource
 - [`func image_to_png_b64(img: Image) -> String`](ContentDB/functions/image_to_png_b64.md) — Serialize a image to Base 64
 - [`func png_b64_to_image(b64: Variant) -> Image`](ContentDB/functions/png_b64_to_image.md) — Deserialize a image from Base 64
+- [`func image_to_raw_b64(img: Image) -> Dictionary`](ContentDB/functions/image_to_raw_b64.md) — Serialize a floating-point image to Base 64 (lossless raw format)
+- [`func raw_b64_to_image(raw_dict: Variant) -> Image`](ContentDB/functions/raw_b64_to_image.md) — Deserialize a floating-point image from raw Base 64 format
 - [`func ids_from_resources(arr: Array, id_prop: String = "id") -> Array`](ContentDB/functions/ids_from_resources.md) — Serialize resources to IDs
 - [`func resources_from_ids(ids: Array, loader: Callable) -> Array`](ContentDB/functions/resources_from_ids.md) — Deserialize resources from IDs
 - [`func id_from_string(string: String) -> String`](ContentDB/functions/id_from_string.md) — Generate ID from string
@@ -65,7 +67,11 @@ with basic validation and helpful error messages.
 
 ## Public Attributes
 
-- `Dictionary _cache` — Cache loaded objects by absolute path.
+- `Dictionary _cache`
+
+## Public Constants
+
+- `const AMMO_DAMAGE_CONFIG: AmmoDamageConfig` — Cache loaded objects by absolute path.
 
 ## Member Function Documentation
 
@@ -379,6 +385,22 @@ func png_b64_to_image(b64: Variant) -> Image
 
 Deserialize a image from Base 64
 
+### image_to_raw_b64
+
+```gdscript
+func image_to_raw_b64(img: Image) -> Dictionary
+```
+
+Serialize a floating-point image to Base 64 (lossless raw format)
+
+### raw_b64_to_image
+
+```gdscript
+func raw_b64_to_image(raw_dict: Variant) -> Image
+```
+
+Deserialize a floating-point image from raw Base 64 format
+
 ### ids_from_resources
 
 ```gdscript
@@ -418,6 +440,14 @@ Safely duplicate a dictionary or array
 
 ```gdscript
 var _cache: Dictionary
+```
+
+## Constant Documentation
+
+### AMMO_DAMAGE_CONFIG
+
+```gdscript
+const AMMO_DAMAGE_CONFIG: AmmoDamageConfig
 ```
 
 Cache loaded objects by absolute path.

@@ -1,6 +1,6 @@
 # DrawingController::clear_all Function Reference
 
-*Defined at:* `scripts/core/DrawingController.gd` (lines 351–362)</br>
+*Defined at:* `scripts/core/DrawingController.gd` (lines 326–336)</br>
 *Belongs to:* [DrawingController](../../DrawingController.md)
 
 **Signature**
@@ -21,7 +21,6 @@ func clear_all() -> void:
 	_current_stroke.clear()
 	_is_drawing = false
 
-	# Clear scenario strokes
 	_scenario_strokes.clear()
 
 	_update_drawing_mesh()

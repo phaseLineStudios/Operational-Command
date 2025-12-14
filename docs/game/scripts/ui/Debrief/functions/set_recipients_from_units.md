@@ -1,6 +1,6 @@
 # Debrief::set_recipients_from_units Function Reference
 
-*Defined at:* `scripts/ui/Debrief.gd` (lines 279–288)</br>
+*Defined at:* `scripts/ui/Debrief.gd` (lines 302–311)</br>
 *Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MissionSelect::is_mission_available Function Reference
 
-*Defined at:* `scripts/ui/MissionSelect.gd` (lines 316–319)</br>
+*Defined at:* `scripts/ui/MissionSelect.gd` (lines 343–346)</br>
 *Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**

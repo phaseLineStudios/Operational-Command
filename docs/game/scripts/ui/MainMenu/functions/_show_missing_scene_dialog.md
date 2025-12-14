@@ -1,6 +1,6 @@
 # MainMenu::_show_missing_scene_dialog Function Reference
 
-*Defined at:* `scripts/ui/MainMenu.gd` (lines 88–95)</br>
+*Defined at:* `scripts/ui/MainMenu.gd` (lines 94–101)</br>
 *Belongs to:* [MainMenu](../../MainMenu.md)
 
 **Signature**

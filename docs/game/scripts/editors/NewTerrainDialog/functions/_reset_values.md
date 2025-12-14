@@ -1,6 +1,6 @@
 # NewTerrainDialog::_reset_values Function Reference
 
-*Defined at:* `scripts/editors/TerrainSettingsDialog.gd` (lines 121–129)</br>
+*Defined at:* `scripts/editors/TerrainSettingsDialog.gd` (lines 139–151)</br>
 *Belongs to:* [NewTerrainDialog](../../NewTerrainDialog.md)
 
 **Signature**
@@ -23,4 +23,8 @@ func _reset_values():
 	terrain_grid_x.value = 100
 	terrain_grid_y.value = 100
 	base_elevation.value = 110
+	meta_country.text = ""
+	meta_edition.text = ""
+	meta_series.text = ""
+	meta_sheet.text = ""
 ```

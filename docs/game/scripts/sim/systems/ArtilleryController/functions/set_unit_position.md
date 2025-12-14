@@ -1,6 +1,6 @@
 # ArtilleryController::set_unit_position Function Reference
 
-*Defined at:* `scripts/sim/systems/ArtilleryController.gd` (lines 96–99)</br>
+*Defined at:* `scripts/sim/systems/ArtilleryController.gd` (lines 126–129)</br>
 *Belongs to:* [ArtilleryController](../../ArtilleryController.md)
 
 **Signature**

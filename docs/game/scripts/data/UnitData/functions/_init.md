@@ -1,6 +1,6 @@
 # UnitData::_init Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 152–155)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 167–170)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**

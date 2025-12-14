@@ -1,6 +1,6 @@
 # MilSymbol::_ensure_viewport Function Reference
 
-*Defined at:* `scripts/utils/unit_symbols/MilSymbol.gd` (lines 202–228)</br>
+*Defined at:* `scripts/utils/unit_symbols/MilSymbol.gd` (lines 288–314)</br>
 *Belongs to:* [MilSymbol](../../MilSymbol.md)
 
 **Signature**
@@ -27,7 +27,7 @@ func _ensure_viewport() -> void:
 	_viewport = SubViewport.new()
 	_viewport.size = Vector2i(render_size, render_size)
 	_viewport.transparent_bg = true
-	_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 
 	# Create renderer
 	_renderer = MilSymbolRenderer.new()

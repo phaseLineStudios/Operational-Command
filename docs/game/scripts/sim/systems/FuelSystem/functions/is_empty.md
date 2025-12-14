@@ -1,6 +1,6 @@
 # FuelSystem::is_empty Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 109–116)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 111–118)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

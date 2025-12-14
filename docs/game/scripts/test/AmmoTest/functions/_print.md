@@ -1,6 +1,6 @@
 # AmmoTest::_print Function Reference
 
-*Defined at:* `scripts/test/AmmoTest.gd` (lines 218–223)</br>
+*Defined at:* `scripts/test/AmmoTest.gd` (lines 224–229)</br>
 *Belongs to:* [AmmoTest](../../AmmoTest.md)
 
 **Signature**

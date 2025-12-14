@@ -1,6 +1,6 @@
 # UnitCard::_get_drag_data Function Reference
 
-*Defined at:* `scripts/ui/helpers/UnitCard.gd` (lines 120–125)</br>
+*Defined at:* `scripts/ui/helpers/UnitCard.gd` (lines 135–140)</br>
 *Belongs to:* [UnitCard](../../UnitCard.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # ContentDB::v2arr_deserialize Function Reference
 
-*Defined at:* `scripts/core/ContentDB.gd` (lines 468–477)</br>
+*Defined at:* `scripts/core/ContentDB.gd` (lines 473–482)</br>
 *Belongs to:* [ContentDB](../../ContentDB.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # UnitVoiceResponses::_get_cardinal_direction Function Reference
 
-*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 366–397)</br>
+*Defined at:* `scripts/radio/UnitVoiceResponses.gd` (lines 419–449)</br>
 *Belongs to:* [UnitVoiceResponses](../../UnitVoiceResponses.md)
 
 **Signature**
@@ -28,14 +28,11 @@ func _get_cardinal_direction(from: Vector2, to: Vector2) -> String:
 	var angle := delta.angle()
 	var degrees := rad_to_deg(angle)
 
-	# Normalize to 0-360
 	while degrees < 0:
 		degrees += 360
 	while degrees >= 360:
 		degrees -= 360
 
-	# Map to cardinal/intercardinal directions
-	# 0° is east, 90° is south, 180° is west, 270° is north
 	if degrees < 22.5 or degrees >= 337.5:
 		return "east"
 	elif degrees < 67.5:

@@ -1,6 +1,6 @@
 # PickupItem::start_inspect Function Reference
 
-*Defined at:* `scripts/core/PickupItem.gd` (lines 96–104)</br>
+*Defined at:* `scripts/core/PickupItem.gd` (lines 140–148)</br>
 *Belongs to:* [PickupItem](../../PickupItem.md)
 
 **Signature**

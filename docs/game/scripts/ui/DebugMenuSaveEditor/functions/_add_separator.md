@@ -1,6 +1,6 @@
 # DebugMenuSaveEditor::_add_separator Function Reference
 
-*Defined at:* `scripts/ui/DebugMenuSaveEditor.gd` (lines 199–207)</br>
+*Defined at:* `scripts/ui/DebugMenuSaveEditor.gd` (lines 190–198)</br>
 *Belongs to:* [DebugMenuSaveEditor](../../DebugMenuSaveEditor.md)
 
 **Signature**

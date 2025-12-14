@@ -1,6 +1,6 @@
 # HQTable::_init_combat_controllers Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 164–172)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 178–191)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**
@@ -23,4 +23,9 @@ func _init_combat_controllers() -> void:
 
 		if sim.engineer_controller:
 			trigger_engine._api._bind_engineer_controller(sim.engineer_controller)
+
+	if combat_sound and sim:
+		combat_sound.bind_sim_world(sim)
+		if sim.artillery_controller:
+			combat_sound.bind_artillery_controller(sim.artillery_controller)
 ```

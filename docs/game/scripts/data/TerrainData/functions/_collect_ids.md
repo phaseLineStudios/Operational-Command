@@ -1,6 +1,6 @@
 # TerrainData::_collect_ids Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 469–476)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 481–488)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

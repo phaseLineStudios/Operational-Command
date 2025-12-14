@@ -1,6 +1,6 @@
 # NewScenarioDialog::_load_from_data Function Reference
 
-*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 152–170)</br>
+*Defined at:* `scripts/editors/NewScenarioDialog.gd` (lines 236–262)</br>
 *Belongs to:* [NewScenarioDialog](../../NewScenarioDialog.md)
 
 **Signature**
@@ -27,10 +27,18 @@ func _load_from_data(d: ScenarioData) -> void:
 		terrain_path.text = terrain.resource_path
 	else:
 		terrain_path.text = ""
+	video_path.text = d.video_path if d.video_path else ""
+	if d.video_subtitles:
+		subtitle_track = d.video_subtitles
+		subtitles_path.text = "Embedded Subtitle Track"
+	else:
+		subtitle_track = null
+		subtitles_path.text = "No Subtitles Selected"
 	_selected_units = []
 	if d.unit_recruits:
 		for u in d.unit_recruits:
 			if u is UnitData:
 				_selected_units.append(u)
 	_refresh_unit_lists()
+	_load_pools_from_scenario(d)
 ```

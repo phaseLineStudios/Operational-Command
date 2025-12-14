@@ -1,6 +1,6 @@
 # TerrainRender::_on_base_layer_resize Function Reference
 
-*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 255–258)</br>
+*Defined at:* `scripts/terrain/TerrainRender.gd` (lines 312–315)</br>
 *Belongs to:* [TerrainRender](../../TerrainRender.md)
 
 **Signature**

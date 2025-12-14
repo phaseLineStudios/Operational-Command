@@ -1,6 +1,6 @@
 # NewTerrainDialog::open_for_edit Function Reference
 
-*Defined at:* `scripts/editors/TerrainSettingsDialog.gd` (lines 48–59)</br>
+*Defined at:* `scripts/editors/TerrainSettingsDialog.gd` (lines 52–63)</br>
 *Belongs to:* [NewTerrainDialog](../../NewTerrainDialog.md)
 
 **Signature**

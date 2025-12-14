@@ -1,6 +1,6 @@
 # Debrief::_request_align Function Reference
 
-*Defined at:* `scripts/ui/Debrief.gd` (lines 422–425)</br>
+*Defined at:* `scripts/ui/Debrief.gd` (lines 445–448)</br>
 *Belongs to:* [Debrief](../../Debrief.md)
 
 **Signature**

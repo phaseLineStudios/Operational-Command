@@ -1,6 +1,6 @@
 # TerrainEditor::_deselect_tool Function Reference
 
-*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 251–265)</br>
+*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 253–267)</br>
 *Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**

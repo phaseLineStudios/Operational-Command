@@ -1,6 +1,6 @@
 # AIController::register_unit Function Reference
 
-*Defined at:* `scripts/ai/AIController.gd` (lines 62–72)</br>
+*Defined at:* `scripts/ai/AIController.gd` (lines 63–73)</br>
 *Belongs to:* [AIController](../../AIController.md)
 
 **Signature**

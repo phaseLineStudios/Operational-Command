@@ -22,8 +22,12 @@ extends RefCounted
 - [`func _setup_unit_create(ctx: ScenarioEditorContext)`](ScenarioUnitsCatalog/functions/_setup_unit_create.md)
 - [`func _on_create_pressed(ctx: ScenarioEditorContext) -> void`](ScenarioUnitsCatalog/functions/_on_create_pressed.md)
 - [`func _on_unit_saved(ctx: ScenarioEditorContext, unit: UnitData, _path: String) -> void`](ScenarioUnitsCatalog/functions/_on_unit_saved.md)
+- [`func _on_dialog_closed(ctx: ScenarioEditorContext) -> void`](ScenarioUnitsCatalog/functions/_on_dialog_closed.md) — Called when dialog is closed without saving
 - [`func _get_selected_unit(ctx: ScenarioEditorContext) -> UnitData`](ScenarioUnitsCatalog/functions/_get_selected_unit.md) — Get the UnitData from the current selection.
 - [`func _used_unit_ids(ctx: ScenarioEditorContext) -> Dictionary`](ScenarioUnitsCatalog/functions/_used_unit_ids.md)
+- [`func _update_button_text(ctx: ScenarioEditorContext) -> void`](ScenarioUnitsCatalog/functions/_update_button_text.md) — Update the create/edit button text based on current selection
+- [`func _deselect_unit(ctx: ScenarioEditorContext) -> void`](ScenarioUnitsCatalog/functions/_deselect_unit.md) — Deselect the currently selected unit in the tree
+- [`func _cancel_active_tool(ctx: ScenarioEditorContext) -> void`](ScenarioUnitsCatalog/functions/_cancel_active_tool.md) — Cancel the active tool if one is running
 
 ## Public Attributes
 
@@ -87,6 +91,14 @@ func _on_create_pressed(ctx: ScenarioEditorContext) -> void
 func _on_unit_saved(ctx: ScenarioEditorContext, unit: UnitData, _path: String) -> void
 ```
 
+### _on_dialog_closed
+
+```gdscript
+func _on_dialog_closed(ctx: ScenarioEditorContext) -> void
+```
+
+Called when dialog is closed without saving
+
 ### _get_selected_unit
 
 ```gdscript
@@ -100,6 +112,30 @@ Get the UnitData from the current selection.
 ```gdscript
 func _used_unit_ids(ctx: ScenarioEditorContext) -> Dictionary
 ```
+
+### _update_button_text
+
+```gdscript
+func _update_button_text(ctx: ScenarioEditorContext) -> void
+```
+
+Update the create/edit button text based on current selection
+
+### _deselect_unit
+
+```gdscript
+func _deselect_unit(ctx: ScenarioEditorContext) -> void
+```
+
+Deselect the currently selected unit in the tree
+
+### _cancel_active_tool
+
+```gdscript
+func _cancel_active_tool(ctx: ScenarioEditorContext) -> void
+```
+
+Cancel the active tool if one is running
 
 ## Member Data Documentation
 

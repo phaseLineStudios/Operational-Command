@@ -1,6 +1,6 @@
 # DebugMenu::_recursive_collect_scenes Function Reference
 
-*Defined at:* `scripts/ui/DebugMenu.gd` (lines 117–137)</br>
+*Defined at:* `scripts/ui/DebugMenu.gd` (lines 120–140)</br>
 *Belongs to:* [DebugMenu](../../DebugMenu.md)
 
 **Signature**

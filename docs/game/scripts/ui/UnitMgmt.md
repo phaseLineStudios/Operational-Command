@@ -14,19 +14,20 @@ extends Control
 - [`func _ready() -> void`](UnitMgmt/functions/_ready.md) — Scene is ready: wire signals and populate UI from Game.
 - [`func _refresh_from_game() -> void`](UnitMgmt/functions/_refresh_from_game.md) — Pull units from Game and refresh list and panel.
 - [`func _collect_units_from_game() -> Array[UnitData]`](UnitMgmt/functions/_collect_units_from_game.md) — Return a flat array of UnitData from the current scenario or recruits.
-- [`func _get_pool() -> int`](UnitMgmt/functions/_get_pool.md) — Read the replacement pool from Game (placeholder persistence).
-- [`func _set_pool(v: int) -> void`](UnitMgmt/functions/_set_pool.md) — Write the replacement pool to Game (placeholder persistence).
+- [`func _get_pool() -> int`](UnitMgmt/functions/_get_pool.md) — Read the replacement pool from Game scenario.
+- [`func _set_pool(v: int) -> void`](UnitMgmt/functions/_set_pool.md) — Write the replacement pool to Game scenario.
 - [`func _on_preview_changed(_unit_id: String, _amt: int) -> void`](UnitMgmt/functions/_on_preview_changed.md) — Live preview hook from panel (visual-only here).
 - [`func _on_committed(plan: Dictionary) -> void`](UnitMgmt/functions/_on_committed.md) — Apply a committed plan:
 clamp to capacity and pool, then signal status changes.
 - [`func _find_unit(uid: String) -> UnitData`](UnitMgmt/functions/_find_unit.md) — Find a unit by id in the cached list.
-- [`func _status_string(u: UnitData) -> String`](UnitMgmt/functions/_status_string.md) — Derive a status string for external consumers.
-- [`func _can_reinforce(u: UnitData) -> bool`](UnitMgmt/functions/_can_reinforce.md) — Test if a unit can be reinforced (this screen cannot reinforce wiped-out units).
+- [`func _status_string(uid: String) -> String`](UnitMgmt/functions/_status_string.md) — Derive a status string for external consumers.
+- [`func _can_reinforce(uid: String) -> bool`](UnitMgmt/functions/_can_reinforce.md) — Test if a unit can be reinforced (this screen cannot reinforce wiped-out units).
 
 ## Public Attributes
 
 - `Array[UnitData] _units`
 - `Dictionary _uid_to_index`
+- `Dictionary[String, float] _unit_strength` — Temporary: tracks current strength per unit for campaign persistence (to be replaced)
 - `VBoxContainer _list_box`
 - `ReinforcementPanel _panel`
 - `Button _btn_refresh`
@@ -67,7 +68,7 @@ Return a flat array of UnitData from the current scenario or recruits.
 func _get_pool() -> int
 ```
 
-Read the replacement pool from Game (placeholder persistence).
+Read the replacement pool from Game scenario.
 
 ### _set_pool
 
@@ -75,7 +76,7 @@ Read the replacement pool from Game (placeholder persistence).
 func _set_pool(v: int) -> void
 ```
 
-Write the replacement pool to Game (placeholder persistence).
+Write the replacement pool to Game scenario.
 
 ### _on_preview_changed
 
@@ -105,7 +106,7 @@ Find a unit by id in the cached list.
 ### _status_string
 
 ```gdscript
-func _status_string(u: UnitData) -> String
+func _status_string(uid: String) -> String
 ```
 
 Derive a status string for external consumers.
@@ -113,7 +114,7 @@ Derive a status string for external consumers.
 ### _can_reinforce
 
 ```gdscript
-func _can_reinforce(u: UnitData) -> bool
+func _can_reinforce(uid: String) -> bool
 ```
 
 Test if a unit can be reinforced (this screen cannot reinforce wiped-out units).
@@ -131,6 +132,14 @@ var _units: Array[UnitData]
 ```gdscript
 var _uid_to_index: Dictionary
 ```
+
+### _unit_strength
+
+```gdscript
+var _unit_strength: Dictionary[String, float]
+```
+
+Temporary: tracks current strength per unit for campaign persistence (to be replaced)
 
 ### _list_box
 
@@ -159,7 +168,7 @@ signal unit_strength_changed(unit_id: String, current: int, status: String)
 ```
 
 Unit Management screen controller. Integrates ReinforcementPanel with unit list.
-This scene expects a Game singleton with current_scenario and an integer
-Game.campaign_replacement_pool for the shared personnel pool.
+This scene expects a Game singleton with current_scenario containing the
+scenario's replacement_pool for the shared personnel pool.
 When the player commits a plan, this applies the allocations to UnitData
-and emits unit_strength_changed for each modified unit.to UnitData.
+and emits unit_strength_changed for each modified unit.

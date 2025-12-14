@@ -1,6 +1,6 @@
 # FuelSystem::_on_move_paused Function Reference
 
-*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 158–163)</br>
+*Defined at:* `scripts/sim/systems/FuelSystem.gd` (lines 160–165)</br>
 *Belongs to:* [FuelSystem](../../FuelSystem.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # RadioSubtitles::_is_ascii_alpha_cp Function Reference
 
-*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 378–381)</br>
+*Defined at:* `scripts/ui/RadioSubtitles.gd` (lines 425–428)</br>
 *Belongs to:* [RadioSubtitles](../../RadioSubtitles.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MovementAdapter::request_move_to Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 357–363)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 359–365)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

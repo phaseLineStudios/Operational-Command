@@ -1,6 +1,6 @@
 # TerrainEditor::map_to_screen Function Reference
 
-*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 526–553)</br>
+*Defined at:* `scripts/editors/TerrainEditor.gd` (lines 528–555)</br>
 *Belongs to:* [TerrainEditor](../../TerrainEditor.md)
 
 **Signature**

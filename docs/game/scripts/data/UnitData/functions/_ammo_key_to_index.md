@@ -1,6 +1,6 @@
 # UnitData::_ammo_key_to_index Function Reference
 
-*Defined at:* `scripts/data/UnitData.gd` (lines 558–568)</br>
+*Defined at:* `scripts/data/UnitData.gd` (lines 519–529)</br>
 *Belongs to:* [UnitData](../../UnitData.md)
 
 **Signature**

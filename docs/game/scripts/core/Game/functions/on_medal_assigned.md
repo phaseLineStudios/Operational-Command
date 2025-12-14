@@ -1,6 +1,6 @@
 # Game::on_medal_assigned Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 187–231)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 296–340)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

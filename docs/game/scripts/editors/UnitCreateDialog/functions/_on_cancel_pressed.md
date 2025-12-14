@@ -1,6 +1,6 @@
 # UnitCreateDialog::_on_cancel_pressed Function Reference
 
-*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 266–271)</br>
+*Defined at:* `scripts/editors/UnitCreateDialog.gd` (lines 295–300)</br>
 *Belongs to:* [UnitCreateDialog](../../UnitCreateDialog.md)
 
 **Signature**

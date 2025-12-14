@@ -36,9 +36,26 @@ const PAPER_SURFACE_INDEX := 3
 ## Size of the document viewport for coordinate mapping
 @export var document_viewport_size := Vector2(2048, 2048)
 
+@export_group("Collision Sounds")
+## Collision sound effects to play randomly on impact
+@export var collision_sounds: Array[AudioStream] = [
+	preload("res://audio/sfx/sfx_drop_generic_01.wav"),
+	preload("res://audio/sfx/sfx_drop_generic_02.wav"),
+	preload("res://audio/sfx/sfx_drop_generic_03.wav"),
+	preload("res://audio/sfx/sfx_drop_generic_04.wav")
+]
+## Minimum impact impulse needed to trigger collision sound
+@export var collision_sound_min_impulse := 0.1
+## Cooldown between collision sounds (seconds)
+@export var collision_sound_cooldown := 0.1
+
 var origin_position: Vector3
 var origin_rotation: Vector3
 var _pre_pick_freeze := false
+var _collision_sound_player: AudioStreamPlayer3D
+var _last_collision_time := 0.0
+var _last_impact_impulse := 0.0
+var _collision_sounds_enabled := false
 
 var _inspecting := false
 var _inspect_camera: Camera3D
@@ -57,6 +74,12 @@ func get_grab_offset(hit_position: Vector3) -> Vector3:
 		return to_local(hit_position)
 
 
+func _enter_tree() -> void:
+	if not collision_sounds.is_empty():
+		max_contacts_reported = 4
+		contact_monitor = true
+
+
 func _ready():
 	collision_layer = 2
 	origin_position = global_transform.origin
@@ -64,6 +87,13 @@ func _ready():
 
 	if document_viewport:
 		set_process_unhandled_input(true)
+
+	if not collision_sounds.is_empty():
+		_collision_sound_player = AudioStreamPlayer3D.new()
+		_collision_sound_player.bus = "SFX"
+		add_child(_collision_sound_player)
+
+		set_physics_process(true)
 
 
 ## Runs on pickup
@@ -82,6 +112,10 @@ func on_drop() -> void:
 		if snap_to_origin_rotation:
 			global_rotation = origin_rotation
 		freeze = true
+
+		var sound := collision_sounds[randi() % collision_sounds.size()]
+		_collision_sound_player.stream = sound
+		_collision_sound_player.play()
 	elif snap_to_origin_rotation:
 		global_rotation = origin_rotation
 		freeze = false
@@ -90,6 +124,16 @@ func on_drop() -> void:
 
 	if hide_mouse:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+
+## Enable collision sounds
+func enable_collision_sounds() -> void:
+	_collision_sounds_enabled = true
+
+
+## Disable collision sounds
+func disable_collision_sounds() -> void:
+	_collision_sounds_enabled = false
 
 
 ## Runs on inspect start
@@ -108,6 +152,7 @@ func end_inspect() -> void:
 		return
 	_inspecting = false
 	_inspect_camera = null
+	global_transform = _pre_inspect_transform
 	global_rotation_degrees = held_rotation
 
 
@@ -212,12 +257,48 @@ func _process(delta: float) -> void:
 		global_transform = target_t
 
 
+## Physics process for collision detection
+func _physics_process(_delta: float) -> void:
+	if collision_sounds.is_empty() or not _collision_sound_player or not _collision_sounds_enabled:
+		return
+
+	if _last_impact_impulse > collision_sound_min_impulse:
+		var current_time := Time.get_ticks_msec() / 1000.0
+		if current_time - _last_collision_time >= collision_sound_cooldown:
+			var volume_db := clampf(
+				remap(_last_impact_impulse, collision_sound_min_impulse, 1.0, -10.0, 0.0),
+				-10.0,
+				0.0
+			)
+
+			var sound := collision_sounds[randi() % collision_sounds.size()]
+			_collision_sound_player.stream = sound
+			_collision_sound_player.volume_db = volume_db
+			_collision_sound_player.play()
+
+			_last_collision_time = current_time
+
+		_last_impact_impulse = 0.0
+
+
+## Integrate forces to detect collisions reliably
+func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	var contact_count := state.get_contact_count()
+	if contact_count > 0:
+		var max_impulse := 0.0
+		for i in contact_count:
+			var impulse := state.get_contact_impulse(i).length()
+			if impulse > max_impulse:
+				max_impulse = impulse
+
+		_last_impact_impulse = max(max_impulse, _last_impact_impulse)
+
+
 ## Handle unhandled input for document interaction
 func _unhandled_input(event: InputEvent) -> void:
 	if not document_viewport:
 		return
 
-	# Only handle mouse button clicks while inspecting
 	if not _inspecting:
 		return
 
@@ -226,7 +307,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	var mouse_event := event as InputEventMouseButton
 
-	# Only handle left clicks
 	if mouse_event.button_index != MOUSE_BUTTON_LEFT:
 		return
 
@@ -347,7 +427,7 @@ func _barycentric_coords(p: Vector3, a: Vector3, b: Vector3, c: Vector3) -> Vect
 
 	var denom := d00 * d11 - d01 * d01
 	if abs(denom) < 0.0001:
-		return Vector3(1, 0, 0)  # Degenerate triangle
+		return Vector3(1, 0, 0)
 
 	var v := (d11 * d20 - d01 * d21) / denom
 	var w := (d00 * d21 - d01 * d20) / denom

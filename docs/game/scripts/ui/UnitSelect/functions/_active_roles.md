@@ -1,6 +1,6 @@
 # UnitSelect::_active_roles Function Reference
 
-*Defined at:* `scripts/ui/UnitSelect.gd` (lines 166–182)</br>
+*Defined at:* `scripts/ui/UnitSelect.gd` (lines 196–212)</br>
 *Belongs to:* [UnitSelect](../../UnitSelect.md)
 
 **Signature**

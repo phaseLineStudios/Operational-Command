@@ -1,6 +1,6 @@
 # HQTable::_on_radio_off Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 300–303)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 390–393)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**
@@ -17,5 +17,5 @@ Handle radio PTT released
 
 ```gdscript
 func _on_radio_off() -> void:
-	pass  # Wait for result to show final text
+	pass
 ```

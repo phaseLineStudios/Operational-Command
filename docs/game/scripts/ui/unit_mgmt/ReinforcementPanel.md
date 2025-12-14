@@ -2,19 +2,19 @@
 
 *File:* `scripts/ui/unit_mgmt/ReinforcementPanel.gd`
 *Class name:* `ReinforcementPanel`
-*Inherits:* `Control`
+*Inherits:* `VBoxContainer`
 
 ## Synopsis
 
 ```gdscript
 class_name ReinforcementPanel
-extends Control
+extends VBoxContainer
 ```
 
 ## Public Member Functions
 
 - [`func _ready() -> void`](ReinforcementPanel/functions/_ready.md)
-- [`func set_units(units: Array[UnitData]) -> void`](ReinforcementPanel/functions/set_units.md) — Provide the list of units to display.
+- [`func set_units(units: Array[UnitData], unit_strengths: Dictionary = {}) -> void`](ReinforcementPanel/functions/set_units.md) — Provide the list of units to display.
 - [`func set_pool(amount: int) -> void`](ReinforcementPanel/functions/set_pool.md) — Set available replacements in the pool and refresh UI.
 - [`func reset_pending() -> void`](ReinforcementPanel/functions/reset_pending.md) — Clear the pending plan back to zero for all units.
 - [`func commit() -> void`](ReinforcementPanel/functions/commit.md) — Emit the current plan to the owner.
@@ -42,13 +42,15 @@ extends Control
 - `int _pool_remaining`
 - `Dictionary[String, int] _pending`
 - `Dictionary[String, RowWidgets] _rows`
+- `Dictionary[String, float] _unit_strength` — Temporary: tracks current strength per unit for campaign persistence (to be replaced)
 - `Label _lbl_pool`
 - `VBoxContainer _rows_box`
 - `Button _btn_commit`
 - `Button _btn_reset`
-- `HBoxContainer box`
+- `VBoxContainer box`
 - `Label title`
 - `UnitStrengthBadge badge`
+- `Label current_max_label`
 - `Button minus`
 - `Label value`
 - `Button plus`
@@ -72,10 +74,12 @@ func _ready() -> void
 ### set_units
 
 ```gdscript
-func set_units(units: Array[UnitData]) -> void
+func set_units(units: Array[UnitData], unit_strengths: Dictionary = {}) -> void
 ```
 
 Provide the list of units to display. Rebuild rows and clear any plan.
+`units` Array of UnitData templates.
+`unit_strengths` Optional dictionary mapping unit_id -> current_strength (for campaign).
 
 ### set_pool
 
@@ -253,6 +257,14 @@ var _pending: Dictionary[String, int]
 var _rows: Dictionary[String, RowWidgets]
 ```
 
+### _unit_strength
+
+```gdscript
+var _unit_strength: Dictionary[String, float]
+```
+
+Temporary: tracks current strength per unit for campaign persistence (to be replaced)
+
 ### _lbl_pool
 
 ```gdscript
@@ -280,7 +292,7 @@ var _btn_reset: Button
 ### box
 
 ```gdscript
-var box: HBoxContainer
+var box: VBoxContainer
 ```
 
 ### title
@@ -293,6 +305,12 @@ var title: Label
 
 ```gdscript
 var badge: UnitStrengthBadge
+```
+
+### current_max_label
+
+```gdscript
+var current_max_label: Label
 ```
 
 ### minus

@@ -1,6 +1,6 @@
 # MissionSelect::_on_back_pressed Function Reference
 
-*Defined at:* `scripts/ui/MissionSelect.gd` (lines 172–175)</br>
+*Defined at:* `scripts/ui/MissionSelect.gd` (lines 289–292)</br>
 *Belongs to:* [MissionSelect](../../MissionSelect.md)
 
 **Signature**

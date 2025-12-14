@@ -1,6 +1,6 @@
 # TerrainData::begin_batch Function Reference
 
-*Defined at:* `scripts/data/TerrainData.gd` (lines 85–88)</br>
+*Defined at:* `scripts/data/TerrainData.gd` (lines 97–100)</br>
 *Belongs to:* [TerrainData](../../TerrainData.md)
 
 **Signature**

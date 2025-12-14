@@ -1,6 +1,6 @@
 # ReinforcementTest::_ready Function Reference
 
-*Defined at:* `scripts/test/ReinforcementTest.gd` (lines 26–87)</br>
+*Defined at:* `scripts/test/ReinforcementTest.gd` (lines 28–92)</br>
 *Belongs to:* [ReinforcementTest](../../ReinforcementTest.md)
 
 **Signature**
@@ -15,31 +15,34 @@ func _ready() -> void
 func _ready() -> void:
 	# Demo units
 	_units = _make_demo_units()
+	# Initialize strength dictionary from demo units (see _make_demo_units for values)
+	for u in _units:
+		# Values set in _make_demo_units: ALPHA=17, BRAVO=0 (wiped), CHARLIE=27
+		_unit_strength[u.id] = float(u.strength)  # Will be overridden below
 
-	# Seed Game's pool first (if autoload exists)
+	# Set test values explicitly
+	_unit_strength["ALPHA"] = 17.0
+	_unit_strength["BRAVO"] = 0.0  # wiped out
+	_unit_strength["CHARLIE"] = 27.0
+
+	# Seed Game's scenario pool first (if autoload exists and scenario is loaded)
 	var g: Node = get_tree().get_root().get_node_or_null("/root/Game")
-	if g:
-		if g.has_method("set_replacement_pool"):
-			g.set_replacement_pool(START_POOL)
-		elif g.has_variable("campaign_replacement_pool"):
-			g.campaign_replacement_pool = START_POOL
+	if g and g.current_scenario:
+		g.current_scenario.replacement_pool = START_POOL
 
 	# Build panel and wait a frame so onready nodes exist
 	_panel = PANEL_SCENE.instantiate() as ReinforcementPanel
 	add_child(_panel)
 	await get_tree().process_frame
 
-	# Initial pool (prefer Game's value)
-	if g:
-		if g.has_method("get_replacement_pool"):
-			_pool = int(g.get_replacement_pool())
-		elif g.has_variable("campaign_replacement_pool"):
-			_pool = int(g.campaign_replacement_pool)
+	# Initial pool (prefer Game scenario's value)
+	if g and g.current_scenario:
+		_pool = int(g.current_scenario.replacement_pool)
 	else:
 		_pool = START_POOL
 
 	# Configure panel (initial view)
-	_panel.set_units(_units)
+	_panel.set_units(_units, _unit_strength)
 	_panel.set_pool(_pool)
 	_panel.reset_pending()
 
@@ -51,7 +54,7 @@ func _ready() -> void:
 		_test_casualties()
 
 	# Ensure panel reflects any mutations from tests, then snapshot
-	_panel.set_units(_units)
+	_panel.set_units(_units, _unit_strength)
 	_panel.set_pool(_pool)
 	_panel.reset_pending()
 
