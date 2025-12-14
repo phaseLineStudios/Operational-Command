@@ -118,7 +118,7 @@ func _apply_video_perf_settings() -> void:
 	elif px >= 2_000_000.0:
 		root_viewport.msaa_3d = Viewport.MSAA_2X
 	elif _base_msaa_3d >= 0:
-		root_viewport.msaa_3d = _base_msaa_3d
+		root_viewport.msaa_3d = _base_msaa_3d as Viewport.MSAA
 
 	LogService.info(
 		(

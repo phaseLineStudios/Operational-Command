@@ -528,7 +528,7 @@ func _refresh_texture(material: StandardMaterial3D, viewport: SubViewport) -> vo
 	material.albedo_color = Color.WHITE
 	material.metallic = 0.0
 	material.roughness = 1.0
-	material.specular = 0.0
+	#material.specular = 0.0
 
 	material.texture_filter = (
 		BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
