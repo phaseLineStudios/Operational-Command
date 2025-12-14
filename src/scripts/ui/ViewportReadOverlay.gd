@@ -59,7 +59,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_texture_gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+	if (
+		event is InputEventMouseButton
+		and event.pressed
+		and event.button_index == MOUSE_BUTTON_RIGHT
+	):
 		get_viewport().set_input_as_handled()
 		close()
 
@@ -126,7 +130,4 @@ func _map_global_to_viewport_pos(global_pos: Vector2) -> Vector2:
 
 	var local_tex: Vector2 = (global_pos - draw_pos) / scale
 	var vp_size_v2 := Vector2(_viewport_size)
-	return Vector2(
-		local_tex.x * vp_size_v2.x / tex_size.x,
-		local_tex.y * vp_size_v2.y / tex_size.y
-	)
+	return Vector2(local_tex.x * vp_size_v2.x / tex_size.x, local_tex.y * vp_size_v2.y / tex_size.y)

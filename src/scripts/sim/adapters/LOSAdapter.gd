@@ -54,7 +54,9 @@ func _ready() -> void:
 		_renderer = get_node(terrain_renderer_path) as TerrainRender
 		_terrain = _renderer.data
 
-	var scan_enabled: bool = sim == null and not actor_path.is_empty() and String(hostiles_group_name) != ""
+	var scan_enabled: bool = (
+		sim == null and not actor_path.is_empty() and String(hostiles_group_name) != ""
+	)
 	set_process(scan_enabled)
 	if scan_enabled:
 		_actor = get_node_or_null(actor_path) as Node3D

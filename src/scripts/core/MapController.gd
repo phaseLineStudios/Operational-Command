@@ -331,20 +331,34 @@ func _bind_terrain_signals(d: TerrainData) -> void:
 	if _terrain_data:
 		if _terrain_data.is_connected("changed", Callable(self, "_on_terrain_changed")):
 			_terrain_data.disconnect("changed", Callable(self, "_on_terrain_changed"))
-		if _terrain_data.is_connected("elevation_changed", Callable(self, "_on_terrain_elevation_changed")):
+		if _terrain_data.is_connected(
+			"elevation_changed", Callable(self, "_on_terrain_elevation_changed")
+		):
 			_terrain_data.disconnect(
 				"elevation_changed", Callable(self, "_on_terrain_elevation_changed")
 			)
-		if _terrain_data.is_connected("surfaces_changed", Callable(self, "_on_terrain_content_changed")):
+		if _terrain_data.is_connected(
+			"surfaces_changed", Callable(self, "_on_terrain_content_changed")
+		):
 			_terrain_data.disconnect(
 				"surfaces_changed", Callable(self, "_on_terrain_content_changed")
 			)
-		if _terrain_data.is_connected("lines_changed", Callable(self, "_on_terrain_content_changed")):
+		if _terrain_data.is_connected(
+			"lines_changed", Callable(self, "_on_terrain_content_changed")
+		):
 			_terrain_data.disconnect("lines_changed", Callable(self, "_on_terrain_content_changed"))
-		if _terrain_data.is_connected("points_changed", Callable(self, "_on_terrain_content_changed")):
-			_terrain_data.disconnect("points_changed", Callable(self, "_on_terrain_content_changed"))
-		if _terrain_data.is_connected("labels_changed", Callable(self, "_on_terrain_content_changed")):
-			_terrain_data.disconnect("labels_changed", Callable(self, "_on_terrain_content_changed"))
+		if _terrain_data.is_connected(
+			"points_changed", Callable(self, "_on_terrain_content_changed")
+		):
+			_terrain_data.disconnect(
+				"points_changed", Callable(self, "_on_terrain_content_changed")
+			)
+		if _terrain_data.is_connected(
+			"labels_changed", Callable(self, "_on_terrain_content_changed")
+		):
+			_terrain_data.disconnect(
+				"labels_changed", Callable(self, "_on_terrain_content_changed")
+			)
 
 	_terrain_data = d
 	if _terrain_data == null:
@@ -480,7 +494,9 @@ func screen_to_map_and_terrain(screen_pos: Vector2) -> Variant:
 	var map_px: Variant = _plane_hit_to_map_px(hit)
 	if map_px == null or renderer == null:
 		return null
-	var s: float = _viewport_pixel_scale if _viewport_pixel_scale > 0.0 else float(max(viewport_oversample, 1))
+	var s: float = (
+		_viewport_pixel_scale if _viewport_pixel_scale > 0.0 else float(max(viewport_oversample, 1))
+	)
 	var logical_px: Vector2 = map_px / s
 	var terrain_pos: Vector2 = renderer.map_to_terrain(logical_px)
 	return {"map_px": map_px, "terrain": terrain_pos}
@@ -548,7 +564,9 @@ func terrain_to_screen(terrain_pos: Vector2) -> Variant:
 	var map_px: Vector2 = renderer.terrain_to_map(terrain_pos)
 
 	# Convert map units to viewport pixels (oversample and/or downscale).
-	var s: float = _viewport_pixel_scale if _viewport_pixel_scale > 0.0 else float(max(viewport_oversample, 1))
+	var s: float = (
+		_viewport_pixel_scale if _viewport_pixel_scale > 0.0 else float(max(viewport_oversample, 1))
+	)
 	var vp_px: Vector2 = map_px * s
 
 	# Convert map pixels to UV coordinates (0-1)

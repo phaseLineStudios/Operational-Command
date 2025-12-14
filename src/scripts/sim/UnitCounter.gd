@@ -71,17 +71,20 @@ static func _face_cache_key(
 	p_symbol_size: MilSymbol.UnitSize,
 	bg: Color
 ) -> String:
-	return JSON.stringify(
-		[
-			int(aff),
-			p_callsign,
-			int(p_symbol_type),
-			int(p_symbol_size),
-			float(bg.r),
-			float(bg.g),
-			float(bg.b),
-			float(bg.a),
-		]
+	return (
+		JSON
+		. stringify(
+			[
+				int(aff),
+				p_callsign,
+				int(p_symbol_type),
+				int(p_symbol_size),
+				float(bg.r),
+				float(bg.g),
+				float(bg.b),
+				float(bg.a),
+			]
+		)
 	)
 
 

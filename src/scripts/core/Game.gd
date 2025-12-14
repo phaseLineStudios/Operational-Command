@@ -152,10 +152,7 @@ func _compute_content_scale_size(window_size: Vector2i, target_size: Vector2i) -
 	var sx: float = float(window_size.x) / float(out.x)
 	var sy: float = float(window_size.y) / float(out.y)
 	var s: float = minf(1.0, minf(sx, sy))
-	return Vector2i(
-		maxi(1, int(round(float(out.x) * s))),
-		maxi(1, int(round(float(out.y) * s)))
-	)
+	return Vector2i(maxi(1, int(round(float(out.x) * s))), maxi(1, int(round(float(out.y) * s))))
 
 
 ## Set current campaign and emit [signal campaign_selected].

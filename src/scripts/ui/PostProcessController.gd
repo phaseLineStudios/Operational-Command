@@ -181,7 +181,9 @@ func _apply_read_mode(enabled: bool) -> void:
 			grain_amount = float(_saved_settings.get("grain_amount", grain_amount))
 			grain_size = float(_saved_settings.get("grain_size", grain_size))
 			vignette = bool(_saved_settings.get("vignette", vignette))
-			vignette_intensity = float(_saved_settings.get("vignette_intensity", vignette_intensity))
+			vignette_intensity = float(
+				_saved_settings.get("vignette_intensity", vignette_intensity)
+			)
 			vignette_softness = float(_saved_settings.get("vignette_softness", vignette_softness))
 			glow = bool(_saved_settings.get("glow", glow))
 			glow_intensity = float(_saved_settings.get("glow_intensity", glow_intensity))
@@ -229,11 +231,15 @@ func _restore_video_state() -> void:
 		return
 	var window: Window = get_window()
 	if window:
-		window.content_scale_mode = int(_saved_video.get("content_scale_mode", window.content_scale_mode))
+		window.content_scale_mode = int(
+			_saved_video.get("content_scale_mode", window.content_scale_mode)
+		)
 		window.content_scale_aspect = int(
 			_saved_video.get("content_scale_aspect", window.content_scale_aspect)
 		)
-		window.content_scale_size = _saved_video.get("content_scale_size", window.content_scale_size)
+		window.content_scale_size = _saved_video.get(
+			"content_scale_size", window.content_scale_size
+		)
 	var root_vp := get_tree().root
 	if root_vp:
 		root_vp.scaling_3d_mode = int(_saved_video.get("scaling_3d_mode", root_vp.scaling_3d_mode))
