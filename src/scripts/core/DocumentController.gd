@@ -135,6 +135,8 @@ func _setup_viewports() -> void:
 	_intel_viewport.transparent_bg = false
 	_intel_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	_intel_viewport.gui_disable_input = false
+	_intel_viewport.msaa_2d = Viewport.MSAA_2X
+	_intel_viewport.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
 	add_child(_intel_viewport)
 
 	# Transcript viewport
@@ -143,6 +145,8 @@ func _setup_viewports() -> void:
 	_transcript_viewport.transparent_bg = false
 	_transcript_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	_transcript_viewport.gui_disable_input = false
+	_transcript_viewport.msaa_2d = Viewport.MSAA_2X
+	_transcript_viewport.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
 	add_child(_transcript_viewport)
 
 	# Briefing viewport
@@ -151,6 +155,8 @@ func _setup_viewports() -> void:
 	_briefing_viewport.transparent_bg = false
 	_briefing_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	_briefing_viewport.gui_disable_input = false
+	_briefing_viewport.msaa_2d = Viewport.MSAA_2X
+	_briefing_viewport.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
 	add_child(_briefing_viewport)
 
 
@@ -517,6 +523,12 @@ func _refresh_texture(material: StandardMaterial3D, viewport: SubViewport) -> vo
 	if material == null or viewport == null:
 		LogService.warning("Cannot refresh: material or viewport is null", "DocumentController.gd")
 		return
+
+	# Reduce glare so text stays readable under strong lights.
+	material.albedo_color = Color.WHITE
+	material.metallic = 0.0
+	material.roughness = 1.0
+	material.specular = 0.0
 
 	material.texture_filter = (
 		BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
