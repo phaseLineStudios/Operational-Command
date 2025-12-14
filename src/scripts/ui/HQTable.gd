@@ -131,7 +131,7 @@ func _init_document_controller(scenario: ScenarioData) -> void:
 ## Handle player radio result for transcript
 func _on_radio_transcript_player_early(text: String) -> void:
 	if document_controller and text != "":
-		document_controller.add_transcript_entry("PLAYER", text)
+		await document_controller.add_transcript_entry("PLAYER", text)
 
 
 ## Handle AI radio messages for transcript
@@ -145,13 +145,13 @@ func _on_radio_transcript_ai(level: String, text: String) -> void:
 	await get_tree().process_frame
 
 	var speaker := _extract_speaker_from_message(text)
-	document_controller.add_transcript_entry(speaker, text)
+	await document_controller.add_transcript_entry(speaker, text)
 
 
 ## Handle unit voice responses for transcript (both acknowledgments and auto-responses)
 func _on_unit_voice_transcript(callsign: String, message: String) -> void:
 	if document_controller and message != "":
-		document_controller.add_transcript_entry(callsign, message)
+		await document_controller.add_transcript_entry(callsign, message)
 
 
 ## Extract speaker callsign from message text if present, otherwise return "HQ".
@@ -533,7 +533,7 @@ func _init_enemy_ai() -> void:
 		agent.set_behaviour(int(u.behaviour))
 		agent.set_combat_mode(int(u.combat_mode))
 
-		var ordered: Array = per_unit.get(i, [])
+		var ordered: Array[Dictionary] = per_unit.get(i, [] as Array[Dictionary])
 		if ordered.is_empty():
 			agent.set_behaviour(ScenarioUnit.Behaviour.AWARE)
 			u.behaviour = ScenarioUnit.Behaviour.AWARE

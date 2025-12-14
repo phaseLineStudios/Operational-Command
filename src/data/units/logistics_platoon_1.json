@@ -1,55 +1,55 @@
 {
   "allowed_slots": [
-    "INF_SLOT",
-    "SUPPORT_SLOT",
-    "RESERVE_ANY",
-    "RESERVE_INF",
+	"INF_SLOT",
+	"SUPPORT_SLOT",
+	"RESERVE_ANY",
+	"RESERVE_INF",
     "RESERVE_SUPPORT"
   ],
   "ammunition": {
-    "ARTILLERY_AP": 0,
-    "ARTILLERY_ILLUM": 0,
-    "ARTILLERY_SMOKE": 0,
-    "ATGM": 0,
-    "AT_ROCKET": 0,
-    "AUTOCANNON": 0,
-    "ENGINEER_MUN": 0,
-    "HEAVY_WEAPONS": 0,
-    "MORTAR_AP": 0,
-    "MORTAR_ILLUM": 0,
-    "MORTAR_SMOKE": 0,
-    "SMALL_ARMS": 0,
-    "TANK_GUN": 0
+	"ARTILLERY_AP": 0,
+	"ARTILLERY_ILLUM": 0,
+	"ARTILLERY_SMOKE": 0,
+	"ATGM": 0,
+	"AT_ROCKET": 0,
+	"AUTOCANNON": 0,
+	"ENGINEER_MUN": 0,
+	"HEAVY_WEAPONS": 0,
+	"MORTAR_AP": 0,
+	"MORTAR_ILLUM": 0,
+	"MORTAR_SMOKE": 0,
+	"SMALL_ARMS": 0,
+	"TANK_GUN": 0
   },
   "ammunition_critical_threshold": 0.1,
   "ammunition_low_threshold": 0.25,
   "cost": 50,
   "doctrine": "nato_logi_1984",
   "editor": {
-    "unit_category": "us_army"
+	"unit_category": "us_army"
   },
   "equipment": {
-    "m1026a0": {
+	"m1026a0": {
 
-    },
-    "m925a2": {
+	},
+	"m925a2": {
 
-    },
-    "m932a2_fuel": {
+	},
+	"m932a2_fuel": {
 
-    },
-    "radios": {
+	},
+	"radios": {
 
-    },
-    "vehicles": {
+	},
+	"vehicles": {
 
-    },
-    "weapons": {
+	},
+	"weapons": {
 
-    }
+	}
   },
   "equipment_tags": [
-    "AMMUNITION_PALLET",
+	"AMMUNITION_PALLET",
     "FUEL_TANK"
   ],
   "experience": 0.0,
@@ -58,28 +58,28 @@
   "role": "SUPPORT",
   "size": 0,
   "state": {
-    "cohesion": 1.0,
-    "state_equipment": 1.0,
-    "state_injured": 0.0,
-    "state_strength": 15.0
+	"cohesion": 1.0,
+	"state_equipment": 1.0,
+	"state_injured": 0.0,
+	"state_strength": 15.0
   },
   "state_ammunition": {
 
   },
   "stats": {
-    "attack": 25.0,
-    "defense": 15.0,
-    "morale": 1.0,
-    "range_m": 300.0,
-    "speed_kph": 50.0,
-    "spot_m": 800.0
+	"attack": 25.0,
+	"defense": 15.0,
+	"morale": 1.0,
+	"range_m": 300.0,
+	"speed_kph": 50.0,
+	"spot_m": 800.0
   },
   "strength": 15,
   "supply_transfer_radius_m": 30.0,
   "supply_transfer_rate": 10.0,
   "throughput": {
-    "equipment": 500.0,
-    "fuel": 500.0
+	"equipment": 500.0,
+	"fuel": 500.0
   },
   "title": "1st Logi",
   "type": 9

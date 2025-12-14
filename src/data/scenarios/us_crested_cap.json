@@ -732,13 +732,8 @@
 		"id": "frg_bw_opfor_1",
 		"playable": false,
 		"position": {
-<<<<<<< HEAD
-		  "x": 2060.09741210938,
-		  "y": 1244.36572265625
-=======
 		  "x": 1969.70947265625,
 		  "y": 1257.82788085938
->>>>>>> origin/main
 		},
 		"state": {
 		  "cohesion": 1.0,
@@ -747,11 +742,7 @@
 		  },
 		  "state_equipment": 0.0,
 		  "state_injured": 0.0,
-<<<<<<< HEAD
-		  "state_strength": 0.0
-=======
 		  "state_strength": 31.0
->>>>>>> origin/main
 		},
 		"unit_id": "frg_bw_opfor"
 	  },
@@ -773,11 +764,7 @@
 		  },
 		  "state_equipment": 0.0,
 		  "state_injured": 0.0,
-<<<<<<< HEAD
-		  "state_strength": 0.0
-=======
 		  "state_strength": 28.0
->>>>>>> origin/main
 		},
 		"unit_id": "frg_opfor_2_bundeswehr"
 	  }
@@ -907,14 +894,12 @@
 		"title": "FOXTROT"
 	  }
 	]
-<<<<<<< HEAD
   },
   "weather": {
 	"fog_m": 8000.0,
 	"rain": 0.0,
 	"wind_dir": 0.0,
 	"wind_speed_m": 1.0
-=======
   },
   "video_path": "res://assets/videos/us_crested_cap_intro.ogv",
   "video_subtitles": {
@@ -976,6 +961,5 @@
 	"rain": 2.6,
 	"wind_dir": 67.0,
 	"wind_speed_m": 4.0
->>>>>>> origin/main
   }
 }

@@ -3,42 +3,42 @@
     "INF"
   ],
   "ammunition": {
-    "ARTILLERY_AP": 0,
-    "ARTILLERY_ILLUM": 0,
-    "ARTILLERY_SMOKE": 0,
-    "ATGM": 0,
-    "AT_ROCKET": 0,
-    "AUTOCANNON": 0,
-    "ENGINEER_BRIDGE": 0,
-    "ENGINEER_DEMO": 0,
-    "ENGINEER_MINE": 0,
-    "HEAVY_WEAPONS": 0,
-    "MORTAR_AP": 0,
-    "MORTAR_ILLUM": 0,
-    "MORTAR_SMOKE": 0,
-    "SMALL_ARMS": 12,
-    "TANK_GUN": 0
+	"ARTILLERY_AP": 0,
+	"ARTILLERY_ILLUM": 0,
+	"ARTILLERY_SMOKE": 0,
+	"ATGM": 0,
+	"AT_ROCKET": 0,
+	"AUTOCANNON": 0,
+	"ENGINEER_BRIDGE": 0,
+	"ENGINEER_DEMO": 0,
+	"ENGINEER_MINE": 0,
+	"HEAVY_WEAPONS": 0,
+	"MORTAR_AP": 0,
+	"MORTAR_ILLUM": 0,
+	"MORTAR_SMOKE": 0,
+	"SMALL_ARMS": 12,
+	"TANK_GUN": 0
   },
   "ammunition_critical_threshold": 0.1,
   "ammunition_low_threshold": 0.25,
   "cost": 50,
   "doctrine": "nato_inf_1983",
   "editor": {
-    "unit_category": "us_army"
+	"unit_category": "us_army"
   },
   "equipment": {
-    "radios": {
+	"radios": {
 
-    },
-    "vehicles": {
+	},
+	"vehicles": {
 
-    },
-    "weapons": {
-      "Gun": {
-        "ammo": 0,
-        "type": 12
-      }
-    }
+	},
+	"weapons": {
+	  "Gun": {
+		"ammo": 0,
+		"type": 12
+	  }
+	}
   },
   "equipment_tags": [],
   "experience": 0.0,
@@ -49,21 +49,21 @@
   "role": "INF",
   "size": 3,
   "state": {
-    "cohesion": 0.0,
-    "state_equipment": 0.0,
-    "state_injured": 0.0,
-    "state_strength": 12.0
+	"cohesion": 0.0,
+	"state_equipment": 0.0,
+	"state_injured": 0.0,
+	"state_strength": 12.0
   },
   "state_ammunition": {
 
   },
   "stats": {
-    "attack": 20.0,
-    "defense": 15.0,
-    "morale": 1.0,
-    "range_m": 500.0,
-    "speed_kph": 50.0,
-    "spot_m": 800.0
+	"attack": 20.0,
+	"defense": 15.0,
+	"morale": 1.0,
+	"range_m": 500.0,
+	"speed_kph": 50.0,
+	"spot_m": 800.0
   },
   "strength": 12,
   "supply_transfer_radius_m": 30.0,
