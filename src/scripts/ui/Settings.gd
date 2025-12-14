@@ -22,6 +22,11 @@ const CONFIG_PATH := "user://settings.cfg"
 ## Scene to navigate to on back (leave empty for no action)
 @export var back_scene: PackedScene
 
+@export_group("Performance")
+## If true, automatically reduce 3D MSAA at very high pixel counts.
+@export var auto_adjust_aa: bool = true
+
+var _base_msaa_3d: int = -1
 var _bus_rows: Dictionary = {}  # name -> {slider: HSlider, label: Label, mute: CheckBox}
 var _cfg := ConfigFile.new()
 
@@ -50,6 +55,7 @@ var _cfg := ConfigFile.new()
 
 ## Build UI and load config.
 func _ready() -> void:
+	_base_msaa_3d = get_tree().root.msaa_3d if get_tree() and get_tree().root else -1
 	_build_video_ui()
 	_build_audio_ui()
 	_build_controls_ui()
@@ -288,8 +294,95 @@ func _apply_video() -> void:
 			get_window().size = res_size
 
 	Engine.max_fps = int(_fps.value)
-	# Store render scale only; actual scaling strategy can be implemented later.
-	# (Keeps groundwork without forcing a scaling mode right now.)
+	_schedule_render_scale_apply()
+
+
+## Apply 3D render scaling to keep performance stable at higher resolutions.
+func _apply_render_scale() -> void:
+	var root_viewport := get_tree().root
+	if root_viewport == null:
+		return
+
+	var window: Window = get_window()
+	var window_size: Vector2i = window.size if window != null else Vector2i.ZERO
+	if window_size.x <= 0 or window_size.y <= 0:
+		window_size = root_viewport.size
+
+	var target_size: Vector2i = window_size
+	var idx := _res.get_selected()
+	if idx >= 0 and idx < resolutions.size():
+		target_size = resolutions[idx]
+
+	# Lock the internal render resolution to the selected resolution and scale the final
+	# output to the window. This avoids large performance swings when resizing.
+	var content_size: Vector2i = _compute_content_scale_size(window_size, target_size)
+	if window != null:
+		window.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
+		window.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
+		window.content_scale_size = content_size
+
+	var user_scale: float = clampf(float(_scale.value) / 100.0, 0.1, 2.0)
+	var final_scale: float = user_scale
+
+	# Godot 4 exposes scaling modes but no explicit "disabled" enum;
+	# use bilinear at scale 1.0 to behave like "off".
+	var mode: int = Viewport.SCALING_3D_MODE_BILINEAR
+	if final_scale < 0.999:
+		mode = Viewport.SCALING_3D_MODE_FSR
+	root_viewport.scaling_3d_mode = mode
+	root_viewport.scaling_3d_scale = final_scale
+
+	_apply_adaptive_aa(root_viewport, content_size, final_scale)
+
+
+func _apply_adaptive_aa(root_viewport: Viewport, render_size: Vector2i, final_scale: float) -> void:
+	if not auto_adjust_aa:
+		if _base_msaa_3d >= 0:
+			root_viewport.msaa_3d = _base_msaa_3d
+		return
+
+	# Estimate actual 3D render pixel count (roughly proportional to cost).
+	var px: float = float(maxi(render_size.x, 1)) * float(maxi(render_size.y, 1))
+	px *= final_scale * final_scale
+
+	# Disable heavy MSAA at high resolutions (big fullscreen performance win).
+	# 2560x1440 ~= 3.7M px, 3840x2160 ~= 8.3M px
+	if px >= 3_500_000.0:
+		root_viewport.msaa_3d = Viewport.MSAA_DISABLED
+	elif px >= 2_000_000.0:
+		root_viewport.msaa_3d = Viewport.MSAA_2X
+	else:
+		if _base_msaa_3d >= 0:
+			root_viewport.msaa_3d = _base_msaa_3d
+
+
+func _compute_content_scale_size(window_size: Vector2i, target_size: Vector2i) -> Vector2i:
+	var out: Vector2i = target_size
+	if out.x <= 0 or out.y <= 0:
+		out = window_size
+	if out.x <= 0 or out.y <= 0:
+		return Vector2i(1, 1)
+
+	if window_size.x <= 0 or window_size.y <= 0:
+		return out
+
+	# Avoid supersampling when the window is smaller than the selected resolution.
+	var sx: float = float(window_size.x) / float(out.x)
+	var sy: float = float(window_size.y) / float(out.y)
+	var s: float = minf(1.0, minf(sx, sy))
+	return Vector2i(maxi(1, int(round(float(out.x) * s))), maxi(1, int(round(float(out.y) * s))))
+
+
+func _schedule_render_scale_apply() -> void:
+	var window := get_window()
+	if window == null:
+		call_deferred("_apply_render_scale")
+		return
+
+	var cb := Callable(self, "_apply_render_scale")
+	if not window.size_changed.is_connected(cb):
+		window.size_changed.connect(cb, CONNECT_ONE_SHOT)
+	call_deferred("_apply_render_scale")
 
 
 ## Apply audio to buses.

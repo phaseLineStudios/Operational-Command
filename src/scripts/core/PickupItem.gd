@@ -152,6 +152,7 @@ func end_inspect() -> void:
 		return
 	_inspecting = false
 	_inspect_camera = null
+	global_transform = _pre_inspect_transform
 	global_rotation_degrees = held_rotation
 
 
