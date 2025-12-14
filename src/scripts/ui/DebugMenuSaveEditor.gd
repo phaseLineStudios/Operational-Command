@@ -69,15 +69,6 @@ func refresh(parent: Node) -> void:
 	)
 	current_mission_hbox.add_child(current_mission_select_btn)
 
-	# Replacement Pool
-	_add_row_int(
-		"Replacement Pool",
-		save.replacement_pool,
-		func(value):
-			save.replacement_pool = int(value)
-			Persistence.save_to_file(save)
-	)
-
 	# Total Playtime (read-only, formatted)
 	var hours := int(save.total_playtime_seconds / 3600.0)
 	var minutes := int(fmod(save.total_playtime_seconds / 60.0, 60.0))

@@ -146,7 +146,7 @@
 		  },
 		  "state_equipment": 0.0,
 		  "state_injured": 0.0,
-		  "state_strength": 0.0
+		  "state_strength": 36.0
 		},
 		"unit_id": "ger_Unit_Patrol"
 	  },
@@ -168,7 +168,7 @@
 		  },
 		  "state_equipment": 0.0,
 		  "state_injured": 0.0,
-		  "state_strength": 0.0
+		  "state_strength": 36.0
 		},
 		"unit_id": "ger_unit_GuardPost"
 	  },
@@ -190,7 +190,7 @@
 		  },
 		  "state_equipment": 0.0,
 		  "state_injured": 0.0,
-		  "state_strength": 0.0
+		  "state_strength": 25.0
 		},
 		"unit_id": "ger_unit_artillery"
 	  },
@@ -212,7 +212,7 @@
 		  },
 		  "state_equipment": 0.0,
 		  "state_injured": 0.0,
-		  "state_strength": 0.0
+		  "state_strength": 14.0
 		},
 		"unit_id": "ger_guardpost_North"
 	  }
