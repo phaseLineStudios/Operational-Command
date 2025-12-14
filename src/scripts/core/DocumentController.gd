@@ -20,17 +20,17 @@ const RESOLUTION_SCALE := 2.0
 ## Material surface index for the paper on clipboard mesh
 const PAPER_MATERIAL_INDEX := 3
 
-@export_group("Performance")
-## If true, bake a CPU ImageTexture with mipmaps from the viewport (expensive).
-@export var bake_viewport_mipmaps: bool = false
-## Delay before rebuilding transcript pages after new entries (seconds).
-@export var transcript_update_delay_sec: float = 0.25
-
 ## Maximum transcript entries before pruning oldest
 const MAX_TRANSCRIPT_ENTRIES := 50
 
 ## Refresh delay in seconds (wait for user to stop navigating)
 const REFRESH_DELAY := 0.15
+
+@export_group("Performance")
+## If true, bake a CPU ImageTexture with mipmaps from the viewport (expensive).
+@export var bake_viewport_mipmaps: bool = false
+## Delay before rebuilding transcript pages after new entries (seconds).
+@export var transcript_update_delay_sec: float = 0.25
 
 ## Sound to play when page is changed.
 @export var page_change_sounds: Array[AudioStream] = [

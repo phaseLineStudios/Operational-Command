@@ -7,6 +7,11 @@ signal texture_ready
 
 enum CounterAffiliation { PLAYER, FRIEND, ENEMY, NEUTRAL, UNKNOWN }
 
+## Cache baked face textures to avoid repeated viewport readbacks.
+const _FACE_CACHE_MAX_ENTRIES: int = 128
+static var _face_texture_cache: Dictionary = {}  # cache_key -> Texture2D
+static var _face_cache_order: Array[String] = []
+
 @export var affiliation: CounterAffiliation = CounterAffiliation.PLAYER
 @export var callsign: String = "ALPHA"
 
@@ -16,11 +21,6 @@ enum CounterAffiliation { PLAYER, FRIEND, ENEMY, NEUTRAL, UNKNOWN }
 
 @export_group("Performance")
 @export var free_face_renderer_after_bake: bool = true
-
-## Cache baked face textures to avoid repeated viewport readbacks.
-const _FACE_CACHE_MAX_ENTRIES: int = 128
-static var _face_texture_cache: Dictionary = {}  # cache_key -> Texture2D
-static var _face_cache_order: Array[String] = []
 
 @onready var mesh: MeshInstance3D = %Mesh.get_node_or_null("unit_counter")
 @onready var face_renderer: SubViewport = %FaceRenderer

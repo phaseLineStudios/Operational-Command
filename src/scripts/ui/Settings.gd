@@ -22,6 +22,11 @@ const CONFIG_PATH := "user://settings.cfg"
 ## Scene to navigate to on back (leave empty for no action)
 @export var back_scene: PackedScene
 
+@export_group("Performance")
+## If true, automatically reduce 3D MSAA at very high pixel counts.
+@export var auto_adjust_aa: bool = true
+
+var _base_msaa_3d: int = -1
 var _bus_rows: Dictionary = {}  # name -> {slider: HSlider, label: Label, mute: CheckBox}
 var _cfg := ConfigFile.new()
 
@@ -36,12 +41,6 @@ var _cfg := ConfigFile.new()
 @onready var _scale: HSlider = %RenderScale
 @onready var _scale_val: Label = %ScaleValue
 @onready var _fps: SpinBox = %FPSCap
-
-@export_group("Performance")
-## If true, automatically reduce 3D MSAA at very high pixel counts.
-@export var auto_adjust_aa: bool = true
-
-var _base_msaa_3d: int = -1
 
 # Audio
 @onready var _buses_list: GridContainer = %BusesList

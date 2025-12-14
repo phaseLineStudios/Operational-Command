@@ -2,9 +2,6 @@ class_name MapController
 extends Node
 ## Handles map interaction and applies terrain renderer as a texture
 
-const READ_OVERLAY_SCENE := preload("res://scenes/ui/viewport_read_overlay.tscn")
-const MAP_PAPER_SHADER := preload("res://assets/shaders/MapPaper.gdshader")
-
 ## Emitted after the mesh has been resized (world XZ)
 signal map_resized(new_world_size: Vector2)
 ## Emitted when mouse is over the map, with terrain position and grid string
@@ -12,15 +9,20 @@ signal mouse_grid_changed(terrain_pos: Vector2, grid: String)
 ## Emitted on unhandled mouse input that hits the map
 signal map_unhandled_mouse(event, map_pos: Vector2, terrain_pos: Vector2)
 
+const READ_OVERLAY_SCENE := preload("res://scenes/ui/viewport_read_overlay.tscn")
+const MAP_PAPER_SHADER := preload("res://assets/shaders/MapPaper.gdshader")
+
 ## Pixel offset from the mouse to place the label
 @export var grid_label_offset: Vector2 = Vector2(16, 16)
 ## Base oversample for the TerrainViewport (1=off). May be reduced to respect max size.
 @export var viewport_oversample: int = 6
-## Maximum TerrainViewport render target size (pixels). Prevents huge map textures on large terrains.
+## Maximum TerrainViewport render target size (pixels).
+## Prevents huge map textures on large terrains.
 @export var viewport_max_size_px: Vector2i = Vector2i(8192, 8192)
 ## If true, the terrain SubViewport renders every frame (useful for debug/animated overlays).
 @export var viewport_update_always: bool = false
-## If true, bake a CPU ImageTexture with mipmaps from the viewport (improves oblique-angle sharpness).
+## If true, bake a CPU ImageTexture with mipmaps from the viewport.
+## Improves oblique-angle sharpness (expensive).
 @export var bake_viewport_mipmaps: bool = true
 ## Delay before rebuilding mipmaps after a map change (seconds).
 @export var mipmap_update_delay_sec: float = 0.25

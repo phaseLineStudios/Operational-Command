@@ -16,15 +16,12 @@ signal scenario_selected(mission_id: StringName)
 ## Emitted when a mission loadout is selected
 signal scenario_loadout_selected(loadout: Dictionary)
 
-@export var debug_display_scene: PackedScene = preload("res://scenes/system/debug_display.tscn")
-
 const _SETTINGS_PATH := "user://settings.cfg"
 const _DEFAULT_RESOLUTIONS: Array[Vector2i] = [
 	Vector2i(1920, 1080), Vector2i(1600, 900), Vector2i(1366, 768), Vector2i(1280, 720)
 ]
 
-var _base_msaa_3d: int = -1
-var _video_perf_timer: SceneTreeTimer
+@export var debug_display_scene: PackedScene = preload("res://scenes/system/debug_display.tscn")
 
 var debug_display: CanvasLayer
 var current_campaign: CampaignData
@@ -33,6 +30,9 @@ var current_save: CampaignSave = null
 var current_scenario: ScenarioData
 var current_scenario_loadout: Dictionary = {}
 var current_scenario_summary: Dictionary = {}
+
+var _base_msaa_3d: int = -1
+var _video_perf_timer: SceneTreeTimer
 
 @onready var resolution: MissionResolution = MissionResolution.new()
 
@@ -82,7 +82,7 @@ func _apply_video_perf_settings() -> void:
 		return
 
 	var cfg := ConfigFile.new()
-	var _err := cfg.load(_SETTINGS_PATH)
+	cfg.load(_SETTINGS_PATH)
 
 	var scale_pct: float = float(cfg.get_value("video", "scale_pct", 100.0))
 	var res_idx: int = int(cfg.get_value("video", "res_index", 0))

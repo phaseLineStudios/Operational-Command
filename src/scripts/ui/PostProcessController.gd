@@ -77,14 +77,14 @@ var film_grain_shader: ShaderMaterial
 var general_shader: ShaderMaterial
 var environment: Environment
 
-@onready var general_rect: ColorRect = $GeneralPP
-@onready var film_grain_rect: ColorRect = $FilmGrain
-@onready var world_environment: WorldEnvironment = %EnvironmentController
-
 var _read_mode_cached: bool = false
 var _saved_settings: Dictionary = {}
 var _saved_video: Dictionary = {}
 var _read_mode_enabled: bool = false
+
+@onready var general_rect: ColorRect = $GeneralPP
+@onready var film_grain_rect: ColorRect = $FilmGrain
+@onready var world_environment: WorldEnvironment = %EnvironmentController
 
 
 func _ready() -> void:

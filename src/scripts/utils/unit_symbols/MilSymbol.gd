@@ -46,17 +46,17 @@ enum UnitStatus { PRESENT, PLANNED }
 ## Unit Reinforced or Reduced
 enum UnitReinforcedReduced { NONE, REINFORCED, REDUCED, REINFORCED_AND_REDUCED }
 
+## Texture cache (avoid repeated viewport renders + GPU readbacks).
+const _CACHE_MAX_ENTRIES: int = 256
+static var _texture_cache: Dictionary = {}  # cache_key -> ImageTexture
+static var _texture_cache_order: Array[String] = []
+
 ## Configuration
 var config: MilSymbolConfig
 
 ## Cached viewport and renderer (reused for efficiency)
 var _viewport: SubViewport
 var _renderer: MilSymbolRenderer
-
-## Texture cache (avoid repeated viewport renders + GPU readbacks).
-const _CACHE_MAX_ENTRIES: int = 256
-static var _texture_cache: Dictionary = {}  # cache_key -> ImageTexture
-static var _texture_cache_order: Array[String] = []
 
 
 static func _cache_key(
