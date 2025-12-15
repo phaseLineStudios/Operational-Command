@@ -244,7 +244,6 @@ func tick(delta: float) -> void:
 		# Process each round individually
 		while mission.current_round < mission.total_rounds:
 			var round_shot_time := _get_round_shot_time(mission, mission.current_round)
-			var round_impact_time := round_shot_time + mission.flight_time
 
 			# Check if it's time to fire this round
 			if mission.time_elapsed >= round_shot_time:

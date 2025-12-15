@@ -57,7 +57,8 @@ func cmd_save() -> void:
 		return
 	if editor.persistence.save_to_path(editor.ctx, current_path):
 		dirty = false
-		_show_info("Saved: %s" % current_path)
+		var filename := current_path.get_file()
+		editor.success_notification("Saved: %s" % filename, 2)
 
 
 ## Show Save As dialog with suggested filename.
@@ -83,8 +84,11 @@ func _on_open_file_selected(path: String) -> void:
 		current_path = path
 		dirty = false
 		editor._on_data_changed()
+		var filename := path.get_file()
+		editor.success_notification("Loaded: %s" % filename, 2)
 	else:
-		_show_info("Failed to open: %s" % path)
+		var filename := path.get_file()
+		editor.failed_notification("Failed to open: %s" % filename, 3)
 
 
 ## Handle file selection to save a scenario.
@@ -94,9 +98,11 @@ func _on_save_file_selected(path: String) -> void:
 	if editor.persistence.save_to_path(editor.ctx, fixed):
 		current_path = fixed
 		dirty = false
-		_show_info("Saved: %s" % fixed)
+		var filename := fixed.get_file()
+		editor.success_notification("Saved: %s" % filename, 2)
 	else:
-		_show_info("Failed to save: %s" % fixed)
+		var filename := fixed.get_file()
+		editor.failed_notification("Failed to save: %s" % filename, 3)
 
 
 ## Apply brand-new scenario data from dialog.

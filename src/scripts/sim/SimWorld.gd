@@ -15,7 +15,8 @@ signal contact_reported(attacker_id: String, defender_id: String)
 ## Emitted for radio/log feedback.
 ## Levels: "debug" (internal), "info" (radio), "warn" (status), "error" (critical)
 ## Only non-debug messages should appear in radio transcript.
-signal radio_message(level: String, text: String)
+## [param unit] Optional unit callsign/ID of the speaker (empty string if not specified).
+signal radio_message(level: String, text: String, unit: String)
 ## Emitted when mission state transitions.
 signal mission_state_changed(prev: State, next: State)
 ## Emitted when damage > 0 is applied this tick (attacker->defender).

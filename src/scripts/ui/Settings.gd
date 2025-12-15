@@ -329,7 +329,7 @@ func _apply_render_scale() -> void:
 	var mode: int = Viewport.SCALING_3D_MODE_BILINEAR
 	if final_scale < 0.999:
 		mode = Viewport.SCALING_3D_MODE_FSR
-	root_viewport.scaling_3d_mode = mode
+	root_viewport.scaling_3d_mode = mode as Viewport.Scaling3DMode
 	root_viewport.scaling_3d_scale = final_scale
 
 	_apply_adaptive_aa(root_viewport, content_size, final_scale)
@@ -338,7 +338,7 @@ func _apply_render_scale() -> void:
 func _apply_adaptive_aa(root_viewport: Viewport, render_size: Vector2i, final_scale: float) -> void:
 	if not auto_adjust_aa:
 		if _base_msaa_3d >= 0:
-			root_viewport.msaa_3d = _base_msaa_3d
+			root_viewport.msaa_3d = _base_msaa_3d as Viewport.MSAA
 		return
 
 	# Estimate actual 3D render pixel count (roughly proportional to cost).
@@ -353,7 +353,7 @@ func _apply_adaptive_aa(root_viewport: Viewport, render_size: Vector2i, final_sc
 		root_viewport.msaa_3d = Viewport.MSAA_2X
 	else:
 		if _base_msaa_3d >= 0:
-			root_viewport.msaa_3d = _base_msaa_3d
+			root_viewport.msaa_3d = _base_msaa_3d as Viewport.MSAA
 
 
 func _compute_content_scale_size(window_size: Vector2i, target_size: Vector2i) -> Vector2i:

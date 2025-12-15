@@ -1,8 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://c5vv37x66vtg7"]
+[gd_scene load_steps=16 format=3 uid="uid://c5vv37x66vtg7"]
 
 [ext_resource type="Script" uid="uid://cilbctp6dmcm" path="res://scripts/editors/ScenarioEditor.gd" id="1_wqbsy"]
 [ext_resource type="PackedScene" uid="uid://rbcwabwc1v0o" path="res://scenes/ui/terrain_render.tscn" id="2_gsqds"]
 [ext_resource type="Script" uid="uid://dxc7kql2s6ijx" path="res://scripts/editors/ScenarioEditorOverlay.gd" id="3_cvhnd"]
+[ext_resource type="Script" uid="uid://draybib1vfjv" path="res://scripts/ui/NotificationBanner.gd" id="3_notification"]
 [ext_resource type="PackedScene" uid="uid://5awqyidom0l2" path="res://scenes/ui/scenario_new_dialog.tscn" id="4_un5t0"]
 [ext_resource type="Script" uid="uid://cjsu4sh4wfvmg" path="res://scripts/editors/TerrainCamera.gd" id="4_ysx1w"]
 [ext_resource type="PackedScene" uid="uid://qsm7784yjbw7" path="res://scenes/ui/weather_dialog.tscn" id="5_un5t0"]
@@ -13,6 +14,14 @@
 [ext_resource type="PackedScene" uid="uid://blt6fcbjfelax" path="res://scenes/ui/unit_config_dialog.tscn" id="13_dnx60"]
 [ext_resource type="PackedScene" uid="uid://cdabq224o47g4" path="res://scenes/ui/trigger_config_dialog.tscn" id="17_72fj5"]
 [ext_resource type="PackedScene" uid="uid://ct4m2p8r3ufw8" path="res://scenes/ui/custom_command_config_dialog.tscn" id="18_custom"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dnx60"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_detail = 5
 
 [node name="ScenarioEditor" type="Control"]
 layout_mode = 3
@@ -92,13 +101,20 @@ layout_mode = 2
 size_flags_horizontal = 3
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="Root/TopBar/HBox"]
+[node name="Spacer" type="HBoxContainer" parent="Root/TopBar/HBox"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
+alignment = 2
+
+[node name="PlayTest" type="Button" parent="Root/TopBar/HBox/Spacer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Play Scenario ▶"
 
 [node name="HBox" type="HBoxContainer" parent="Root"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/separation = 0
 
 [node name="LeftTray" type="PanelContainer" parent="Root/HBox"]
 custom_minimum_size = Vector2(250, 0)
@@ -132,9 +148,28 @@ size_flags_horizontal = 3
 stretch = true
 mouse_target = true
 
+[node name="NotificationBanner" type="PanelContainer" parent="Root/HBox/TerrainView"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dnx60")
+script = ExtResource("3_notification")
+
+[node name="Label" type="Label" parent="Root/HBox/TerrainView/NotificationBanner"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Notification"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Timer" type="Timer" parent="Root/HBox/TerrainView/NotificationBanner"]
+one_shot = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Root/HBox/TerrainView/NotificationBanner"]
+
 [node name="View" type="SubViewport" parent="Root/HBox/TerrainView"]
 handle_input_locally = false
-size = Vector2i(553, 586)
+size = Vector2i(561, 586)
 render_target_update_mode = 4
 
 [node name="World" parent="Root/HBox/TerrainView/View" instance=ExtResource("2_gsqds")]

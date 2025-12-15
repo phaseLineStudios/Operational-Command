@@ -77,7 +77,7 @@
 	"speed_kph": 20.0,
 	"spot_m": 800.0
   },
-  "strength": 31,
+  "strength": 12,
   "supply_transfer_radius_m": 30.0,
   "supply_transfer_rate": 10.0,
   "throughput": {

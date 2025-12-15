@@ -48,7 +48,7 @@
   },
   "equipment_tags": [],
   "experience": 0.0,
-  "id": "frg_opfor_2_bundeswehr",
+  "id": "frg_bw_opfor_3",
   "isEngineer": false,
   "isMedical": false,
   "movement_profile": 2,
@@ -62,12 +62,12 @@
 	"speed_kph": 50.0,
 	"spot_m": 800.0
   },
-  "strength": 28,
+  "strength": 12,
   "supply_transfer_radius_m": 30.0,
   "supply_transfer_rate": 10.0,
   "throughput": {
 
   },
-  "title": "Bundeswehr OPFOR-2",
+  "title": "Bundeswehr OPFOR-3",
   "type": 0
 }

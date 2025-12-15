@@ -258,9 +258,7 @@ func tick_units(units: Array[ScenarioUnit], dt: float) -> void:
 		if _grid.ensure_profile(p):
 			_grid.use_profile(p)
 			for u in groups[p]:
-				# Handle repath requests from environment system
 				_repath_if_requested(u)
-
 				# Auto-pause if unit is under fire (taking damage)
 				# Note: We don't pause if the unit is actively firing back,
 				# which is handled by the combat mode and engagement system.

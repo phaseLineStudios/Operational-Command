@@ -69,6 +69,14 @@ text = "Back to main menu"
 script = ExtResource("2_f6eus")
 metadata/_custom_type_script = "uid://boc05sevt2wad"
 
+[node name="ExitEditor" type="Button" parent="MenuContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Exit to Editor"
+script = ExtResource("2_f6eus")
+metadata/_custom_type_script = "uid://boc05sevt2wad"
+
 [node name="SettingsDisplay" parent="." instance=ExtResource("2_0lmf7")]
 unique_name_in_owner = true
 visible = false

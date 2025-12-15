@@ -26,8 +26,12 @@ var _items: Array = []
 
 ## Init: load data, build board, wire UI.
 func _ready() -> void:
-	_btn_back.pressed.connect(func(): Game.goto_scene(SCENE_MISSION_SELECT))
+	_btn_back.pressed.connect(_on_back_pressed)
 	_btn_next.pressed.connect(func(): Game.goto_scene(SCENE_UNIT_SELECT))
+
+	# Update back button text based on play mode
+	if Game.play_mode == Game.PlayMode.SOLO_PLAY_TEST:
+		_btn_back.text = "Back to Editor"
 
 	_load_brief()
 	_build_board()
@@ -49,6 +53,14 @@ func _build_board() -> void:
 	if _brief.board_texture != null:
 		var tex: Texture2D = _brief.board_texture
 		_whiteboard.texture = tex
+
+
+## Handle back button press
+func _on_back_pressed() -> void:
+	if Game.play_mode == Game.PlayMode.SOLO_PLAY_TEST:
+		Game.end_playtest()
+	else:
+		Game.goto_scene(SCENE_MISSION_SELECT)
 
 # TODO Create logic to display briefing items
 # TODO Create logic to inspect briefing items

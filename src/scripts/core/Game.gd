@@ -16,6 +16,9 @@ signal scenario_selected(mission_id: StringName)
 ## Emitted when a mission loadout is selected
 signal scenario_loadout_selected(loadout: Dictionary)
 
+## Play mode determines navigation flow and UI behavior
+enum PlayMode { SOLO_CAMPAIGN, SOLO_PLAY_TEST }
+
 const _SETTINGS_PATH := "user://settings.cfg"
 const _DEFAULT_RESOLUTIONS: Array[Vector2i] = [
 	Vector2i(1920, 1080), Vector2i(1600, 900), Vector2i(1366, 768), Vector2i(1280, 720)
@@ -30,6 +33,10 @@ var current_save: CampaignSave = null
 var current_scenario: ScenarioData
 var current_scenario_loadout: Dictionary = {}
 var current_scenario_summary: Dictionary = {}
+var play_mode: PlayMode = PlayMode.SOLO_CAMPAIGN
+var playtest_return_scene: String = ""
+var playtest_history_state: Dictionary = {}
+var playtest_file_path: String = ""
 
 var _base_msaa_3d: int = -1
 var _video_perf_timer: SceneTreeTimer
@@ -118,7 +125,7 @@ func _apply_video_perf_settings() -> void:
 	elif px >= 2_000_000.0:
 		root_viewport.msaa_3d = Viewport.MSAA_2X
 	elif _base_msaa_3d >= 0:
-		root_viewport.msaa_3d = _base_msaa_3d
+		root_viewport.msaa_3d = _base_msaa_3d as Viewport.MSAA
 
 	LogService.info(
 		(
@@ -277,6 +284,11 @@ func end_scenario_and_go_to_debrief() -> void:
 
 ## Handle continue from debrief scene
 func on_debrief_continue(_payload: Dictionary) -> void:
+	# In playtest mode, return to editor
+	if play_mode == PlayMode.SOLO_PLAY_TEST:
+		end_playtest()
+		return
+
 	# Save campaign state with experience updates
 	if current_save:
 		save_campaign_state()
@@ -573,3 +585,30 @@ func save_campaign_state() -> void:
 
 	# Save to disk
 	Persistence.save_to_file(current_save)
+
+
+## Start playtest mode from the scenario editor
+func start_playtest(
+	scenario: ScenarioData, return_scene: String, file_path: String, history_state: Dictionary = {}
+) -> void:
+	play_mode = PlayMode.SOLO_PLAY_TEST
+	playtest_return_scene = return_scene
+	playtest_file_path = file_path
+	playtest_history_state = history_state
+	select_scenario(scenario)
+
+	# Check if there's an intro video
+	if scenario.video:
+		goto_scene("res://scenes/mission_video.tscn")
+	else:
+		goto_scene("res://scenes/briefing.tscn")
+
+
+## End playtest mode and return to editor
+func end_playtest() -> void:
+	if play_mode == PlayMode.SOLO_PLAY_TEST and playtest_return_scene != "":
+		var return_to := playtest_return_scene
+		play_mode = PlayMode.SOLO_CAMPAIGN
+		playtest_return_scene = ""
+		# Note: playtest_history_state and playtest_file_path are preserved for the editor to retrieve
+		goto_scene(return_to)

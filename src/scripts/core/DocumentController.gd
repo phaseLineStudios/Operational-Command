@@ -528,7 +528,7 @@ func _refresh_texture(material: StandardMaterial3D, viewport: SubViewport) -> vo
 	material.albedo_color = Color.WHITE
 	material.metallic = 0.0
 	material.roughness = 1.0
-	material.specular = 0.0
+	#material.specular = 0.0
 
 	material.texture_filter = (
 		BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
@@ -566,10 +566,6 @@ func _split_transcript_into_pages(content: RichTextLabel, full_text: String) -> 
 	var visible_lines := content.get_visible_line_count()
 
 	if visible_lines < 10:
-		LogService.warning(
-			"visible_lines=%d is too small, defaulting to 30" % visible_lines,
-			"DocumentController.gd"
-		)
 		visible_lines = 30
 
 	if total_lines <= visible_lines:
@@ -664,10 +660,6 @@ func _split_into_pages(content: RichTextLabel, full_text: String) -> Array[Strin
 
 	# Safety check - if visible_lines is 0 or unreasonably small, use default
 	if visible_lines < 10:
-		LogService.warning(
-			"visible_lines=%d is too small, defaulting to 30" % visible_lines,
-			"DocumentController.gd"
-		)
 		visible_lines = 30
 
 	# If everything fits on one page

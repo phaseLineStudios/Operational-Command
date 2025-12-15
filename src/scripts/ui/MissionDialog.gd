@@ -19,10 +19,14 @@ var _should_unpause: bool = false
 var _map_controller: MapController = null
 var _position_m: Variant = null
 var _target_node: Variant = null  # Node or NodePath to point at
+var _dragging: bool = false
+var _drag_offset: Vector2 = Vector2.ZERO
 
 @onready var _text_label: RichTextLabel = %DialogText
 @onready var _ok_button: Button = %OkButton
 @onready var _line_overlay: Control = $LineOverlay
+@onready var _drag_bar: Control = $CenterContainer/DialogPanel/DialogRoot/DragBar
+@onready var _center_container: CenterContainer = $CenterContainer
 
 
 func _ready() -> void:
@@ -32,6 +36,11 @@ func _ready() -> void:
 	if _line_overlay:
 		_line_overlay.draw.connect(_draw_line)
 		_line_overlay.visible = false
+
+	# Setup drag functionality
+	if _drag_bar:
+		_drag_bar.gui_input.connect(_on_drag_bar_input)
+		_drag_bar.mouse_filter = Control.MOUSE_FILTER_STOP
 
 
 ## Show dialog with message text and optional pause
@@ -68,6 +77,11 @@ func show_dialog(
 	visible = true
 	if _ok_button:
 		_ok_button.grab_focus()
+
+	# Reset to centered position when showing
+	if _center_container:
+		_center_container.anchors_preset = Control.PRESET_CENTER
+		_center_container.set_anchors_preset(Control.PRESET_CENTER)
 
 	# Update line overlay visibility (show if we have either position or target node)
 	if _line_overlay:
@@ -197,3 +211,23 @@ func _get_closest_edge_point(rect: Rect2, target: Vector2) -> Vector2:
 
 	var t: float = min(t_x, t_y)
 	return Vector2(center.x + dx * t, center.y + dy * t)
+
+
+## Handle drag bar input for dragging the dialog
+func _on_drag_bar_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		if mb.button_index == MOUSE_BUTTON_LEFT:
+			if mb.pressed:
+				# Start dragging
+				_dragging = true
+				_drag_offset = _center_container.global_position - get_global_mouse_position()
+			else:
+				# Stop dragging
+				_dragging = false
+	elif event is InputEventMouseMotion and _dragging:
+		# Update dialog position while dragging
+		if _center_container:
+			# Switch to manual positioning
+			_center_container.set_anchors_preset(Control.PRESET_TOP_LEFT)
+			_center_container.position = get_global_mouse_position() + _drag_offset

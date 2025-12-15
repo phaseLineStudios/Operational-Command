@@ -179,6 +179,9 @@ func _make_ctx(t: ScenarioTrigger, presence_ok: bool) -> Dictionary:
 		"count_friend": counts.friend,
 		"count_enemy": counts.enemy,
 		"count_player": counts.player,
+		"units_friend": counts.units_friend,
+		"units_enemy": counts.units_enemy,
+		"units_player": counts.units_player,
 	}
 	# Include all global variables in context for easy access
 	for key in _globals.keys():
@@ -191,13 +194,17 @@ func _make_ctx(t: ScenarioTrigger, presence_ok: bool) -> Dictionary:
 ## [param center_m] Center of area
 ## [param size_m] Size of area.
 ## [param shape] Shape of area (rect or circle).
-## [return] a dictionary of unit counts.
+## [return] a dictionary of unit counts and unit ID lists.
 func _counts_in_area(
 	center_m: Vector2, size_m: Vector2, shape: ScenarioTrigger.AreaShape
 ) -> Dictionary:
 	var friend := 0
 	var enemy := 0
 	var player := 0
+	var units_friend: Array[String] = []
+	var units_enemy: Array[String] = []
+	var units_player: Array[String] = []
+
 	for id in _snap_by_id.keys():
 		var s: Dictionary = _snap_by_id[id]
 		var pos: Vector2 = s.get("pos_m", Vector2.ZERO)
@@ -205,11 +212,22 @@ func _counts_in_area(
 			var aff := int(s.get("aff", 0))
 			if aff == 0:
 				friend += 1
+				units_friend.append(id)
 			else:
 				enemy += 1
+				units_enemy.append(id)
 			if _player_ids.has(id):
 				player += 1
-	return {"friend": friend, "enemy": enemy, "player": player}
+				units_player.append(id)
+
+	return {
+		"friend": friend,
+		"enemy": enemy,
+		"player": player,
+		"units_friend": units_friend,
+		"units_enemy": units_enemy,
+		"units_player": units_player,
+	}
 
 
 ## Check if a given point is withn a shape.
