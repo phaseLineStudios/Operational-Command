@@ -59,13 +59,13 @@
 	"role": "LOGI",
 	"size": 2.0,
 	"stats": {
-		"attack": 8.8000000000000007,
+		"attack": 10.8,
 		"defense": 12.0,
 		"morale": 1.0,
 		"range_m": 300.0,
 		"speed_kph": 49.0,
 		"spot_m": 600.0,
-		"understrength_threshold": 0.80000000000000004
+		"understrength_threshold": 0.8
 	},
 	"strength": 10.0,
 	"supply_transfer_radius_m": 30.0,

@@ -67,12 +67,12 @@
 
   },
   "stats": {
-	"attack": 25.0,
-	"defense": 15.0,
-	"morale": 1.0,
-	"range_m": 300.0,
-	"speed_kph": 50.0,
-	"spot_m": 800.0
+    "attack": 1.2,
+    "defense": 15.0,
+    "morale": 1.0,
+    "range_m": 300.0,
+    "speed_kph": 50.0,
+    "spot_m": 800.0
   },
   "strength": 15,
   "supply_transfer_radius_m": 30.0,

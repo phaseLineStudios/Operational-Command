@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="AmmoDamageConfig" load_steps=2 format=3 uid="uid://dc3643j2acw86"]
+[gd_resource type="Resource" script_class="AmmoDamageConfig" load_steps=2 format=3 uid="uid://djivxg6x5tb31"]
 
 [ext_resource type="Script" uid="uid://cd1qqywax1jtr" path="res://scripts/data/AmmoDamageConfig.gd" id="1_8olcq"]
 
@@ -6,8 +6,8 @@
 script = ExtResource("1_8olcq")
 damage_by_type = {
 "ARTILLERY_AP": {
-"damage": 8.0,
-"vehicle_damage": 2.0
+"damage": 10.0,
+"vehicle_damage": 2.5
 },
 "ARTILLERY_ILLUM": {
 "damage": 0.2
@@ -17,41 +17,41 @@ damage_by_type = {
 },
 "ATGM": {
 "anti_vehicle": true,
-"damage": 7.0,
-"vehicle_damage": 10.0
+"damage": 2.5,
+"vehicle_damage": 14.0
 },
 "AT_ROCKET": {
 "anti_vehicle": true,
-"damage": 4.5,
-"vehicle_damage": 6.0
+"damage": 2.0,
+"vehicle_damage": 8.0
 },
 "AUTOCANNON": {
 "anti_vehicle": true,
-"damage": 3.5,
-"vehicle_damage": 4.5
+"damage": 6.0,
+"vehicle_damage": 8.0
 },
 "ENGINEER_BRIDGE": {
 "damage": 0.0
 },
 "ENGINEER_DEMO": {
 "anti_vehicle": true,
-"damage": 4.5,
-"vehicle_damage": 7.0
+"damage": 0.2,
+"vehicle_damage": 0.5
 },
 "ENGINEER_MINE": {
 "anti_vehicle": true,
-"damage": 4.0,
+"damage": 0.1,
 "tags": ["mine"],
-"vehicle_damage": 8.0
+"vehicle_damage": 0.3
 },
 "HEAVY_WEAPONS": {
-"damage": 2.2,
+"damage": 3.0,
 "tags": ["ap"],
-"vehicle_damage": 0.4
+"vehicle_damage": 0.5
 },
 "MORTAR_AP": {
-"damage": 3.0,
-"vehicle_damage": 0.8
+"damage": 5.0,
+"vehicle_damage": 1.2
 },
 "MORTAR_ILLUM": {
 "damage": 0.1
@@ -60,11 +60,11 @@ damage_by_type = {
 "damage": 0.2
 },
 "SMALL_ARMS": {
-"damage": 0.8
+"damage": 1.0
 },
 "TANK_GUN": {
 "anti_vehicle": true,
-"damage": 6.0,
-"vehicle_damage": 9.0
+"damage": 12.0,
+"vehicle_damage": 16.0
 }
 }
