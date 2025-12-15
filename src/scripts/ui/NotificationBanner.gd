@@ -15,14 +15,14 @@ const COLOR_NORMAL := Color(0.3, 0.3, 0.3, 0.75)
 
 ## Sound for success notification
 const SOUND_SUCCESS := preload("res://audio/ui/sfx_ui_save.wav")
-const SOUND_NORMAL := preload("res://audio/ui/sfx_ui_save.wav")
+const SOUND_NORMAL := SOUND_SUCCESS
 const SOUND_FAILURE := preload("res://audio/ui/sfx_ui_error.wav")
+
+var _panel_style: StyleBoxFlat
 
 @onready var _label: Label = $Label
 @onready var _timer: Timer = $Timer
 @onready var _audio: AudioStreamPlayer = $AudioStreamPlayer
-
-var _panel_style: StyleBoxFlat
 
 
 func _ready() -> void:
@@ -67,7 +67,9 @@ func generic_notification(text: String, timeout: int = 2, sound: bool = true) ->
 
 
 ## Internal method to show notification with specified type.
-func _show_notification(text: String, timeout: int, type: NotificationType, play_sound: bool) -> void:
+func _show_notification(
+	text: String, timeout: int, type: NotificationType, play_sound: bool
+) -> void:
 	_label.text = text
 
 	match type:

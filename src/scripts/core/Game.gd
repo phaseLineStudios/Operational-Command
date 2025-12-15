@@ -5,12 +5,6 @@ extends Node
 ## to global services. Orchestrates the campaign loop: menus → briefing →
 ## tactical map → debrief → unit management.
 
-## Play mode determines navigation flow and UI behavior
-enum PlayMode {
-	SOLO_CAMPAIGN,  ## Normal campaign progression
-	SOLO_PLAY_TEST  ## Testing from scenario editor
-}
-
 ## Emitted when a campaign is selected.
 signal campaign_selected(campaign_id: StringName)
 ## Emitted when a save is selected.
@@ -21,6 +15,9 @@ signal save_deleted(save_id: StringName)
 signal scenario_selected(mission_id: StringName)
 ## Emitted when a mission loadout is selected
 signal scenario_loadout_selected(loadout: Dictionary)
+
+## Play mode determines navigation flow and UI behavior
+enum PlayMode { SOLO_CAMPAIGN, SOLO_PLAY_TEST }
 
 const _SETTINGS_PATH := "user://settings.cfg"
 const _DEFAULT_RESOLUTIONS: Array[Vector2i] = [

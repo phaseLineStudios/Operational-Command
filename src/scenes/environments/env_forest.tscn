@@ -130,7 +130,7 @@ ground_sink = 0.01
 align_to_slope = true
 terrain = NodePath("../Terrain/Terrain")
 
-[node name="TreeMultiMesh_LOD0_1" type="MultiMeshInstance3D" parent="Content/Trees"]
+[node name="TreeMultiMeshLOD01" type="MultiMeshInstance3D" parent="Content/Trees"]
 extra_cull_margin = 16384.0
 visibility_range_begin_margin = 1.0
 visibility_range_end = 50.0
@@ -138,7 +138,7 @@ visibility_range_end_margin = 1.0
 visibility_range_fade_mode = 2
 multimesh = SubResource("MultiMesh_b77up")
 
-[node name="TreeMultiMesh_LOD0_2" type="MultiMeshInstance3D" parent="Content/Trees"]
+[node name="TreeMultiMeshLOD02" type="MultiMeshInstance3D" parent="Content/Trees"]
 extra_cull_margin = 16384.0
 visibility_range_begin_margin = 1.0
 visibility_range_end = 50.0
@@ -146,7 +146,7 @@ visibility_range_end_margin = 1.0
 visibility_range_fade_mode = 2
 multimesh = SubResource("MultiMesh_7chd0")
 
-[node name="TreeMultiMesh_LOD1_1" type="MultiMeshInstance3D" parent="Content/Trees"]
+[node name="TreeMultiMeshLOD11" type="MultiMeshInstance3D" parent="Content/Trees"]
 extra_cull_margin = 16384.0
 visibility_range_begin = 50.0
 visibility_range_begin_margin = 1.0
@@ -155,7 +155,7 @@ visibility_range_end_margin = 1.0
 visibility_range_fade_mode = 2
 multimesh = SubResource("MultiMesh_cxntu")
 
-[node name="TreeMultiMesh_LOD1_2" type="MultiMeshInstance3D" parent="Content/Trees"]
+[node name="TreeMultiMeshLOD12" type="MultiMeshInstance3D" parent="Content/Trees"]
 extra_cull_margin = 16384.0
 visibility_range_begin = 50.0
 visibility_range_begin_margin = 1.0
@@ -164,7 +164,7 @@ visibility_range_end_margin = 1.0
 visibility_range_fade_mode = 2
 multimesh = SubResource("MultiMesh_icw5x")
 
-[node name="TreeMultiMesh_LOD2_1" type="MultiMeshInstance3D" parent="Content/Trees"]
+[node name="TreeMultiMeshLOD21" type="MultiMeshInstance3D" parent="Content/Trees"]
 extra_cull_margin = 16384.0
 visibility_range_begin = 100.0
 visibility_range_begin_margin = 1.0
@@ -173,7 +173,7 @@ visibility_range_end_margin = 1.0
 visibility_range_fade_mode = 2
 multimesh = SubResource("MultiMesh_ra3mn")
 
-[node name="TreeMultiMesh_LOD2_2" type="MultiMeshInstance3D" parent="Content/Trees"]
+[node name="TreeMultiMeshLOD22" type="MultiMeshInstance3D" parent="Content/Trees"]
 extra_cull_margin = 16384.0
 visibility_range_begin = 100.0
 visibility_range_begin_margin = 1.0

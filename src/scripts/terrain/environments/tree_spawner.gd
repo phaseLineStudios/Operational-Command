@@ -182,7 +182,12 @@ func regenerate() -> void:
 	# Create MultiMesh for each LOD level
 	_create_multimesh_lods()
 
-	print("[TreeSpawner] Generated %d trees across %d LOD levels" % [_tree_transforms.size(), _count_lod_levels()])
+	print(
+		(
+			"[TreeSpawner] Generated %d trees across %d LOD levels"
+			% [_tree_transforms.size(), _count_lod_levels()]
+		)
+	)
 
 
 ## Clear all tree instances
@@ -210,7 +215,9 @@ func _generate_tree_transforms() -> void:
 		attempts += 1
 
 		# Generate position
-		var pos_2d := Vector2(randf_range(-half_size.x, half_size.x), randf_range(-half_size.y, half_size.y))
+		var pos_2d := Vector2(
+			randf_range(-half_size.x, half_size.x), randf_range(-half_size.y, half_size.y)
+		)
 
 		# Apply clustering
 		var noise_val := (_noise.get_noise_2d(pos_2d.x, pos_2d.y) + 1.0) / 2.0
@@ -248,7 +255,12 @@ func _generate_tree_transforms() -> void:
 		placed += 1
 
 	if placed < tree_count:
-		push_warning("[TreeSpawner] Only placed %d/%d trees due to spacing constraints" % [placed, tree_count])
+		push_warning(
+			(
+				"[TreeSpawner] Only placed %d/%d trees due to spacing constraints"
+				% [placed, tree_count]
+			)
+		)
 
 
 func _check_spacing(pos: Vector2) -> bool:
@@ -326,7 +338,9 @@ func _create_multimesh_lods() -> void:
 		_create_lod_level(tree_meshes_lod2, lod1_distance, lod2_distance, "LOD2")
 
 
-func _create_lod_level(meshes: Array[ArrayMesh], dist_begin: float, dist_end: float, lod_name: String) -> void:
+func _create_lod_level(
+	meshes: Array[ArrayMesh], dist_begin: float, dist_end: float, lod_name: String
+) -> void:
 	var mesh_count := meshes.size()
 	if mesh_count == 0:
 		return
@@ -379,7 +393,12 @@ func _create_lod_level(meshes: Array[ArrayMesh], dist_begin: float, dist_end: fl
 		if Engine.is_editor_hint():
 			mmi.owner = get_tree().edited_scene_root
 
-		print("[TreeSpawner] Created %s with %d instances (visibility: %.1fm-%.1fm)" % [mmi.name, mm.instance_count, dist_begin, dist_end])
+		print(
+			(
+				"[TreeSpawner] Created %s with %d instances (visibility: %.1fm-%.1fm)"
+				% [mmi.name, mm.instance_count, dist_begin, dist_end]
+			)
+		)
 
 
 func _generate_forest_all_lods() -> void:

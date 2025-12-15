@@ -295,7 +295,8 @@ func _setup_autocomplete() -> void:
 		"is_unit_in_trigger_area":
 		{
 			"return_type": "bool",
-			"description": "Check if a specific unit (by callsign) is currently inside the trigger area.",
+			"description":
+			"Check if a specific unit (by callsign) is currently inside the trigger area.",
 			"params": ["callsign: String"],
 		},
 		"show_dialog":
@@ -375,8 +376,7 @@ func _setup_autocomplete() -> void:
 		"set_unit_fuel":
 		{
 			"return_type": "bool",
-			"description":
-			"Set the fuel level of a unit (0-100%). Returns true if successful.",
+			"description": "Set the fuel level of a unit (0-100%). Returns true if successful.",
 			"params": ["id_or_callsign: String", "fuel_pct: float"],
 		},
 		"has_built_bridge":

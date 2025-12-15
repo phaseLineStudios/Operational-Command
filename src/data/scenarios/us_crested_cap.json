@@ -1,1228 +1,1228 @@
 {
   "briefing": {
-    "admin_logi": "[b]Sustainment[/b]\nClass III/V 0730 (no live HE). Aid/medevac simulated via UMPIRE.\n\n[b]Calls:[/b]\n- Lane control = [b]RANGE[/b]\n- Medevac = [b]UMPIRE[/b]",
-    "execution": "[b]Commander’s Intent:[/b] Safe, by-the-book reps, clean radio work and zero vehicle/safety incidents.\n\n[b]Concept:[/b]\n- L1 (Comms/CP): Net check, graphics, TRPs.\n- L2 (Movement/Contact): React to ambush, report, smoke, bound.\n- L3 (Break Contact): Screen and disengage to next PL.\n- L4 (River-Crossing): Engineer drill—emplace/clear training bridge; traffic control.\n- AAR/Refit.\n\n[b]Tasks:[/b]\n- Scout Plt (1/A): Lead lanes, trigger contacts and report.\n- Tank Plt (2/A): Overwatch and base-of-fire.\n- AT/TOW Sec: Demonstrate engagement.\n- Mortar Sec: On-call smoke/illum (simulated) per FSO.\n- Engr Plt (58th Engr Co): Crossing site, demo procedures.",
-    "id": "crested_cap_checkride_brief",
-    "intel_board": {
-      "board_texture_path": null,
-      "items": []
-    },
-    "mission": {
-      "objectives": [
-        {
-          "id": "lane_1_comms",
-          "score": 20,
-          "success": "Perform a radio check and receive a reply.",
-          "title": "Lane 1: Perform Radio Check"
-        },
-        {
-          "id": "unit_markers",
-          "score": 20,
-          "success": "Ask for a position report and place unit markers for each unit.",
-          "title": "Lane 1: Place unit markers"
-        },
-        {
-          "id": "set_time",
-          "score": 20,
-          "success": "Start timer",
-          "title": "Lane 1: Start timer"
-        },
-        {
-          "id": "draw_plan",
-          "score": 40,
-          "success": "Draw movement plan for Training Lane 2.",
-          "title": "Lane 1: Draw movement plan"
-        },
-        {
-          "id": "lane2_movement",
-          "score": 50,
-          "success": "Reach the objective.",
-          "title": "Lane 2: Move to objective"
-        },
-        {
-          "id": "lane2_combat",
-          "score": 50,
-          "success": "The unit must report contact and status, destroy one enemy platoon and break contact with the second.",
-          "title": "Lane 2: Practice Combat"
-        },
-        {
-          "id": "lane3_bridge",
-          "score": 30,
-          "success": "Have engineers build a bridge east of OBJ 3.",
-          "title": "Lane 3: Build Bridge"
-        },
-        {
-          "id": "lane3_artillery",
-          "score": 30,
-          "success": "Call artillery barrage of smoke to cover unit movement",
-          "title": "Lane 3: Call for smoke barrage"
-        },
-        {
-          "id": "lane3_retreat",
-          "score": 40,
-          "success": "Have a friendly unit cross the bridge from east to west and move to OBJ 3.",
-          "title": "Lane 3: Move across bridge"
-        }
-      ],
-      "statement": "At 0900C 05 NOV 83, A Trp/1-11 ACR (-) conducts a four-lane evaluation at Wildflecken to rehearse comms discipline, movement under contact, break-contact with smoke, and river crossing in order to certify the troop GO for follow-on taskings."
-    },
-    "situation": {
-      "enemy": "Mech platoon (OPFOR roleplayers) simulating NVA tactics. May inject recon probes, hasty ambush, and mortar smoke (simulated).",
-      "friendly": "- A Troop, 1-11 ACR (-) with attached Engineer Platoon\n- Bundeswehr Observers\n- Range Control / UMPIRE",
-      "start_time": "",
-      "terrain": "Forrested ridges, open fields, shallow lake, shallow river crossing.",
-      "weather": ""
-    },
-    "title": "FTX Crested Cap Checkride"
+	"admin_logi": "[b]Sustainment[/b]\nClass III/V 0730 (no live HE). Aid/medevac simulated via UMPIRE.\n\n[b]Calls:[/b]\n- Lane control = [b]RANGE[/b]\n- Medevac = [b]UMPIRE[/b]",
+	"execution": "[b]Commander’s Intent:[/b] Safe, by-the-book reps, clean radio work and zero vehicle/safety incidents.\n\n[b]Concept:[/b]\n- L1 (Comms/CP): Net check, graphics, TRPs.\n- L2 (Movement/Contact): React to ambush, report, smoke, bound.\n- L3 (Break Contact): Screen and disengage to next PL.\n- L4 (River-Crossing): Engineer drill—emplace/clear training bridge; traffic control.\n- AAR/Refit.\n\n[b]Tasks:[/b]\n- Scout Plt (1/A): Lead lanes, trigger contacts and report.\n- Tank Plt (2/A): Overwatch and base-of-fire.\n- AT/TOW Sec: Demonstrate engagement.\n- Mortar Sec: On-call smoke/illum (simulated) per FSO.\n- Engr Plt (58th Engr Co): Crossing site, demo procedures.",
+	"id": "crested_cap_checkride_brief",
+	"intel_board": {
+	  "board_texture_path": null,
+	  "items": []
+	},
+	"mission": {
+	  "objectives": [
+		{
+		  "id": "lane_1_comms",
+		  "score": 20,
+		  "success": "Perform a radio check and receive a reply.",
+		  "title": "Lane 1: Perform Radio Check"
+		},
+		{
+		  "id": "unit_markers",
+		  "score": 20,
+		  "success": "Ask for a position report and place unit markers for each unit.",
+		  "title": "Lane 1: Place unit markers"
+		},
+		{
+		  "id": "set_time",
+		  "score": 20,
+		  "success": "Start timer",
+		  "title": "Lane 1: Start timer"
+		},
+		{
+		  "id": "draw_plan",
+		  "score": 40,
+		  "success": "Draw movement plan for Training Lane 2.",
+		  "title": "Lane 1: Draw movement plan"
+		},
+		{
+		  "id": "lane2_movement",
+		  "score": 50,
+		  "success": "Reach the objective.",
+		  "title": "Lane 2: Move to objective"
+		},
+		{
+		  "id": "lane2_combat",
+		  "score": 50,
+		  "success": "The unit must report contact and status, destroy one enemy platoon and break contact with the second.",
+		  "title": "Lane 2: Practice Combat"
+		},
+		{
+		  "id": "lane3_bridge",
+		  "score": 30,
+		  "success": "Have engineers build a bridge east of OBJ 3.",
+		  "title": "Lane 3: Build Bridge"
+		},
+		{
+		  "id": "lane3_artillery",
+		  "score": 30,
+		  "success": "Call artillery barrage of smoke to cover unit movement",
+		  "title": "Lane 3: Call for smoke barrage"
+		},
+		{
+		  "id": "lane3_retreat",
+		  "score": 40,
+		  "success": "Have a friendly unit cross the bridge from east to west and move to OBJ 3.",
+		  "title": "Lane 3: Move across bridge"
+		}
+	  ],
+	  "statement": "At 0900C 05 NOV 83, A Trp/1-11 ACR (-) conducts a four-lane evaluation at Wildflecken to rehearse comms discipline, movement under contact, break-contact with smoke, and river crossing in order to certify the troop GO for follow-on taskings."
+	},
+	"situation": {
+	  "enemy": "Mech platoon (OPFOR roleplayers) simulating NVA tactics. May inject recon probes, hasty ambush, and mortar smoke (simulated).",
+	  "friendly": "- A Troop, 1-11 ACR (-) with attached Engineer Platoon\n- Bundeswehr Observers\n- Range Control / UMPIRE",
+	  "start_time": "",
+	  "terrain": "Forrested ridges, open fields, shallow lake, shallow river crossing.",
+	  "weather": ""
+	},
+	"title": "FTX Crested Cap Checkride"
   },
   "content": {
-    "custom_commands": [
-      {
-        "additional_grammar": [
-          "radio",
-          "check",
-          "comms",
-          "communications",
+	"custom_commands": [
+	  {
+		"additional_grammar": [
+		  "radio",
+		  "check",
+		  "comms",
+		  "communications",
           "nominal"
-        ],
-        "keyword": "Radio Check",
-        "route_as_order": false,
-        "trigger_id": "radio_check_trigger"
-      }
-    ],
-    "drawings": [
-      {
-        "id": "draw_stamp_001",
-        "label": "wp 1",
-        "layer": 0,
-        "modulate": "000000ff",
-        "opacity": 1.0,
-        "order": 50299603,
-        "position_m": {
-          "x": 1240.46655273438,
-          "y": 1451.82299804688
-        },
-        "rotation_deg": 0.0,
-        "scale": 0.1,
-        "texture_path": "res://assets/textures/stamps/stamp_wp.png",
-        "type": "stamp",
-        "visible": true
-      },
-      {
-        "id": "draw_stamp_002",
-        "label": "wp 2",
-        "layer": 0,
-        "modulate": "000000ff",
-        "opacity": 1.0,
-        "order": 55950200,
-        "position_m": {
-          "x": 1677.47680664063,
-          "y": 1253.505859375
-        },
-        "rotation_deg": 0.0,
-        "scale": 0.1,
-        "texture_path": "res://assets/textures/stamps/stamp_wp.png",
-        "type": "stamp",
-        "visible": true
-      },
-      {
-        "id": "draw_stamp_003",
-        "label": "wp 3",
-        "layer": 0,
-        "modulate": "000000ff",
-        "opacity": 1.0,
-        "order": 61070009,
-        "position_m": {
-          "x": 1992.17163085938,
-          "y": 1890.02099609375
-        },
-        "rotation_deg": 0.0,
-        "scale": 0.1,
-        "texture_path": "res://assets/textures/stamps/stamp_wp.png",
-        "type": "stamp",
-        "visible": true
-      },
-      {
-        "color": "ff0000ff",
-        "id": "draw_stroke_001",
-        "layer": 0,
-        "opacity": 1.0,
-        "order": 57922295,
-        "points": [
-          {
-            "x": 1763.56481933594,
-            "y": 270.872222900391
-          },
-          {
-            "x": 1758.50366210938,
-            "y": 270.872222900391
-          },
-          {
-            "x": 1756.81665039063,
-            "y": 269.185211181641
-          },
-          {
-            "x": 1729.82446289063,
-            "y": 264.124145507813
-          },
-          {
-            "x": 1719.70227050781,
-            "y": 262.437133789063
-          },
-          {
-            "x": 1692.7099609375,
-            "y": 262.437133789063
-          },
-          {
-            "x": 1674.15283203125,
-            "y": 262.437133789063
-          },
-          {
-            "x": 1596.5498046875,
-            "y": 275.933288574219
-          },
-          {
-            "x": 1586.427734375,
-            "y": 279.307312011719
-          },
-          {
-            "x": 1571.24462890625,
-            "y": 343.4140625
-          },
-          {
-            "x": 1576.3056640625,
-            "y": 353.536193847656
-          },
-          {
-            "x": 1598.23681640625,
-            "y": 400.772766113281
-          },
-          {
-            "x": 1601.61083984375,
-            "y": 410.894897460938
-          },
-          {
-            "x": 1611.73303222656,
-            "y": 426.078063964844
-          },
-          {
-            "x": 1660.65661621094,
-            "y": 466.566528320313
-          },
-          {
-            "x": 1670.77868652344,
-            "y": 469.940551757813
-          },
-          {
-            "x": 1691.02294921875,
-            "y": 471.627624511719
-          },
-          {
-            "x": 1756.81665039063,
-            "y": 449.696350097656
-          },
-          {
-            "x": 1766.93884277344,
-            "y": 442.9482421875
-          },
-          {
-            "x": 1777.06103515625,
-            "y": 432.826110839844
-          },
-          {
-            "x": 1805.740234375,
-            "y": 378.841491699219
-          },
-          {
-            "x": 1807.42724609375,
-            "y": 372.093444824219
-          },
-          {
-            "x": 1809.1142578125,
-            "y": 353.536193847656
-          },
-          {
-            "x": 1809.1142578125,
-            "y": 345.101135253906
-          },
-          {
-            "x": 1795.6181640625,
-            "y": 304.612609863281
-          },
-          {
-            "x": 1792.244140625,
-            "y": 296.177551269531
-          },
-          {
-            "x": 1768.62585449219,
-            "y": 272.559265136719
-          },
-          {
-            "x": 1760.19067382813,
-            "y": 269.185211181641
-          },
-          {
-            "x": 1745.00756835938,
-            "y": 265.811187744141
-          }
-        ],
-        "type": "stroke",
-        "visible": true,
-        "width_px": 3.0
-      },
-      {
-        "id": "draw_stamp_004",
-        "label": "OBJ 1",
-        "layer": 0,
-        "modulate": "000000ff",
-        "opacity": 1.0,
-        "order": 1147628579,
-        "position_m": {
-          "x": 2318.63305664063,
-          "y": 1836.00170898438
-        },
-        "rotation_deg": 0.0,
-        "scale": 0.1,
-        "texture_path": "res://assets/textures/stamps/stamp_obj.png",
-        "type": "stamp",
-        "visible": true
-      },
-      {
-        "id": "draw_stamp_005",
-        "label": "OBJ 2",
-        "layer": 0,
-        "modulate": "000000ff",
-        "opacity": 1.0,
-        "order": 1154825170,
-        "position_m": {
-          "x": 2133.353515625,
-          "y": 647.418334960938
-        },
-        "rotation_deg": 0.0,
-        "scale": 0.1,
-        "texture_path": "res://assets/textures/stamps/stamp_obj.png",
-        "type": "stamp",
-        "visible": true
-      },
-      {
-        "id": "draw_stamp_006",
-        "label": "OBJ3",
-        "layer": 0,
-        "modulate": "000000ff",
-        "opacity": 1.0,
-        "order": 425292265,
-        "position_m": {
-          "x": 1449.53857421875,
-          "y": 353.136962890625
-        },
-        "rotation_deg": 0.0,
-        "scale": 0.1,
-        "texture_path": "res://assets/textures/stamps/stamp_obj.png",
-        "type": "stamp",
-        "visible": true
-      },
-      {
-        "id": "draw_stamp_007",
-        "label": "Staging Area Hog",
-        "layer": 0,
-        "modulate": "000000ff",
-        "opacity": 1.0,
-        "order": 356494595,
-        "position_m": {
-          "x": 533.232788085938,
-          "y": 1835.67529296875
-        },
-        "rotation_deg": 0.0,
-        "scale": 0.1,
-        "texture_path": "res://assets/textures/stamps/stamp_dot.png",
-        "type": "stamp",
-        "visible": true
-      },
-      {
-        "id": "draw_stamp_008",
-        "label": "Staging Area Rabbit",
-        "layer": 0,
-        "modulate": "000000ff",
-        "opacity": 1.0,
-        "order": 2307658562,
-        "position_m": {
-          "x": 1262.8740234375,
-          "y": 535.414245605469
-        },
-        "rotation_deg": 0.0,
-        "scale": 0.1,
-        "texture_path": "res://assets/textures/stamps/stamp_circle.png",
-        "type": "stamp",
-        "visible": true
-      }
-    ],
-    "tasks": [
-      {
-        "id": "task_set_combat_mode_1",
-        "next_index": 1,
-        "params": {
-          "combat_mode": 2.0
-        },
-        "position_m": {
-          "x": 1962.61157226563,
-          "y": 1279.76342773438
-        },
-        "prev_index": -1,
-        "task_type": "set_combat_mode",
-        "unit_index": 2
-      },
-      {
-        "id": "task_move_1",
-        "next_index": -1,
-        "params": {
+		],
+		"keyword": "Radio Check",
+		"route_as_order": false,
+		"trigger_id": "radio_check_trigger"
+	  }
+	],
+	"drawings": [
+	  {
+		"id": "draw_stamp_001",
+		"label": "wp 1",
+		"layer": 0,
+		"modulate": "000000ff",
+		"opacity": 1.0,
+		"order": 50299603,
+		"position_m": {
+		  "x": 1240.46655273438,
+		  "y": 1451.82299804688
+		},
+		"rotation_deg": 0.0,
+		"scale": 0.1,
+		"texture_path": "res://assets/textures/stamps/stamp_wp.png",
+		"type": "stamp",
+		"visible": true
+	  },
+	  {
+		"id": "draw_stamp_002",
+		"label": "wp 2",
+		"layer": 0,
+		"modulate": "000000ff",
+		"opacity": 1.0,
+		"order": 55950200,
+		"position_m": {
+		  "x": 1677.47680664063,
+		  "y": 1253.505859375
+		},
+		"rotation_deg": 0.0,
+		"scale": 0.1,
+		"texture_path": "res://assets/textures/stamps/stamp_wp.png",
+		"type": "stamp",
+		"visible": true
+	  },
+	  {
+		"id": "draw_stamp_003",
+		"label": "wp 3",
+		"layer": 0,
+		"modulate": "000000ff",
+		"opacity": 1.0,
+		"order": 61070009,
+		"position_m": {
+		  "x": 1992.17163085938,
+		  "y": 1890.02099609375
+		},
+		"rotation_deg": 0.0,
+		"scale": 0.1,
+		"texture_path": "res://assets/textures/stamps/stamp_wp.png",
+		"type": "stamp",
+		"visible": true
+	  },
+	  {
+		"color": "ff0000ff",
+		"id": "draw_stroke_001",
+		"layer": 0,
+		"opacity": 1.0,
+		"order": 57922295,
+		"points": [
+		  {
+			"x": 1763.56481933594,
+			"y": 270.872222900391
+		  },
+		  {
+			"x": 1758.50366210938,
+			"y": 270.872222900391
+		  },
+		  {
+			"x": 1756.81665039063,
+			"y": 269.185211181641
+		  },
+		  {
+			"x": 1729.82446289063,
+			"y": 264.124145507813
+		  },
+		  {
+			"x": 1719.70227050781,
+			"y": 262.437133789063
+		  },
+		  {
+			"x": 1692.7099609375,
+			"y": 262.437133789063
+		  },
+		  {
+			"x": 1674.15283203125,
+			"y": 262.437133789063
+		  },
+		  {
+			"x": 1596.5498046875,
+			"y": 275.933288574219
+		  },
+		  {
+			"x": 1586.427734375,
+			"y": 279.307312011719
+		  },
+		  {
+			"x": 1571.24462890625,
+			"y": 343.4140625
+		  },
+		  {
+			"x": 1576.3056640625,
+			"y": 353.536193847656
+		  },
+		  {
+			"x": 1598.23681640625,
+			"y": 400.772766113281
+		  },
+		  {
+			"x": 1601.61083984375,
+			"y": 410.894897460938
+		  },
+		  {
+			"x": 1611.73303222656,
+			"y": 426.078063964844
+		  },
+		  {
+			"x": 1660.65661621094,
+			"y": 466.566528320313
+		  },
+		  {
+			"x": 1670.77868652344,
+			"y": 469.940551757813
+		  },
+		  {
+			"x": 1691.02294921875,
+			"y": 471.627624511719
+		  },
+		  {
+			"x": 1756.81665039063,
+			"y": 449.696350097656
+		  },
+		  {
+			"x": 1766.93884277344,
+			"y": 442.9482421875
+		  },
+		  {
+			"x": 1777.06103515625,
+			"y": 432.826110839844
+		  },
+		  {
+			"x": 1805.740234375,
+			"y": 378.841491699219
+		  },
+		  {
+			"x": 1807.42724609375,
+			"y": 372.093444824219
+		  },
+		  {
+			"x": 1809.1142578125,
+			"y": 353.536193847656
+		  },
+		  {
+			"x": 1809.1142578125,
+			"y": 345.101135253906
+		  },
+		  {
+			"x": 1795.6181640625,
+			"y": 304.612609863281
+		  },
+		  {
+			"x": 1792.244140625,
+			"y": 296.177551269531
+		  },
+		  {
+			"x": 1768.62585449219,
+			"y": 272.559265136719
+		  },
+		  {
+			"x": 1760.19067382813,
+			"y": 269.185211181641
+		  },
+		  {
+			"x": 1745.00756835938,
+			"y": 265.811187744141
+		  }
+		],
+		"type": "stroke",
+		"visible": true,
+		"width_px": 3.0
+	  },
+	  {
+		"id": "draw_stamp_004",
+		"label": "OBJ 1",
+		"layer": 0,
+		"modulate": "000000ff",
+		"opacity": 1.0,
+		"order": 1147628579,
+		"position_m": {
+		  "x": 2318.63305664063,
+		  "y": 1836.00170898438
+		},
+		"rotation_deg": 0.0,
+		"scale": 0.1,
+		"texture_path": "res://assets/textures/stamps/stamp_obj.png",
+		"type": "stamp",
+		"visible": true
+	  },
+	  {
+		"id": "draw_stamp_005",
+		"label": "OBJ 2",
+		"layer": 0,
+		"modulate": "000000ff",
+		"opacity": 1.0,
+		"order": 1154825170,
+		"position_m": {
+		  "x": 2133.353515625,
+		  "y": 647.418334960938
+		},
+		"rotation_deg": 0.0,
+		"scale": 0.1,
+		"texture_path": "res://assets/textures/stamps/stamp_obj.png",
+		"type": "stamp",
+		"visible": true
+	  },
+	  {
+		"id": "draw_stamp_006",
+		"label": "OBJ3",
+		"layer": 0,
+		"modulate": "000000ff",
+		"opacity": 1.0,
+		"order": 425292265,
+		"position_m": {
+		  "x": 1449.53857421875,
+		  "y": 353.136962890625
+		},
+		"rotation_deg": 0.0,
+		"scale": 0.1,
+		"texture_path": "res://assets/textures/stamps/stamp_obj.png",
+		"type": "stamp",
+		"visible": true
+	  },
+	  {
+		"id": "draw_stamp_007",
+		"label": "Staging Area Hog",
+		"layer": 0,
+		"modulate": "000000ff",
+		"opacity": 1.0,
+		"order": 356494595,
+		"position_m": {
+		  "x": 533.232788085938,
+		  "y": 1835.67529296875
+		},
+		"rotation_deg": 0.0,
+		"scale": 0.1,
+		"texture_path": "res://assets/textures/stamps/stamp_dot.png",
+		"type": "stamp",
+		"visible": true
+	  },
+	  {
+		"id": "draw_stamp_008",
+		"label": "Staging Area Rabbit",
+		"layer": 0,
+		"modulate": "000000ff",
+		"opacity": 1.0,
+		"order": 2307658562,
+		"position_m": {
+		  "x": 1262.8740234375,
+		  "y": 535.414245605469
+		},
+		"rotation_deg": 0.0,
+		"scale": 0.1,
+		"texture_path": "res://assets/textures/stamps/stamp_circle.png",
+		"type": "stamp",
+		"visible": true
+	  }
+	],
+	"tasks": [
+	  {
+		"id": "task_set_combat_mode_1",
+		"next_index": 1,
+		"params": {
+		  "combat_mode": 2.0
+		},
+		"position_m": {
+		  "x": 1962.61157226563,
+		  "y": 1279.76342773438
+		},
+		"prev_index": -1,
+		"task_type": "set_combat_mode",
+		"unit_index": 2
+	  },
+	  {
+		"id": "task_move_1",
+		"next_index": -1,
+		"params": {
 
-        },
-        "position_m": {
-          "x": 1850.59497070313,
-          "y": 1346.73400878906
-        },
-        "prev_index": 0,
-        "task_type": "move",
-        "unit_index": 2
-      },
-      {
-        "id": "task_set_combat_mode_2",
-        "next_index": 3,
-        "params": {
-          "combat_mode": 2.0
-        },
-        "position_m": {
-          "x": 2042.40087890625,
-          "y": 1734.25158691406
-        },
-        "prev_index": -1,
-        "task_type": "set_combat_mode",
-        "unit_index": 3
-      },
-      {
-        "id": "task_move_2",
-        "next_index": 6,
-        "params": {
+		},
+		"position_m": {
+		  "x": 1850.59497070313,
+		  "y": 1346.73400878906
+		},
+		"prev_index": 0,
+		"task_type": "move",
+		"unit_index": 2
+	  },
+	  {
+		"id": "task_set_combat_mode_2",
+		"next_index": 3,
+		"params": {
+		  "combat_mode": 2.0
+		},
+		"position_m": {
+		  "x": 2042.40087890625,
+		  "y": 1734.25158691406
+		},
+		"prev_index": -1,
+		"task_type": "set_combat_mode",
+		"unit_index": 3
+	  },
+	  {
+		"id": "task_move_2",
+		"next_index": 6,
+		"params": {
 
-        },
-        "position_m": {
-          "x": 2013.24145507813,
-          "y": 1676.05578613281
-        },
-        "prev_index": 2,
-        "task_type": "move",
-        "unit_index": 3
-      },
-      {
-        "id": "task_move_3",
-        "next_index": 5,
-        "params": {
+		},
+		"position_m": {
+		  "x": 2013.24145507813,
+		  "y": 1676.05578613281
+		},
+		"prev_index": 2,
+		"task_type": "move",
+		"unit_index": 3
+	  },
+	  {
+		"id": "task_move_3",
+		"next_index": 5,
+		"params": {
 
-        },
-        "position_m": {
-          "x": 1995.640625,
-          "y": 1889.78930664063
-        },
-        "prev_index": -1,
-        "task_type": "move",
-        "unit_index": 4
-      },
-      {
-        "id": "task_move_4",
-        "next_index": -1,
-        "params": {
+		},
+		"position_m": {
+		  "x": 1995.640625,
+		  "y": 1889.78930664063
+		},
+		"prev_index": -1,
+		"task_type": "move",
+		"unit_index": 4
+	  },
+	  {
+		"id": "task_move_4",
+		"next_index": -1,
+		"params": {
 
-        },
-        "position_m": {
-          "x": 1897.869140625,
-          "y": 933.79833984375
-        },
-        "prev_index": 4,
-        "task_type": "move",
-        "unit_index": 4
-      },
-      {
-        "id": "task_move_5",
-        "next_index": -1,
-        "params": {
+		},
+		"position_m": {
+		  "x": 1897.869140625,
+		  "y": 933.79833984375
+		},
+		"prev_index": 4,
+		"task_type": "move",
+		"unit_index": 4
+	  },
+	  {
+		"id": "task_move_5",
+		"next_index": -1,
+		"params": {
 
-        },
-        "position_m": {
-          "x": 2039.09521484375,
-          "y": 960.957275390625
-        },
-        "prev_index": 3,
-        "task_type": "move",
-        "unit_index": 3
-      }
-    ],
-    "triggers": [
-      {
-        "area_center_m": {
-          "x": 1851.359375,
-          "y": 1332.51171875
-        },
-        "condition_expr": "true",
-        "id": "TRG_1",
-        "on_activate_expr": "",
-        "on_deactivate_expr": "",
-        "presence": 1,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 500.0,
-          "y": 500.0
-        },
-        "synced_tasks": [
-          0,
-          2
-        ],
-        "synced_units": [],
-        "title": "Ambush Trigger"
-      },
-      {
-        "area_center_m": {
-          "x": 2151.0,
-          "y": 151.0
-        },
-        "condition_expr": "last_radio_command().to_lower().contains(\"radio check\")",
-        "id": "radio_check_trigger",
-        "on_activate_expr": "radio(\"Company this is Alpha. I Read you five by five.\", \"info\", \"ALPHA\");\nset_objective(\"lane_1_comms\", 1);\nsleep_ui(2.0);\ntutorial_dialog(\"Excellent! You just performed a radio check. You'll use the radio to give all commands to your units.\", \"%TranscriptDoc\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"The Radio Transcript shows all messages. Use it to review what was said during the mission.\", \"%TranscriptDoc\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This drawer contains blank unit counters. You can create markers to track friendly and enemy units.\", \"%UnitCounterDrawer\", true);\ntutorial_dialog(\"Click the drawer, then create a counter for UMPIRE: Affiliation=Neutral, Type=HQ, Size=Team, Callsign=UMPIRE.\", \"%UnitCounterDrawer\", true);",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Radio Check Response"
-      },
-      {
-        "area_center_m": {
-          "x": 1951.0,
-          "y": 152.544235229492
-        },
-        "condition_expr": "true",
-        "id": "mission_init",
-        "on_activate_expr": "set_global(\"is_tool_tut_finished\", false);\n\n# Find and store callsigns for key unit roles\nset_global(\"recon_callsign\", find_callsign_by_role(\"RECON\"));\nset_global(\"armor_callsign\", find_callsign_by_role(\"ARMOR\"));\nset_global(\"at_callsign\", find_callsign_by_role(\"AT\"));\nset_global(\"eng_callsign\", find_callsign_by_role(\"ENG\"));\n\n# Set initial tutorial unit (prefer RECON)\nset_global(\"tutorial_unit\", get_global(\"recon_callsign\", \"\"));\n\nsleep_ui(2.0);\ntutorial_dialog(\"Welcome to Operational Command! This tutorial mission will teach you the basics of commanding your units.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This is your HQ table. You command units by talking on the radio, tracking them on the map, and reading documents.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This briefing document shows your mission objectives. Drag it with LMB, double-click to open, RMB to close.\", \"%BriefingDoc\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This is your radio - the most important tool. Press and HOLD SPACE to transmit, then speak your command.\", \"%Radio\", true);\ntutorial_dialog(\"Let's try it! Hold SPACE and say: 'Radio Check' (then release SPACE).\", \"%Radio\", true);\nset_global(\"is_tool_tut_finished\", true);",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Mission Init"
-      },
-      {
-        "area_center_m": {
-          "x": 1951.0,
-          "y": 251.0
-        },
-        "condition_expr": "is_unit_destroyed(get_global(\"recon_callsign\", \"\"))",
-        "id": "tutorial_unit_monitor",
-        "on_activate_expr": "set_global(\"tutorial_unit\", get_global(\"armor_callsign\", \"\"))\nradio(armor_cs + \" is now your primary unit. Continue the mission.\", \"info\")",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Tutorial Unit Monitor"
-      },
-      {
-        "area_center_m": {
-          "x": 1951.0,
-          "y": 351.0
-        },
-        "condition_expr": "is_unit_destroyed(get_global(\"recon_callsign\", \"ALPHA\")) and get_global(\"armor_callsign\", \"BRAVO\")",
-        "id": "tutorial_units_dead_fail",
-        "on_activate_expr": "radio(\"All combat units destroyed. Mission failed.\", \"error\");\nsleep(2.0);\nfail_objective(\"lane2_movement\");\nfail_objective(\"lane2_combat\");",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Tutorial Units Dead - Fail"
-      },
-      {
-        "area_center_m": {
-          "x": 1951.0,
-          "y": 451.0
-        },
-        "condition_expr": "is_unit_destroyed(get_global(\"eng_callsign\", \"\"))",
-        "id": "engineer_dead_fail",
-        "on_activate_expr": "var eng_unit = get_global(\"eng_callsign\", \"FOXTROT\");\nradio(eng_unit + \" destroyed! Without engineers, we cannot complete the mission.\", \"error\");\nsleep(2.0);\nshow_dialog(\"MISSION FAILED: Engineers lost. Cannot complete river crossing objectives.\", true);\nfail_objective(\"lane3_bridge\");\nfail_objective(\"lane3_retreat\");",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Engineer Dead - Fail"
-      },
-      {
-        "area_center_m": {
-          "x": 2551.0,
-          "y": 151.0
-        },
-        "condition_expr": "has_drawn() and get_global(\"tutorial_unit\", \"\") != \"\"",
-        "id": "drawing_check_trigger",
-        "on_activate_expr": "set_objective(\"draw_plan\", 1);\nvar tut_unit = get_global(\"tutorial_unit\", \"\");\ntutorial_dialog(\"Great! You've drawn your maneuver plan. Now let's order \" + tut_unit + \" to execute it.\", \"%Map\", true);\ntutorial_dialog(\"Hold SPACE and say: '\" + tut_unit + \", move to OBJ 1' or '\" + tut_unit + \", move to grid 633858' (OBJ 1's grid coordinate).\", \"%Radio\", true);",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Drawing Check"
-      },
-      {
-        "area_center_m": {
-          "x": 2351.0,
-          "y": 351.0
-        },
-        "condition_expr": "last_radio_command().to_lower().contains(\"move\") and last_radio_command().to_lower().contains(get_global(\"tutorial_unit\", \"\").to_lower())",
-        "id": "tutorial_unit_move_check",
-        "on_activate_expr": "var tut_unit = get_global(\"tutorial_unit\", \"\");\nvar armor_unit = get_global(\"armor_callsign\", \"\");\nsleep_ui(1.0);\ntutorial_dialog(\"Good! \" + tut_unit + \" received the order. Now let's send your armor to support them.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"Hold SPACE and say: '\" + armor_unit + \", move to OBJ 1' - they'll move together with \" + tut_unit + \".\", \"%Radio\", true);",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Tutorial Unit Move Check"
-      },
-      {
-        "area_center_m": {
-          "x": 2351.0,
-          "y": 451.0
-        },
-        "condition_expr": "last_radio_command().to_lower().contains(\"move\") and last_radio_command().to_lower().contains(get_global(\"armor_callsign\", \"\").to_lower())",
-        "id": "armor_move_check",
-        "on_activate_expr": "var armor_unit = get_global(\"armor_callsign\", \"\");\nvar eng_unit = get_global(\"eng_callsign\", \"FOXTROT\");\nsleep_ui(1.0);\ntutorial_dialog(\"Perfect! \" + armor_unit + \" will support the advance. Now let's position our engineers.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"Engineers can build bridges and clear obstacles. Order them to the staging area.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"Hold SPACE and say: '\" + eng_unit + \", move to grid 622846' (Staging Area Rabbit marker).\", \"%Radio\", true);",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Armor Move Check"
-      },
-      {
-        "area_center_m": {
-          "x": 2351.0,
-          "y": 551.0
-        },
-        "condition_expr": "last_radio_command().to_lower().contains(\"move\") and last_radio_command().to_lower().contains(get_global(\"eng_callsign\", \"\").to_lower())",
-        "id": "eng_move_check",
-        "on_activate_expr": "var eng_unit = get_global(\"eng_callsign\", \"FOXTROT\");\nvar at_unit = get_global(\"at_callsign\", \"\");\nsleep_ui(1.0);\ntutorial_dialog(\"Excellent! \" + eng_unit + \" are moving to staging. Now order your AT/TOW unit to escort them.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"Hold SPACE and say: '\" + at_unit + \", move to grid 624846'.\", \"%Radio\", true);\nset_global(\"all_units_ordered\", false);",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Eng Move Check"
-      },
-      {
-        "area_center_m": {
-          "x": 2351.0,
-          "y": 651.0
-        },
-        "condition_expr": "last_radio_command().to_lower().contains(\"move\") and last_radio_command().to_lower().contains(get_global(\"at_callsign\", \"\").to_lower()) and not get_global(\"all_units_ordered\", false)",
-        "id": "at_move_check",
-        "on_activate_expr": "var at_unit = get_global(\"at_callsign\", \"\");\nset_global(\"all_units_ordered\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"Perfect! \" + at_unit + \" will provide anti-tank support. All units have orders!\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"Now start the simulation to watch them execute. Click the PLAY button on the timer.\", \"%Timer\", true);",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "AT Move Check"
-      },
-      {
-        "area_center_m": {
-          "x": 2351.0,
-          "y": 151.0
-        },
-        "condition_expr": "is_running()",
-        "id": "timer_check_trigger",
-        "on_activate_expr": "set_objective(\"set_time\", 1)\n\nvar tut_unit = get_global(\"tutorial_unit\", \"\");\nvar armor_unit = get_global(\"armor_callsign\", \"\");\nvar eng_unit = get_global(\"eng_callsign\", \"FOXTROT\");\nsleep_ui(1.0);\ntutorial_dialog(\"Good! Time is running. All your units are executing their orders. You can pause/play anytime.\", \"%Timer\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"The other documents on the table (Intel, Protractor, Field Manual) provide reference info - check them out later!\", \"%IntelDoc\", true);\nsleep(15.0);\ntutorial_dialog(\"You can request reports from units. Hold SPACE and try: '\" + tut_unit + \", report position' or '\" + tut_unit + \", report status'\", \"%Radio\", true);",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Timer Check"
-      },
-      {
-        "area_center_m": {
-          "x": 2151.0,
-          "y": 351.0
-        },
-        "condition_expr": "has_created_counter()",
-        "id": "unit_counter_trigger",
-        "on_activate_expr": "set_objective(\"unit_markers\", 1)\n\nsleep_ui(2.0);\ntutorial_dialog(\"Perfect! Unit counters help you track units on the map. You can pick them up and place them anywhere using LMB.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"These are drawing tools. Click a pen to pick it up, then hold LMB on the map to draw. Right-click to put it down.\", \"%PenBlue\", true);\ntutorial_dialog(\"Let's plan a route to OBJ 1. Pick the BLUE pen and draw arrows from WP 1 → WP 2 → WP 3 → OBJ 1.\", \"%Map\", true);",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Unit Counter Check"
-      },
-      {
-        "area_center_m": {
-          "x": 2551.0,
-          "y": 351.0
-        },
-        "condition_expr": "is_unit_in_combat(get_global(\"tutorial_unit\", \"\"))",
-        "id": "combat_trigger",
-        "on_activate_expr": "set_global(\"ambush_triggered\", true);\nvar tut_unit = get_global(\"tutorial_unit\", \"\");\nvar pos := get_unit_position(tut_unit);\nshow_dialog(\"CONTACT! \" + tut_unit + \" is under fire! Request a contact report to learn about the enemy.\\n\\nSay: '\" + tut_unit + \", report contact'\", true);\nfail_objective(\"lane2_movement\");\n",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Combat Trigger"
-      },
-      {
-        "area_center_m": {
-          "x": 2751.0,
-          "y": 151.0
-        },
-        "condition_expr": "get_global(\"ambush_triggered\", false) and last_radio_command().to_lower().contains(\"contact\")",
-        "id": "ambush_reports",
-        "on_activate_expr": "sleep(2.0);\nvar pos := get_unit_position(\"ALPHA\");\nshow_dialog(\"Good! You now know VICTOR's position. Let me explain how combat works.\", pos);\nsleep(3.0);\nshow_dialog(\"COMBAT MECHANICS:\\n\\nUnits automatically fire when they have line-of-sight to enemies and are in range. You don't micromanage every shot.\", true);\nsleep(3.0);\nshow_dialog(\"HOW TO INFLUENCE COMBAT:\\n\\n1. Call in SUPPORT: Order other units to attack the same target\\n2. FIRE SUPPORT: Use artillery/mortars (DELTA) to suppress enemies\\n3. FLANK: Attack from multiple directions\\n4. USE TERRAIN: Units in cover take less damage\", true);\nsleep(3.0);\nshow_dialog(\"For this tutorial, let's keep it simple. Directly engage VICTOR!\\n\\nSay: 'ALPHA, attack VICTOR' or 'ALPHA, fire on VICTOR'\", pos);",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Ambush Reports Trigger"
-      },
-      {
-        "area_center_m": {
-          "x": 2751.0,
-          "y": 351.0
-        },
-        "condition_expr": "get_global(\"ambush_triggered\", false) and is_unit_destroyed(\"VICTOR\")",
-        "id": "victor_destroyed_trigger",
-        "on_activate_expr": "var tut_unit = get_global(\"tutorial_unit\", \"\");\nshow_dialog(\"VICTOR destroyed! Now we need to break contact with BORIS.\", true);\nsleep(2.0);\nshow_dialog(\"Let's practice FIRE SUPPORT! You can suppress BORIS with mortars while \" + tut_unit + \" withdraws.\\n\\n(OPTIONAL) Say: 'DELTA, fire on BORIS' to suppress them.\", true);\nsleep(3.0);\nshow_dialog(\"Now order \" + tut_unit + \" to move to OBJ 2 (grid 631846).\\n\\nSay: '\" + tut_unit + \", move to OBJ 2'\", true, vec2(2138, 648));\n",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "VICTOR Destroyed Trigger"
-      },
-      {
-        "area_center_m": {
-          "x": 2371.0,
-          "y": 911.0
-        },
-        "condition_expr": "is_unit_in_trigger_area(get_global(\"tutorial_unit\", \"ALPHA\"))",
-        "id": "fuel_depletion_trigger",
-        "on_activate_expr": "var tut_unit_cs = get_global(\"tutorial_unit\", \"\");\nset_unit_fuel(tut_unit_cs, 18.0);\nset_global(\"fuel_depleted\", true);",
-        "on_deactivate_expr": "",
-        "presence": 1,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 1,
-        "size_m": {
-          "x": 1300.0,
-          "y": 300.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Fuel Depletion Trigger"
-      },
-      {
-        "area_center_m": {
-          "x": 2553.71044921875,
-          "y": 454.429260253906
-        },
-        "condition_expr": "get_global(\"fuel_depleted\", false) and not get_global(\"resupply_instructed\", false)",
-        "id": "resupply_instruction_trigger",
-        "on_activate_expr": "set_global(\"resupply_instructed\", true);\nvar tut_unit = get_global(\"tutorial_unit\", \"\");\nvar logi_unit = find_callsign_by_role(\"LOGI\");\nif logi_unit == \"\":\n    logi_unit = \"CHARLIE\";\nsleep(2.0);\nshow_dialog(\"WARNING: \" + tut_unit + \" is running low on fuel!\\n\\nUnits consume fuel as they move. Without fuel, they'll stop.\", true);\nsleep(2.0);\nshow_dialog(\"To resupply, drive \" + logi_unit + \" (logistics unit) within 50 meters of \" + tut_unit + \".\\n\\nLogistics units automatically resupply nearby friendlies.\", true);\nsleep(2.0);\nshow_dialog(\"Order \" + logi_unit + \" to the same location as \" + tut_unit + \" to resupply them.\\n\\nSay: '\" + logi_unit + \", move to \" + tut_unit + \"'\", true);",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Resupply Instruction Trigger"
-      },
-      {
-        "area_center_m": {
-          "x": 2131.0,
-          "y": 645.568237304688
-        },
-        "condition_expr": "true",
-        "id": "ambush_contact_break_trigger",
-        "on_activate_expr": "set_global(\"ambush_broke_contact\", true);\ncomplete_objective(\"lane2_combat\");\nvar tut_unit = get_global(\"tutorial_unit\", \"\");\nvar eng_unit = get_global(\"eng_callsign\", \"FOXTROT\");\nsleep(2.0);\nshow_dialog(\"Excellent! \" + tut_unit + \" reached OBJ 2 safely. Lane 2 complete!\\n\\nNow for Lane 3: river crossing and smoke support.\", true);\nsleep(2.0);\nshow_dialog(\"First, we need a bridge. \" + eng_unit + \" are engineers - they can build bridges.\\n\\nSay: '\" + eng_unit + \", build bridge at grid 626843' (east of the river)\", true, vec2(1687, 340));",
-        "on_deactivate_expr": "",
-        "presence": 1,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 200.0,
-          "y": 200.0
-        },
-        "synced_tasks": [
-          4,
-          6
-        ],
-        "synced_units": [],
-        "title": "Ambush Contact Break Trigger"
-      },
-      {
-        "area_center_m": {
-          "x": 2951.0,
-          "y": 151.0
-        },
-        "condition_expr": "has_built_bridge()",
-        "id": "bridge_trigger",
-        "on_activate_expr": "set_global(\"bridge_built\", true);\nvar tut_unit = get_global(\"tutorial_unit\", \"\");\nvar eng_unit = get_global(\"eng_callsign\", \"FOXTROT\");\nsleep(2.0);\nshow_dialog(\"Bridge complete! \" + eng_unit + \" did their job. Now let's use smoke to cover \" + tut_unit + \"'s crossing.\", false, vec2(1687, 340));\nsleep(2.0);\nshow_dialog(\"DELTA has mortars that can fire smoke. Call for fire support!\\n\\nSay: 'DELTA, fire smoke at grid 628845'\", true);\ncomplete_objective(\"lane3_bridge\");",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": false,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Bridge Trigger"
-      },
-      {
-        "area_center_m": {
-          "x": 2951.0,
-          "y": 351.0
-        },
-        "condition_expr": "get_global(\"bridge_built\", false) and has_called_artillery()",
-        "id": "arty_trigger",
-        "on_activate_expr": "complete_objective(\"lane3_artillery\")\nvar tut_unit = get_global(\"tutorial_unit\", \"\");\nsleep(2.0);\nshow_dialog(\"Smoke rounds away! Now send \" + tut_unit + \" across the bridge under the smoke cover.\\n\\nSay: '\" + tut_unit + \", move to OBJ 3' (grid 624843)\", true, vec2(1449, 353));",
-        "on_deactivate_expr": "",
-        "presence": 0,
-        "require_duration_s": 0.0,
-        "run_once": false,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Artillery trigger"
-      },
-      {
-        "area_center_m": {
-          "x": 1451.0,
-          "y": 351.0
-        },
-        "condition_expr": "get_global(\"bridge_built\", false)",
-        "id": "alpha_retreat_trigger",
-        "on_activate_expr": "complete_objective(\"lane3_retreat\")\nvar tut_unit = get_global(\"tutorial_unit\", \"\");\nsleep(2.0);\nshow_dialog(\"Outstanding! \" + tut_unit + \" crossed successfully. Tutorial complete!\\n\\nYou've learned: radio commands, drawing, combat reports, engineer tasks, and fire support.\\n\\nCheck the Field Manual for advanced topics. Good luck, Commander!\", true);",
-        "on_deactivate_expr": "",
-        "presence": 1,
-        "require_duration_s": 0.0,
-        "run_once": true,
-        "shape": 0,
-        "size_m": {
-          "x": 100.0,
-          "y": 100.0
-        },
-        "synced_tasks": [],
-        "synced_units": [],
-        "title": "Alpha Retreat Trigger"
-      }
-    ],
-    "units": [
-      {
-        "affiliation": 0,
-        "behaviour": 0,
-        "callsign": "RANGE",
-        "combat_mode": 0,
-        "id": "infantry_plt_1_1",
-        "playable": false,
-        "position": {
-          "x": 48.9387359619141,
-          "y": 139.476898193359
-        },
-        "state": {
-          "cohesion": 1.0,
-          "state_ammunition": {
+		},
+		"position_m": {
+		  "x": 2039.09521484375,
+		  "y": 960.957275390625
+		},
+		"prev_index": 3,
+		"task_type": "move",
+		"unit_index": 3
+	  }
+	],
+	"triggers": [
+	  {
+		"area_center_m": {
+		  "x": 1851.359375,
+		  "y": 1332.51171875
+		},
+		"condition_expr": "true",
+		"id": "TRG_1",
+		"on_activate_expr": "",
+		"on_deactivate_expr": "",
+		"presence": 1,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 500.0,
+		  "y": 500.0
+		},
+		"synced_tasks": [
+		  0,
+		  2
+		],
+		"synced_units": [],
+		"title": "Ambush Trigger"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2151.0,
+		  "y": 151.0
+		},
+		"condition_expr": "last_radio_command().to_lower().contains(\"radio check\")",
+		"id": "radio_check_trigger",
+		"on_activate_expr": "radio(\"Company this is Alpha. I Read you five by five.\", \"info\", \"ALPHA\");\nset_objective(\"lane_1_comms\", 1);\nsleep_ui(2.0);\ntutorial_dialog(\"Excellent! You just performed a radio check. You'll use the radio to give all commands to your units.\", \"%TranscriptDoc\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"The Radio Transcript shows all messages. Use it to review what was said during the mission.\", \"%TranscriptDoc\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This drawer contains blank unit counters. You can create markers to track friendly and enemy units.\", \"%UnitCounterDrawer\", true);\ntutorial_dialog(\"Click the drawer, then create a counter for UMPIRE: Affiliation=Neutral, Type=HQ, Size=Team, Callsign=UMPIRE.\", \"%UnitCounterDrawer\", true);",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Radio Check Response"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 1951.0,
+		  "y": 152.544235229492
+		},
+		"condition_expr": "true",
+		"id": "mission_init",
+		"on_activate_expr": "set_global(\"is_tool_tut_finished\", false);\n\n# Find and store callsigns for key unit roles\nset_global(\"recon_callsign\", find_callsign_by_role(\"RECON\"));\nset_global(\"armor_callsign\", find_callsign_by_role(\"ARMOR\"));\nset_global(\"at_callsign\", find_callsign_by_role(\"AT\"));\nset_global(\"eng_callsign\", find_callsign_by_role(\"ENG\"));\n\n# Set initial tutorial unit (prefer RECON)\nset_global(\"tutorial_unit\", get_global(\"recon_callsign\", \"\"));\n\nsleep_ui(2.0);\ntutorial_dialog(\"Welcome to Operational Command! This tutorial mission will teach you the basics of commanding your units.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This is your HQ table. You command units by talking on the radio, tracking them on the map, and reading documents.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This briefing document shows your mission objectives. Drag it with LMB, double-click to open, RMB to close.\", \"%BriefingDoc\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"This is your radio - the most important tool. Press and HOLD SPACE to transmit, then speak your command.\", \"%Radio\", true);\ntutorial_dialog(\"Let's try it! Hold SPACE and say: 'Radio Check' (then release SPACE).\", \"%Radio\", true);\nset_global(\"is_tool_tut_finished\", true);",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Mission Init"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 1951.0,
+		  "y": 251.0
+		},
+		"condition_expr": "is_unit_destroyed(get_global(\"recon_callsign\", \"\"))",
+		"id": "tutorial_unit_monitor",
+		"on_activate_expr": "set_global(\"tutorial_unit\", get_global(\"armor_callsign\", \"\"))\nradio(armor_cs + \" is now your primary unit. Continue the mission.\", \"info\")",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Tutorial Unit Monitor"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 1951.0,
+		  "y": 351.0
+		},
+		"condition_expr": "is_unit_destroyed(get_global(\"recon_callsign\", \"ALPHA\")) and get_global(\"armor_callsign\", \"BRAVO\")",
+		"id": "tutorial_units_dead_fail",
+		"on_activate_expr": "radio(\"All combat units destroyed. Mission failed.\", \"error\");\nsleep(2.0);\nfail_objective(\"lane2_movement\");\nfail_objective(\"lane2_combat\");",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Tutorial Units Dead - Fail"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 1951.0,
+		  "y": 451.0
+		},
+		"condition_expr": "is_unit_destroyed(get_global(\"eng_callsign\", \"\"))",
+		"id": "engineer_dead_fail",
+		"on_activate_expr": "var eng_unit = get_global(\"eng_callsign\", \"FOXTROT\");\nradio(eng_unit + \" destroyed! Without engineers, we cannot complete the mission.\", \"error\");\nsleep(2.0);\nshow_dialog(\"MISSION FAILED: Engineers lost. Cannot complete river crossing objectives.\", true);\nfail_objective(\"lane3_bridge\");\nfail_objective(\"lane3_retreat\");",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Engineer Dead - Fail"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2551.0,
+		  "y": 151.0
+		},
+		"condition_expr": "has_drawn() and get_global(\"tutorial_unit\", \"\") != \"\"",
+		"id": "drawing_check_trigger",
+		"on_activate_expr": "set_objective(\"draw_plan\", 1);\nvar tut_unit = get_global(\"tutorial_unit\", \"\");\ntutorial_dialog(\"Great! You've drawn your maneuver plan. Now let's order \" + tut_unit + \" to execute it.\", \"%Map\", true);\ntutorial_dialog(\"Hold SPACE and say: '\" + tut_unit + \", move to OBJ 1' or '\" + tut_unit + \", move to grid 633858' (OBJ 1's grid coordinate).\", \"%Radio\", true);",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Drawing Check"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2351.0,
+		  "y": 351.0
+		},
+		"condition_expr": "last_radio_command().to_lower().contains(\"move\") and last_radio_command().to_lower().contains(get_global(\"tutorial_unit\", \"\").to_lower())",
+		"id": "tutorial_unit_move_check",
+		"on_activate_expr": "var tut_unit = get_global(\"tutorial_unit\", \"\");\nvar armor_unit = get_global(\"armor_callsign\", \"\");\nsleep_ui(1.0);\ntutorial_dialog(\"Good! \" + tut_unit + \" received the order. Now let's send your armor to support them.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"Hold SPACE and say: '\" + armor_unit + \", move to OBJ 1' - they'll move together with \" + tut_unit + \".\", \"%Radio\", true);",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Tutorial Unit Move Check"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2351.0,
+		  "y": 451.0
+		},
+		"condition_expr": "last_radio_command().to_lower().contains(\"move\") and last_radio_command().to_lower().contains(get_global(\"armor_callsign\", \"\").to_lower())",
+		"id": "armor_move_check",
+		"on_activate_expr": "var armor_unit = get_global(\"armor_callsign\", \"\");\nvar eng_unit = get_global(\"eng_callsign\", \"FOXTROT\");\nsleep_ui(1.0);\ntutorial_dialog(\"Perfect! \" + armor_unit + \" will support the advance. Now let's position our engineers.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"Engineers can build bridges and clear obstacles. Order them to the staging area.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"Hold SPACE and say: '\" + eng_unit + \", move to grid 622846' (Staging Area Rabbit marker).\", \"%Radio\", true);",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Armor Move Check"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2351.0,
+		  "y": 551.0
+		},
+		"condition_expr": "last_radio_command().to_lower().contains(\"move\") and last_radio_command().to_lower().contains(get_global(\"eng_callsign\", \"\").to_lower())",
+		"id": "eng_move_check",
+		"on_activate_expr": "var eng_unit = get_global(\"eng_callsign\", \"FOXTROT\");\nvar at_unit = get_global(\"at_callsign\", \"\");\nsleep_ui(1.0);\ntutorial_dialog(\"Excellent! \" + eng_unit + \" are moving to staging. Now order your AT/TOW unit to escort them.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"Hold SPACE and say: '\" + at_unit + \", move to grid 624846'.\", \"%Radio\", true);\nset_global(\"all_units_ordered\", false);",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Eng Move Check"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2351.0,
+		  "y": 651.0
+		},
+		"condition_expr": "last_radio_command().to_lower().contains(\"move\") and last_radio_command().to_lower().contains(get_global(\"at_callsign\", \"\").to_lower()) and not get_global(\"all_units_ordered\", false)",
+		"id": "at_move_check",
+		"on_activate_expr": "var at_unit = get_global(\"at_callsign\", \"\");\nset_global(\"all_units_ordered\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"Perfect! \" + at_unit + \" will provide anti-tank support. All units have orders!\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"Now start the simulation to watch them execute. Click the PLAY button on the timer.\", \"%Timer\", true);",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "AT Move Check"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2351.0,
+		  "y": 151.0
+		},
+		"condition_expr": "is_running()",
+		"id": "timer_check_trigger",
+		"on_activate_expr": "set_objective(\"set_time\", 1)\n\nvar tut_unit = get_global(\"tutorial_unit\", \"\");\nvar armor_unit = get_global(\"armor_callsign\", \"\");\nvar eng_unit = get_global(\"eng_callsign\", \"FOXTROT\");\nsleep_ui(1.0);\ntutorial_dialog(\"Good! Time is running. All your units are executing their orders. You can pause/play anytime.\", \"%Timer\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"The other documents on the table (Intel, Protractor, Field Manual) provide reference info - check them out later!\", \"%IntelDoc\", true);\nsleep(15.0);\ntutorial_dialog(\"You can request reports from units. Hold SPACE and try: '\" + tut_unit + \", report position' or '\" + tut_unit + \", report status'\", \"%Radio\", true);",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Timer Check"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2151.0,
+		  "y": 351.0
+		},
+		"condition_expr": "has_created_counter()",
+		"id": "unit_counter_trigger",
+		"on_activate_expr": "set_objective(\"unit_markers\", 1)\n\nsleep_ui(2.0);\ntutorial_dialog(\"Perfect! Unit counters help you track units on the map. You can pick them up and place them anywhere using LMB.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"These are drawing tools. Click a pen to pick it up, then hold LMB on the map to draw. Right-click to put it down.\", \"%PenBlue\", true);\ntutorial_dialog(\"Let's plan a route to OBJ 1. Pick the BLUE pen and draw arrows from WP 1 → WP 2 → WP 3 → OBJ 1.\", \"%Map\", true);",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Unit Counter Check"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2551.0,
+		  "y": 351.0
+		},
+		"condition_expr": "is_unit_in_combat(get_global(\"tutorial_unit\", \"\"))",
+		"id": "combat_trigger",
+		"on_activate_expr": "set_global(\"ambush_triggered\", true);\nvar tut_unit = get_global(\"tutorial_unit\", \"\");\nvar pos := get_unit_position(tut_unit);\nshow_dialog(\"CONTACT! \" + tut_unit + \" is under fire! Request a contact report to learn about the enemy.\\n\\nSay: '\" + tut_unit + \", report contact'\", true);\nfail_objective(\"lane2_movement\");\n",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Combat Trigger"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2751.0,
+		  "y": 151.0
+		},
+		"condition_expr": "get_global(\"ambush_triggered\", false) and last_radio_command().to_lower().contains(\"contact\")",
+		"id": "ambush_reports",
+		"on_activate_expr": "sleep(2.0);\nvar pos := get_unit_position(\"ALPHA\");\nshow_dialog(\"Good! You now know VICTOR's position. Let me explain how combat works.\", pos);\nsleep(3.0);\nshow_dialog(\"COMBAT MECHANICS:\\n\\nUnits automatically fire when they have line-of-sight to enemies and are in range. You don't micromanage every shot.\", true);\nsleep(3.0);\nshow_dialog(\"HOW TO INFLUENCE COMBAT:\\n\\n1. Call in SUPPORT: Order other units to attack the same target\\n2. FIRE SUPPORT: Use artillery/mortars (DELTA) to suppress enemies\\n3. FLANK: Attack from multiple directions\\n4. USE TERRAIN: Units in cover take less damage\", true);\nsleep(3.0);\nshow_dialog(\"For this tutorial, let's keep it simple. Directly engage VICTOR!\\n\\nSay: 'ALPHA, attack VICTOR' or 'ALPHA, fire on VICTOR'\", pos);",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Ambush Reports Trigger"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2751.0,
+		  "y": 351.0
+		},
+		"condition_expr": "get_global(\"ambush_triggered\", false) and is_unit_destroyed(\"VICTOR\")",
+		"id": "victor_destroyed_trigger",
+		"on_activate_expr": "var tut_unit = get_global(\"tutorial_unit\", \"\");\nshow_dialog(\"VICTOR destroyed! Now we need to break contact with BORIS.\", true);\nsleep(2.0);\nshow_dialog(\"Let's practice FIRE SUPPORT! You can suppress BORIS with mortars while \" + tut_unit + \" withdraws.\\n\\n(OPTIONAL) Say: 'DELTA, fire on BORIS' to suppress them.\", true);\nsleep(3.0);\nshow_dialog(\"Now order \" + tut_unit + \" to move to OBJ 2 (grid 631846).\\n\\nSay: '\" + tut_unit + \", move to OBJ 2'\", true, vec2(2138, 648));\n",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "VICTOR Destroyed Trigger"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2371.0,
+		  "y": 911.0
+		},
+		"condition_expr": "is_unit_in_trigger_area(get_global(\"tutorial_unit\", \"ALPHA\"))",
+		"id": "fuel_depletion_trigger",
+		"on_activate_expr": "var tut_unit_cs = get_global(\"tutorial_unit\", \"\");\nset_unit_fuel(tut_unit_cs, 18.0);\nset_global(\"fuel_depleted\", true);",
+		"on_deactivate_expr": "",
+		"presence": 1,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 1,
+		"size_m": {
+		  "x": 1300.0,
+		  "y": 300.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Fuel Depletion Trigger"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2553.71044921875,
+		  "y": 454.429260253906
+		},
+		"condition_expr": "get_global(\"fuel_depleted\", false) and not get_global(\"resupply_instructed\", false)",
+		"id": "resupply_instruction_trigger",
+		"on_activate_expr": "set_global(\"resupply_instructed\", true);\nvar tut_unit = get_global(\"tutorial_unit\", \"\");\nvar logi_unit = find_callsign_by_role(\"LOGI\");\nif logi_unit == \"\":\n    logi_unit = \"CHARLIE\";\nsleep(2.0);\nshow_dialog(\"WARNING: \" + tut_unit + \" is running low on fuel!\\n\\nUnits consume fuel as they move. Without fuel, they'll stop.\", true);\nsleep(2.0);\nshow_dialog(\"To resupply, drive \" + logi_unit + \" (logistics unit) within 50 meters of \" + tut_unit + \".\\n\\nLogistics units automatically resupply nearby friendlies.\", true);\nsleep(2.0);\nshow_dialog(\"Order \" + logi_unit + \" to the same location as \" + tut_unit + \" to resupply them.\\n\\nSay: '\" + logi_unit + \", move to \" + tut_unit + \"'\", true);",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Resupply Instruction Trigger"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2131.0,
+		  "y": 645.568237304688
+		},
+		"condition_expr": "true",
+		"id": "ambush_contact_break_trigger",
+		"on_activate_expr": "set_global(\"ambush_broke_contact\", true);\ncomplete_objective(\"lane2_combat\");\nvar tut_unit = get_global(\"tutorial_unit\", \"\");\nvar eng_unit = get_global(\"eng_callsign\", \"FOXTROT\");\nsleep(2.0);\nshow_dialog(\"Excellent! \" + tut_unit + \" reached OBJ 2 safely. Lane 2 complete!\\n\\nNow for Lane 3: river crossing and smoke support.\", true);\nsleep(2.0);\nshow_dialog(\"First, we need a bridge. \" + eng_unit + \" are engineers - they can build bridges.\\n\\nSay: '\" + eng_unit + \", build bridge at grid 626843' (east of the river)\", true, vec2(1687, 340));",
+		"on_deactivate_expr": "",
+		"presence": 1,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 200.0,
+		  "y": 200.0
+		},
+		"synced_tasks": [
+		  4,
+		  6
+		],
+		"synced_units": [],
+		"title": "Ambush Contact Break Trigger"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2951.0,
+		  "y": 151.0
+		},
+		"condition_expr": "has_built_bridge()",
+		"id": "bridge_trigger",
+		"on_activate_expr": "set_global(\"bridge_built\", true);\nvar tut_unit = get_global(\"tutorial_unit\", \"\");\nvar eng_unit = get_global(\"eng_callsign\", \"FOXTROT\");\nsleep(2.0);\nshow_dialog(\"Bridge complete! \" + eng_unit + \" did their job. Now let's use smoke to cover \" + tut_unit + \"'s crossing.\", false, vec2(1687, 340));\nsleep(2.0);\nshow_dialog(\"DELTA has mortars that can fire smoke. Call for fire support!\\n\\nSay: 'DELTA, fire smoke at grid 628845'\", true);\ncomplete_objective(\"lane3_bridge\");",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": false,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Bridge Trigger"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 2951.0,
+		  "y": 351.0
+		},
+		"condition_expr": "get_global(\"bridge_built\", false) and has_called_artillery()",
+		"id": "arty_trigger",
+		"on_activate_expr": "complete_objective(\"lane3_artillery\")\nvar tut_unit = get_global(\"tutorial_unit\", \"\");\nsleep(2.0);\nshow_dialog(\"Smoke rounds away! Now send \" + tut_unit + \" across the bridge under the smoke cover.\\n\\nSay: '\" + tut_unit + \", move to OBJ 3' (grid 624843)\", true, vec2(1449, 353));",
+		"on_deactivate_expr": "",
+		"presence": 0,
+		"require_duration_s": 0.0,
+		"run_once": false,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Artillery trigger"
+	  },
+	  {
+		"area_center_m": {
+		  "x": 1451.0,
+		  "y": 351.0
+		},
+		"condition_expr": "get_global(\"bridge_built\", false)",
+		"id": "alpha_retreat_trigger",
+		"on_activate_expr": "complete_objective(\"lane3_retreat\")\nvar tut_unit = get_global(\"tutorial_unit\", \"\");\nsleep(2.0);\nshow_dialog(\"Outstanding! \" + tut_unit + \" crossed successfully. Tutorial complete!\\n\\nYou've learned: radio commands, drawing, combat reports, engineer tasks, and fire support.\\n\\nCheck the Field Manual for advanced topics. Good luck, Commander!\", true);",
+		"on_deactivate_expr": "",
+		"presence": 1,
+		"require_duration_s": 0.0,
+		"run_once": true,
+		"shape": 0,
+		"size_m": {
+		  "x": 100.0,
+		  "y": 100.0
+		},
+		"synced_tasks": [],
+		"synced_units": [],
+		"title": "Alpha Retreat Trigger"
+	  }
+	],
+	"units": [
+	  {
+		"affiliation": 0,
+		"behaviour": 0,
+		"callsign": "RANGE",
+		"combat_mode": 0,
+		"id": "infantry_plt_1_1",
+		"playable": false,
+		"position": {
+		  "x": 48.9387359619141,
+		  "y": 139.476898193359
+		},
+		"state": {
+		  "cohesion": 1.0,
+		  "state_ammunition": {
 
-          },
-          "state_equipment": 0.0,
-          "state_injured": 0.0,
-          "state_strength": 0.0
-        },
-        "unit_id": "infantry_plt_1"
-      },
-      {
-        "affiliation": 0,
-        "behaviour": 0,
-        "callsign": "UMPIRE",
-        "combat_mode": 0,
-        "id": "infantry_plt_2_1",
-        "playable": false,
-        "position": {
-          "x": 47.7604370117188,
-          "y": 40.5906677246094
-        },
-        "state": {
-          "cohesion": 1.0,
-          "state_ammunition": {
+		  },
+		  "state_equipment": 0.0,
+		  "state_injured": 0.0,
+		  "state_strength": 0.0
+		},
+		"unit_id": "infantry_plt_1"
+	  },
+	  {
+		"affiliation": 0,
+		"behaviour": 0,
+		"callsign": "UMPIRE",
+		"combat_mode": 0,
+		"id": "infantry_plt_2_1",
+		"playable": false,
+		"position": {
+		  "x": 47.7604370117188,
+		  "y": 40.5906677246094
+		},
+		"state": {
+		  "cohesion": 1.0,
+		  "state_ammunition": {
 
-          },
-          "state_equipment": 0.0,
-          "state_injured": 0.0,
-          "state_strength": 0.0
-        },
-        "unit_id": "infantry_plt_2"
-      },
-      {
-        "affiliation": 1,
-        "behaviour": 3,
-        "callsign": "VICTOR",
-        "combat_mode": 0,
-        "id": "frg_bw_opfor_1",
-        "playable": false,
-        "position": {
-          "x": 1960.81774902344,
-          "y": 1351.71520996094
-        },
-        "state": {
-          "cohesion": 1.0,
-          "state_ammunition": {
+		  },
+		  "state_equipment": 0.0,
+		  "state_injured": 0.0,
+		  "state_strength": 0.0
+		},
+		"unit_id": "infantry_plt_2"
+	  },
+	  {
+		"affiliation": 1,
+		"behaviour": 3,
+		"callsign": "VICTOR",
+		"combat_mode": 0,
+		"id": "frg_bw_opfor_1",
+		"playable": false,
+		"position": {
+		  "x": 1960.81774902344,
+		  "y": 1351.71520996094
+		},
+		"state": {
+		  "cohesion": 1.0,
+		  "state_ammunition": {
 
-          },
-          "state_equipment": 0.0,
-          "state_injured": 0.0,
-          "state_strength": 12.0
-        },
-        "unit_id": "frg_bw_opfor"
-      },
-      {
-        "affiliation": 1,
-        "behaviour": 1,
-        "callsign": "BORIS",
-        "combat_mode": 0,
-        "id": "frg_bw_opfor_2_1",
-        "playable": false,
-        "position": {
-          "x": 2128.06420898438,
-          "y": 1725.70764160156
-        },
-        "state": {
-          "cohesion": 1.0,
-          "state_ammunition": {
+		  },
+		  "state_equipment": 0.0,
+		  "state_injured": 0.0,
+		  "state_strength": 12.0
+		},
+		"unit_id": "frg_bw_opfor"
+	  },
+	  {
+		"affiliation": 1,
+		"behaviour": 1,
+		"callsign": "BORIS",
+		"combat_mode": 0,
+		"id": "frg_bw_opfor_2_1",
+		"playable": false,
+		"position": {
+		  "x": 2128.06420898438,
+		  "y": 1725.70764160156
+		},
+		"state": {
+		  "cohesion": 1.0,
+		  "state_ammunition": {
 
-          },
-          "state_equipment": 0.0,
-          "state_injured": 0.0,
-          "state_strength": 12.0
-        },
-        "unit_id": "frg_bw_opfor_2"
-      },
-      {
-        "affiliation": 1,
-        "behaviour": 1,
-        "callsign": "IVAN",
-        "combat_mode": 2,
-        "id": "frg_bw_opfor_3_1",
-        "playable": false,
-        "position": {
-          "x": 2367.10083007813,
-          "y": 1843.86279296875
-        },
-        "state": {
-          "cohesion": 1.0,
-          "state_ammunition": {
+		  },
+		  "state_equipment": 0.0,
+		  "state_injured": 0.0,
+		  "state_strength": 12.0
+		},
+		"unit_id": "frg_bw_opfor_2"
+	  },
+	  {
+		"affiliation": 1,
+		"behaviour": 1,
+		"callsign": "IVAN",
+		"combat_mode": 2,
+		"id": "frg_bw_opfor_3_1",
+		"playable": false,
+		"position": {
+		  "x": 2367.10083007813,
+		  "y": 1843.86279296875
+		},
+		"state": {
+		  "cohesion": 1.0,
+		  "state_ammunition": {
 
-          },
-          "state_equipment": 1.0,
-          "state_injured": 0.0,
-          "state_strength": 12.0
-        },
-        "unit_id": "frg_bw_opfor_3"
-      }
-    ]
+		  },
+		  "state_equipment": 1.0,
+		  "state_injured": 0.0,
+		  "state_strength": 12.0
+		},
+		"unit_id": "frg_bw_opfor_3"
+	  }
+	]
   },
   "datetime": {
-    "day": 5,
-    "hour": 9,
-    "minute": 0,
-    "month": 11,
-    "year": 1983
+	"day": 5,
+	"hour": 9,
+	"minute": 0,
+	"month": 11,
+	"year": 1983
   },
   "description": "A routine lane evaluation at Wildflecken caps a week of Autumn Forge drills. Range Control wants clean radio work, safe bounds, and a pretty AAR for visiting brass. Your troop runs the lanes, pops smoke on cue, and rehearses river drills with engineers who’ve done this a hundred times. \n\nThe only tension is the weather and the stopwatch—until distant artillery thumps roll in from the border. Umpires shrug it off as another unit’s live-fire. Your RTO doesn’t like the pattern; neither do you.\n\n\"It’s just an exercise—until it isn’t.\"",
   "difficulty": 1,
   "id": "us_crested_cap",
   "map_position": {
-    "x": 0.439999997615814,
-    "y": 0.540000021457672
+	"x": 0.439999997615814,
+	"y": 0.540000021457672
   },
   "preview_path": "res://assets/textures/scenarios/nato_crested_cap.png",
   "scenario_order": 0,
   "terrain_id": "wildflecken_training_area",
   "title": "Crested Cap Checkride",
   "units": {
-    "ammo_pools": {
-      "ARTILLERY_SMOKE": 50.0,
-      "ATGM": 10.0,
-      "SMALL_ARMS": 10000.0,
-      "TANK_GUN": 30.0
-    },
-    "equipment_pool": 100,
-    "replacement_pool": 100,
-    "unit_points": 500,
-    "unit_recruits_ids": [
-      "scout_plt_1a111_acr",
-      "us_11acr_a_trp_2plt_tank_m60a3",
-      "us_11acr_a_trp_itv_sec",
-      "us_11acr_a_trp_mortar_sec_m106",
-      "us_11acr_field_trains_sec",
+	"ammo_pools": {
+	  "ARTILLERY_SMOKE": 50.0,
+	  "ATGM": 10.0,
+	  "SMALL_ARMS": 10000.0,
+	  "TANK_GUN": 30.0
+	},
+	"equipment_pool": 100,
+	"replacement_pool": 100,
+	"unit_points": 500,
+	"unit_recruits_ids": [
+	  "scout_plt_1a111_acr",
+	  "us_11acr_a_trp_2plt_tank_m60a3",
+	  "us_11acr_a_trp_itv_sec",
+	  "us_11acr_a_trp_mortar_sec_m106",
+	  "us_11acr_field_trains_sec",
       "us_11acr_58engr_pl"
-    ],
-    "unit_reserves": [],
-    "unit_slots": [
-      {
-        "allowed_roles": [
-          "INF",
-          "MECH",
-          "ARMOR",
-          "RECON",
+	],
+	"unit_reserves": [],
+	"unit_slots": [
+	  {
+		"allowed_roles": [
+		  "INF",
+		  "MECH",
+		  "ARMOR",
+		  "RECON",
           "AT"
-        ],
-        "callsign": "ALPHA",
-        "key": "SLOT_1",
-        "start_position": {
-          "x": 504.539459228516,
-          "y": 1718.78479003906
-        },
-        "title": "ALPHA"
-      },
-      {
-        "allowed_roles": [
-          "INF",
-          "MECH",
-          "ARMOR",
-          "RECON",
+		],
+		"callsign": "ALPHA",
+		"key": "SLOT_1",
+		"start_position": {
+		  "x": 504.539459228516,
+		  "y": 1718.78479003906
+		},
+		"title": "ALPHA"
+	  },
+	  {
+		"allowed_roles": [
+		  "INF",
+		  "MECH",
+		  "ARMOR",
+		  "RECON",
           "AT"
-        ],
-        "callsign": "BRAVO",
-        "key": "SLOT_2",
-        "start_position": {
-          "x": 701.886596679688,
-          "y": 1888.73376464844
-        },
-        "title": "BRAVO"
-      },
-      {
-        "allowed_roles": [
-          "INF",
-          "MECH",
-          "ARMOR",
-          "RECON",
+		],
+		"callsign": "BRAVO",
+		"key": "SLOT_2",
+		"start_position": {
+		  "x": 701.886596679688,
+		  "y": 1888.73376464844
+		},
+		"title": "BRAVO"
+	  },
+	  {
+		"allowed_roles": [
+		  "INF",
+		  "MECH",
+		  "ARMOR",
+		  "RECON",
           "AT"
-        ],
-        "callsign": "CHARLIE",
-        "key": "SLOT_3",
-        "start_position": {
-          "x": 597.212585449219,
-          "y": 1813.87329101563
-        },
-        "title": "CHARLIE"
-      },
-      {
-        "allowed_roles": [
-          "FIRES",
+		],
+		"callsign": "CHARLIE",
+		"key": "SLOT_3",
+		"start_position": {
+		  "x": 597.212585449219,
+		  "y": 1813.87329101563
+		},
+		"title": "CHARLIE"
+	  },
+	  {
+		"allowed_roles": [
+		  "FIRES",
           "MORTAR"
-        ],
-        "callsign": "DELTA",
-        "key": "SLOT_4",
-        "start_position": {
-          "x": 412.263061523438,
-          "y": 1858.07702636719
-        },
-        "title": "DELTA"
-      },
-      {
-        "allowed_roles": [
+		],
+		"callsign": "DELTA",
+		"key": "SLOT_4",
+		"start_position": {
+		  "x": 412.263061523438,
+		  "y": 1858.07702636719
+		},
+		"title": "DELTA"
+	  },
+	  {
+		"allowed_roles": [
           "LOGI"
-        ],
-        "callsign": "ECHO",
-        "key": "SLOT_5",
-        "start_position": {
-          "x": 479.759887695313,
-          "y": 1909.47131347656
-        },
-        "title": "ECHO"
-      },
-      {
-        "allowed_roles": [
+		],
+		"callsign": "ECHO",
+		"key": "SLOT_5",
+		"start_position": {
+		  "x": 479.759887695313,
+		  "y": 1909.47131347656
+		},
+		"title": "ECHO"
+	  },
+	  {
+		"allowed_roles": [
           "ENG"
-        ],
-        "callsign": "FOXTROT",
-        "key": "SLOT_6",
-        "start_position": {
-          "x": 583.921997070313,
-          "y": 1955.3232421875
-        },
-        "title": "FOXTROT"
-      }
-    ]
+		],
+		"callsign": "FOXTROT",
+		"key": "SLOT_6",
+		"start_position": {
+		  "x": 583.921997070313,
+		  "y": 1955.3232421875
+		},
+		"title": "FOXTROT"
+	  }
+	]
   },
   "video_path": "res://assets/videos/us_crested_cap_intro.ogv",
   "video_subtitles": {
-    "subtitles": [
-      {
-        "end_time": 19.0,
-        "start_time": 12.0,
-        "text": "You have just finished a week of Autumn Forge drills. And, Today is the easy part: a four-lane evaluation."
-      },
-      {
-        "end_time": 25.591,
-        "start_time": 19.976,
-        "text": "The Enemy is a mechanized platoon of Bundeswehr playing OPFOR, using NVA tactics."
-      },
-      {
-        "end_time": 32.777,
-        "start_time": 25.967,
-        "text": "You should Expect reconnoisance probes, hasty ambushes and simulated mortar strikes using smokes."
-      },
-      {
-        "end_time": 41.322,
-        "start_time": 33.795,
-        "text": "Attached to your company is an engineer platoon. and, adjacent forces include Bundeswehr observers and Range Control umpires."
-      },
-      {
-        "end_time": 48.219,
-        "start_time": 42.0,
-        "text": "The wildflecken terrain is comprised ridges, fields, a shallow lake and a river crossing."
-      },
-      {
-        "end_time": 58.193,
-        "start_time": 49.084,
-        "text": "At zero-nine-hundred, your company will run the four lanes: communication and command, movement and contact, break contact and river crossings. "
-      },
-      {
-        "end_time": 64.953,
-        "start_time": 58.785,
-        "text": "These lanes should be done safely, by-the-books, with clean radio comms, and zero incidents."
-      },
-      {
-        "end_time": 74.263,
-        "start_time": 66.335,
-        "text": "Your Scouts lead, with tanks on overwatch while TOWs and mortars are in support. engineers will own the river crossing."
-      },
-      {
-        "end_time": 82.786,
-        "start_time": 75.062,
-        "text": "Fuel and ammo are topped off, no live rounds. Lane control is call sign RANGE. Medevac is UMPIRE."
-      },
-      {
-        "end_time": 87.184,
-        "start_time": 84.027,
-        "text": "Good Luck"
-      }
-    ]
+	"subtitles": [
+	  {
+		"end_time": 19.0,
+		"start_time": 12.0,
+		"text": "You have just finished a week of Autumn Forge drills. And, Today is the easy part: a four-lane evaluation."
+	  },
+	  {
+		"end_time": 25.591,
+		"start_time": 19.976,
+		"text": "The Enemy is a mechanized platoon of Bundeswehr playing OPFOR, using NVA tactics."
+	  },
+	  {
+		"end_time": 32.777,
+		"start_time": 25.967,
+		"text": "You should Expect reconnoisance probes, hasty ambushes and simulated mortar strikes using smokes."
+	  },
+	  {
+		"end_time": 41.322,
+		"start_time": 33.795,
+		"text": "Attached to your company is an engineer platoon. and, adjacent forces include Bundeswehr observers and Range Control umpires."
+	  },
+	  {
+		"end_time": 48.219,
+		"start_time": 42.0,
+		"text": "The wildflecken terrain is comprised ridges, fields, a shallow lake and a river crossing."
+	  },
+	  {
+		"end_time": 58.193,
+		"start_time": 49.084,
+		"text": "At zero-nine-hundred, your company will run the four lanes: communication and command, movement and contact, break contact and river crossings. "
+	  },
+	  {
+		"end_time": 64.953,
+		"start_time": 58.785,
+		"text": "These lanes should be done safely, by-the-books, with clean radio comms, and zero incidents."
+	  },
+	  {
+		"end_time": 74.263,
+		"start_time": 66.335,
+		"text": "Your Scouts lead, with tanks on overwatch while TOWs and mortars are in support. engineers will own the river crossing."
+	  },
+	  {
+		"end_time": 82.786,
+		"start_time": 75.062,
+		"text": "Fuel and ammo are topped off, no live rounds. Lane control is call sign RANGE. Medevac is UMPIRE."
+	  },
+	  {
+		"end_time": 87.184,
+		"start_time": 84.027,
+		"text": "Good Luck"
+	  }
+	]
   },
   "weather": {
-    "fog_m": 8000.0,
-    "rain": 2.6,
-    "wind_dir": 67.0,
-    "wind_speed_m": 4.0
+	"fog_m": 8000.0,
+	"rain": 2.6,
+	"wind_dir": 67.0,
+	"wind_speed_m": 4.0
   }
 }

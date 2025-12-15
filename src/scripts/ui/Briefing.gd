@@ -62,6 +62,5 @@ func _on_back_pressed() -> void:
 	else:
 		Game.goto_scene(SCENE_MISSION_SELECT)
 
-
 # TODO Create logic to display briefing items
 # TODO Create logic to inspect briefing items

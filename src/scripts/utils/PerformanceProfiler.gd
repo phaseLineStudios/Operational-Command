@@ -2,6 +2,7 @@ extends Node
 ## Quick performance profiler to identify bottlenecks
 ## Add to hq_table scene temporarily and press F12 to print stats
 
+
 func _ready() -> void:
 	print("=== Performance Profiler Active ===")
 	print("Press F12 to dump performance stats")
@@ -19,8 +20,18 @@ func _print_stats() -> void:
 	print("FPS: ", Engine.get_frames_per_second())
 	print("Frame Time: %.2f ms" % (perf.get_monitor(Performance.TIME_PROCESS) * 1000.0))
 	print("\n--- Memory ---")
-	print("Video Memory: %.1f MB" % (perf.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1024.0 / 1024.0))
-	print("Texture Memory: %.1f MB" % (perf.get_monitor(Performance.RENDER_TEXTURE_MEM_USED) / 1024.0 / 1024.0))
+	print(
+		(
+			"Video Memory: %.1f MB"
+			% (perf.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1024.0 / 1024.0)
+		)
+	)
+	print(
+		(
+			"Texture Memory: %.1f MB"
+			% (perf.get_monitor(Performance.RENDER_TEXTURE_MEM_USED) / 1024.0 / 1024.0)
+		)
+	)
 	print("\n--- Rendering ---")
 	print("Draw Calls: ", perf.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
 	print("Objects Drawn: ", perf.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME))
