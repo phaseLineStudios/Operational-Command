@@ -1,41 +1,41 @@
 {
   "allowed_slots": [
-    "INF_SLOT",
-    "RESERVE_ANY",
+	"INF_SLOT",
+	"RESERVE_ANY",
     "RESERVE_INF"
   ],
   "ammunition": {
-    "ARTILLERY_AP": 0,
-    "ARTILLERY_ILLUM": 0,
-    "ARTILLERY_SMOKE": 0,
-    "ATGM": 0,
-    "AT_ROCKET": 0,
-    "AUTOCANNON": 0,
-    "ENGINEER_MUN": 0,
-    "HEAVY_WEAPONS": 0,
-    "MORTAR_AP": 0,
-    "MORTAR_ILLUM": 0,
-    "MORTAR_SMOKE": 0,
-    "SMALL_ARMS": 0,
-    "TANK_GUN": 0
+	"ARTILLERY_AP": 0,
+	"ARTILLERY_ILLUM": 0,
+	"ARTILLERY_SMOKE": 0,
+	"ATGM": 0,
+	"AT_ROCKET": 0,
+	"AUTOCANNON": 0,
+	"ENGINEER_MUN": 0,
+	"HEAVY_WEAPONS": 0,
+	"MORTAR_AP": 0,
+	"MORTAR_ILLUM": 0,
+	"MORTAR_SMOKE": 0,
+	"SMALL_ARMS": 0,
+	"TANK_GUN": 0
   },
   "ammunition_critical_threshold": 0.1,
   "ammunition_low_threshold": 0.25,
   "cost": 50,
   "doctrine": "nato_inf_1985",
   "editor": {
-    "unit_category": "us_army"
+	"unit_category": "us_army"
   },
   "equipment": {
-    "radios": {
+	"radios": {
 
-    },
-    "vehicles": {
+	},
+	"vehicles": {
 
-    },
-    "weapons": {
+	},
+	"weapons": {
 
-    }
+	}
   },
   "equipment_tags": [],
   "experience": 0.0,
@@ -44,21 +44,21 @@
   "role": "INF",
   "size": 2,
   "state": {
-    "cohesion": 1.0,
-    "state_equipment": 1.0,
-    "state_injured": 0.0,
-    "state_strength": 40.0
+	"cohesion": 1.0,
+	"state_equipment": 1.0,
+	"state_injured": 0.0,
+	"state_strength": 40.0
   },
   "state_ammunition": {
 
   },
   "stats": {
-    "attack": 3.2,
-    "defense": 35.0,
-    "morale": 1.0,
-    "range_m": 500.0,
-    "speed_kph": 6.0,
-    "spot_m": 1000.0
+	"attack": 3.2,
+	"defense": 35.0,
+	"morale": 1.0,
+	"range_m": 500.0,
+	"speed_kph": 6.0,
+	"spot_m": 1000.0
   },
   "strength": 40,
   "supply_transfer_radius_m": 30.0,

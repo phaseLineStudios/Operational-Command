@@ -24,39 +24,39 @@
   "cost": 50,
   "doctrine": "nato_inf_1983",
   "editor": {
-    "unit_category": "us_army"
+	"unit_category": "us_army"
   },
   "equipment": {
-    "radios": {
-      "AN/VRC-12": {
-        "ammo": -1,
-        "type": 4
-      }
-    },
-    "vehicles": {
-      "M60A3": {
-        "ammo": -1,
-        "type": 3
-      }
-    },
-    "weapons": {
-      "105mm Gun": {
-        "ammo": -1,
-        "type": 4
-      },
-      "105mm Main Gun": {
-        "ammo": 3,
-        "type": 4
-      },
-      "M240": {
-        "ammo": 0,
-        "type": 4
-      },
-      "M85 .50": {
-        "ammo": 1,
-        "type": 4
-      }
-    }
+	"radios": {
+	  "AN/VRC-12": {
+		"ammo": -1,
+		"type": 4
+	  }
+	},
+	"vehicles": {
+	  "M60A3": {
+		"ammo": -1,
+		"type": 3
+	  }
+	},
+	"weapons": {
+	  "105mm Gun": {
+		"ammo": -1,
+		"type": 4
+	  },
+	  "105mm Main Gun": {
+		"ammo": 3,
+		"type": 4
+	  },
+	  "M240": {
+		"ammo": 0,
+		"type": 4
+	  },
+	  "M85 .50": {
+		"ammo": 1,
+		"type": 4
+	  }
+	}
   },
   "equipment_tags": [],
   "experience": 0.0,
