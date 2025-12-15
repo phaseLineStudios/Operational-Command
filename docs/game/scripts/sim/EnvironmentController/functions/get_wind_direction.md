@@ -1,6 +1,6 @@
 # EnvironmentController::get_wind_direction Function Reference
 
-*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 437–440)</br>
+*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 442–445)</br>
 *Belongs to:* [EnvironmentController](../../EnvironmentController.md)
 
 **Signature**

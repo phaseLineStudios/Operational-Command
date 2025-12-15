@@ -1,6 +1,6 @@
 # UnitAutoResponses::trigger_ammo_low Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 542–545)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 596–599)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

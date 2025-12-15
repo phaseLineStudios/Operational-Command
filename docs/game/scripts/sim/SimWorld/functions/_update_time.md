@@ -1,6 +1,6 @@
 # SimWorld::_update_time Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 410–413)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 411–414)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

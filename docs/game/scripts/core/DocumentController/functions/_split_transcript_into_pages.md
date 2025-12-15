@@ -1,6 +1,6 @@
 # DocumentController::_split_transcript_into_pages Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 554–649)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 554–645)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**
@@ -32,10 +32,6 @@ func _split_transcript_into_pages(content: RichTextLabel, full_text: String) -> 
 	var visible_lines := content.get_visible_line_count()
 
 	if visible_lines < 10:
-		LogService.warning(
-			"visible_lines=%d is too small, defaulting to 30" % visible_lines,
-			"DocumentController.gd"
-		)
 		visible_lines = 30
 
 	if total_lines <= visible_lines:

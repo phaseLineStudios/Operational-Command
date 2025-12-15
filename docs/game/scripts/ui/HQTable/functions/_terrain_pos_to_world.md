@@ -1,6 +1,6 @@
 # HQTable::_terrain_pos_to_world Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 447–476)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 448–477)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

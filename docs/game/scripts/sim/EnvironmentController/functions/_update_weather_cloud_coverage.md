@@ -1,6 +1,6 @@
 # EnvironmentController::_update_weather_cloud_coverage Function Reference
 
-*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 403–416)</br>
+*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 408–421)</br>
 *Belongs to:* [EnvironmentController](../../EnvironmentController.md)
 
 **Signature**

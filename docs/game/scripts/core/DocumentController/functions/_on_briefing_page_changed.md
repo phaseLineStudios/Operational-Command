@@ -1,6 +1,6 @@
 # DocumentController::_on_briefing_page_changed Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 757–761)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 749–753)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

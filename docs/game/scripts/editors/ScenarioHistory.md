@@ -47,6 +47,8 @@ Set entity world position by id
 - [`func _deep_copy_array_res(arr: Array) -> Array`](ScenarioHistory/functions/_deep_copy_array_res.md)
 - [`func _has_prop(o: Object, p_name: String) -> bool`](ScenarioHistory/functions/_has_prop.md) — Does an Object expose a property with this name
 - [`func _emit_changed(data)`](ScenarioHistory/functions/_emit_changed.md)
+- [`func serialize_state() -> Dictionary`](ScenarioHistory/functions/serialize_state.md) — Serialize history state for preservation (e.g., during playtest)
+- [`func restore_state(state: Dictionary) -> void`](ScenarioHistory/functions/restore_state.md) — Restore history state from serialized data
 
 ## Public Attributes
 
@@ -138,6 +140,22 @@ Does an Object expose a property with this name
 ```gdscript
 func _emit_changed(data)
 ```
+
+### serialize_state
+
+```gdscript
+func serialize_state() -> Dictionary
+```
+
+Serialize history state for preservation (e.g., during playtest)
+
+### restore_state
+
+```gdscript
+func restore_state(state: Dictionary) -> void
+```
+
+Restore history state from serialized data
 
 ## Member Data Documentation
 

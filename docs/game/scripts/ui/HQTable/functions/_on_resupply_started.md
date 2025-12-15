@@ -1,6 +1,6 @@
 # HQTable::_on_resupply_started Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 263–267)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 264–268)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

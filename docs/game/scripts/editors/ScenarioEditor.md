@@ -28,7 +28,8 @@ extends Control
 - [`func _clear_hint() -> void`](ScenarioEditor/functions/_clear_hint.md) — Remove all hint widgets from the hint bar
 - [`func _on_overlay_gui_input(event: InputEvent) -> void`](ScenarioEditor/functions/_on_overlay_gui_input.md) — Handle overlay input: hover, drag, link, select, and tool input
 - [`func _unhandled_key_input(event)`](ScenarioEditor/functions/_unhandled_key_input.md) — Global key handling: delete, undo/redo, and tool input
-- [`func _on_update_scenario(_d: ScenarioData) -> void`](ScenarioEditor/functions/_on_update_scenario.md) — Apply edits to current scenario data from dialog
+- [`func _on_edit_menu_pressed(id: int) -> void`](ScenarioEditor/functions/_on_edit_menu_pressed.md) — Handle Edit menu actions (Undo/Redo).
+- [`func _on_update_scenario(_d: ScenarioData) -> void`](ScenarioEditor/functions/_on_update_scenario.md)
 - [`func _on_briefing_update(new_brief: BriefData) -> void`](ScenarioEditor/functions/_on_briefing_update.md) — Apply briefing change via history (undoable).
 - [`func _on_data_changed() -> void`](ScenarioEditor/functions/_on_data_changed.md) — Refresh UI/overlay/tree after data changes
 - [`func _update_title() -> void`](ScenarioEditor/functions/_update_title.md) — Update window title label from scenario title
@@ -47,12 +48,18 @@ extends Control
 - [`func _on_new_command() -> void`](ScenarioEditor/functions/_on_new_command.md) — Create a new custom command
 - [`func _on_edit_command() -> void`](ScenarioEditor/functions/_on_edit_command.md) — Edit the selected custom command
 - [`func _on_delete_command() -> void`](ScenarioEditor/functions/_on_delete_command.md) — Delete the selected custom command
+- [`func _on_playtest_pressed() -> void`](ScenarioEditor/functions/_on_playtest_pressed.md) — Handle PlayTest button press
+- [`func _check_playtest_return() -> void`](ScenarioEditor/functions/_check_playtest_return.md) — Check if returning from playtest and restore state
+- [`func success_notification(text: String, timeout: int = 2, sound: bool = true) -> void`](ScenarioEditor/functions/success_notification.md) — Show a success notification banner.
+- [`func failed_notification(text: String, timeout: int = 2, sound: bool = true) -> void`](ScenarioEditor/functions/failed_notification.md) — Show a failure notification banner.
+- [`func generic_notification(text: String, timeout: int = 2, sound: bool = true) -> void`](ScenarioEditor/functions/generic_notification.md) — Show a normal notification banner.
 
 ## Public Attributes
 
 - `ScenarioData data` — Active scenario data resource bound to the editor UI
 - `ScenarioHistory history` — Global undo/redo history stack for scenario edits
 - `MenuButton file_menu`
+- `MenuButton edit_menu`
 - `MenuButton attribute_menu`
 - `Label title_label`
 - `TerrainRender terrain_render`
@@ -100,6 +107,8 @@ extends Control
 - `TriggerConfigDialog trigger_cfg`
 - `CustomCommandConfigDialog command_cfg`
 - `TabContainer _tab_container1`
+- `Button _playtest_btn`
+- `NotificationBanner _notification_banner`
 
 ## Member Function Documentation
 
@@ -223,13 +232,20 @@ func _unhandled_key_input(event)
 
 Global key handling: delete, undo/redo, and tool input
 
+### _on_edit_menu_pressed
+
+```gdscript
+func _on_edit_menu_pressed(id: int) -> void
+```
+
+Handle Edit menu actions (Undo/Redo).
+`id` Menu item ID (0=Undo, 1=Redo).
+
 ### _on_update_scenario
 
 ```gdscript
 func _on_update_scenario(_d: ScenarioData) -> void
 ```
-
-Apply edits to current scenario data from dialog
 
 ### _on_briefing_update
 
@@ -375,6 +391,55 @@ func _on_delete_command() -> void
 
 Delete the selected custom command
 
+### _on_playtest_pressed
+
+```gdscript
+func _on_playtest_pressed() -> void
+```
+
+Handle PlayTest button press
+
+### _check_playtest_return
+
+```gdscript
+func _check_playtest_return() -> void
+```
+
+Check if returning from playtest and restore state
+
+### success_notification
+
+```gdscript
+func success_notification(text: String, timeout: int = 2, sound: bool = true) -> void
+```
+
+Show a success notification banner.
+`text` Notification text to display.
+`timeout` Duration in seconds before auto-hiding (default 2).
+`sound` Whether to play success sound (default true).
+
+### failed_notification
+
+```gdscript
+func failed_notification(text: String, timeout: int = 2, sound: bool = true) -> void
+```
+
+Show a failure notification banner.
+`text` Notification text to display.
+`timeout` Duration in seconds before auto-hiding (default 2).
+`sound` Whether to play failure sound (default true).
+
+### generic_notification
+
+```gdscript
+func generic_notification(text: String, timeout: int = 2, sound: bool = true) -> void
+```
+
+Show a normal notification banner.
+`text` Notification text to display.
+`timeout` Duration in seconds before auto-hiding (default 2).
+`sound` Whether to play notification sound (default true).
+
 ## Member Data Documentation
 
 ### data
@@ -401,6 +466,12 @@ Global undo/redo history stack for scenario edits
 
 ```gdscript
 var file_menu: MenuButton
+```
+
+### edit_menu
+
+```gdscript
+var edit_menu: MenuButton
 ```
 
 ### attribute_menu
@@ -683,4 +754,16 @@ var command_cfg: CustomCommandConfigDialog
 
 ```gdscript
 var _tab_container1: TabContainer
+```
+
+### _playtest_btn
+
+```gdscript
+var _playtest_btn: Button
+```
+
+### _notification_banner
+
+```gdscript
+var _notification_banner: NotificationBanner
 ```

@@ -1,6 +1,6 @@
 # TriggerAPI::_bind_artillery_controller Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 804–808)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 631–635)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

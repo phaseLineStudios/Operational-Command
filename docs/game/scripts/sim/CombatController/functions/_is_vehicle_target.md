@@ -1,6 +1,6 @@
 # CombatController::_is_vehicle_target Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 545–552)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 553–560)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**

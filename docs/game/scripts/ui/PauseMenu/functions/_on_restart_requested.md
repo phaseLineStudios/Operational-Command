@@ -1,6 +1,6 @@
 # PauseMenu::_on_restart_requested Function Reference
 
-*Defined at:* `scripts/ui/PauseMenu.gd` (lines 65–70)</br>
+*Defined at:* `scripts/ui/PauseMenu.gd` (lines 77–82)</br>
 *Belongs to:* [PauseMenu](../../PauseMenu.md)
 
 **Signature**

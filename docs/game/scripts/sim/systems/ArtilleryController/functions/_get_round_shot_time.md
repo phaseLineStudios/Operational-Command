@@ -1,6 +1,6 @@
 # ArtilleryController::_get_round_shot_time Function Reference
 
-*Defined at:* `scripts/sim/systems/ArtilleryController.gd` (lines 335–345)</br>
+*Defined at:* `scripts/sim/systems/ArtilleryController.gd` (lines 334–344)</br>
 *Belongs to:* [ArtilleryController](../../ArtilleryController.md)
 
 **Signature**

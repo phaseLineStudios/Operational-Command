@@ -1,6 +1,6 @@
 # SimWorld::get_state Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 540–543)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 541–544)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

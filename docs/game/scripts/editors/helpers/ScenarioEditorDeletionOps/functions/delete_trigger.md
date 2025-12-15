@@ -1,6 +1,6 @@
 # ScenarioEditorDeletionOps::delete_trigger Function Reference
 
-*Defined at:* `scripts/editors/helpers/ScenarioEditorDeletionOps.gd` (lines 191–206)</br>
+*Defined at:* `scripts/editors/helpers/ScenarioEditorDeletionOps.gd` (lines 194–210)</br>
 *Belongs to:* [ScenarioEditorDeletionOps](../../ScenarioEditorDeletionOps.md)
 
 **Signature**
@@ -32,4 +32,5 @@ func delete_trigger(trigger_index: int) -> void:
 	editor.selection.clear_selection(editor.ctx)
 	editor.ctx.request_overlay_redraw()
 	editor._rebuild_scene_tree()
+	editor.generic_notification("Deleted trigger", 1, false)
 ```

@@ -1,6 +1,6 @@
 # CombatController::_compute_dynamic_defense_value Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 505–520)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 513–528)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**

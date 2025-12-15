@@ -1,6 +1,6 @@
 # CombatController::set_debug_enabled Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 478–482)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 486–490)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**

@@ -23,6 +23,7 @@ extends Control
 - [`func _on_main_menu_pressed() -> void`](PauseMenu/functions/_on_main_menu_pressed.md) — Called on main menu pressed.
 - [`func _unhandled_key_input(event: InputEvent) -> void`](PauseMenu/functions/_unhandled_key_input.md)
 - [`func _release_interactions() -> void`](PauseMenu/functions/_release_interactions.md)
+- [`func _on_exit_editor_pressed() -> void`](PauseMenu/functions/_on_exit_editor_pressed.md) — Called on exit editor button pressed.
 
 ## Public Attributes
 
@@ -34,6 +35,7 @@ extends Control
 - `Button settings_btn`
 - `Button scenarios_btn`
 - `Button main_menu_btn`
+- `Button exit_editor_btn`
 - `PanelContainer menu_container`
 - `Settings settings`
 
@@ -130,6 +132,14 @@ func _unhandled_key_input(event: InputEvent) -> void
 func _release_interactions() -> void
 ```
 
+### _on_exit_editor_pressed
+
+```gdscript
+func _on_exit_editor_pressed() -> void
+```
+
+Called on exit editor button pressed.
+
 ## Member Data Documentation
 
 ### _restart_dialog
@@ -178,6 +188,12 @@ var scenarios_btn: Button
 
 ```gdscript
 var main_menu_btn: Button
+```
+
+### exit_editor_btn
+
+```gdscript
+var exit_editor_btn: Button
 ```
 
 ### menu_container

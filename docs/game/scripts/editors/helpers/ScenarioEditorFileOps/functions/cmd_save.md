@@ -1,6 +1,6 @@
 # ScenarioEditorFileOps::cmd_save Function Reference
 
-*Defined at:* `scripts/editors/helpers/ScenarioEditorFileOps.gd` (lines 51–62)</br>
+*Defined at:* `scripts/editors/helpers/ScenarioEditorFileOps.gd` (lines 51–63)</br>
 *Belongs to:* [ScenarioEditorFileOps](../../ScenarioEditorFileOps.md)
 
 **Signature**
@@ -25,5 +25,6 @@ func cmd_save() -> void:
 		return
 	if editor.persistence.save_to_path(editor.ctx, current_path):
 		dirty = false
-		_show_info("Saved: %s" % current_path)
+		var filename := current_path.get_file()
+		editor.success_notification("Saved: %s" % filename, 2)
 ```

@@ -1,6 +1,6 @@
 # OrdersParser::_read_number Function Reference
 
-*Defined at:* `scripts/radio/OrdersParser.gd` (lines 359–425)</br>
+*Defined at:* `scripts/radio/OrdersParser.gd` (lines 362–428)</br>
 *Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**

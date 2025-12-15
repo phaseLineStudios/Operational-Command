@@ -1,6 +1,6 @@
 # Game::_snapshot_mission_start_states Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 420–457)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 432–469)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

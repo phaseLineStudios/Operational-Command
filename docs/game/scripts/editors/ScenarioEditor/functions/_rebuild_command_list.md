@@ -1,6 +1,6 @@
 # ScenarioEditor::_rebuild_command_list Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 617–626)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 651–660)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

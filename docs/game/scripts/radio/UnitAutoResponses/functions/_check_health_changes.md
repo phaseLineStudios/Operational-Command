@@ -1,6 +1,6 @@
 # UnitAutoResponses::_check_health_changes Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 460–487)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 486–522)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**
@@ -26,6 +26,15 @@ func _check_health_changes(unit_id: String, prev: Dictionary, current: Dictionar
 	var max_strength: int = unit.unit.strength
 
 	current["strength"] = curr_strength
+
+	var was_alive := prev_strength > 0
+	var is_dead := unit.is_dead()
+	if was_alive and is_dead:
+		_report_unit_death(unit_id)
+		return
+
+	if is_dead:
+		return
 
 	if curr_strength >= prev_strength:
 		return

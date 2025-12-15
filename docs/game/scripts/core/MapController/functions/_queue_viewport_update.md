@@ -1,6 +1,6 @@
 # MapController::_queue_viewport_update Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 280–286)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 263–269)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

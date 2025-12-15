@@ -1,6 +1,6 @@
 # HQTable::_find_all_pickup_items Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 309–317)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 310–318)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

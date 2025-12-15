@@ -1,6 +1,6 @@
 # TriggerAPI::has_global Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 198–203)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 201–206)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

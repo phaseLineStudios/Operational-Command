@@ -1,6 +1,6 @@
 # SimWorld::_register_logistics_units Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 738–763)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 739–764)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

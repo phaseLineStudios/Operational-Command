@@ -36,6 +36,8 @@ Start movement; will plan if needed or if dest is provided.
 - [`func _speed_here_mps(grid: PathGrid, p_m: Vector2) -> float`](ScenarioUnit/functions/_speed_here_mps.md) — Terrain-modified speed at a point using PathGrid weight.
 - [`func _estimate_time_along(grid: PathGrid, pts: PackedVector2Array) -> float`](ScenarioUnit/functions/_estimate_time_along.md) — Sum time for a polyline using mid-segment speed.
 - [`func _kph_to_mps(speed_kph: float) -> float`](ScenarioUnit/functions/_kph_to_mps.md) — Convert kph to mps
+- [`func mark_under_fire() -> void`](ScenarioUnit/functions/mark_under_fire.md) — Mark this unit as being fired upon (called by Combat system)
+- [`func is_under_fire() -> bool`](ScenarioUnit/functions/is_under_fire.md) — Check if this unit is currently under fire
 - [`func serialize() -> Dictionary`](ScenarioUnit/functions/serialize.md) — Serialize to JSON.
 - [`func deserialize(d: Dictionary) -> ScenarioUnit`](ScenarioUnit/functions/deserialize.md) — Deserialzie from JSON.
 
@@ -54,6 +56,8 @@ Start movement; will plan if needed or if dest is provided.
 - `float state_equipment` — Current remaining equipment (1.0 = 100%)
 - `float cohesion` — Current cohesion level (0.0–1.0).
 - `Dictionary state_ammunition` — Current ammo per type for this unit, same keys as unit.ammunition.
+- `float last_fired_upon_time` — Timestamp when unit was last fired upon (seconds since epoch)
+- `float under_fire_timeout` — Duration (seconds) to consider a unit "under fire" after being hit
 - `MoveState _move_state`
 - `Vector2 _move_dest_m`
 - `PackedVector2Array _move_path`
@@ -225,6 +229,23 @@ func _kph_to_mps(speed_kph: float) -> float
 
 Convert kph to mps
 
+### mark_under_fire
+
+```gdscript
+func mark_under_fire() -> void
+```
+
+Mark this unit as being fired upon (called by Combat system)
+
+### is_under_fire
+
+```gdscript
+func is_under_fire() -> bool
+```
+
+Check if this unit is currently under fire
+[return] True if recently fired upon, false otherwise
+
 ### serialize
 
 ```gdscript
@@ -372,6 +393,22 @@ var state_ammunition: Dictionary
 Decorators: `@export`
 
 Current ammo per type for this unit, same keys as unit.ammunition.
+
+### last_fired_upon_time
+
+```gdscript
+var last_fired_upon_time: float
+```
+
+Timestamp when unit was last fired upon (seconds since epoch)
+
+### under_fire_timeout
+
+```gdscript
+var under_fire_timeout: float
+```
+
+Duration (seconds) to consider a unit "under fire" after being hit
 
 ### _move_state
 

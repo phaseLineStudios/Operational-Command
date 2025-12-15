@@ -1,6 +1,6 @@
 # OrdersRouter::_is_label_name Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 379–391)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 460–472)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**

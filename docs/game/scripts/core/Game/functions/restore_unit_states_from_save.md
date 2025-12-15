@@ -1,6 +1,6 @@
 # Game::restore_unit_states_from_save Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 418–473)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 473–544)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**
@@ -13,6 +13,7 @@ func restore_unit_states_from_save(scenario: ScenarioData) -> void
 
 Restore unit states from the current campaign save.
 Called when a scenario is selected to apply persistent state across missions.
+If replaying a mission, restores from the snapshot taken BEFORE that mission.
 
 ## Source
 
@@ -26,6 +27,9 @@ func restore_unit_states_from_save(scenario: ScenarioData) -> void:
 		LogService.debug("No scenario playable units to restore", "Game")
 		return
 
+	var mission_id := scenario.id
+	var is_replay := current_save.is_mission_completed(mission_id)
+
 	var restored_count := 0
 
 	for su in scenario.playable_units:
@@ -33,7 +37,19 @@ func restore_unit_states_from_save(scenario: ScenarioData) -> void:
 			continue
 
 		var unit_id := su.unit.id
-		var saved_state := current_save.get_unit_state(unit_id)
+		var saved_state := {}
+
+		# If replaying, use the snapshot from BEFORE this mission started
+		if is_replay and current_save.mission_start_states.has(mission_id):
+			var mission_snapshot: Dictionary = current_save.mission_start_states[mission_id]
+			saved_state = mission_snapshot.get(unit_id, {})
+			if not saved_state.is_empty():
+				LogService.debug(
+					"Restoring replay state for %s from mission start snapshot" % unit_id, "Game"
+				)
+		else:
+			# Forward progress or first playthrough - use current unit_states
+			saved_state = current_save.get_unit_state(unit_id)
 
 		if saved_state.is_empty():
 			LogService.debug("No saved state for unit: %s, using defaults" % unit_id, "Game")
@@ -70,5 +86,6 @@ func restore_unit_states_from_save(scenario: ScenarioData) -> void:
 			"Game"
 		)
 
-	LogService.info("Restored %d unit states from save" % restored_count, "Game")
+	var mode := "replay" if is_replay else "forward"
+	LogService.info("Restored %d unit states from save (%s mode)" % [restored_count, mode], "Game")
 ```

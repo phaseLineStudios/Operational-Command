@@ -1,6 +1,6 @@
 # TriggerAPI::last_radio_command Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 155–158)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 168–171)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**
@@ -15,20 +15,6 @@ func last_radio_command() -> String
 
 Get the last radio command heard this tick (cleared after tick).
 Useful for trigger conditions to match custom voice commands.
-  
-  
-
-**Usage in trigger condition_expr:**
-
-```
-last_radio_command().contains("fire mission")
-last_radio_command() == "thunder actual"
-```
-
-  
-
-**Note:** Command is automatically cleared after each tick, so triggers
-only fire once per voice command.
 
 ## Source
 

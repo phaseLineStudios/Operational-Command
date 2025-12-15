@@ -15,7 +15,7 @@ func _apply_adaptive_aa(root_viewport: Viewport, render_size: Vector2i, final_sc
 func _apply_adaptive_aa(root_viewport: Viewport, render_size: Vector2i, final_scale: float) -> void:
 	if not auto_adjust_aa:
 		if _base_msaa_3d >= 0:
-			root_viewport.msaa_3d = _base_msaa_3d
+			root_viewport.msaa_3d = _base_msaa_3d as Viewport.MSAA
 		return
 
 	# Estimate actual 3D render pixel count (roughly proportional to cost).
@@ -30,5 +30,5 @@ func _apply_adaptive_aa(root_viewport: Viewport, render_size: Vector2i, final_sc
 		root_viewport.msaa_3d = Viewport.MSAA_2X
 	else:
 		if _base_msaa_3d >= 0:
-			root_viewport.msaa_3d = _base_msaa_3d
+			root_viewport.msaa_3d = _base_msaa_3d as Viewport.MSAA
 ```

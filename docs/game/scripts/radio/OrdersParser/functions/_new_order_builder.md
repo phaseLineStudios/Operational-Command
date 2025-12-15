@@ -1,6 +1,6 @@
 # OrdersParser::_new_order_builder Function Reference
 
-*Defined at:* `scripts/radio/OrdersParser.gd` (lines 293–309)</br>
+*Defined at:* `scripts/radio/OrdersParser.gd` (lines 296–312)</br>
 *Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**

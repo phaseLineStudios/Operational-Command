@@ -1,6 +1,6 @@
 # TriggerAPI::has_drawn Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 302–307)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 323–328)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**
@@ -19,14 +19,6 @@ Returns true if any pen strokes have been made with the drawing tools.
   
 
 **Usage in trigger condition:**
-
-```
-# Trigger activates when player has drawn on the map
-has_drawn()
-
-# Combined with other conditions
-has_drawn() and time_s() > 60
-```
 
 ## Source
 

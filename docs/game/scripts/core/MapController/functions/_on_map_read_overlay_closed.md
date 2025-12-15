@@ -1,6 +1,6 @@
 # MapController::_on_map_read_overlay_closed Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 189–193)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 172–176)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

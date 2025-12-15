@@ -1,6 +1,6 @@
 # TriggerEngine::activate_trigger Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 307–319)</br>
+*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 325–337)</br>
 *Belongs to:* [TriggerEngine](../../TriggerEngine.md)
 
 **Signature**

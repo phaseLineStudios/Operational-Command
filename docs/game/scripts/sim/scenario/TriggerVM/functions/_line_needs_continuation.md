@@ -1,6 +1,6 @@
 # TriggerVM::_line_needs_continuation Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerVM.gd` (lines 262–296)</br>
+*Defined at:* `scripts/sim/scenario/TriggerVM.gd` (lines 232–268)</br>
 *Belongs to:* [TriggerVM](../../TriggerVM.md)
 
 **Signature**

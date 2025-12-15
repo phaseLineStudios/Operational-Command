@@ -1,6 +1,6 @@
 # MapController::_update_mipmap_texture Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 229–255)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 212–238)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

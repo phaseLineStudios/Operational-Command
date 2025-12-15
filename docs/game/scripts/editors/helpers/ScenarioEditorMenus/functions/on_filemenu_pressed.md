@@ -29,5 +29,5 @@ func on_filemenu_pressed(id: int) -> void:
 		3:
 			editor.file_ops.cmd_save_as()
 		4:
-			Game.goto_scene(MAIN_MENU_SCENE)
+			_on_quit_requested()
 ```

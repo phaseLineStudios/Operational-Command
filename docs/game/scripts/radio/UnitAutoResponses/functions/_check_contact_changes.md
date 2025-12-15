@@ -1,12 +1,12 @@
 # UnitAutoResponses::_check_contact_changes Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 448–458)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 449–459)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**
 
 ```gdscript
-func _check_contact_changes(unit_id: String, prev: Dictionary, current: Dictionary) -> void
+func _check_contact_changes(unit_id: String, _prev: Dictionary, _current: Dictionary) -> void
 ```
 
 ## Description
@@ -16,13 +16,13 @@ Check for contact changes (enemies spotted/lost).
 ## Source
 
 ```gdscript
-func _check_contact_changes(unit_id: String, prev: Dictionary, current: Dictionary) -> void:
-	var prev_contacts: Array = prev.get("contacts", [])
-	var curr_contacts: Array = current.get("contacts", [])
+func _check_contact_changes(unit_id: String, _prev: Dictionary, _current: Dictionary) -> void:
+	var current_contacts := _get_current_contacts_for_unit(unit_id)
+	var prev_tracked: Array = _active_contacts.get(unit_id, []).duplicate()
 
-	if curr_contacts.size() > prev_contacts.size():
-		_queue_message(unit_id, EventType.CONTACT_SPOTTED)
+	for prev_enemy_id in prev_tracked:
+		if prev_enemy_id not in current_contacts:
+			_report_contact_lost(unit_id, prev_enemy_id)
 
-	elif curr_contacts.size() < prev_contacts.size() and curr_contacts.is_empty():
-		_queue_message(unit_id, EventType.CONTACT_LOST)
+	_active_contacts[unit_id] = current_contacts.duplicate()
 ```

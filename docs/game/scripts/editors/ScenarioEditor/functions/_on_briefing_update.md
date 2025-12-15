@@ -1,6 +1,6 @@
 # ScenarioEditor::_on_briefing_update Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 408–417)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 442–451)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

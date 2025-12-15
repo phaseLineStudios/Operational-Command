@@ -1,6 +1,6 @@
 # OrdersRouter::apply Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 62–97)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 63–100)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**
@@ -48,6 +48,8 @@ func apply(order: Dictionary) -> bool:
 			return _apply_report(unit, order)
 		"ENGINEER":
 			return _apply_engineer(unit, order)
+		"RETREAT":
+			return _apply_retreat(unit, order)
 		"CUSTOM":
 			return _apply_custom(unit, order)
 		_:

@@ -1,6 +1,6 @@
 # SimWorld::get_time_scale Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 522–525)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 523–526)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # TriggerAPI::vec2 Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 618–621)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 512–515)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**
@@ -17,18 +17,6 @@ func vec2(x: float, y: float) -> Vector2
 
 Create a Vector2 from x and y coordinates.
 Use this helper to construct Vector2 in trigger expressions.
-  
-  
-
-**Usage in trigger expressions:**
-
-```
-# Show dialog with line to position
-show_dialog("Check here!", false, vec2(500, 750))
-
-# Store position in global variable
-set_global("checkpoint", vec2(1000, 500))
-```
 
 ## Source
 

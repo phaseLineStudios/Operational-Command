@@ -1,6 +1,6 @@
 # ScenarioEditorDeletionOps::delete_unit Function Reference
 
-*Defined at:* `scripts/editors/helpers/ScenarioEditorDeletionOps.gd` (lines 36–110)</br>
+*Defined at:* `scripts/editors/helpers/ScenarioEditorDeletionOps.gd` (lines 36–111)</br>
 *Belongs to:* [ScenarioEditorDeletionOps](../../ScenarioEditorDeletionOps.md)
 
 **Signature**
@@ -91,4 +91,5 @@ func delete_unit(unit_index: int) -> void:
 	editor.ctx.request_overlay_redraw()
 	editor._rebuild_scene_tree()
 	editor.units._refresh(editor.ctx)
+	editor.generic_notification("Deleted unit", 1, false)
 ```

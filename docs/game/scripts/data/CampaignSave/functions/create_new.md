@@ -1,6 +1,6 @@
 # CampaignSave::create_new Function Reference
 
-*Defined at:* `scripts/data/CampaignSave.gd` (lines 34–50)</br>
+*Defined at:* `scripts/data/CampaignSave.gd` (lines 39–57)</br>
 *Belongs to:* [CampaignSave](../../CampaignSave.md)
 
 **Signature**
@@ -28,7 +28,9 @@ static func create_new(p_campaign_id: String, p_save_name: String = "") -> Resou
 	save.set("last_played_timestamp", save.get("created_timestamp"))
 	save.set("completed_missions", [])
 	save.set("current_mission", "")
+	save.set("furthest_mission", "")
 	save.set("total_playtime_seconds", 0.0)
 	save.set("unit_states", {})
+	save.set("mission_start_states", {})
 	return save
 ```

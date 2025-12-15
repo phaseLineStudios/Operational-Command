@@ -1,6 +1,6 @@
 # PauseMenu::_release_interactions Function Reference
 
-*Defined at:* `scripts/ui/PauseMenu.gd` (lines 105–108)</br>
+*Defined at:* `scripts/ui/PauseMenu.gd` (lines 117–122)</br>
 *Belongs to:* [PauseMenu](../../PauseMenu.md)
 
 **Signature**

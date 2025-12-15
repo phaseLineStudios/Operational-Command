@@ -1,6 +1,6 @@
 # TriggerAPI::_set_last_radio_command Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 161–164)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 174–177)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # ScenarioEditor::_on_update_scenario Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 403–406)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 437–440)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
@@ -8,10 +8,6 @@
 ```gdscript
 func _on_update_scenario(_d: ScenarioData) -> void
 ```
-
-## Description
-
-Apply edits to current scenario data from dialog
 
 ## Source
 

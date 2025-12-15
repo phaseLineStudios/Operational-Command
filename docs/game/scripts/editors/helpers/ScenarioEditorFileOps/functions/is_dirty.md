@@ -1,6 +1,6 @@
 # ScenarioEditorFileOps::is_dirty Function Reference
 
-*Defined at:* `scripts/editors/helpers/ScenarioEditorFileOps.gd` (lines 152–153)</br>
+*Defined at:* `scripts/editors/helpers/ScenarioEditorFileOps.gd` (lines 158–159)</br>
 *Belongs to:* [ScenarioEditorFileOps](../../ScenarioEditorFileOps.md)
 
 **Signature**

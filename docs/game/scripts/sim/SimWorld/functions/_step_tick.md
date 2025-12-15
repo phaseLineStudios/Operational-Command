@@ -1,6 +1,6 @@
 # SimWorld::_step_tick Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 190–217)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 191–218)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

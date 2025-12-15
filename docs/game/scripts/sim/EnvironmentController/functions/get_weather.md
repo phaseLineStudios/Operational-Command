@@ -1,6 +1,6 @@
 # EnvironmentController::get_weather Function Reference
 
-*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 443–449)</br>
+*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 448–454)</br>
 *Belongs to:* [EnvironmentController](../../EnvironmentController.md)
 
 **Signature**

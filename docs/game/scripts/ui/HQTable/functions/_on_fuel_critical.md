@@ -1,6 +1,6 @@
 # HQTable::_on_fuel_critical Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 257–261)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 258–262)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MapController::_sync_viewport_update_mode Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 269–278)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 252–261)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

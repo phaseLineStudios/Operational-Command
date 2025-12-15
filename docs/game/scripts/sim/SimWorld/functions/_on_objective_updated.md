@@ -1,6 +1,6 @@
 # SimWorld::_on_objective_updated Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 170–173)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 171–174)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

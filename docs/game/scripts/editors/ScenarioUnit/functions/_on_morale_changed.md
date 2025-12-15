@@ -1,6 +1,6 @@
 # ScenarioUnit::_on_morale_changed Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 84–88)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 90–94)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**

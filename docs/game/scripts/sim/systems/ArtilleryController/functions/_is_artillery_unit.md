@@ -1,6 +1,6 @@
 # ArtilleryController::_is_artillery_unit Function Reference
 
-*Defined at:* `scripts/sim/systems/ArtilleryController.gd` (lines 410–423)</br>
+*Defined at:* `scripts/sim/systems/ArtilleryController.gd` (lines 409–422)</br>
 *Belongs to:* [ArtilleryController](../../ArtilleryController.md)
 
 **Signature**

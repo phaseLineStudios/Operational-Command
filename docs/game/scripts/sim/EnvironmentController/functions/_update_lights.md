@@ -1,6 +1,6 @@
 # EnvironmentController::_update_lights Function Reference
 
-*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 119–137)</br>
+*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 120–138)</br>
 *Belongs to:* [EnvironmentController](../../EnvironmentController.md)
 
 **Signature**

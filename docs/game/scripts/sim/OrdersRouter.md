@@ -45,6 +45,7 @@ resolved through the movement adapter.
 - [`func _apply_fire(unit: ScenarioUnit, order: Dictionary) -> bool`](OrdersRouter/functions/_apply_fire.md) — FIRE: artillery indirect fire only (no direct fire or movement fallback).
 - [`func _apply_report(_unit: ScenarioUnit, order: Dictionary) -> bool`](OrdersRouter/functions/_apply_report.md) — REPORT: informational pass-through.
 - [`func _apply_engineer(unit: ScenarioUnit, order: Dictionary) -> bool`](OrdersRouter/functions/_apply_engineer.md) — ENGINEER: engineer task orders (mines, demo, bridges).
+- [`func _apply_retreat(unit: ScenarioUnit, order: Dictionary) -> bool`](OrdersRouter/functions/_apply_retreat.md) — RETREAT: Unit falls back away from enemies silently (no player notifications).
 - [`func _apply_custom(_unit: ScenarioUnit, order: Dictionary) -> bool`](OrdersRouter/functions/_apply_custom.md) — CUSTOM: Emit signal for mission-specific handling.
 - [`func _resolve_target(order: Dictionary) -> ScenarioUnit`](OrdersRouter/functions/_resolve_target.md) — Resolve a unit from `target_callsign`.
 - [`func _is_label_name(l_name: String) -> bool`](OrdersRouter/functions/_is_label_name.md) — Test whether a string matches a TerrainData label (tolerant).
@@ -180,6 +181,19 @@ ENGINEER: engineer task orders (mines, demo, bridges).
 `unit` Subject unit.
 `order` Order dictionary.
 [return] `true` if applied, otherwise `false`.
+
+### _apply_retreat
+
+```gdscript
+func _apply_retreat(unit: ScenarioUnit, order: Dictionary) -> bool
+```
+
+RETREAT: Unit falls back away from enemies silently (no player notifications).
+Calculates weighted retreat direction based on all nearby threats.
+If no threats are visible, retreats toward rear (south/southwest by default).
+`unit` Subject unit.
+`order` Order dictionary.
+[return] `true` if retreat was initiated, otherwise `false`.
 
 ### _apply_custom
 

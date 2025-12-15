@@ -1,6 +1,6 @@
 # TriggerVM::_compile Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerVM.gd` (lines 113–146)</br>
+*Defined at:* `scripts/sim/scenario/TriggerVM.gd` (lines 83–116)</br>
 *Belongs to:* [TriggerVM](../../TriggerVM.md)
 
 **Signature**
@@ -9,7 +9,7 @@
 func _compile(src: String, ctx: Dictionary, debug_info: Dictionary = {}) -> Variant
 ```
 
-- **src**: Source to compile.
+- **src**: Source to compile (should already have comments stripped).
 - **ctx**: Context dictionary.
 - **debug_info**: Optional debug info for error messages.
 - **Return Value**: Compiled expression, or null on error.

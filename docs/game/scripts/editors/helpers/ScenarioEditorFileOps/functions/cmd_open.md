@@ -1,6 +1,6 @@
 # ScenarioEditorFileOps::cmd_open Function Reference
 
-*Defined at:* `scripts/editors/helpers/ScenarioEditorFileOps.gd` (lines 73–78)</br>
+*Defined at:* `scripts/editors/helpers/ScenarioEditorFileOps.gd` (lines 74–79)</br>
 *Belongs to:* [ScenarioEditorFileOps](../../ScenarioEditorFileOps.md)
 
 **Signature**

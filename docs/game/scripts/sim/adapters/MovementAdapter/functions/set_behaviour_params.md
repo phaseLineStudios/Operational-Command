@@ -1,6 +1,6 @@
 # MovementAdapter::set_behaviour_params Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 353–357)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 361–365)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

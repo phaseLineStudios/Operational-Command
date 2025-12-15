@@ -18,12 +18,12 @@
 - [ContentDB](../scripts/core/ContentDB.md) — 43 funcs · 1 vars · 0 signals · 1 consts · 0 enums — *inherits* `Node`
 - [DocumentController](../scripts/core/DocumentController.md) — 32 funcs · 30 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 - [DrawingController](../scripts/core/DrawingController.md) — 20 funcs · 16 vars · 3 signals · 0 consts · 1 enums — *inherits* `Node`
-- [Game](../scripts/core/Game.md) — 26 funcs · 11 vars · 5 signals · 1 consts · 0 enums — *inherits* `Node`
+- [Game](../scripts/core/Game.md) — 28 funcs · 15 vars · 5 signals · 1 consts · 1 enums — *inherits* `Node`
 - [InputSchema](../scripts/core/InputSchema.md) — 0 funcs · 0 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 - [InteractionController](../scripts/core/InteractionController.md) — 7 funcs · 5 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 - [LogService](../scripts/core/LogService.md) — 11 funcs · 2 vars · 1 signals · 0 consts · 1 enums — *inherits* `Node`
 - [LogTap](../scripts/core/LogTap.md) — 1 funcs · 0 vars · 1 signals · 0 consts · 0 enums — *inherits* `Logger`
-- [MapController](../scripts/core/MapController.md) — 35 funcs · 25 vars · 3 signals · 0 consts · 0 enums — *inherits* `Node`
+- [MapController](../scripts/core/MapController.md) — 34 funcs · 25 vars · 3 signals · 0 consts · 0 enums — *inherits* `Node`
 - [MissionResolution](../scripts/core/MissionResolution.md) — 13 funcs · 9 vars · 3 signals · 0 consts · 2 enums — *inherits* `Node`
 - [Persistence](../scripts/core/Persistence.md) — 10 funcs · 1 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 - [PickupItem](../scripts/core/PickupItem.md) — 18 funcs · 18 vars · 0 signals · 0 consts · 0 enums — *inherits* `RigidBody3D`
@@ -37,7 +37,7 @@
 - [BriefData](../scripts/data/BriefData.md) — 2 funcs · 13 vars · 0 signals · 0 consts · 0 enums — *inherits* `Resource`
 - [BriefItemData](../scripts/data/BriefItemData.md) — 2 funcs · 5 vars · 0 signals · 0 consts · 1 enums — *inherits* `Resource`
 - [CampaignData](../scripts/data/CampaignData.md) — 2 funcs · 8 vars · 0 signals · 0 consts · 0 enums — *inherits* `Resource`
-- [CampaignSave](../scripts/data/CampaignSave.md) — 8 funcs · 9 vars · 0 signals · 0 consts · 0 enums — *inherits* `Resource`
+- [CampaignSave](../scripts/data/CampaignSave.md) — 10 funcs · 11 vars · 0 signals · 0 consts · 0 enums — *inherits* `Resource`
 - [CustomCommand](../scripts/data/CustomCommand.md) — 2 funcs · 4 vars · 0 signals · 0 consts · 0 enums — *inherits* `Resource`
 - [FuelProfile](../scripts/data/FuelProfile.md) — 1 funcs · 6 vars · 0 signals · 0 consts · 0 enums — *inherits* `Resource`
 - [ScenarioData](../scripts/data/ScenarioData.md) — 7 funcs · 38 vars · 0 signals · 0 consts · 1 enums — *inherits* `Resource`
@@ -60,11 +60,11 @@
 - [NewScenarioDialog](../scripts/editors/NewScenarioDialog.md) — 24 funcs · 45 vars · 2 signals · 0 consts · 1 enums — *inherits* `Window`
 - [NewTerrainDialog](../scripts/editors/NewTerrainDialog.md) — 7 funcs · 14 vars · 2 signals · 0 consts · 0 enums — *inherits* `Window`
 - [ObjectiveDialog](../scripts/editors/ObjectiveDialog.md) — 5 funcs · 8 vars · 3 signals · 0 consts · 1 enums — *inherits* `Window`
-- [ScenarioEditor](../scripts/editors/ScenarioEditor.md) — 34 funcs · 50 vars · 0 signals · 0 consts · 0 enums — *inherits* `Control`
+- [ScenarioEditor](../scripts/editors/ScenarioEditor.md) — 40 funcs · 53 vars · 0 signals · 0 consts · 0 enums — *inherits* `Control`
 - [ScenarioEditorOverlay](../scripts/editors/ScenarioEditorOverlay.md) — 45 funcs · 23 vars · 0 signals · 0 consts · 0 enums — *inherits* `Control`
-- [ScenarioHistory](../scripts/editors/ScenarioHistory.md) — 11 funcs · 6 vars · 1 signals · 0 consts · 0 enums — *inherits* `Node`
+- [ScenarioHistory](../scripts/editors/ScenarioHistory.md) — 13 funcs · 6 vars · 1 signals · 0 consts · 0 enums — *inherits* `Node`
 - [ScenarioTask](../scripts/editors/ScenarioTask.md) — 4 funcs · 7 vars · 0 signals · 0 consts · 0 enums — *inherits* `Resource`
-- [ScenarioUnit](../scripts/editors/ScenarioUnit.md) — 21 funcs · 19 vars · 7 signals · 0 consts · 4 enums — *inherits* `Resource`
+- [ScenarioUnit](../scripts/editors/ScenarioUnit.md) — 23 funcs · 21 vars · 7 signals · 0 consts · 4 enums — *inherits* `Resource`
 - [ScenarioWeatherDialog](../scripts/editors/ScenarioWeatherDialog.md) — 15 funcs · 16 vars · 0 signals · 0 consts · 0 enums — *inherits* `Window`
 - [SlotConfigDialog](../scripts/editors/SlotConfigDialog.md) — 7 funcs · 13 vars · 0 signals · 0 consts · 0 enums — *inherits* `Window`
 - [TaskConfigDialog](../scripts/editors/TaskConfigDialog.md) — 4 funcs · 8 vars · 1 signals · 0 consts · 0 enums — *inherits* `Window`
@@ -78,12 +78,12 @@
 #### scripts/radio
 
 - [NARules](../scripts/radio/NARules.md) — 2 funcs · 6 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
-- [OrdersParser](../scripts/radio/OrdersParser.md) — 17 funcs · 4 vars · 2 signals · 0 consts · 1 enums — *inherits* `Node`
+- [OrdersParser](../scripts/radio/OrdersParser.md) — 17 funcs · 4 vars · 2 signals · 0 consts · 0 enums — *inherits* `Node`
 - [Radio](../scripts/radio/Radio.md) — 6 funcs · 2 vars · 5 signals · 0 consts · 0 enums — *inherits* `Node`
 - [RadioResponsesSfx](../scripts/radio/RadioResponsesSfx.md) — 3 funcs · 6 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 - [STTService](../scripts/radio/STTService.md) — 15 funcs · 2 vars · 3 signals · 0 consts · 0 enums — *inherits* `Node`
 - [TTSService](../scripts/radio/TTSService.md) — 15 funcs · 8 vars · 4 signals · 0 consts · 1 enums — *inherits* `Node`
-- [UnitAutoResponses](../scripts/radio/UnitAutoResponses.md) — 33 funcs · 31 vars · 3 signals · 0 consts · 1 enums — *inherits* `Node`
+- [UnitAutoResponses](../scripts/radio/UnitAutoResponses.md) — 37 funcs · 33 vars · 3 signals · 0 consts · 1 enums — *inherits* `Node`
 - [UnitVoiceResponses](../scripts/radio/UnitVoiceResponses.md) — 18 funcs · 6 vars · 3 signals · 0 consts · 0 enums — *inherits* `Node`
 
 #### scripts/sim
@@ -93,8 +93,8 @@
 - [LOS](../scripts/sim/LOS.md) — 0 funcs · 2 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 - [MoraleSystem](../scripts/sim/MoraleSystem.md) — 10 funcs · 5 vars · 2 signals · 0 consts · 1 enums — *inherits* `RefCounted`
 - [OrdersQueue](../scripts/sim/OrdersQueue.md) — 6 funcs · 1 vars · 2 signals · 0 consts · 0 enums — *inherits* `RefCounted`
-- [OrdersRouter](../scripts/sim/OrdersRouter.md) — 18 funcs · 8 vars · 3 signals · 0 consts · 0 enums — *inherits* `Node`
-- [SceneEnvironment](../scripts/sim/SceneEnvironment.md) — 3 funcs · 1 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node3D`
+- [OrdersRouter](../scripts/sim/OrdersRouter.md) — 19 funcs · 8 vars · 3 signals · 0 consts · 0 enums — *inherits* `Node`
+- [SceneEnvironment](../scripts/sim/SceneEnvironment.md) — 4 funcs · 2 vars · 1 signals · 0 consts · 0 enums — *inherits* `Node3D`
 - [SimDebugOverlay](../scripts/sim/SimDebugOverlay.md) — 15 funcs · 21 vars · 0 signals · 0 consts · 0 enums — *inherits* `Control`
 - [SimEvent](../scripts/sim/SimEvent.md) — 1 funcs · 3 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 - [SimWorld](../scripts/sim/SimWorld.md) — 44 funcs · 31 vars · 5 signals · 0 consts · 1 enums — *inherits* `Node`
@@ -134,7 +134,7 @@
 #### scripts/ui
 
 - [AmmoRearmPanel](../scripts/ui/AmmoRearmPanel.md) — 11 funcs · 13 vars · 1 signals · 0 consts · 0 enums — *inherits* `Control`
-- [Briefing](../scripts/ui/Briefing.md) — 3 funcs · 7 vars · 0 signals · 2 consts · 1 enums — *inherits* `Control`
+- [Briefing](../scripts/ui/Briefing.md) — 4 funcs · 7 vars · 0 signals · 2 consts · 1 enums — *inherits* `Control`
 - [CampaignSelect](../scripts/ui/CampaignSelect.md) — 17 funcs · 15 vars · 0 signals · 0 consts · 0 enums — *inherits* `Control`
 - [CodeEditAutocomplete](../scripts/ui/CodeEditAutocomplete.md) — 10 funcs · 6 vars · 0 signals · 13 consts · 0 enums — *inherits* `RefCounted`
 - [CounterConfigDialog](../scripts/ui/CounterConfigDialog.md) — 5 funcs · 6 vars · 1 signals · 0 consts · 0 enums — *inherits* `Window`
@@ -149,10 +149,11 @@
 - [HUD](../scripts/ui/HUD.md) — 0 funcs · 0 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 - [LoadingScreen](../scripts/ui/LoadingScreen.md) — 4 funcs · 5 vars · 0 signals · 0 consts · 0 enums — *inherits* `Control`
 - [MainMenu](../scripts/ui/MainMenu.md) — 12 funcs · 10 vars · 0 signals · 0 consts · 1 enums — *inherits* `Control`
-- [MissionDialog](../scripts/ui/MissionDialog.md) — 6 funcs · 11 vars · 1 signals · 0 consts · 0 enums — *inherits* `Control`
+- [MissionDialog](../scripts/ui/MissionDialog.md) — 7 funcs · 15 vars · 1 signals · 0 consts · 0 enums — *inherits* `Control`
 - [MissionSelect](../scripts/ui/MissionSelect.md) — 19 funcs · 21 vars · 0 signals · 0 consts · 0 enums — *inherits* `Control`
 - [MissionVideo](../scripts/ui/MissionVideo.md) — 9 funcs · 5 vars · 0 signals · 0 consts · 0 enums — *inherits* `Control`
-- [PauseMenu](../scripts/ui/PauseMenu.md) — 12 funcs · 10 vars · 2 signals · 0 consts · 0 enums — *inherits* `Control`
+- [NotificationBanner](../scripts/ui/NotificationBanner.md) — 6 funcs · 4 vars · 0 signals · 0 consts · 1 enums — *inherits* `PanelContainer`
+- [PauseMenu](../scripts/ui/PauseMenu.md) — 13 funcs · 11 vars · 2 signals · 0 consts · 0 enums — *inherits* `Control`
 - [PostProcessController](../scripts/ui/PostProcessController.md) — 7 funcs · 29 vars · 0 signals · 0 consts · 0 enums — *inherits* `CanvasLayer`
 - [RadioSubtitles](../scripts/ui/RadioSubtitles.md) — 33 funcs · 11 vars · 0 signals · 0 consts · 0 enums — *inherits* `Control`
 - [Settings](../scripts/ui/Settings.md) — 25 funcs · 22 vars · 1 signals · 0 consts · 1 enums — *inherits* `Control`
@@ -164,6 +165,7 @@
 
 #### scripts/utils
 
+- [PerformanceProfiler](../scripts/utils/PerformanceProfiler.md) — 5 funcs · 0 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
 - [SerializeTerrain](../scripts/utils/SerializeTerrain.md) — 1 funcs · 2 vars · 0 signals · 0 consts · 0 enums — *inherits* `EditorScript`
 
 #### tools/ci
@@ -186,7 +188,7 @@
 - [ScenarioEditorDrawTools](../scripts/editors/helpers/ScenarioEditorDrawTools.md) — 10 funcs · 3 vars · 0 signals · 0 consts · 0 enums — *inherits* `RefCounted`
 - [ScenarioEditorFileOps](../scripts/editors/helpers/ScenarioEditorFileOps.md) — 12 funcs · 3 vars · 0 signals · 0 consts · 0 enums — *inherits* `RefCounted`
 - [ScenarioEditorIDGenerator](../scripts/editors/helpers/ScenarioEditorIDGenerator.md) — 7 funcs · 1 vars · 0 signals · 2 consts · 0 enums — *inherits* `RefCounted`
-- [ScenarioEditorMenus](../scripts/editors/helpers/ScenarioEditorMenus.md) — 8 funcs · 1 vars · 0 signals · 0 consts · 0 enums — *inherits* `RefCounted`
+- [ScenarioEditorMenus](../scripts/editors/helpers/ScenarioEditorMenus.md) — 9 funcs · 1 vars · 0 signals · 0 consts · 0 enums — *inherits* `RefCounted`
 - [UnitDDItemList](../scripts/editors/helpers/UnitDDItemList.md) — 4 funcs · 3 vars · 0 signals · 0 consts · 1 enums — *inherits* `ItemList`
 
 ##### scripts/editors/services
@@ -238,9 +240,9 @@
 
 ##### scripts/sim/scenario
 
-- [TriggerAPI](../scripts/sim/scenario/TriggerAPI.md) — 46 funcs · 15 vars · 0 signals · 0 consts · 0 enums — *inherits* `RefCounted`
-- [TriggerEngine](../scripts/sim/scenario/TriggerEngine.md) — 20 funcs · 13 vars · 1 signals · 0 consts · 0 enums — *inherits* `Node`
-- [TriggerVM](../scripts/sim/scenario/TriggerVM.md) — 8 funcs · 2 vars · 0 signals · 0 consts · 0 enums — *inherits* `RefCounted`
+- [TriggerAPI](../scripts/sim/scenario/TriggerAPI.md) — 55 funcs · 16 vars · 0 signals · 0 consts · 0 enums — *inherits* `RefCounted`
+- [TriggerEngine](../scripts/sim/scenario/TriggerEngine.md) — 20 funcs · 16 vars · 1 signals · 0 consts · 0 enums — *inherits* `Node`
+- [TriggerVM](../scripts/sim/scenario/TriggerVM.md) — 14 funcs · 9 vars · 0 signals · 0 consts · 0 enums — *inherits* `RefCounted`
 
 ##### scripts/sim/systems
 
@@ -249,6 +251,11 @@
 - [EngineerController](../scripts/sim/systems/EngineerController.md) — 20 funcs · 16 vars · 3 signals · 0 consts · 1 enums — *inherits* `Node`
 - [EnvBehaviorSystem](../scripts/sim/systems/EnvBehaviorSystem.md) — 19 funcs · 13 vars · 6 signals · 0 consts · 0 enums — *inherits* `Node`
 - [FuelSystem](../scripts/sim/systems/FuelSystem.md) — 30 funcs · 10 vars · 8 signals · 0 consts · 0 enums — *inherits* `Node`
+
+##### scripts/terrain/environments
+
+- [ForestTerrain](../scripts/terrain/environments/ForestTerrain.md) — 3 funcs · 4 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node`
+- [TreeSpawner](../scripts/terrain/environments/TreeSpawner.md) — 13 funcs · 25 vars · 0 signals · 0 consts · 0 enums — *inherits* `Node3D`
 
 ##### scripts/ui/controls
 

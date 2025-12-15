@@ -1,6 +1,6 @@
 # TriggerAPI::_bind_engineer_controller Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 797–801)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 624–628)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

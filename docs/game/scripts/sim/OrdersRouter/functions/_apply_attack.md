@@ -1,6 +1,6 @@
 # OrdersRouter::_apply_attack Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 148–158)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 151–161)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**

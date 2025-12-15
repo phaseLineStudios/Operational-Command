@@ -1,6 +1,6 @@
 # TriggerAPI::_set_dialog_pending Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 773–777)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 600–604)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # DocumentController::_get_objective_status_icon Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 819–832)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 811–824)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

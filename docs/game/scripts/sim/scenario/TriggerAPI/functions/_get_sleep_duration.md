@@ -1,6 +1,6 @@
 # TriggerAPI::_get_sleep_duration Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 747–750)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 574–577)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

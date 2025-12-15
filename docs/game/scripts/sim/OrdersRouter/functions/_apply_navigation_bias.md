@@ -1,6 +1,6 @@
 # OrdersRouter::_apply_navigation_bias Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 488–494)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 569–575)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**

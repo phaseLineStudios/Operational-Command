@@ -1,6 +1,6 @@
 # TriggerVM::_values_for Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerVM.gd` (lines 151–157)</br>
+*Defined at:* `scripts/sim/scenario/TriggerVM.gd` (lines 121–127)</br>
 *Belongs to:* [TriggerVM](../../TriggerVM.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # TriggerAPI::has_created_counter Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 338–343)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 345–350)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**
@@ -19,14 +19,6 @@ Returns true if at least one counter has been spawned.
   
 
 **Usage in trigger condition:**
-
-```
-# Trigger activates when player has created a counter
-has_created_counter()
-
-# Combined with other conditions
-has_created_counter() and time_s() > 30
-```
 
 ## Source
 

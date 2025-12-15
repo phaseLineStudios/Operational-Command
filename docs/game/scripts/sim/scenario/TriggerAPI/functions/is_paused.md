@@ -1,6 +1,6 @@
 # TriggerAPI::is_paused Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 32–37)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 33–38)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

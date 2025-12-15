@@ -1,6 +1,6 @@
 # OrdersRouter::bind_units Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 54–58)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 55–59)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**

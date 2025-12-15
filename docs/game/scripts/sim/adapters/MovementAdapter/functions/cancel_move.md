@@ -1,6 +1,6 @@
 # MovementAdapter::cancel_move Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 266–271)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 274–279)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

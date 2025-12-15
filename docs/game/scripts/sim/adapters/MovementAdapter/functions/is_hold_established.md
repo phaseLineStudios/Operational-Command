@@ -1,6 +1,6 @@
 # MovementAdapter::is_hold_established Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 390–399)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 398–407)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MapController::refresh Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 621–625)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 604–608)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

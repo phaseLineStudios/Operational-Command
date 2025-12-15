@@ -1,6 +1,6 @@
 # TriggerAPI::is_unit_in_combat Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 379–399)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 367–387)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**
@@ -20,19 +20,6 @@ Returns true if the unit has line-of-sight to any enemy units.
   
 
 **Usage in trigger condition:**
-
-```
-# Trigger when ALPHA unit is in combat
-is_unit_in_combat("ALPHA")
-
-# Trigger when any player unit is in combat
-var u = unit("ALPHA")
-if u:
-is_unit_in_combat(u.id)
-
-# Tutorial: explain combat when ambushed
-is_unit_in_combat("ALPHA") and not has_global("combat_tutorial_shown")
-```
 
 ## Source
 

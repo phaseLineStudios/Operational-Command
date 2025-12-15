@@ -1,6 +1,6 @@
 # MapController::_set_read_mode Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 194–200)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 177–183)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

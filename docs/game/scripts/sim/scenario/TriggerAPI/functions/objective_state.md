@@ -1,6 +1,6 @@
 # TriggerAPI::objective_state Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 100–105)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 103–108)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

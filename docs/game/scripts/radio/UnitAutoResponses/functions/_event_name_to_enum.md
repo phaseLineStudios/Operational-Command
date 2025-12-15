@@ -1,6 +1,6 @@
 # UnitAutoResponses::_event_name_to_enum Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 171–227)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 175–231)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

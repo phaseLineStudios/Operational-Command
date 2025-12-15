@@ -18,5 +18,5 @@ Handle player radio result for transcript
 ```gdscript
 func _on_radio_transcript_player_early(text: String) -> void:
 	if document_controller and text != "":
-		document_controller.add_transcript_entry("PLAYER", text)
+		await document_controller.add_transcript_entry("PLAYER", text)
 ```

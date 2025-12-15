@@ -1,6 +1,6 @@
 # SimWorld::_get_contact_key Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 260–266)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 261–267)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

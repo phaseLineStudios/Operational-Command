@@ -1,6 +1,6 @@
 # MapController::_apply_viewport_texture Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 217–227)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 200–210)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MovementAdapter::set_navigation_bias Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 575–580)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 583–588)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

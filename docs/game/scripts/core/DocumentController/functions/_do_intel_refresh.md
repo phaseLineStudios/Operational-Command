@@ -1,6 +1,6 @@
 # DocumentController::_do_intel_refresh Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 763–770)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 755–762)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

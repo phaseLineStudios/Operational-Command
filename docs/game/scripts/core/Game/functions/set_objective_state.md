@@ -1,6 +1,6 @@
 # Game::set_objective_state Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 231–234)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 240–243)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

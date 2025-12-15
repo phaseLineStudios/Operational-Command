@@ -1,6 +1,6 @@
 # EnvironmentController::get_rain_intensity Function Reference
 
-*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 419–422)</br>
+*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 424–427)</br>
 *Belongs to:* [EnvironmentController](../../EnvironmentController.md)
 
 **Signature**

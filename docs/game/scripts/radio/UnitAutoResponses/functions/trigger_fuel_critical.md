@@ -1,6 +1,6 @@
 # UnitAutoResponses::trigger_fuel_critical Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 560–563)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 614–617)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MissionDialog::_process Function Reference
 
-*Defined at:* `scripts/ui/MissionDialog.gd` (lines 108–112)</br>
+*Defined at:* `scripts/ui/MissionDialog.gd` (lines 122–126)</br>
 *Belongs to:* [MissionDialog](../../MissionDialog.md)
 
 **Signature**

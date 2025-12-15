@@ -1,6 +1,6 @@
 # CombatController::_attacker_can_damage_vehicle Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 536–543)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 544–551)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**

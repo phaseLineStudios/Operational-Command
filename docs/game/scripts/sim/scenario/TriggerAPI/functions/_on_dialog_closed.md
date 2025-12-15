@@ -1,6 +1,6 @@
 # TriggerAPI::_on_dialog_closed Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 779–794)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 606–621)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

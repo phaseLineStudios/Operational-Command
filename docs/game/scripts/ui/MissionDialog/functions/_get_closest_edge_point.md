@@ -1,6 +1,6 @@
 # MissionDialog::_get_closest_edge_point Function Reference
 
-*Defined at:* `scripts/ui/MissionDialog.gd` (lines 176–199)</br>
+*Defined at:* `scripts/ui/MissionDialog.gd` (lines 190–215)</br>
 *Belongs to:* [MissionDialog](../../MissionDialog.md)
 
 **Signature**

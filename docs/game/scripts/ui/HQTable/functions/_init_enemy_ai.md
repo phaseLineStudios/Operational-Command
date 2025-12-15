@@ -1,6 +1,6 @@
 # HQTable::_init_enemy_ai Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 503–542)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 504–543)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**
@@ -45,7 +45,7 @@ func _init_enemy_ai() -> void:
 		agent.set_behaviour(int(u.behaviour))
 		agent.set_combat_mode(int(u.combat_mode))
 
-		var ordered: Array = per_unit.get(i, [])
+		var ordered: Array[Dictionary] = per_unit.get(i, [] as Array[Dictionary])
 		if ordered.is_empty():
 			agent.set_behaviour(ScenarioUnit.Behaviour.AWARE)
 			u.behaviour = ScenarioUnit.Behaviour.AWARE

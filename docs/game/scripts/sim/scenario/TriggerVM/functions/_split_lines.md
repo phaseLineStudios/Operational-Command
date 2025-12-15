@@ -1,6 +1,6 @@
 # TriggerVM::_split_lines Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerVM.gd` (lines 173–258)</br>
+*Defined at:* `scripts/sim/scenario/TriggerVM.gd` (lines 143–228)</br>
 *Belongs to:* [TriggerVM](../../TriggerVM.md)
 
 **Signature**

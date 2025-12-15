@@ -1,6 +1,6 @@
 # PauseMenu::_build_restart_dialog Function Reference
 
-*Defined at:* `scripts/ui/PauseMenu.gd` (lines 41–50)</br>
+*Defined at:* `scripts/ui/PauseMenu.gd` (lines 53–62)</br>
 *Belongs to:* [PauseMenu](../../PauseMenu.md)
 
 **Signature**

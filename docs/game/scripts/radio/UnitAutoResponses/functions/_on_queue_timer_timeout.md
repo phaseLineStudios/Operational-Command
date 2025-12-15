@@ -1,6 +1,6 @@
 # UnitAutoResponses::_on_queue_timer_timeout Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 302–331)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 306–335)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

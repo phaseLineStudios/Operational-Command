@@ -1,6 +1,6 @@
 # TriggerAPI::complete_objective Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 80–83)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 83–86)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

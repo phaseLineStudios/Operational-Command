@@ -183,6 +183,7 @@ func tick_units(units: Array[ScenarioUnit], dt: float) -> void
 
 Ticks unit movement grouped by profile (reduces grid switching).
 Skips groups whose profile grid is still building this frame.
+Auto-pauses units that are under fire (but not actively firing).
 `units` Units to tick.
 `dt` Delta time in seconds.
 

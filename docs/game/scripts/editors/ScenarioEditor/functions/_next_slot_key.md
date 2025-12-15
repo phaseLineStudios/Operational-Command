@@ -1,6 +1,6 @@
 # ScenarioEditor::_next_slot_key Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 465–471)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 499–505)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

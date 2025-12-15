@@ -1,6 +1,6 @@
 # MissionDialog::_ready Function Reference
 
-*Defined at:* `scripts/ui/MissionDialog.gd` (lines 28–36)</br>
+*Defined at:* `scripts/ui/MissionDialog.gd` (lines 32–45)</br>
 *Belongs to:* [MissionDialog](../../MissionDialog.md)
 
 **Signature**
@@ -19,4 +19,9 @@ func _ready() -> void:
 	if _line_overlay:
 		_line_overlay.draw.connect(_draw_line)
 		_line_overlay.visible = false
+
+	# Setup drag functionality
+	if _drag_bar:
+		_drag_bar.gui_input.connect(_on_drag_bar_input)
+		_drag_bar.mouse_filter = Control.MOUSE_FILTER_STOP
 ```

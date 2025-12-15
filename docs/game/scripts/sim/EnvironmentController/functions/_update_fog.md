@@ -1,6 +1,6 @@
 # EnvironmentController::_update_fog Function Reference
 
-*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 343–382)</br>
+*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 350–389)</br>
 *Belongs to:* [EnvironmentController](../../EnvironmentController.md)
 
 **Signature**

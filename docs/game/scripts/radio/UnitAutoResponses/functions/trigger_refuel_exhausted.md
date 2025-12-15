@@ -1,6 +1,6 @@
 # UnitAutoResponses::trigger_refuel_exhausted Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 616–619)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 669–672)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

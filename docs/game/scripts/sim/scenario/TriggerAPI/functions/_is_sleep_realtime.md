@@ -1,6 +1,6 @@
 # TriggerAPI::_is_sleep_realtime Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 753–756)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 580–583)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # SimWorld::get_tick Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 546–549)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 547–550)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

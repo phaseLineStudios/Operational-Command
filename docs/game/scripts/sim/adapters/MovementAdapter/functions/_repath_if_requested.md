@@ -1,6 +1,6 @@
 # MovementAdapter::_repath_if_requested Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 603–614)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 611–622)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

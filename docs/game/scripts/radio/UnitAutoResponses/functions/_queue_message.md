@@ -1,6 +1,6 @@
 # UnitAutoResponses::_queue_message Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 355–388)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 357–389)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**
@@ -17,7 +17,6 @@ Queue a voice message for a unit.
 
 ```gdscript
 func _queue_message(unit_id: String, event_type: EventType) -> void:
-	# Only queue messages for playable units
 	var unit = _units_by_id.get(unit_id)
 	if not unit or not unit.playable:
 		return

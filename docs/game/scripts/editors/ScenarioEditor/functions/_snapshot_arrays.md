@@ -1,6 +1,6 @@
 # ScenarioEditor::_snapshot_arrays Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 593–609)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 627–643)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # OrdersParser::register_custom_command Function Reference
 
-*Defined at:* `scripts/radio/OrdersParser.gd` (lines 62–68)</br>
+*Defined at:* `scripts/radio/OrdersParser.gd` (lines 65–71)</br>
 *Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MissionDialog::_on_ok_pressed Function Reference
 
-*Defined at:* `scripts/ui/MissionDialog.gd` (lines 103–106)</br>
+*Defined at:* `scripts/ui/MissionDialog.gd` (lines 117–120)</br>
 *Belongs to:* [MissionDialog](../../MissionDialog.md)
 
 **Signature**

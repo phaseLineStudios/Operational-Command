@@ -1,6 +1,6 @@
 # NARules::get_parser_tables Function Reference
 
-*Defined at:* `scripts/radio/NARules.gd` (lines 35–209)</br>
+*Defined at:* `scripts/radio/NARules.gd` (lines 35–213)</br>
 *Belongs to:* [NARules](../../NARules.md)
 
 **Signature**
@@ -72,6 +72,10 @@ func get_parser_tables() -> Dictionary:
 			"sitrep": OrdersParser.OrderType.REPORT,
 			"cancel": OrdersParser.OrderType.CANCEL,
 			"abort": OrdersParser.OrderType.CANCEL,
+			"retreat": OrdersParser.OrderType.RETREAT,
+			"withdraw": OrdersParser.OrderType.RETREAT,
+			"pullback": OrdersParser.OrderType.RETREAT,
+			"disengage": OrdersParser.OrderType.RETREAT,
 			"lay": OrdersParser.OrderType.ENGINEER,
 			"place": OrdersParser.OrderType.ENGINEER,
 			"build": OrdersParser.OrderType.ENGINEER,

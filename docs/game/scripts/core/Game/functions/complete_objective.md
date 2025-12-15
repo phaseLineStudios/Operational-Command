@@ -1,6 +1,6 @@
 # Game::complete_objective Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 226–229)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 235–238)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

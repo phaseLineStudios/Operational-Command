@@ -1,6 +1,6 @@
 # OrdersParser::order_to_string Function Reference
 
-*Defined at:* `scripts/radio/OrdersParser.gd` (lines 457–478)</br>
+*Defined at:* `scripts/radio/OrdersParser.gd` (lines 460–481)</br>
 *Belongs to:* [OrdersParser](../../OrdersParser.md)
 
 **Signature**

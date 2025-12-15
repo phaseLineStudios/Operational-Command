@@ -37,6 +37,7 @@ Queue a message with custom text (bypasses phrase selection).
 `priority` Message priority.
 
 Handle engagement reported signal.
+Only reports when engagement STARTS, not for every shot.
 
 Handle artillery mission confirmation.
 `unit_id` Artillery unit ID.
@@ -82,9 +83,10 @@ Handle battle damage assessment from observer.
 - [`func _queue_message(unit_id: String, event_type: EventType) -> void`](UnitAutoResponses/functions/_queue_message.md) — Queue a voice message for a unit.
 - [`func _on_unit_updated(unit_id: String, snapshot: Dictionary) -> void`](UnitAutoResponses/functions/_on_unit_updated.md) — Handle unit state update - detect state changes.
 - [`func _check_movement_state(unit_id: String, prev: Dictionary, current: Dictionary) -> void`](UnitAutoResponses/functions/_check_movement_state.md) — Check for movement state changes.
-- [`func _check_contact_changes(unit_id: String, prev: Dictionary, current: Dictionary) -> void`](UnitAutoResponses/functions/_check_contact_changes.md) — Check for contact changes (enemies spotted/lost).
+- [`func _check_contact_changes(unit_id: String, _prev: Dictionary, _current: Dictionary) -> void`](UnitAutoResponses/functions/_check_contact_changes.md) — Check for contact changes (enemies spotted/lost).
+- [`func _get_current_contacts_for_unit(unit_id: String) -> Array`](UnitAutoResponses/functions/_get_current_contacts_for_unit.md) — Get list of enemy IDs currently in contact with this unit.
 - [`func _check_health_changes(unit_id: String, prev: Dictionary, current: Dictionary) -> void`](UnitAutoResponses/functions/_check_health_changes.md) — Check for health/casualty changes.
-- [`func _on_contact_reported(attacker_id: String, defender_id: String) -> void`](UnitAutoResponses/functions/_on_contact_reported.md) — Handle contact reported signal.
+- [`func _on_contact_reported(attacker_id: String, defender_id: String) -> void`](UnitAutoResponses/functions/_on_contact_reported.md) — Handle contact reported signal (NEW contact only).
 - [`func _on_order_failed(order: Dictionary, reason: String) -> void`](UnitAutoResponses/functions/_on_order_failed.md) — Handle order failure.
 - [`func _on_unit_move_blocked(reason: String, unit_id: String) -> void`](UnitAutoResponses/functions/_on_unit_move_blocked.md) — Handle unit move_blocked signal.
 - [`func trigger_ammo_low(unit_id: String) -> void`](UnitAutoResponses/functions/trigger_ammo_low.md) — Trigger ammo low event for unit.
@@ -98,7 +100,10 @@ Handle battle damage assessment from observer.
 - [`func trigger_movement_blocked(unit_id: String, reason: String) -> void`](UnitAutoResponses/functions/trigger_movement_blocked.md) — Handle movement blocked event.
 - [`func _trigger_casualties(unit_id: String, casualties: int, current_strength: int) -> void`](UnitAutoResponses/functions/_trigger_casualties.md) — Trigger casualties report.
 - [`func _trigger_command_change(unit_id: String) -> void`](UnitAutoResponses/functions/_trigger_command_change.md) — Trigger command change announcement.
-- [`func _report_contact_spotted(spotter_id: String, contact_id: String) -> void`](UnitAutoResponses/functions/_report_contact_spotted.md) — Generate and queue descriptive contact report.
+- [`func _report_contact_spotted(spotter_id: String, contact_id: String) -> void`](UnitAutoResponses/functions/_report_contact_spotted.md) — Generate and queue descriptive contact report for NEW contact.
+- [`func _report_contact_lost(spotter_id: String, contact_id: String) -> void`](UnitAutoResponses/functions/_report_contact_lost.md) — Report when contact is lost (enemy retreated, moved out of LOS, etc.).
+- [`func _report_unit_death(dead_unit_id: String) -> void`](UnitAutoResponses/functions/_report_unit_death.md) — Report unit death via an observer with LOS.
+- [`func _has_los_between(a: ScenarioUnit, b: ScenarioUnit) -> bool`](UnitAutoResponses/functions/_has_los_between.md) — Check if unit A has LOS to unit B.
 - [`func _get_unit_description(unit: ScenarioUnit) -> String`](UnitAutoResponses/functions/_get_unit_description.md) — Get descriptive text for a unit (e.g., "Enemy infantry platoon").
 - [`func _get_grid_from_position(pos_m: Vector2) -> String`](UnitAutoResponses/functions/_get_grid_from_position.md) — Get grid coordinate from terrain position.
 - [`func _spawn_contact_counter(contact_id: String) -> void`](UnitAutoResponses/functions/_spawn_contact_counter.md) — Spawn a unit counter for a spotted contact.
@@ -121,6 +126,8 @@ Handle battle damage assessment from observer.
 - `ArtilleryController _artillery_controller`
 - `Dictionary _unit_states`
 - `Dictionary _spotted_contacts`
+- `Dictionary _active_contacts` — Tracks which units are in contact with whom: { "unit_id": ["enemy1_id", ...] }
+- `Dictionary _active_engagements` — Tracks active engagements to prevent spam: { "attacker_id|defender_id": true }
 - `Array[VoiceMessage] _message_queue`
 - `float _last_message_time`
 - `Dictionary _unit_last_message`
@@ -250,10 +257,19 @@ Check for movement state changes.
 ### _check_contact_changes
 
 ```gdscript
-func _check_contact_changes(unit_id: String, prev: Dictionary, current: Dictionary) -> void
+func _check_contact_changes(unit_id: String, _prev: Dictionary, _current: Dictionary) -> void
 ```
 
 Check for contact changes (enemies spotted/lost).
+
+### _get_current_contacts_for_unit
+
+```gdscript
+func _get_current_contacts_for_unit(unit_id: String) -> Array
+```
+
+Get list of enemy IDs currently in contact with this unit.
+Filters out dead units to prevent stale contact tracking.
 
 ### _check_health_changes
 
@@ -269,7 +285,7 @@ Check for health/casualty changes.
 func _on_contact_reported(attacker_id: String, defender_id: String) -> void
 ```
 
-Handle contact reported signal.
+Handle contact reported signal (NEW contact only).
 
 ### _on_order_failed
 
@@ -401,9 +417,40 @@ Trigger command change announcement.
 func _report_contact_spotted(spotter_id: String, contact_id: String) -> void
 ```
 
-Generate and queue descriptive contact report.
+Generate and queue descriptive contact report for NEW contact.
 `spotter_id` Unit that spotted the contact.
 `contact_id` Enemy unit that was spotted.
+
+### _report_contact_lost
+
+```gdscript
+func _report_contact_lost(spotter_id: String, contact_id: String) -> void
+```
+
+Report when contact is lost (enemy retreated, moved out of LOS, etc.).
+`spotter_id` Unit that lost contact.
+`contact_id` Enemy unit that is no longer visible.
+
+### _report_unit_death
+
+```gdscript
+func _report_unit_death(dead_unit_id: String) -> void
+```
+
+Report unit death via an observer with LOS.
+If no friendly unit has LOS, nothing is reported (silence).
+`dead_unit_id` ID of the unit that just died.
+
+### _has_los_between
+
+```gdscript
+func _has_los_between(a: ScenarioUnit, b: ScenarioUnit) -> bool
+```
+
+Check if unit A has LOS to unit B.
+`a` First unit.
+`b` Second unit.
+[return] True if A can see B.
 
 ### _get_unit_description
 
@@ -547,6 +594,22 @@ var _unit_states: Dictionary
 ```gdscript
 var _spotted_contacts: Dictionary
 ```
+
+### _active_contacts
+
+```gdscript
+var _active_contacts: Dictionary
+```
+
+Tracks which units are in contact with whom: { "unit_id": ["enemy1_id", ...] }
+
+### _active_engagements
+
+```gdscript
+var _active_engagements: Dictionary
+```
+
+Tracks active engagements to prevent spam: { "attacker_id|defender_id": true }
 
 ### _message_queue
 

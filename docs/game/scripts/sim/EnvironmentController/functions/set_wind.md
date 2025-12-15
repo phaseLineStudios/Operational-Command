@@ -1,6 +1,6 @@
 # EnvironmentController::set_wind Function Reference
 
-*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 294–298)</br>
+*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 296–300)</br>
 *Belongs to:* [EnvironmentController](../../EnvironmentController.md)
 
 **Signature**

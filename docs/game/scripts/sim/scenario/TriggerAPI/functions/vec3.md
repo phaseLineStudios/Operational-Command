@@ -1,6 +1,6 @@
 # TriggerAPI::vec3 Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 633–636)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 521–524)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**
@@ -17,15 +17,6 @@ func vec3(x: float, y: float, z: float) -> Vector3
 ## Description
 
 Create a Vector3 from x, y, and z coordinates.
-  
-  
-
-**Usage in trigger expressions:**
-
-```
-# Create 3D position
-set_global("spawn_point", vec3(500, 0, 750))
-```
 
 ## Source
 

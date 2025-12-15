@@ -1,6 +1,6 @@
 # UnitAutoResponses::_report_contact_spotted Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 664–696)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 717–737)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**
@@ -14,26 +14,19 @@ func _report_contact_spotted(spotter_id: String, contact_id: String) -> void
 
 ## Description
 
-Generate and queue descriptive contact report.
+Generate and queue descriptive contact report for NEW contact.
 
 ## Source
 
 ```gdscript
 func _report_contact_spotted(spotter_id: String, contact_id: String) -> void:
-	var event_key := "%s:%d" % [spotter_id, EventType.CONTACT_SPOTTED]
-	var current_time := Time.get_ticks_msec() / 1000.0
-	var last_trigger_time: float = _event_last_triggered.get(event_key, 0.0)
-	var cooldown: float = event_config[EventType.CONTACT_SPOTTED].get("cooldown_s", 15.0)
-
-	if current_time - last_trigger_time < cooldown:
-		return
-
 	var spotter_callsign: String = _id_to_callsign.get(spotter_id, spotter_id)
 	var contact_unit = _units_by_id.get(contact_id)
 	if not contact_unit:
 		_queue_message(spotter_id, EventType.CONTACT_SPOTTED)
 		return
 
+	var current_time := Time.get_ticks_msec() / 1000.0
 	var description := _get_unit_description(contact_unit)
 	var grid_pos := _get_grid_from_position(contact_unit.position_m)
 
@@ -45,9 +38,4 @@ func _report_contact_spotted(spotter_id: String, contact_id: String) -> void:
 		_message_queue.remove_at(_message_queue.size() - 1)
 
 	_message_queue.append(msg)
-	_event_last_triggered[event_key] = current_time
-
-	# Start queue timer if not already running
-	if _queue_timer and _queue_timer.is_stopped():
-		_queue_timer.start()
 ```

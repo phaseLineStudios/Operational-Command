@@ -1,6 +1,6 @@
 # ScenarioUnit::move_state Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 263–266)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 269–272)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**

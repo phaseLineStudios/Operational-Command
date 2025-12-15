@@ -1,6 +1,6 @@
 # TriggerEngine::_on_radio_raw Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 297–301)</br>
+*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 315–319)</br>
 *Belongs to:* [TriggerEngine](../../TriggerEngine.md)
 
 **Signature**

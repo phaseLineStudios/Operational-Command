@@ -1,6 +1,6 @@
 # EnvironmentController::_update_rotation Function Reference
 
-*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 139–144)</br>
+*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 140–145)</br>
 *Belongs to:* [EnvironmentController](../../EnvironmentController.md)
 
 **Signature**

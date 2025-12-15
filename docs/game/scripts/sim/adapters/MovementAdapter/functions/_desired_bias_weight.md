@@ -1,6 +1,6 @@
 # MovementAdapter::_desired_bias_weight Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 626–638)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 634–646)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

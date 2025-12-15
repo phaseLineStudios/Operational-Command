@@ -28,6 +28,6 @@ func _has_los_between(a: ScenarioUnit, b: ScenarioUnit) -> bool:
 	return _sim_world.los_adapter.has_los(a, b)
 
 	# Start queue timer if not already running
-	if _queue_timer and _queue_timer.is_stopped():
-		_queue_timer.start()
+	#if _queue_timer and _queue_timer.is_stopped():
+	#	_queue_timer.start()
 ```

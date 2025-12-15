@@ -1,6 +1,6 @@
 # ScenarioUnit::_init Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 79–83)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 85–89)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**

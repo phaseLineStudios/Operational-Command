@@ -1,6 +1,6 @@
 # OrdersRouter::_apply_report Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 258–262)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 261–265)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**

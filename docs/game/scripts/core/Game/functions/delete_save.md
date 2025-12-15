@@ -1,6 +1,6 @@
 # Game::delete_save Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 177–187)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 184–194)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

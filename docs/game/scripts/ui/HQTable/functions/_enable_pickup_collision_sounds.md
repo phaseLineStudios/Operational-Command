@@ -1,6 +1,6 @@
 # HQTable::_enable_pickup_collision_sounds Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 300–307)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 301–308)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

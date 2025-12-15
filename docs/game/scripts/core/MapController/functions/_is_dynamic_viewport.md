@@ -1,6 +1,6 @@
 # MapController::_is_dynamic_viewport Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 257–267)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 240–250)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

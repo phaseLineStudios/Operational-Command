@@ -19,14 +19,6 @@ Get the number of unit counters the player has created.
 
 **Usage in trigger condition:**
 
-```
-# Trigger when player has created at least 3 counters
-get_counter_count() >= 3
-
-# Combined with other conditions
-get_counter_count() > 0 and time_s() > 60
-```
-
 ## Source
 
 ```gdscript

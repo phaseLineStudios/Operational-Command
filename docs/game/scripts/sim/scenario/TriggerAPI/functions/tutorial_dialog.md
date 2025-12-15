@@ -1,6 +1,6 @@
 # TriggerAPI::tutorial_dialog Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 279–289)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 307–317)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**
@@ -19,42 +19,6 @@ Show a tutorial dialog with a line pointing to a UI element.
 Designed for tutorial sequences to highlight specific tools, buttons, or UI elements.
 Automatically pauses the simulation and points at the specified node.
 By default, blocks execution until the dialog is dismissed (can be disabled).
-  
-  
-
-**Usage in trigger expressions:**
-
-```
-# Point to a node by unique name (% prefix) - blocks until dismissed
-tutorial_dialog("This is the radio button. Press spacebar to transmit.", "%RadioButton")
-
-# Point to a node by name (searches from root)
-tutorial_dialog("Use this tool to draw on the map.", "DrawingTool")
-
-# Point to a node by path
-tutorial_dialog("These are your unit cards.", "HBoxContainer/UnitPanel")
-
-# Tutorial sequence - automatically waits for each dialog to be dismissed
-tutorial_dialog("Welcome to the mission!")
-tutorial_dialog("This is the map viewer.", "%MapViewer")
-tutorial_dialog("Click and drag to pan the map.", "%MapViewer")
-tutorial_dialog("Press spacebar to use the radio.", "%RadioButton")
-
-# Non-blocking tutorial dialog (old behavior with sleep_ui)
-tutorial_dialog("Watch this!", "%SomeNode", false)
-sleep_ui(3.0)
-tutorial_dialog("Now this!", "%OtherNode", false)
-```
-
-  
-
-**Note:** The dialog will automatically pause the simulation. Node lookup tries:
-  
-1. Unique name lookup (if starts with %)
-  
-2. Direct path from dialog node
-  
-3. Recursive search from root by name
 
 ## Source
 

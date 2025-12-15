@@ -1,6 +1,6 @@
 # ScenarioEditorFileOps::_on_open_file_selected Function Reference
 
-*Defined at:* `scripts/editors/helpers/ScenarioEditorFileOps.gd` (lines 81–89)</br>
+*Defined at:* `scripts/editors/helpers/ScenarioEditorFileOps.gd` (lines 82–93)</br>
 *Belongs to:* [ScenarioEditorFileOps](../../ScenarioEditorFileOps.md)
 
 **Signature**
@@ -23,6 +23,9 @@ func _on_open_file_selected(path: String) -> void:
 		current_path = path
 		dirty = false
 		editor._on_data_changed()
+		var filename := path.get_file()
+		editor.success_notification("Loaded: %s" % filename, 2)
 	else:
-		_show_info("Failed to open: %s" % path)
+		var filename := path.get_file()
+		editor.failed_notification("Failed to open: %s" % filename, 3)
 ```

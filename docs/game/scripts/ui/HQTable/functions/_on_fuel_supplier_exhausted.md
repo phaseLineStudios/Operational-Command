@@ -1,6 +1,6 @@
 # HQTable::_on_fuel_supplier_exhausted Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 281–285)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 282–286)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

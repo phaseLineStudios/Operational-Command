@@ -1,6 +1,6 @@
 # DocumentController::_on_objective_updated Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 834–837)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 826–829)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

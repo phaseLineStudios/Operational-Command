@@ -1,6 +1,6 @@
 # EnvironmentController::_ready Function Reference
 
-*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 248–252)</br>
+*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 250–254)</br>
 *Belongs to:* [EnvironmentController](../../EnvironmentController.md)
 
 **Signature**

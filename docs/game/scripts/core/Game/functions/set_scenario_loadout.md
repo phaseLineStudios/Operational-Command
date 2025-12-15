@@ -1,6 +1,6 @@
 # Game::set_scenario_loadout Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 201–205)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 210–214)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

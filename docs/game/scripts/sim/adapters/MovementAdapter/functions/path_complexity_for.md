@@ -1,6 +1,6 @@
 # MovementAdapter::path_complexity_for Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 582–602)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 590–610)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

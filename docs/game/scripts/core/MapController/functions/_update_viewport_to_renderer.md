@@ -1,6 +1,6 @@
 # MapController::_update_viewport_to_renderer Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 401–440)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 384–423)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # Game::_on_window_size_changed Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 67–78)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 74–85)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

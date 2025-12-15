@@ -1,6 +1,6 @@
 # CombatController::_apply_vehicle_damage_resolution Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 554–580)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 562–588)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**

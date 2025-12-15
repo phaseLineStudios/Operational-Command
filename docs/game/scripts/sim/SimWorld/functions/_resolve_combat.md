@@ -1,6 +1,6 @@
 # SimWorld::_resolve_combat Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 321–362)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 322–363)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

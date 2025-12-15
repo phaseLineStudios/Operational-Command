@@ -1,6 +1,6 @@
 # MapController::_on_mipmap_timer_timeout Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 310–314)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 293–297)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

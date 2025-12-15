@@ -1,6 +1,6 @@
 # HQTable::generate_playable_units Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 328–383)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 329–384)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

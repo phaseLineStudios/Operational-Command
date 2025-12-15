@@ -1,6 +1,6 @@
 # MapController::_set_map_texture Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 210–215)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 193–198)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # UnitAutoResponses::_build_callsign_mapping Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 261–271)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 265–275)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

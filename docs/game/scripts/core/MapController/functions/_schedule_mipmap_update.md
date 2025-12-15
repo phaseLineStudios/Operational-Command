@@ -1,6 +1,6 @@
 # MapController::_schedule_mipmap_update Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 295–309)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 278–292)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

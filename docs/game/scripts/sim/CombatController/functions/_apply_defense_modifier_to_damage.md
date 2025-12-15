@@ -1,6 +1,6 @@
 # CombatController::_apply_defense_modifier_to_damage Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 522–534)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 530–542)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**

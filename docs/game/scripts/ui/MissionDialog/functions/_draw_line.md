@@ -1,6 +1,6 @@
 # MissionDialog::_draw_line Function Reference
 
-*Defined at:* `scripts/ui/MissionDialog.gd` (lines 114–174)</br>
+*Defined at:* `scripts/ui/MissionDialog.gd` (lines 128–188)</br>
 *Belongs to:* [MissionDialog](../../MissionDialog.md)
 
 **Signature**

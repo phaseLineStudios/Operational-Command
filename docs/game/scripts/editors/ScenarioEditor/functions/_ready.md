@@ -1,6 +1,6 @@
 # ScenarioEditor::_ready Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 80–172)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 83–183)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
@@ -55,6 +55,7 @@ func _ready():
 	ctx.selection_changed.connect(_on_ctx_selection_changed)
 
 	file_menu.get_popup().connect("id_pressed", menus.on_filemenu_pressed)
+	edit_menu.get_popup().connect("id_pressed", _on_edit_menu_pressed)
 	attribute_menu.get_popup().connect("id_pressed", menus.on_attributemenu_pressed)
 
 	new_scenario_dialog.request_create.connect(file_ops.on_new_scenario)
@@ -106,5 +107,12 @@ func _ready():
 	delete_command_btn.pressed.connect(_on_delete_command)
 	command_cfg.saved.connect(func(_idx: int, _cmd: CustomCommand): _rebuild_command_list())
 
+	# PlayTest button
+	_playtest_btn.pressed.connect(_on_playtest_pressed)
+
 	draw_tools.build_stamp_pool()
+
+	# Check if returning from playtest and restore history
+	# This must be done AFTER all context setup is complete
+	_check_playtest_return()
 ```

@@ -1,6 +1,6 @@
 # ScenarioEditorDeletionOps::delete_slot Function Reference
 
-*Defined at:* `scripts/editors/helpers/ScenarioEditorDeletionOps.gd` (lines 113–128)</br>
+*Defined at:* `scripts/editors/helpers/ScenarioEditorDeletionOps.gd` (lines 114–130)</br>
 *Belongs to:* [ScenarioEditorDeletionOps](../../ScenarioEditorDeletionOps.md)
 
 **Signature**
@@ -32,4 +32,5 @@ func delete_slot(slot_index: int) -> void:
 	editor.selection.clear_selection(editor.ctx)
 	editor.ctx.request_overlay_redraw()
 	editor._rebuild_scene_tree()
+	editor.generic_notification("Deleted slot", 1, false)
 ```

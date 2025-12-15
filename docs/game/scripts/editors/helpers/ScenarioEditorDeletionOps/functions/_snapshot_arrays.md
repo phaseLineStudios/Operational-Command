@@ -1,6 +1,6 @@
 # ScenarioEditorDeletionOps::_snapshot_arrays Function Reference
 
-*Defined at:* `scripts/editors/helpers/ScenarioEditorDeletionOps.gd` (lines 225–243)</br>
+*Defined at:* `scripts/editors/helpers/ScenarioEditorDeletionOps.gd` (lines 230–248)</br>
 *Belongs to:* [ScenarioEditorDeletionOps](../../ScenarioEditorDeletionOps.md)
 
 **Signature**

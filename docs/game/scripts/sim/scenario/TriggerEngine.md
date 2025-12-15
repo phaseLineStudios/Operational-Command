@@ -22,7 +22,7 @@ Count of units in area.
 `center_m` Center of area
 `size_m` Size of area.
 `shape` Shape of area (rect or circle).
-[return] a dictionary of unit counts.
+[return] a dictionary of unit counts and unit ID lists.
 
 Check if a given point is withn a shape.
 `p` Point to check.
@@ -85,6 +85,9 @@ Schedule an action to execute after a delay.
 - `Dictionary _globals` — Shared global variables accessible across all triggers
 - `Array _scheduled_actions` — Scheduled actions queue: [{execute_at: float, expr: String, ctx: Dictionary, use_realtime: bool}]
 - `float _realtime_accumulator` — Real-time accumulator for sleep_ui
+- `Array[String] units_friend`
+- `Array[String] units_enemy`
+- `Array[String] units_player`
 - `Dictionary s`
 - `Vector2 pos`
 - `float r`
@@ -354,6 +357,24 @@ var _realtime_accumulator: float
 ```
 
 Real-time accumulator for sleep_ui
+
+### units_friend
+
+```gdscript
+var units_friend: Array[String]
+```
+
+### units_enemy
+
+```gdscript
+var units_enemy: Array[String]
+```
+
+### units_player
+
+```gdscript
+var units_player: Array[String]
+```
 
 ### s
 

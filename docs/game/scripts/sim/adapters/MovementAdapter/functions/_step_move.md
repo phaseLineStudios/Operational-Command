@@ -1,6 +1,6 @@
 # MovementAdapter::_step_move Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 437–460)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 445–468)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

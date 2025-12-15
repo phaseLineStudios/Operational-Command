@@ -1,6 +1,6 @@
 # HQTable::_on_ammo_low Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 239–243)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 240–244)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

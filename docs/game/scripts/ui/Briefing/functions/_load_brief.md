@@ -1,6 +1,6 @@
 # Briefing::_load_brief Function Reference
 
-*Defined at:* `scripts/ui/Briefing.gd` (lines 37–44)</br>
+*Defined at:* `scripts/ui/Briefing.gd` (lines 41–48)</br>
 *Belongs to:* [Briefing](../../Briefing.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # UnitAutoResponses::_trigger_casualties Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 637–647)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 690–700)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

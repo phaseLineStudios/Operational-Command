@@ -1,6 +1,6 @@
 # CampaignSave::get_unit_state Function Reference
 
-*Defined at:* `scripts/data/CampaignSave.gd` (lines 76–79)</br>
+*Defined at:* `scripts/data/CampaignSave.gd` (lines 112–115)</br>
 *Belongs to:* [CampaignSave](../../CampaignSave.md)
 
 **Signature**

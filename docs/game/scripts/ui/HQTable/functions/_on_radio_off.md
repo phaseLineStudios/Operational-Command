@@ -1,6 +1,6 @@
 # HQTable::_on_radio_off Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 390–393)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 391–394)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

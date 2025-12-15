@@ -1,6 +1,6 @@
 # TriggerAPI::_is_sleep_requested Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 741–744)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 568–571)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

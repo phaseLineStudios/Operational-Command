@@ -1,6 +1,6 @@
 # UnitAutoResponses::trigger_movement_blocked Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 623–632)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 676–685)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

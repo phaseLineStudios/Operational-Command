@@ -1,6 +1,6 @@
 # MovementAdapter::is_move_complete Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 366–369)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 374–377)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

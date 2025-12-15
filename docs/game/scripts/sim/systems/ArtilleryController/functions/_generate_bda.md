@@ -1,6 +1,6 @@
 # ArtilleryController::_generate_bda Function Reference
 
-*Defined at:* `scripts/sim/systems/ArtilleryController.gd` (lines 356–397)</br>
+*Defined at:* `scripts/sim/systems/ArtilleryController.gd` (lines 355–396)</br>
 *Belongs to:* [ArtilleryController](../../ArtilleryController.md)
 
 **Signature**

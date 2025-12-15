@@ -1,6 +1,6 @@
 # MovementAdapter::set_patrol_dwell Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 432–435)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 440–443)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

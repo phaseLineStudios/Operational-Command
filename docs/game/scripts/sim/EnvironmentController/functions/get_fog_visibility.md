@@ -1,6 +1,6 @@
 # EnvironmentController::get_fog_visibility Function Reference
 
-*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 425–428)</br>
+*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 430–433)</br>
 *Belongs to:* [EnvironmentController](../../EnvironmentController.md)
 
 **Signature**

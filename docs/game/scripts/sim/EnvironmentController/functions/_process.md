@@ -1,6 +1,6 @@
 # EnvironmentController::_process Function Reference
 
-*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 253–276)</br>
+*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 255–278)</br>
 *Belongs to:* [EnvironmentController](../../EnvironmentController.md)
 
 **Signature**

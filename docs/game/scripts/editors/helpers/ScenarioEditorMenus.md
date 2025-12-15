@@ -32,6 +32,7 @@ Path to return to main menu scene
 - [`func open_task_config(task_index: int) -> void`](ScenarioEditorMenus/functions/open_task_config.md) — Open task configuration dialog for a task index.
 - [`func open_trigger_config(index: int) -> void`](ScenarioEditorMenus/functions/open_trigger_config.md) — Open trigger configuration dialog for a trigger index.
 - [`func open_command_config(index: int) -> void`](ScenarioEditorMenus/functions/open_command_config.md) — Open custom command configuration dialog for a command index.
+- [`func _on_quit_requested() -> void`](ScenarioEditorMenus/functions/_on_quit_requested.md) — Handle quit request with unsaved changes confirmation
 
 ## Public Attributes
 
@@ -110,6 +111,14 @@ func open_command_config(index: int) -> void
 
 Open custom command configuration dialog for a command index.
 `index` Custom command index.
+
+### _on_quit_requested
+
+```gdscript
+func _on_quit_requested() -> void
+```
+
+Handle quit request with unsaved changes confirmation
 
 ## Member Data Documentation
 

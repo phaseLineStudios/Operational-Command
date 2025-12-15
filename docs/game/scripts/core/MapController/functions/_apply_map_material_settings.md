@@ -1,6 +1,6 @@
 # MapController::_apply_map_material_settings Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 201–209)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 184–192)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

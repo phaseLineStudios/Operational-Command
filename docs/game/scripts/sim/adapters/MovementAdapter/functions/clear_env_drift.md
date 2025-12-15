@@ -1,6 +1,6 @@
 # MovementAdapter::clear_env_drift Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 557–565)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 565–573)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

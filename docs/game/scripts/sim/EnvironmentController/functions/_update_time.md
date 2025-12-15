@@ -1,6 +1,6 @@
 # EnvironmentController::_update_time Function Reference
 
-*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 109–117)</br>
+*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 110–118)</br>
 *Belongs to:* [EnvironmentController](../../EnvironmentController.md)
 
 **Signature**

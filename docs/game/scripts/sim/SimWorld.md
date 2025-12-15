@@ -117,7 +117,7 @@ Optimized to only check LOS between units when at least one has moved.
 
 - `signal unit_updated(unit_id: String, snapshot: Dictionary)` — Emitted when a unit snapshot changes.
 - `signal contact_reported(attacker_id: String, defender_id: String)` — Emitted when LOS contact is reported (attacker->defender).
-- `signal radio_message(level: String, text: String)` — Emitted for radio/log feedback.
+- `signal radio_message(level: String, text: String, unit: String)` — Emitted for radio/log feedback.
 - `signal mission_state_changed(prev: State, next: State)` — Emitted when mission state transitions.
 - `signal engagement_reported(attacker_id: String, defender_id: String, damage: float)` — Emitted when damage > 0 is applied this tick (attacker->defender).
 
@@ -800,12 +800,13 @@ Emitted when LOS contact is reported (attacker->defender).
 ### radio_message
 
 ```gdscript
-signal radio_message(level: String, text: String)
+signal radio_message(level: String, text: String, unit: String)
 ```
 
 Emitted for radio/log feedback.
 Levels: "debug" (internal), "info" (radio), "warn" (status), "error" (critical)
 Only non-debug messages should appear in radio transcript.
+`unit` Optional unit callsign/ID of the speaker (empty string if not specified).
 
 ### mission_state_changed
 

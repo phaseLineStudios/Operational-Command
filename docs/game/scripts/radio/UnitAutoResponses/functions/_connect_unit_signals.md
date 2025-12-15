@@ -1,6 +1,6 @@
 # UnitAutoResponses::_connect_unit_signals Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 273–280)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 277–284)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # UnitAutoResponses::_trigger_command_change Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 650–660)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 703–713)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MissionDialog::hide_dialog Function Reference
 
-*Defined at:* `scripts/ui/MissionDialog.gd` (lines 82–101)</br>
+*Defined at:* `scripts/ui/MissionDialog.gd` (lines 96–115)</br>
 *Belongs to:* [MissionDialog](../../MissionDialog.md)
 
 **Signature**

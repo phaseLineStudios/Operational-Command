@@ -1,6 +1,6 @@
 # MovementAdapter::request_patrol Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 403–426)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 411–434)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

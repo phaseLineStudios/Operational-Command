@@ -1,6 +1,6 @@
 # ArtilleryController::_process_impact Function Reference
 
-*Defined at:* `scripts/sim/systems/ArtilleryController.gd` (lines 347–354)</br>
+*Defined at:* `scripts/sim/systems/ArtilleryController.gd` (lines 346–353)</br>
 *Belongs to:* [ArtilleryController](../../ArtilleryController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # UnitAutoResponses::_on_unit_updated Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 412–424)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 413–425)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

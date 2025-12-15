@@ -1,6 +1,6 @@
 # Game::_compute_content_scale_size Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 141–157)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 148–164)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

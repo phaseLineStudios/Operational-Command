@@ -1,6 +1,6 @@
 # MapController::_unhandled_input Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 154–172)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 154–171)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**
@@ -29,7 +29,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		and (event as InputEventMouseButton).double_click
 		and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT
 	):
-		_open_map_read_overlay()
 		get_viewport().set_input_as_handled()
 		return
 	emit_signal("map_unhandled_mouse", event, res.map_px, res.terrain)

@@ -1,6 +1,6 @@
 # TriggerAPI::sim_state Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 54–69)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 55–70)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

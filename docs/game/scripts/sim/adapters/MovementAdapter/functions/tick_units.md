@@ -1,6 +1,6 @@
 # MovementAdapter::tick_units Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 243–263)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 244–271)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**
@@ -16,6 +16,7 @@ func tick_units(units: Array[ScenarioUnit], dt: float) -> void
 
 Ticks unit movement grouped by profile (reduces grid switching).
 Skips groups whose profile grid is still building this frame.
+Auto-pauses units that are under fire (but not actively firing).
 
 ## Source
 
@@ -38,5 +39,12 @@ func tick_units(units: Array[ScenarioUnit], dt: float) -> void:
 			_grid.use_profile(p)
 			for u in groups[p]:
 				_repath_if_requested(u)
+				# Auto-pause if unit is under fire (taking damage)
+				# Note: We don't pause if the unit is actively firing back,
+				# which is handled by the combat mode and engagement system.
+				# This simple check just pauses movement when hit.
+				if u.is_under_fire() and u.move_state() == ScenarioUnit.MoveState.MOVING:
+					u.pause_move()
+
 				u.tick(dt, _grid)
 ```

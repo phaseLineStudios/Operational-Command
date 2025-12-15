@@ -1,6 +1,6 @@
 # PauseMenu::_build_exit_dialog Function Reference
 
-*Defined at:* `scripts/ui/PauseMenu.gd` (lines 31–40)</br>
+*Defined at:* `scripts/ui/PauseMenu.gd` (lines 43–52)</br>
 *Belongs to:* [PauseMenu](../../PauseMenu.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # CampaignSave::touch Function Reference
 
-*Defined at:* `scripts/data/CampaignSave.gd` (lines 63–66)</br>
+*Defined at:* `scripts/data/CampaignSave.gd` (lines 99–102)</br>
 *Belongs to:* [CampaignSave](../../CampaignSave.md)
 
 **Signature**

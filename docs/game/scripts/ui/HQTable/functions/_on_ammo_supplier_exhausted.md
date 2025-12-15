@@ -1,6 +1,6 @@
 # HQTable::_on_ammo_supplier_exhausted Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 269–273)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 270–274)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

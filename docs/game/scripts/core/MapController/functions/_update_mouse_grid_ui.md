@@ -1,6 +1,6 @@
 # MapController::_update_mouse_grid_ui Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 540–557)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 523–540)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # MapController::_bind_terrain_signals Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 329–376)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 312–359)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

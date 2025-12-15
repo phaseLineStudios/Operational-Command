@@ -1,6 +1,6 @@
 # ScenarioEditor::_confirm_discard Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 568–583)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 602–617)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

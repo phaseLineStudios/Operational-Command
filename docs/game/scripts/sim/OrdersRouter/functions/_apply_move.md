@@ -1,6 +1,6 @@
 # OrdersRouter::_apply_move Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 102–130)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 105–133)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**

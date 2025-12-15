@@ -1,6 +1,6 @@
 # CombatController::print_unit_status Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 253–270)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 261–278)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**

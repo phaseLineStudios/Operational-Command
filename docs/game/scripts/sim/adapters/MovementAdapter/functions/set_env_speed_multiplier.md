@@ -1,6 +1,6 @@
 # MovementAdapter::set_env_speed_multiplier Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 531–536)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 539–544)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

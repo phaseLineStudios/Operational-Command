@@ -1,6 +1,6 @@
 # CombatController::_select_ammo_profile_for_attack Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 582–647)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 590–655)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**

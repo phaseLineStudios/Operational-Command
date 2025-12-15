@@ -23,7 +23,9 @@ unit states, and metadata. Can be serialized to/from JSON for file storage.
 ## Public Member Functions
 
 - [`func create_new(p_campaign_id: String, p_save_name: String = "") -> Resource`](CampaignSave/functions/create_new.md) — Create a new campaign save with initial values.
-- [`func complete_mission(mission_id: String) -> void`](CampaignSave/functions/complete_mission.md) — Mark a mission as completed.
+- [`func complete_mission(mission_id: String) -> void`](CampaignSave/functions/complete_mission.md) — Mark a mission as completed and update furthest progress.
+- [`func _is_mission_further(mission_a: String, mission_b: String) -> bool`](CampaignSave/functions/_is_mission_further.md) — Check if mission A is further than mission B in campaign order.
+- [`func _extract_mission_number(mission_id: String) -> int`](CampaignSave/functions/_extract_mission_number.md) — Extract mission number from mission ID (e.g., "mission_03" -> 3).
 - [`func is_mission_completed(mission_id: String) -> bool`](CampaignSave/functions/is_mission_completed.md) — Check if a mission is completed.
 - [`func touch() -> void`](CampaignSave/functions/touch.md) — Update last played timestamp.
 - [`func update_unit_state(unit_id: String, state: Dictionary) -> void`](CampaignSave/functions/update_unit_state.md) — Update unit state for a unit.
@@ -40,7 +42,9 @@ unit states, and metadata. Can be serialized to/from JSON for file storage.
 - `int last_played_timestamp` — Unix timestamp of last update
 - `Array[String] completed_missions` — List of completed scenario IDs
 - `String current_mission` — Current/active scenario ID (empty if at campaign start)
+- `String furthest_mission` — Furthest mission reached (for forward-only persistence)
 - `float total_playtime_seconds` — Total playtime in seconds
+- `Dictionary mission_start_states` — Unit states at the START of each mission (for replay support)
 - `Dictionary unit_states` — Dictionary mapping unit IDs to their persistent state
 Format: { "unit_id": { "state_strength": float, "state_injured": float, ...
 
@@ -60,7 +64,24 @@ Create a new campaign save with initial values.
 func complete_mission(mission_id: String) -> void
 ```
 
-Mark a mission as completed.
+Mark a mission as completed and update furthest progress.
+
+### _is_mission_further
+
+```gdscript
+func _is_mission_further(mission_a: String, mission_b: String) -> bool
+```
+
+Check if mission A is further than mission B in campaign order.
+Simple heuristic: compare mission IDs lexicographically.
+
+### _extract_mission_number
+
+```gdscript
+func _extract_mission_number(mission_id: String) -> int
+```
+
+Extract mission number from mission ID (e.g., "mission_03" -> 3).
 
 ### is_mission_completed
 
@@ -185,6 +206,16 @@ Decorators: `@export`
 
 Current/active scenario ID (empty if at campaign start)
 
+### furthest_mission
+
+```gdscript
+var furthest_mission: String
+```
+
+Decorators: `@export`
+
+Furthest mission reached (for forward-only persistence)
+
 ### total_playtime_seconds
 
 ```gdscript
@@ -194,6 +225,17 @@ var total_playtime_seconds: float
 Decorators: `@export`
 
 Total playtime in seconds
+
+### mission_start_states
+
+```gdscript
+var mission_start_states: Dictionary
+```
+
+Decorators: `@export`
+
+Unit states at the START of each mission (for replay support)
+Format: { "mission_id": { "unit_id": { state } } }
 
 ### unit_states
 

@@ -1,6 +1,6 @@
 # TriggerAPI::_on_engineer_task_completed Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 810–814)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 637–641)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

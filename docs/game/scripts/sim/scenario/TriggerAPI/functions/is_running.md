@@ -1,6 +1,6 @@
 # TriggerAPI::is_running Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 40–45)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 41–46)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

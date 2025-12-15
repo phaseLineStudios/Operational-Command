@@ -1,6 +1,6 @@
 # TriggerAPI::get_unit_position Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 421–427)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 391–397)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**
@@ -15,27 +15,6 @@ func get_unit_position(id_or_callsign: String) -> Variant
 ## Description
 
 Get the current position of a unit in terrain meters (Vector2).
-  
-  
-
-**Usage in trigger expressions:**
-
-```
-# Get unit position
-var pos = get_unit_position("ALPHA")
-radio("ALPHA is at position " + str(pos))
-
-# Check if unit reached a location
-var target = vec2(1000, 500)
-var pos = get_unit_position("ALPHA")
-if pos and pos.distance_to(target) < 50:
-radio("ALPHA reached the objective!")
-
-# Point dialog at unit's current position
-var pos = get_unit_position("BRAVO")
-if pos:
-show_dialog("Enemy spotted here!", false, pos)
-```
 
 ## Source
 

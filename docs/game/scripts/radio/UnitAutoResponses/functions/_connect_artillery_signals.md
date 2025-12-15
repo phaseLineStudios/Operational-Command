@@ -1,6 +1,6 @@
 # UnitAutoResponses::_connect_artillery_signals Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 282–299)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 286–303)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

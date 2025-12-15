@@ -47,7 +47,7 @@ func _apply_render_scale() -> void:
 	var mode: int = Viewport.SCALING_3D_MODE_BILINEAR
 	if final_scale < 0.999:
 		mode = Viewport.SCALING_3D_MODE_FSR
-	root_viewport.scaling_3d_mode = mode
+	root_viewport.scaling_3d_mode = mode as Viewport.Scaling3DMode
 	root_viewport.scaling_3d_scale = final_scale
 
 	_apply_adaptive_aa(root_viewport, content_size, final_scale)

@@ -1,6 +1,6 @@
 # ScenarioEditorMenus::open_command_config Function Reference
 
-*Defined at:* `scripts/editors/helpers/ScenarioEditorMenus.gd` (lines 101–104)</br>
+*Defined at:* `scripts/editors/helpers/ScenarioEditorMenus.gd` (lines 101–106)</br>
 *Belongs to:* [ScenarioEditorMenus](../../ScenarioEditorMenus.md)
 
 **Signature**

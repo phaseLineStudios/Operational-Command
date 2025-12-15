@@ -1,6 +1,6 @@
 # TriggerEngine::_make_ctx Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 171–189)</br>
+*Defined at:* `scripts/sim/scenario/TriggerEngine.gd` (lines 171–192)</br>
 *Belongs to:* [TriggerEngine](../../TriggerEngine.md)
 
 **Signature**
@@ -31,6 +31,9 @@ func _make_ctx(t: ScenarioTrigger, presence_ok: bool) -> Dictionary:
 		"count_friend": counts.friend,
 		"count_enemy": counts.enemy,
 		"count_player": counts.player,
+		"units_friend": counts.units_friend,
+		"units_enemy": counts.units_enemy,
+		"units_player": counts.units_player,
 	}
 	# Include all global variables in context for easy access
 	for key in _globals.keys():

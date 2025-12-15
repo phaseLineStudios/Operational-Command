@@ -1,6 +1,6 @@
 # DocumentController::_split_into_pages Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 651–733)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 647–725)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**
@@ -32,10 +32,6 @@ func _split_into_pages(content: RichTextLabel, full_text: String) -> Array[Strin
 
 	# Safety check - if visible_lines is 0 or unreasonably small, use default
 	if visible_lines < 10:
-		LogService.warning(
-			"visible_lines=%d is too small, defaulting to 30" % visible_lines,
-			"DocumentController.gd"
-		)
 		visible_lines = 30
 
 	# If everything fits on one page

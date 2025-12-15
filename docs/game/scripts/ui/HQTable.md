@@ -18,7 +18,7 @@ extends Node3D
 - [`func _init_counter_controller() -> void`](HQTable/functions/_init_counter_controller.md) — Initialize the counter controller and bind to trigger API
 - [`func _init_document_controller(scenario: ScenarioData) -> void`](HQTable/functions/_init_document_controller.md) — Initialize the document controller and render documents
 - [`func _on_radio_transcript_player_early(text: String) -> void`](HQTable/functions/_on_radio_transcript_player_early.md) — Handle player radio result for transcript
-- [`func _on_radio_transcript_ai(level: String, text: String) -> void`](HQTable/functions/_on_radio_transcript_ai.md) — Handle AI radio messages for transcript
+- [`func _on_radio_transcript_ai(level: String, text: String, unit: String = "") -> void`](HQTable/functions/_on_radio_transcript_ai.md) — Handle AI radio messages for transcript
 - [`func _on_unit_voice_transcript(callsign: String, message: String) -> void`](HQTable/functions/_on_unit_voice_transcript.md) — Handle unit voice responses for transcript (both acknowledgments and auto-responses)
 - [`func _extract_speaker_from_message(text: String) -> String`](HQTable/functions/_extract_speaker_from_message.md) — Extract speaker callsign from message text if present, otherwise return "HQ".
 - [`func _init_combat_controllers() -> void`](HQTable/functions/_init_combat_controllers.md) — Bind artillery and engineer controllers to trigger API for tracking
@@ -32,7 +32,7 @@ extends Node3D
 - [`func _on_ammo_supplier_exhausted(src_unit_id: String) -> void`](HQTable/functions/_on_ammo_supplier_exhausted.md) — Handle ammo supplier exhausted.
 - [`func _on_refuel_started(src_unit_id: String, dst_unit_id: String) -> void`](HQTable/functions/_on_refuel_started.md) — Handle refuel started.
 - [`func _on_fuel_supplier_exhausted(src_unit_id: String) -> void`](HQTable/functions/_on_fuel_supplier_exhausted.md) — Handle fuel supplier exhausted.
-- [`func _on_radio_message(_level: String, text: String) -> void`](HQTable/functions/_on_radio_message.md) — Handle radio messages from SimWorld (trigger API, ammo/fuel warnings, etc.)
+- [`func _on_radio_message(_level: String, text: String, _unit: String = "") -> void`](HQTable/functions/_on_radio_message.md) — Handle radio messages from SimWorld (trigger API, ammo/fuel warnings, etc.)
 - [`func _enable_pickup_collision_sounds() -> void`](HQTable/functions/_enable_pickup_collision_sounds.md) — Enable collision sounds for all PickupItems in the scene
 - [`func _find_all_pickup_items(node: Node) -> Array[PickupItem]`](HQTable/functions/_find_all_pickup_items.md) — Recursively find all PickupItem nodes in the tree
 - [`func _exit_tree() -> void`](HQTable/functions/_exit_tree.md) — Clean up when exiting (clears session drawings)
@@ -112,7 +112,7 @@ Handle player radio result for transcript
 ### _on_radio_transcript_ai
 
 ```gdscript
-func _on_radio_transcript_ai(level: String, text: String) -> void
+func _on_radio_transcript_ai(level: String, text: String, unit: String = "") -> void
 ```
 
 Handle AI radio messages for transcript
@@ -225,7 +225,7 @@ Handle fuel supplier exhausted.
 ### _on_radio_message
 
 ```gdscript
-func _on_radio_message(_level: String, text: String) -> void
+func _on_radio_message(_level: String, text: String, _unit: String = "") -> void
 ```
 
 Handle radio messages from SimWorld (trigger API, ammo/fuel warnings, etc.)

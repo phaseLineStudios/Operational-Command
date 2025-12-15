@@ -1,6 +1,6 @@
 # UnitAutoResponses::_on_order_failed Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 512–532)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 566–586)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # ScenarioUnit::_speed_here_mps Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 281–328)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 287–334)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**

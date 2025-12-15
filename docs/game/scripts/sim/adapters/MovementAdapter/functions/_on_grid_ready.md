@@ -1,6 +1,6 @@
 # MovementAdapter::_on_grid_ready Function Reference
 
-*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 320–351)</br>
+*Defined at:* `scripts/sim/adapters/MovementAdapter.gd` (lines 328–359)</br>
 *Belongs to:* [MovementAdapter](../../MovementAdapter.md)
 
 **Signature**

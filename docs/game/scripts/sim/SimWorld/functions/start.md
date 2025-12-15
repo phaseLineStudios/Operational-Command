@@ -1,6 +1,6 @@
 # SimWorld::start Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 504–514)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 505–515)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

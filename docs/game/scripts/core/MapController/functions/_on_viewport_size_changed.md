@@ -1,6 +1,6 @@
 # MapController::_on_viewport_size_changed Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 470–475)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 453–458)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

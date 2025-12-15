@@ -1,6 +1,6 @@
 # DocumentController::_do_briefing_refresh Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 779–786)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 771–778)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

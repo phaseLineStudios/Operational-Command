@@ -1,6 +1,6 @@
 # EnvironmentController::_update_sky Function Reference
 
-*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 146–230)</br>
+*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 147–231)</br>
 *Belongs to:* [EnvironmentController](../../EnvironmentController.md)
 
 **Signature**

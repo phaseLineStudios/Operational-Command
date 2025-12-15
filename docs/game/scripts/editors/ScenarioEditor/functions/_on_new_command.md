@@ -1,6 +1,6 @@
 # ScenarioEditor::_on_new_command Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 628–648)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 662–682)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

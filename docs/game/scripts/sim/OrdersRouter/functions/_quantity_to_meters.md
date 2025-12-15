@@ -1,6 +1,6 @@
 # OrdersRouter::_quantity_to_meters Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 472–486)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 553–567)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**

@@ -21,6 +21,12 @@ Converts radio transcripts into structured orders.
 Consumes the full `result` string from STTService and extracts one or more
 machine-readable orders for AI units using tables from `NaRules`.
 
+High-level order categories.
+  
+CUSTOM is used for mission-specific commands registered via `method register_custom_command`.
+  
+RETREAT makes units fall back away from enemies without player updates until safe.
+
 Minimal schema returned per order.
 
 Build a CUSTOM order from a matched keyword.
@@ -56,10 +62,6 @@ Build a CUSTOM order from a matched keyword.
 
 - `signal parsed(orders: Array)` — Emitted when parsing succeeds.
 - `signal parse_error(msg: String)` — Emitted if parsing fails (no orders, or malformed input).
-
-## Enumerations
-
-- `enum OrderType` — High-level order categories.
 
 ## Member Function Documentation
 
@@ -262,15 +264,3 @@ signal parse_error(msg: String)
 ```
 
 Emitted if parsing fails (no orders, or malformed input).
-
-## Enumeration Type Documentation
-
-### OrderType
-
-```gdscript
-enum OrderType
-```
-
-High-level order categories.
-  
-CUSTOM is used for mission-specific commands registered via `method register_custom_command`.

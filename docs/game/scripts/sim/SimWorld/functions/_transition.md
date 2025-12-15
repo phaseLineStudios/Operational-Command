@@ -1,6 +1,6 @@
 # SimWorld::_transition Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 615–623)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 616–624)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

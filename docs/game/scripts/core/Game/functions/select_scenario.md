@@ -1,6 +1,6 @@
 # Game::select_scenario Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 189–199)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 196–208)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**
@@ -21,6 +21,8 @@ func select_scenario(scenario: ScenarioData) -> void:
 
 	# Restore unit states from save if available
 	if current_save:
+		# Snapshot current unit states BEFORE mission starts (for replay support)
+		_snapshot_mission_start_states(scenario)
 		restore_unit_states_from_save(scenario)
 
 	LogService.trace("Set Scenario: %s" % current_scenario.id)

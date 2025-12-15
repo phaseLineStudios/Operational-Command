@@ -1,6 +1,6 @@
 # TriggerVM::run Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerVM.gd` (lines 53–107)</br>
+*Defined at:* `scripts/sim/scenario/TriggerVM.gd` (lines 59–77)</br>
 *Belongs to:* [TriggerVM](../../TriggerVM.md)
 
 **Signature**
@@ -32,48 +32,12 @@ func run(expr_src: String, ctx: Dictionary, debug_info: Dictionary = {}) -> void
 	# Reset sleep state before execution
 	if _api:
 		_api._reset_sleep()
+		# Store context in API so trigger functions can access it
+		_api._current_context = ctx
 
-	var lines := _split_lines(src)
-	for i in lines.size():
-		var line := lines[i]
-		var compiled: Variant = _compile(line, ctx, debug_info)
-		if compiled == null or compiled.is_empty():
-			continue
-		var inputs := _values_for(compiled.names, ctx)
-		compiled.expr.execute(inputs, _api, false, false)
+	# Strip comments before executing
+	var clean_src := _strip_comments(src)
 
-		# Check if sleep was requested after this statement
-		if _api and _api._is_sleep_requested():
-			# Collect remaining statements
-			var remaining_lines := PackedStringArray()
-			for j in range(i + 1, lines.size()):
-				remaining_lines.append(lines[j])
-
-			if remaining_lines.size() > 0:
-				var remaining_expr := "\n".join(remaining_lines)
-				var sleep_duration := _api._get_sleep_duration()
-				var use_realtime := _api._is_sleep_realtime()
-
-				# Schedule remaining statements
-				if _api.engine and _api.engine.has_method("schedule_action"):
-					_api.engine.schedule_action(sleep_duration, remaining_expr, ctx, use_realtime)
-
-			# Reset sleep state and stop processing
-			_api._reset_sleep()
-			return
-
-		# Check if dialog blocking was requested after this statement
-		if _api and _api._is_dialog_blocking():
-			# Collect remaining statements
-			var remaining_lines := PackedStringArray()
-			for j in range(i + 1, lines.size()):
-				remaining_lines.append(lines[j])
-
-			if remaining_lines.size() > 0:
-				var remaining_expr := "\n".join(remaining_lines)
-				# Store the pending expression to execute when dialog closes
-				_api._set_dialog_pending(remaining_expr, ctx)
-
-			# Stop processing (dialog blocking flag remains set)
-			return
+	# Execute with control flow support
+	_execute_script(clean_src, ctx, debug_info)
 ```

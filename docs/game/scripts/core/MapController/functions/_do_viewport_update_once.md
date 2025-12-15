@@ -1,6 +1,6 @@
 # MapController::_do_viewport_update_once Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 287–293)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 270–276)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # EnvironmentController::_update_wind_effects Function Reference
 
-*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 384–401)</br>
+*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 391–406)</br>
 *Belongs to:* [EnvironmentController](../../EnvironmentController.md)
 
 **Signature**
@@ -20,11 +20,9 @@ func _update_wind_effects() -> void:
 	if rain_node != null:
 		var process_mat := rain_node.process_material as ParticleProcessMaterial
 		if process_mat:
-			var wind_rad := deg_to_rad(wind_direction)
-			var wind_x := -sin(wind_rad) * wind_speed * 0.1
-			var wind_z := cos(wind_rad) * wind_speed * 0.1
+			process_mat.direction = Vector3(0, -1, 0)
 
-			process_mat.direction = Vector3(wind_x, -1, wind_z).normalized()
+	_update_rain_particles()
 
 	if sky_preset != null:
 		var cloud_speed: float = wind_speed * 0.001

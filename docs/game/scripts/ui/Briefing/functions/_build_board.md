@@ -1,6 +1,6 @@
 # Briefing::_build_board Function Reference
 
-*Defined at:* `scripts/ui/Briefing.gd` (lines 46–52)</br>
+*Defined at:* `scripts/ui/Briefing.gd` (lines 50–57)</br>
 *Belongs to:* [Briefing](../../Briefing.md)
 
 **Signature**

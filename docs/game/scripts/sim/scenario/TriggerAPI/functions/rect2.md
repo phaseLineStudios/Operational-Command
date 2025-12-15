@@ -1,6 +1,6 @@
 # TriggerAPI::rect2 Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 668–671)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 541–544)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**
@@ -18,15 +18,6 @@ func rect2(x: float, y: float, width: float, height: float) -> Rect2
 ## Description
 
 Create a Rect2 from position and size.
-  
-  
-
-**Usage in trigger expressions:**
-
-```
-# Create rectangle area
-set_global("patrol_area", rect2(500, 750, 200, 100))
-```
 
 ## Source
 

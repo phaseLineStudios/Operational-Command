@@ -35,6 +35,7 @@ Show dialog with message text and optional pause
 - [`func _process(_delta: float) -> void`](MissionDialog/functions/_process.md) — Update line overlay every frame when visible
 - [`func _draw_line() -> void`](MissionDialog/functions/_draw_line.md) — Draw the line from dialog to map position or target node
 - [`func _get_closest_edge_point(rect: Rect2, target: Vector2) -> Vector2`](MissionDialog/functions/_get_closest_edge_point.md) — Get the closest point on the rectangle edge to a target position
+- [`func _on_drag_bar_input(event: InputEvent) -> void`](MissionDialog/functions/_on_drag_bar_input.md) — Handle drag bar input for dragging the dialog
 
 ## Public Attributes
 
@@ -46,9 +47,13 @@ Show dialog with message text and optional pause
 - `MapController _map_controller`
 - `Variant _position_m`
 - `Variant _target_node`
+- `bool _dragging`
+- `Vector2 _drag_offset`
 - `RichTextLabel _text_label`
 - `Button _ok_button`
 - `Control _line_overlay`
+- `Control _drag_bar`
+- `CenterContainer _center_container`
 
 ## Signals
 
@@ -101,6 +106,14 @@ func _get_closest_edge_point(rect: Rect2, target: Vector2) -> Vector2
 ```
 
 Get the closest point on the rectangle edge to a target position
+
+### _on_drag_bar_input
+
+```gdscript
+func _on_drag_bar_input(event: InputEvent) -> void
+```
+
+Handle drag bar input for dragging the dialog
 
 ## Member Data Documentation
 
@@ -160,6 +173,18 @@ var _position_m: Variant
 var _target_node: Variant
 ```
 
+### _dragging
+
+```gdscript
+var _dragging: bool
+```
+
+### _drag_offset
+
+```gdscript
+var _drag_offset: Vector2
+```
+
 ### _text_label
 
 ```gdscript
@@ -176,6 +201,18 @@ var _ok_button: Button
 
 ```gdscript
 var _line_overlay: Control
+```
+
+### _drag_bar
+
+```gdscript
+var _drag_bar: Control
+```
+
+### _center_container
+
+```gdscript
+var _center_container: CenterContainer
 ```
 
 ## Signal Documentation

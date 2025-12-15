@@ -1,6 +1,6 @@
 # HQTable::_on_refuel_started Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 275–279)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 276–280)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

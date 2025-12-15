@@ -1,6 +1,6 @@
 # TriggerAPI::set_global Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 190–194)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 193–197)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # ScenarioEditor::_on_history_changed Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 438–463)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 472–497)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # UnitAutoResponses::trigger_refuel_started Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 595–613)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 648–666)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**

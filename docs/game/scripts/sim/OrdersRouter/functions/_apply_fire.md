@@ -1,6 +1,6 @@
 # OrdersRouter::_apply_fire Function Reference
 
-*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 194–253)</br>
+*Defined at:* `scripts/sim/OrdersRouter.gd` (lines 197–256)</br>
 *Belongs to:* [OrdersRouter](../../OrdersRouter.md)
 
 **Signature**

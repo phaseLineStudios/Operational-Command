@@ -1,6 +1,6 @@
 # HQTable::_init_tts_system Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 193–219)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 194–220)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

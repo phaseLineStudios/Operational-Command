@@ -1,6 +1,6 @@
 # HQTable::_create_initial_unit_counters Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 426–443)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 427–444)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

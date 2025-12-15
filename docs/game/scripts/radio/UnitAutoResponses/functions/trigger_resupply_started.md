@@ -1,6 +1,6 @@
 # UnitAutoResponses::trigger_resupply_started Function Reference
 
-*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 567–585)</br>
+*Defined at:* `scripts/radio/UnitAutoResponses.gd` (lines 621–638)</br>
 *Belongs to:* [UnitAutoResponses](../../UnitAutoResponses.md)
 
 **Signature**
@@ -25,7 +25,6 @@ func trigger_resupply_started(src_unit_id: String, dst_unit_id: String) -> void:
 	if not src_unit or not src_unit.playable:
 		return
 
-	# Cooldown check (30 seconds, matching JSON config)
 	var cooldown_key := "resupply_started:%s" % src_unit_id
 	var current_time := Time.get_ticks_msec() / 1000.0
 	var last_trigger_time: float = _resupply_refuel_last_triggered.get(cooldown_key, 0.0)

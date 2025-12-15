@@ -1,6 +1,6 @@
 # Game::on_debrief_continue Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 277–287)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 286–301)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**
@@ -17,6 +17,11 @@ Handle continue from debrief scene
 
 ```gdscript
 func on_debrief_continue(_payload: Dictionary) -> void:
+	# In playtest mode, return to editor
+	if play_mode == PlayMode.SOLO_PLAY_TEST:
+		end_playtest()
+		return
+
 	# Save campaign state with experience updates
 	if current_save:
 		save_campaign_state()

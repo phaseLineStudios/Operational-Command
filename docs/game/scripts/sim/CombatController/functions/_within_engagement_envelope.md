@@ -1,6 +1,6 @@
 # CombatController::_within_engagement_envelope Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 355–361)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 363–369)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**

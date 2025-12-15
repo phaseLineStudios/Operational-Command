@@ -1,6 +1,6 @@
 # EnvironmentController::get_wind_speed Function Reference
 
-*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 431–434)</br>
+*Defined at:* `scripts/sim/EnvironmentController.gd` (lines 436–439)</br>
 *Belongs to:* [EnvironmentController](../../EnvironmentController.md)
 
 **Signature**

@@ -1,6 +1,6 @@
 # TriggerAPI::get_drawing_count Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 320–325)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 334–339)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**
@@ -19,14 +19,6 @@ Each continuous pen stroke counts as one stroke.
   
 
 **Usage in trigger condition:**
-
-```
-# Trigger when player has drawn at least 3 strokes
-get_drawing_count() >= 3
-
-# Combined with location check
-get_drawing_count() > 0 and count_in_area("friend", Vector2(500, 500), Vector2(100, 100)) > 0
-```
 
 ## Source
 

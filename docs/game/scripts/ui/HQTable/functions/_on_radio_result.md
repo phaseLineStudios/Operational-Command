@@ -1,6 +1,6 @@
 # HQTable::_on_radio_result Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 400–403)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 401–404)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

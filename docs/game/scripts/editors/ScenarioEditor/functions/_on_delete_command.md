@@ -1,6 +1,6 @@
 # ScenarioEditor::_on_delete_command Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 658–662)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 692–698)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**

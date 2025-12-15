@@ -1,6 +1,6 @@
 # TriggerVM::eval_condition Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerVM.gd` (lines 20–45)</br>
+*Defined at:* `scripts/sim/scenario/TriggerVM.gd` (lines 20–51)</br>
 *Belongs to:* [TriggerVM](../../TriggerVM.md)
 
 **Signature**
@@ -26,7 +26,13 @@ func eval_condition(expr_src: String, ctx: Dictionary, debug_info: Dictionary = 
 	if src == "" or src == "true":
 		return true
 
-	var lines := _split_lines(src)
+	# Store context in API so trigger functions can access it
+	if _api:
+		_api._current_context = ctx
+
+	# Strip comments before splitting into lines
+	var clean_src := _strip_comments(src)
+	var lines := _split_lines(clean_src)
 	var last: Variant = true
 	for line in lines:
 		var compiled: Variant = _compile(line, ctx, debug_info)

@@ -1,6 +1,6 @@
 # TriggerAPI::_is_dialog_blocking Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 766–769)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 593–596)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

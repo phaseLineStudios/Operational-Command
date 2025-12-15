@@ -1,6 +1,6 @@
 # HQTable::_init_combat_controllers Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 178–191)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 179–192)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

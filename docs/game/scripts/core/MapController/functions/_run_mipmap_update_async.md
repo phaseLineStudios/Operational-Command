@@ -1,6 +1,6 @@
 # MapController::_run_mipmap_update_async Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 315–327)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 298–310)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

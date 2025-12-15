@@ -1,6 +1,6 @@
 # HQTable::_wire_logistics_warnings Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 221–237)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 222–238)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

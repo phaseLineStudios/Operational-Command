@@ -1,6 +1,6 @@
 # SimWorld::_on_radio_command_for_triggers Function Reference
 
-*Defined at:* `scripts/sim/SimWorld.gd` (lines 718–736)</br>
+*Defined at:* `scripts/sim/SimWorld.gd` (lines 719–737)</br>
 *Belongs to:* [SimWorld](../../SimWorld.md)
 
 **Signature**

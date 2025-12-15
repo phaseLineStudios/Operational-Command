@@ -1,6 +1,6 @@
 # HQTable::_extract_speaker_from_message Function Reference
 
-*Defined at:* `scripts/ui/HQTable.gd` (lines 159–176)</br>
+*Defined at:* `scripts/ui/HQTable.gd` (lines 160–177)</br>
 *Belongs to:* [HQTable](../../HQTable.md)
 
 **Signature**

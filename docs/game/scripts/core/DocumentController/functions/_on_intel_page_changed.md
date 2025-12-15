@@ -1,6 +1,6 @@
 # DocumentController::_on_intel_page_changed Function Reference
 
-*Defined at:* `scripts/core/DocumentController.gd` (lines 747–751)</br>
+*Defined at:* `scripts/core/DocumentController.gd` (lines 739–743)</br>
 *Belongs to:* [DocumentController](../../DocumentController.md)
 
 **Signature**

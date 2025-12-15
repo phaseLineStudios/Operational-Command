@@ -22,7 +22,6 @@ Handles map interaction and applies terrain renderer as a texture
 - [`func prebuild_force_profiles() -> void`](MapController/functions/prebuild_force_profiles.md) — Prebuild movement profiles
 - [`func _process(_dt: float) -> void`](MapController/functions/_process.md)
 - [`func _unhandled_input(event: InputEvent) -> void`](MapController/functions/_unhandled_input.md) — Handle *unhandled* input and emit when it hits the map.
-- [`func _open_map_read_overlay() -> void`](MapController/functions/_open_map_read_overlay.md)
 - [`func _on_map_read_overlay_closed() -> void`](MapController/functions/_on_map_read_overlay_closed.md)
 - [`func _set_read_mode(enabled: bool) -> void`](MapController/functions/_set_read_mode.md)
 - [`func _apply_map_material_settings() -> void`](MapController/functions/_apply_map_material_settings.md)
@@ -124,12 +123,6 @@ func _unhandled_input(event: InputEvent) -> void
 ```
 
 Handle *unhandled* input and emit when it hits the map.
-
-### _open_map_read_overlay
-
-```gdscript
-func _open_map_read_overlay() -> void
-```
 
 ### _on_map_read_overlay_closed
 

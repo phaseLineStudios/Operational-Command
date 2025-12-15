@@ -24,6 +24,7 @@ Default thumb size.
 - [`func _ready() -> void`](Briefing/functions/_ready.md) — Init: load data, build board, wire UI.
 - [`func _load_brief() -> void`](Briefing/functions/_load_brief.md) — Load the new-structure brief (your schema).
 - [`func _build_board() -> void`](Briefing/functions/_build_board.md) — Put the whiteboard background.
+- [`func _on_back_pressed() -> void`](Briefing/functions/_on_back_pressed.md) — Handle back button press
 
 ## Public Attributes
 
@@ -69,6 +70,14 @@ func _build_board() -> void
 ```
 
 Put the whiteboard background.
+
+### _on_back_pressed
+
+```gdscript
+func _on_back_pressed() -> void
+```
+
+Handle back button press
 
 ## Member Data Documentation
 

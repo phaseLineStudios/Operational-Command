@@ -1,6 +1,6 @@
 # CampaignSave::serialize Function Reference
 
-*Defined at:* `scripts/data/CampaignSave.gd` (lines 81–94)</br>
+*Defined at:* `scripts/data/CampaignSave.gd` (lines 117–132)</br>
 *Belongs to:* [CampaignSave](../../CampaignSave.md)
 
 **Signature**
@@ -25,7 +25,9 @@ func serialize() -> Dictionary:
 		"last_played_timestamp": last_played_timestamp,
 		"completed_missions": completed_missions.duplicate(),
 		"current_mission": current_mission,
+		"furthest_mission": furthest_mission,
 		"total_playtime_seconds": total_playtime_seconds,
 		"unit_states": unit_states.duplicate(true),
+		"mission_start_states": mission_start_states.duplicate(true),
 	}
 ```

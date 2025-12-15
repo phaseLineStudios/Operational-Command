@@ -1,6 +1,6 @@
 # ScenarioEditorDeletionOps::delete_command Function Reference
 
-*Defined at:* `scripts/editors/helpers/ScenarioEditorDeletionOps.gd` (lines 209–222)</br>
+*Defined at:* `scripts/editors/helpers/ScenarioEditorDeletionOps.gd` (lines 213–227)</br>
 *Belongs to:* [ScenarioEditorDeletionOps](../../ScenarioEditorDeletionOps.md)
 
 **Signature**
@@ -30,4 +30,5 @@ func delete_command(command_index: int) -> void:
 		editor.ctx.data, "custom_commands", before, after, "Delete Custom Command"
 	)
 	editor._rebuild_command_list()
+	editor.generic_notification("Deleted custom command", 1, false)
 ```

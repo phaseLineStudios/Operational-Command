@@ -1,6 +1,6 @@
 # TriggerAPI::time_scale Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 48–51)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 49–52)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

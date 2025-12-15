@@ -1,6 +1,6 @@
 # CombatController::_compute_dynamic_attack_power Function Reference
 
-*Defined at:* `scripts/sim/Combat.gd` (lines 484–503)</br>
+*Defined at:* `scripts/sim/Combat.gd` (lines 492–511)</br>
 *Belongs to:* [CombatController](../../CombatController.md)
 
 **Signature**

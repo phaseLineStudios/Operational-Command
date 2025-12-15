@@ -1,6 +1,6 @@
 # TriggerAPI::_reset_sleep Function Reference
 
-*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 758–763)</br>
+*Defined at:* `scripts/sim/scenario/TriggerAPI.gd` (lines 585–590)</br>
 *Belongs to:* [TriggerAPI](../../TriggerAPI.md)
 
 **Signature**

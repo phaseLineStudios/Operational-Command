@@ -1,6 +1,6 @@
 # Game::on_debrief_retry Function Reference
 
-*Defined at:* `scripts/core/Game.gd` (lines 289–293)</br>
+*Defined at:* `scripts/core/Game.gd` (lines 303–307)</br>
 *Belongs to:* [Game](../../Game.md)
 
 **Signature**

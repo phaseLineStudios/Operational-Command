@@ -1,6 +1,6 @@
 # ScenarioUnit::serialize Function Reference
 
-*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 352–372)</br>
+*Defined at:* `scripts/editors/ScenarioUnit.gd` (lines 372–392)</br>
 *Belongs to:* [ScenarioUnit](../../ScenarioUnit.md)
 
 **Signature**

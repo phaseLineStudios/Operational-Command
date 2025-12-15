@@ -1,6 +1,6 @@
 # ScenarioEditorDeletionOps::delete_task Function Reference
 
-*Defined at:* `scripts/editors/helpers/ScenarioEditorDeletionOps.gd` (lines 131–188)</br>
+*Defined at:* `scripts/editors/helpers/ScenarioEditorDeletionOps.gd` (lines 133–191)</br>
 *Belongs to:* [ScenarioEditorDeletionOps](../../ScenarioEditorDeletionOps.md)
 
 **Signature**
@@ -74,4 +74,5 @@ func delete_task(task_index: int) -> void:
 	editor.selection.clear_selection(editor.ctx)
 	editor.ctx.request_overlay_redraw()
 	editor._rebuild_scene_tree()
+	editor.generic_notification("Deleted task", 1, false)
 ```

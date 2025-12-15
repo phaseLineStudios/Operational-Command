@@ -1,6 +1,6 @@
 # MapController::_on_terrain_elevation_changed Function Reference
 
-*Defined at:* `scripts/core/MapController.gd` (lines 392–395)</br>
+*Defined at:* `scripts/core/MapController.gd` (lines 375–378)</br>
 *Belongs to:* [MapController](../../MapController.md)
 
 **Signature**

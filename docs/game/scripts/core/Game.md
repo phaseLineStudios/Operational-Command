@@ -19,6 +19,8 @@ Central coordinator that manages scene transitions, difficulty, and access
 to global services. Orchestrates the campaign loop: menus → briefing →
 tactical map → debrief → unit management.
 
+Start playtest mode from the scenario editor
+
 ## Public Member Functions
 
 - [`func ready() -> void`](Game/functions/ready.md)
@@ -45,8 +47,10 @@ tactical map → debrief → unit management.
 - [`func on_medal_assigned(medal: String, recipient_name: String) -> void`](Game/functions/on_medal_assigned.md) — Handle medal assignment in debrief
 - [`func get_current_units() -> Array`](Game/functions/get_current_units.md) — Return current units in context for screens that need them.
 - [`func _award_experience_to_units() -> void`](Game/functions/_award_experience_to_units.md) — Award experience to playable units after mission completion.
+- [`func _snapshot_mission_start_states(scenario: ScenarioData) -> void`](Game/functions/_snapshot_mission_start_states.md) — Snapshot unit states at mission start (for replay support).
 - [`func restore_unit_states_from_save(scenario: ScenarioData) -> void`](Game/functions/restore_unit_states_from_save.md) — Restore unit states from the current campaign save.
 - [`func save_campaign_state() -> void`](Game/functions/save_campaign_state.md)
+- [`func end_playtest() -> void`](Game/functions/end_playtest.md) — End playtest mode and return to editor
 
 ## Public Attributes
 
@@ -58,6 +62,10 @@ tactical map → debrief → unit management.
 - `ScenarioData current_scenario`
 - `Dictionary current_scenario_loadout`
 - `Dictionary current_scenario_summary`
+- `PlayMode play_mode`
+- `String playtest_return_scene`
+- `Dictionary playtest_history_state`
+- `String playtest_file_path`
 - `int _base_msaa_3d`
 - `SceneTreeTimer _video_perf_timer`
 - `MissionResolution resolution`
@@ -73,6 +81,10 @@ tactical map → debrief → unit management.
 - `signal save_deleted(save_id: StringName)` — Emitted when a save is deleted.
 - `signal scenario_selected(mission_id: StringName)` — Emitted when a mission is selected.
 - `signal scenario_loadout_selected(loadout: Dictionary)` — Emitted when a mission loadout is selected
+
+## Enumerations
+
+- `enum PlayMode` — Play mode determines navigation flow and UI behavior
 
 ## Member Function Documentation
 
@@ -259,6 +271,15 @@ func _award_experience_to_units() -> void
 Award experience to playable units after mission completion.
 Base XP for survival, bonus for success.
 
+### _snapshot_mission_start_states
+
+```gdscript
+func _snapshot_mission_start_states(scenario: ScenarioData) -> void
+```
+
+Snapshot unit states at mission start (for replay support).
+This captures the unit state BEFORE the mission begins, so replays start fresh.
+
 ### restore_unit_states_from_save
 
 ```gdscript
@@ -267,12 +288,21 @@ func restore_unit_states_from_save(scenario: ScenarioData) -> void
 
 Restore unit states from the current campaign save.
 Called when a scenario is selected to apply persistent state across missions.
+If replaying a mission, restores from the snapshot taken BEFORE that mission.
 
 ### save_campaign_state
 
 ```gdscript
 func save_campaign_state() -> void
 ```
+
+### end_playtest
+
+```gdscript
+func end_playtest() -> void
+```
+
+End playtest mode and return to editor
 
 ## Member Data Documentation
 
@@ -322,6 +352,30 @@ var current_scenario_loadout: Dictionary
 
 ```gdscript
 var current_scenario_summary: Dictionary
+```
+
+### play_mode
+
+```gdscript
+var play_mode: PlayMode
+```
+
+### playtest_return_scene
+
+```gdscript
+var playtest_return_scene: String
+```
+
+### playtest_history_state
+
+```gdscript
+var playtest_history_state: Dictionary
+```
+
+### playtest_file_path
+
+```gdscript
+var playtest_file_path: String
 ```
 
 ### _base_msaa_3d
@@ -391,3 +445,13 @@ signal scenario_loadout_selected(loadout: Dictionary)
 ```
 
 Emitted when a mission loadout is selected
+
+## Enumeration Type Documentation
+
+### PlayMode
+
+```gdscript
+enum PlayMode
+```
+
+Play mode determines navigation flow and UI behavior

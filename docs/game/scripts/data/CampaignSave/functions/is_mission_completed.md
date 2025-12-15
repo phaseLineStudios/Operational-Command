@@ -1,6 +1,6 @@
 # CampaignSave::is_mission_completed Function Reference
 
-*Defined at:* `scripts/data/CampaignSave.gd` (lines 58–61)</br>
+*Defined at:* `scripts/data/CampaignSave.gd` (lines 94–97)</br>
 *Belongs to:* [CampaignSave](../../CampaignSave.md)
 
 **Signature**

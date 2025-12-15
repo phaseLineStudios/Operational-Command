@@ -1,6 +1,6 @@
 # ScenarioEditor::_queue_free_children Function Reference
 
-*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 611–615)</br>
+*Defined at:* `scripts/editors/ScenarioEditor.gd` (lines 645–649)</br>
 *Belongs to:* [ScenarioEditor](../../ScenarioEditor.md)
 
 **Signature**
