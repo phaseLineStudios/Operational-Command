@@ -67,13 +67,13 @@
   "role": "ARMOR",
   "size": 3,
   "stats": {
-    "attack": 65.28,
-    "defense": 60.0,
-    "morale": 1.0,
-    "range_m": 600.0,
-    "speed_kph": 48.0,
-    "spot_m": 1800.0,
-    "understrength_threshold": 0.8
+	"attack": 65.28,
+	"defense": 60.0,
+	"morale": 1.0,
+	"range_m": 600.0,
+	"speed_kph": 48.0,
+	"spot_m": 1800.0,
+	"understrength_threshold": 0.8
   },
   "strength": 16,
   "supply_transfer_radius_m": 30.0,

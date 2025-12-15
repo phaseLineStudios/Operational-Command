@@ -28,32 +28,32 @@
 	"unit_category": "us_army"
   },
   "equipment": {
-    "radios": {
-      "AN/PRC-77": {
-        "ammo": -1,
-        "type": 2
-      }
-    },
-    "vehicles": {
-      "5-ton truck": {
-        "ammo": -1,
-        "type": 2
-      },
-      "M113A1": {
-        "ammo": -1,
-        "type": 2
-      }
-    },
-    "weapons": {
-      "Demo Charges": {
-        "ammo": 12,
-        "type": 4
-      },
-      "M60": {
-        "ammo": 0,
-        "type": 4
-      }
-    }
+	"radios": {
+	  "AN/PRC-77": {
+		"ammo": -1,
+		"type": 2
+	  }
+	},
+	"vehicles": {
+	  "5-ton truck": {
+		"ammo": -1,
+		"type": 2
+	  },
+	  "M113A1": {
+		"ammo": -1,
+		"type": 2
+	  }
+	},
+	"weapons": {
+	  "Demo Charges": {
+		"ammo": 12,
+		"type": 4
+	  },
+	  "M60": {
+		"ammo": 0,
+		"type": 4
+	  }
+	}
   },
   "equipment_tags": [],
   "experience": 0.0,
@@ -64,23 +64,13 @@
   "role": "ENG",
   "size": 3,
   "stats": {
-<<<<<<< HEAD
-	"attack": 101.44,
+	"attack": 7.04,
 	"defense": 20.0,
 	"morale": 1.0,
 	"range_m": 400.0,
 	"speed_kph": 45.0,
 	"spot_m": 800.0,
 	"understrength_threshold": 0.8
-=======
-    "attack": 7.04,
-    "defense": 20.0,
-    "morale": 1.0,
-    "range_m": 400.0,
-    "speed_kph": 45.0,
-    "spot_m": 800.0,
-    "understrength_threshold": 0.8
->>>>>>> main
   },
   "strength": 28,
   "supply_transfer_radius_m": 30.0,
