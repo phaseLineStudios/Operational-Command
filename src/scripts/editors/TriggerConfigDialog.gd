@@ -159,8 +159,8 @@ func _setup_autocomplete() -> void:
 		"radio":
 		{
 			"return_type": "void",
-			"description": "Send a radio/log message (levels: info|warn|error).",
-			"params": ["msg: String", 'level: String = "info"'],
+			"description": "Send a radio/log message. Optionally specify the speaking unit.",
+			"params": ["msg: String", 'level: String = "info"', 'unit: String = ""'],
 		},
 		"complete_objective":
 		{
@@ -195,6 +195,17 @@ func _setup_autocomplete() -> void:
 				+ "Returns {id, callsign, pos_m: Vector2, aff: int} or {}."
 			),
 			"params": ["id_or_callsign: String"],
+		},
+		"find_callsign_by_role":
+		{
+			"return_type": "String",
+			"description":
+			(
+				"Find callsign of first playable unit with the specified role. "
+				+ 'Searches through playable units (e.g., "RECON", "ARMOR", "AT", "ENG"). '
+				+ "Returns empty string if not found."
+			),
+			"params": ["role: String"],
 		},
 		"count_in_area":
 		{
@@ -244,6 +255,42 @@ func _setup_autocomplete() -> void:
 			"return_type": "bool",
 			"description": "Check if a global variable exists.",
 			"params": ["key: String"],
+		},
+		"triggering_units_friend":
+		{
+			"return_type": "Array",
+			"description": "Get list of friendly unit IDs in the trigger area.",
+			"params": [],
+		},
+		"triggering_units_enemy":
+		{
+			"return_type": "Array",
+			"description": "Get list of enemy unit IDs in the trigger area.",
+			"params": [],
+		},
+		"triggering_units_player":
+		{
+			"return_type": "Array",
+			"description": "Get list of player unit IDs in the trigger area.",
+			"params": [],
+		},
+		"triggering_unit_friend":
+		{
+			"return_type": "String",
+			"description": "Get first friendly unit ID in the trigger area (or empty).",
+			"params": [],
+		},
+		"triggering_unit_enemy":
+		{
+			"return_type": "String",
+			"description": "Get first enemy unit ID in the trigger area (or empty).",
+			"params": [],
+		},
+		"triggering_unit_player":
+		{
+			"return_type": "String",
+			"description": "Get first player unit ID in the trigger area (or empty).",
+			"params": [],
 		},
 		"show_dialog":
 		{
@@ -318,6 +365,13 @@ func _setup_autocomplete() -> void:
 			"return_type": "float",
 			"description": "Get the current strength of a unit (base strength × state_strength).",
 			"params": ["id_or_callsign: String"],
+		},
+		"set_unit_fuel":
+		{
+			"return_type": "bool",
+			"description":
+			"Set the fuel level of a unit (0-100%). Returns true if successful.",
+			"params": ["id_or_callsign: String", "fuel_pct: float"],
 		},
 		"has_built_bridge":
 		{

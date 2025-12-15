@@ -92,9 +92,14 @@ layout_mode = 2
 size_flags_horizontal = 3
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="Root/TopBar/HBox"]
+[node name="Spacer" type="HBoxContainer" parent="Root/TopBar/HBox"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
+alignment = 2
+
+[node name="Button" type="Button" parent="Root/TopBar/HBox/Spacer"]
+layout_mode = 2
+text = "Play Scenario ▶"
 
 [node name="HBox" type="HBoxContainer" parent="Root"]
 layout_mode = 2
@@ -134,7 +139,7 @@ mouse_target = true
 
 [node name="View" type="SubViewport" parent="Root/HBox/TerrainView"]
 handle_input_locally = false
-size = Vector2i(552, 586)
+size = Vector2i(553, 586)
 render_target_update_mode = 4
 
 [node name="World" parent="Root/HBox/TerrainView/View" instance=ExtResource("2_gsqds")]

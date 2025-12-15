@@ -135,7 +135,7 @@ func _on_radio_transcript_player_early(text: String) -> void:
 
 
 ## Handle AI radio messages for transcript
-func _on_radio_transcript_ai(level: String, text: String) -> void:
+func _on_radio_transcript_ai(level: String, text: String, unit: String = "") -> void:
 	if not document_controller or text == "":
 		return
 
@@ -144,7 +144,8 @@ func _on_radio_transcript_ai(level: String, text: String) -> void:
 
 	await get_tree().process_frame
 
-	var speaker := _extract_speaker_from_message(text)
+	# Use explicit unit parameter if provided, otherwise extract from message
+	var speaker := unit if unit != "" else _extract_speaker_from_message(text)
 	document_controller.add_transcript_entry(speaker, text)
 
 
@@ -284,7 +285,7 @@ func _on_fuel_supplier_exhausted(src_unit_id: String) -> void:
 
 
 ## Handle radio messages from SimWorld (trigger API, ammo/fuel warnings, etc.)
-func _on_radio_message(_level: String, text: String) -> void:
+func _on_radio_message(_level: String, text: String, _unit: String = "") -> void:
 	if text.begins_with("Order applied") or text.begins_with("Order failed"):
 		return
 

@@ -19,6 +19,7 @@ var _dialog_pending_expr: String = ""
 var _dialog_pending_ctx: Dictionary = {}
 var _bridges_built: int = 0  # Counter for completed bridges
 var _artillery_called: int = 0  # Counter for artillery missions
+var _current_context: Dictionary = {}  # Current trigger execution context
 
 
 ## Return mission time in seconds.
@@ -68,11 +69,13 @@ func sim_state() -> String:
 
 
 ## Send a radio/log message (levels: info|warn|error).
+## Optionally specify which unit is speaking for the transcript.
 ## [param msg] Radio message.
-## [param level] Optional Log level.
-func radio(msg: String, level: String = "info") -> void:
+## [param level] Optional Log level (info|warn|error).
+## [param unit] Optional unit callsign/ID of the speaker (for transcript display).
+func radio(msg: String, level: String = "info", unit_say: String = "") -> void:
 	if sim:
-		sim.emit_signal("radio_message", level, msg)
+		sim.emit_signal("radio_message", level, msg, unit_say)
 
 
 ## Set objective state to completed.
@@ -110,6 +113,32 @@ func unit(id_or_callsign: String) -> Dictionary:
 	if engine:
 		return engine.get_unit_snapshot(id_or_callsign)
 	return {}
+
+
+## Find callsign of first playable unit with the specified role.
+## Searches through playable units and returns the callsign of the first unit
+## whose UnitData.role matches the specified role string.
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## var recon_cs = find_callsign_by_role("RECON");
+## var armor_cs = find_callsign_by_role("ARMOR");
+## var at_cs = find_callsign_by_role("AT");
+## [/codeblock]
+## [param role] Role string to search for (e.g., "RECON", "ARMOR", "AT", "ENG").
+## [return] Callsign string of first matching unit, or empty string if not found.
+func find_callsign_by_role(role: String) -> String:
+	if not engine or not engine._scenario:
+		return ""
+
+	var playable_units: Array = engine._scenario.playable_units
+	for su in playable_units:
+		if su == null or su.unit == null:
+			continue
+		if su.unit.role == role and not su.callsign.is_empty():
+			return su.callsign
+
+	return ""
 
 
 ## Count units in an area by affiliation: "friend"|"enemy"|"player"|"any".
@@ -199,6 +228,79 @@ func has_global(key: String) -> bool:
 	if engine:
 		return engine.has_global(key)
 	return false
+
+
+## Get list of friendly unit IDs currently inside the trigger area.
+## Only works when called from within a trigger condition or action expression.
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Check if tutorial unit entered the trigger
+## var tut_unit = get_global("tutorial_unit", "")
+## var friends_in_trigger = triggering_units_friend()
+## for unit_id in friends_in_trigger:
+##     var snap = unit(unit_id)
+##     if snap.get("callsign", "") == tut_unit:
+##         radio("Tutorial unit entered the area!", "info", tut_unit)
+## [/codeblock]
+## [return] Array of friendly unit IDs in trigger area, or empty array if not called from trigger.
+func triggering_units_friend() -> Array:
+	if _current_context.has("units_friend"):
+		return _current_context.get("units_friend", [])
+	return []
+
+
+## Get list of enemy unit IDs currently inside the trigger area.
+## Only works when called from within a trigger condition or action expression.
+## [return] Array of enemy unit IDs in trigger area, or empty array if not called from trigger.
+func triggering_units_enemy() -> Array:
+	if _current_context.has("units_enemy"):
+		return _current_context.get("units_enemy", [])
+	return []
+
+
+## Get list of player-controlled unit IDs currently inside the trigger area.
+## Only works when called from within a trigger condition or action expression.
+## [return] Array of player unit IDs in trigger area, or empty array if not called from trigger.
+func triggering_units_player() -> Array:
+	if _current_context.has("units_player"):
+		return _current_context.get("units_player", [])
+	return []
+
+
+## Get the first friendly unit ID that triggered this area (convenience method).
+## Returns empty string if no friendly units in area.
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Check if tutorial unit is the one that triggered
+## var tut_unit_cs = get_global("tutorial_unit", "")
+## var trigger_unit_id = triggering_unit_friend()
+## if trigger_unit_id != "":
+##     var snap = unit(trigger_unit_id)
+##     if snap.get("callsign", "") == tut_unit_cs:
+##         set_unit_fuel(tut_unit_cs, 18.0)
+## [/codeblock]
+## [return] First friendly unit ID in trigger area, or empty string.
+func triggering_unit_friend() -> String:
+	var units := triggering_units_friend()
+	return units[0] if units.size() > 0 else ""
+
+
+## Get the first enemy unit ID that triggered this area (convenience method).
+## Returns empty string if no enemy units in area.
+## [return] First enemy unit ID in trigger area, or empty string.
+func triggering_unit_enemy() -> String:
+	var units := triggering_units_enemy()
+	return units[0] if units.size() > 0 else ""
+
+
+## Get the first player-controlled unit ID that triggered this area (convenience method).
+## Returns empty string if no player units in area.
+## [return] First player unit ID in trigger area, or empty string.
+func triggering_unit_player() -> String:
+	var units := triggering_units_player()
+	return units[0] if units.size() > 0 else ""
 
 
 ## Show a mission dialog with text and an OK button.
@@ -513,6 +615,73 @@ func get_unit_strength(id_or_callsign: String) -> float:
 	if unit_data.is_empty():
 		return 0.0
 	return unit_data.get("strength", 0.0)
+
+
+## Set the fuel level of a unit (for scripted events and tutorials).
+## Fuel is specified as a percentage (0-100).
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Lower unit fuel to 20% for tutorial
+## set_unit_fuel("ALPHA", 20.0)
+##
+## # Deplete fuel during retreat
+## var tut_unit = get_global("tutorial_unit", "")
+## if tut_unit != "":
+##     set_unit_fuel(tut_unit, 15.0)
+##     radio(tut_unit + " is running low on fuel!")
+##
+## # Restore fuel after resupply
+## set_unit_fuel("BRAVO", 100.0)
+##
+## # Tutorial: create fuel emergency
+## if not has_global("fuel_tutorial_triggered"):
+##     set_global("fuel_tutorial_triggered", true)
+##     set_unit_fuel("ALPHA", 18.0)
+##     show_dialog("Your fuel is critically low! Resupply immediately.")
+## [/codeblock]
+## [param id_or_callsign] Unit ID or callsign.
+## [param fuel_pct] Fuel percentage (0-100).
+## [return] True if fuel was successfully set, false if unit or FuelSystem not found.
+func set_unit_fuel(id_or_callsign: String, fuel_pct: float) -> bool:
+	if not sim:
+		return false
+
+	# Resolve callsign to unit ID
+	var unit_data := unit(id_or_callsign)
+	var unit_id := ""
+	if unit_data.has("id"):
+		unit_id = unit_data.get("id", "")
+	else:
+		# Fallback: assume it's already an ID
+		unit_id = id_or_callsign
+
+	if unit_id == "":
+		return false
+
+	# Find FuelSystem in scene tree
+	var fuel_system = null
+	var tree := sim.get_tree()
+	if tree:
+		var nodes := tree.get_nodes_in_group("FuelSystem")
+		if nodes.size() > 0:
+			fuel_system = nodes[0]
+
+	if fuel_system == null or not fuel_system.has_method("get_fuel_state"):
+		return false
+
+	# Get fuel state for this unit
+	var fuel_state = fuel_system.get_fuel_state(unit_id)
+	if fuel_state == null:
+		return false
+
+	# Clamp fuel percentage to 0-100 range
+	var clamped_pct: float = clamp(fuel_pct, 0.0, 100.0)
+
+	# Set fuel level (as percentage of capacity)
+	fuel_state.state_fuel = (clamped_pct / 100.0) * fuel_state.fuel_capacity
+
+	return true
 
 
 ## Check if any engineers have built a bridge.
