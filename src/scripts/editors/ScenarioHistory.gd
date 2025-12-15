@@ -317,3 +317,23 @@ static func _emit_changed(data):
 		data.emit_changed()
 	elif data.has_signal("changed"):
 		data.emit_signal("changed")
+
+
+## Serialize history state for preservation (e.g., during playtest)
+func serialize_state() -> Dictionary:
+	return {"past": _past.duplicate(), "future": _future.duplicate()}
+
+
+## Restore history state from serialized data
+func restore_state(state: Dictionary) -> void:
+	if state.has("past"):
+		_past = state["past"].duplicate()
+	else:
+		_past.clear()
+
+	if state.has("future"):
+		_future = state["future"].duplicate()
+	else:
+		_future.clear()
+
+	emit_signal("history_changed", _past.duplicate(), _future.duplicate())

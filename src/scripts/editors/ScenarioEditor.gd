@@ -74,6 +74,7 @@ var menus := ScenarioEditorMenus.new()
 @onready var command_cfg: CustomCommandConfigDialog = %CustomCommandConfigDialog
 
 @onready var _tab_container1: TabContainer = %TabContainer1
+@onready var _playtest_btn: Button = %PlayTest
 
 
 ## Initialize context, services, signals, UI, and dialogs
@@ -167,7 +168,14 @@ func _ready():
 	delete_command_btn.pressed.connect(_on_delete_command)
 	command_cfg.saved.connect(func(_idx: int, _cmd: CustomCommand): _rebuild_command_list())
 
+	# PlayTest button
+	_playtest_btn.pressed.connect(_on_playtest_pressed)
+
 	draw_tools.build_stamp_pool()
+
+	# Check if returning from playtest and restore history
+	# This must be done AFTER all context setup is complete
+	_check_playtest_return()
 
 
 ## Connect scene tree selection to selection service
@@ -660,3 +668,59 @@ func _on_delete_command() -> void:
 	if selected.is_empty():
 		return
 	deletion_ops.delete_command(selected[0])
+
+
+## Handle PlayTest button press
+func _on_playtest_pressed() -> void:
+	if not ctx.data:
+		push_warning("Cannot playtest: no scenario loaded")
+		return
+
+	# Auto-save scenario before playtesting
+	if file_ops.current_path.strip_edges() == "":
+		# No path set - prompt for save location
+		file_ops.cmd_save_as()
+		await file_ops.save_dlg.file_selected
+		# If user cancelled, don't start playtest
+		if file_ops.current_path.strip_edges() == "":
+			return
+	else:
+		# Save to current path
+		file_ops.cmd_save()
+
+	# Serialize history state for restoration
+	var history_state := {}
+	if history:
+		history_state = history.serialize_state()
+
+	# Start playtest mode
+	Game.start_playtest(
+		ctx.data, "res://scenes/scenario_editor.tscn", file_ops.current_path, history_state
+	)
+
+
+## Check if returning from playtest and restore state
+func _check_playtest_return() -> void:
+	if Game.playtest_history_state.is_empty():
+		return
+
+	# Reload the scenario that was being edited
+	var file_path := Game.playtest_file_path
+	if file_path.strip_edges() != "":
+		if persistence.load_from_path(ctx, file_path):
+			file_ops.current_path = file_path
+			file_ops.dirty = false
+			LogService.info("Reloaded scenario after playtest: %s" % file_path, "ScenarioEditor")
+			_on_data_changed()
+
+	# Wait for history to be initialized
+	await get_tree().process_frame
+
+	# Restore history state
+	if history:
+		history.restore_state(Game.playtest_history_state)
+		LogService.info("Restored playtest history state", "ScenarioEditor")
+
+	# Clear the playtest state
+	Game.playtest_history_state = {}
+	Game.playtest_file_path = ""

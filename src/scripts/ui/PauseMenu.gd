@@ -12,6 +12,7 @@ var _exit_target: String
 @onready var settings_btn: Button = %Settings
 @onready var scenarios_btn: Button = %Scenarios
 @onready var main_menu_btn: Button = %MainMenu
+@onready var exit_editor_btn: Button = %ExitEditor
 @onready var menu_container: PanelContainer = %MenuContainer
 @onready var settings: Settings = %SettingsDisplay
 
@@ -23,9 +24,20 @@ func _ready():
 	settings.back_requested.connect(_on_setting_hide)
 	scenarios_btn.pressed.connect(_on_scenarios_pressed)
 	main_menu_btn.pressed.connect(_on_main_menu_pressed)
+	exit_editor_btn.pressed.connect(_on_exit_editor_pressed)
 
 	_build_exit_dialog()
 	_build_restart_dialog()
+
+	# Configure buttons based on play mode
+	if Game.play_mode == Game.PlayMode.SOLO_PLAY_TEST:
+		scenarios_btn.visible = false
+		main_menu_btn.visible = false
+		exit_editor_btn.visible = true
+	else:
+		scenarios_btn.visible = true
+		main_menu_btn.visible = true
+		exit_editor_btn.visible = false
 
 
 func _build_exit_dialog():
@@ -106,3 +118,8 @@ func _release_interactions() -> void:
 	for controller in get_tree().get_nodes_in_group("interaction_controllers"):
 		if controller and controller.has_method("cancel_hold"):
 			controller.cancel_hold()
+
+
+## Called on exit editor button pressed.
+func _on_exit_editor_pressed() -> void:
+	Game.end_playtest()

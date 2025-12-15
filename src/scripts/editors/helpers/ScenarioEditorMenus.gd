@@ -31,7 +31,7 @@ func on_filemenu_pressed(id: int) -> void:
 		3:
 			editor.file_ops.cmd_save_as()
 		4:
-			Game.goto_scene(MAIN_MENU_SCENE)
+			_on_quit_requested()
 
 
 ## Handle Attributes menu actions (Edit Scenario/Briefing/Weather).
@@ -102,3 +102,11 @@ func open_command_config(index: int) -> void:
 	if index < 0 or index >= editor.ctx.data.custom_commands.size():
 		return
 	editor.command_cfg.show_for(editor, index)
+
+
+## Handle quit request with unsaved changes confirmation
+func _on_quit_requested() -> void:
+	if editor.file_ops.is_dirty():
+		if not await editor.file_ops.confirm_discard():
+			return
+	Game.goto_scene(MAIN_MENU_SCENE)
