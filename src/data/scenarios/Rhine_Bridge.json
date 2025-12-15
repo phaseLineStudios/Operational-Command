@@ -112,7 +112,7 @@
 		},
 		"condition_expr": "time_s()>60*10\nget_global(\"bridge_cap\") != true",
 		"id": "timer_trigger",
-		"on_activate_expr": "fail_objective(\"capture_bridge\")\nradio(\"the bridge was blown, We failed our mission\")",
+		"on_activate_expr": "fail_objective(\"capture_bridge\")\nfail_objective(\"defeat_enemies\")\nradio(\"the bridge was blown, We failed our mission\")",
 		"on_deactivate_expr": "",
 		"presence": 0,
 		"require_duration_s": 0.0,
@@ -131,7 +131,7 @@
 		  "x": 141.0,
 		  "y": 141.0
 		},
-		"condition_expr": "is_unit_destroyed(\"IVAN\") and is_unit_destroyed(\"SERGEI\") and is_unit_destroyed(\"BORIS\") and is_unit_destroyed(\"VIKTOR\")",
+		"condition_expr": "is_unit_destroyed(\"IVAN\") and is_unit_destroyed(\"SERGEI\") and is_unit_destroyed(\"BORIS\") and is_unit_destroyed(\"VICTOR\")",
 		"id": "enemiesDestroyedTrigger",
 		"on_activate_expr": "complete_objective(\"defeat_enemies\")\nradio(\"we have deafeated every last enemy, the bridge is safe\")",
 		"on_deactivate_expr": "",
