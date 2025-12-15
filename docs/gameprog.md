@@ -10,7 +10,7 @@
 - [Custom Godot Documentation Tool](https://github.com/phaseLineStudios/gdscript_to_docs)
 
 ## Gameplay Video
-- [Gameplay Demo Video](future_video_here)
+- [Gameplay Demo Video](https://youtu.be/jGwi8hXwWzM)
 
 ## Development Discussion
 ### Strengths and Weaknesses of Engine
