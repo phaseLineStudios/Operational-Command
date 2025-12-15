@@ -12,12 +12,12 @@
     "ENGINEER_BRIDGE": 0,
     "ENGINEER_DEMO": 0,
     "ENGINEER_MINE": 0,
-    "HEAVY_WEAPONS": 2400,
+    "HEAVY_WEAPONS": 4,
     "MORTAR_AP": 0,
     "MORTAR_ILLUM": 0,
     "MORTAR_SMOKE": 0,
-    "SMALL_ARMS": 300,
-    "TANK_GUN": 60
+    "SMALL_ARMS": 4,
+    "TANK_GUN": 4
   },
   "ammunition_critical_threshold": 0.1,
   "ammunition_low_threshold": 0.25,
@@ -67,8 +67,8 @@
   "role": "ARMOR",
   "size": 3,
   "stats": {
-    "attack": 65.28,
-    "defense": 60.0,
+    "attack": 69.28,
+    "defense": 65.0,
     "morale": 1.0,
     "range_m": 600.0,
     "speed_kph": 48.0,

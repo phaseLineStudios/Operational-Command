@@ -364,8 +364,8 @@
           "combat_mode": 2.0
         },
         "position_m": {
-          "x": 1952.61828613281,
-          "y": 1213.55859375
+          "x": 1962.61157226563,
+          "y": 1279.76342773438
         },
         "prev_index": -1,
         "task_type": "set_combat_mode",
@@ -378,8 +378,8 @@
 
         },
         "position_m": {
-          "x": 1835.63220214844,
-          "y": 1310.39562988281
+          "x": 1850.59497070313,
+          "y": 1346.73400878906
         },
         "prev_index": 0,
         "task_type": "move",
@@ -392,8 +392,8 @@
           "combat_mode": 2.0
         },
         "position_m": {
-          "x": 2096.80517578125,
-          "y": 1720.05078125
+          "x": 2042.40087890625,
+          "y": 1734.25158691406
         },
         "prev_index": -1,
         "task_type": "set_combat_mode",
@@ -551,7 +551,7 @@
         },
         "condition_expr": "is_unit_destroyed(get_global(\"recon_callsign\", \"ALPHA\")) and get_global(\"armor_callsign\", \"BRAVO\")",
         "id": "tutorial_units_dead_fail",
-        "on_activate_expr": "# Both RECON and ARMOR are dead - fail mission\nradio(\"All combat units destroyed. Mission failed.\", \"error\");\nsleep(2.0);\nfail_objective(\"lane2_movement\");\nfail_objective(\"lane2_combat\");",
+        "on_activate_expr": "radio(\"All combat units destroyed. Mission failed.\", \"error\");\nsleep(2.0);\nfail_objective(\"lane2_movement\");\nfail_objective(\"lane2_combat\");",
         "on_deactivate_expr": "",
         "presence": 0,
         "require_duration_s": 0.0,
@@ -568,11 +568,11 @@
       {
         "area_center_m": {
           "x": 1951.0,
-          "y": 454.068542480469
+          "y": 451.0
         },
         "condition_expr": "is_unit_destroyed(get_global(\"eng_callsign\", \"\"))",
         "id": "engineer_dead_fail",
-        "on_activate_expr": "# Engineer unit destroyed - fail mission\nvar eng_unit = get_global(\"eng_callsign\", \"FOXTROT\");\nradio(eng_unit + \" destroyed! Without engineers, we cannot complete the mission.\", \"error\");\nsleep(2.0);\nshow_dialog(\"MISSION FAILED: Engineers lost. Cannot complete river crossing objectives.\", true);\nfail_objective(\"lane3_bridge\");\nfail_objective(\"lane3_retreat\");",
+        "on_activate_expr": "var eng_unit = get_global(\"eng_callsign\", \"FOXTROT\");\nradio(eng_unit + \" destroyed! Without engineers, we cannot complete the mission.\", \"error\");\nsleep(2.0);\nshow_dialog(\"MISSION FAILED: Engineers lost. Cannot complete river crossing objectives.\", true);\nfail_objective(\"lane3_bridge\");\nfail_objective(\"lane3_retreat\");",
         "on_deactivate_expr": "",
         "presence": 0,
         "require_duration_s": 0.0,
@@ -656,7 +656,7 @@
         },
         "condition_expr": "last_radio_command().to_lower().contains(\"move\") and last_radio_command().to_lower().contains(get_global(\"eng_callsign\", \"\").to_lower())",
         "id": "eng_move_check",
-        "on_activate_expr": "var eng_unit = get_global(\"eng_callsign\", \"FOXTROT\");\nvar at_unit = get_global(\"at_callsign\", \"\");\nsleep_ui(1.0);\ntutorial_dialog(\"Excellent! \" + eng_unit + \" are moving to staging. Now order your AT/TOW unit to escort them.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"Hold SPACE and say: '\" + at_unit + \", move to grid 622846'.\", \"%Radio\", true);\nset_global(\"all_units_ordered\", false);",
+        "on_activate_expr": "var eng_unit = get_global(\"eng_callsign\", \"FOXTROT\");\nvar at_unit = get_global(\"at_callsign\", \"\");\nsleep_ui(1.0);\ntutorial_dialog(\"Excellent! \" + eng_unit + \" are moving to staging. Now order your AT/TOW unit to escort them.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"Hold SPACE and say: '\" + at_unit + \", move to grid 624846'.\", \"%Radio\", true);\nset_global(\"all_units_ordered\", false);",
         "on_deactivate_expr": "",
         "presence": 0,
         "require_duration_s": 0.0,
@@ -719,7 +719,7 @@
         },
         "condition_expr": "has_created_counter()",
         "id": "unit_counter_trigger",
-        "on_activate_expr": "set_objective(\"unit_markers\", 1)\n\nsleep_ui(2.0);\ntutorial_dialog(\"Perfect! Unit counters help you track units on the map. You can pcik them up andplace them anywhere using LMB.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"These are drawing tools. Click a pen to pick it up, then hold LMB on the map to draw. Right-click to put it down.\", \"%PenBlue\", true);\ntutorial_dialog(\"Let's plan a route to OBJ 1. Pick the BLUE pen and draw arrows from WP 1 → WP 2 → WP 3 → OBJ 1.\", \"%Map\", true);",
+        "on_activate_expr": "set_objective(\"unit_markers\", 1)\n\nsleep_ui(2.0);\ntutorial_dialog(\"Perfect! Unit counters help you track units on the map. You can pick them up and place them anywhere using LMB.\", \"%Map\", true);\nsleep_ui(1.0);\ntutorial_dialog(\"These are drawing tools. Click a pen to pick it up, then hold LMB on the map to draw. Right-click to put it down.\", \"%PenBlue\", true);\ntutorial_dialog(\"Let's plan a route to OBJ 1. Pick the BLUE pen and draw arrows from WP 1 → WP 2 → WP 3 → OBJ 1.\", \"%Map\", true);",
         "on_deactivate_expr": "",
         "presence": 0,
         "require_duration_s": 0.0,
@@ -801,9 +801,9 @@
           "x": 2371.0,
           "y": 911.0
         },
-        "condition_expr": "var tut_unit_cs = get_global(\"tutorial_unit\", \"\");\nif tut_unit_cs == \"\" or not is_unit_destroyed(\"VICTOR\"):\n    return false;\n\nvar units_in_area = triggering_units_player();\nfor unit_id in units_in_area:\n    var snap = unit(unit_id);\n    if snap.get(\"callsign\", \"\") == tut_unit_cs:\n        return true;\n\nreturn false;",
+        "condition_expr": "is_unit_in_trigger_area(get_global(\"tutorial_unit\", \"ALPHA\"))",
         "id": "fuel_depletion_trigger",
-        "on_activate_expr": "# Deplete fuel during retreat for resupply tutorial\nvar tut_unit_cs = get_global(\"tutorial_unit\", \"\");\nset_unit_fuel(tut_unit_cs, 18.0);\nset_global(\"fuel_depleted\", true);",
+        "on_activate_expr": "var tut_unit_cs = get_global(\"tutorial_unit\", \"\");\nset_unit_fuel(tut_unit_cs, 18.0);\nset_global(\"fuel_depleted\", true);",
         "on_deactivate_expr": "",
         "presence": 1,
         "require_duration_s": 0.0,
@@ -979,8 +979,8 @@
         "id": "frg_bw_opfor_1",
         "playable": false,
         "position": {
-          "x": 1950.60083007813,
-          "y": 1279.06188964844
+          "x": 1960.81774902344,
+          "y": 1351.71520996094
         },
         "state": {
           "cohesion": 1.0,
@@ -989,7 +989,7 @@
           },
           "state_equipment": 0.0,
           "state_injured": 0.0,
-          "state_strength": 31.0
+          "state_strength": 12.0
         },
         "unit_id": "frg_bw_opfor"
       },
@@ -1001,8 +1001,8 @@
         "id": "frg_bw_opfor_2_1",
         "playable": false,
         "position": {
-          "x": 2244.26245117188,
-          "y": 1720.39587402344
+          "x": 2128.06420898438,
+          "y": 1725.70764160156
         },
         "state": {
           "cohesion": 1.0,
@@ -1011,7 +1011,7 @@
           },
           "state_equipment": 0.0,
           "state_injured": 0.0,
-          "state_strength": 28.0
+          "state_strength": 12.0
         },
         "unit_id": "frg_bw_opfor_2"
       },
@@ -1033,7 +1033,7 @@
           },
           "state_equipment": 1.0,
           "state_injured": 0.0,
-          "state_strength": 0.0
+          "state_strength": 12.0
         },
         "unit_id": "frg_bw_opfor_3"
       }

@@ -292,6 +292,12 @@ func _setup_autocomplete() -> void:
 			"description": "Get first player unit ID in the trigger area (or empty).",
 			"params": [],
 		},
+		"is_unit_in_trigger_area":
+		{
+			"return_type": "bool",
+			"description": "Check if a specific unit (by callsign) is currently inside the trigger area.",
+			"params": ["callsign: String"],
+		},
 		"show_dialog":
 		{
 			"return_type": "void",

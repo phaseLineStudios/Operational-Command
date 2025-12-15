@@ -22,6 +22,7 @@ var deletion_ops := ScenarioEditorDeletionOps.new()
 var menus := ScenarioEditorMenus.new()
 
 @onready var file_menu: MenuButton = %File
+@onready var edit_menu: MenuButton = %Edit
 @onready var attribute_menu: MenuButton = %Attributes
 @onready var title_label: Label = %ScenarioTitle
 @onready var terrain_render: TerrainRender = %World
@@ -75,6 +76,7 @@ var menus := ScenarioEditorMenus.new()
 
 @onready var _tab_container1: TabContainer = %TabContainer1
 @onready var _playtest_btn: Button = %PlayTest
+@onready var _notification_banner: NotificationBanner = %NotificationBanner
 
 
 ## Initialize context, services, signals, UI, and dialogs
@@ -117,6 +119,7 @@ func _ready():
 	ctx.selection_changed.connect(_on_ctx_selection_changed)
 
 	file_menu.get_popup().connect("id_pressed", menus.on_filemenu_pressed)
+	edit_menu.get_popup().connect("id_pressed", _on_edit_menu_pressed)
 	attribute_menu.get_popup().connect("id_pressed", menus.on_attributemenu_pressed)
 
 	new_scenario_dialog.request_create.connect(file_ops.on_new_scenario)
@@ -393,21 +396,44 @@ func _unhandled_key_input(event):
 			get_viewport().set_input_as_handled()
 			return
 	if event is InputEventKey and event.pressed:
+		if event.ctrl_pressed and event.keycode == KEY_S:
+			file_ops.cmd_save()
+			get_viewport().set_input_as_handled()
+			return
+		if event.ctrl_pressed and event.keycode == KEY_O:
+			file_ops.cmd_open()
+			get_viewport().set_input_as_handled()
+			return
 		if event.ctrl_pressed and event.keycode == KEY_Z:
 			if history:
 				history.undo()
+				generic_notification("Undo", 1, false)
 			get_viewport().set_input_as_handled()
 			return
 		if event.ctrl_pressed and event.keycode == KEY_Y:
 			if history:
 				history.redo()
+				generic_notification("Redo", 1, false)
 			get_viewport().set_input_as_handled()
 			return
 	if ctx.current_tool and ctx.current_tool.handle_input(event):
 		return
 
 
-## Apply edits to current scenario data from dialog
+## Handle Edit menu actions (Undo/Redo).
+## [param id] Menu item ID (0=Undo, 1=Redo).
+func _on_edit_menu_pressed(id: int) -> void:
+	match id:
+		0:  # Undo
+			if history:
+				history.undo()
+				generic_notification("Undo", 1, false)
+		1:  # Redo
+			if history:
+				history.redo()
+				generic_notification("Redo", 1, false)
+
+
 func _on_update_scenario(_d: ScenarioData) -> void:
 	_on_data_changed()
 
@@ -724,3 +750,30 @@ func _check_playtest_return() -> void:
 	# Clear the playtest state
 	Game.playtest_history_state = {}
 	Game.playtest_file_path = ""
+
+
+## Show a success notification banner.
+## [param text] Notification text to display.
+## [param timeout] Duration in seconds before auto-hiding (default 2).
+## [param sound] Whether to play success sound (default true).
+func success_notification(text: String, timeout: int = 2, sound: bool = true) -> void:
+	if _notification_banner:
+		_notification_banner.success_notification(text, timeout, sound)
+
+
+## Show a failure notification banner.
+## [param text] Notification text to display.
+## [param timeout] Duration in seconds before auto-hiding (default 2).
+## [param sound] Whether to play failure sound (default true).
+func failed_notification(text: String, timeout: int = 2, sound: bool = true) -> void:
+	if _notification_banner:
+		_notification_banner.failed_notification(text, timeout, sound)
+
+
+## Show a normal notification banner.
+## [param text] Notification text to display.
+## [param timeout] Duration in seconds before auto-hiding (default 2).
+## [param sound] Whether to play notification sound (default true).
+func generic_notification(text: String, timeout: int = 2, sound: bool = true) -> void:
+	if _notification_banner:
+		_notification_banner.generic_notification(text, timeout, sound)

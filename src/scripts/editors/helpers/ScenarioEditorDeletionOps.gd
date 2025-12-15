@@ -106,6 +106,7 @@ func delete_unit(unit_index: int) -> void:
 	editor.ctx.request_overlay_redraw()
 	editor._rebuild_scene_tree()
 	editor.units._refresh(editor.ctx)
+	editor.generic_notification("Deleted unit", 1, false)
 
 
 ## Delete a slot; push history and refresh.
@@ -124,6 +125,7 @@ func delete_slot(slot_index: int) -> void:
 	editor.selection.clear_selection(editor.ctx)
 	editor.ctx.request_overlay_redraw()
 	editor._rebuild_scene_tree()
+	editor.generic_notification("Deleted slot", 1, false)
 
 
 ## Delete a task; repair chain links and reindex; push history.
@@ -184,6 +186,7 @@ func delete_task(task_index: int) -> void:
 	editor.selection.clear_selection(editor.ctx)
 	editor.ctx.request_overlay_redraw()
 	editor._rebuild_scene_tree()
+	editor.generic_notification("Deleted task", 1, false)
 
 
 ## Delete a trigger; push history and refresh.
@@ -202,6 +205,7 @@ func delete_trigger(trigger_index: int) -> void:
 	editor.selection.clear_selection(editor.ctx)
 	editor.ctx.request_overlay_redraw()
 	editor._rebuild_scene_tree()
+	editor.generic_notification("Deleted trigger", 1, false)
 
 
 ## Delete a custom command; push history and refresh.
@@ -218,6 +222,7 @@ func delete_command(command_index: int) -> void:
 		editor.ctx.data, "custom_commands", before, after, "Delete Custom Command"
 	)
 	editor._rebuild_command_list()
+	editor.generic_notification("Deleted custom command", 1, false)
 
 
 ## Deep-copy key arrays for history operations.

@@ -303,6 +303,53 @@ func triggering_unit_player() -> String:
 	return units[0] if units.size() > 0 else ""
 
 
+## Check if a specific unit is currently inside the trigger area.
+## Only works when called from within a trigger condition or action expression.
+## Checks across all affiliation categories (friend, enemy, player).
+## [br][br]
+## [b]Usage in trigger expressions:[/b]
+## [codeblock]
+## # Check if specific unit entered trigger area
+## if is_unit_in_trigger_area("ALPHA"):
+##     radio("ALPHA has entered the area!")
+##
+## # Tutorial: check if tutorial unit reached checkpoint
+## var tut_unit = get_global("tutorial_unit", "")
+## if is_unit_in_trigger_area(tut_unit):
+##     set_global("checkpoint_reached", true)
+##     show_dialog("Good! You've reached the checkpoint.")
+##
+## # Condition: trigger only when specific unit enters
+## is_unit_in_trigger_area("RECON_1") and not has_global("recon_entered")
+##
+## # Check multiple units
+## if is_unit_in_trigger_area("ALPHA") or is_unit_in_trigger_area("BRAVO"):
+##     radio("At least one of our units is in the zone")
+## [/codeblock]
+## [param callsign] Unit callsign to check.
+## [return] True if unit is in trigger area, false otherwise or if not in trigger context.
+func is_unit_in_trigger_area(callsign: String) -> bool:
+	# Get unit snapshot to resolve callsign to ID
+	var unit_data := unit(callsign)
+	if unit_data.is_empty():
+		return false
+
+	var unit_id: String = unit_data.get("id", "")
+	if unit_id == "":
+		return false
+
+	# Check if unit is in any of the trigger area lists
+	var friend_units := triggering_units_friend()
+	var enemy_units := triggering_units_enemy()
+	var player_units := triggering_units_player()
+
+	return (
+		friend_units.has(unit_id)
+		or enemy_units.has(unit_id)
+		or player_units.has(unit_id)
+	)
+
+
 ## Show a mission dialog with text and an OK button.
 ## Optionally pauses the simulation until the player dismisses the dialog.
 ## Can display a line from the dialog to a position on the map.
