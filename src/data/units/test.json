@@ -1,6 +1,5 @@
 {
   "allowed_slots": [
-	"ENG",
     "INF"
   ],
   "ammunition": {
@@ -10,74 +9,65 @@
 	"ATGM": 0,
 	"AT_ROCKET": 0,
 	"AUTOCANNON": 0,
-	"ENGINEER_BRIDGE": 1,
-	"ENGINEER_DEMO": 24,
-	"ENGINEER_MINE": 3,
+	"ENGINEER_BRIDGE": 0,
+	"ENGINEER_DEMO": 0,
+	"ENGINEER_MINE": 0,
 	"HEAVY_WEAPONS": 0,
 	"MORTAR_AP": 0,
 	"MORTAR_ILLUM": 0,
 	"MORTAR_SMOKE": 0,
-	"SMALL_ARMS": 2000,
+	"SMALL_ARMS": 0,
 	"TANK_GUN": 0
   },
   "ammunition_critical_threshold": 0.1,
   "ammunition_low_threshold": 0.25,
-  "cost": 60,
+  "cost": 50,
   "doctrine": "nato_inf_1983",
   "editor": {
 	"unit_category": "us_army"
   },
   "equipment": {
 	"radios": {
-	  "AN/PRC-77": {
-		"ammo": -1,
-		"type": 2
-	  }
+
 	},
 	"vehicles": {
-	  "5-ton truck": {
-		"ammo": -1,
-		"type": 2
-	  },
-	  "M113A1": {
-		"ammo": -1,
-		"type": 2
-	  }
+
 	},
 	"weapons": {
-	  "Demo Charges": {
-		"ammo": 12,
-		"type": 4
-	  },
-	  "M60": {
-		"ammo": 0,
-		"type": 4
-	  }
+
 	}
   },
   "equipment_tags": [],
   "experience": 0.0,
-  "id": "us_11acr_58engr_pl",
+  "id": "test",
   "is_engineer": false,
   "is_medical": false,
-  "movement_profile": 1,
-  "role": "ENG",
+  "movement_profile": 2,
+  "role": "INF",
   "size": 3,
-  "stats": {
-	"attack": 7.04,
-	"defense": 20.0,
-	"morale": 1.0,
-	"range_m": 400.0,
-	"speed_kph": 45.0,
-	"spot_m": 800.0,
-	"understrength_threshold": 0.8
+  "state": {
+	"cohesion": 0.0,
+	"state_equipment": 0.0,
+	"state_injured": 0.0,
+	"state_strength": 36.0
   },
-  "strength": 28,
+  "state_ammunition": {
+
+  },
+  "stats": {
+	"attack": 25.0,
+	"defense": 15.0,
+	"morale": 1.0,
+	"range_m": 500.0,
+	"speed_kph": 50.0,
+	"spot_m": 800.0
+  },
+  "strength": 36,
   "supply_transfer_radius_m": 30.0,
   "supply_transfer_rate": 10.0,
   "throughput": {
 
   },
-  "title": "58th Engr Co, 11th ACR",
-  "type": 9
+  "title": "test",
+  "type": 0
 }
