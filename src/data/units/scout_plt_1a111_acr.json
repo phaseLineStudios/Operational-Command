@@ -66,15 +66,6 @@
   "role": "RECON",
   "size": 3,
   "stats": {
-<<<<<<< HEAD
-	"attack": 72.64,
-	"defense": 15.0,
-	"morale": 1.0,
-	"range_m": 400.0,
-	"speed_kph": 60.0,
-	"spot_m": 1600.0,
-	"understrength_threshold": 0.8
-=======
 	"attack": 36.24,
 	"defense": 15.0,
 	"morale": 1.0,
@@ -82,7 +73,6 @@
 	"speed_kph": 60.0,
 	"spot_m": 1600.0,
 	"understrength_threshold": 0.8
->>>>>>> main
   },
   "strength": 28,
   "supply_transfer_radius_m": 30.0,
