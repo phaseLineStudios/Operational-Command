@@ -1,4 +1,4 @@
-[gd_scene load_steps=138 format=3 uid="uid://c20duptp1uplb"]
+[gd_scene load_steps=140 format=3 uid="uid://c20duptp1uplb"]
 
 [ext_resource type="Script" uid="uid://eagpng1qo5yn" path="res://scripts/core/PickupItem.gd" id="1_oof4l"]
 [ext_resource type="PackedScene" uid="uid://5wbc83x6ecek" path="res://scenes/system/radio.tscn" id="1_p1n4g"]
@@ -20,9 +20,11 @@
 [ext_resource type="Script" uid="uid://b1vs2cahgd48f" path="res://scripts/sim/SimWorld.gd" id="7_ge8rp"]
 [ext_resource type="PackedScene" uid="uid://ck35exaprsx2l" path="res://assets/models/field_manual/FieldManual.glb" id="7_gvjko"]
 [ext_resource type="Script" uid="uid://b5eh10v1g6c4v" path="res://scripts/sim/SimDebugOverlay.gd" id="7_tixey"]
-[ext_resource type="PackedScene" uid="uid://pkvppyl3iywj" path="res://assets/models/radio/am_1777.glb" id="7_u1ngg"]
+[ext_resource type="PackedScene" uid="uid://dwaudpme4e2sd" path="res://assets/models/radio/am_1777.glb" id="7_u1ngg"]
 [ext_resource type="PackedScene" uid="uid://7ta8ojkjg5rg" path="res://scenes/ui/pause_menu.tscn" id="7_uk27s"]
 [ext_resource type="AudioStream" uid="uid://csrgtinedwlbr" path="res://audio/sfx/sfx_drop_protractor_04.wav" id="8_5bsee"]
+[ext_resource type="Material" uid="uid://tty6aat5whaj" path="res://assets/models/radio/body.material" id="8_fpuk0"]
+[ext_resource type="Material" uid="uid://d3helqypa83gq" path="res://assets/models/radio/panel.material" id="9_3jg1r"]
 [ext_resource type="Script" uid="uid://bxw82utaedlvn" path="res://scripts/radio/OrdersParser.gd" id="9_415kk"]
 [ext_resource type="Script" uid="uid://be785qai04d2g" path="res://scripts/sim/adapters/MovementAdapter.gd" id="9_fera7"]
 [ext_resource type="Script" uid="uid://dy2uex65i3y4m" path="res://scripts/sim/adapters/CombatAdapter.gd" id="9_vxnyp"]
@@ -513,6 +515,12 @@ skeleton = NodePath("")
 [node name="Radio" parent="StaticObjects" instance=ExtResource("7_u1ngg")]
 unique_name_in_owner = true
 transform = Transform3D(0.87417936, 0, -0.4856032, 0, 1, 0, 0.4856032, 0, 0.87417936, 0.35100284, 0.7439508, -0.23816364)
+
+[node name="Body" parent="StaticObjects/Radio" index="0"]
+surface_material_override/0 = ExtResource("8_fpuk0")
+
+[node name="Panel" parent="StaticObjects/Radio" index="1"]
+surface_material_override/0 = ExtResource("9_3jg1r")
 
 [node name="Lamp" type="MeshInstance3D" parent="StaticObjects"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.248519, 0.736343, -0.305243)
@@ -1022,3 +1030,4 @@ visible = false
 visible = false
 
 [editable path="Tent/Mesh"]
+[editable path="StaticObjects/Radio"]
