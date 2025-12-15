@@ -51,6 +51,8 @@ var _dynamic_viewport_cached := false
 var _viewport_pixel_scale: float = 1.0  # Viewport pixels per renderer "map unit"
 var _last_mouse_pos: Vector2 = Vector2(-9999, -9999)  # Track last mouse position
 var _map_read_overlay: ViewportReadOverlay = null
+var _pp_saved_read_force_full_res: bool = true
+var _pp_saved_read_force_full_res_valid: bool = false
 
 @onready var terrain_viewport: SubViewport = %TerrainViewport
 @onready var renderer: TerrainRender = %TerrainRender
@@ -164,9 +166,32 @@ func _unhandled_input(event: InputEvent) -> void:
 		and (event as InputEventMouseButton).double_click
 		and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT
 	):
+		_open_map_read_overlay()
 		get_viewport().set_input_as_handled()
 		return
 	emit_signal("map_unhandled_mouse", event, res.map_px, res.terrain)
+
+
+func _open_map_read_overlay() -> void:
+	if terrain_viewport == null:
+		return
+	if _map_read_overlay != null and is_instance_valid(_map_read_overlay):
+		return
+
+	var inst := READ_OVERLAY_SCENE.instantiate() as ViewportReadOverlay
+	if inst == null:
+		return
+
+	inst.consume_escape = true
+	_map_read_overlay = inst
+	_map_read_overlay.closed.connect(_on_map_read_overlay_closed, CONNECT_ONE_SHOT)
+	get_tree().root.add_child(_map_read_overlay)
+
+	var tex: Texture2D = terrain_viewport.get_texture()
+	if bake_viewport_mipmaps and _mipmap_texture != null and _mipmap_texture.get_width() > 0:
+		tex = _mipmap_texture
+	_map_read_overlay.open_texture(tex, "Map")
+	_set_read_mode(true, false)
 
 
 func _on_map_read_overlay_closed() -> void:
@@ -174,11 +199,22 @@ func _on_map_read_overlay_closed() -> void:
 	_set_read_mode(false)
 
 
-func _set_read_mode(enabled: bool) -> void:
+func _set_read_mode(enabled: bool, force_full_res: bool = true) -> void:
 	var pp := get_tree().root.find_child("PostProcess", true, false)
 	if pp != null and pp.has_method("set"):
-		if "read_mode_enabled" in pp:
-			pp.read_mode_enabled = enabled
+		if enabled:
+			if "read_mode_force_full_res" in pp and not _pp_saved_read_force_full_res_valid:
+				_pp_saved_read_force_full_res = bool(pp.read_mode_force_full_res)
+				_pp_saved_read_force_full_res_valid = true
+				pp.read_mode_force_full_res = force_full_res
+			if "read_mode_enabled" in pp:
+				pp.read_mode_enabled = true
+		else:
+			if "read_mode_enabled" in pp:
+				pp.read_mode_enabled = false
+			if "read_mode_force_full_res" in pp and _pp_saved_read_force_full_res_valid:
+				pp.read_mode_force_full_res = _pp_saved_read_force_full_res
+			_pp_saved_read_force_full_res_valid = false
 
 
 func _apply_map_material_settings() -> void:
